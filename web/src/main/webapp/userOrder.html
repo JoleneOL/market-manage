@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>用户订单 - 代理商后台管理</title>
+    <link rel="stylesheet" href="assets/css/style.default.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/city-picker.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://resali.huobanplus.com/cdn/bracket/js/html5shiv.js"></script>
+    <script src="http://resali.huobanplus.com/cdn/bracket/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="inner-document">
+<section>
+    <div class="pageheader">
+        <h2><i class="fa fa-list-alt"></i> 用户订单 <span>用户下单页面</span></h2>
+    </div>
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">用户下单</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-7 col-lg-6">
+                                    <form class="form-horizontal mb40">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">姓名</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入客户姓名" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">年龄</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" min="1" placeholder="请输入年龄" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">性别</label>
+                                            <div class="col-sm-6 control-label">
+                                                <div class="col-sm-4">
+                                                    <div class="rdio rdio-success">
+                                                        <input type="radio" name="radio" value="0" id="sexMan" checked>
+                                                        <label for="sexMan">男</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="rdio rdio-success">
+                                                        <input type="radio" name="radio" value="1" id="sexFemale">
+                                                        <label for="sexFemale">女</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">安装地址</label>
+                                            <div class="col-sm-6">
+                                                <div data-toggle="city-picker">
+                                                    <input class="control-label" readonly type="text" data-toggle="city-picker" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <input type="text" placeholder="详细地址" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">用户电话</label>
+                                            <div class="col-sm-6">
+                                                <input type="tel" placeholder="请输入电话" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">产品类型</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control">
+                                                    <option value="1">饮水机 1</option>
+                                                    <option value="2">饮水机 2</option>
+                                                    <option value="3">饮水机 3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">租用机型</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control">
+                                                    <option value="1">立式</option>
+                                                    <option value="2">欧式</option>
+                                                    <option value="3">法式</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">数量</label>
+                                            <div class="col-sm-6">
+                                                <input type="number" min="1" placeholder="请输入数量" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">套餐选择</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" min="1" value="2年收费" readonly disabled class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">活动码</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="输入活动码" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">订单总金额</label>
+                                            <div class="col-sm-3">
+                                                <h1 class="total">5000.00</h1>
+                                            </div>
+                                            <label class="col-sm-3 control-label">安装费用</label>
+                                            <div class="col-sm-3">
+                                                <h1 class="total">120.00</h1>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-3 col-sm-offset-3 control-label">
+                                                <div class="ckbox ckbox-success">
+                                                    <input type="checkbox" id="agreement">
+                                                    <label for="agreement">同意《违约协议》</label>
+                                                </div>
+                                            </div>
+                                            <label class="col-sm-3 control-label">订单总金额</label>
+                                            <div class="col-sm-3">
+                                                <h1 class="total">999999.99</h1>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6 col-sm-offset-3 control-label">
+                                                <button type="button" class="btn btn-success btn-block btn-lg">下&nbsp;单</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<script src="http://resali.huobanplus.com/cdn/jquery/1.12.4/jquery.min.js"></script>
+<script src="assets/js/city-picker.data.min.js"></script>
+<script src="assets/js/city-picker.min.js"></script>
+</html>

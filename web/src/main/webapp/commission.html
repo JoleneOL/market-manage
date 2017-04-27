@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>我的佣金 - 代理商后台管理</title>
+    <link rel="stylesheet" href="assets/css/style.default.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://resali.huobanplus.com/cdn/bracket/js/html5shiv.js"></script>
+    <script src="http://resali.huobanplus.com/cdn/bracket/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="inner-document">
+<section>
+    <div class="pageheader">
+        <h2><i class="fa fa-home"></i> 首页 <span>重要信息的概要</span></h2>
+    </div>
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-success panel-stat">
+                    <div class="panel-heading">
+                        <h4>今日获佣金（元）</h4>
+                        <h2>60000.58</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-danger panel-stat">
+                    <div class="panel-heading">
+                        <h4>今日下单数</h4>
+                        <h2>50</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-warning panel-stat">
+                    <div class="panel-heading">
+                        <h4>今日安装台数</h4>
+                        <h2>30</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-dark panel-stat">
+                    <div class="panel-heading">
+                        <h4>今日总库存数</h4>
+                        <h2>3000</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel panel-dark panel-alt">
+                    <div class="panel-heading">
+                        <div class="panel-btns">
+                            <a href="javascript:;" class="minimize">−</a>
+                        </div>
+                        <h5 class="panel-title">消息中心</h5>
+                    </div>
+                    <div class="panel-body panel-table">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr class="table-head-alt">
+                                    <th>#</th>
+                                    <th>时间</th>
+                                    <th>消息</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2017-12-31</td>
+                                    <td>您增加了一位经销商 节菲菲经销商推荐了小菲菲成为经销商</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2017-12-31</td>
+                                    <td>总公司接收了您的订单号56788订购消息，请等待商品出库</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>2017-12-31</td>
+                                    <td>您的订单号56788已出库</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>2017-12-31</td>
+                                    <td>经销商节菲菲发起了一笔退货</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs nav-dark">
+                    <li class="active">
+                        <a href="#refundPending" data-toggle="tab">
+                            <strong>退款待处理</strong>
+                            <span class="badge badge-danger">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#repairPending" data-toggle="tab">
+                            <strong>维修待处理</strong>
+                            <span class="badge badge-danger">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#agentCheck" data-toggle="tab">
+                            <strong>代理商查看</strong>
+                            <span class="badge badge-danger">2</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="refundPending">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-success">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>订单号</th>
+                                    <th>代理商</th>
+                                    <th>商品型号</th>
+                                    <th>退货内容</th>
+                                    <th>订单总额</th>
+                                    <th>套餐</th>
+                                    <th>活动码</th>
+                                    <th>购买时间</th>
+                                    <th>违约金</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>20170418-a1</td>
+                                    <td>李菲菲</td>
+                                    <td>滤芯 reg fdhd</td>
+                                    <td>未安装退货</td>
+                                    <td>4567</td>
+                                    <td>2年收费</td>
+                                    <td></td>
+                                    <td>2017-09-09</td>
+                                    <td>20%</td>
+                                    <td>待同意</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>20170418-a1</td>
+                                    <td>李菲菲</td>
+                                    <td>滤芯 reg fdhd</td>
+                                    <td>未安装退货</td>
+                                    <td>4567</td>
+                                    <td>2年收费</td>
+                                    <td></td>
+                                    <td>2017-09-09</td>
+                                    <td>20%</td>
+                                    <td>待同意</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>20170418-a1</td>
+                                    <td>李菲菲</td>
+                                    <td>滤芯 reg fdhd</td>
+                                    <td>未安装退货</td>
+                                    <td>4567</td>
+                                    <td>2年收费</td>
+                                    <td></td>
+                                    <td>2017-09-09</td>
+                                    <td>20%</td>
+                                    <td>待同意</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="repairPending">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+                                <button class="btn btn-primary mr5">Follow Me</button>
+                                <button class="btn btn-white">Send Message</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="agentCheck">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<script src="http://resali.huobanplus.com/cdn/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
+</html>

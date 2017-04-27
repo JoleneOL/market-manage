@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>退货及维修 - 代理商后台管理</title>
+    <link rel="stylesheet" href="assets/css/style.default.css">
+    <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://resali.huobanplus.com/cdn/bracket/js/html5shiv.js"></script>
+    <script src="http://resali.huobanplus.com/cdn/bracket/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="inner-document">
+<section>
+    <div class="pageheader">
+        <h2><i class="fa fa-address-card-o"></i> 用户订单管理 <span>详细的用户订单管理中心</span></h2>
+    </div>
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-sm-2 mb30">
+                <button type="button" class="btn btn-success btn-block btn-lg">我要下单</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb10">
+                <div class="form-inline">
+                    <div class="js-selectToolbar">
+                        <button type="button" class="btn btn-success btn-xs js-search">查询</button>
+                        <input type="search" class="form-control input-sm js-orderId" placeholder="订单编号" name="orderId" aria-controls="orderTable">
+                        <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号" name="phone" aria-controls="orderTable">
+                        <label>
+                            <select class="form-control input-sm js-searchRank" name="agentRank">
+                                <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
+                                <option value=" " disabled="" selected="" class="hidden">商品类型</option>
+                                <option value="1">欧式</option>
+                                <option value="2">法式</option>
+                                <option value="3">中式</option>
+                            </select>
+                        </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control hasDatepicker js-js-orderDate" placeholder="mm/dd/yyyy" id="datepicker" name="orderDate" aria-controls="orderTable">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs nav-dark">
+                    <li class="active">
+                        <a href="#allOrder" data-toggle="tab">
+                            <strong>全部</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#payment" data-toggle="tab">
+                            <strong>待付款</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#deliver" data-toggle="tab">
+                            <strong>待发货</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#install" data-toggle="tab">
+                            <strong>待安装</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#installed" data-toggle="tab">
+                            <strong>已安装</strong>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="allOrder">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-success">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>订单号</th>
+                                    <th>代理商</th>
+                                    <th>商品型号</th>
+                                    <th>退货内容</th>
+                                    <th>订单总额</th>
+                                    <th>套餐</th>
+                                    <th>活动码</th>
+                                    <th>购买时间</th>
+                                    <th>违约金</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>20170418-a1</td>
+                                    <td>李菲菲</td>
+                                    <td>滤芯 reg fdhd</td>
+                                    <td>未安装退货</td>
+                                    <td>4567</td>
+                                    <td>2年收费</td>
+                                    <td></td>
+                                    <td>2017-09-09</td>
+                                    <td>20%</td>
+                                    <td>待同意</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>20170418-a1</td>
+                                    <td>李菲菲</td>
+                                    <td>滤芯 reg fdhd</td>
+                                    <td>未安装退货</td>
+                                    <td>4567</td>
+                                    <td>2年收费</td>
+                                    <td></td>
+                                    <td>2017-09-09</td>
+                                    <td>20%</td>
+                                    <td>待同意</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>20170418-a1</td>
+                                    <td>李菲菲</td>
+                                    <td>滤芯 reg fdhd</td>
+                                    <td>未安装退货</td>
+                                    <td>4567</td>
+                                    <td>2年收费</td>
+                                    <td></td>
+                                    <td>2017-09-09</td>
+                                    <td>20%</td>
+                                    <td>待同意</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="payment">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+                                <button class="btn btn-primary mr5">Follow Me</button>
+                                <button class="btn btn-white">Send Message</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="deliver">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias </p>
+                    </div>
+                    <div class="tab-pane" id="install">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias </p>
+                    </div>
+                    <div class="tab-pane" id="installed">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat</p>
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<script src="http://resali.huobanplus.com/cdn/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
+<script src="assets/js/bootstrap-datepicker.min.js"></script>
+<script src="assets/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="assets/js/main.js"></script>
+</html>

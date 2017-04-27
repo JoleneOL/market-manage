@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.lmjia.market-manage</groupId>
+    <artifactId>market-manage</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>core-service</module>
+        <module>dealer</module>
+        <module>web</module>
+        <module>manage-service</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <javaee.version>7.0</javaee.version>
+        <jiangcai.version>3.0-SNAPSHOT</jiangcai.version>
+        <spring.version>4.3.8.RELEASE</spring.version>
+        <spring.data.rest.version>2.4.4.RELEASE</spring.data.rest.version>
+        <spring.security.version>4.0.4.RELEASE</spring.security.version>
+        <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+        <fasterxml.jackson.version>2.7.5</fasterxml.jackson.version>
+        <junit.version>4.12</junit.version>
+        <jsonpath.version>2.2.0</jsonpath.version>
+        <log4j2.version>2.4.1</log4j2.version>
+        <slf4j.version>1.7.12</slf4j.version>
+        <httpclient.version>4.5.2</httpclient.version>
+        <fastjson.version>1.2.8</fastjson.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <goods.version>1.0.0-SNAPSHOT</goods.version>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>jc-nexus</id>
+            <name>Nexus Release Repository</name>
+            <url>http://repo.jiangcai.me:8082/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>jc-nexus</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://repo.jiangcai.me:8082/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-instrument</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>repo-jc</id>
+            <name>JiangCai Repository</name>
+            <url>http://repo.jiangcai.me:8082/content/groups/public/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>repo-jc</id>
+            <name>JiangCai Repository</name>
+            <url>http://repo.jiangcai.me:8082/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

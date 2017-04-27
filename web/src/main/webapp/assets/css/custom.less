@@ -1,0 +1,289 @@
+//@brand-success:#009bb6;
+//@btn-success-color: #fff;
+//@btn-success-bg: @brand-success;
+//@btn-success-border: darken(@btn-success-bg, 5%);
+//.btn-success {
+//  background-color: @btn-success-bg;
+//  border-color: @btn-success-border;
+//}
+//
+//.btn-success:hover,
+//.btn-success:active,
+//.btn-success.active,
+//.open .dropdown-toggle.btn-success {
+//  background-color: @btn-success-border;
+//  border-color: darken(@btn-success-border, 12%);
+//}
+html, body, .main-wrapper, .mainpanel {
+  height: 100%;
+}
+.outer-document {
+  overflow: hidden;
+}
+.outer-document iframe {
+  display: block;
+}
+#content-main {
+  height: calc(~"100% - 50px");
+  overflow: hidden;
+}
+a:hover, a:focus {
+  text-decoration: none;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #F5F5F5
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #999
+}
+
+.display-inline {
+  display: inline-block;
+}
+.total {
+  font-family: "Microsoft YaHei", sans-serif;
+  font-weight: 700;
+  margin-top: 0;
+}
+.input-group-sm {
+  margin-top: 3px;
+}
+//select
+select.form-control {
+  padding: 8px 10px;
+}
+
+//重写按钮样式
+.btn-success {
+  color: #ffffff;
+  background-color: #009bb6;
+  border-color: #00859d;
+}
+
+.btn-success:focus,
+.btn-success.focus {
+  color: #ffffff;
+  background-color: #007083;
+  border-color: #00191d;
+}
+
+.btn-success:hover {
+  color: #ffffff;
+  background-color: #007083;
+  border-color: #00515f;
+}
+
+.btn-success:active,
+.btn-success.active,
+.open > .dropdown-toggle.btn-success {
+  color: #ffffff;
+  background-color: #007083;
+  border-color: #00515f;
+}
+
+.btn-success:active:hover,
+.btn-success.active:hover,
+.open > .dropdown-toggle.btn-success:hover,
+.btn-success:active:focus,
+.btn-success.active:focus,
+.open > .dropdown-toggle.btn-success:focus,
+.btn-success:active.focus,
+.btn-success.active.focus,
+.open > .dropdown-toggle.btn-success.focus {
+  color: #ffffff;
+  background-color: #00515f;
+  border-color: #00191d;
+}
+
+.btn-success:active,
+.btn-success.active,
+.open > .dropdown-toggle.btn-success {
+  background-image: none;
+}
+
+.btn-success.disabled:hover,
+.btn-success[disabled]:hover,
+fieldset[disabled] .btn-success:hover,
+.btn-success.disabled:focus,
+.btn-success[disabled]:focus,
+fieldset[disabled] .btn-success:focus,
+.btn-success.disabled.focus,
+.btn-success[disabled].focus,
+fieldset[disabled] .btn-success.focus {
+  background-color: #009bb6;
+  border-color: #00859d;
+}
+
+.btn-success .badge {
+  color: #009bb6;
+  background-color: #ffffff;
+}
+
+//logo 图片
+.logopanel .logo {
+  width: 224px;
+  height: auto;
+  display: block;
+}
+
+//菜单重写
+.nav-bracket > li.active > a,
+.nav-bracket > li.active > a:hover,
+.nav-bracket > li.active > a:focus {
+  background-color: #009bb6;
+  color: #fff;
+}
+
+//badge
+.badge-success {
+  background-color: #009bb6;
+}
+
+.leftpanelinner {
+  padding-top: 15px;
+  .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+// header menu
+.headermenu .user-info {
+  line-height: 50px;
+  border-left: none;
+  p {
+    margin-bottom: 0;
+  }
+  i {
+    font-style: normal;
+  }
+}
+
+.headermenu {
+  .tp-icon {
+    font-size: 14px;
+  }
+}
+
+//inner-document
+.inner-document {
+  background: #e4e7ea;
+  height: auto;
+  padding-bottom: 60px;
+  .pageheader {
+    padding: 2px;
+    .fa {
+      border: none;
+      font-size: 12px;
+    }
+    h2 {
+      font-size: 12px;
+    }
+  }
+  .panel-heading {
+    color: #fff;
+    h2 {
+      margin: 0 0 20px 0;
+      line-height: 36px;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-size: 38px;
+      text-align: center;
+    }
+    h4 {
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: fade(#fff, 75);
+      text-align: center;
+    }
+  }
+  .table-action {
+    a {
+      color: #009bb6;
+    }
+  }
+}
+
+//panel
+.panel-success .panel-heading {
+  background-color: #009bb6;
+}
+.panel-default > .quote {
+  border-left: 5px solid #eee;
+}
+.panel-default > .quote-success {
+  border-left-color: #009bb6;
+}
+
+//table
+.table-success thead tr th {
+  background-color: #009bb6;
+}
+
+// pagination
+
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  background-color: #009bb6;
+  border-color: #009bb6;
+}
+
+// input
+select.input-sm {
+  padding: 5px 10px;
+}
+
+// dataTables
+#agentTable_wrapper.dataTables_wrapper div.dataTables_filter,
+#usersTable_wrapper.dataTables_wrapper div.dataTables_filter {
+  margin-right: 10px;
+  text-align: left;
+  display: inline-block;
+}
+
+.js-selectRank, .js-inputPhone {
+  display: inline-block;
+  margin-right: 10px;
+}
+.js-search {
+  margin-top: 3px;
+}
+
+//radio
+.rdio-success, .ckbox-success{
+  text-align: left;
+}
+.rdio-success input[type="radio"]:checked + label:before {
+  border-color: #009bb6;
+}
+
+.rdio-success input[type="radio"]:checked + label::after {
+  background-color: #009bb6;
+}
+//checkbox
+.ckbox-success label {
+  font-size: 12px;
+}
+.ckbox-success input[type="checkbox"]:checked + label:before {
+  border-color: #009bb6;
+  background-color: #009bb6;
+}
+
+input[type=radio], input[type=checkbox] {
+  margin: 2px 0 0;
+}
+.col-sm-25 {
+  width: 40%;
+}

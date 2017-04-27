@@ -1,0 +1,79 @@
+{
+  "draw": 1,
+  "recordsTotal": 23,
+  "recordsFiltered": 23,
+  "data": [
+    {
+      "id": "1",
+      "name": "老常",
+      "rank": "会员",
+      "recommend": 999,
+      "join_time": "2011-11-11",
+      "province": "浙江省",
+      "city": "杭州市",
+      "district": "滨江区",
+      "address": "阡陌路482号智慧E谷B栋",
+      "phone": 15677776666
+    },
+    {
+      "id": "2",
+      "name": "老常A",
+      "rank": "经纪人",
+      "recommend": 450,
+      "join_time": "2011-11-11",
+      "province": "浙江省",
+      "city": "杭州市",
+      "district": "西湖区",
+      "address": "文三路",
+      "phone": 15677776666
+    },
+    {
+      "id": "3",
+      "name": "老常B",
+      "rank": "经销商",
+      "recommend": 999,
+      "join_time": "2011-11-11",
+      "province": "浙江省",
+      "city": "杭州市",
+      "district": "上城区",
+      "address": "XXXXXXXX",
+      "phone": 15677776666
+    },
+    {
+      "id": "4",
+      "name": "老常C",
+      "rank": "经销商",
+      "recommend": 999,
+      "join_time": "2011-11-11",
+      "province": "浙江省",
+      "city": "杭州市",
+      "district": "下城区",
+      "address": "不知道路XXX",
+      "phone": 15677776666
+    },
+    {
+      "id": "5",
+      "name": "老常D",
+      "rank": "经销商",
+      "recommend": 999,
+      "join_time": "2011-11-11",
+      "province": "浙江省",
+      "city": "杭州市",
+      "district": "余杭区",
+      "address": "不知道路XXX",
+      "phone": 15677776666
+    },
+    {
+      "id": "6",
+      "name": "老常E",
+      "rank": "经销商",
+      "recommend": 999,
+      "join_time": "2011-11-11",
+      "province": "浙江省",
+      "city": "杭州市",
+      "district": "萧山区",
+      "address": "文三街道",
+      "phone": 15677776666
+    }
+  ]
+}
