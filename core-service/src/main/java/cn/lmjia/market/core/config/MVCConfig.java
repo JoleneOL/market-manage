@@ -274,7 +274,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 return engine;
             }
 
-            private SpringResourceTemplateResolver htmlTemplateResolver() {
+            private SpringResourceTemplateResolver createHtmlTemplateResolver() {
                 SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
                 resolver.setCacheable(!environment.acceptsProfiles("development")
                         && !environment.acceptsProfiles("test"));
@@ -289,13 +289,13 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 final Set<ITemplateResolver> collect = webModules.stream()
                         .filter(WebModule::hasOwnTemplateResolver)
                         .map(webModule -> {
-                            SpringResourceTemplateResolver resolver = htmlTemplateResolver();
+                            SpringResourceTemplateResolver resolver = createHtmlTemplateResolver();
                             webModule.templateResolver(resolver);
                             return (ITemplateResolver) resolver;
                         })
                         .collect(Collectors.toSet());
 
-                collect.add(htmlTemplateResolver());
+                collect.add(createHtmlTemplateResolver());
                 return templateEngine(collect);
             }
 

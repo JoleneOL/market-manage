@@ -1,6 +1,5 @@
-package cn.lmjia.market.dealer.entity;
+package cn.lmjia.market.core.entity;
 
-import cn.lmjia.market.core.entity.Login;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,5 +31,5 @@ public abstract class AgentLevel {
     @OneToOne
     private Login login;
     @Column(length = 20)
-    private String name;
+    private String rank;
 }
