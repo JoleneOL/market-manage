@@ -59,8 +59,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     private static final String PAGE_PARAMETER_NAME = "pageNumber";
     private static final String SIZE_PARAMETER_NAME = "pageSize";
     private static String[] STATIC_RESOURCE_PATHS = new String[]{
-            "platform/css", "platform/images", "platform/js", "platform/weui", "assets", "_resources", "portal/css"
-            , "portal/js", "portal/images",
+            "assets", "_resources"
     };
     private final ThymeleafViewResolver htmlViewResolver;
     //    private final TokenHotUserResolver tokenHotUserResolver;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -10,17 +10,20 @@
     <meta name="format-detection" content="telephone=no"/>
     <title>代理商管理 - 代理商后台管理</title>
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/style.default.css">
+    <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/style.default.css"
+          th:href="@{/assets/css/style.default.css}">
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/dataTables.bootstrap.min.css"
+          th:href="@{/assets/css/dataTables.bootstrap.min.css}">
+    <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/custom.css"
+          th:href="@{/assets/css/custom.css}">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="http://resali.huobanplus.com/cdn/bracket/js/html5shiv.js"></script>
     <script src="http://resali.huobanplus.com/cdn/bracket/js/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="inner-document">
+<body class="inner-document" data-agent-url="../mock/agentData.json">
 <section>
     <div class="pageheader">
         <h2><i class="fa fa-users"></i> 代理商管理 <span>代理商详情信息</span></h2>
@@ -36,7 +39,8 @@
 </body>
 <script type="text/template" id="selectToolbar">
     <button type="button" class="btn btn-success btn-xs js-search">查询</button>
-    <input type="search" class="form-control input-sm js-searchName" placeholder="代理商名称" name="agentName" aria-controls="agentTable">
+    <input type="search" class="form-control input-sm js-searchName" placeholder="代理商名称" name="agentName"
+           aria-controls="agentTable">
     <label>
         <select class="form-control input-sm js-searchRank" name="agentRank">
             <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
@@ -50,9 +54,14 @@
 <script src="http://resali.huobanplus.com/cdn/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>
 <!--<script src="http://resali.huobanplus.com/cdn/layer/3.0.3/layer.js"></script>-->
-<script src="assets/js/jquery.dataTables.min.js"></script>
-<script src="assets/js/dataTables.bootstrap.min.js"></script>
-<script src="assets/js/dataTables.treeGrid.js"></script>
-<script src="assets/js/dataTables.zh-CN.js"></script>
-<script src="assets/js/agentManage.js"></script>
+<script src="../../../../../web/src/main/webapp/assets/js/jquery.dataTables.min.js"
+        th:src="@{/assets/js/jquery.dataTables.min.js}"></script>
+<script src="../../../../../web/src/main/webapp/assets/js/dataTables.bootstrap.min.js"
+        th:src="@{/assets/js/dataTables.bootstrap.min.js}"></script>
+<script src="../../../../../web/src/main/webapp/assets/js/dataTables.treeGrid.js"
+        th:src="@{/assets/js/dataTables.treeGrid.js}"></script>
+<script src="../../../../../web/src/main/webapp/assets/js/dataTables.zh-CN.js"
+        th:src="@{/assets/js/dataTables.zh-CN.js}"></script>
+<script src="../dealer-resource/js/agentManage.js"
+        th:src="@{/dealer-resource/js/agentManage.js}"></script>
 </html>

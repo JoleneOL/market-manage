@@ -8,7 +8,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "mock/agentData.json",
+            "url": $('body').attr('data-agent-url'),
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }

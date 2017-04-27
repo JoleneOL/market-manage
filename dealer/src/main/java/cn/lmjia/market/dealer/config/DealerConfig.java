@@ -12,24 +12,28 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
  */
 @Configuration
 @Import(MVCConfig.class)
-public class DealerConfig implements WebModule{
+public class DealerConfig implements WebModule {
     @Override
     public boolean hasOwnTemplateResolver() {
-        return false;
+        return true;
     }
 
     @Override
     public void templateResolver(SpringResourceTemplateResolver resolver) {
-
+        resolver.setPrefix("classpath:/dealer-view/");
     }
 
     @Override
     public String[] resourcePathPatterns() {
-        return null;
+        return new String[]{"/dealer-resource/js/**"};
     }
 
     @Override
     public void resourceHandler(String pattern, ResourceHandlerRegistration registration) {
-
+        switch (pattern) {
+            case "/dealer-resource/js/**":
+                registration.addResourceLocations("classpath:/dealer-resource/js/");
+                break;
+        }
     }
 }
