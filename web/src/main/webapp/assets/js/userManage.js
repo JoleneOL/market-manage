@@ -20,9 +20,6 @@ $(function () {
         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "columns": [
             {
-                "title": "#", "data": "id"
-            },
-            {
                 "title": "用户", "data": "name"
             },
             {
@@ -52,8 +49,8 @@ $(function () {
             {
                 title: "操作",
                 className: 'table-action',
-                data: function () {
-                    return '<a href="javascript:;" class="js-checkUser"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                data: function (item) {
+                    return '<a href="javascript:;" class="js-checkUser" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
                 }
             }
         ],

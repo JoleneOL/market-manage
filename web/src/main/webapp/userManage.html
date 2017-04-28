@@ -35,18 +35,19 @@
 </section>
 </body>
 <script type="text/template" id="selectToolbar">
-    <button type="button" class="btn btn-success btn-xs js-search">查询</button>
     <input type="search" class="form-control input-sm js-searchName" placeholder="用户名称" name="userName" aria-controls="agentTable">
     <input type="search" class="form-control input-sm js-searchPhone" placeholder="用户手机号" name="userPhone" aria-controls="agentTable">
     <label>
         <select class="form-control input-sm js-searchRank" name="userRank">
             <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
             <option value=" " disabled selected class="hidden">级别</option>
-            <option value="1">会员</option>
-            <option value="2">经纪人</option>
+            <option value="1">总代理</option>
+            <option value="2">分代理</option>
             <option value="3">经销商</option>
+            <option value="3">爱心天使</option>
         </select>
     </label>
+    <button type="button" class="btn btn-success btn-xs js-search">查询</button>
 </script>
 <script src="http://resali.huobanplus.com/cdn/jquery/1.12.4/jquery.min.js"></script>
 <script src="http://resali.huobanplus.com/cdn/bootstrap/3.3.7/bootstrap.min.js"></script>

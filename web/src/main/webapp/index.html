@@ -72,15 +72,13 @@
                             <table class="table">
                                 <thead>
                                 <tr class="table-head-alt">
-                                    <th>#</th>
                                     <th>时间</th>
                                     <th>消息</th>
-                                    <th>操作</th>
+                                    <th class="table-action">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>1</td>
                                     <td>2017-12-31</td>
                                     <td>您增加了一位经销商 节菲菲经销商推荐了小菲菲成为经销商</td>
                                     <td class="table-action">
@@ -88,7 +86,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
                                     <td>2017-12-31</td>
                                     <td>总公司接收了您的订单号56788订购消息，请等待商品出库</td>
                                     <td class="table-action">
@@ -96,7 +93,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
                                     <td>2017-12-31</td>
                                     <td>您的订单号56788已出库</td>
                                     <td class="table-action">
@@ -104,7 +100,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>4</td>
                                     <td>2017-12-31</td>
                                     <td>经销商节菲菲发起了一笔退货</td>
                                     <td class="table-action">
@@ -146,7 +141,6 @@
                             <table class="table table-hover table-success">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>订单号</th>
                                     <th>代理商</th>
                                     <th>商品型号</th>
@@ -157,12 +151,11 @@
                                     <th>购买时间</th>
                                     <th>违约金</th>
                                     <th>状态</th>
-                                    <th>操作</th>
+                                    <th class="table-action">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>1</td>
                                     <td>20170418-a1</td>
                                     <td>李菲菲</td>
                                     <td>滤芯 reg fdhd</td>
@@ -178,7 +171,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>2</td>
                                     <td>20170418-a1</td>
                                     <td>李菲菲</td>
                                     <td>滤芯 reg fdhd</td>
@@ -194,7 +186,6 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>3</td>
                                     <td>20170418-a1</td>
                                     <td>李菲菲</td>
                                     <td>滤芯 reg fdhd</td>
@@ -214,17 +205,112 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="repairPending">
-                        <div class="row">
-                            <div class="col-sm-9">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
-                                <button class="btn btn-primary mr5">Follow Me</button>
-                                <button class="btn btn-white">Send Message</button>
+                        <div class="table-responsive">
+                                <table class="table table-hover table-success">
+                                    <thead>
+                                    <tr>
+                                        <th>订单号</th>
+                                        <th>代理商</th>
+                                        <th>商品型号</th>
+                                        <th>维修内容</th>
+                                        <th>购买时间</th>
+                                        <th>机器维修费用</th>
+                                        <th>状态</th>
+                                        <th class="table-action">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>20170418-a1</td>
+                                        <td>李菲菲</td>
+                                        <td>滤芯 reg fdhd</td>
+                                        <td>没出水</td>
+                                        <td>2017-09-09</td>
+                                        <td>保修</td>
+                                        <td>维修中</td>
+                                        <td class="table-action">
+                                            <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>20170418-a2</td>
+                                        <td>李菲菲</td>
+                                        <td>滤芯 reg fdhd</td>
+                                        <td>没出水</td>
+                                        <td>2017-09-09</td>
+                                        <td>保修</td>
+                                        <td>维修中</td>
+                                        <td class="table-action">
+                                            <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>20170418-a3</td>
+                                        <td>李菲菲</td>
+                                        <td>滤芯 reg fdhd</td>
+                                        <td>没出水</td>
+                                        <td>2017-10-08</td>
+                                        <td>500</td>
+                                        <td>已维修</td>
+                                        <td class="table-action">
+                                            <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
                     </div>
                     <div class="tab-pane" id="agentCheck">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitat</p>
-                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias </p>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-success">
+                                <thead>
+                                <tr>
+                                    <th>代理商</th>
+                                    <th>手机号码</th>
+                                    <th>级别</th>
+                                    <th>推荐人</th>
+                                    <th>代理方式</th>
+                                    <th>代理商地址</th>
+                                    <th class="table-action">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>李菲菲</td>
+                                    <td>15677776845</td>
+                                    <td>经销商</td>
+                                    <td>18970008787</td>
+                                    <td>升级</td>
+                                    <td>阡陌路482号智慧E谷B栋</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>李菲C菲</td>
+                                    <td>15677776845</td>
+                                    <td>经销商</td>
+                                    <td>18970008787</td>
+                                    <td>付费</td>
+                                    <td>阡陌路482号智慧E谷B栋</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>李菲A菲</td>
+                                    <td>15677776845</td>
+                                    <td>经销商</td>
+                                    <td>18970008787</td>
+                                    <td>推荐</td>
+                                    <td>阡陌路482号智慧E谷B栋</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

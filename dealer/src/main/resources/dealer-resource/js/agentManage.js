@@ -39,7 +39,7 @@ $(function () {
                 "title": "手机号", "data": "phone"
             },
             {
-                "title": "不知道是啥", "data": "idotno"
+                "title": "团队", "data": "idotno"
             },
             {
                 "title": "销售总额", "data": "total_sales"
