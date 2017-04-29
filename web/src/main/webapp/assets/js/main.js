@@ -8,11 +8,17 @@ $(function () {
     $('.js-goBack').click(function () {
         window.history.back();
     });
+    // 面包屑导航返回
+    $('.pageheader').find('.breadcrumb').find('a').click(function () {
+        window.history.back();
+    });
+
     // 初始化 datepicker
     if( $('#datepicker').length > 0) {
         $('#datepicker').datepicker({
             format: 'yyyy-mm-dd',
-            language: 'zh-CN'
+            language: 'zh-CN',
+            endDate : new Date()
         });
     }
 

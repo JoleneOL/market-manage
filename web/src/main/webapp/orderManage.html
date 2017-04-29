@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>用户订单管理 - 代理商后台管理</title>
+    <title>用户订单 - 代理商后台管理</title>
     <link rel="stylesheet" href="assets/css/bootstrap-datepicker3.min.css">
     <link rel="stylesheet" href="assets/css/style.default.css">
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -23,12 +23,17 @@
 <body class="inner-document">
 <section>
     <div class="pageheader">
-        <h2><i class="fa fa-address-card-o"></i> 用户订单管理 <span>详细的用户订单管理中心</span></h2>
+        <h2>
+            <i class="fa fa-address-card-o"></i>
+            <ol class="breadcrumb">
+                <li class="active">用户订单</li>
+            </ol>
+        </h2>
     </div>
     <div class="contentpanel">
         <div class="row">
             <div class="col-sm-2 mb30">
-                <button type="button" class="btn btn-success btn-block btn-lg">我要下单</button>
+                <button type="button" class="btn btn-success btn-block btn-lg" id="js-buyOrder">我要下单</button>
             </div>
         </div>
         <div class="row">
@@ -103,6 +108,6 @@
 <script src="assets/js/jquery.dataTables.min.js"></script>
 <script src="assets/js/dataTables.bootstrap.min.js"></script>
 <script src="assets/js/dataTables.zh-CN.js"></script>
-<script src="assets/js/orderMangae.js"></script>
+<script src="assets/js/orderManage.js"></script>
 <script src="assets/js/main.js"></script>
 </html>

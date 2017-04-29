@@ -77,7 +77,7 @@
 
 body {
     background: #1d2939;
-    font-family: 'LatoRegular', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, sans-serif !important;
+    font-family: 'tahoma', 'arial', 'Hiragino Sans GB','微软雅黑',sans-serif;
     line-height: 21px;
     color: #636e7b;
 }
@@ -88,7 +88,7 @@ body.signin {
 }
 
 input,select,textarea {
-    font-family: 'LatoRegular', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, sans-serif !important;
+    font-family: 'LatoRegular', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, sans-serif;
     color: #636e7b;
 }
 
@@ -99,7 +99,7 @@ h1,h2,h3,h4,h5 {
 }
 
 strong {
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     font-weight: normal;
 }
 
@@ -150,7 +150,6 @@ strong {
     height: 50px;
     font-size: 22px;
     cursor: pointer;
-    float: left;
     color: #1d2939;
     border-right: 1px solid #eee;
     -moz-transition: all 0.2s ease-out 0s;
@@ -267,7 +266,7 @@ strong {
 
 .headermenu .dropdown-menu {
     border: 0;
-    margin-top: 0px;
+    margin-top: 0;
     margin-right: -1px;
     -moz-border-radius: 2px 0 2px 2px;
     -webkit-border-radius: 2px 0 2px 2px;
@@ -583,7 +582,7 @@ strong {
 }
 
 .nav-bracket > li.nav-parent > a:focus {
-    background-color: none;
+    background-color: transparent;
     color: #8F939E;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
@@ -739,7 +738,6 @@ strong {
 }
 
 .infosummary span {
-    font-size: 11px;
     line-height: normal;
     text-transform: uppercase;
     font-size: 10px;
@@ -896,7 +894,7 @@ form .form-group:last-child {
     font-size: 13px;
     text-transform: uppercase;
     color: #333;
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     margin-bottom: 15px;
     margin-top: 0;
 }
@@ -1032,7 +1030,7 @@ p {
 }
 
 .ckbox input[type="checkbox"]:checked + label::after  {
-    font-family: 'FontAwesome';
+    font-family: 'FontAwesome', sans-serif;
     content: "\F00C";
     position: absolute;
     top: 0;
@@ -1185,7 +1183,7 @@ div.error label.error {
 }
 
 div.error label.error:before {
-    font-family: 'Glyphicons Halflings';
+    font-family: 'Glyphicons Halflings', sans-serif;
     content: '\e101';
     position: absolute;
     top: -2px;
@@ -1439,7 +1437,7 @@ div.error label.error:before {
 .tinystat h4 {
     margin: 0;
     color: #333;
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     line-height: normal;
     font-size: 16px;
 }
@@ -1503,7 +1501,7 @@ div.error label.error:before {
     font-size: 13px;
     color: #333;
     margin: 0;
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     line-height: normal;
 }
 
@@ -1534,7 +1532,7 @@ div.error label.error:before {
     line-height: normal;
     margin: 0;
     color: #333;
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     font-size: 20px;
 }
 
@@ -1558,7 +1556,7 @@ div.error label.error:before {
     color: #333;
     font-size: 16px;
     margin: 0;
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     line-height: normal;
 }
 
@@ -1633,7 +1631,7 @@ div.error label.error:before {
 
 .widget-weather .temp h1 {
     font-size: 60px;
-    font-family: 'LatoLight';
+    font-family: 'LatoLight', sans-serif;
 }
 
 .widget-weather .temp h1 span {
@@ -2360,7 +2358,7 @@ div.error label.error:before {
 }
 
 .activity-list .media-title {
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     font-size: 15px;
     margin-bottom: 0;
 }
@@ -2468,7 +2466,7 @@ div.error label.error:before {
     margin: 0;
     margin-bottom: 5px;
     font-size: 16px;
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     line-height: normal;
 }
 
@@ -2499,7 +2497,7 @@ div.error label.error:before {
 }
 
 .blog-title {
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
     margin: 0;
     font-weight: normal;
 }
@@ -2511,8 +2509,7 @@ div.error label.error:before {
 .blog-meta {
     list-style: none;
     padding: 0;
-    margin: 0;
-    margin-top: 10px;
+    margin: 10px 0 0;
 }
 
 .blog-meta::after {
@@ -2575,7 +2572,7 @@ div.error label.error:before {
 
 .blog-quote .quote-author {
     display: block;
-    font-family: 'LatoRegular';
+    font-family: 'LatoRegular', sans-serif;
     opacity: 0.5;
 }
 
@@ -2639,7 +2636,7 @@ div.error label.error:before {
 }
 
 .blogsingle-title {
-    font-family: 'LatoRegular';
+    font-family: 'LatoRegular', sans-serif;
     color: #333;
     margin: 0;
 }
@@ -2878,7 +2875,6 @@ div.error label.error:before {
 
 .notfoundpanel {
     text-align: center;
-    margin-top: 10%;
     width: 600px;
     margin: 10% auto 0 auto;
 }
@@ -3020,7 +3016,6 @@ div.error label.error:before {
 }
 
 .timeline-post .form-control:focus {
-    -moz-box-shdow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
@@ -3423,8 +3418,7 @@ div.error label.error:before {
 
 .leftpanel-collapsed .nav-bracket ul a {
     text-align: left;
-    padding: 6px 10px;
-    padding-left: 0;
+    padding: 6px 10px 6px 0;
 }
 
 .leftpanel-collapsed .nav-bracket ul a:hover {
@@ -3794,8 +3788,7 @@ div.error label.error:before {
 }
 
 .media-details .media-title {
-    margin: 0;
-    margin-bottom: 10px;
+    margin: 0 0 10px 0;
     color: #333;
     font-size: 20px;
 }
@@ -3812,7 +3805,7 @@ div.error label.error:before {
     font-size: 12px;
     color: #333;
     text-transform: uppercase;
-    font-family: 'LatoBold';
+    font-family: 'LatoBold', sans-serif;
 }
 
 .media-details .table {
@@ -3875,8 +3868,7 @@ div.error label.error:before {
 }
 
 .bug-key-title {
-    margin: 0;
-    margin-bottom: 5px;
+    margin: 0 0 5px 0;
 }
 
 
@@ -4082,7 +4074,7 @@ div.error label.error:before {
 }
 
 .serif {
-    font-family: 'Georgia, serif';
+    font-family: 'Georgia, serif', sans-serif;
 }
 
 .italic {

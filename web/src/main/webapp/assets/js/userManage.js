@@ -29,7 +29,7 @@ $(function () {
                 "title": "推荐人数", "data": "recommend"
             },
             {
-                "title": "入会时间", "data": "join_time"
+                "title": "入会时间", "data": "joinTime"
             },
             {
                 "title": "省", "data": "province"
@@ -54,8 +54,7 @@ $(function () {
                 }
             }
         ],
-        "lengthMenu": [10, 15, 20],
-        "displayLength": 10,
+        "displayLength": 15,
         "drawCallback": function () {
             clearSearchValue();
         }

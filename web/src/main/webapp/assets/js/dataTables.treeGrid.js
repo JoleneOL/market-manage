@@ -147,7 +147,7 @@
                         var left = (layer + 1) * sLeft;
                         $(node).attr('parent-index', index);
                         treegridTd.find('span').css('marginLeft', left + 'px');
-                        treegridTd.next().css('paddingLeft', paddingLeft + left + 'px');
+                        treegridTd.siblings().not('.table-action').css('paddingLeft', paddingLeft + left + 'px');
                         $(node).insertAfter(prevRow);
                         prevRow = node;
                         subRows.push(node);

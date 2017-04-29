@@ -19,13 +19,10 @@ $(function () {
         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "columns": [
             {
-                "title": "#", "data": "id"
+                "title": "订单号", "data": "orderId"
             },
             {
-                "title": "订单号", "data": "order_id"
-            },
-            {
-                "title": "购买用户", "data": "order_user"
+                "title": "购买用户", "data": "orderUser"
             },
             {
                 "title": "手机号", "data": "phone"
@@ -55,18 +52,20 @@ $(function () {
                 "title": "状态", "data": "status"
             },
             {
-                "title": "下单时间", "data": "order_time"
+                "title": "下单时间", "data": "orderTime"
             },
             {
                 title: "操作",
                 className: 'table-action',
-                data: function () {
-                    return '<a href="javascript:;" class="js-checkUser"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                data: function (item) {
+                    var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                    var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;修改</a>';
+                    if (item.statusCode === 0) return a + b;
+                    return a;
                 }
             }
         ],
-        "lengthMenu": [10, 15, 20],
-        "displayLength": 10,
+        "displayLength": 15,
         "drawCallback": function () {
             clearSearchValue();
         }
@@ -76,13 +75,13 @@ $(function () {
     $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止
         table.ajax.reload();
-    }).on('click', '.js-checkUser', function () {
+    }).on('click', '.js-checkOrder', function () {
         // TODO
         // 需要获取一些参数供详情跳转
+        $('#content', parent.document).attr('src', 'orderDetail.html');
     });
     $('.js-orderStatus').find('a').click(function () {
-        var status = $(this).attr('data-status');
-        console.log(status);
+        table.ajax.reload();
     });
     // 添加额外的参数
     function extendData() {
@@ -96,11 +95,16 @@ $(function () {
             var v = t.val();
             if (v) data[n] = v;
         });
-        console.log(data);
+        // 获取当前tab
+        data['status'] = $('.js-orderStatus').find('.active').find('a').attr('data-status');
         return data;
     }
 
     function clearSearchValue() {
         //TODO
     }
+
+    $('#js-buyOrder').click(function () {
+        $('#content', parent.document).attr('src', 'orderPlace.html');
+    });
 });

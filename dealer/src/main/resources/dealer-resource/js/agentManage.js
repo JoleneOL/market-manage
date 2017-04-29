@@ -39,16 +39,13 @@ $(function () {
                 "title": "手机号", "data": "phone"
             },
             {
-                "title": "团队", "data": "idotno"
-            },
-            {
-                "title": "销售总额", "data": "total_sales"
+                "title": "所佣下属", "data": "subordinate"
             },
             {
                 title: "操作",
                 className: 'table-action',
-                data: function () {
-                    return '<a href="javascript:;" class="js-checkUser"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                data: function (item) {
+                    return '<a href="javascript:;" class="js-checkUser" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
                 }
             }
         ],
@@ -57,8 +54,7 @@ $(function () {
             "expandIcon": '<span><i class="fa fa-chevron-right" aria-hidden="true"></i></span>',
             "collapseIcon": '<span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>'
         },
-        "lengthMenu": [10, 15, 20],
-        "displayLength": 10,
+        "displayLength": 15,
         "drawCallback": function () {
             clearSearchValue();
         }

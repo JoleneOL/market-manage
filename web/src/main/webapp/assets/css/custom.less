@@ -1,4 +1,4 @@
-//@brand-success:#009bb6;
+@brand-success:#009bb6;
 //@btn-success-color: #fff;
 //@btn-success-bg: @brand-success;
 //@btn-success-border: darken(@btn-success-bg, 5%);
@@ -188,6 +188,23 @@ fieldset[disabled] .btn-success.focus {
     h2 {
       font-size: 12px;
     }
+    .breadcrumb {
+      margin-bottom: 0;
+      a {
+        color: @brand-success;
+        &:hover {
+          color: darken(@brand-success, 12%);
+        }
+      }
+      .active {
+        font-size: 12px;
+        text-transform: none;
+        color: #999;
+        font-style: italic;
+        vertical-align: middle;
+        letter-spacing: 0;
+      }
+    }
   }
   .panel-heading {
     color: #fff;
@@ -280,10 +297,85 @@ select.input-sm {
   border-color: #009bb6;
   background-color: #009bb6;
 }
-
 input[type=radio], input[type=checkbox] {
   margin: 2px 0 0;
 }
-.col-sm-25 {
-  width: 40%;
+// 物流信息
+.panel-package {
+
+  .package-title {
+    margin: 0;
+    padding: 0 0 14px 20px;
+    position: relative;
+    font-size: 18px;
+    border-bottom: 1px solid #e7e7e7;
+    font-family: "Hiragino Sans GB","Microsoft YaHei", sans-serif;
+    .title-text {
+      margin: 0;
+      font-weight: 400;
+      font-family: "Microsoft Yahei", sans-serif;
+      font-size: 16px;
+    }
+  }
+  .package-status {
+    padding: 18px 0 0 0;
+    .status-box {
+      position: relative;
+      overflow: hidden;
+    }
+    .status-list {
+      margin-left: 12px;
+      padding-left: 10px;
+      list-style: none;
+      font-size: 12px;
+      li {
+        height: auto;
+        min-height: 30px;
+        border-left: 1px solid #d9d9d9;
+        &::before {
+          content: '';
+          border: 3px solid #f3f3f3;
+          background-color: #d9d9d9;
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          border-radius: 5px;
+          margin-left: -6px;
+          margin-right: 10px;
+          box-sizing: content-box;
+        }
+      }
+      .latest {
+        border: none;
+        &::before {
+          margin-left: -5px;
+          background-color: @brand-success;
+          border-color: lightblue;
+        }
+      }
+      .data, .week, .time, .text {
+        display: inline-block;
+      }
+      .data {
+        width: 78px;
+        font-weight: 700;
+        margin-right: 8px;
+        font-family: Arial, sans-serif;
+      }
+      .week {
+        width: 32px;
+        font-weight: 700;
+      }
+      .time {
+        width: 48px;
+        margin-right: 28px;
+        margin-left: 5px;
+      }
+      .text {
+        display: inline-block;
+        vertical-align: text-top;
+        line-height: 1.3em;
+      }
+    }
+  }
 }
