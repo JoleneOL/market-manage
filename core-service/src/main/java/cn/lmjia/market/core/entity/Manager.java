@@ -39,4 +39,9 @@ public class Manager extends Login {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
     }
+
+    @Override
+    public boolean isManageable() {
+        return true;
+    }
 }

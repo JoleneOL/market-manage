@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -11,6 +11,20 @@
     <title>登录 - 代理商后台管理</title>
     <link rel="stylesheet" href="http://resali.huobanplus.com/cdn/bracket/css/style.default.css">
     <link rel="stylesheet" href="./assets/css/custom.css">
+    <style>
+        .msgDiv {
+            display: none;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            color: #FFFFFF;
+            height: 60px;
+            line-height: 60px;
+            float: right;
+            padding: 0 10px;
+            margin: 10px 10px 0 0;
+        }
+    </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="http://resali.huobanplus.com/cdn/bracket/js/html5shiv.js"></script>
@@ -36,12 +50,12 @@
             </div>
 
             <div class="col-md-5">
-                <form method="post" action="/">
+                <form method="get" action="main.html" th:action="@{/passwordAuth}" th:method="post">
                     <h4 class="nomargin">登录</h4>
                     <p class="mt5 mb20">所有操作都需要登录才可以继续.</p>
-                    <input type="text" class="form-control uname" placeholder="账号" />
-                    <input type="password" class="form-control pword" placeholder="密码" />
-                    <button type="button" class="btn btn-success btn-block">登录</button>
+                    <input type="text" class="form-control uname" name="username" placeholder="账号"/>
+                    <input type="password" class="form-control pword" name="password" placeholder="密码"/>
+                    <button type="submit" class="btn btn-success btn-block">登录</button>
                 </form>
             </div>
         </div>
@@ -52,5 +66,29 @@
         </div>
     </div>
 </section>
+<p th:remove="all">
+    <br/>
+    可以使用<a href="login.html?type=error">链接</a>预览密码错误的场景
+</p>
+<div style="width: 200px; float: right">
+    <div id="loginError" class="msgDiv"
+         style="background-color:indianred ;">
+        用户名或者密码错误
+    </div>
+</div>
+<script src="//cdn.lmjia.cn/jquery-3.1.1.min.js"></script>
+<script>
+    var time;
+    function hideDiv() {
+        $('#loginError').animate({opacity: '0'}).hide(1000);
+        window.clearTimeout(time);
+    }
+    if (window.document.location.search.indexOf('type=error') >= 0) {
+        $('#loginError')
+            .animate({opacity: '1'})
+            .show();
+        time = setTimeout("hideDiv();", 3000);//使用字符串执行方法
+    }
+</script>
 </body>
 </html>

@@ -66,4 +66,8 @@ public class Login implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+    public boolean isManageable() {
+        return false;
+    }
 }

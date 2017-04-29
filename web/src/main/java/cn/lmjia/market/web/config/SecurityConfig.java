@@ -5,7 +5,6 @@ import cn.lmjia.market.core.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,8 +37,12 @@ class SecurityConfig {
     @Order(99)//毕竟不是老大 100就让给别人了
     public static class Security extends WebSecurityConfigurerAdapter {
 
+        private final MVCConfig mvcConfig;
+
         @Autowired
-        private MVCConfig mvcConfig;
+        public Security(MVCConfig mvcConfig) {
+            this.mvcConfig = mvcConfig;
+        }
 
         @Override
         public void configure(WebSecurity web) throws Exception {
@@ -71,7 +74,7 @@ class SecurityConfig {
 
             registry
                     // 首页允许访问
-                    .antMatchers("/").permitAll()
+//                    .antMatchers("/").permitAll()
                     // 短链不保护
                     .antMatchers("/t/**").permitAll()
                     // API 不经过安全机制
@@ -97,11 +100,11 @@ class SecurityConfig {
                     .formLogin()
 //                .failureHandler()
                     .loginProcessingUrl("/passwordAuth")
-                    .loginPage("/manage/login")
-                    .failureUrl("/manage/login?type=error")
+                    .loginPage("/toLogin")
+                    .failureUrl("/toLogin?type=error")
                     .permitAll()
                     .and()
-                    .logout().logoutUrl("/manage/logout").permitAll()
+                    .logout().logoutUrl("/logout").permitAll()
 //                    .logoutSuccessUrl("/justLogout").permitAll()
             ;
         }
