@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.Collection;
 
 /**
@@ -24,6 +26,7 @@ import java.util.Collection;
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "loginName")})
 public class Login implements UserDetails {
 
     @Id
