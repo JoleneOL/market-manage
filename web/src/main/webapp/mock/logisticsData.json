@@ -1,0 +1,73 @@
+{
+  "draw": 1,
+  "recordsTotal": 23,
+  "recordsFiltered": 23,
+  "data": [
+    {
+      "id": "1",
+      "type": "滤芯 滤芯1",
+      "code": "189348484848",
+      "orderTime": "2017-09-09",
+      "address": "阡陌路482号智慧E谷B栋",
+      "user": "李菲菲",
+      "phone": 18945454545,
+      "deliveryTime": "",
+      "state": "未发货"
+    },
+    {
+      "id": "2",
+      "type": "滤芯 滤芯2",
+      "code": "189348484848",
+      "orderTime": "2017-09-09",
+      "address": "阡陌路482号智慧E谷B栋",
+      "user": "李菲菲",
+      "phone": 18945454545,
+      "deliveryTime": "2017-09-20",
+      "state": "待收货"
+    },
+    {
+      "id": "3",
+      "type": "滤芯 滤芯3",
+      "code": "189348484848",
+      "orderTime": "2017-09-09",
+      "address": "阡陌路482号智慧E谷B栋",
+      "user": "李菲菲",
+      "phone": 18945454545,
+      "deliveryTime": "2017-09-20",
+      "state": "待收货"
+    },
+    {
+      "id": "4",
+      "type": "滤芯 滤芯4",
+      "code": "189348484848",
+      "orderTime": "2017-09-09",
+      "address": "阡陌路482号智慧E谷B栋",
+      "user": "李菲菲",
+      "phone": 18945454545,
+      "deliveryTime": "2017-09-20",
+      "state": "已收货"
+    },
+    {
+      "id": "5",
+      "type": "滤芯 滤芯5",
+      "code": "189348484848",
+      "orderTime": "2017-09-09",
+      "address": "阡陌路482号智慧E谷B栋",
+      "user": "李菲菲",
+      "phone": 18945454545,
+      "deliveryTime": "2017-09-20",
+      "state": "已收货"
+    },
+    {
+      "id": "6",
+      "type": "滤芯 滤芯6",
+      "code": "189348484848",
+      "orderTime": "2017-09-09",
+      "address": "阡陌路482号智慧E谷B栋",
+      "user": "李菲菲",
+      "phone": 18945454545,
+      "deliveryTime": "2017-09-20",
+      "state": "已收货"
+    }
+  ]
+}
