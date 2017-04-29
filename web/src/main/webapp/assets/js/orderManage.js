@@ -79,6 +79,10 @@ $(function () {
         // TODO
         // 需要获取一些参数供详情跳转
         $('#content', parent.document).attr('src', 'orderDetail.html');
+    }).on('click', '.js-modifyOrder', function () {
+        // TODO
+        // 需要获取一些参数供详情跳转
+        $('#content', parent.document).attr('src', 'orderModify.html');
     });
     $('.js-orderStatus').find('a').click(function () {
         table.ajax.reload();
