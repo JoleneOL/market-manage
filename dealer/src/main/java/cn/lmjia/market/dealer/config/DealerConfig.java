@@ -42,7 +42,7 @@ public class DealerConfig extends WebMvcConfigurerAdapter implements WebModule {
     }
 
     @Configuration
-    @ComponentScan("cn.lmjia.market.dealer.mvc")
+    @ComponentScan({"cn.lmjia.market.dealer.mvc", "cn.lmjia.market.dealer.service"})
     @EnableJpaRepositories("cn.lmjia.market.dealer.repository")
     static class First {
     }

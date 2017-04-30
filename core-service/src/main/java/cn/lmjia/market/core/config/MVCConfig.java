@@ -281,6 +281,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 resolver.setCharacterEncoding(UTF8);
                 resolver.setApplicationContext(applicationContext);
                 resolver.setTemplateMode(TemplateMode.HTML);
+                resolver.setOrder(1);
                 return resolver;
             }
 
@@ -291,6 +292,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                         .map(webModule -> {
                             SpringResourceTemplateResolver resolver = createHtmlTemplateResolver();
                             webModule.templateResolver(resolver);
+                            resolver.setOrder(2);
                             return (ITemplateResolver) resolver;
                         })
                         .collect(Collectors.toSet());
