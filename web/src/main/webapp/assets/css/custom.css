@@ -114,7 +114,7 @@ fieldset[disabled] .btn-success.focus {
   background-color: #009bb6;
 }
 .leftpanelinner {
-  padding-top: 10px;
+  padding-top: 0;
 }
 .leftpanelinner .divider {
   height: 1px;
