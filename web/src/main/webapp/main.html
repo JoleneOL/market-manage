@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="main-html">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="title" type="java.lang.String"*/-->
+<!--/*@thymesVar id="loginAs" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -28,10 +30,11 @@
             <h1><img class="logo" src="assets/images/logo.png" alt="LMJ利每家"></h1>
         </div>
         <div class="panel-logo-title">
-            <h3><span>&#91;&nbsp;</span>经销商后台<span>&nbsp;&#93;</span></h3>
+            <h3><span>&#91;&nbsp;</span>
+                <b th:text="${title}">经销商后台</b><span>&nbsp;&#93;</span></h3>
             <!--<h3><span>&#91;&nbsp;</span>区分代理后台<span>&nbsp;&#93;</span></h3>-->
             <!--<h3><span>&#91;&nbsp;</span>区总代理后台<span>&nbsp;&#93;</span></h3>-->
-            <p>徐春风 早上好</p>
+            <p><b th:text="${#authentication.name}">徐春风</b> 早上好</p>
         </div>
         <div class="leftpanelinner">
             <ul class="nav nav-pills nav-stacked nav-bracket js-navActive">
@@ -76,7 +79,8 @@
             <div class="header-right">
                 <ul class="headermenu">
                     <li class="user-info">
-                        <p>你好，<span>徐粗放</span><i>【超级管理员】</i></p>
+                        <p>你好，<span th:text="${#authentication.name}">徐粗放</span><i>【
+                            <span th:text="${loginAs}">超级管理员</span>】</i></p>
                     </li>
                     <li>
                         <div class="btn-group">

@@ -44,4 +44,9 @@ public class Manager extends Login {
     public boolean isManageable() {
         return true;
     }
+
+    @Override
+    public String getLoginTitle() {
+        return level.title();
+    }
 }

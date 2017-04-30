@@ -84,4 +84,11 @@ public class Login implements UserDetails {
     public boolean isManageable() {
         return false;
     }
+
+    /**
+     * @return 登录身份的头衔
+     */
+    public String getLoginTitle() {
+        return "一般";
+    }
 }
