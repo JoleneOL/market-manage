@@ -341,6 +341,9 @@ input[type=checkbox] {
   margin: 10px 10px 0 0;
   background-color: indianred;
 }
+.leftpanel-collapsed .panel-logo-title {
+  display: none;
+}
 .panel-logo-title {
   padding-top: 10px;
   font-size: 30px;

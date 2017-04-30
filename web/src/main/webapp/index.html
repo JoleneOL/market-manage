@@ -68,26 +68,35 @@
         </div>
         <div class="row">
             <div class="col-md-9">
-                <div class="panel panel-dark panel-alt">
-                    <div class="panel-heading">
-                        <div class="panel-btns">
-                            <a href="javascript:;" class="minimize">−</a>
-                        </div>
-                        <h5 class="panel-title">消息中心</h5>
-                    </div>
-                    <div class="panel-body panel-table">
+                <ul class="nav nav-tabs nav-dark">
+                    <li class="active">
+                        <a href="#allMsg" data-toggle="tab">
+                            <strong>全部消息</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderMsg" data-toggle="tab">
+                            <strong>订单消息</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#refundMsg" data-toggle="tab">
+                            <strong>退款消息</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#repairMsg" data-toggle="tab">
+                            <strong>维修消息</strong>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="allMsg">
                         <div class="table-responsive">
                             <table class="table">
-                                <thead>
-                                <tr class="table-head-alt">
-                                    <th>时间</th>
-                                    <th>消息</th>
-                                    <th class="table-action">操作</th>
-                                </tr>
-                                </thead>
                                 <tbody>
                                 <tr>
-                                    <td>2017-12-31</td>
+                                    <td width="120px">2017-12-31</td>
                                     <td>您增加了一位经销商 节菲菲经销商推荐了小菲菲成为经销商</td>
                                     <td class="table-action">
                                         <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
@@ -110,6 +119,128 @@
                                 <tr>
                                     <td>2017-12-31</td>
                                     <td>经销商节菲菲发起了一笔退货</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="orderMsg">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">2017-12-31</td>
+                                    <td>您的订单号56788已派单</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的订单号56788订单发货</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的订单号56788订单已收货</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的订单号56788订单已安装</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="refundMsg">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">2017-12-31</td>
+                                    <td>您的客户节菲菲发起一笔退款，请及时处理</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您客户哈哈哈的退款已到账，请及时确认</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的客户呵嘿U好发起一笔退款，请及时处理</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的客户飞萨芬发起一笔退款，请及时处理</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="repairMsg">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">2017-12-31</td>
+                                    <td>您的客户休息休息发起维修请求，请及时处理</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的客户节菲菲发起的维修已完成</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的客户休息休息发起维修请求，请及时处理</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的客户休息休息发起维修请求，请及时处理</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的客户休息休息发起维修请求，请及时处理</td>
+                                    <td class="table-action">
+                                        <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2017-12-31</td>
+                                    <td>您的客户休息休息发起维修请求，请及时处理</td>
                                     <td class="table-action">
                                         <a href="javascript:;"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>
                                     </td>
