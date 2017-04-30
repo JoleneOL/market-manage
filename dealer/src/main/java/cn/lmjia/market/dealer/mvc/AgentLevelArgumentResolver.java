@@ -1,9 +1,8 @@
 package cn.lmjia.market.dealer.mvc;
 
+import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.dealer.entity.Agent;
-import cn.lmjia.market.dealer.entity.GeneralAgent;
-import cn.lmjia.market.dealer.entity.SubAgent;
+import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.dealer.repository.AgentRepository;
 import cn.lmjia.market.dealer.repository.GeneralAgentRepository;
 import cn.lmjia.market.dealer.repository.SubAgentRepository;
@@ -32,6 +31,8 @@ public class AgentLevelArgumentResolver implements HandlerMethodArgumentResolver
     private SubAgentRepository subAgentRepository;
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private AgentLevelRepository agentLevelRepository;
 
     /**
      * Obtains the specified {@link Annotation} on the specified {@link MethodParameter}.
@@ -73,15 +74,17 @@ public class AgentLevelArgumentResolver implements HandlerMethodArgumentResolver
         Object principal = authentication.getPrincipal();
         if (principal != null && principal instanceof Login) {
             final Login login = (Login) principal;
-            GeneralAgent generalAgent = generalAgentRepository.findByLogin(login);
-            if (generalAgent != null)
-                return generalAgent;
-            SubAgent subAgent = subAgentRepository.findByLogin(login);
-            if (subAgent != null)
-                return subAgent;
-            Agent agent = agentRepository.findByLogin(login);
-            if (agent != null)
-                return agent;
+            AgentLevel agentLevel = agentLevelRepository.findByLogin(login).stream()
+                    .findAny().orElse(null);
+            if (agentLevel != null && findMethodAnnotation(HighestAgent.class, parameter) != null) {
+                // 最高级别的
+                AgentLevel current = agentLevel;
+                while (current.getSuperior() != null && current.getSuperior().getLogin().equals(login)) {
+                    current = current.getSuperior();
+                }
+                return current;
+            }
+            return agentLevel;
         }
         return null;
     }

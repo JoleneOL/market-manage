@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * 表明这是一个可登录的法人或者自然人
@@ -41,6 +42,19 @@ public class Login implements UserDetails {
      */
     @ManyToOne
     private Login guideUser;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Login)) return false;
+        Login login = (Login) o;
+        return Objects.equals(loginName, login.loginName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(loginName);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

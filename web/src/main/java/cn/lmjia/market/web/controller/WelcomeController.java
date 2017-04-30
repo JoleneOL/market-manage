@@ -19,7 +19,7 @@ public class WelcomeController {
         // 如果当前登录者是管理员 或者是代理体系内的一般代理则都给予引导至管理页
         if (login.isManageable() || agentLevel != null)
             return "main.html";
-        return "help";
+        throw new IllegalStateException("不知道引到至何处。");
     }
 
 }

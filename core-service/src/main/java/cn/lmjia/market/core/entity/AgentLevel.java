@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 /**
@@ -21,7 +22,7 @@ import javax.persistence.OneToOne;
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AgentLevel {
+public class AgentLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +31,14 @@ public abstract class AgentLevel {
      */
     @OneToOne
     private Login login;
+    /**
+     * 等级说明
+     */
     @Column(length = 20)
     private String rank;
+    /**
+     * 上级;作为最顶级的代理商它的superior是null
+     */
+    @ManyToOne
+    private AgentLevel superior;
 }
