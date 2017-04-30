@@ -43,8 +43,10 @@
             <div class="col-md-12 mb10">
                 <div class="form-inline">
                     <div class="js-selectToolbar">
-                        <input type="search" class="form-control input-sm js-orderId" placeholder="订单编号" name="orderId" aria-controls="orderTable">
-                        <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号" name="phone" aria-controls="orderTable">
+                        <input type="search" class="form-control input-sm js-orderId" placeholder="订单编号" name="orderId"
+                               aria-controls="orderTable">
+                        <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号" name="phone"
+                               aria-controls="orderTable">
                         <label>
                             <select class="form-control input-sm js-searchRank" name="agentRank">
                                 <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
@@ -55,7 +57,8 @@
                             </select>
                         </label>
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control hasDatepicker js-js-orderDate" placeholder="下单日期" id="datepicker" name="orderDate" aria-controls="orderTable">
+                            <input type="text" class="form-control hasDatepicker js-orderDate" placeholder="下单日期"
+                                   id="datepicker" name="orderDate" aria-controls="orderTable">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
                         <button type="button" class="btn btn-success btn-xs js-search">查询</button>
@@ -95,7 +98,8 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="orderDatagrid">
                         <div class="table-responsive">
-                            <table id="orderTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+                            <table id="orderTable" class="table table-hover table-success" cellspacing="0"
+                                   width="100%"></table>
                         </div>
                     </div>
                 </div>

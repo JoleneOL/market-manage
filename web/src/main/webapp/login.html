@@ -12,23 +12,10 @@
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/animate.css/3.5.2/animate.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
     <link rel="stylesheet" href="assets/css/custom.css">
-    <style>
-        .msgDiv {
-            display: none;
-            filter: alpha(opacity=50);
-            -moz-opacity: 0.5;
-            opacity: 0.5;
-            color: #FFFFFF;
-            height: 60px;
-            line-height: 60px;
-            float: right;
-            padding: 0 10px;
-            margin: 10px 10px 0 0;
-        }
-    </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -52,7 +39,6 @@
                     <h5><strong>欢迎登录!</strong></h5>
                 </div>
             </div>
-
             <div class="col-md-5">
                 <form method="get" action="main.html" th:action="@{/passwordAuth}" th:method="post">
                     <h4 class="nomargin">登录</h4>
@@ -74,24 +60,17 @@
     <br/>
     可以使用<a href="login.html?type=error">链接</a>预览密码错误的场景
 </p>
-<div style="width: 200px; float: right">
-    <div id="loginError" class="msgDiv"
-         style="background-color:indianred ;">
-        用户名或者密码错误
-    </div>
-</div>
+<div id="loginError" class="msgDiv">用户名或者密码错误</div>
 <script src="//cdn.lmjia.cn/jquery-3.1.1.min.js"></script>
 <script>
     var time;
     function hideDiv() {
-        $('#loginError').animate({opacity: '0'}).hide(1000);
+        $('#loginError').addClass('animated fadeOutDown');
         window.clearTimeout(time);
     }
     if (window.document.location.search.indexOf('type=error') >= 0) {
-        $('#loginError')
-            .animate({opacity: '1'})
-            .show();
-        time = setTimeout("hideDiv();", 3000);//使用字符串执行方法
+        $('#loginError').show().addClass('animated fadeInUp');
+        time = setTimeout("hideDiv();", 3000);
     }
 </script>
 </body>

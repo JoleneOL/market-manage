@@ -27,7 +27,7 @@
 <section>
     <div class="pageheader">
         <h2>
-            <i class="fa fa-address-card-o"></i>
+            <i class="fa fa-truck"></i>
             <ol class="breadcrumb">
                 <li class="active">物流管理</li>
             </ol>
@@ -38,9 +38,11 @@
             <div class="col-md-12 mb10">
                 <div class="form-inline">
                     <div class="js-selectToolbar">
-                        <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号" name="phone" aria-controls="orderTable">
+                        <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号" name="phone"
+                               aria-controls="logisticsTable">
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control hasDatepicker js-js-orderDate" placeholder="订单日期" id="datepicker" name="orderDate" aria-controls="orderTable">
+                            <input type="text" class="form-control hasDatepicker js-orderDate" placeholder="订单时间"
+                                   id="datepicker" name="orderDate" aria-controls="logisticsTable">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
                         <button type="button" class="btn btn-success btn-xs js-search">查询</button>
@@ -75,7 +77,8 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="logisticsDatagrid">
                         <div class="table-responsive">
-                            <table id="logisticsTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+                            <table id="logisticsTable" class="table table-hover table-success" cellspacing="0"
+                                   width="100%"></table>
                         </div>
                     </div>
                 </div>
