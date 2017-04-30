@@ -27,6 +27,12 @@ html, body, .main-wrapper, .mainpanel {
   height: calc(~"100% - 50px");
   overflow: hidden;
 }
+a {
+  color: @brand-success;
+  &:hover {
+    color: darken(@brand-success, 12%);
+  }
+}
 a:hover, a:focus {
   text-decoration: none;
 }
@@ -431,5 +437,35 @@ input[type=radio], input[type=checkbox] {
     padding-top: 15px;
     padding-bottom: 15px;
     color: #636e7b;
+  }
+}
+//commission
+.panel-commission {
+  .panel-heading {
+    min-height: 162px;
+    color: #000;
+    h4 {
+      color: #636e7b;
+      text-align: left;
+    }
+    h2 {
+      text-align: left;
+      font-weight: 700;
+      font-size: 30px;
+    }
+  }
+  .text-right {
+    h4 {
+      text-align: right;
+    }
+  }
+}
+.tab-commission {
+  h5 {
+    span {
+      font-weight: 700;
+      font-size: 18px;
+      color: #000;
+    }
   }
 }
