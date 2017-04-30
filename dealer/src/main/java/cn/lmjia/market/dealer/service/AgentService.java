@@ -2,6 +2,8 @@ package cn.lmjia.market.dealer.service;
 
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -72,5 +74,21 @@ public interface AgentService {
         }
     }
 
+    /**
+     * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
+     *
+     * @param login    当前身份
+     * @param pageable 分页
+     * @return login可以管理的相关代理
+     */
+    @Transactional(readOnly = true)
+    Page<AgentLevel> manageable(Login login, Pageable pageable);
 
+
+    /**
+     * @param login 特定身份
+     * @return 最高可表达的代理商
+     */
+    @Transactional(readOnly = true)
+    AgentLevel highestAgent(Login login);
 }

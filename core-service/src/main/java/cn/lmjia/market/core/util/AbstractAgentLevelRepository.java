@@ -21,4 +21,6 @@ public interface AbstractAgentLevelRepository<T extends AgentLevel>
      */
     List<T> findByLogin(Login login);
 
+    List<T> findBySuperior(AgentLevel agentLevel);
+
 }

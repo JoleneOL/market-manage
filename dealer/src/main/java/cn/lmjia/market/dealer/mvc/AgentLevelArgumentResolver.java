@@ -1,11 +1,11 @@
 package cn.lmjia.market.dealer.mvc;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.dealer.repository.AgentRepository;
 import cn.lmjia.market.dealer.repository.GeneralAgentRepository;
 import cn.lmjia.market.dealer.repository.SubAgentRepository;
+import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -33,6 +33,8 @@ public class AgentLevelArgumentResolver implements HandlerMethodArgumentResolver
     private AgentRepository agentRepository;
     @Autowired
     private AgentLevelRepository agentLevelRepository;
+    @Autowired
+    private AgentService agentService;
 
     /**
      * Obtains the specified {@link Annotation} on the specified {@link MethodParameter}.
@@ -74,17 +76,19 @@ public class AgentLevelArgumentResolver implements HandlerMethodArgumentResolver
         Object principal = authentication.getPrincipal();
         if (principal != null && principal instanceof Login) {
             final Login login = (Login) principal;
-            AgentLevel agentLevel = agentLevelRepository.findByLogin(login).stream()
-                    .findAny().orElse(null);
-            if (agentLevel != null && findMethodAnnotation(HighestAgent.class, parameter) != null) {
-                // 最高级别的
-                AgentLevel current = agentLevel;
-                while (current.getSuperior() != null && current.getSuperior().getLogin().equals(login)) {
-                    current = current.getSuperior();
-                }
-                return current;
-            }
-            return agentLevel;
+            if (findMethodAnnotation(HighestAgent.class, parameter) != null)
+                return agentService.highestAgent(login);
+//            AgentLevel agentLevel = agentLevelRepository.findByLogin(login).stream()
+//                    .findAny().orElse(null);
+//            if (agentLevel != null && findMethodAnnotation(HighestAgent.class, parameter) != null) {
+//                // 最高级别的
+//                AgentLevel current = agentLevel;
+//                while (current.getSuperior() != null && current.getSuperior().getLogin().equals(login)) {
+//                    current = current.getSuperior();
+//                }
+//                return current;
+//            }
+//            return agentLevel;
         }
         return null;
     }
