@@ -363,3 +363,8 @@ input[type=checkbox] {
   margin: 0;
   font-size: 14px;
 }
+.tp-icon a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  color: #636e7b;
+}
