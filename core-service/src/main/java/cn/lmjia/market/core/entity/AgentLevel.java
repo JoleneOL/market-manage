@@ -2,6 +2,7 @@ package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.selection.FunctionSelection;
 import cn.lmjia.market.core.selection.Selection;
+import cn.lmjia.market.core.service.ReadService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +35,7 @@ public class AgentLevel {
     /**
      * 它都一个登录与之对应，但是可能会有一个登录对应多个代理体系成员
      */
-    @OneToOne
+    @ManyToOne
     private Login login;
     /**
      * 等级说明
@@ -50,11 +50,11 @@ public class AgentLevel {
     @OneToMany(mappedBy = "superior")
     private List<AgentLevel> subAgents;
 
-    public static List<Selection<AgentLevel>> ManageSelections() {
+    public static List<Selection<AgentLevel>> ManageSelections(ReadService readService) {
         return Arrays.asList(
                 new FunctionSelection<>("rank", AgentLevel::getRank)
-                , new FunctionSelection<>("name", level -> level.getLogin().getLoginName())
-                , new FunctionSelection<>("phone", level -> level.getLogin().getLoginName())
+                , new FunctionSelection<>("name", level -> readService.nameForPrincipal(level.getLogin()))
+                , new FunctionSelection<>("phone", level -> readService.mobileFor(level.getLogin()))
                 , new FunctionSelection<AgentLevel>("subordinate", level -> "???")
                 // 如何实现循环调用？
                 , new Selection<AgentLevel>() {

@@ -7,13 +7,15 @@ import cn.lmjia.market.core.service.LoginService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Collection;
 import java.util.concurrent.Callable;
 
 /**
@@ -49,7 +51,42 @@ public abstract class CoreServiceTest extends SpringWebTest {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         try {
             SecurityContextImpl securityContext1 = new SecurityContextImpl();
-            securityContext1.setAuthentication(new PreAuthenticatedAuthenticationToken(login, login));
+            securityContext1.setAuthentication(new Authentication() {
+                @Override
+                public Collection<? extends GrantedAuthority> getAuthorities() {
+                    return login.getAuthorities();
+                }
+
+                @Override
+                public Object getCredentials() {
+                    return login;
+                }
+
+                @Override
+                public Object getDetails() {
+                    return login;
+                }
+
+                @Override
+                public Object getPrincipal() {
+                    return login;
+                }
+
+                @Override
+                public boolean isAuthenticated() {
+                    return true;
+                }
+
+                @Override
+                public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+                }
+
+                @Override
+                public String getName() {
+                    return login.getLoginName();
+                }
+            });
             SecurityContextHolder.setContext(securityContext1);
             callable.call();
         } finally {

@@ -2,6 +2,7 @@ package cn.lmjia.market.dealer;
 
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.dealer.config.DealerConfig;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lnjia.market.core.CoreServiceTest;
@@ -20,6 +21,8 @@ public abstract class DealerServiceTest extends CoreServiceTest {
 
     @Autowired
     protected AgentService agentService;
+    @Autowired
+    private ContactWayService contactWayService;
 
     /**
      * 新增并且保存一个随机的顶级代理商
@@ -42,6 +45,10 @@ public abstract class DealerServiceTest extends CoreServiceTest {
         Login login = new Login();
         login.setLoginName(randomMobile());
         login = loginService.password(login, rawPassword);
+        if (random.nextBoolean()) {
+            contactWayService.updateMobile(login, randomMobile());
+            contactWayService.updateName(login, "新名字" + RandomStringUtils.randomAlphabetic(6));
+        }
         agentService.addAgent(login, "随机代理" + RandomStringUtils.randomAlphabetic(4), superior);
         return login;
     }

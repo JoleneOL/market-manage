@@ -4,11 +4,13 @@ import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.dealer.service.AgentService;
+import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 
@@ -56,10 +58,26 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public Page<AgentLevel> manageable(Login login, Pageable pageable) {
+    public Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable) {
+        final Specification<AgentLevel> nameSpecification;
+        if (StringUtils.isEmpty(agentName)) {
+            nameSpecification = null;
+        } else {
+            nameSpecification = (root, query, cb) -> {
+                String name = "%" + agentName + "%";
+//                Path<ContactWay> contactWayPath = cb.treat(root.get("login").get("contactWay"), ContactWay.class);
+                return cb.or(
+                        cb.like(root.get("login").get("loginName"), name),
+                        cb.like(root.get("rank"), name)
+//                        cb.like(contactWayPath.get("name"), name),
+//                        cb.like(contactWayPath.get("mobile"), name)
+                );
+            };
+        }
         if (login.isManageable())
-            return agentLevelRepository.findAll((root, query, cb) -> cb.isNull(root.get("superior")), pageable);
-        return agentLevelRepository.findAll(s(highestAgent(login)), pageable);
+            return agentLevelRepository.findAll(new AndSpecification<>((root, query, cb)
+                    -> cb.isNull(root.get("superior")), nameSpecification), pageable);
+        return agentLevelRepository.findAll(new AndSpecification<>(s(highestAgent(login)), nameSpecification), pageable);
     }
 
 //    @SuppressWarnings("SpringJavaAutowiringInspection")

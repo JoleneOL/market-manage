@@ -88,12 +88,12 @@ public interface AgentService {
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
      *
-     * @param login    当前身份
-     * @param pageable 分页
-     * @return login可以管理的相关代理
+     * @param login     当前身份
+     * @param agentName 可选搜索条件
+     * @param pageable  分页  @return login可以管理的相关代理
      */
     @Transactional(readOnly = true)
-    Page<AgentLevel> manageable(Login login, Pageable pageable);
+    Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable);
 
 
     /**

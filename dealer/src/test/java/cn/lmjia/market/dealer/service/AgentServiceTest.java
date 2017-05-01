@@ -26,20 +26,21 @@ public class AgentServiceTest extends DealerServiceTest {
     public void manageable() throws Exception {
         // 管理员可以看到所有的top Agent!
         Manager manager = newRandomManager("", ManageLevel.root);
-        long currentTotal = agentService.manageable(manager, new PageRequest(0, 40)).getTotalElements();
+        String agentName = null;
+        long currentTotal = agentService.manageable(manager, agentName, new PageRequest(0, 40)).getTotalElements();
         final int count = random.nextInt(10) + 1;
         int i = count;
         while (i-- > 0)
             newRandomAgent("");
 
-        Page<AgentLevel> fromManager = agentService.manageable(manager, new PageRequest(0, 40));
+        Page<AgentLevel> fromManager = agentService.manageable(manager, agentName, new PageRequest(0, 40));
 //        System.out.println(fromManager.getTotalElements());
         assertThat(fromManager.getTotalElements())
                 .isEqualTo(currentTotal + count);
 
         // 作为一个代理商可以看到下级代理商的情况
         newRandomAgentSystemAnd((login, agentLevel) -> {
-            Page<AgentLevel> fromAgent = agentService.manageable(login, new PageRequest(0, 9999));
+            Page<AgentLevel> fromAgent = agentService.manageable(login, agentName, new PageRequest(0, 9999));
             // 里面所有的数据都满足 上级为currentSuper
             assertThat(fromAgent.getContent())
                     .containsOnlyElementsOf(agentsFor(agentLevel));

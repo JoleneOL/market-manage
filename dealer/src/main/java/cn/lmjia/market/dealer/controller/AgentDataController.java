@@ -4,6 +4,7 @@ import cn.lmjia.market.core.data_table.DataPageable;
 import cn.lmjia.market.core.data_table.DrawablePageAndSelection;
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,11 +24,13 @@ public class AgentDataController {
 
     @Autowired
     private AgentService agentService;
+    @Autowired
+    private ReadService readService;
 
     @GetMapping(value = "/list")
-    public DrawablePageAndSelection<AgentLevel> list(@AuthenticationPrincipal Login login, DataPageable pageable) {
-        Page<AgentLevel> agentLevelPage = agentService.manageable(login, pageable);
-        return new DrawablePageAndSelection<>(pageable, agentLevelPage, AgentLevel.ManageSelections());
+    public DrawablePageAndSelection<AgentLevel> list(@AuthenticationPrincipal Login login, String agentName, DataPageable pageable) {
+        Page<AgentLevel> agentLevelPage = agentService.manageable(login, agentName, pageable);
+        return new DrawablePageAndSelection<>(pageable, agentLevelPage, AgentLevel.ManageSelections(readService));
     }
 
 }
