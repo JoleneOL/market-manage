@@ -17,6 +17,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>${javaee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>me.jiangcai.lib</groupId>
             <artifactId>spring</artifactId>
             <version>${jiangcai.version}</version>

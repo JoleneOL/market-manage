@@ -9,6 +9,9 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.UUID;
+import java.util.function.BiConsumer;
+
 /**
  * @author CJ
  */
@@ -16,7 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 public abstract class DealerServiceTest extends CoreServiceTest {
 
     @Autowired
-    private AgentService agentService;
+    protected AgentService agentService;
 
     /**
      * 新增并且保存一个随机的顶级代理商
@@ -43,4 +46,46 @@ public abstract class DealerServiceTest extends CoreServiceTest {
         return login;
     }
 
+    /**
+     * 添加一个崭新的代理树，并且进行特定检查
+     *
+     * @param work 特定检查，每个新增的父级代理都会经历一次
+     */
+    protected void newRandomAgentSystemAnd(BiConsumer<Login, AgentLevel> work) {
+        newRandomAgentSystemAnd(UUID.randomUUID().toString(), work);
+    }
+
+    /**
+     * 添加一个崭新的代理树，并且进行特定检查
+     *
+     * @param rawPassword 为此新增身份的明文密码
+     * @param work        特定检查，每个新增的父级代理都会经历一次
+     */
+    protected void newRandomAgentSystemAnd(String rawPassword, BiConsumer<Login, AgentLevel> work) {
+        int i;
+        Login rootLogin = newRandomAgent(rawPassword);
+        AgentLevel rootAgent = agentService.highestAgent(rootLogin);
+        // 建立旗下分支
+        i = agentService.systemLevel() - 1;
+        AgentLevel newAgent = rootAgent;
+        Login newLogin = rootLogin;
+        while (i-- > 0) {
+            // 当前的代理商的上级是
+            AgentLevel currentSuper = newAgent;
+            Login currentSuperLogin = newLogin;
+            newAgent = null;
+            int x = random.nextInt(10) + 1;
+            while (x-- > 0) {
+                Login login = newRandomAgent(rawPassword, currentSuper);
+                if (newAgent == null || random.nextBoolean()) {
+                    newAgent = agentService.highestAgent(login);
+                    newLogin = login;
+                }
+            }
+
+            // currentSuper 拥有的代理商
+
+            work.accept(currentSuperLogin, currentSuper);
+        }
+    }
 }

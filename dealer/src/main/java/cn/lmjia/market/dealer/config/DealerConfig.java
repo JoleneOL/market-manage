@@ -14,6 +14,7 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
  * @author CJ
  */
 @Configuration
+@ComponentScan("cn.lmjia.market.dealer.controller")
 @Import({MVCConfig.class, DealerConfig.First.class})
 public class DealerConfig extends WebMvcConfigurerAdapter implements WebModule {
 

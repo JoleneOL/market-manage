@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.config;
 
+import cn.lmjia.market.core.data_table.DrawablePageAndSelectionResolver;
 import cn.lmjia.market.core.data_table.DrawablePageableArgumentResolver;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
@@ -78,7 +79,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
-//        returnValueHandlers.add(pageAndSelectionResolver);
+        returnValueHandlers.add(new DrawablePageAndSelectionResolver());
     }
 
     @Override
