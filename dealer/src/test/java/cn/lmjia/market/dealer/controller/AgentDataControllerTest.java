@@ -15,6 +15,19 @@ public class AgentDataControllerTest extends DealerServiceTest {
             System.out.println(login);
             System.out.println(agentService.agentLevel(agent));
             // 没有登录 那么怎么使用这个标签呢？
+            try {
+                runWith(login, () -> {
+                    mockMvc.perform(
+                            get("/agentData/list")
+                    )
+//                            .andDo(print())
+                            .andExpect(similarJQueryDataTable("classpath:/mock/agentData.json"));
+
+                    return null;
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
     }
