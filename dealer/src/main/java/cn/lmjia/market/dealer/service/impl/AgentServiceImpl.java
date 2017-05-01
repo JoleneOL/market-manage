@@ -1,6 +1,7 @@
 package cn.lmjia.market.dealer.service.impl;
 
 import cn.lmjia.market.core.entity.AgentLevel;
+import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.dealer.service.AgentService;
@@ -12,6 +13,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import java.util.ArrayList;
 
 /**
@@ -66,11 +69,14 @@ public class AgentServiceImpl implements AgentService {
             nameSpecification = (root, query, cb) -> {
                 String name = "%" + agentName + "%";
 //                Path<ContactWay> contactWayPath = cb.treat(root.get("login").get("contactWay"), ContactWay.class);
+                Join<Login, AgentLevel> loginAgentLevelJoin = root.join("login");
+                Join<ContactWay, Login> contactWayLoginJoin = loginAgentLevelJoin.join("contactWay", JoinType.LEFT);
+//                Path<ContactWay> contactWayPath = root.get("login").get("contactWay");
                 return cb.or(
-                        cb.like(root.get("login").get("loginName"), name),
-                        cb.like(root.get("rank"), name)
-//                        cb.like(contactWayPath.get("name"), name),
-//                        cb.like(contactWayPath.get("mobile"), name)
+                        cb.like(root.get("login").get("loginName"), name)
+                        , cb.like(root.get("rank"), name)
+                        , cb.like(contactWayLoginJoin.get("name"), name)
+                        , cb.like(contactWayLoginJoin.get("mobile"), name)
                 );
             };
         }
