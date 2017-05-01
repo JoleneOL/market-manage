@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -51,6 +51,9 @@
             <testResource>
                 <directory>../core-service/src/share/resources</directory>
             </testResource>
+            <testResource>
+                <directory>../dealer/src/share/resources</directory>
+            </testResource>
         </testResources>
         <plugins>
             <plugin>
@@ -85,6 +88,7 @@
                                 <echo>copy demo files</echo>
                                 <copy todir="target/demo-sources">
                                     <fileset dir="../core-service/src/share/java"/>
+                                    <fileset dir="../dealer/src/share/java"/>
                                 </copy>
                             </tasks>
                         </configuration>

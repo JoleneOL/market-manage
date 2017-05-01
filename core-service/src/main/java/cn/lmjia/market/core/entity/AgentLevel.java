@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.List;
 
 /**
  * 代理体系的成员，具备上下级关系
@@ -41,4 +43,6 @@ public class AgentLevel {
      */
     @ManyToOne
     private AgentLevel superior;
+    @OneToMany(mappedBy = "superior")
+    private List<AgentLevel> subAgents;
 }

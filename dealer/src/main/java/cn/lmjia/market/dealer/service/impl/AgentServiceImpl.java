@@ -20,10 +20,13 @@ public class AgentServiceImpl implements AgentService {
     private AgentLevelRepository agentLevelRepository;
 
     @Override
-    public AgentLevel addTopAgent(Login login, String name) {
-        AgentLevel current = null;
+    public AgentLevel addAgent(Login login, String name, AgentLevel superior) {
         AgentLevel topLevel = null;
-        int count = systemLevel();
+
+        AgentLevel current = superior;
+        int count = systemLevel() - (current == null ? 0 : agentLevel(superior) + 1);// 几次 如果是最顶级的那么就是 systemLevel次
+        if (count <= 0)
+            throw new IllegalStateException("无法给" + superior + "添加下级代理商，违法了现在有的" + systemLevel() + "层架构");
         while (count-- > 0) {
             AgentLevel top = new AgentLevel();
             top.setLogin(login);
@@ -39,11 +42,41 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public AgentLevel addTopAgent(Login login, String name) {
+        return addAgent(login, name, null);
+    }
+
+    @Override
     public Page<AgentLevel> manageable(Login login, Pageable pageable) {
         if (login.isManageable())
-            return agentLevelRepository.findAll(pageable);
+            return agentLevelRepository.findAll((root, query, cb) -> cb.isNull(root.get("superior")), pageable);
         return agentLevelRepository.findAll(s(highestAgent(login)), pageable);
     }
+
+//    @SuppressWarnings("SpringJavaAutowiringInspection")
+//    @Autowired
+//    private EntityManager entityManager;
+//
+//    private Page<AgentInfo> agentInfo(Specification<AgentLevel> specification, Pageable pageable) {
+//        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<AgentInfo> query = criteriaBuilder.createQuery(AgentInfo.class);
+//        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+//        Root<AgentLevel> root = query.from(AgentLevel.class);
+//        Root<AgentLevel> countRoot = countQuery.from(AgentLevel.class);
+//
+//        countQuery = countQuery.select(criteriaBuilder.count(countRoot));
+//        countQuery = countQuery.where(specification.toPredicate(countRoot,countQuery,criteriaBuilder));
+//        // 数据
+//        Subquery<AgentLevel> query.subquery(AgentLevel.class);
+//        query = query.select(criteriaBuilder.construct(
+//                AgentInfo.class,
+//                root,
+//        ))
+//
+//
+////        entityManager.find
+//        return null;
+//    }
 
     private Specification<AgentLevel> s(AgentLevel agent) {
         return (root, query, cb) -> cb.equal(root.get("superior"), agent);

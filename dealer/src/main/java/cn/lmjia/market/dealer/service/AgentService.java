@@ -59,6 +59,16 @@ public interface AgentService {
     AgentLevel addTopAgent(Login login, String name);
 
     /**
+     * 添加一个特定等级的代理商；按照每个代理都是同时存在的理论；那么会同时创建{@link #systemLevel()}个代理商
+     *
+     * @param login    相关身份
+     * @param name     名称
+     * @param superior 上级
+     * @return 被保存的新的最高代理商
+     */
+    AgentLevel addAgent(Login login, String name, AgentLevel superior);
+
+    /**
      * @param level 该身份最高可识别的代理
      * @return 该身份头衔
      */
