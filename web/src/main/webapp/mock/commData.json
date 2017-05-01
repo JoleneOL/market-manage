@@ -1,0 +1,87 @@
+{
+  "draw": 1,
+  "recordsTotal": 23,
+  "recordsFiltered": 23,
+  "data": [
+    {
+      "id": "1",
+      "commType": "销售收益",
+      "code": "189348484848",
+      "user": "李菲菲",
+      "orderTotal": 342525,
+      "divided": "20%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    },
+    {
+      "id": "2",
+      "commType": "其他收益",
+      "code": "189348484848",
+      "user": "李菲菲",
+      "orderTotal": 342525,
+      "divided": "20%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    },
+    {
+      "id": "3",
+      "commType": "其他收益",
+      "code": "189348484848",
+      "user": "李菲菲",
+      "orderTotal": 342525,
+      "divided": "70%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    },
+    {
+      "id": "4",
+      "commType": "销售收益",
+      "code": "189348484848",
+      "user": "李菲菲",
+      "orderTotal": 342525,
+      "divided": "5%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    },
+    {
+      "id": "5",
+      "commType": "其他收益",
+      "code": "189348484848",
+      "user": "李菲菲",
+      "orderTotal": 342525,
+      "divided": "3%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    },
+    {
+      "id": "6",
+      "commType": "其他收益",
+      "code": "189348484848",
+      "user": "李菲菲",
+      "orderTotal": 342525,
+      "divided": "2%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    },
+    {
+      "id": "7",
+      "commType": "退款",
+      "code": "189348484848",
+      "user": "李菲菲",
+      "orderTotal": 342525,
+      "divided": "1%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    },
+    {
+      "id": "8",
+      "commType": "管理费",
+      "code": "189348484848",
+      "user": "",
+      "orderTotal": 3425,
+      "divided": "",
+      "commission": -4566,
+      "commTime": ""
+    }
+  ]
+}
