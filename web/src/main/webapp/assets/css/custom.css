@@ -398,3 +398,6 @@ input[type=checkbox] {
   font-size: 18px;
   color: #000;
 }
+#commTable_wrapper .btn-group {
+  margin-bottom: 0;
+}

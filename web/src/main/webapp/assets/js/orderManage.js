@@ -15,7 +15,7 @@ $(function () {
         },
         "ordering": false,
         "lengthChange": false,
-        "filter": false,
+        "searching": false,
         "columns": [
             {
                 "title": "订单号", "data": "orderId"

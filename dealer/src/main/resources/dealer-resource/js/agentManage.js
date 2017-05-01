@@ -15,7 +15,7 @@ $(function () {
         },
         "ordering": false,
         "lengthChange": false,
-        "filter": false,
+        "searching": false,
         "columns": [
             {
                 title: '',
