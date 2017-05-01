@@ -2,6 +2,7 @@ package cn.lmjia.market.core.config;
 
 import cn.lmjia.market.core.data_table.DrawablePageAndSelectionResolver;
 import cn.lmjia.market.core.data_table.DrawablePageableArgumentResolver;
+import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -269,7 +270,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             }
 
             private SpringResourceTemplateResolver createHtmlTemplateResolver() {
-                SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+                SpringResourceTemplateResolver resolver = new NewSpringResourceTemplateResolver();
                 resolver.setCacheable(!environment.acceptsProfiles("development")
                         && !environment.acceptsProfiles("test"));
                 resolver.setCharacterEncoding(UTF8);

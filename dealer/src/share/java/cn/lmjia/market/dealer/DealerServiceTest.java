@@ -84,8 +84,8 @@ public abstract class DealerServiceTest extends CoreServiceTest {
             }
 
             // currentSuper 拥有的代理商
-
-            work.accept(currentSuperLogin, currentSuper);
+            if (work != null)
+                work.accept(currentSuperLogin, currentSuper);
         }
     }
 }
