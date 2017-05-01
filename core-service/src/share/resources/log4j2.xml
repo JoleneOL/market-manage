@@ -3,7 +3,7 @@
     <!--先定义所有的appender-->
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %c{1.} - %msg%n"/>
         </Console>
     </appenders>
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
@@ -17,6 +17,8 @@
         <logger name="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" level="info"/>
         <logger name="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" level="info"/>
         <logger name="org.springframework.web.servlet.resource.ResourceUrlProvider" level="info"/>
+
+        <logger name="com.gargoylesoftware.htmlunit.DefaultCssErrorHandler" level="error"/>
 
         <!--建立一个默认的root的logger-->
         <root level="info">
