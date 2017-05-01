@@ -1,7 +1,10 @@
 package cn.lmjia.market.core.service;
 
+import cn.lmjia.market.core.Version;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import me.jiangcai.lib.upgrade.VersionUpgrade;
+import me.jiangcai.lib.upgrade.service.UpgradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +21,28 @@ public class InitService {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private UpgradeService upgradeService;
 
     @PostConstruct
     @Transactional
     public void init() {
+        upgrade();
         managers();
+    }
+
+    private void upgrade() {
+        //noinspection Convert2Lambda
+        upgradeService.systemUpgrade(new VersionUpgrade<Version>() {
+            @Override
+            public void upgradeToVersion(Version version) throws Exception {
+                switch (version) {
+                    case init:
+                        break;
+                }
+
+            }
+        });
     }
 
     private void managers() {
