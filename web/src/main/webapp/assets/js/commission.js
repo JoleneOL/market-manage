@@ -7,7 +7,8 @@ $(function () {
     DatePicker('#beginDate', '#endDate');
 
     var $dataRange = $('#J_dataRange');
-    $('#J_dataSelect').change(function () {
+    var $dataSelect = $('#J_dataSelect');
+    $dataSelect.change(function () {
         if ($(this).val() === '5') {
             $dataRange.removeClass('hidden');
         } else {
@@ -90,7 +91,10 @@ $(function () {
             var v = t.val();
             if (v) data[n] = v;
         });
-
+        if ($dataSelect.val() === '5') {
+            data['beginDate'] = $('#beginDate').val();
+            data['endDate'] = $('#endDate').val();
+        }
         return data;
     }
 
