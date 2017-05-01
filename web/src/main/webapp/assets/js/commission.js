@@ -7,7 +7,8 @@ $(function () {
     DatePicker('#beginDate', '#endDate');
 
     var $dataRange = $('#J_dataRange');
-    $('#J_dataSelect').change(function () {
+    var $dataSelect = $('#J_dataSelect');
+    $dataSelect.change(function () {
         if ($(this).val() === '5') {
             $dataRange.removeClass('hidden');
         } else {
@@ -26,7 +27,7 @@ $(function () {
         },
         "ordering": false,
         "lengthChange": false,
-        "filter": false,
+        "searching": false,
         "columns": [
             {
                 "title": "佣金类型", "data": "commType"
@@ -54,26 +55,25 @@ $(function () {
         "drawCallback": function () {
             clearSearchValue();
         },
-        "buttons": [
-            {
-                'extend': 'excel',
-                'text': '导出',//定义导出excel按钮的文字
-                'exportOptions': {
-                    'modifier': {
-                        'page': 'current'
-                    }
-                }
-            }
-        ]
+        "dom": "<'row'<'col-sm-12'B>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "buttons": [{
+            "extend": "excel",
+            "text": "导出 Excel",
+            "className": "btn-success btn-xs"
+        }]
     });
 
     $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止
+        // 改变新地址
+        // table.ajax.url( 'mock/commDataNew.json' ).load()
         table.ajax.reload();
     }).on('click', '.js-checkLogistics', function () {
         // TODO
         // 需要获取一些参数供详情跳转
-        $('#content', parent.document).attr('src', 'logisticsDetail.html');
+        // $('#content', parent.document).attr('src', 'logisticsDetail.html');
     });
 
     $('.js-orderStatus').find('a').click(function () {
@@ -91,8 +91,10 @@ $(function () {
             var v = t.val();
             if (v) data[n] = v;
         });
-        // 获取当前tab
-        data['status'] = $('.js-orderStatus').find('.active').find('a').attr('data-status');
+        if ($dataSelect.val() === '5') {
+            data['beginDate'] = $('#beginDate').val();
+            data['endDate'] = $('#endDate').val();
+        }
         return data;
     }
 

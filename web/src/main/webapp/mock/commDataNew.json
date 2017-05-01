@@ -1,0 +1,17 @@
+{
+  "draw": 2,
+  "recordsTotal": 23,
+  "recordsFiltered": 23,
+  "data": [
+    {
+      "id": "1",
+      "commType": "销售收益",
+      "code": "189348484848",
+      "user": "测试测试",
+      "orderTotal": 342525,
+      "divided": "20%",
+      "commission": 691.2,
+      "commTime": "2017-09-09"
+    }
+  ]
+}
