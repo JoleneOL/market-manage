@@ -14,9 +14,8 @@ $(function () {
             }
         },
         "ordering": false,
-        "dom": "<'row'<'col-sm-12'<'js-selectToolbar'>>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "lengthChange": false,
+        "filter": false,
         "columns": [
             {
                 title: '',
@@ -59,7 +58,6 @@ $(function () {
             clearSearchValue();
         }
     });
-    $("div.js-selectToolbar").html($("#selectToolbar").html());
 
     $(document).on('click', '.js-search', function () {
         table.ajax.reload();

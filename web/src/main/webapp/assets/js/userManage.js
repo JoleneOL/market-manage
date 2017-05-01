@@ -15,9 +15,8 @@ $(function () {
             }
         },
         "ordering": false,
-        "dom": "<'row'<'col-sm-12'<'js-selectToolbar'>>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "lengthChange": false,
+        "filter": false,
         "columns": [
             {
                 "title": "用户", "data": "name"
@@ -59,8 +58,6 @@ $(function () {
             clearSearchValue();
         }
     });
-
-    $("div.js-selectToolbar").html($("#selectToolbar").html());
 
     $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止

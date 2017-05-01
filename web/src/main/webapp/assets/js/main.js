@@ -5,11 +5,12 @@ $(function () {
     "use strict";
 
     // 初始化 datepicker
-    if( $('#datepicker').length > 0) {
+    if ($('#datepicker').length > 0) {
         $('#datepicker').datepicker({
             format: 'yyyy-mm-dd',
             language: 'zh-CN',
-            endDate : new Date()
+            clearBtn: true,
+            endDate: new Date()
         });
     }
 

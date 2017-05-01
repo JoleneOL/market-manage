@@ -14,9 +14,8 @@ $(function () {
             }
         },
         "ordering": false,
-        "dom": "<'row'<'col-sm-12'<'js-selectToolbar'>>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "lengthChange": false,
+        "filter": false,
         "columns": [
             {
                 "title": "发货机型", "data": "type"

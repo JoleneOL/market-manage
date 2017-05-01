@@ -35,28 +35,37 @@
     </div>
     <div class="contentpanel">
         <div class="row">
-            <div class="table-responsive">
-                <table id="agentTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+            <div class="col-sm-12">
+                <div class="form-inline">
+                    <div class="js-selectToolbar">
+                        <input type="search" class="form-control input-sm js-searchName" placeholder="代理商名称"
+                               name="agentName"
+                               aria-controls="agentTable">
+                        <label>
+                            <select class="form-control input-sm js-searchRank" name="agentRank">
+                                <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
+                                <option value=" " disabled selected class="hidden">级别</option>
+                                <option value="1">总代理</option>
+                                <option value="2">分代理</option>
+                                <option value="3">经销商</option>
+                                <option value="4">爱心天使</option>
+                            </select>
+                        </label>
+                        <button type="button" class="btn btn-success btn-xs js-search">查询</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table id="agentTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+                </div>
             </div>
         </div>
     </div>
 </section>
 </body>
-<script type="text/template" id="selectToolbar">
-    <input type="search" class="form-control input-sm js-searchName" placeholder="代理商名称" name="agentName"
-           aria-controls="agentTable">
-    <label>
-        <select class="form-control input-sm js-searchRank" name="agentRank">
-            <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
-            <option value=" " disabled selected class="hidden">级别</option>
-            <option value="1">总代理</option>
-            <option value="2">分代理</option>
-            <option value="3">经销商</option>
-            <option value="4">爱心天使</option>
-        </select>
-    </label>
-    <button type="button" class="btn btn-success btn-xs js-search">查询</button>
-</script>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
