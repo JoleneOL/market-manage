@@ -27,6 +27,7 @@ public class ManagerFlow extends WebTest {
         ManageMainPage manageMainPage = initPage(ManageMainPage.class);
 
         manageMainPage.selectMenu("fa-users");
+//        manageMainPage.printThisPage();
         AgentManagePage agentManagePage = manageMainPage.currentContext(AgentManagePage.class);
     }
 }
