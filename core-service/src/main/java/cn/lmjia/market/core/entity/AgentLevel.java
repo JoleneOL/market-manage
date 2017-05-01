@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 代理体系的成员，具备上下级关系
@@ -45,4 +46,26 @@ public class AgentLevel {
     private AgentLevel superior;
     @OneToMany(mappedBy = "superior")
     private List<AgentLevel> subAgents;
+
+    @Override
+    public String toString() {
+        return "AgentLevel{" +
+                "id=" + id +
+                ", login=" + login +
+                ", rank='" + rank + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AgentLevel)) return false;
+        AgentLevel that = (AgentLevel) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

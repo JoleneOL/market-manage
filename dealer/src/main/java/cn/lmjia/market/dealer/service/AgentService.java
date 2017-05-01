@@ -66,6 +66,7 @@ public interface AgentService {
      * @param superior 上级
      * @return 被保存的新的最高代理商
      */
+    @Transactional
     AgentLevel addAgent(Login login, String name, AgentLevel superior);
 
     /**

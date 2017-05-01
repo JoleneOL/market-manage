@@ -91,4 +91,14 @@ public class Login implements UserDetails {
     public String getLoginTitle() {
         return "一般";
     }
+
+    @Override
+    public String toString() {
+        return "Login{" +
+                "id=" + id +
+                ", loginName='" + loginName + '\'' +
+                ", enabled=" + enabled +
+                ", guideUser=" + guideUser +
+                '}';
+    }
 }

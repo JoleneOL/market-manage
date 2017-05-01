@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * @author CJ
  */
@@ -32,7 +34,14 @@ public class AgentServiceImpl implements AgentService {
             top.setLogin(login);
             top.setRank(name);
             top.setSuperior(current);
-            current = agentLevelRepository.save(top);
+            final AgentLevel newAgentLevel = agentLevelRepository.save(top);
+            if (current != null) {
+                if (current.getSubAgents() == null)
+                    current.setSubAgents(new ArrayList<>());
+                current.getSubAgents().add(newAgentLevel);
+                agentLevelRepository.save(current);
+            }
+            current = newAgentLevel;
             if (topLevel == null) {
                 topLevel = current;
             }

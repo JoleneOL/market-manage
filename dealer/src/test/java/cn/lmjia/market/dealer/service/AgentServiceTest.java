@@ -36,7 +36,7 @@ public class AgentServiceTest extends DealerServiceTest {
             newRandomAgent("");
 
         Page<AgentLevel> fromManager = agentService.manageable(manager, new PageRequest(0, 40));
-        System.out.println(fromManager.getTotalElements());
+//        System.out.println(fromManager.getTotalElements());
         assertThat(fromManager.getTotalElements())
                 .isEqualTo(currentTotal + count);
 
@@ -66,14 +66,13 @@ public class AgentServiceTest extends DealerServiceTest {
             Page<AgentLevel> fromAgent = agentService.manageable(currentSuperLogin, new PageRequest(0, 9999));
             // 里面所有的数据都满足 上级为currentSuper
             assertThat(fromAgent.getContent())
-                    .containsOnly(agentsFor(currentSuper));
+                    .containsOnlyElementsOf(agentsFor(currentSuper));
         }
 
     }
 
-    private AgentLevel[] agentsFor(AgentLevel level) {
-        final List<AgentLevel> subAgents = agentLevelRepository.getOne(level.getId()).getSubAgents();
-        return subAgents.toArray(new AgentLevel[subAgents.size()]);
+    private List<AgentLevel> agentsFor(AgentLevel level) {
+        return agentLevelRepository.getOne(level.getId()).getSubAgents();
     }
 
 }
