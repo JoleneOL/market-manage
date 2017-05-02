@@ -32,6 +32,11 @@ import java.util.Objects;
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "loginName")})
 public class Login implements UserDetails {
 
+    /**
+     * 可以管理所有关于代理的项目
+     */
+    public static final String ROLE_AllAgent = "ALL_AGENT";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

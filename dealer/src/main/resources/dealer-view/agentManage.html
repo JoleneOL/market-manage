@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://security.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -35,7 +35,10 @@
     </div>
     <div class="contentpanel">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-2" sec:authorize="hasAnyRole('ROOT','ALL_AGENT')">
+                <button type="button" class="btn btn-success btn-xs js-addTopAgent">添加总代理</button>
+            </div>
+            <div class="col-sm-10">
                 <div class="form-inline">
                     <div class="js-selectToolbar">
                         <input type="search" class="form-control input-sm js-searchName" placeholder="代理商名称"
