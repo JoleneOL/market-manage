@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
 /**
  * @author CJ
  */
-@ContextConfiguration(classes = DealerConfig.class)
+@ContextConfiguration(classes = {DealerConfig.class})
 public abstract class DealerServiceTest extends CoreServiceTest {
 
     @Autowired
