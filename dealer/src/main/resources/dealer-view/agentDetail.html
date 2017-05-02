@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="agent" type="cn.lmjia.market.core.entity.AgentLevel"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -50,31 +51,31 @@
                                 <tbody>
                                 <tr>
                                     <td width="120px">用户</td>
-                                    <td>徐春风</td>
+                                    <td th:text="${@readService.nameForPrincipal(agent.login)}">徐春风</td>
                                 </tr>
                                 <tr>
                                     <td>级别</td>
-                                    <td>经销商</td>
+                                    <td th:text="${agent.rank}">经销商</td>
                                 </tr>
                                 <tr>
                                     <td>手机号</td>
-                                    <td>18958044532</td>
+                                    <td th:text="${@readService.mobileFor(agent.login)}">18958044532</td>
                                 </tr>
                                 <tr>
                                     <td>代理地址</td>
-                                    <td>浙江杭州西湖大西湖国际</td>
+                                    <td th:text="'无'">浙江杭州西湖大西湖国际</td>
                                 </tr>
                                 <tr>
                                     <td>用户数量</td>
-                                    <td>123</td>
+                                    <td th:text="0">123</td>
                                 </tr>
                                 <tr>
                                     <td>销售订单数量</td>
-                                    <td>2033</td>
+                                    <td th:text="0">2033</td>
                                 </tr>
                                 <tr>
                                     <td>销售总额</td>
-                                    <td>335677.33</td>
+                                    <td th:text="0">335677.33</td>
                                 </tr>
                                 <tr>
                                     <td>分成比例</td>

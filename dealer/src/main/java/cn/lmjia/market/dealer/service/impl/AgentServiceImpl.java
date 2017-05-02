@@ -129,4 +129,9 @@ public class AgentServiceImpl implements AgentService {
         }
         return null;
     }
+
+    @Override
+    public AgentLevel getAgent(long id) {
+        return agentLevelRepository.getOne(id);
+    }
 }

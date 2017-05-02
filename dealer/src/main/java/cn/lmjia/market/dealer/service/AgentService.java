@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+
 /**
  * 代理服务
  *
@@ -102,4 +104,12 @@ public interface AgentService {
      */
     @Transactional(readOnly = true)
     AgentLevel highestAgent(Login login);
+
+    /**
+     * @param id 代理id
+     * @return 代理实体；不会为null
+     * @throws EntityNotFoundException 如果找不到
+     */
+    @Transactional(readOnly = true)
+    AgentLevel getAgent(long id);
 }
