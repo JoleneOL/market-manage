@@ -12,6 +12,7 @@
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
     <link rel="stylesheet" href="assets/css/custom.css">
@@ -48,53 +49,55 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="repair">
-                        <div class="form-inline">
-                            <div class="js-selectToolbar">
-                                <label>
-                                    <select class="form-control input-sm js-goodsType" name="goodsType">
-                                        <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
-                                        <option value=" " disabled="" selected="" class="hidden">商品类型</option>
-                                        <option value="1">欧式</option>
-                                        <option value="2">法式</option>
-                                        <option value="3">中式</option>
-                                    </select>
-                                </label>
-                                <label>
-                                    <select class="form-control input-sm js-goodsCode" name="goodsCode">
-                                        <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
-                                        <option value=" " disabled="" selected="" class="hidden">商品型号</option>
-                                        <option value="1">u56</option>
-                                        <option value="2">u57</option>
-                                        <option value="3">u58</option>
-                                    </select>
-                                </label>
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control hasDatepicker js-operateDate"
-                                           placeholder="操作时间" id="datepicker" name="operateDate"
-                                           aria-controls="repairTable">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                </div>
-                                <label>
-                                    <select class="form-control input-sm js-searchRank" name="repairState">
-                                        <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
-                                        <option value=" " disabled="" selected="" class="hidden">状态</option>
-                                        <option value="1">维修中</option>
-                                        <option value="2">已维修</option>
-                                    </select>
-                                </label>
-                                <button type="button" class="btn btn-success btn-xs js-search">查询</button>
-                            </div>
+                        <div class="col-md-1 mb10">
+                            <a href="#" class="btn btn-success btn-block">发起维修</a>
                         </div>
-                        <div class="table-responsive">
-                            <table id="repairTable" class="table table-hover table-success" cellspacing="0"
-                                   width="100%"></table>
+                        <div class="col-md-12">
+                            <div class="form-inline">
+                                <div class="js-selectToolbar">
+                                    <label>
+                                        <select class="form-control input-sm js-goodsType" name="goodsType">
+                                            <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
+                                            <option value=" " disabled="" selected="" class="hidden">商品类型</option>
+                                            <option value="1">欧式</option>
+                                            <option value="2">法式</option>
+                                            <option value="3">中式</option>
+                                        </select>
+                                    </label>
+                                    <label>
+                                        <select class="form-control input-sm js-goodsCode" name="goodsCode">
+                                            <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
+                                            <option value=" " disabled="" selected="" class="hidden">商品型号</option>
+                                            <option value="1">u56</option>
+                                            <option value="2">u57</option>
+                                            <option value="3">u58</option>
+                                        </select>
+                                    </label>
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control hasDatepicker js-operateDate"
+                                               placeholder="操作时间" id="datepicker" name="operateDate"
+                                               aria-controls="repairTable">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
+                                    <label>
+                                        <select class="form-control input-sm js-repairState" name="repairState">
+                                            <!--此项为巧妙的select placeholder效果，thymeleaf 勿删-->
+                                            <option value=" " disabled="" selected="" class="hidden">状态</option>
+                                            <option value="1">维修中</option>
+                                            <option value="2">已维修</option>
+                                        </select>
+                                    </label>
+                                    <button type="button" class="btn btn-success btn-xs js-search">查询</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="repairTable" class="table table-hover table-success" cellspacing="0"
+                                       width="100%"></table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <h1>TODO</h1>
         </div>
     </div>
 </section>
@@ -103,5 +106,9 @@
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
-<script src="assets/js/main.js"></script>
+
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="assets/js/afterSale.js"></script>
 </html>
