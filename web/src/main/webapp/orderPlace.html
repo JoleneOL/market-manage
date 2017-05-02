@@ -44,7 +44,7 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-7 col-lg-6">
-                                    <form class="form-horizontal mb40" id="J_orderPlace">
+                                    <form class="form-horizontal mb40" id="J_orderPlace" method="post">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">姓名</label>
                                             <div class="col-sm-6">
@@ -55,8 +55,8 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">年龄</label>
                                             <div class="col-sm-6">
-                                                <input type="number" min="1" placeholder="请输入年龄" class="form-control"
-                                                       name="age">
+                                                <input type="number" min="1" max="99" placeholder="请输入年龄"
+                                                       class="form-control" name="age">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -75,7 +75,8 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">安装地址</label>
                                             <div class="col-sm-6">
-                                                <input class="form-control" readonly type="text" data-responsive="true"
+                                                <input class="form-control" id="J_cityPicker" readonly type="text"
+                                                       data-responsive="true"
                                                        data-toggle="city-picker" data-simple="true" name="address">
                                             </div>
                                         </div>
@@ -122,19 +123,20 @@
                                             <label class="col-sm-3 control-label">套餐选择</label>
                                             <div class="col-sm-6">
                                                 <input type="text" value="2年收费" class="form-control"
-                                                       disabled="disabled">
+                                                       disabled="disabled" name="package">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">活动码</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="输入活动码" class="form-control">
+                                                <input type="text" placeholder="输入活动码" class="form-control" name="activityCode">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">订单总金额</label>
                                             <div class="col-sm-3">
                                                 <h1 class="total">5000.00</h1>
+                                                <!--<input type="text" value="5000.00" class="form-control" name="total" readonly>-->
                                             </div>
                                             <label class="col-sm-3 control-label">安装费用</label>
                                             <div class="col-sm-3">
@@ -173,41 +175,40 @@
 </section>
 </body>
 <script type="text/template" id="J_protocol">
-    <div class="protocal-content">
+    <div class="protocol-content">
         <h2>利每家赠机协议</h2>
-        <p>甲方：</p>
-        <p>乙方：利每家科技有限公司</p>
+        <p class="text-indent0">甲方：</p>
+        <p class="text-indent0">乙方：利每家科技有限公司</p>
         <p>甲乙双方在平等自愿、公平诚信的基础上，基于对乙方提供的产品和服务的了解和需求，达成协议如下：</p>
-        <p><strong>第一条</strong>&nbsp;;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，预存______元保证金，并承诺协议期为 36 个月，即___年___月___日至___年___月___日，甲方承诺在使用期间不退保证金、不退机，不过户。</p>
+        <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，预存&#95;&#95;&#95;&#95;&#95;&#95;元保证金，并承诺协议期为<u>&nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;</u>个月，即&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日至&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日，甲方承诺在使用期间不退保证金、不退机，不过户。
+        </p>
+        <p><strong>第二条</strong>&nbsp;&nbsp;&nbsp;&nbsp;使用条件</p>
+        <p>（一）为保障甲乙双方的权益，协议期内乙方对甲方使用的用户机型与终端IMEI码进行机码匹配核实。</p>
+        <p>
+            （二）在协议期内，甲方不得提前终止活动。若使用中甲方单方面违约，则甲方需赔偿乙方三年协议期内剩余使用金额的50%作为违约金，甲方将机器送到乙方指定地点后(快递费用由甲方自理)，乙方相关人员核实完毕，在10个工作日内把剩余的款项退还给甲方。</p>
+        <p>（三）乙方根据甲方的使用情况，在协议期内，为甲方免费提供更换的滤芯。在水质或其他环境因素，无法达到安装或使用条件时，乙方有权与甲方解约，对此，甲方同意乙方的解约要求。</p>
+        <p>（四）若使用期间，机器发生非人为损坏或不能使用，乙方将免费为甲方更换新机或维修，若使用期间，机器发生人为损坏，则由甲方承担维修或更换新机的费用</p>
+        <p>（五）协议期内，机器的所有权归乙方所有，协议期满后，若甲乙双方遵守此协议内约定，结清协议约定费用后，机器归甲方所有。</p>
+        <p><strong>第三条</strong>&nbsp;&nbsp;&nbsp;&nbsp;违约责任及承担</p>
+        <p>（一）甲方违约责任</p>
+        <p>1、甲乙双方一致确认，甲方出现本协议所述的违约情形时，甲方应向乙方支付违约金以补偿乙方的损失，乙方有权以甲方账户中尚未解冻的预存款直接抵扣违约金及约定的相关费用，不足部分，乙方保留对甲方追缴的权利。</p>
+        <p>（二）乙方违约责任</p>
+        <p>1、乙方构成违约的，应按国家有关规定，承担违约责任。</p>
+        <p>
+            2、乙方向甲方直接提供的机器出现质量问题时，甲方应送相关厂商指定的售后网点进行处理，或持厂商指定售后网点出具的检测证明材料到乙方区域网点，乙方按《产品质量法》、《消费者权益保护法》等国家法律法规的规定，承担相应责任并进行处理。</p>
+        <p><strong>第四条</strong>&nbsp;&nbsp;&nbsp;&nbsp;协议生效</p>
+        <p>本协议自双方签字盖章之日起生效，本协议到期时，如甲乙双方均未提出新的服务时，本协议自动终止。</p>
+        <p><strong>（甲方承诺：本人已经充分、完整阅读并理解本协议所述全部条款及条件。）</strong></p>
+        <br>
+        <p class="clearfix">
+            <span class="col-xs-6">甲方：（签字或盖章）</span>
+            <span class="col-xs-6">乙方：（盖章）</span></p>
+        <br>
+        <p class="clearfix">
+            <span class="col-xs-6">签署日期：&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</span>
+            <span class="col-xs-6">签署日期：&nbsp;&nbsp;&nbsp;&nbsp; 年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</span>
+        </p>
     </div>
-    <!--<h1>利每家赠机协议</h1>-->
-    <!--<p>甲方：</p>-->
-    <!--<p>乙方：利每家科技有限公司</p>-->
-    <!--甲乙双方在平等自愿、公平诚信的基础上，基于对乙方提供的产品和服务的了解和需求，达成协议如下：-->
-    <!--第一条	甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，预存               元保证金，并承诺协议期为 36 个月，即   年    月___日至   年  月____日，甲方承诺在使用期间不退保证金、不退机，不过户。-->
-    <!--第二条	 使用条件-->
-    <!--（一）为保障甲乙双方的权益，协议期内乙方对甲方使用的用户机型与终端IMEI码进行机码匹配核实。-->
-    <!--（二）在协议期内，甲方不得提前终止活动。若使用中甲方单方面违约，则甲方需赔偿乙方三年协议期内剩余使用金额的50%作为违约金，甲方将机器送到乙方指定地点后(快递费用由甲方自理)，乙方相关人员核实完毕，在10个工作日内把剩余的款项退还给甲方；-->
-    <!--（三）乙方根据甲方的使用情况，在协议期内，为甲方免费提供更换的滤芯。在水质或其他环境因素，无法达到安装或使用条件时，乙方有权与甲方解约，对此，甲方同意乙方的解约要求。-->
-    <!--（四）若使用期间，机器发生非人为损坏或不能使用，乙方将免费为甲方更换新机或维修，若使用期间，机器发生人为损坏，则由甲方承担维修或更换新机的费用。-->
-    <!--（五）协议期内，机器的所有权归乙方所有，协议期满后，若甲乙双方遵守此协议内约定，结清协议约定费用后，机器归甲方所有。-->
-
-    <!--第三条	 违约责任及承担-->
-    <!--（一）甲方违约责任-->
-    <!--1、甲乙双方一致确认，甲方出现本协议所述的违约情形时，甲方应向乙方支付违约金以补偿乙方的损失，乙方有权以甲方账户中尚未解冻的预存款直接抵扣违约金及约定的相关费用，不足部分，乙方保留对甲方追缴的权利。-->
-    <!--（二）乙方违约责任-->
-    <!--1、乙方构成违约的，应按国家有关规定，承担违约责任。-->
-    <!--2、乙方向甲方直接提供的机器出现质量问题时，甲方应送相关厂商指定的售后网点进行处理，或持厂商指定售后网点出具的检测证明材料到乙方区域网点，乙方按《产品质量法》、《消费者权益保护法》等国家法律法规的规定，承担相应责任并进行处理。-->
-    <!--第四条	 协议生效-->
-    <!--本协议自双方签字盖章之日起生效，本协议到期时，如甲乙双方均未提出新的服务时，本协议自动终止。-->
-    <!--（甲方承诺：本人已经充分、完整阅读并理解本协议所述全部条款及条件。）-->
-
-    <!--甲方：（签字或盖章）                    乙方：（盖章）-->
-
-
-
-    <!--签署日期：　  年　　月　　日               签署日期：    年　　月　　日-->
-
 </script>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
@@ -215,53 +216,5 @@
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
-<script>
-    $('#J_isAgree').click(function () {
-        layer.open({
-            type: 1,
-            shade: 0.5,
-            title: false,
-            area: ['396px', '334px'],
-            content: $('#J_protocol').html()
-        });
-    });
-    $.validator.setDefaults({
-        submitHandler: function () {
-            alert("submitted!");
-        }
-    });
-    $('#J_orderPlace').validate({
-        rules: {
-            customer: "required",
-            age: "required",
-            isAgree: "required"
-        },
-        messages: {
-            customer: "Please enter your firstname",
-            age: "Please enter your lastname",
-            agree: "请确认"
-        },
-        errorElement: "span",
-        errorPlacement: function (error, element) {
-            error.addClass("help-block");
-            if (element.prop("type") === "checkbox") {
-                element.siblings('label').addClass('error');
-            } else {
-                error.insertAfter(element);
-            }
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).parent().addClass("has-error").removeClass("has-success");
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            if($(element).prop("type") === "checkbox") {
-                $(element).siblings('label').removeClass('error');
-            } else {
-                $(element).parent().addClass("has-success").removeClass("has-error");
-            }
-
-        }
-    });
-</script>
-<script src="assets/js/main.js"></script>
+<script src="assets/js/orderForm.js"></script>
 </html>
