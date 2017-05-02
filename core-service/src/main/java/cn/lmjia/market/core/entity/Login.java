@@ -29,7 +29,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "loginName")})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"loginName", "code"})})
 public class Login implements UserDetails {
 
     /**
@@ -42,6 +42,11 @@ public class Login implements UserDetails {
     private Long id;
     @Column(length = 30)
     private String loginName;
+    /**
+     * 推荐码，需要唯一；
+     * TODO 算法待定
+     */
+    private String code;
     private String password;
     private boolean enabled = true;
     /**

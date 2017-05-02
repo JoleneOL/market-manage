@@ -22,6 +22,27 @@ public interface AgentService {
         return 3;
     }
 
+    /*
+当一个订单结算时，会根据它的引导者（自动成为经纪人），以及这个代理体系建立一整套分佣结果
+     */
+
+
+    /**
+     * @param level 该身份最高可识别的代理
+     * @return 该身份头衔
+     */
+    default String loginTitle(AgentLevel level) {
+        switch (agentLevel(level)) {
+            case 0:
+                return "总代理商";
+            case 1:
+                return "分代理商";
+            case 2:
+            default:
+                return "经销商";
+        }
+    }
+
     /**
      * @param level 该身份最高可表达的代理
      * @return 代理等级;0 表示最高 应当存在{@link #systemLevel()}个等级
@@ -70,22 +91,6 @@ public interface AgentService {
      */
     @Transactional
     AgentLevel addAgent(Login login, String name, AgentLevel superior);
-
-    /**
-     * @param level 该身份最高可识别的代理
-     * @return 该身份头衔
-     */
-    default String loginTitle(AgentLevel level) {
-        switch (agentLevel(level)) {
-            case 0:
-                return "总代理商";
-            case 1:
-                return "分代理商";
-            case 2:
-            default:
-                return "经销商";
-        }
-    }
 
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
