@@ -78,8 +78,16 @@
                                     <td th:text="0">335677.33</td>
                                 </tr>
                                 <tr>
-                                    <td>分成比例</td>
-                                    <td>20%</td>
+                                    <td>直接分成比例</td>
+                                    <td th:text="${@readService.percentage(@commissionRateService.directRate(agent))}">
+                                        2%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>间接分成比例</td>
+                                    <td th:text="${@readService.percentage(@commissionRateService.indirectRate(agent))}">
+                                        1%
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -35,7 +35,7 @@ public class ManageMainPage extends AbstractPage {
         webDriver.get(targetSrc);
     }
 
-    public <T extends AbstractContextPage> T currentContext(Class<T> pageClass) {
+    public <T extends AbstractContentPage> T currentContext(Class<T> pageClass) {
 //        webDriver.switchTo().
 //        return initPage(pageClass, webDriver.switchTo().frame(webDriver.findElement(By.id("content"))));
         return initPage(pageClass);
