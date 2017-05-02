@@ -48,7 +48,7 @@ public interface AgentService {
     }
 
     /**
-     * @param level 该身份最高可表达的代理
+     * @param level 特定代理商
      * @return 代理等级;0 表示最高 应当存在{@link #systemLevel()}个等级
      */
     default int agentLevel(AgentLevel level) {

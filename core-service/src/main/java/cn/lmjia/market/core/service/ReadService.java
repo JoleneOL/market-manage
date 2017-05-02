@@ -1,5 +1,7 @@
 package cn.lmjia.market.core.service;
 
+import java.math.BigDecimal;
+
 /**
  * 获取信息服务
  * 通常都是一些非常简单的
@@ -19,5 +21,13 @@ public interface ReadService {
      * @return 名字；或者登录名
      */
     String nameForPrincipal(Object principal);
+
+    /**
+     * 以百分比的方式显示数字；如有必要将最多保留2位小数
+     *
+     * @param input 数字
+     * @return 诸如 20%或者10.15%
+     */
+    String percentage(BigDecimal input);
 
 }

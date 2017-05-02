@@ -11,6 +11,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 
 /**
+ * 可支持配置
+ * <ul>
+ * <li><b>default.agent.loginName</b>默认顶级代理商登录名</li>
+ * <li><b>default.agent.password</b>默认顶级代理商登录密码</li>
+ * <li><b>default.agent.name</b>默认顶级代理商 级别名称</li>
+ * </ul>
+ *
  * @author CJ
  */
 @Configuration

@@ -4,9 +4,12 @@ import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ReadService;
+import me.jiangcai.lib.seext.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.math.BigDecimal;
 
 /**
  * @author CJ
@@ -40,5 +43,10 @@ public class ReadServiceImpl implements ReadService {
         if (StringUtils.isEmpty(contactWay.getName()))
             return login.getLoginName();
         return contactWay.getName();
+    }
+
+    @Override
+    public String percentage(BigDecimal input) {
+        return NumberUtils.normalPercentage(input);
     }
 }
