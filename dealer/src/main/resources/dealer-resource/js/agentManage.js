@@ -4,6 +4,19 @@
 $(function () {
     "use strict";
 
+    /**
+     * TODO: 建议单独维护该API
+     * TODO: 建议增加替换原参数功能
+     * @param originUrl 原始URL
+     * @param params 要新增的参数，暂不支持替换原参数
+     * @return {string} 包含新参数的新url
+     */
+    function buildUrl(originUrl, params) {
+        var newParameters = $.param(params);
+        var sep = (originUrl.indexOf('?') > -1) ? '&' : '?';
+        return originUrl + sep + newParameters;
+    }
+
     var table = $('#agentTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -62,7 +75,10 @@ $(function () {
     $(document).on('click', '.js-search', function () {
         table.ajax.reload();
     }).on('click', '.js-checkUser', function () {
-        $('#content', parent.document).attr('src', 'agentDetail.html');
+        // buildUri()
+        location.href = buildUrl($('body').attr('data-detail-url'), {
+            id: $(this).attr('data-id')
+        });
     });
 
     function extendData() {
