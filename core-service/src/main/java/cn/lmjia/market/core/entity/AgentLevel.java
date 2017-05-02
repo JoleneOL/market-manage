@@ -50,7 +50,8 @@ public class AgentLevel {
 
     public static List<Selection<AgentLevel>> ManageSelections(ReadService readService) {
         return Arrays.asList(
-                new FunctionSelection<>("rank", AgentLevel::getRank)
+                new FunctionSelection<>("id", AgentLevel::getId)
+                , new FunctionSelection<>("rank", AgentLevel::getRank)
                 , new FunctionSelection<>("name", level -> readService.nameForPrincipal(level.getLogin()))
                 , new FunctionSelection<>("phone", level -> readService.mobileFor(level.getLogin()))
                 , new FunctionSelection<AgentLevel>("subordinate", level -> "???")

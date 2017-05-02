@@ -19,7 +19,7 @@ public interface AgentService {
      * @return 代理体系的等级
      */
     default int systemLevel() {
-        return 3;
+        return 5;
     }
 
     /*
@@ -34,10 +34,14 @@ public interface AgentService {
     default String loginTitle(AgentLevel level) {
         switch (agentLevel(level)) {
             case 0:
-                return "总代理商";
+                return "省总代理商";
             case 1:
-                return "分代理商";
+                return "市总代理商";
             case 2:
+                return "区县总代理商";
+            case 3:
+                return "分代理商";
+            case 4:
             default:
                 return "经销商";
         }
