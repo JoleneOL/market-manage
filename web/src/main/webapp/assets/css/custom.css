@@ -413,3 +413,8 @@ input[type=checkbox] {
 .radio-inline .rdio label {
   padding-left: 22px;
 }
+.city-picker-span {
+  text-indent: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
