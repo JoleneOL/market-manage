@@ -34,6 +34,6 @@ public interface CommissionRateService {
      * @param login 推荐人
      * @return 推荐分佣比例
      */
-    BigDecimal recommand(Login login);
+    BigDecimal recommend(Login login);
 
 }
