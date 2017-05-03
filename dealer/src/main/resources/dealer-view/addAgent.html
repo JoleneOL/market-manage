@@ -1,10 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>用户订单 - 代理商后台管理</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
+    <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/custom.css"
+          th:href="@{/assets/css/custom.css}">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
+<body class="inner-document">
+<section>
+    <div class="pageheader">
+        <h2>
+            <i class="fa fa-address-book-o"></i>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/agentManage}" href="agentManage.html"
+                       target="content">代理商管理</a></li>
+                <li class="active">新增代理商</li>
+            </ol>
+        </h2>
+    </div>
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">用户下单</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-7 col-lg-6">
+                                    <form class="form-horizontal mb40" id="J_addAgentForm" method="post">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">上级代理</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入上级代理" class="form-control"
+                                                       name="higherAgent" value="利美家" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">级别</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入代理级别"
+                                                       class="form-control" name="level"
+                                                       value="浙江省代理">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">代理商姓名</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入代理商姓名"
+                                                       class="form-control" name="agentName"
+                                                       value="徐北方">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">首笔进货款</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="元"
+                                                       class="form-control" name="upfrontPaymen"
+                                                       value="30000">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">代理费</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="元"
+                                                       class="form-control" name="agencyFee"
+                                                       value="30000">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">协议时间</label>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="text"
+                                                               class="form-control hasDatepicker js-orderDate"
+                                                               placeholder="开始时间" id="beginDate" name="beginDate"
+                                                               aria-controls="installTable">
+                                                    </div>
+                                                    <div class="display-inline text-center col-xs-12 col-sm-2 b-to-e">
+                                                        ————
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input type="text"
+                                                               class="form-control hasDatepicker js-orderDate"
+                                                               placeholder="结束时间" id="endDate" name="endDate"
+                                                               aria-controls="installTable">
+                                                    </div>
+                                                </div>
 
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">手机号</label>
+                                            <div class="col-sm-6">
+                                                <div class="input-group">
+                                                    <input type="tel" class="form-control" placeholder="请输入手机号"
+                                                           name="phone">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-success button-sendCode" type="button">验证手机号</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">验证码</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入短信验证码"
+                                                       class="form-control" name="authCode">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">初始登录密码</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="最小六位，含大小写字母，数字，下换线，至少包括其中两种"
+                                                       class="form-control" name="authCode" value="123456">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">分成比例</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入分成比例"
+                                                       class="form-control" name="proportion"
+                                                        value="3%" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">推荐人手机号</label>
+                                            <div class="col-sm-6">
+                                                <input type="tel" placeholder="推荐人手机号"
+                                                       class="form-control" name="referrerPhone"
+                                                       value="159888888888" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">办公地址</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" id="J_cityPicker" readonly type="text"
+                                                       data-responsive="true" data-toggle="city-picker"
+                                                       data-simple="true" name="address">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <input type="text" placeholder="详细地址" class="form-control"
+                                                       name="fullAddress">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6 col-sm-offset-3 control-label">
+                                                <button type="submit" class="btn btn-success btn-block btn-lg">
+                                                    开通代理
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
+<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<!--<script src="assets/js/orderForm.js"></script>-->
 </html>

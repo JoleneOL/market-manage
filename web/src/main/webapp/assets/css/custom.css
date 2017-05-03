@@ -440,3 +440,13 @@ input[type=checkbox] {
 .protocol-content .mr40 {
   margin-right: 200px;
 }
+.set-lh {
+  line-height: 37px;
+}
+.b-to-e {
+  line-height: 40px;
+  color: #ccc;
+}
+.button-sendCode {
+  line-height: 1.42857143;
+}

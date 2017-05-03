@@ -57,10 +57,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-2" sec:authorize="hasAnyRole('ROOT','ALL_AGENT')">
-                <div class="form-inline">
-                    <button type="button" class="btn btn-success btn-xs js-addTopAgent">添加总代理</button>
-                </div>
+            <div class="col-sm-2 text-right set-lh" sec:authorize="hasAnyRole('ROOT','ALL_AGENT')">
+                <a href="addAgent.html" content="content" type="button" class="btn btn-success btn-sm js-addTopAgent">添加总代理</a>
             </div>
         </div>
         <div class="row">
