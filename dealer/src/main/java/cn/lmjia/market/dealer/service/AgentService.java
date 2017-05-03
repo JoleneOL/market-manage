@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
@@ -101,7 +102,18 @@ public interface AgentService {
      *
      * @param login     当前身份
      * @param agentName 可选搜索条件
-     * @param pageable  分页  @return login可以管理的相关代理
+     * @return login可以管理的相关代理的规格
+     */
+    Specification<AgentLevel> manageable(Login login, String agentName);
+
+    /**
+     * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
+     *
+     * @param login     当前身份
+     * @param agentName 可选搜索条件
+     * @param pageable  分页
+     * @return login可以管理的相关代理
+     * @see #manageable(Login, String)
      */
     @Transactional(readOnly = true)
     Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable);

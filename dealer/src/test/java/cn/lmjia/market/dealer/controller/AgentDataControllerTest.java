@@ -30,17 +30,19 @@ public class AgentDataControllerTest extends DealerServiceTest {
             // 没有登录 那么怎么使用这个标签呢？
             try {
                 runWith(login, () -> {
+                    final String targetListUri = "/agentData/list2";
+
                     mockMvc.perform(
-                            get("/agentData/list")
+                            get(targetListUri)
                     )
-//                            .andDo(print())
+                            .andDo(print())
                             .andExpect(similarJQueryDataTable("classpath:/mock/agentData.json"));
                     // 支持搜索条件 agentName 可以是手机号码 也可以是用户名 也可以是rankName
                     AgentLevel target = agentLevelRepository.getOne(agent.getId()).getSubAgents().stream()
                             .max(new RandomComparator()).orElse(null);
                     //登录名
                     mockMvc.perform(
-                            get("/agentData/list")
+                            get(targetListUri)
                                     .param("agentName", target.getLogin().getLoginName())
                     )
 //                            .andDo(print())
@@ -49,7 +51,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                     ;
                     // 级别名称
                     mockMvc.perform(
-                            get("/agentData/list")
+                            get(targetListUri)
                                     .param("agentName", target.getRank())
                     )
 //                            .andDo(print())
@@ -59,7 +61,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                     String name = readService.nameForPrincipal(target.getLogin());
                     // 名字
                     mockMvc.perform(
-                            get("/agentData/list")
+                            get(targetListUri)
                                     .param("agentName", name)
                     )
 //                            .andDo(print())
@@ -69,7 +71,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                     String mobile = readService.mobileFor(target.getLogin());
                     if (!StringUtils.isEmpty(mobile)) {
                         mockMvc.perform(
-                                get("/agentData/list")
+                                get(targetListUri)
                                         .param("agentName", mobile)
                         )
 //                            .andDo(print())

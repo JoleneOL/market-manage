@@ -3,11 +3,13 @@ package cn.lmjia.market.core.config;
 import cn.lmjia.market.core.data_table.DrawablePageAndSelectionResolver;
 import cn.lmjia.market.core.data_table.DrawablePageableArgumentResolver;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
+import cn.lmjia.market.core.selection.RowDefinitionHandler;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
@@ -61,6 +63,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 //    private final DateConverter dateConverter;
     private final Environment environment;
     private final Set<WebModule> webModules;
+    @Autowired
+    private RowDefinitionHandler rowDefinitionHandler;
 //    private final BigDecimalConverter bigDecimalConverter;
 
     @Autowired
@@ -81,6 +85,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
         returnValueHandlers.add(new DrawablePageAndSelectionResolver());
+        returnValueHandlers.add(rowDefinitionHandler);
     }
 
     @Override
@@ -241,6 +246,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             return resolver;
         }
 
+        @ComponentScan("cn.lmjia.market.core.selection")
         @Import(WeixinWebSpringConfig.class)
         @Configuration
 //        @ComponentScan("me.jiangcai.wx.web.thymeleaf")

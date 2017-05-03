@@ -61,7 +61,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable) {
+    public Specification<AgentLevel> manageable(Login login, String agentName) {
         final Specification<AgentLevel> nameSpecification;
         if (StringUtils.isEmpty(agentName)) {
             nameSpecification = null;
@@ -81,9 +81,14 @@ public class AgentServiceImpl implements AgentService {
             };
         }
         if (login.isManageable())
-            return agentLevelRepository.findAll(new AndSpecification<>((root, query, cb)
-                    -> cb.isNull(root.get("superior")), nameSpecification), pageable);
-        return agentLevelRepository.findAll(new AndSpecification<>(s(highestAgent(login)), nameSpecification), pageable);
+            return (new AndSpecification<>((root, query, cb)
+                    -> cb.isNull(root.get("superior")), nameSpecification));
+        return (new AndSpecification<>(s(highestAgent(login)), nameSpecification));
+    }
+
+    @Override
+    public Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable) {
+        return agentLevelRepository.findAll(manageable(login, agentName), pageable);
     }
 
 //    @SuppressWarnings("SpringJavaAutowiringInspection")
