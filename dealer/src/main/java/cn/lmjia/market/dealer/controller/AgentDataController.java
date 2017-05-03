@@ -72,7 +72,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root) {
+                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("id");
                             }
 
@@ -88,7 +88,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root) {
+                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("rank");
                             }
                         }, new AgentLevelField() {
@@ -103,7 +103,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root) {
+                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("login");
                             }
                         }, new AgentLevelField() {
@@ -118,7 +118,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root) {
+                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("login");
                             }
                         }, new AgentLevelField() {
@@ -133,7 +133,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root) {
+                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
                                 return null;
                             }
                         }, new AgentLevelField() {
@@ -148,7 +148,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root) {
+                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
                                 return null;
                             }
                         }

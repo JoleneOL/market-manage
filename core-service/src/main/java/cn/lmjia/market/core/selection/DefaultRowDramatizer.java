@@ -1,6 +1,6 @@
 package cn.lmjia.market.core.selection;
 
-import org.springframework.util.NumberUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -13,34 +13,34 @@ import java.util.List;
 /**
  * @author CJ
  */
-public class DefaultRowDramatizer implements RowDramatizer {
+public class DefaultRowDramatizer extends AbstractMediaRowDramatizer implements RowDramatizer {
     @Override
     public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
             , Root<?> root) {
         return Collections.emptyList();
     }
 
-    @Override
-    public int queryOffset(NativeWebRequest webRequest) {
-        try {
-            return NumberUtils.parseNumber(webRequest.getParameter("offset"), Integer.class);
-        } catch (Exception ignored) {
-            return 0;
-        }
+
+    public String getOffsetParameterName() {
+        return "offset";
+    }
+
+    public int getDefaultSize() {
+        return 10;
+    }
+
+    public String getSizeParameterName() {
+        return "size";
     }
 
     @Override
-    public int querySize(NativeWebRequest webRequest) {
-        try {
-            return NumberUtils.parseNumber(webRequest.getParameter("size"), Integer.class);
-        } catch (Exception ignored) {
-            return 0;
-        }
+    public MediaType toMediaType() {
+        return MediaType.APPLICATION_JSON_UTF8;
     }
 
     @Override
-    public void writeResponse(long total, List<?> list, List<FieldDefinition> fields
-            , NativeWebRequest webRequest) throws IOException {
-        // i do not know
+    protected void writeResponse(long total, List<Object> rows, NativeWebRequest webRequest) throws IOException {
+// i do not know
     }
+
 }

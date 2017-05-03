@@ -15,12 +15,36 @@ import java.util.List;
  */
 public interface RowDramatizer {
 
+    /**
+     * @param fields          要显示的字段
+     * @param webRequest      请求
+     * @param criteriaBuilder cb
+     * @param root            root
+     * @return 排序规则
+     */
     List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
             , Root<?> root);
 
+    /**
+     * @param webRequest 请求
+     * @return 开始查询位；默认0
+     */
     int queryOffset(NativeWebRequest webRequest);
 
+    /**
+     * @param webRequest 请求
+     * @return 查询长度
+     */
     int querySize(NativeWebRequest webRequest);
 
+    /**
+     * 写入响应
+     *
+     * @param total      总数
+     * @param list       结果集
+     * @param fields     字段
+     * @param webRequest 请求
+     * @throws IOException 写入时出现的
+     */
     void writeResponse(long total, List<?> list, List<FieldDefinition> fields, NativeWebRequest webRequest) throws IOException;
 }

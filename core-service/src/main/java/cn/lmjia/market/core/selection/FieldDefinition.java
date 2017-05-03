@@ -39,8 +39,9 @@ public interface FieldDefinition {
     Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe);
 
     /**
-     * @param root root
+     * @param root            root
+     * @param criteriaBuilder cb
      * @return 排序表达式; null 表示该字段并不支持排序
      */
-    Expression<?> order(Root<?> root);
+    Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder);
 }
