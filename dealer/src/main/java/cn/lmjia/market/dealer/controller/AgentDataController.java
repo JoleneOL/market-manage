@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import java.util.Arrays;
@@ -43,7 +44,7 @@ public class AgentDataController {
 
     @GetMapping(value = "/list2")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class)
-    public Object data(@AuthenticationPrincipal Login login, String agentName) {
+    public RowDefinition data(@AuthenticationPrincipal Login login, String agentName) {
         return new RowDefinition<AgentLevel>() {
 
             @Override
@@ -70,6 +71,11 @@ public class AgentDataController {
                                 return "id";
                             }
 
+                            @Override
+                            public Expression<?> order(Root<?> root) {
+                                return root.get("id");
+                            }
+
                         }, new AgentLevelField() {
                             @Override
                             protected Object export(AgentLevel level, Function<List, ?> exportMe) {
@@ -79,6 +85,11 @@ public class AgentDataController {
                             @Override
                             public String name() {
                                 return "rank";
+                            }
+
+                            @Override
+                            public Expression<?> order(Root<?> root) {
+                                return root.get("rank");
                             }
                         }, new AgentLevelField() {
                             @Override
@@ -90,6 +101,11 @@ public class AgentDataController {
                             public String name() {
                                 return "name";
                             }
+
+                            @Override
+                            public Expression<?> order(Root<?> root) {
+                                return root.get("login");
+                            }
                         }, new AgentLevelField() {
                             @Override
                             protected Object export(AgentLevel level, Function<List, ?> exportMe) {
@@ -99,6 +115,11 @@ public class AgentDataController {
                             @Override
                             public String name() {
                                 return "phone";
+                            }
+
+                            @Override
+                            public Expression<?> order(Root<?> root) {
+                                return root.get("login");
                             }
                         }, new AgentLevelField() {
                             @Override
@@ -110,6 +131,11 @@ public class AgentDataController {
                             public String name() {
                                 return "subordinate";
                             }
+
+                            @Override
+                            public Expression<?> order(Root<?> root) {
+                                return null;
+                            }
                         }, new AgentLevelField() {
                             @Override
                             protected Object export(AgentLevel level, Function<List, ?> exportMe) {
@@ -119,6 +145,11 @@ public class AgentDataController {
                             @Override
                             public String name() {
                                 return "children";
+                            }
+
+                            @Override
+                            public Expression<?> order(Root<?> root) {
+                                return null;
                             }
                         }
                 );

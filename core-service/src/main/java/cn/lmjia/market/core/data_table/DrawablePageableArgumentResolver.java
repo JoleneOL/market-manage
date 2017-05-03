@@ -144,9 +144,7 @@ public class DrawablePageableArgumentResolver implements HandlerMethodArgumentRe
                 : defaultOrFallback.getPageSize();
         int draw = StringUtils.hasText(drawString) ? parseAndApplyBoundaries(drawString, Integer.MAX_VALUE, false)
                 : defaultOrFallback.getDraw();
-        // todo sort
-        // order[0][column]:2
-        // order[0][dir]:desc
+
 
         return new DataPageRequest(start, length, draw);
     }

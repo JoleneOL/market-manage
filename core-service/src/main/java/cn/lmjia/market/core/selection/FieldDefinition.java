@@ -4,6 +4,7 @@ import org.springframework.http.MediaType;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.function.Function;
@@ -36,4 +37,10 @@ public interface FieldDefinition {
      * @return 输出数据
      */
     Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe);
+
+    /**
+     * @param root root
+     * @return 排序表达式; null 表示该字段并不支持排序
+     */
+    Expression<?> order(Root<?> root);
 }

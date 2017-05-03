@@ -28,7 +28,15 @@ public class JQueryDataTableDramatizer implements RowDramatizer {
     private static final MediaType mediaType = MediaType.APPLICATION_JSON_UTF8;
 
     @Override
-    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder, Root<?> root) {
+    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
+            , Root<?> root) {
+        // todo sort
+        // order[0][column]:2
+        // order[0][dir]:desc
+
+        // 首先循环i from 0; 即可获知存在或者指向 column索引 以及方向
+        // 若column索引可以确定 FieldDefinition 则按此定义的
+//        criteriaBuilder.desc(fields.get(0).order(root));
         return null;
     }
 
