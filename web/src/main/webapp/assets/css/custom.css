@@ -440,3 +440,54 @@ input[type=checkbox] {
 .protocol-content .mr40 {
   margin-right: 200px;
 }
+.set-lh {
+  line-height: 37px;
+}
+.b-to-e {
+  line-height: 40px;
+  color: #ccc;
+}
+.button-sendCode {
+  line-height: 1.42857143;
+}
+.upload-container {
+  position: relative;
+  height: 114px;
+  overflow: hidden;
+}
+.upload-container .upload-default {
+  height: 114px;
+  background-repeat: no-repeat;
+  background-position: 0 -248px;
+  background-image: url(../images/id-card.png);
+}
+.upload-container .upload-default img {
+  width: 180px;
+  height: 114px;
+}
+.upload-container .webuploader-container {
+  top: -114px;
+  height: 100%;
+}
+.upload-container .webuploader-container .webuploader-pick {
+  visibility: hidden;
+  width: 100%;
+  height: 100%;
+}
+.upload-demo-container {
+  position: relative;
+  height: 114px;
+  overflow: hidden;
+}
+.upload-demo-container .upload-demo-front {
+  height: 114px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: url(../images/id-card.png);
+}
+.upload-demo-container .upload-demo-back {
+  height: 114px;
+  background-repeat: no-repeat;
+  background-position: 0 -124px;
+  background-image: url(../images/id-card.png);
+}
