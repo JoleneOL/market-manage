@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
     <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/custom.css"
@@ -166,6 +167,47 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">添加身份证</label>
+                                            <div class="col-sm-6">
+                                                <p class="form-control-static">个人信息面 （格式：3M以下的jpg、jpeg和png）</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-9 col-sm-offset-3">
+                                                <div class="col-sm-6">
+                                                    <div class="upload-container">
+                                                        <div class="upload-default js-uploadFront"></div>
+                                                        <div id="J_uploadFront">选择图片</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="upload-demo-container">
+                                                        <div class="upload-demo-front"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <p class="form-control-static">国徽面 （格式：3M以下的jpg、jpeg和png）</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-9 col-sm-offset-3">
+                                                <div class="col-sm-6">
+                                                    <div class="upload-container">
+                                                        <div class="upload-default js-uploadBack"></div>
+                                                        <div id="J_uploadBack">选择图片</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="upload-demo-container">
+                                                        <div class="upload-demo-back"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <div class="col-sm-6 col-sm-offset-3 control-label">
                                                 <button type="submit" class="btn btn-success btn-block btn-lg">
                                                     开通代理
@@ -184,9 +226,12 @@
 </section>
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
-<!--<script src="assets/js/orderForm.js"></script>-->
+<script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
+<script src="../dealer-resource/js/addAgent.js"
+        th:src="@{/dealer-resource/js/addAgent.js}"></script>
 </html>

@@ -529,3 +529,44 @@ input[type=radio], input[type=checkbox] {
 .button-sendCode {
   line-height: 1.42857143;
 }
+.upload-container {
+  position: relative;
+  height: 114px;
+  overflow: hidden;
+  .upload-default {
+    height: 114px;
+    background-repeat: no-repeat;
+    background-position: 0 -248px;
+    background-image: url(../images/id-card.png);
+    img {
+      width: 180px;
+      height: 114px;
+    }
+  }
+  .webuploader-container {
+    top: -114px;
+    height: 100%;
+    .webuploader-pick {
+      visibility: hidden;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+.upload-demo-container {
+  position: relative;
+  height: 114px;
+  overflow: hidden;
+  .upload-demo-front {
+    height: 114px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-image: url(../images/id-card.png);
+  }
+  .upload-demo-back {
+    height: 114px;
+    background-repeat: no-repeat;
+    background-position: 0 -124px;
+    background-image: url(../images/id-card.png);
+  }
+}
