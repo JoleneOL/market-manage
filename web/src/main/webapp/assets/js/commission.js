@@ -106,28 +106,26 @@ $(function () {
 
 function DatePicker(beginSelector, endSelector) {
     // 仅选择日期
-    $(beginSelector).datepicker(
-        {
-            language: "zh-CN",
-            autoclose: true,
-            format: "yyyy-mm-dd",
-            clearBtn: true,
-            endDate: new Date()
-        }).on('changeDate', function (ev) {
+    $(beginSelector).datepicker({
+        language: "zh-CN",
+        autoclose: true,
+        format: "yyyy-mm-dd",
+        clearBtn: true,
+        endDate: new Date()
+    }).on('changeDate', function (ev) {
         if (ev.date) {
             $(endSelector).datepicker('setStartDate', new Date(ev.date.valueOf()))
         } else {
             $(endSelector).datepicker('setStartDate', null);
         }
     });
-    $(endSelector).datepicker(
-        {
-            language: "zh-CN",
-            autoclose: true,
-            format: "yyyy-mm-dd",
-            clearBtn: true,
-            endDate: new Date()
-        }).on('changeDate', function (ev) {
+    $(endSelector).datepicker({
+        language: "zh-CN",
+        autoclose: true,
+        format: "yyyy-mm-dd",
+        clearBtn: true,
+        endDate: new Date()
+    }).on('changeDate', function (ev) {
         if (ev.date) {
             $(beginSelector).datepicker('setEndDate', new Date(ev.date.valueOf()))
         } else {

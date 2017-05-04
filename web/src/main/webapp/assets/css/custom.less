@@ -528,12 +528,13 @@ input[type=radio], input[type=checkbox] {
 }
 .button-sendCode {
   line-height: 1.42857143;
+  min-width: 102px;
 }
 .upload-container {
   position: relative;
   height: 114px;
-  overflow: hidden;
   .upload-default {
+    position: relative;
     height: 114px;
     background-repeat: no-repeat;
     background-position: 0 -248px;
@@ -541,6 +542,14 @@ input[type=radio], input[type=checkbox] {
     img {
       width: 180px;
       height: 114px;
+    }
+    .has-error {
+      position: absolute;
+      bottom: -20px;
+      color: #a94442;
+    }
+    .has-success {
+      color: #3c763d;
     }
   }
   .webuploader-container {
@@ -569,4 +578,7 @@ input[type=radio], input[type=checkbox] {
     background-position: 0 -124px;
     background-image: url(../images/id-card.png);
   }
+}
+.has-error ~ .error  {
+  color: #a94442;
 }

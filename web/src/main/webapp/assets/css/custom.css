@@ -449,13 +449,14 @@ input[type=checkbox] {
 }
 .button-sendCode {
   line-height: 1.42857143;
+  min-width: 102px;
 }
 .upload-container {
   position: relative;
   height: 114px;
-  overflow: hidden;
 }
 .upload-container .upload-default {
+  position: relative;
   height: 114px;
   background-repeat: no-repeat;
   background-position: 0 -248px;
@@ -464,6 +465,14 @@ input[type=checkbox] {
 .upload-container .upload-default img {
   width: 180px;
   height: 114px;
+}
+.upload-container .upload-default .has-error {
+  position: absolute;
+  bottom: -20px;
+  color: #a94442;
+}
+.upload-container .upload-default .has-success {
+  color: #3c763d;
 }
 .upload-container .webuploader-container {
   top: -114px;
@@ -490,4 +499,7 @@ input[type=checkbox] {
   background-repeat: no-repeat;
   background-position: 0 -124px;
   background-image: url(../images/id-card.png);
+}
+.has-error ~ .error {
+  color: #a94442;
 }

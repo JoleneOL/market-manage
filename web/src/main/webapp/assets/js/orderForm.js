@@ -3,12 +3,12 @@
  */
 $(function () {
     // 粗略的手机号正则
-    jQuery.validator.addMethod("isPhone", function (value, element) {
+    $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1(3|4|5|7|8)\d{9}$/;
         return this.optional(element) || (mobile.test(value));
     }, "请正确填写的手机号");
     // 曲线救国验证 地址是否选择
-    jQuery.validator.addMethod("hasCity", function (value, element) {
+    $.validator.addMethod("hasCity", function (value, element) {
         var val = $('#J_cityPicker').val();
         return val.split("/").length === 3;
     }, "请选择完整的地址");

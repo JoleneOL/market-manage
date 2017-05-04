@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
     <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/custom.css"
@@ -75,7 +76,7 @@
                                             <label class="col-sm-3 control-label">首笔进货款</label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="元"
-                                                       class="form-control" name="upfrontPaymen"
+                                                       class="form-control" name="upfrontPayment"
                                                        value="30000">
                                             </div>
                                         </div>
@@ -117,7 +118,8 @@
                                                     <input type="tel" class="form-control" placeholder="请输入手机号"
                                                            name="phone">
                                                     <span class="input-group-btn">
-                                                        <button class="btn btn-success button-sendCode" type="button">验证手机号</button>
+                                                        <button class="btn btn-success button-sendCode" type="button"
+                                                                id="J_sendAuthCode" disabled>验证手机号</button>
                                                     </span>
                                                 </div>
                                             </div>
@@ -141,7 +143,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入分成比例"
                                                        class="form-control" name="proportion"
-                                                        value="3%" readonly>
+                                                       value="3%" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -149,7 +151,7 @@
                                             <div class="col-sm-6">
                                                 <input type="tel" placeholder="推荐人手机号"
                                                        class="form-control" name="referrerPhone"
-                                                       value="159888888888" readonly>
+                                                       value="15678887888" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -176,8 +178,14 @@
                                             <div class="col-sm-9 col-sm-offset-3">
                                                 <div class="col-sm-6">
                                                     <div class="upload-container">
-                                                        <div class="upload-default js-uploadFront"></div>
-                                                        <div id="J_uploadFront">选择图片</div>
+                                                        <div class="upload-default js-uploadFront">
+                                                            <div class="js-uploadShow"></div>
+                                                            <span class="has-error">
+                                                                <i class="fa fa-exclamation" aria-hidden="true"></i>
+                                                                <strong>请上传图片</strong>
+                                                            </span>
+                                                        </div>
+                                                        <div id="J_uploadFront"></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
@@ -196,8 +204,14 @@
                                             <div class="col-sm-9 col-sm-offset-3">
                                                 <div class="col-sm-6">
                                                     <div class="upload-container">
-                                                        <div class="upload-default js-uploadBack"></div>
-                                                        <div id="J_uploadBack">选择图片</div>
+                                                        <div class="upload-default js-uploadBack">
+                                                            <div class="js-uploadShow"></div>
+                                                            <span class="has-error">
+                                                                <i class="fa fa-exclamation" aria-hidden="true"></i>
+                                                                <strong>请上传图片</strong>
+                                                            </span>
+                                                        </div>
+                                                        <div id="J_uploadBack"></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
@@ -227,6 +241,8 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
