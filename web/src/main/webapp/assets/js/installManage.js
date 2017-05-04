@@ -13,30 +13,31 @@ $(function () {
                 return $.extend({}, d, extendData());
             }
         },
-        "ordering": false,
+        "ordering": true,
         "lengthChange": false,
         "searching": false,
+        "colReorder": true,
         "columns": [
             {
-                "title": "安装机型", "data": "type"
+                "title": "安装机型", "data": "type", "name": "type"
             },
             {
-                "title": "饮水机编码", "data": "code"
+                "title": "饮水机编码", "data": "code", "name": "code"
             },
             {
-                "title": "安装时间", "data": "installTime"
+                "title": "安装时间", "data": "installTime", "name": "installTime"
             },
             {
-                "title": "安装地址", "data": "address"
+                "title": "安装地址", "data": "address", "name": "address"
             },
             {
-                "title": "使用用户", "data": "user"
+                "title": "使用用户", "data": "user", "name": "user"
             },
             {
-                "title": "手机号", "data": "phone"
+                "title": "手机号", "data": "phone", "name": "phone"
             },
             {
-                "title": "状态", "data": "state"
+                "title": "状态", "data": "state", "name": "state"
             }
         ],
         "displayLength": 15,
