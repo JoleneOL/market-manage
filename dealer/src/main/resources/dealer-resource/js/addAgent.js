@@ -83,17 +83,19 @@ $(function () {
         });
     }
 
+    var isUploader = 2;
+
     function successOrError(uploader, msg) {
         var $msg = $(msg);
         uploader.on('uploadSuccess', function (file) {
             layer.msg('上传成功');
             message('success', $msg, '上传成功');
+            if(!--isUploader) $('#J_submitBtn').prop('disabled', false);
         });
 
         uploader.on('uploadError', function (file) {
             layer.msg('上传失败，重新上传');
             message('error', $msg, '上传失败，重新上传');
-
         });
 
         uploader.on('error', function (type) {
@@ -146,8 +148,6 @@ $(function () {
         submitHandler: function (form) {
             // form.submit();
             layer.msg('OK');
-
-            console.log($('input[name="cardFront"]').val());
         }
     });
     $('#J_addAgentForm').validate({
@@ -168,7 +168,7 @@ $(function () {
             beginDate: "required",
             endDate: "required",
             authCode: {
-                required: true,
+                required: true
             },
             referrerPhone: {
                 required: true,
@@ -221,6 +221,8 @@ function DatePicker(beginSelector, endSelector) {
     }).on('changeDate', function (e) {
         var startTime = e.date;
         $(endSelector).datetimepicker('setStartDate', startTime);
+    }).on('hide', function (e) {
+        e.target.focus();
     });
     $(endSelector).datetimepicker({
         language: "zh-CN",
@@ -233,6 +235,8 @@ function DatePicker(beginSelector, endSelector) {
     }).on('changeDate', function (e) {
         var endTime = e.date;
         $(beginSelector).datetimepicker('setEndDate',endTime);
+    }).on('hide', function (e) {
+        e.target.focus();
     });
 
 }
