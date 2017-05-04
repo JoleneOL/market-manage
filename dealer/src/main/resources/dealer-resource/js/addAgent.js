@@ -15,42 +15,6 @@ $(function () {
     successOrError(uploaderFront, '.js-uploadFront');
     successOrError(uploaderBack, '.js-uploadBack');
 
-    $('#J_sendAuthCode').click(function () {
-        // TODO
-        var self = $(this);
-        $.ajax({
-            method: 'POST',
-            url: sendAuthCodeUrl,
-            data: {
-                loginName: phone
-            },
-            dataType: 'json',
-            success: function (data) {
-                if (data.resultCode !== 200) {
-                    layer.msg(data.resultMsg);
-                    return false;
-                }
-                sendSMS(self);
-            },
-            error: function () {
-                layer.msg("系统错误");
-            }
-        });
-    });
-
-    function sendSMS(ele) {
-        ele.prop('disabled', true);
-        var s = 30;
-        var t = setInterval(function () {
-            ele.text(s-- + '秒');
-            if (s === -1) {
-                clearInterval(t);
-                ele.text('验证手机号')
-                    .prop('disabled', false);
-            }
-        }, 1000);
-    }
-
     function createUploader(id, fileName) {
         return WebUploader.create({
             auto: true,
