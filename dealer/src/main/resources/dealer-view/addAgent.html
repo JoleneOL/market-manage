@@ -27,7 +27,8 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="inner-document">
+<body class="inner-document" data-upload-url="../../../../../core-service/src/test/resources/mock/webUploader.json"
+      th:data-upload-url="@{/resourceUpload/webUploader}">
 <section>
     <div class="pageheader">
         <h2>
@@ -56,9 +57,10 @@
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="higherAgent" id="higherAgent"
                                                         title="请选择上级代理">
-                                                    <option>A</option>
-                                                    <option>B</option>
-                                                    <option>C</option>
+                                                    <option>无</option>
+                                                    <option value="A">A</option>
+                                                    <option value="B">B</option>
+                                                    <option value="C">C</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -160,9 +162,9 @@
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="referrerPhone" id="referrerPhone"
                                                         title="推荐人">
-                                                    <option>陈X(15678887888)</option>
-                                                    <option>刘Y(15678887889)</option>
-                                                    <option>叶Z(15678887880)</option>
+                                                    <option value="1">陈X(15678887888)</option>
+                                                    <option value="2">刘Y(15678887889)</option>
+                                                    <option value="3">叶Z(15678887880)</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -184,6 +186,8 @@
                                             <label class="col-sm-3 control-label">添加身份证</label>
                                             <div class="col-sm-6">
                                                 <p class="form-control-static">个人信息面 （格式：3M以下的jpg、jpeg和png）</p>
+                                                <input type="hidden" name="cardFrontPath"/>
+                                                <input type="hidden" name="cardBackPath"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -236,7 +240,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-6 col-sm-offset-3 control-label">
                                                 <button type="submit" class="btn btn-success btn-block btn-lg"
-                                                        id="J_submitBtn" th:disabled="">
+                                                        id="J_submitBtn" disabled>
                                                     开通代理
                                                 </button>
                                             </div>

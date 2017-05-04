@@ -6,23 +6,24 @@ $(function () {
 
     DatePicker('#beginDate', '#endDate');
 
-    var uploaderFront = createUploader('#J_uploadFront', 'cardFront');
-    var uploaderBack = createUploader('#J_uploadBack', 'cardBack');
-
     $('#higherAgent').searchableSelect();
     $('#referrerPhone').searchableSelect();
 
+    var uploaderFront = createUploader('#J_uploadFront', 'cardFront');
+    var uploaderBack = createUploader('#J_uploadBack', 'cardBack');
 
-    makeThumb(uploaderFront, '.js-uploadFront');
-    makeThumb(uploaderBack, '.js-uploadBack');
-    successOrError(uploaderFront, '.js-uploadFront');
-    successOrError(uploaderBack, '.js-uploadBack');
+    uploadMakeThumb(uploaderFront, '.js-uploadFront');
+    uploadMakeThumb(uploaderBack, '.js-uploadBack');
+    uploadError(uploaderFront, '.js-uploadFront');
+    uploadError(uploaderBack, '.js-uploadBack');
+    uploadSuccess(uploaderFront, uploaderBack);
+
 
     function createUploader(id, fileName) {
         return WebUploader.create({
             auto: true,
             swf: '//cdn.lmjia.cn/webuploader/0.1.5/Uploader.swf',
-            server: '/api/fileUpload',
+            server: $('body').attr('data-upload-url'),
             pick: {
                 id: id,
                 multiple: false,
@@ -36,7 +37,7 @@ $(function () {
         });
     }
 
-    function makeThumb(uploader, wrapper) {
+    function uploadMakeThumb(uploader, wrapper) {
         var $wrap = $(wrapper).find('.js-uploadShow');
         uploader.on('fileQueued', function (file) {
             var $img = $('<img />');
@@ -50,15 +51,26 @@ $(function () {
         });
     }
 
-    var isUploader = 2;
+    function uploadSuccess(uploader1, uploader2) {
+        // var $msg = $(msg);
 
-    function successOrError(uploader, msg) {
+        function successForEach(uploader, name) {
+            uploader.on('uploadSuccess', function (file, response) {
+                layer.msg('上传成功');
+                // message('success', $msg, '上传成功');
+                // console.log(response);
+                $('[name=' + name + ']').val(response.id);
+                if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0)
+                    $('#J_submitBtn').prop('disabled', false);
+            });
+        }
+
+        successForEach(uploader1, 'cardFrontPath');
+        successForEach(uploader2, 'cardBackPath');
+    }
+
+    function uploadError(uploader, msg) {
         var $msg = $(msg);
-        uploader.on('uploadSuccess', function (file) {
-            layer.msg('上传成功');
-            message('success', $msg, '上传成功');
-            if(!--isUploader) $('#J_submitBtn').prop('disabled', false);
-        });
 
         uploader.on('uploadError', function (file) {
             layer.msg('上传失败，重新上传');
@@ -180,12 +192,12 @@ $(function () {
 function DatePicker(beginSelector, endSelector) {
     // 仅选择日期
     $(beginSelector).datetimepicker({
-        todayBtn : "linked",
+        todayBtn: "linked",
         language: "zh-CN",
         autoclose: true,
         format: "yyyy-mm-dd",
         clearBtn: true,
-        todayHighlight : true,
+        todayHighlight: true,
         minView: 2,
         startDate: new Date()
     }).on('changeDate', function (e) {
@@ -198,13 +210,13 @@ function DatePicker(beginSelector, endSelector) {
         language: "zh-CN",
         autoclose: true,
         format: "yyyy-mm-dd",
-        todayHighlight : true,
+        todayHighlight: true,
         clearBtn: true,
         minView: 2,
         startDate: new Date()
     }).on('changeDate', function (e) {
         var endTime = e.date;
-        $(beginSelector).datetimepicker('setEndDate',endTime);
+        $(beginSelector).datetimepicker('setEndDate', endTime);
     }).on('hide', function (e) {
         e.target.focus();
     });
