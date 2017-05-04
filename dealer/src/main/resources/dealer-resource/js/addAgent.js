@@ -131,10 +131,9 @@ $(function () {
     });
     $('#J_addAgentForm').validate({
         rules: {
-            higherAgent: "required",
-            level: "required",
+            rank: "required",
             agentName: 'required',
-            upfrontPayment: {
+            firstPayment: {
                 required: true,
                 number: true,
                 isPositive: true
@@ -146,19 +145,15 @@ $(function () {
             },
             beginDate: "required",
             endDate: "required",
-            authCode: {
+            password: {
                 required: true
             },
-            referrerPhone: {
-                required: true,
-                isPhone: true
-            },
-            phone: {
-                required: true,
-                isPhone: true
-            },
-            address: {
+            guideUser: {
                 required: true
+            },
+            mobile: {
+                required: true,
+                isPhone: true
             },
             fullAddress: {
                 required: true,
