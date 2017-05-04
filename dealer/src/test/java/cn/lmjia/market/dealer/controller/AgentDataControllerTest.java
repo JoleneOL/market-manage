@@ -30,7 +30,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
             // 没有登录 那么怎么使用这个标签呢？
             try {
                 runWith(login, () -> {
-                    final String targetListUri = "/agentData/list2";
+                    final String targetListUri = "/agentData/list";
 
                     mockMvc.perform(
                             get(targetListUri)

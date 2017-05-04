@@ -1,8 +1,5 @@
 package cn.lmjia.market.core.entity;
 
-import cn.lmjia.market.core.selection.FunctionSelection;
-import cn.lmjia.market.core.selection.Selection;
-import cn.lmjia.market.core.service.ReadService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,33 +43,6 @@ public class AgentLevel {
     private AgentLevel superior;
     @OneToMany(mappedBy = "superior")
     private List<AgentLevel> subAgents;
-
-    public static List<Selection<AgentLevel>> ManageSelections(ReadService readService) {
-        return Arrays.asList(
-                new FunctionSelection<>("id", AgentLevel::getId)
-                , new FunctionSelection<>("rank", AgentLevel::getRank)
-                , new FunctionSelection<>("name", level -> readService.nameForPrincipal(level.getLogin()))
-                , new FunctionSelection<>("phone", level -> readService.mobileFor(level.getLogin()))
-                , new FunctionSelection<AgentLevel>("subordinate", level -> "???")
-                // 如何实现循环调用？
-                , new Selection<AgentLevel>() {
-                    @Override
-                    public String getName() {
-                        return "children";
-                    }
-
-                    @Override
-                    public boolean supportIterable() {
-                        return true;
-                    }
-
-                    @Override
-                    public Object selectData(AgentLevel data) {
-                        return data.getSubAgents();
-                    }
-                }
-        );
-    }
 
     @Override
     public String toString() {

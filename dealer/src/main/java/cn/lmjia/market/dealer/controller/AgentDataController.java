@@ -1,17 +1,14 @@
 package cn.lmjia.market.dealer.controller;
 
-import cn.lmjia.market.core.data_table.DataPageable;
-import cn.lmjia.market.core.data_table.DrawablePageAndSelection;
-import cn.lmjia.market.core.data_table.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.selection.FieldDefinition;
+import cn.lmjia.market.core.selection.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.selection.RowCustom;
 import cn.lmjia.market.core.selection.RowDefinition;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +39,7 @@ public class AgentDataController {
     @Autowired
     private ReadService readService;
 
-    @GetMapping(value = "/list2")
+    @GetMapping(value = "/list")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition data(@AuthenticationPrincipal Login login, String agentName) {
         return new RowDefinition<AgentLevel>() {
@@ -160,13 +157,6 @@ public class AgentDataController {
                 return agentService.manageable(login, agentName);
             }
         };
-    }
-
-    @GetMapping(value = "/list")
-    public DrawablePageAndSelection<AgentLevel> list(@AuthenticationPrincipal Login login, String agentName
-            , DataPageable pageable) {
-        Page<AgentLevel> agentLevelPage = agentService.manageable(login, agentName, pageable);
-        return new DrawablePageAndSelection<>(pageable, agentLevelPage, AgentLevel.ManageSelections(readService));
     }
 
     // 写一个最有可能实现 也是最具备描述性的方案

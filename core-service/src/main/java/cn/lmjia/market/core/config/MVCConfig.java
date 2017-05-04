@@ -1,7 +1,5 @@
 package cn.lmjia.market.core.config;
 
-import cn.lmjia.market.core.data_table.DrawablePageAndSelectionResolver;
-import cn.lmjia.market.core.data_table.DrawablePageableArgumentResolver;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.selection.RowDefinitionHandler;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
@@ -84,7 +82,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
-        returnValueHandlers.add(new DrawablePageAndSelectionResolver());
+//        returnValueHandlers.add(new DrawablePageAndSelectionResolver());
         returnValueHandlers.add(rowDefinitionHandler);
     }
 
@@ -134,8 +132,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 //        resolver.setPageParameterName(PAGE_PARAMETER_NAME);
 //        resolver.setSizeParameterName(SIZE_PARAMETER_NAME);
 
-        DrawablePageableArgumentResolver resolver = new DrawablePageableArgumentResolver();
-        argumentResolvers.add(resolver);
+//        DrawablePageableArgumentResolver resolver = new DrawablePageableArgumentResolver();
+//        argumentResolvers.add(resolver);
 //        argumentResolvers.add(tokenHotUserResolver);
     }
 
