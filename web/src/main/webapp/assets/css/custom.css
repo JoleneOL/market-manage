@@ -440,6 +440,14 @@ input[type=checkbox] {
 .protocol-content .mr40 {
   margin-right: 200px;
 }
+.protocol-content .table th,
+.protocol-content .table td {
+  text-align: center;
+}
+.protocol-content .table-center {
+  width: 90%;
+  margin: 0 auto;
+}
 .set-lh {
   line-height: 37px;
 }
