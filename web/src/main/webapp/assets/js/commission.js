@@ -106,30 +106,33 @@ $(function () {
 
 function DatePicker(beginSelector, endSelector) {
     // 仅选择日期
-    $(beginSelector).datepicker({
+    $(beginSelector).datetimepicker({
+        todayBtn : "linked",
         language: "zh-CN",
         autoclose: true,
         format: "yyyy-mm-dd",
-        clearBtn: true,
+        todayHighlight : true,
+        minView: 2,
         endDate: new Date()
     }).on('changeDate', function (ev) {
         if (ev.date) {
-            $(endSelector).datepicker('setStartDate', new Date(ev.date.valueOf()))
+            $(endSelector).datetimepicker('setStartDate', new Date(ev.date.valueOf()))
         } else {
-            $(endSelector).datepicker('setStartDate', null);
+            $(endSelector).datetimepicker('setStartDate', null);
         }
     });
-    $(endSelector).datepicker({
+    $(endSelector).datetimepicker({
         language: "zh-CN",
         autoclose: true,
         format: "yyyy-mm-dd",
-        clearBtn: true,
+        todayHighlight : true,
+        minView: 2,
         endDate: new Date()
     }).on('changeDate', function (ev) {
         if (ev.date) {
-            $(beginSelector).datepicker('setEndDate', new Date(ev.date.valueOf()))
+            $(beginSelector).datetimepicker('setEndDate', new Date(ev.date.valueOf()))
         } else {
-            $(beginSelector).datepicker('setEndDate', new Date());
+            $(beginSelector).datetimepicker('setEndDate', new Date());
         }
     });
 }

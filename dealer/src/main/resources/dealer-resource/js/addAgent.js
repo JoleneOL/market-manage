@@ -14,7 +14,7 @@ $(function () {
     makeThumb(uploaderBack, '.js-uploadBack');
     successOrError(uploaderFront, '.js-uploadFront');
     successOrError(uploaderBack, '.js-uploadBack');
-    
+
     $('#J_sendAuthCode').click(function () {
         // TODO
         var self = $(this);
@@ -42,7 +42,7 @@ $(function () {
         ele.prop('disabled', true);
         var s = 30;
         var t = setInterval(function () {
-            ele.text(s--+'秒');
+            ele.text(s-- + '秒');
             if (s === -1) {
                 clearInterval(t);
                 ele.text('验证手机号')
@@ -209,32 +209,30 @@ $(function () {
 
 function DatePicker(beginSelector, endSelector) {
     // 仅选择日期
-    $(beginSelector).datepicker({
-        showOnFocus: false,
+    $(beginSelector).datetimepicker({
+        todayBtn : "linked",
         language: "zh-CN",
         autoclose: true,
         format: "yyyy-mm-dd",
         clearBtn: true,
+        todayHighlight : true,
+        minView: 2,
         startDate: new Date()
-    }).on('changeDate', function (ev) {
-        if (ev.date) {
-            $(endSelector).datepicker('setStartDate', new Date(ev.date.valueOf()))
-        } else {
-            $(endSelector).datepicker('setStartDate', null);
-        }
+    }).on('changeDate', function (e) {
+        var startTime = e.date;
+        $(endSelector).datetimepicker('setStartDate', startTime);
     });
-    $(endSelector).datepicker({
-        showOnFocus: false,
+    $(endSelector).datetimepicker({
         language: "zh-CN",
         autoclose: true,
         format: "yyyy-mm-dd",
+        todayHighlight : true,
         clearBtn: true,
+        minView: 2,
         startDate: new Date()
-    }).on('changeDate', function (ev) {
-        if (ev.date) {
-            $(beginSelector).datepicker('setEndDate', new Date(ev.date.valueOf()))
-        } else {
-            $(beginSelector).datepicker('setEndDate', new Date());
-        }
+    }).on('changeDate', function (e) {
+        var endTime = e.date;
+        $(beginSelector).datetimepicker('setEndDate',endTime);
     });
+
 }
