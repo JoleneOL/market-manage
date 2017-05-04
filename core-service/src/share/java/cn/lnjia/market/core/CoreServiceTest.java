@@ -7,6 +7,8 @@ import cn.lmjia.market.core.service.LoginService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,6 +17,10 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
@@ -92,5 +98,15 @@ public abstract class CoreServiceTest extends SpringWebTest {
         } finally {
             SecurityContextHolder.setContext(securityContext);
         }
+    }
+
+    protected BufferedImage randomImage() throws IOException {
+        try (InputStream inputStream = randomPngImageResource().getInputStream()) {
+            return ImageIO.read(inputStream);
+        }
+    }
+
+    protected Resource randomPngImageResource() {
+        return new ClassPathResource("/images/logo.png");
     }
 }

@@ -47,6 +47,7 @@ import java.util.stream.Stream;
  * @author CJ
  */
 @Configuration
+@ComponentScan("cn.lmjia.market.core.controller")
 @EnableWebMvc
 @Import({MVCConfig.MVCConfigLoader.class})
 public class MVCConfig extends WebMvcConfigurerAdapter {
