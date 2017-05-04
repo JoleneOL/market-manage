@@ -10,6 +10,8 @@ $(function () {
             format: 'yyyy-mm-dd',
             language: 'zh-CN',
             clearBtn: true,
+            todayBtn : "linked",
+            todayHighlight : true,
             endDate: new Date()
         });
     }

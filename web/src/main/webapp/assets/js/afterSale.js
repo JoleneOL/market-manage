@@ -61,7 +61,7 @@ $(function () {
     }).on('click', '.js-checkUser', function () {
         // TODO
         // 需要获取一些参数供详情跳转
-        // $('#content', parent.document).attr('src', 'userDetail.html');
+        $('#content', parent.document).attr('src', 'repairDetail.html');
     });
 
     // 添加额外的参数
