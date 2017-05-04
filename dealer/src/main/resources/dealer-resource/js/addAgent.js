@@ -9,6 +9,9 @@ $(function () {
     var uploaderFront = createUploader('#J_uploadFront', 'cardFront');
     var uploaderBack = createUploader('#J_uploadBack', 'cardBack');
 
+    $('#higherAgent').searchableSelect();
+    $('#referrerPhone').searchableSelect();
+
 
     makeThumb(uploaderFront, '.js-uploadFront');
     makeThumb(uploaderBack, '.js-uploadBack');
@@ -110,8 +113,8 @@ $(function () {
 
     $.validator.setDefaults({
         submitHandler: function (form) {
-            // form.submit();
-            layer.msg('OK');
+            form.submit();
+            // layer.msg('OK');
         }
     });
     $('#J_addAgentForm').validate({
@@ -141,6 +144,9 @@ $(function () {
             phone: {
                 required: true,
                 isPhone: true
+            },
+            address: {
+                required: true
             },
             fullAddress: {
                 required: true,

@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/datetimepicker/css/bootstrap-datetimepicker.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
+    <link href="http://resali.huobanplus.com/cdn/hotui/css/plugins/SearchableSelect/jquery.searchableSelect-1.0.0.css"
+          rel="stylesheet"/>
     <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/custom.css"
           th:href="@{/assets/css/custom.css}">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -42,7 +44,7 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">用户下单</h3>
+                        <h3 class="panel-title">新增代理商</h3>
                     </div>
                     <div class="panel-body">
                         <div class="container-fluid">
@@ -52,8 +54,12 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">上级代理</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入上级代理" class="form-control"
-                                                       name="higherAgent" value="利美家" readonly>
+                                                <select class="form-control" name="higherAgent" id="higherAgent"
+                                                        title="请选择上级代理">
+                                                    <option>A</option>
+                                                    <option>B</option>
+                                                    <option>C</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -61,7 +67,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入代理级别"
                                                        class="form-control" name="level"
-                                                       value="浙江省代理">
+                                                       value="浙江省代理" th:value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -69,7 +75,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入代理商姓名"
                                                        class="form-control" name="agentName"
-                                                       value="徐北方">
+                                                       value="徐北方" th:value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -77,7 +83,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="元"
                                                        class="form-control" name="upfrontPayment"
-                                                       value="30000">
+                                                       value="30000" th:value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -85,7 +91,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="元"
                                                        class="form-control" name="agencyFee"
-                                                       value="30000">
+                                                       value="30000" th:value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -96,7 +102,8 @@
                                                         <input type="text"
                                                                class="form-control hasDatepicker js-orderDate"
                                                                placeholder="开始时间" id="beginDate" name="beginDate"
-                                                               aria-controls="installTable">
+                                                               aria-controls="installTable"
+                                                               value="2017-5-1" th:value="">
                                                     </div>
                                                     <div class="display-inline text-center col-xs-12 col-sm-2 b-to-e">
                                                         ————
@@ -105,30 +112,32 @@
                                                         <input type="text"
                                                                class="form-control hasDatepicker js-orderDate"
                                                                placeholder="结束时间" id="endDate" name="endDate"
-                                                               aria-controls="installTable">
+                                                               aria-controls="installTable" value="2018-5-1"
+                                                               th:value="">
                                                     </div>
                                                 </div>
 
                                             </div>
                                         </div>
                                         <!--<div class="form-group">-->
-                                            <!--<label class="col-sm-3 control-label">手机号</label>-->
-                                            <!--<div class="col-sm-6">-->
-                                                <!--<div class="input-group">-->
-                                                    <!--<input type="tel" class="form-control" placeholder="请输入手机号"-->
-                                                           <!--name="phone">-->
-                                                    <!--<span class="input-group-btn">-->
-                                                        <!--<button class="btn btn-success button-sendCode" type="button"-->
-                                                                <!--id="J_sendAuthCode" disabled>验证手机号</button>-->
-                                                    <!--</span>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
+                                        <!--<label class="col-sm-3 control-label">手机号</label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<div class="input-group">-->
+                                        <!--<input type="tel" class="form-control" placeholder="请输入手机号"-->
+                                        <!--name="phone">-->
+                                        <!--<span class="input-group-btn">-->
+                                        <!--<button class="btn btn-success button-sendCode" type="button"-->
+                                        <!--id="J_sendAuthCode" disabled>验证手机号</button>-->
+                                        <!--</span>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
                                         <!--</div>-->
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">手机号</label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入手机号"
-                                                       class="form-control" name="phone">
+                                                       class="form-control" name="phone" value="18829901010"
+                                                       th:value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -138,20 +147,23 @@
                                                        class="form-control" name="authCode" value="123456">
                                             </div>
                                         </div>
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">分成比例</label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<input type="text" placeholder="请输入分成比例"-->
+                                        <!--class="form-control" name="proportion"-->
+                                        <!--value="3%" readonly>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">分成比例</label>
+                                            <label class="col-sm-3 control-label">推荐人</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入分成比例"
-                                                       class="form-control" name="proportion"
-                                                       value="3%" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">推荐人手机号</label>
-                                            <div class="col-sm-6">
-                                                <input type="tel" placeholder="推荐人手机号"
-                                                       class="form-control" name="referrerPhone"
-                                                       value="15678887888" readonly>
+                                                <select class="form-control" name="referrerPhone" id="referrerPhone"
+                                                        title="推荐人">
+                                                    <option>陈X(15678887888)</option>
+                                                    <option>刘Y(15678887889)</option>
+                                                    <option>叶Z(15678887880)</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -224,7 +236,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-6 col-sm-offset-3 control-label">
                                                 <button type="submit" class="btn btn-success btn-block btn-lg"
-                                                        id="J_submitBtn" disabled>
+                                                        id="J_submitBtn" th:disabled="">
                                                     开通代理
                                                 </button>
                                             </div>
@@ -249,6 +261,7 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/hotui/js/plugins/SearchableSelect/jquery.searchableSelect-1.0.1.js"></script>
 <script src="../dealer-resource/js/addAgent.js"
         th:src="@{/dealer-resource/js/addAgent.js}"></script>
 </html>
