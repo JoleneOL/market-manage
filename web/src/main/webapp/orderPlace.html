@@ -96,9 +96,10 @@
                                             <label class="col-sm-3 control-label">产品类型</label>
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="goodsType">
-                                                    <option value="1">饮水机 1</option>
-                                                    <option value="2">饮水机 2</option>
-                                                    <option value="3">饮水机 3</option>
+                                                    <option value="1" data-deposit="3180" data-need-install="120">净水机</option>
+                                                    <option value="2" data-deposit="6000">空气净化器</option>
+                                                    <option value="3" data-deposit="9800">食品优化宝（家用）</option>
+                                                    <option value="4" data-deposit="12800">食品优化宝（商用）</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -106,16 +107,16 @@
                                             <label class="col-sm-3 control-label">租用机型</label>
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="leasedType">
-                                                    <option value="1">立式</option>
-                                                    <option value="2">欧式</option>
-                                                    <option value="3">法式</option>
+                                                    <option value="1">SCRO-200LK-L</option>
+                                                    <option value="2">SCRO-200LK-B</option>
+                                                    <option value="3">SCRO-200LK-K</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">数量</label>
                                             <div class="col-sm-6">
-                                                <input type="number" min="1" placeholder="请输入数量" class="form-control"
+                                                <input type="number" min="0" placeholder="请输入数量" class="form-control"
                                                        name="amount">
                                             </div>
                                         </div>
@@ -123,7 +124,7 @@
                                             <label class="col-sm-3 control-label">套餐选择</label>
                                             <div class="col-sm-6">
                                                 <input type="text" value="3年收费" class="form-control"
-                                                       disabled="disabled" name="package">
+                                                       disabled name="package">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -134,26 +135,41 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">用户保证金</label>
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-6">
                                                 <h1 class="total">5000.00</h1>
-                                                <!--<input type="text" value="5000.00" class="form-control" name="total" readonly>-->
-                                            </div>
-                                            <label class="col-sm-3 control-label">安装费用</label>
-                                            <div class="col-sm-3">
-                                                <h1 class="total">120.00</h1>
                                             </div>
                                         </div>
+                                        <!--<div class="form-group">-->
+                                            <!--<label class="col-sm-3 control-label">用户保证金</label>-->
+                                            <!--<div class="col-sm-3">-->
+                                                <!--<h1 class="total">5000.00</h1>-->
+                                                <!--&lt;!&ndash;<input type="text" value="5000.00" class="form-control" name="total" readonly>&ndash;&gt;-->
+                                            <!--</div>-->
+                                            <!--<label class="col-sm-3 control-label">安装费用</label>-->
+                                            <!--<div class="col-sm-3">-->
+                                                <!--<h1 class="total">120.00</h1>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="form-group">-->
+                                            <!--<div class="col-sm-3 col-sm-offset-3 control-label">-->
+                                                <!--<div class="ckbox ckbox-success">-->
+                                                    <!--<input type="checkbox" id="agreement" name="isAgree" checked>-->
+                                                    <!--<label for="agreement">同意《用户赠机协议》</label>-->
+                                                    <!--<a href="javascript:;" id="J_isAgree">查看</a>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                            <!--<label class="col-sm-3 control-label">订单总金额</label>-->
+                                            <!--<div class="col-sm-3">-->
+                                                <!--<h1 class="total">999999.99</h1>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                         <div class="form-group">
-                                            <div class="col-sm-3 col-sm-offset-3 control-label">
+                                            <div class="col-sm-6 col-sm-offset-3 control-label">
                                                 <div class="ckbox ckbox-success">
                                                     <input type="checkbox" id="agreement" name="isAgree" checked>
                                                     <label for="agreement">同意《用户赠机协议》</label>
                                                     <a href="javascript:;" id="J_isAgree">查看</a>
                                                 </div>
-                                            </div>
-                                            <label class="col-sm-3 control-label">订单总金额</label>
-                                            <div class="col-sm-3">
-                                                <h1 class="total">999999.99</h1>
                                             </div>
                                         </div>
                                         <div class="form-group">

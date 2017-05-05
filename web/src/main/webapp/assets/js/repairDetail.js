@@ -11,6 +11,7 @@ $(function () {
             type: 1,
             shade: 0.5,
             title: false,
+            shadeClose: true,
             area: ['auto', 'auto'],
             content: content.html()
         });
