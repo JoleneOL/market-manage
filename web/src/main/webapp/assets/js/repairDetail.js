@@ -5,8 +5,8 @@ $(function () {
     "use strict";
     
     $('.img-feedback-list').find('img').click(function () {
-        var $img = $('<img/>').attr('src', $(this).attr('src'));
-        var content = $('<div>').append($img);
+        var $img = $('<img class="img-feedback-big img-thumbnail"/>').attr('src', $(this).attr('src'));
+        var content = $('<div class="container">').append($img);
         window.top.layer.open({
             type: 1,
             shade: 0.5,
