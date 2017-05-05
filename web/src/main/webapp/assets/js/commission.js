@@ -110,7 +110,7 @@ function DatePicker(beginSelector, endSelector) {
         todayBtn : "linked",
         language: "zh-CN",
         autoclose: true,
-        format: "yyyy-mm-dd",
+        format: "yyyy-m-d",
         todayHighlight : true,
         minView: 2,
         endDate: new Date()
@@ -124,7 +124,7 @@ function DatePicker(beginSelector, endSelector) {
     $(endSelector).datetimepicker({
         language: "zh-CN",
         autoclose: true,
-        format: "yyyy-mm-dd",
+        format: "yyyy-m-d",
         todayHighlight : true,
         minView: 2,
         endDate: new Date()

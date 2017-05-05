@@ -7,7 +7,7 @@ $(function () {
     // 初始化 datepicker
     if ($('#datepicker').length > 0) {
         $('#datepicker').datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'yyyy-m-d',
             language: 'zh-CN',
             clearBtn: true,
             todayBtn : "linked",
