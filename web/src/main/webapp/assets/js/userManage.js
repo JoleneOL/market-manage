@@ -28,7 +28,7 @@ $(function () {
                 "title": "推荐人数", "data": "recommend"
             },
             {
-                "title": "入会时间", "data": "joinTime"
+                "title": "注册时间", "data": "joinTime"
             },
             {
                 "title": "省", "data": "province"

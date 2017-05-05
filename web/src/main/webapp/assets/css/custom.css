@@ -453,7 +453,13 @@ input[type=checkbox] {
 }
 .b-to-e {
   line-height: 40px;
-  color: #ccc;
+}
+.b-to-e i {
+  display: inline-block;
+  vertical-align: middle;
+  height: 1px;
+  width: 100%;
+  background: #ccc;
 }
 .button-sendCode {
   line-height: 1.42857143;
@@ -639,4 +645,16 @@ input[type=checkbox] {
 .ivu-steps-horizontal .ivu-steps-item:not(:first-child) .ivu-steps-head {
   padding-left: 10px;
   margin-left: -10px;
+}
+.searchable-select {
+  width: 100%;
+}
+.searchable-select-holder {
+  padding: 10px;
+  border-color: #ccc;
+}
+.img-feedback-list img {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
 }
