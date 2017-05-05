@@ -52,13 +52,10 @@ $(function () {
     }
 
     function uploadSuccess(uploader1, uploader2) {
-        // var $msg = $(msg);
-
         function successForEach(uploader, name) {
             uploader.on('uploadSuccess', function (file, response) {
                 layer.msg('上传成功');
-                // message('success', $msg, '上传成功');
-                // console.log(response);
+                uploadSuccessMsg(name);
                 $('[name=' + name + ']').val(response.id);
                 if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0)
                     $('#J_submitBtn').prop('disabled', false);
@@ -67,6 +64,11 @@ $(function () {
 
         successForEach(uploader1, 'cardFrontPath');
         successForEach(uploader2, 'cardBackPath');
+    }
+
+    function uploadSuccessMsg(msg) {
+        var $msg = (msg === 'cardFrontPath' ) ? $('.js-uploadFront'): $('.js-uploadBack');
+        message('success', $msg, '上传成功');
     }
 
     function uploadError(uploader, msg) {
