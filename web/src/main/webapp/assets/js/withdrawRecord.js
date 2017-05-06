@@ -13,25 +13,25 @@ $(function () {
         "searching": false,
         "columns": [
             {
-                "title": "提现金额", "data": "amount"
+                "title": "提现金额", "data": "amount", "name": "amount"
             },
             {
-                "title": "收款帐号", "data": "account"
+                "title": "收款帐号", "data": "account", "name": "account"
             },
             {
-                "title": "收款人", "data": "user"
+                "title": "收款人", "data": "user", "name": "user"
             },
             {
-                "title": "发票物流", "data": "logistics"
+                "title": "发票物流", "data": "logistics", "name": "logistics"
             },
             {
-                "title": "提现时间", "data": "time"
+                "title": "提现时间", "data": "time", "name": "time"
             },
             {
-                "title": "状态", "data": "status"
+                "title": "状态", "data": "status", "name": "status"
             },
             {
-                "title": "备注", "data": "remark"
+                "title": "备注", "data": "remark", "name": "remark"
             }
         ],
         "displayLength": 15,

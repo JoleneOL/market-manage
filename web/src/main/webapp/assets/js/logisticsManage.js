@@ -18,28 +18,28 @@ $(function () {
         "searching": false,
         "columns": [
             {
-                "title": "发货机型", "data": "type"
+                "title": "发货机型", "data": "type", "name": "type"
             },
             {
-                "title": "饮水机编码", "data": "code"
+                "title": "饮水机编码", "data": "code", "name": "code"
             },
             {
-                "title": "订单时间", "data": "orderTime"
+                "title": "订单时间", "data": "orderTime", "name": "orderTime"
             },
             {
-                "title": "收货地址", "data": "address"
+                "title": "收货地址", "data": "address", "name": "address"
             },
             {
-                "title": "购买用户", "data": "user"
+                "title": "购买用户", "data": "user", "name": "user"
             },
             {
-                "title": "手机号", "data": "phone"
+                "title": "手机号", "data": "phone", "name": "phone"
             },
             {
-                "title": "发货时间", "data": "deliveryTime"
+                "title": "发货时间", "data": "deliveryTime", "name": "deliveryTime"
             },
             {
-                "title": "状态", "data": "state"
+                "title": "状态", "data": "state", "name": "state"
             },
             {
                 title: "操作",
