@@ -79,4 +79,44 @@ $(function () {
 
         }
     });
+
+    // 物流tips
+    $('#J_installationCost').mouseenter(function () {
+        var self = this;
+        layer.tips('<span style="color: #555;">物流费用公司承担、经营范围内免费。无总代的地方需要运费</span>', self, {
+            tips: [1, '#eee']
+        });
+    });
+
+    $('#J_goodsAmount').keyup(function () {
+        countTotal();
+    });
+
+    $('#J_goodsType').change(function () {
+        changeAllMoney($(this));
+        countTotal();
+    });
+
+
+    function countTotal() {
+        var deposit = +$('#J_userDeposit').find('strong').text();
+        var cost = +$('#J_installationCost').find('strong').text();
+        var amout = +$('#J_goodsAmount').val();
+        var total = (deposit + cost) * amout;
+        $('#J_orderTotal').find('strong').text(total);
+    }
+
+    function changeAllMoney($ele) {
+        var $type = $ele.find('option:checked');
+        var deposit = $type.attr('data-deposit');
+        var isNeed = $type.attr('data-need-install');
+        if (isNeed) {
+            $('.js-install').show();
+            $('#J_installationCost').find('strong').text(isNeed);
+        } else {
+            $('.js-install').hide();
+            $('#J_installationCost').find('strong').text(0);
+        }
+        $('#J_userDeposit').find('strong').text(deposit);
+    }
 });
