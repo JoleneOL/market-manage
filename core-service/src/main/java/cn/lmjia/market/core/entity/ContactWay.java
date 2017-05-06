@@ -2,6 +2,7 @@ package cn.lmjia.market.core.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,4 +31,14 @@ public class ContactWay {
     @Column(length = 50)
     private String name;
 
+    @Override
+    public String toString() {
+        if (StringUtils.isEmpty(name) && StringUtils.isEmpty(mobile))
+            return "";
+        if (StringUtils.isEmpty(name))
+            return mobile;
+        if (StringUtils.isEmpty(mobile))
+            return name;
+        return name + "(" + mobile + ")";
+    }
 }

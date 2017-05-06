@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.selection;
+package cn.lmjia.market.core.row;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,4 +19,9 @@ public @interface RowCustom {
      * @return 装饰器
      */
     Class<? extends RowDramatizer> dramatizer() default DefaultRowDramatizer.class;
+
+    /**
+     * @return 是否排序重复结果
+     */
+    boolean distinct();
 }

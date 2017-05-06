@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.selection;
+package cn.lmjia.market.core.row;
 
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -20,7 +20,7 @@ public interface RowDramatizer {
      * @param webRequest      请求
      * @param criteriaBuilder cb
      * @param root            root
-     * @return 排序规则
+     * @return 排序规则;可以返回null表示不支持排序
      */
     List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
             , Root<?> root);

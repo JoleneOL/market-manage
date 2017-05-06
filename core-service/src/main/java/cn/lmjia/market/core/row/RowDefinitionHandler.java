@@ -1,9 +1,10 @@
-package cn.lmjia.market.core.selection;
+package cn.lmjia.market.core.row;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
@@ -11,6 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Objects;
@@ -43,10 +45,14 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
 
         // 看看有没有
         RowDramatizer dramatizer;
-        if (rowCustom != null)
+        boolean distinct;
+        if (rowCustom != null) {
             dramatizer = rowCustom.dramatizer().newInstance();
-        else
+            distinct = rowCustom.distinct();
+        } else {
             dramatizer = new DefaultRowDramatizer();
+            distinct = false;
+        }
 
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<?> originDataQuery = criteriaBuilder.createQuery();
@@ -61,14 +67,24 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
 
-        countQuery = countQuery.select(criteriaBuilder.count(countRoot));
+
+        if (distinct)
+            countQuery = countQuery.select(criteriaBuilder.countDistinct(countRoot));
+        else
+            countQuery = countQuery.select(criteriaBuilder.count(countRoot));
 
         // where
         dataQuery = where(criteriaBuilder, dataQuery, root, rowDefinition);
         countQuery = where(criteriaBuilder, countQuery, countRoot, rowDefinition);
 
+        // Distinct
+        if (distinct)
+            dataQuery = dataQuery.distinct(true);
+
         // sort
-        dataQuery = dataQuery.orderBy(dramatizer.order(rowDefinition.fields(), webRequest, criteriaBuilder, root));
+        final List<Order> order = dramatizer.order(rowDefinition.fields(), webRequest, criteriaBuilder, root);
+        if (!CollectionUtils.isEmpty(order))
+            dataQuery = dataQuery.orderBy(order);
 
         // 打包成Object[]
         long total = entityManager.createQuery(countQuery).getSingleResult();

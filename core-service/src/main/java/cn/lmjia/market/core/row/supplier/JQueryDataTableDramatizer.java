@@ -1,5 +1,8 @@
-package cn.lmjia.market.core.selection;
+package cn.lmjia.market.core.row.supplier;
 
+import cn.lmjia.market.core.row.AbstractMediaRowDramatizer;
+import cn.lmjia.market.core.row.FieldDefinition;
+import cn.lmjia.market.core.row.RowDramatizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.NativeWebRequest;

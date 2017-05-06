@@ -1,7 +1,7 @@
 package cn.lmjia.market.core.config;
 
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
-import cn.lmjia.market.core.selection.RowDefinitionHandler;
+import cn.lmjia.market.core.row.RowDefinitionHandler;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -245,7 +245,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             return resolver;
         }
 
-        @ComponentScan("cn.lmjia.market.core.selection")
+        @ComponentScan("cn.lmjia.market.core.row")
         @Import(WeixinWebSpringConfig.class)
         @Configuration
 //        @ComponentScan("me.jiangcai.wx.web.thymeleaf")

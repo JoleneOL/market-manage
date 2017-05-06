@@ -4,8 +4,12 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.LoginService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -16,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -24,12 +29,16 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author CJ
  */
 @ContextConfiguration(classes = CoreServiceTestConfig.class)
 @WebAppConfiguration
 public abstract class CoreServiceTest extends SpringWebTest {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Log log = LogFactory.getLog(CoreServiceTest.class);
     @Autowired
     protected LoginService loginService;
 
@@ -108,5 +117,30 @@ public abstract class CoreServiceTest extends SpringWebTest {
 
     protected Resource randomPngImageResource() {
         return new ClassPathResource("/images/logo.png");
+    }
+
+    protected ResultMatcher similarSelect2(String resource) {
+        return result -> {
+            Resource resource1 = context.getResource(resource);
+            try (InputStream inputStream = resource1.getInputStream()) {
+                JsonNode actual = objectMapper.readTree(result.getResponse().getContentAsByteArray());
+                assertThat(actual.get("total_count").isNumber())
+                        .isTrue();
+//                assertThat(actual.get("incomplete_results").isBoolean())
+//                        .isTrue();
+
+                JsonNode rows = actual.get("items");
+                assertThat(rows.isArray())
+                        .isTrue();
+                if (rows.size() == 0) {
+                    log.warn("响应的rows为空,无法校验");
+                    return;
+                }
+                JsonNode exceptedAll = objectMapper.readTree(inputStream);
+                JsonNode excepted = exceptedAll.get("items").get(0);
+
+                assertSimilarJsonObject(rows.get(0), excepted);
+            }
+        };
     }
 }

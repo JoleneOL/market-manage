@@ -26,4 +26,11 @@ public class AgentController {
         model.addAttribute("agent", agentService.getAgent(id));
         return "agentDetail.html";
     }
+
+    // 目前仅允许管理员 添加
+    // 实际上应该是允许更多人干这个事儿
+    @GetMapping("/addAgent")
+    public String indexForAdd() {
+        return null;
+    }
 }

@@ -7,7 +7,60 @@ $(function () {
     DatePicker('#beginDate', '#endDate');
 
     $('#higherAgent').searchableSelect();
-    $('#referrerPhone').searchableSelect();
+    $("#referrerPhone").select2({
+        placeholder: "选择一个推荐人",
+        allowClear: true,
+        ajax: {
+            url: "https://api.github.com/search/repositories",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }, // let our custom formatter work
+        minimumInputLength: 2,
+        templateResult: function (x) {
+            if (x.id == '')
+                return x.text;
+            // 渲染html宽体
+            // console.log('templateResult', x);
+            return x.full_name;
+        },
+        templateSelection: function (x) {
+            if (x.id == '')
+                return x.text;
+            // 渲染当前选择
+            return x.full_name;
+        }
+
+    });
+    // var x = $('#referrerPhone').searchableSelect({
+    //     afterSelectItem:function (x) {
+    //         console.log('select ',x);
+    //     }
+    // });
+    // console.log(x);
 
     var uploaderFront = createUploader('#J_uploadFront', 'cardFront');
     var uploaderBack = createUploader('#J_uploadBack', 'cardBack');
@@ -67,7 +120,7 @@ $(function () {
     }
 
     function uploadSuccessMsg(msg) {
-        var $msg = (msg === 'cardFrontPath' ) ? $('.js-uploadFront'): $('.js-uploadBack');
+        var $msg = (msg === 'cardFrontPath' ) ? $('.js-uploadFront') : $('.js-uploadBack');
         message('success', $msg, '上传成功');
     }
 

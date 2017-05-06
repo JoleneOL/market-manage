@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.selection;
+package cn.lmjia.market.core.row;
 
 import org.springframework.data.jpa.domain.Specification;
 

@@ -2,10 +2,10 @@ package cn.lmjia.market.dealer.controller;
 
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.selection.FieldDefinition;
-import cn.lmjia.market.core.selection.JQueryDataTableDramatizer;
-import cn.lmjia.market.core.selection.RowCustom;
-import cn.lmjia.market.core.selection.RowDefinition;
+import cn.lmjia.market.core.row.FieldDefinition;
+import cn.lmjia.market.core.row.RowCustom;
+import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class AgentDataController {
     private ReadService readService;
 
     @GetMapping(value = "/list")
-    @RowCustom(dramatizer = JQueryDataTableDramatizer.class)
+    @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition data(@AuthenticationPrincipal Login login, String agentName) {
         return new RowDefinition<AgentLevel>() {
 
