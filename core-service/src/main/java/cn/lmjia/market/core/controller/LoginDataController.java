@@ -9,6 +9,7 @@ import cn.lmjia.market.core.row.field.BasicExpressionField;
 import cn.lmjia.market.core.row.field.BasicField;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import java.util.List;
 @Controller
 public class LoginDataController {
 
+    @PreAuthorize("!isAnonymous()")
     @GetMapping("/loginData/select2")
     @RowCustom(dramatizer = Select2Dramatizer.class, distinct = true)
     public RowDefinition<Login> searchLoginSelect2(String search) {
