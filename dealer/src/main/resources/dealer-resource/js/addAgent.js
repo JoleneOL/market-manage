@@ -11,12 +11,12 @@ $(function () {
         placeholder: "选择一个推荐人",
         allowClear: true,
         ajax: {
-            url: "https://api.github.com/search/repositories",
+            url: $('body').attr('data-search-login-url'),
             dataType: 'json',
             delay: 250,
             data: function (params) {
                 return {
-                    q: params.term, // search term
+                    search: params.term, // search term
                     page: params.page
                 };
             },
@@ -45,13 +45,31 @@ $(function () {
                 return x.text;
             // 渲染html宽体
             // console.log('templateResult', x);
-            return x.full_name;
+            var strName;
+            if (x.name)
+                strName = '<p>姓名:' + x.name + '</p>';
+            else
+                strName = '';
+
+            var strMobile;
+            if (x.mobile)
+                strMobile = '<p>电话:' + x.mobile + '</p>';
+            else
+                strMobile = '';
+
+            return strName + strMobile;
         },
         templateSelection: function (x) {
             if (x.id == '')
                 return x.text;
             // 渲染当前选择
-            return x.full_name;
+            if (x.name && x.mobile)
+                return x.name + '(' + x.mobile + ')';
+            if (!x.name && !x.mobile)
+                return '';
+            if (x.name)
+                return x.name;
+            return x.mobile;
         }
 
     });
