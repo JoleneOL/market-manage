@@ -42,16 +42,16 @@ $(function () {
                 }
             },
             {
-                "title": "级别", "data": "rank"
+                "title": "级别", "data": "rank", "name": "rank"
             },
             {
-                "title": "用户", "data": "name"
+                "title": "用户", "data": "name", "name": "name"
             },
             {
-                "title": "手机号", "data": "phone"
+                "title": "手机号", "data": "phone", "name": "phone"
             },
             {
-                "title": "所佣下属", "data": "subordinate"
+                "title": "所佣下属", "data": "subordinate", "name": "subordinate"
             },
             {
                 title: "操作",

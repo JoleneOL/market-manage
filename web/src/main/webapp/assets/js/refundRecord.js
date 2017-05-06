@@ -13,25 +13,25 @@ $(function () {
         "searching": false,
         "columns": [
             {
-                "title": "佣金类型", "data": "type"
+                "title": "佣金类型", "data": "type", "name": "type"
             },
             {
-                "title": "订单编号", "data": "orderId"
+                "title": "订单编号", "data": "orderId", "name": "orderId"
             },
             {
-                "title": "购买人姓名", "data": "user"
+                "title": "购买人姓名", "data": "user", "name": "user"
             },
             {
-                "title": "订单总额", "data": "total"
+                "title": "订单总额", "data": "total", "name": "total"
             },
             {
-                "title": "分成比例", "data": "divided"
+                "title": "分成比例", "data": "divided", "name": "divided"
             },
             {
-                "title": "佣金", "data": "commission"
+                "title": "佣金", "data": "commission", "name": "commission"
             },
             {
-                "title": "获佣时间", "data": "time"
+                "title": "获佣时间", "data": "time", "name": "time"
             }
         ],
         "displayLength": 15,

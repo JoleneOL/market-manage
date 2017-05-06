@@ -18,40 +18,40 @@ $(function () {
         "searching": false,
         "columns": [
             {
-                "title": "订单号", "data": "orderId"
+                "title": "订单号", "data": "orderId", "name": "orderId"
             },
             {
-                "title": "购买用户", "data": "orderUser"
+                "title": "购买用户", "data": "orderUser", "name": "orderUser"
             },
             {
-                "title": "手机号", "data": "phone"
+                "title": "手机号", "data": "phone", "name": "phone"
             },
             {
-                "title": "商品品类", "data": "category"
+                "title": "商品品类", "data": "category", "name": "category"
             },
             {
-                "title": "商品型号", "data": "type"
+                "title": "商品型号", "data": "type", "name": "type"
             },
             {
-                "title": "数量", "data": "amount"
+                "title": "数量", "data": "amount", "name": "amount"
             },
             {
-                "title": "充值套餐", "data": "package"
+                "title": "充值套餐", "data": "package", "name": "package"
             },
             {
-                "title": "支付方式", "data": "method"
+                "title": "支付方式", "data": "method", "name": "method"
             },
             {
-                "title": "订单总金额", "data": "total"
+                "title": "订单总金额", "data": "total", "name": "total"
             },
             {
-                "title": "安装地址", "data": "address"
+                "title": "安装地址", "data": "address", "name": "address"
             },
             {
-                "title": "状态", "data": "status"
+                "title": "状态", "data": "status", "name": "status"
             },
             {
-                "title": "下单时间", "data": "orderTime"
+                "title": "下单时间", "data": "orderTime", "name": "orderTime"
             },
             {
                 title: "操作",

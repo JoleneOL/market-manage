@@ -1,15 +1,14 @@
 /**
- * Created by Chang on 2017/4/25.
+ * Created by Neo on 2017/5/6.
  */
-
 $(function () {
     "use strict";
 
-    var table = $('#usersTable').DataTable({
+    var table = $('#refundTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "mock/userData.json",
+            "url": "mock/refundOperate.json",
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
@@ -19,37 +18,37 @@ $(function () {
         "searching": false,
         "columns": [
             {
-                "title": "用户", "data": "name", "name": "name"
+                "title": "购买用户", "data": "user", "name": "user"
             },
             {
-                "title": "级别", "data": "rank", "name": "rank"
+                "title": "手机号", "data": "phone", "name": "phone"
             },
             {
-                "title": "推荐人数", "data": "recommend", "name": "recommend"
+                "title": "购买型号", "data": "type", "name": "type"
             },
             {
-                "title": "注册时间", "data": "joinTime", "name": "joinTime"
+                "title": "商品编码", "data": "code", "name": "code"
             },
             {
-                "title": "省", "data": "province", "name": "province"
+                "title": "数量", "data": "amount", "name": "amount"
             },
             {
-                "title": "市", "data": "city", "name": "city"
+                "title": "发起时间", "data": "time", "name": "time"
             },
             {
-                "title": "区 / 县", "data": "district", "name": "district"
+                "title": "操作员", "data": "operator", "name": "operator"
             },
             {
-                "title": "详细地址", "data": "address", "name": "address"
-            },
-            {
-                "title": "手机号码", "data": "phone", "name": "phone"
+                "title": "状态", "data": "status", "name": "status"
             },
             {
                 title: "操作",
-                className: 'table-action',
+                className: 'table-operate',
                 data: function (item) {
-                    return '<a href="javascript:;" class="js-checkUser" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                    var a = '<a href="javascript:;" class="js-checkUser" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;退款详情</a>';
+                    var b = '<a href="javascript:;" class="js-checkLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看物流</a>';
+                    if(item.statusCode === 2)  return a + b;
+                    return a;
                 }
             }
         ],
@@ -65,7 +64,7 @@ $(function () {
     }).on('click', '.js-checkUser', function () {
         // TODO
         // 需要获取一些参数供详情跳转
-        $('#content', parent.document).attr('src', 'userDetail.html');
+        $('#content', parent.document).attr('src', 'repairDetail.html');
     });
 
     // 添加额外的参数
@@ -86,5 +85,4 @@ $(function () {
     function clearSearchValue() {
         //TODO
     }
-
 });

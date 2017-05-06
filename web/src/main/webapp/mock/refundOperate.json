@@ -1,0 +1,55 @@
+{
+  "draw": 1,
+  "recordsTotal": 23,
+  "recordsFiltered": 23,
+  "data": [
+    {
+      "id": "1",
+      "user": "李菲菲F",
+      "phone": "18673454854",
+      "type": "滤芯 u56  立式",
+      "code": "556664335789",
+      "amount": 1,
+      "time": "2017-09-09",
+      "operator": "大大头",
+      "status": "待处理",
+      "statusCode": 0
+    },
+    {
+      "id": "2",
+      "user": "李菲菲F",
+      "phone": "18673454854",
+      "type": "滤芯 u56  立式",
+      "code": "556664335789",
+      "amount": 1,
+      "time": "2017-09-09",
+      "operator": "大大头",
+      "status": "退款中",
+      "statusCode": 2
+    },
+    {
+      "id": "3",
+      "user": "李菲菲J",
+      "phone": "18673454854",
+      "type": "滤芯 u56  立式",
+      "code": "556664335789",
+      "amount": 1,
+      "time": "2017-09-09",
+      "operator": "大大头",
+      "status": "退货中",
+      "statusCode": 3
+    },
+    {
+      "id": "4",
+      "user": "李菲菲H",
+      "phone": "18673454854",
+      "type": "滤芯 u56  立式",
+      "code": "556664335789",
+      "amount": 1,
+      "time": "2017-09-09",
+      "operator": "大大头",
+      "status": "退款成功",
+      "statusCode": 4
+    }
+  ]
+}

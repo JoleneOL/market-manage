@@ -18,28 +18,28 @@ $(function () {
         "searching": false,
         "columns": [
             {
-                "title": "购买用户", "data": "user"
+                "title": "购买用户", "data": "user", "name": "user"
             },
             {
-                "title": "手机号", "data": "phone"
+                "title": "手机号", "data": "phone", "name": "phone"
             },
             {
-                "title": "购买型号", "data": "type"
+                "title": "购买型号", "data": "type", "name": "type"
             },
             {
-                "title": "商品编码", "data": "code"
+                "title": "商品编码", "data": "code", "name": "code"
             },
             {
-                "title": "数量", "data": "amount"
+                "title": "数量", "data": "amount", "name": "amount"
             },
             {
-                "title": "维修时间", "data": "time"
+                "title": "维修时间", "data": "time", "name": "time"
             },
             {
-                "title": "操作员", "data": "operator"
+                "title": "操作员", "data": "operator", "name": "operator"
             },
             {
-                "title": "状态", "data": "status"
+                "title": "状态", "data": "status", "name": "status"
             },
             {
                 title: "操作",
