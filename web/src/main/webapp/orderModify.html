@@ -101,8 +101,9 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">产品类型</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="goodsType">
-                                                    <option value="1" data-deposit="3180" data-need-install="120">净水机</option>
+                                                <select class="form-control" name="goodsType" id="J_goodsType">
+                                                    <option value="1" data-deposit="3180" data-need-install="120">净水机
+                                                    </option>
                                                     <option value="2" data-deposit="6000">空气净化器</option>
                                                     <option value="3" data-deposit="9800">食品优化宝（家用）</option>
                                                     <option value="4" data-deposit="12800">食品优化宝（商用）</option>
@@ -112,7 +113,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">租用机型</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="leasedType">
+                                                <select class="form-control" name="leasedType" id="J_leasedType">
                                                     <option value="1">SCRO-200LK-L</option>
                                                     <option value="2">SCRO-200LK-B</option>
                                                     <option value="3">SCRO-200LK-K</option>
@@ -123,7 +124,8 @@
                                             <label class="col-sm-3 control-label">数量</label>
                                             <div class="col-sm-6">
                                                 <input type="number" min="0" value="2" placeholder="请输入数量"
-                                                       class="form-control" name="amount">
+                                                       class="form-control" name="amount"
+                                                       id="J_goodsAmount">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -137,20 +139,43 @@
                                             <label class="col-sm-3 control-label">活动码</label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="输入活动码" class="form-control" value="无"
+                                                       name="activityCode"
                                                        disabled>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">用户保证金</label>
                                             <div class="col-sm-3">
-                                                <h1 class="total">5000.00</h1>
+                                                <p class="form-control-static text-danger" id="J_userDeposit">
+                                                    <strong>3180</strong>
+                                                    <span class="unit-txt">元 / 台</span>
+                                                </p>
+                                            </div>
+                                            <label class="col-sm-3 control-label js-install">安装费用</label>
+                                            <div class="col-sm-3">
+                                                <p class="form-control-static text-danger js-install"
+                                                   id="J_installationCost">
+                                                    <strong>180</strong>
+                                                    <span class="unit-txt">元 / 台</span>
+                                                    <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-3 col-sm-offset-3 control-label">
+                                            <label class="col-sm-3 control-label">订单总金额</label>
+                                            <div class="col-sm-9">
+                                                <input type="hidden" name="orderTotal" value="3360">
+                                                <p class="form-control-static text-danger order-total"
+                                                   id="J_orderTotal">
+                                                    <strong>3360</strong>
+                                                    <span class="unit-txt">元</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6 col-sm-offset-3 control-label">
                                                 <div class="ckbox ckbox-success">
-                                                    <input type="checkbox" id="agreement" name="isAgree" checked
-                                                           disabled>
+                                                    <input type="checkbox" id="agreement" name="isAgree" checked>
                                                     <label for="agreement">同意《用户赠机协议》</label>
                                                     <a href="javascript:;" id="J_isAgree">查看</a>
                                                 </div>

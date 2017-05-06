@@ -40,13 +40,19 @@ a:focus {
 .display-none {
   display: none;
 }
-.total {
+strong {
   font-family: "Microsoft YaHei", sans-serif;
   font-weight: 700;
   margin-top: 0;
 }
 .input-group-sm {
   margin-top: 3px;
+}
+.text-danger {
+  color: #d43f3a;
+}
+.label-success {
+  background-color: #009bb6;
 }
 select.form-control {
   padding: 8px 10px;
@@ -662,4 +668,14 @@ input[type=checkbox] {
   margin: 10px;
   max-width: 900px;
   max-height: 800px;
+}
+.order-total strong {
+  font-size: 25px;
+}
+.form-group .form-control-static {
+  margin-top: 3px;
+}
+.label-xlg {
+  padding: 9px 30px;
+  font-size: 14px;
 }
