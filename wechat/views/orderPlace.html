@@ -92,7 +92,7 @@
                     <label class="weui-label">产品类型</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-select" name="goodsType">
+                    <select class="weui-select" name="goodsType" id="J_goodsType">
                         <option value="1" data-deposit="3180" data-need-install="120">净水机
                         </option>
                         <option value="2" data-deposit="6000">空气净化器</option>
@@ -101,7 +101,7 @@
                     </select>
                 </div>
             </div>
-            <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell weui-cell_select weui-cell_select-after" id="J_leasedType">
                 <div class="weui-cell__hd">
                     <label class="weui-label">租用机型</label>
                 </div>
@@ -118,7 +118,8 @@
                     <label class="weui-label">数量</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="number" placeholder="请输入数量" min="0" name="amount">
+                    <input class="weui-input" type="number" placeholder="请输入数量" min="0" name="amount"
+                           id="J_goodsAmount">
                 </div>
             </div>
             <div class="weui-cell">
@@ -147,22 +148,22 @@
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">安装费用</label>
+                    <label class="weui-label">保证金</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="weui-input text-warn">
-                        <strong>120</strong>
+                    <p class="weui-input text-warn" id="J_userDeposit">
+                        <strong>3180</strong>
                         <span class="unit-txt">元 / 台</span>
                     </p>
                 </div>
             </div>
-            <div class="weui-cell">
+            <div class="weui-cell js-install">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">保证金</label>
+                    <label class="weui-label">安装费用</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="weui-input text-warn">
-                        <strong>5000</strong>
+                    <p class="weui-input text-warn" id="J_installationCost">
+                        <strong>180</strong>
                         <span class="unit-txt">元 / 台</span>
                     </p>
                 </div>
@@ -172,8 +173,8 @@
                     <label class="weui-label">订单总金额</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="weui-input text-warn">
-                        <strong>5120</strong>
+                    <p class="weui-input text-warn" id="J_orderTotal">
+                        <strong>3360</strong>
                         <span class="unit-txt">元</span>
                     </p>
                 </div>
