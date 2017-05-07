@@ -54,6 +54,9 @@ strong {
 .label-success {
   background-color: #009bb6;
 }
+textarea {
+  resize: none;
+}
 select.form-control {
   padding: 8px 10px;
 }
@@ -681,4 +684,7 @@ input[type=checkbox] {
 }
 .table-operate a {
   margin-right: 20px;
+}
+.select2-container {
+  width: 100% !important;
 }
