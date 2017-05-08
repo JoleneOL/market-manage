@@ -20,7 +20,10 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 @Import({CommonConfig.class, DataSupportConfig.class,
 //        ServiceConfig.class
 })
-@ComponentScan({"cn.lmjia.market.core.service"})
+@ComponentScan({
+        "cn.lmjia.market.core.service"
+        , "cn.lmjia.market.core.converter"
+})
 @EnableJpaRepositories("cn.lmjia.market.core.repository")
 public class CoreConfig extends WeixinWebSpringConfig implements WebModule {
 

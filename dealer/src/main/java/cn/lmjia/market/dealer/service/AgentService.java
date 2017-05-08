@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
+import java.time.LocalDate;
 
 /**
  * 代理服务
@@ -123,13 +124,17 @@ public interface AgentService {
     /**
      * 添加一个特定等级的代理商；按照每个代理都是同时存在的理论；那么会同时创建{@link #systemLevel()}个代理商
      *
-     * @param login    相关身份
-     * @param name     名称
-     * @param superior 上级
-     * @return 被保存的新的最高代理商
+     * @param who          可选参数；谁添加的代理
+     * @param login        相关身份
+     * @param name         名称
+     * @param beginDate    合同起始时间
+     * @param endDate      合同结束时间
+     * @param firstPayment 首笔进货款
+     * @param agencyFee    代理费
+     * @param superior     上级  @return 被保存的新的最高代理商
      */
     @Transactional
-    AgentLevel addAgent(Login login, String name, AgentLevel superior);
+    AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate, int firstPayment, int agencyFee, AgentLevel superior);
 
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的

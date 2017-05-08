@@ -42,14 +42,12 @@ public abstract class DealerServiceTest extends CoreServiceTest {
      * @return 已保存的代理商的登录
      */
     protected Login newRandomAgent(String rawPassword, AgentLevel superior) {
-        Login login = new Login();
-        login.setLoginName(randomMobile());
-        login = loginService.password(login, rawPassword);
+        Login login = loginService.newLogin(randomMobile(), null, rawPassword);
         if (random.nextBoolean()) {
             contactWayService.updateMobile(login, randomMobile());
             contactWayService.updateName(login, "新名字" + RandomStringUtils.randomAlphabetic(6));
         }
-        agentService.addAgent(login, "随机代理" + RandomStringUtils.randomAlphabetic(4), superior);
+        agentService.addAgent(null, login, "随机代理" + RandomStringUtils.randomAlphabetic(4), null, null, 0, 0, superior);
         return login;
     }
 

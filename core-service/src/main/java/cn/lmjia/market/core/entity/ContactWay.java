@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity;
 
+import cn.lmjia.market.core.entity.support.Address;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
@@ -9,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * 联系方式
@@ -18,6 +21,9 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = "mobile")
+})
 public class ContactWay {
 
     @Id
@@ -30,6 +36,12 @@ public class ContactWay {
      */
     @Column(length = 50)
     private String name;
+
+    private Address address;
+    @Column(length = 60)
+    private String frontImagePath;
+    @Column(length = 60)
+    private String backImagePath;
 
     @Override
     public String toString() {

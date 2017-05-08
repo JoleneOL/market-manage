@@ -2,11 +2,15 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ContactWayService;
+import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -17,6 +21,8 @@ public class ContactWayServiceImpl implements ContactWayService {
 
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private ResourceService resourceService;
 
     @Override
     public ContactWay updateMobile(Login login, String mobile) {
@@ -24,7 +30,9 @@ public class ContactWayServiceImpl implements ContactWayService {
     }
 
     private ContactWay updateContactWay(Login login, Consumer<ContactWay> contactWayConsumer) {
-        login = loginRepository.getOne(login.getId());
+        if (login.getId() != null)
+            login = loginRepository.getOne(login.getId());
+
         if (login.getContactWay() == null) {
             login.setContactWay(new ContactWay());
         }
@@ -35,5 +43,29 @@ public class ContactWayServiceImpl implements ContactWayService {
     @Override
     public ContactWay updateName(Login login, String name) {
         return updateContactWay(login, contactWay -> contactWay.setName(name));
+    }
+
+    @Override
+    public ContactWay updateAddress(Login login, Address address) {
+        return updateContactWay(login, contactWay -> contactWay.setAddress(address));
+    }
+
+    @Override
+    public ContactWay updateIDCardImages(Login login, String frontResourcePath, String backResourcePath)
+            throws IOException {
+        String id = UUID.randomUUID().toString();
+        String frontPath = "contact/" + id + "/front." + ext(frontResourcePath);
+        String backPath = "contact/" + id + "/back." + ext(backResourcePath);
+        resourceService.moveResource(frontPath, frontResourcePath);
+        resourceService.moveResource(backPath, backResourcePath);
+        return updateContactWay(login, contactWay -> {
+            contactWay.setFrontImagePath(frontPath);
+            contactWay.setBackImagePath(backPath);
+        });
+    }
+
+    private String ext(String path) {
+        int index = path.lastIndexOf(".");
+        return path.substring(index + 1, path.length());
     }
 }

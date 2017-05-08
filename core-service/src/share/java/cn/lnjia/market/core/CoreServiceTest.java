@@ -1,13 +1,18 @@
 package cn.lnjia.market.core;
 
+import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.LoginService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +31,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +48,12 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private static final Log log = LogFactory.getLog(CoreServiceTest.class);
     @Autowired
     protected LoginService loginService;
+    @Autowired
+    protected ResourceService resourceService;
+    @Autowired
+    private LocalDateConverter localDateConverter;
+    @Autowired
+    private LoginRepository loginRepository;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -115,6 +128,17 @@ public abstract class CoreServiceTest extends SpringWebTest {
         }
     }
 
+    /**
+     * @return 新生成的图片路径
+     */
+    protected String newRandomImagePath() throws IOException {
+        String path = "tmp/" + UUID.randomUUID().toString() + ".png";
+        try (InputStream stream = randomPngImageResource().getInputStream()) {
+            resourceService.uploadResource(path, stream);
+        }
+        return path;
+    }
+
     protected Resource randomPngImageResource() {
         return new ClassPathResource("/images/logo.png");
     }
@@ -142,5 +166,33 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 assertSimilarJsonObject(rows.get(0), excepted);
             }
         };
+    }
+
+    public String toText(LocalDate localDate) {
+        return localDateConverter.print(localDate, null);
+    }
+
+    /**
+     * @param manager 管理员可以么？
+     * @return 随便一个已存在的身份
+     */
+    protected Login randomLogin(boolean manager) {
+        return loginRepository.findAll((root, query, cb)
+                -> cb.isTrue(root.get("enabled"))).stream()
+                .filter(login -> !(manager && login instanceof Manager))
+                .max(new RandomComparator())
+                .orElseThrow(() -> new IllegalStateException("一个都没有？"));
+    }
+
+    /**
+     * @return 随机的一个地址
+     */
+    protected Address randomAddress() {
+        Address address = new Address();
+        address.setProvince("北京市");
+        address.setPrefecture("北京市");
+        address.setCounty("东城区");
+        address.setOtherAddress("其他地址" + RandomStringUtils.randomAlphabetic(10));
+        return address;
     }
 }

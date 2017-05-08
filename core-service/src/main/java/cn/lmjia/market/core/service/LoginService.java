@@ -26,4 +26,17 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional
     <T extends Login> T password(T login, String rawPassword);
+
+    Login get(long id);
+
+    /**
+     * 新增普通登录
+     *
+     * @param username    登录名
+     * @param guide       引导者
+     * @param rawPassword 明文密码
+     * @return
+     */
+    @Transactional
+    Login newLogin(String username, Login guide, String rawPassword);
 }

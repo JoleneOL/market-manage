@@ -44,4 +44,17 @@ public class LoginServiceImpl implements LoginService {
         login.setPassword(passwordEncoder.encode(rawPassword));
         return loginRepository.save(login);
     }
+
+    @Override
+    public Login get(long id) {
+        return loginRepository.getOne(id);
+    }
+
+    @Override
+    public Login newLogin(String username, Login guide, String rawPassword) {
+        Login login = new Login();
+        login.setLoginName(username);
+        login.setGuideUser(guide);
+        return password(login, rawPassword);
+    }
 }

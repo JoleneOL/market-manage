@@ -1,5 +1,7 @@
 package cn.lmjia.market.core.config;
 
+import cn.lmjia.market.core.converter.AddressResolver;
+import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.row.RowDefinitionHandler;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
@@ -35,6 +37,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -65,6 +68,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private RowDefinitionHandler rowDefinitionHandler;
 //    private final BigDecimalConverter bigDecimalConverter;
+@Autowired
+private LocalDateConverter localDateConverter;
 
     @Autowired
     public MVCConfig(ThymeleafViewResolver htmlViewResolver, Environment environment, Set<WebModule> webModules) {
@@ -136,12 +141,13 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 //        DrawablePageableArgumentResolver resolver = new DrawablePageableArgumentResolver();
 //        argumentResolvers.add(resolver);
 //        argumentResolvers.add(tokenHotUserResolver);
+        argumentResolvers.add(new AddressResolver());
     }
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
-//        registry.addFormatterForFieldType(LocalDateTime.class, localDateTimeFormatter);
+        registry.addFormatterForFieldType(LocalDate.class, localDateConverter);
 //        registry.addFormatterForFieldType(BigDecimal.class, bigDecimalConverter);
 //        registry.addFormatterForFieldType(Date.class, dateConverter);
     }

@@ -19,6 +19,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -45,18 +47,26 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public AgentLevel addAgent(Login login, String name, AgentLevel superior) {
+    public AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate
+            , int firstPayment, int agencyFee, AgentLevel superior) {
         AgentLevel topLevel = null;
 
         AgentLevel current = superior;
-        int count = systemLevel() - (current == null ? 0 : agentLevel(superior) + 1);// 几次 如果是最顶级的那么就是 systemLevel次
+        int count = systemLevel() - (current == null ? 0 : agentLevel(superior) + 1);
+        // 几次 如果是最顶级的那么就是 systemLevel次
         if (count <= 0)
             throw new IllegalStateException("无法给" + superior + "添加下级代理商，违法了现在有的" + systemLevel() + "层架构");
         while (count-- > 0) {
             AgentLevel top = new AgentLevel();
+            top.setCreatedBy(who);
+            top.setCreatedTime(LocalDateTime.now());
             top.setLogin(login);
             top.setRank(name);
             top.setSuperior(current);
+            top.setBeginDate(beginDate);
+            top.setEndDate(endDate);
+            top.setFirstPayment(firstPayment);
+            top.setAgencyFee(agencyFee);
             final AgentLevel newAgentLevel = agentLevelRepository.save(top);
             if (current != null) {
                 if (current.getSubAgents() == null)
@@ -75,7 +85,7 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public AgentLevel addTopAgent(Login login, String name) {
-        return addAgent(login, name, null);
+        return addAgent(null, login, name, null, null, 0, 0, null);
     }
 
     @Override

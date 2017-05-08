@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +38,22 @@ public class AgentLevel {
      */
     @Column(length = 20)
     private String rank;
+    /**
+     * 谁添加的
+     */
+    @ManyToOne
+    private Login createdBy;
+    /**
+     * 添加时间
+     */
+    @Column(columnDefinition = "datetime")
+    private LocalDateTime createdTime;
+    @Column(columnDefinition = "date")
+    private LocalDate beginDate;
+    @Column(columnDefinition = "date")
+    private LocalDate endDate;
+    private int firstPayment;
+    private int agencyFee;
     /**
      * 上级;作为最顶级的代理商它的superior是null
      */

@@ -39,11 +39,9 @@ public class DealerInitService {
     public void defaultAgents() {
         long count = agentLevelRepository.count((root, query, cb) -> cb.isNull(root.get("superior")));
         if (count == 0) {
-            Login login = new Login();
-            login.setLoginName(environment.getProperty("default.agent.loginName", "master"));
-            login = loginService.password(login
+            Login login = loginService.newLogin(environment.getProperty("default.agent.loginName"
+                    , "master"), null
                     , environment.getProperty("default.agent.password", "masterIsMaster"));
-
             agentService.addTopAgent(login, environment.getProperty("default.agent.name", "默认名称"));
         }
     }
