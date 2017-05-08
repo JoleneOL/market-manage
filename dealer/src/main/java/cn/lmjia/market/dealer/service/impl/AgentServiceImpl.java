@@ -56,10 +56,12 @@ public class AgentServiceImpl implements AgentService {
         // 几次 如果是最顶级的那么就是 systemLevel次
         if (count <= 0)
             throw new IllegalStateException("无法给" + superior + "添加下级代理商，违法了现在有的" + systemLevel() + "层架构");
+
+        final LocalDateTime now = LocalDateTime.now();
         while (count-- > 0) {
             AgentLevel top = new AgentLevel();
             top.setCreatedBy(who);
-            top.setCreatedTime(LocalDateTime.now());
+            top.setCreatedTime(now);
             top.setLogin(login);
             top.setRank(name);
             top.setSuperior(current);

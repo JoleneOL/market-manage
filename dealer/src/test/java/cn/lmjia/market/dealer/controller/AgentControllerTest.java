@@ -66,6 +66,8 @@ public class AgentControllerTest extends DealerServiceTest {
                     .andDo(print())
                     .andExpect(status().isFound())
             ;
+
+            // TODO 数据校验，以及因为手机号码的排他性，所以需要在页面上做远程校验 同时检查登录名以及联系表的手机号码
             return null;
         });
 
