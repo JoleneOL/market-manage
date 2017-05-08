@@ -55,6 +55,7 @@ public interface AgentService {
      * @param root    root
      * @param builder builder
      * @return 等级的表达式
+     * @see #agentLevel(AgentLevel)
      */
     default Expression<Integer> agentLevelExpression(Root<? extends AgentLevel> root, CriteriaBuilder builder) {
         return builder.function("mm_agentLevel", Integer.class, root.get("id"));
@@ -64,6 +65,7 @@ public interface AgentService {
      * @param agentId 已知的一个代理的主键
      * @param builder builder
      * @return 等级的表达式
+     * @see #agentLevel(AgentLevel)
      */
     default Expression<Integer> agentLevelExpression(long agentId, CriteriaBuilder builder) {
         return builder.function("mm_agentLevel", Integer.class, builder.literal(agentId));
@@ -126,6 +128,16 @@ public interface AgentService {
      * @return login可以管理的相关代理的规格
      */
     Specification<AgentLevel> manageable(Login login, String agentName);
+
+    /**
+     * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
+     * 并且它可以拥有下级单位
+     *
+     * @param login     当前身份
+     * @param agentName 可选搜索条件
+     * @return login可以管理的相关代理的规格
+     */
+    Specification<AgentLevel> manageableAndRuling(Login login, String agentName);
 
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的

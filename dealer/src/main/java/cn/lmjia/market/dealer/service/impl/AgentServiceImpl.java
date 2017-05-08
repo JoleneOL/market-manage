@@ -79,6 +79,13 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public Specification<AgentLevel> manageableAndRuling(Login login, String agentName) {
+        return new AndSpecification<>(manageable(login, agentName)
+                , (root, query, cb)
+                -> cb.lessThan(agentLevelExpression(root, cb), systemLevel() - 1));
+    }
+
+    @Override
     public Specification<AgentLevel> manageable(Login login, String agentName) {
         final Specification<AgentLevel> nameSpecification;
         if (StringUtils.isEmpty(agentName)) {
@@ -101,7 +108,7 @@ public class AgentServiceImpl implements AgentService {
         if (login.isManageable())
             return (new AndSpecification<>((root, query, cb)
                     -> cb.isNull(root.get("superior")), nameSpecification));
-        return (new AndSpecification<>(s(highestAgent(login)), nameSpecification));
+        return (new AndSpecification<>(directBelongsTo(highestAgent(login)), nameSpecification));
     }
 
     @Override
@@ -134,7 +141,7 @@ public class AgentServiceImpl implements AgentService {
 //        return null;
 //    }
 
-    private Specification<AgentLevel> s(AgentLevel agent) {
+    private Specification<AgentLevel> directBelongsTo(AgentLevel agent) {
         return (root, query, cb) -> cb.equal(root.get("superior"), agent);
     }
 
