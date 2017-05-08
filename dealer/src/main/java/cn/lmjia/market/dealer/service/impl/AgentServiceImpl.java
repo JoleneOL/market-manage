@@ -39,7 +39,7 @@ public class AgentServiceImpl implements AgentService {
         CriteriaQuery<Integer> integerCriteriaQuery = criteriaBuilder.createQuery(Integer.class);
         Root<AgentLevel> root = integerCriteriaQuery.from(AgentLevel.class);
 //        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(level.getId(), criteriaBuilder));
-        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(root, criteriaBuilder));
+        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(root.get("id"), criteriaBuilder));
         integerCriteriaQuery = integerCriteriaQuery.where(criteriaBuilder.equal(root.get("id"), level.getId()));
         return entityManager.createQuery(integerCriteriaQuery).getSingleResult();
     }
@@ -79,14 +79,14 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public Specification<AgentLevel> manageableAndRuling(Login login, String agentName) {
-        return new AndSpecification<>(manageable(login, agentName)
+    public Specification<AgentLevel> manageableAndRuling(boolean direct, Login login, String agentName) {
+        return new AndSpecification<>(manageable(direct, login, agentName)
                 , (root, query, cb)
-                -> cb.lessThan(agentLevelExpression(root, cb), systemLevel() - 1));
+                -> cb.lessThan(agentLevelExpression(root.get("id"), cb), systemLevel() - 1));
     }
 
     @Override
-    public Specification<AgentLevel> manageable(Login login, String agentName) {
+    public Specification<AgentLevel> manageable(boolean direct, Login login, String agentName) {
         final Specification<AgentLevel> nameSpecification;
         if (StringUtils.isEmpty(agentName)) {
             nameSpecification = null;
@@ -106,14 +106,20 @@ public class AgentServiceImpl implements AgentService {
             };
         }
         if (login.isManageable())
-            return (new AndSpecification<>((root, query, cb)
-                    -> cb.isNull(root.get("superior")), nameSpecification));
-        return (new AndSpecification<>(directBelongsTo(highestAgent(login)), nameSpecification));
+            if (direct)
+                return (new AndSpecification<>((root, query, cb)
+                        -> cb.isNull(root.get("superior")), nameSpecification));
+            else
+                return nameSpecification;
+        if (direct)
+            return (new AndSpecification<>(directBelongsTo(highestAgent(login)), nameSpecification));
+        else
+            return (new AndSpecification<>(belongsTo(highestAgent(login)), nameSpecification));
     }
 
     @Override
     public Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable) {
-        return agentLevelRepository.findAll(manageable(login, agentName), pageable);
+        return agentLevelRepository.findAll(manageable(true, login, agentName), pageable);
     }
 
 //    @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -140,6 +146,10 @@ public class AgentServiceImpl implements AgentService {
 ////        entityManager.find
 //        return null;
 //    }
+
+    private Specification<AgentLevel> belongsTo(AgentLevel agent) {
+        return (root, query, cb) -> cb.equal(agentBelongsExpression(root.get("id"), cb.literal(agent.getId()), cb), 1);
+    }
 
     private Specification<AgentLevel> directBelongsTo(AgentLevel agent) {
         return (root, query, cb) -> cb.equal(root.get("superior"), agent);

@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Root;
 
 /**
  * 代理服务
@@ -52,13 +51,25 @@ public interface AgentService {
     }
 
     /**
-     * @param root    root
-     * @param builder builder
+     * @param agentIdExpression agentIdExpression
+     * @param toExpression      toExpression
+     * @param builder           builder
+     * @return agentIdExpression 是否从属于toExpression(包括间接) 只有1是表示肯定的
+     * @see #agentLevel(AgentLevel)
+     */
+    default Expression<Integer> agentBelongsExpression(Expression<?> agentIdExpression, Expression<?> toExpression
+            , CriteriaBuilder builder) {
+        return builder.function("mm_agentBelongs", Integer.class, agentIdExpression, toExpression);
+    }
+
+    /**
+     * @param agentIdExpression agentIdExpression
+     * @param builder           builder
      * @return 等级的表达式
      * @see #agentLevel(AgentLevel)
      */
-    default Expression<Integer> agentLevelExpression(Root<? extends AgentLevel> root, CriteriaBuilder builder) {
-        return builder.function("mm_agentLevel", Integer.class, root.get("id"));
+    default Expression<Integer> agentLevelExpression(Expression<?> agentIdExpression, CriteriaBuilder builder) {
+        return builder.function("mm_agentLevel", Integer.class, agentIdExpression);
     }
 
     /**
@@ -123,21 +134,23 @@ public interface AgentService {
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
      *
+     * @param direct    是否要求直接从属
      * @param login     当前身份
      * @param agentName 可选搜索条件
      * @return login可以管理的相关代理的规格
      */
-    Specification<AgentLevel> manageable(Login login, String agentName);
+    Specification<AgentLevel> manageable(boolean direct, Login login, String agentName);
 
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
      * 并且它可以拥有下级单位
      *
+     * @param direct    是否要求直接从属
      * @param login     当前身份
      * @param agentName 可选搜索条件
      * @return login可以管理的相关代理的规格
      */
-    Specification<AgentLevel> manageableAndRuling(Login login, String agentName);
+    Specification<AgentLevel> manageableAndRuling(boolean direct, Login login, String agentName);
 
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的
@@ -146,7 +159,7 @@ public interface AgentService {
      * @param agentName 可选搜索条件
      * @param pageable  分页
      * @return login可以管理的相关代理
-     * @see #manageable(Login, String)
+     * @see #manageable(boolean, Login, String)
      */
     @Transactional(readOnly = true)
     Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable);

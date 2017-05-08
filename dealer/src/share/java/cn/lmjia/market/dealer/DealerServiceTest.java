@@ -6,12 +6,12 @@ import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.dealer.config.DealerConfig;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lnjia.market.core.CoreServiceTest;
+import me.jiangcai.lib.seext.function.AllBiConsumer;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
 /**
  * @author CJ
@@ -58,7 +58,7 @@ public abstract class DealerServiceTest extends CoreServiceTest {
      *
      * @param work 特定检查，每个新增的父级代理都会经历一次
      */
-    protected void newRandomAgentSystemAnd(BiConsumer<Login, AgentLevel> work) {
+    protected void newRandomAgentSystemAnd(AllBiConsumer<Login, AgentLevel> work) throws Exception {
         newRandomAgentSystemAnd(UUID.randomUUID().toString(), work);
     }
 
@@ -68,7 +68,7 @@ public abstract class DealerServiceTest extends CoreServiceTest {
      * @param rawPassword 为此新增身份的明文密码
      * @param work        特定检查，每个新增的父级代理都会经历一次
      */
-    protected void newRandomAgentSystemAnd(String rawPassword, BiConsumer<Login, AgentLevel> work) {
+    protected void newRandomAgentSystemAnd(String rawPassword, AllBiConsumer<Login, AgentLevel> work) throws Exception {
         int i;
         Login rootLogin = newRandomAgent(rawPassword);
         AgentLevel rootAgent = agentService.highestAgent(rootLogin);

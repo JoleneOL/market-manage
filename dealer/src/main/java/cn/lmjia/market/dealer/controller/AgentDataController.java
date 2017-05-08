@@ -5,7 +5,9 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.field.BasicField;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,31 @@ public class AgentDataController {
     private AgentService agentService;
     @Autowired
     private ReadService readService;
+
+    @GetMapping(value = "/listRuling")
+    @RowCustom(dramatizer = Select2Dramatizer.class, distinct = true)
+    public RowDefinition listRuling(@AuthenticationPrincipal Login login, String search) {
+        return new RowDefinition<AgentLevel>() {
+
+            @Override
+            public Class<AgentLevel> entityClass() {
+                return AgentLevel.class;
+            }
+
+            @Override
+            public List<FieldDefinition> fields() {
+                return Arrays.asList(
+                        new BasicField("id")
+                        , new BasicField("rank")
+                );
+            }
+
+            @Override
+            public Specification<AgentLevel> specification() {
+                return agentService.manageableAndRuling(false, login, search);
+            }
+        };
+    }
 
     @GetMapping(value = "/list")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
@@ -154,7 +181,7 @@ public class AgentDataController {
 
             @Override
             public Specification<AgentLevel> specification() {
-                return agentService.manageable(login, agentName);
+                return agentService.manageable(true, login, agentName);
             }
         };
     }

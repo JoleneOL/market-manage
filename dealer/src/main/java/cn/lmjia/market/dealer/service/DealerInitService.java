@@ -62,15 +62,20 @@ public class DealerInitService {
 
             try (Statement statement = connection.getConnection().createStatement()) {
                 try {
-                    String agentLevel = StreamUtils.copyToString(new ClassPathResource("/functions/agentLevel."
-                            + name + ".sql").getInputStream(), Charset.forName("UTF-8"));
-                    statement.executeUpdate(agentLevel);
+                    addFunction(name, statement, "agentLevel");
+                    addFunction(name, statement, "agentBelongs");
                 } catch (IOException e) {
                     throw new InternalError(e);
                 }
             }
 
         });
+    }
+
+    private void addFunction(String name, Statement statement, String functionName) throws IOException, SQLException {
+        String agentLevel = StreamUtils.copyToString(new ClassPathResource("/functions/" + functionName + "."
+                + name + ".sql").getInputStream(), Charset.forName("UTF-8"));
+        statement.executeUpdate(agentLevel);
     }
 
 }
