@@ -9,6 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * @author CJ
@@ -38,7 +39,8 @@ public class AddressResolver implements HandlerMethodArgumentResolver {
         final Iterator<String> parameterNames = webRequest.getParameterNames();
         while (parameterNames.hasNext()) {
             String nextName = parameterNames.next();
-            if (nextName.contains(name)) {
+
+            if (!nextName.equals(name) && nextName.toUpperCase(Locale.CHINA).contains(name.toUpperCase(Locale.CHINA))) {
                 if (otherAddressName == null)
                     otherAddressName = nextName;
                 else
