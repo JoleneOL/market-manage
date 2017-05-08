@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>维护 - 微信管理平台</title>
+    <title>维修详情 - 微信管理平台</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -16,8 +16,8 @@
 </head>
 <body class="view-bg-color view-fs-small">
 <section class="view_body">
-    <form>
-        <div class="weui-cells__title">维护 <a href="maintainRecord.html" class="weui-cell_link">维护记录</a></div>
+    <form id="J_form">
+        <div class="weui-cells__title">维修详情</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -53,19 +53,30 @@
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">维护内容</label>
+                    <label class="weui-label">保修内容</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-select" name="maintainType">
-                        <option value="1">更换滤芯</option>
-                        <option value="2">更换机器</option>
+                    <select class="weui-select" name="repairType" id="J_repairType">
+                        <option value="1">漏水</option>
+                        <option value="2">无法开机</option>
+                        <option value="3">换滤芯</option>
+                        <option value="other">其他</option>
                     </select>
+                </div>
+            </div>
+            <div class="weui-cell view_textarea-other J_extra displayNone">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" placeholder="请输入文本" rows="3" name="otherType"></textarea>
                 </div>
             </div>
         </div>
 
         <div class="weui-btn-area">
-            <button type="submit" class="weui-btn weui-btn_primary">提&nbsp;&nbsp;交</button>
+            <button type="submit" class="weui-btn weui-btn_primary">修改维修</button>
+            <button type="button" class="weui-btn weui-btn_default" id="J_Cancel">取消维修</button>
+            <!--如果售后已经确认维修，用户无法再修改和取消-->
+            <!--所有表单元素 disabled-->
+            <button type="button" class="weui-btn weui-btn_default weui-btn_disabled" disabled>等待维修...</button>
         </div>
     </form>
 </section>

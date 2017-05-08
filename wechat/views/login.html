@@ -41,6 +41,9 @@
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_primary">登&nbsp;&nbsp;录</button>
         </div>
+        <div class="weui-btn-area" th:remove="all">
+            <a href="login.html?type=error" class="weui-btn weui-btn_warn">（测试）如果密码错误的场景</a>
+        </div>
     </form>
 </section>
 <footer>
@@ -48,10 +51,6 @@
         <p class="weui-footer__text">Copyright © 2017 利每家</p>
     </div>
 </footer>
-<p th:remove="all">
-    <br/>
-    可以使用<a href="login.html?type=error" class="weui-btn weui-btn_mini weui-btn_primary">链接</a>预览密码错误的场景
-</p>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
