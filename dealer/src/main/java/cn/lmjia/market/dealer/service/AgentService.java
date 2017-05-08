@@ -8,6 +8,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 
 /**
  * 代理服务
@@ -46,6 +49,24 @@ public interface AgentService {
             default:
                 return "经销商";
         }
+    }
+
+    /**
+     * @param root    root
+     * @param builder builder
+     * @return 等级的表达式
+     */
+    default Expression<Integer> agentLevelExpression(Root<? extends AgentLevel> root, CriteriaBuilder builder) {
+        return builder.function("mm_agentLevel", Integer.class, root.get("id"));
+    }
+
+    /**
+     * @param agentId 已知的一个代理的主键
+     * @param builder builder
+     * @return 等级的表达式
+     */
+    default Expression<Integer> agentLevelExpression(long agentId, CriteriaBuilder builder) {
+        return builder.function("mm_agentLevel", Integer.class, builder.literal(agentId));
     }
 
     /**
