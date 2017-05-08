@@ -31,7 +31,9 @@
 <body class="inner-document" data-upload-url="../../../../../core-service/src/test/resources/mock/webUploader.json"
       th:data-upload-url="@{/resourceUpload/webUploader}"
       data-search-login-url="../../../../../core-service/src/test/resources/mock/searchLogin.json"
-      th:data-search-login-url="@{/loginData/select2}">
+      th:data-search-login-url="@{/loginData/select2}"
+      data-search-agent-url="../mock/agentList.json"
+      th:data-search-agent-url="@{/agentData/listRuling}">
 <section>
     <div class="pageheader">
         <h2>
@@ -60,10 +62,6 @@
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="superiorId" id="higherAgent"
                                                         title="请选择上级代理">
-                                                    <option>无</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -162,7 +160,8 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">推荐人</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control select2-single" name="guideUser" id="referrerPhone"
+                                                <select class="form-control select2-single" name="guideUser"
+                                                        id="referrerPhone"
                                                         title="请选择推荐人">
                                                 </select>
                                             </div>

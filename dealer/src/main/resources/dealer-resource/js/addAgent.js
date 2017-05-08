@@ -4,9 +4,63 @@
 $(function () {
     "use strict";
 
+    var body = $('body');
+
     DatePicker('#beginDate', '#endDate');
 
-    $('#higherAgent').searchableSelect();
+    // $('#higherAgent').searchableSelect();
+    $('#higherAgent').select2({
+        theme: "bootstrap",
+        width: null,
+        containerCssClass: ':all:',
+        placeholder: "作为最顶级代理商",
+        allowClear: true,
+        language: "zh-CN",
+        ajax: {
+            url: body.attr('data-search-agent-url'),
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    search: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.page = params.page || 1;
+
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }, // let our custom formatter work
+        minimumInputLength: 2,
+        templateResult: function (x) {
+            if (x.id == '')
+                return x.text;
+            // 渲染html宽体
+            // console.log('templateResult', x);
+            return '<b>' + x.rank + '</b>';
+        },
+        templateSelection: function (x) {
+            if (x.id == '')
+                return x.text;
+            // 渲染当前选择
+            return x.rank;
+        }
+
+    });
     $("#referrerPhone").select2({
         theme: "bootstrap",
         width: null,
@@ -15,7 +69,7 @@ $(function () {
         allowClear: true,
         language: "zh-CN",
         ajax: {
-            url: $('body').attr('data-search-login-url'),
+            url: body.attr('data-search-login-url'),
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -98,7 +152,7 @@ $(function () {
         return WebUploader.create({
             auto: true,
             swf: '//cdn.lmjia.cn/webuploader/0.1.5/Uploader.swf',
-            server: $('body').attr('data-upload-url'),
+            server: body.attr('data-upload-url'),
             pick: {
                 id: id,
                 multiple: false,
