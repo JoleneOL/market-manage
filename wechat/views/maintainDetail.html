@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>维护 - 微信管理平台</title>
+    <title>维护详情 - 微信管理平台</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -16,8 +16,8 @@
 </head>
 <body class="view-bg-color view-fs-small">
 <section class="view_body">
-    <form>
-        <div class="weui-cells__title">维护 <a href="maintainRecord.html" class="weui-cell_link">维护记录</a></div>
+    <form id="J_form">
+        <div class="weui-cells__title">维护详情</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -65,7 +65,11 @@
         </div>
 
         <div class="weui-btn-area">
-            <button type="submit" class="weui-btn weui-btn_primary">提&nbsp;&nbsp;交</button>
+            <button type="submit" class="weui-btn weui-btn_primary">修改维修</button>
+            <button type="button" class="weui-btn weui-btn_default" id="J_Cancel">取消维修</button>
+            <!--如果售后已经确认维护，用户无法再修改和取消-->
+            <!--所有表单元素 disabled-->
+            <button type="button" class="weui-btn weui-btn_default weui-btn_disabled" disabled>等待维护...</button>
         </div>
     </form>
 </section>

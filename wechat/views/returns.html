@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>维护 - 微信管理平台</title>
+    <title>退货寄件 - 微信管理平台</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -17,7 +17,7 @@
 <body class="view-bg-color view-fs-small">
 <section class="view_body">
     <form>
-        <div class="weui-cells__title">维护 <a href="maintainRecord.html" class="weui-cell_link">维护记录</a></div>
+        <div class="weui-cells__title">寄件</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -43,23 +43,30 @@
                     <input class="weui-input" type="tel" placeholder="输入手机号码" name="phone" value="15899884457" readonly>
                 </div>
             </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label for="J_maintainTime" class="weui-label">预约时间</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" id="J_maintainTime" type="text" value="2017-12-12 12:13">
-                </div>
-            </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">维护内容</label>
+                    <label class="weui-label">物流公司</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-select" name="maintainType">
-                        <option value="1">更换滤芯</option>
-                        <option value="2">更换机器</option>
+                    <select class="weui-select" name="logisticsCompany" id="J_Logistics">
+                        <option value="1">天天快递</option>
+                        <option value="2">韵达快递</option>
+                        <option value="3">中通</option>
+                        <option value="other">其他</option>
                     </select>
+                </div>
+            </div>
+            <div class="weui-cell view_textarea-other J_extra displayNone">
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="输入物流公司名称" name="logisticsName">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">物流单号</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="输入物流单号" name="logisticsCode">
                 </div>
             </div>
         </div>
@@ -77,6 +84,5 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
-<script src="//cdn.lmjia.cn/moment.js/2.18.1/moment.min.js"></script>
 <script src="../assets/js/equipment.js"></script>
 </html>
