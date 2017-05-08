@@ -16,9 +16,10 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/datetimepicker/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery.searchableSelect/jquery.searchableSelect.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
-    <link href="//cdn.bootcss.com/select2/4.0.3/css/select2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../../../../web/src/main/webapp/assets/css/custom.css"
           th:href="@{/assets/css/custom.css}">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -161,7 +162,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">推荐人</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="guideUser" id="referrerPhone"
+                                                <select class="form-control select2-single" name="guideUser" id="referrerPhone"
                                                         title="请选择推荐人">
                                                 </select>
                                             </div>
@@ -256,6 +257,7 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script src="//cdn.lmjia.cn/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
@@ -263,8 +265,8 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
-<script src="//cdn.bootcss.com/select2/4.0.3/js/select2.full.min.js"></script>
-<script src="//cdn.bootcss.com/select2/4.0.3/js/i18n/zh-CN.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script src="//cdn.lmjia.cn/jquery.searchableSelect/jquery.searchableSelect.js"></script>
 <script src="../dealer-resource/js/addAgent.js"
         th:src="@{/dealer-resource/js/addAgent.js}"></script>

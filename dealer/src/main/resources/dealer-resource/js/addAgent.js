@@ -8,8 +8,12 @@ $(function () {
 
     $('#higherAgent').searchableSelect();
     $("#referrerPhone").select2({
+        theme: "bootstrap",
+        width: null,
+        containerCssClass: ':all:',
         placeholder: "选择一个推荐人",
         allowClear: true,
+        language: "zh-CN",
         ajax: {
             url: $('body').attr('data-search-login-url'),
             dataType: 'json',
