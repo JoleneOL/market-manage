@@ -33,7 +33,9 @@
       data-search-login-url="../../../../../core-service/src/test/resources/mock/searchLogin.json"
       th:data-search-login-url="@{/loginData/select2}"
       data-search-agent-url="../mock/agentList.json"
-      th:data-search-agent-url="@{/agentData/listRuling}">
+      th:data-search-agent-url="@{/agentData/listRuling}"
+      data-mobile-validation-url="../../../../../core-service/src/test/resources/mock/mobileValidation.json"
+      th:data-mobile-validation-url="@{/loginData/mobileValidation}">
 <section>
     <div class="pageheader">
         <h2>
@@ -56,7 +58,8 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-7 col-lg-6">
-                                    <form class="form-horizontal mb40" id="J_addAgentForm" method="post">
+                                    <form class="form-horizontal mb40" id="J_addAgentForm" method="post"
+                                          th:action="@{/addAgent}">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">上级代理</label>
                                             <div class="col-sm-6">

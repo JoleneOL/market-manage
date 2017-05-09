@@ -284,7 +284,11 @@ $(function () {
             },
             mobile: {
                 required: true,
-                isPhone: true
+                isPhone: true,
+                remote: {
+                    url: body.attr('data-mobile-validation-url'),
+                    method: 'get'
+                }
             },
             fullAddress: {
                 required: true,
