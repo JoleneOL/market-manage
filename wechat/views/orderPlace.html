@@ -91,24 +91,23 @@
                 </div>
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="goodsType" id="J_goodsType">
-                        <option value="1" data-deposit="3180" data-need-install="120">净水机
-                        </option>
-                        <option value="2" data-deposit="6000">空气净化器</option>
-                        <option value="3" data-deposit="9800">食品优化宝（家用）</option>
-                        <option value="4" data-deposit="12800">食品优化宝（商用）</option>
+                        <option value="1" data-deposit="3000" data-need-install="180" data-model="SCRO-200LK-L">尼维柯立式净水机</option>
+                        <option value="2" data-deposit="3000" data-need-install="180" data-model="SCRO-200LK-B">尼维柯台式净水机</option>
+                        <option value="3" data-deposit="3000" data-need-install="180" data-model="WAP615R">韦博小蛮腰型橱下净水机</option>
+                        <option value="4" data-deposit="3000" data-need-install="180" data-model="WAP611R">韦博字典型橱下净水机</option>
+                        <option value="5" data-deposit="6000">空气净化器</option>
+                        <option value="6" data-deposit="9800">食品优化宝（家用）</option>
+                        <option value="7" data-deposit="12800">食品优化宝（商用）</option>
                     </select>
                 </div>
             </div>
-            <div class="weui-cell weui-cell_select weui-cell_select-after" id="J_leasedType">
+            <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">租用机型</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-select" name="leasedType">
-                        <option value="1">SCRO-200LK-L</option>
-                        <option value="2">SCRO-200LK-B</option>
-                        <option value="3">SCRO-200LK-K</option>
-                    </select>
+                    <input class="weui-input" type="text" placeholder="请租用机型"  name="leasedType"
+                           id="J_leasedType" value="SCRO-200LK-L" readonly>
                 </div>
             </div>
             <div class="weui-cell">
@@ -149,30 +148,30 @@
                     <label class="weui-label">保证金</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="weui-input text-error" id="J_userDeposit">
-                        <strong>3180</strong>
+                    <p class="weui-input" id="J_userDeposit">
+                        <span>3000</span>
                         <span class="unit-txt">元 / 台</span>
                     </p>
                 </div>
             </div>
             <div class="weui-cell js-install">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">安装费用</label>
+                    <label class="weui-label">安装费</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="weui-input text-error" id="J_installationCost">
-                        <strong>180</strong>
+                    <p class="weui-input" id="J_installationCost">
+                        <span>180</span>
                         <span class="unit-txt">元 / 台</span>
                     </p>
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">订单总金额</label>
+                    <label class="weui-label">用户保证金</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="weui-input text-error" id="J_orderTotal">
-                        <strong>3360</strong>
+                    <p class="weui-input text-big" id="J_orderTotal">
+                        <strong>3180</strong>
                         <span class="unit-txt">元</span>
                     </p>
                 </div>
