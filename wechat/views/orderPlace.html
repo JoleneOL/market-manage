@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -180,6 +180,12 @@
         </div>
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_primary">下&nbsp;&nbsp;单</button>
+        </div>
+        <div class="weui-btn-area" th:remove="all">
+            <a href="orderSuccess.html" class="weui-btn weui-btn_primary">（测试）下单成功</a>
+        </div>
+        <div class="weui-btn-area" th:remove="all">
+            <a href="orderFail.html" class="weui-btn weui-btn_warn">（测试）下单失败</a>
         </div>
     </form>
 </section>

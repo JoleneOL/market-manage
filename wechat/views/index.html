@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>模拟页面 - 微信管理平台</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <style>
+        body, html {
+            height: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .weui-tabbar__label {
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body class="view-fs-small">
+<div class="weui-tab">
+    <div class="weui-tab__bd">
+        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+            <h1>模拟页面</h1>
+            <h4>点击下面的菜单。如果没有登陆都先跳转登录页面</h4>
+            <a href="login.html" class="weui-btn weui-btn_primary">登陆</a>
+            <h4>模拟推送，退款处理页面</h4>
+            <a href="refundOperate.html" class="weui-btn weui-btn_plain-primary">用户小菲菲发起一笔退款，请及时处理</a>
+        </div>
+    </div>
+
+    <div class="weui-tabbar">
+        <a href="myTeam.html" class="weui-tabbar__item weui-bar__item--on">
+            <p class="weui-tabbar__label">我的团队</p>
+        </a>
+        <a href="orderPlace.html" class="weui-tabbar__item">
+
+            <p class="weui-tabbar__label">下单</p>
+        </a>
+        <a href="personalCenter.html" class="weui-tabbar__item">
+
+            <p class="weui-tabbar__label">我的</p>
+        </a>
+    </div>
+</div>
+</body>
+</html>
