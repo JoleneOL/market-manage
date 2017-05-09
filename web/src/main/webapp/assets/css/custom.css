@@ -685,3 +685,6 @@ input[type=checkbox] {
 .table-operate a {
   margin-right: 20px;
 }
+.total {
+  margin-top: 0;
+}

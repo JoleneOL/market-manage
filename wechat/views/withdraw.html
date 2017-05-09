@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>我要提现 - 微信管理平台</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="view-bg-color view-fs-small">
+<section class="view_body">
+    <form action="withdrawSuccess.html">
+        <div class="weui-cells__title">收款信息</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收款人</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入收款人" name="payee">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收款帐号</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入收款帐号" name="account" id="J_Bank">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">开户行</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入电话" name="bank">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收款人电话</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="tel" placeholder="请输入电话" name="phone">
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__title">提现金额</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell view-input-withdraw">
+                <div class="weui-cell__hd">
+                    <strong class="text-big">￥</strong>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="可提现金额 59988.09元" id="J_allInVal">
+                </div>
+                <div class="weui-cell__ft">
+                    <a href="javascrip:;" class="weui-btn weui-btn_default_custom js-all-in" id="J_allInBtn" data-all-in=" 59988.09">全部提现</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">发票</div>
+        <div class="weui-cells weui-cells_checkbox">
+            <label class="weui-cell weui-check__label" for="J_haveInvoice">
+                <div class="weui-cell__hd">
+                    <input type="radio" class="weui-check js-invoice" name="invoice" value="0" id="J_haveInvoice"
+                           checked="checked">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>无发票，代扣税20%</p>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="J_noInvoice">
+                <div class="weui-cell__hd">
+                    <input type="radio" class="weui-check js-invoice" name="invoice" value="1" id="J_noInvoice">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>有发票</p>
+                </div>
+            </label>
+            <div id="J_extra" class="displayNone">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">物流单号</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" placeholder="输入物流单号" name="logisticsCode">
+                    </div>
+                </div>
+                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                    <div class="weui-cell__hd">
+                        <label class="weui-label">物流公司</label>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <select class="weui-select" name="logisticsCompany" id="J_Logistics">
+                            <option value="1">圆通快递</option>
+                            <option value="2">申通快递</option>
+                            <option value="3">韵达快递</option>
+                            <option value="4">中通快递</option>
+                            <option value="5">顺丰快递</option>
+                            <option value="6">天天快递</option>
+                            <option value="7">EMS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-footer weui-footer_fixed-bottom view-footer_withdraw">
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                    <div class="weui-cells__title">到账金额</div>
+                    <p class="text-big">￥59988.09</p>
+                </div>
+                <div class="weui-flex__item">
+                    <button type="submit" class="weui-btn weui-btn_custom">确定提现</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $('#J_Bank').on('keyup mouseout input', function () {
+        var $this = $(this);
+        var v = $this.val();
+        /\S{5}/.test(v) && $this.val(v.replace(/\s/g, '').replace(/(.{4})/g, "$1 "));
+    });
+    $('#J_allInVal').on('keyup mouseout input', function () {
+        var $this = $(this);
+        var v = $this.val()
+        if(v) {
+            $this.addClass('view-input-big');
+        } else  {
+            $this.removeClass('view-input-big');
+        }
+    });
+
+    $('#J_allInBtn').click(function () {
+        $('#J_allInVal')
+            .val($(this).attr('data-all-in'))
+            .addClass('view-input-big');
+    });
+
+    var $invoice = $('#J_extra');
+    $('.js-invoice').change(function () {
+        if($(this).val() === '1') {
+            $invoice.removeClass('displayNone');
+        } else {
+            $invoice.addClass('displayNone');
+        }
+    })
+</script>
+</html>
