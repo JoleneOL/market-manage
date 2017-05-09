@@ -12,6 +12,9 @@
   .weui-cells {
     font-size: 14px;
   }
+  .weui-btn {
+    font-size: 16px;
+  }
 }
 
 .view-mb-20 {
@@ -23,7 +26,7 @@
   .header_wrap-title {
     text-align: center;
     font-size: 34px;
-    color: #0bb20c;
+    color: @brand-success;
     font-weight: 400;
     margin: 0 15%;
   }
@@ -82,6 +85,26 @@
   color: #0bb20c;
 }
 
+.text-custom {
+   color: @brand-success;
+ }
+
+.text-black {
+  color: #333;
+}
+.text-gray {
+  color: #ccc;
+}
+.weui-btn_custom {
+  background-color: @brand-success;
+}
+.weui-btn_default_custom {
+  color: @brand-success;
+  background-color: #fff;
+  &:after {
+    border: none;
+  }
+}
 .text-alignment_team {
   height: 38px;
   line-height: 38px;
@@ -194,7 +217,9 @@
 .view_badge-success {
   background-color: #0bb20c;
 }
-
+.view_badge-custom {
+  background-color: @brand-success;
+}
 .view_badge-warn {
   background-color: #ffbe00;
 }
@@ -251,7 +276,7 @@
   }
   &:first-of-type {
     .view_timeline-item-color {
-      background-color: #0bb20c;
+      background-color: @brand-success;
     }
   }
 }
@@ -313,6 +338,16 @@
   }
 }
 
+.text-custom {
+  h4, p {
+    color: @brand-success;
+  }
+}
+
+.weui-icon-success-circle, .weui_icon_custom_no_circle {
+  color: @brand-success;
+}
+
 .view_timeline-item-checked {
   position: absolute;
   left: 0;
@@ -338,9 +373,9 @@
 }
 
 .weui-navbar__item.weui-bar__item--on {
-  color: #0bb20c;
+  color: @brand-success;
   background: #fff;
-  border-bottom-color: #0bb20c;
+  border-bottom-color: @brand-success;
 }
 
 .view_navbar-fixed {
@@ -418,7 +453,51 @@
     border-bottom: 2px solid transparent;
   }
   .active {
-    color: #0bb20c;
-    border-bottom-color: #0bb20c;
+    color: @brand-success;
+    border-bottom-color: @brand-success;
   }
+}
+.swiper-slide {
+  .view-form-preview-ex {
+   padding-bottom: 2px;
+  }
+  .weui-form-preview__hd {
+    padding: 2px 15px;
+    line-height: 2em;
+    .weui-form-preview__value {
+      font-size: 1.2em;
+    }
+  }
+  .weui-form-preview__bd {
+    padding-top: 2px;
+  }
+}
+.view-form-card_line {
+  .weui-form-preview__bd {
+    text-align: left;
+    color: #333;
+  }
+  .weui-flex {
+    .weui-flex__item:last-of-type {
+      text-align: right;
+    }
+  }
+}
+.view-btn-group {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  .weui-btn {
+    margin: 15px 6px 0;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+  }
+}
+// 重写
+.weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before {
+  color: @brand-success;
+}
+.weui-icon-custom {
+  color: @brand-success;
 }

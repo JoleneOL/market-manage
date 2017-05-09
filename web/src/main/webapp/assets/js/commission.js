@@ -36,7 +36,7 @@ $(function () {
                 "title": "订单编号", "data": "code", "name": "code"
             },
             {
-                "title": "购买人姓各", "data": "user", "name": "user"
+                "title": "购买人姓名", "data": "user", "name": "user"
             },
             {
                 "title": "订单总额", "data": "orderTotal", "name": "orderTotal"
