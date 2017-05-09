@@ -11,6 +11,7 @@
         </property>
         <property name="packagesToScan">
             <array>
+                <value>me.jiangcai.wx.standard.entity</value>
                 <value>cn.lmjia.market.core.entity</value>
                 <value>cn.lmjia.market.dealer.entity</value>
                 <value>me.jiangcai.lib.sys.entity</value>

@@ -12,6 +12,7 @@ package cn.lmjia.market.core.service;
 
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.wx.PublicAccountSupplier;
+import me.jiangcai.wx.TokenType;
 import me.jiangcai.wx.model.PublicAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -60,7 +61,28 @@ public class MyPublicAccount extends PublicAccount implements PublicAccountSuppl
     }
 
     @Override
+    public void updateToken(PublicAccount account, TokenType type, String token, LocalDateTime timeToExpire) throws Throwable {
+        if (type == TokenType.access) {
+            systemStringService.updateSystemString(AccessToken, token);
+            systemStringService.updateSystemString(TimeToExpire, timeToExpire);
+        } else if (type == TokenType.javascript) {
+            systemStringService.updateSystemString(JavascriptTicket, token);
+            systemStringService.updateSystemString(JavascriptTimeToExpire, timeToExpire);
+        }
+    }
+
+    @Override
+    public void getTokens(PublicAccount account) {
+
+    }
+
+    @Override
     public PublicAccount findByHost(String host) {
+        return this;
+    }
+
+    @Override
+    public PublicAccountSupplier getSupplier() {
         return this;
     }
 }

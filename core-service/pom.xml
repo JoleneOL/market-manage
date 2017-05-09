@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>me.jiangcai.wx</groupId>
-            <artifactId>web</artifactId>
+            <artifactId>weixin-web</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

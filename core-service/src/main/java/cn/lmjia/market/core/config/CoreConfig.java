@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.config;
 
+import me.jiangcai.wx.standard.StandardWeixinConfig;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,6 +19,7 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
  */
 @Configuration
 @Import({CommonConfig.class, DataSupportConfig.class,
+        StandardWeixinConfig.class
 //        ServiceConfig.class
 })
 @ComponentScan({
