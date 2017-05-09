@@ -2,15 +2,18 @@ package cn.lmjia.market.core.controller;
 
 import cn.lmjia.market.core.CoreWebTest;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.ContactWayService;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 /**
@@ -20,6 +23,31 @@ public class LoginDataControllerTest extends CoreWebTest {
 
     @Autowired
     private ContactWayService contactWayService;
+
+    @Test
+    public void mobile() throws Exception {
+        String mobile = randomMobile();
+        assertMobileValidation(mobile, true);
+
+        // 添加一个用户
+        Manager manager = newRandomManager(mobile, "", ManageLevel.root);
+        assertMobileValidation(mobile, false);
+
+        // 再弄一个新的好嘛
+        mobile = randomMobile();
+        assertMobileValidation(mobile, true);
+        contactWayService.updateMobile(manager, mobile);
+        assertMobileValidation(mobile, false);
+
+    }
+
+    private void assertMobileValidation(String mobile, boolean expected) throws Exception {
+        mockMvc.perform(get("/loginData/mobileValidation").param("mobile", mobile)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(expected));
+    }
 
     @Test
     public void searchLoginSelect2() throws Exception {

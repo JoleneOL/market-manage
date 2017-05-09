@@ -58,13 +58,44 @@ public abstract class CoreServiceTest extends SpringWebTest {
     /**
      * 新增并且保存一个随机的管理员
      *
+     * @return 已保存的管理员
+     */
+    protected Manager newRandomManager() {
+        return newRandomManager(ManageLevel.values());
+    }
+
+    /**
+     * 新增并且保存一个随机的管理员
+     *
+     * @param levels 等级;可以为null
+     * @return 已保存的管理员
+     */
+    protected Manager newRandomManager(ManageLevel... levels) {
+        return newRandomManager(randomMobile(), UUID.randomUUID().toString(), levels);
+    }
+
+    /**
+     * 新增并且保存一个随机的管理员
+     *
      * @param rawPassword 明文密码
      * @param levels      等级;可以为null
      * @return 已保存的管理员
      */
     protected Manager newRandomManager(String rawPassword, ManageLevel... levels) {
+        return newRandomManager(randomMobile(), rawPassword, levels);
+    }
+
+    /**
+     * 新增并且保存一个随机的管理员
+     *
+     * @param rawPassword 明文密码
+     * @param loginName   指定登录名
+     * @param levels      等级;可以为null
+     * @return 已保存的管理员
+     */
+    protected Manager newRandomManager(String loginName, String rawPassword, ManageLevel... levels) {
         Manager manager = new Manager();
-        manager.setLoginName(randomMobile());
+        manager.setLoginName(loginName);
         manager.setLevel(EnumUtils.randomEnum(ManageLevel.class, levels));
         return loginService.password(manager, rawPassword);
     }
