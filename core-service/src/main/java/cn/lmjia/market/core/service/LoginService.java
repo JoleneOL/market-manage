@@ -39,4 +39,14 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional
     Login newLogin(String username, Login guide, String rawPassword);
+
+    /**
+     * 手机号码可用性校验
+     * 应当同时保证可在Login中作为登录名，也可以作为mobile放在ContactWay
+     *
+     * @param mobile 号码
+     * @return true for 可用
+     */
+    @Transactional(readOnly = true)
+    boolean mobileValidation(String mobile);
 }

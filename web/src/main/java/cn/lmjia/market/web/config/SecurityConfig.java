@@ -73,6 +73,8 @@ class SecurityConfig {
                             .authorizeRequests();
 
             registry
+                    // 手机号码可用性检测
+                    .antMatchers("/loginData/mobileValidation").permitAll()
                     // 首页允许访问
 //                    .antMatchers("/").permitAll()
                     // 短链不保护

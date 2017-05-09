@@ -8,11 +8,15 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.BasicExpressionField;
 import cn.lmjia.market.core.row.field.BasicField;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
+import cn.lmjia.market.core.service.LoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -26,6 +30,21 @@ import java.util.List;
  */
 @Controller
 public class LoginDataController {
+
+    @Autowired
+    private LoginService loginService;
+
+    /**
+     * 公开可用的手机号码可用性校验
+     *
+     * @param mobile 确认的手机号码
+     * @return 可用性
+     */
+    @GetMapping("/loginData/mobileValidation")
+    @ResponseBody
+    public boolean mobileValidation(@RequestParam String mobile) {
+        return loginService.mobileValidation(mobile);
+    }
 
     @PreAuthorize("!isAnonymous()")
     @GetMapping("/loginData/select2")
