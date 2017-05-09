@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="../assets/css/custom.css">
 </head>
-<body class="view-bg-color">
+<body class="view-bg-color view-fs-small">
 <section class="view_body">
     <form>
         <div class="weui-cells__title">我要下单</div>
@@ -74,7 +74,7 @@
                     <label class="weui-label"></label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="详细地址" name="fullAddress">
+                    <input class="weui-input" type="text" placeholder="请输入详细地址" name="fullAddress">
                 </div>
             </div>
             <div class="weui-cell">
@@ -82,7 +82,7 @@
                     <label class="weui-label">用户电话</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="tel" placeholder="详细地址" name="phone">
+                    <input class="weui-input" type="tel" placeholder="请输入电话" name="phone">
                 </div>
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
@@ -91,13 +91,21 @@
                 </div>
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="goodsType" id="J_goodsType">
-                        <option value="1" data-deposit="3000" data-need-install="180" data-model="SCRO-200LK-L">尼维柯立式净水机</option>
-                        <option value="2" data-deposit="3000" data-need-install="180" data-model="SCRO-200LK-B">尼维柯台式净水机</option>
-                        <option value="3" data-deposit="3000" data-need-install="180" data-model="WAP615R">韦博小蛮腰型橱下净水机</option>
-                        <option value="4" data-deposit="3000" data-need-install="180" data-model="WAP611R">韦博字典型橱下净水机</option>
-                        <option value="5" data-deposit="6000">空气净化器</option>
-                        <option value="6" data-deposit="9800">食品优化宝（家用）</option>
-                        <option value="7" data-deposit="12800">食品优化宝（商用）</option>
+                        <option value="1" data-deposit="3000" data-need-install="180" data-model="SCRO-200LK-L"
+                                data-type="净水机">尼维柯立式净水机
+                        </option>
+                        <option value="2" data-deposit="3000" data-need-install="180" data-model="SCRO-200LK-B"
+                                data-type="净水机">尼维柯台式净水机
+                        </option>
+                        <option value="3" data-deposit="3000" data-need-install="180" data-model="WAP615R"
+                                data-type="净水机">韦博小蛮腰型橱下净水机
+                        </option>
+                        <option value="4" data-deposit="3000" data-need-install="180" data-model="WAP611R"
+                                data-type="净水机">韦博字典型橱下净水机
+                        </option>
+                        <!--<option value="5" data-deposit="6000" data-type="空气净化器">空气净化器</option>-->
+                        <!--<option value="6" data-deposit="9800" data-type="食品优化宝（家用）">食品优化宝（家用）</option>-->
+                        <!--<option value="7" data-deposit="12800" data-type="食品优化宝（商用）">食品优化宝（商用）</option>-->
                     </select>
                 </div>
             </div>
@@ -106,7 +114,7 @@
                     <label class="weui-label">租用机型</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请租用机型"  name="leasedType"
+                    <input class="weui-input" type="text" placeholder="请租用机型" name="leasedType"
                            id="J_leasedType" value="SCRO-200LK-L" readonly>
                 </div>
             </div>
@@ -132,7 +140,7 @@
                     <label class="weui-label">活动码</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" name="activityCode" placeholder="输入活动码">
+                    <input class="weui-input" type="text" name="activityCode" placeholder="请输入活动码">
                 </div>
             </div>
             <div class="weui-cell">
@@ -171,7 +179,7 @@
                 </div>
                 <div class="weui-cell__bd">
                     <p class="weui-input text-big" id="J_orderTotal">
-                        <strong>3180</strong>
+                        <strong>0</strong>
                         <span class="unit-txt">元</span>
                     </p>
                 </div>

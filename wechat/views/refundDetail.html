@@ -43,15 +43,12 @@
                     <input class="weui-input" type="tel" placeholder="输入手机号码" name="phone" value="15899884457" readonly>
                 </div>
             </div>
-            <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">服务选择</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-select" name="serviceType">
-                        <option value="1">退货退款</option>
-                        <option value="2">仅退款</option>
-                    </select>
+                    <input class="weui-input" type="text" placeholder="请输入服务选择" name="serviceType" value="退款" readonly>
                 </div>
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
@@ -80,44 +77,18 @@
                     <input class="weui-input" type="number" placeholder="输入退款金额" name="refundAmount" value="1000">
                 </div>
             </div>
-            <div class="weui-cell weui-cell_link">
-                <div class="weui-cell__bd">剩余金额2000 可退回剩余金额50%</div>
-            </div>
-            <div class="weui-cell weui-cell_select weui-cell_select-after">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">物流公司</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <select class="weui-select" name="logisticsCompany" id="J_Logistics">
-                        <option value="1">天天快递</option>
-                        <option value="2">韵达快递</option>
-                        <option value="3">中通</option>
-                        <option value="other">其他</option>
-                    </select>
-                </div>
-            </div>
-            <div class="weui-cell view_textarea-other J_extra displayNone">
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="输入物流公司名称" name="logisticsName">
-                </div>
-            </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">物流单号</label>
+                    <label class="weui-label">&nbsp;</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="输入物流单号" name="logisticsCode">
+                    <p class="text-gray">剩余金额2000 可退回剩余金额50%</p>
                 </div>
             </div>
         </div>
         <div class="weui-btn-area view-btn-group">
             <button type="button" class="weui-btn weui-btn_default" id="J_Cancel">取消退款</button>
             <button type="submit" class="weui-btn weui-btn_custom">修改退款</button>
-        </div>
-        <div class="weui-btn-area">
-            <!--如果售后已经确认维修，用户无法再修改和取消-->
-            <!--所有表单元素 disabled-->
-            <button type="button" class="weui-btn weui-btn_default weui-btn_disabled" disabled>等待退款...</button>
         </div>
     </form>
 </section>
