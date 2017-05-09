@@ -295,7 +295,11 @@ $(function () {
                 hasCity: true
             }
         },
-        messages: {},
+        messages: {
+            mobile: {
+                remote: '该手机号码当前不可用'
+            }
+        },
         errorElement: "span",
         errorPlacement: function (error, element) {
             error.addClass("help-block")
