@@ -97,10 +97,16 @@
   height: 38px;
   line-height: 38px;
 }
+.view_team-logo {
+  width: 100%;
+}
 .view_team-list .weui-flex__item {
   padding: 6px 8px;
   text-align: center;
   color: #333;
+}
+.view_team-list .weui-flex__item:nth-child(2) {
+  padding: 6px 0;
 }
 .view_team-list .view_team-header .weui-flex__item {
   background-color: #f2f2f2;

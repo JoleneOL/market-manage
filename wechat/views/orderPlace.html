@@ -16,7 +16,7 @@
 </head>
 <body class="view-bg-color view-fs-small">
 <section class="view_body">
-    <form>
+    <form action="orderSuccess.html">
         <div class="weui-cells__title">我要下单</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -103,11 +103,8 @@
                         <option value="4" data-deposit="3000" data-need-install="180" data-model="WAP611R"
                                 data-type="净水机">韦博字典型橱下净水机
                         </option>
-                        <option value="5" data-deposit="6000" data-model="ESL-HM01" data-type="空气净化器">空气净化器</option>
-                        <option value="6" data-deposit="9800" data-model="SP70--J" data-type="食品优化宝（家用）">食品优化宝（家用）
-                        </option>
-                        <option value="7" data-deposit="12800" data-model="SP70--S" data-type="食品优化宝（商用）">食品优化宝（商用）
-                        </option>
+                        <option value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器">空气净化器</option>
+                        <option value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝">食品优化宝</option>
                     </select>
                 </div>
             </div>
@@ -190,12 +187,12 @@
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_custom">下&nbsp;&nbsp;单</button>
         </div>
-        <div class="weui-btn-area" th:remove="all">
-            <a href="orderSuccess.html" class="weui-btn weui-btn_primary">（测试）下单成功</a>
-        </div>
-        <div class="weui-btn-area" th:remove="all">
-            <a href="orderFail.html" class="weui-btn weui-btn_warn">（测试）下单失败</a>
-        </div>
+        <!--<div class="weui-btn-area" th:remove="all">-->
+            <!--<a href="orderSuccess.html" class="weui-btn weui-btn_primary">（测试）下单成功</a>-->
+        <!--</div>-->
+        <!--<div class="weui-btn-area" th:remove="all">-->
+            <!--<a href="orderFail.html" class="weui-btn weui-btn_warn">（测试）下单失败</a>-->
+        <!--</div>-->
     </form>
 </section>
 </body>
