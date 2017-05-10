@@ -22,8 +22,8 @@
         <a class="weui-navbar__item" href="#commission">我的佣金</a>
     </div>
     <div class="weui-tab__bd">
-        <div id="equipment" class="weui-tab__bd-item weui-tab__bd-item--active">
-            <div class="weui-cells__title">饮水机状况</div>
+        <div id="equipment" class="weui-tab__bd-item weui-tab__bd-item--active" data-loading="0">
+            <div class="weui-cells__title js-extra-h-e">饮水机状况</div>
             <div class="weui-form-preview view-mb-20">
                 <div class="view-form-preview-ex">
                     <div class="weui-form-preview__item">
@@ -159,6 +159,10 @@
                         <a href="refundStatus.html" class="weui-btn weui-btn_mini weui-btn_default">退款中</a>
                     </div>
                 </div>
+            </div>
+            <div class="weui-loadmore">
+                <i class="weui-loading"></i>
+                <span class="weui-loadmore__tips">玩了命的加载中...</span>
             </div>
         </div>
         <div id="commission" class="weui-tab__bd-item">
@@ -420,25 +424,9 @@
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
-<script>
-    var tabsItem = $('.view-tabs_item');
-    var tabsSwiper = $('#tabs-container').swiper({
-        observer: true,
-        observeParents: true,
-        speed: 500,
-        onSlideChangeStart: function () {
-            $(".view-tabs .active").removeClass('active');
-            tabsItem.eq(tabsSwiper.activeIndex).addClass('active');
-        }
-    });
-    tabsItem.on('touchstart mousedown', function (e) {
-        e.preventDefault();
-        $(".view-tabs .active").removeClass('active');
-        $(this).addClass('active');
-        tabsSwiper.slideTo($(this).index())
-    });
-    tabsItem.click(function (e) {
-        e.preventDefault();
-    });
-</script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js"></script>
+<script src="../mock/api.js"></script>
+<!--生产环境请移除 End-->
+<script src="../assets/js/personCenter.js"></script>
 </html>

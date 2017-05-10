@@ -1,30 +1,36 @@
 /**
- * Created by Chang on 2017/5/7.
+ * Created by Neo on 2017/5/10.
  */
 $(function () {
-    $('#J_upgradeRules').click(function () {
-        $.toast("满30个人即可升级", "text");
+    var tabsItem = $('.view-tabs_item');
+    var tabsSwiper = $('#tabs-container').swiper({
+        observer: true,
+        observeParents: true,
+        speed: 500,
+        onSlideChangeStart: function () {
+            $(".view-tabs .active").removeClass('active');
+            tabsItem.eq(tabsSwiper.activeIndex).addClass('active');
+        }
+    });
+    tabsItem.on('touchstart mousedown', function (e) {
+        e.preventDefault();
+        $(".view-tabs .active").removeClass('active');
+        $(this).addClass('active');
+        tabsSwiper.slideTo($(this).index())
+    });
+    tabsItem.click(function (e) {
+        e.preventDefault();
     });
 
-    var infiniteWrap = $('#J_teamList');
-    // 阻止多次请求
-    var loading = false;
 
-    infiniteWrap.infinite().on("infinite", function () {
+    $('#equipment').infinite().on("infinite", function() {
         var self = $(this);
         if(self.attr('data-loading') === "1") return;
         self.attr('data-loading', 1);
-        getDate(self);
+        getEquipment(self);
     });
 
-    var extraHeight = 0;
-    $('.js-extra-h').each(function () {
-        extraHeight += $(this).outerHeight(true);
-    });
-
-    infiniteWrap.height($(window).height() - Math.ceil(extraHeight));
-
-    function getDate($ele) {
+    function getEquipment($ele) {
         $.ajax('/api/teamList', {
             method: 'GET',
             data: {
@@ -38,11 +44,11 @@ $(function () {
                     return false;
                 }
                 if(res.data.length > 0) {
-                    $('.weui-loadmore').before(createDom(res.data));
+                    // $('.weui-loadmore').before(createDom(res.data));
                     $ele.attr('data-loading', 0);
                 } else {
-                    $('.weui-loadmore').text('没有更多内容了');
-                    $('#J_teamList').destroyInfinite();
+                    // $('.weui-loadmore').text('没有更多内容了');
+                    // $('#J_teamList').destroyInfinite();
                     $ele.attr('data-loading', 1);
                 }
             },
@@ -71,4 +77,3 @@ $(function () {
             '</div>';
     }
 });
-

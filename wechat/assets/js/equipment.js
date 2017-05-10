@@ -3,8 +3,8 @@
  */
 $(function () {
 
-    if(typeof moment === 'function') {
-        var date = moment().format('YYYY-MM-DD HH:mm');
+    if (typeof moment === 'function') {
+        var date = moment().format('yyyy-MM-dd hh:mm');
         $("#J_maintainTime").datetimePicker({
             title: '预约时间',
             min: date
@@ -21,10 +21,11 @@ $(function () {
     });
 
     $('#J_Cancel').click(function () {
-        $.confirm("您确定取消售后服务么？", "确认取消？", function() {
+        $.confirm("您确定取消售后服务么？", "确认取消？", function () {
             $('#J_form').submit();
-        }, function() {
+        }, function () {
             //取消操作
         });
     });
+
 });

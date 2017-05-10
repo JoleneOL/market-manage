@@ -21,3 +21,21 @@ Mock.mock(/\/api\/teamList/, "get", {
         }
     ]
 });
+
+Mock.mock(/\/api\/orderList/, "get", {
+    "resultCode": '@pick([200, 200, 200, 500])',
+    "resultMsg": "ok",
+    "data|10": [
+        {
+            orderId: '@id',
+            orderTime: '@datetime("yyyy-MM-dd")',
+            orderStatus: '@pick(["成功", "失败", "取消"])',
+            name: "@cname",
+            goodsInfo: '饮水机 u56立式',
+            orderAmount: '@integer(3000, 9999999)',
+            package: '3年收费 730天',
+            quantity: '@integer(1, 100)',
+            phone: '@integer(10000000000, 18888888888)'
+        }
+    ]
+});

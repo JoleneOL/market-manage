@@ -29,6 +29,7 @@ $(function () {
         var deposit = $type.attr('data-deposit');
         var isNeed = $type.attr('data-need-install');
         var model = $type.attr('data-model');
+
         if (isNeed) {
             $('.js-install').show();
             $('#J_installationCost').find('span').eq(0).text(isNeed);
