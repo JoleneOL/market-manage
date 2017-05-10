@@ -1,4 +1,5 @@
 @brand-success: #009bb6;
+
 .view-bg-color {
   background-color: #fbf9fe;
 }
@@ -89,18 +90,21 @@
 }
 
 .text-custom {
-   color: @brand-success;
- }
+  color: @brand-success;
+}
 
 .text-black {
   color: #333;
 }
+
 .text-gray {
   color: #ccc;
 }
+
 .weui-btn_custom {
   background-color: @brand-success;
 }
+
 .weui-btn_default_custom {
   color: @brand-success;
   background-color: #fff;
@@ -108,6 +112,7 @@
     border: none;
   }
 }
+
 .text-alignment_team {
   height: 38px;
   line-height: 38px;
@@ -145,9 +150,11 @@
   -webkit-flex: 3;
   flex: 3;
 }
+
 .view-mt-0 {
   margin-top: 0;
 }
+
 .view-cells_inline {
   .weui-cell {
     &:first-of-type {
@@ -204,6 +211,7 @@
     border-top: 1px solid #d5d5d6;
     background-color: #fff;
     bottom: 0;
+    z-index: 1000;
   }
   .weui-btn {
     color: #fff;
@@ -235,9 +243,11 @@
 .view_badge-success {
   background-color: #0bb20c;
 }
+
 .view_badge-custom {
   background-color: @brand-success;
 }
+
 .view_badge-warn {
   background-color: #ffbe00;
 }
@@ -448,6 +458,7 @@
     font-size: 36px;
   }
 }
+
 .view-tabs {
   display: -webkit-box;
   display: -webkit-flex;
@@ -466,7 +477,7 @@
     padding: 13px 0;
     text-align: center;
     font-size: 15px;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     color: #888;
     background: #fff;
     border-bottom: 2px solid transparent;
@@ -476,9 +487,10 @@
     border-bottom-color: @brand-success;
   }
 }
+
 .swiper-slide {
   .view-form-preview-ex {
-   padding-bottom: 2px;
+    padding-bottom: 2px;
   }
   .weui-form-preview__hd {
     padding: 2px 15px;
@@ -491,6 +503,7 @@
     padding-top: 2px;
   }
 }
+
 .view-form-card_line {
   .weui-form-preview__bd {
     text-align: left;
@@ -502,6 +515,7 @@
     }
   }
 }
+
 .view-btn-group {
   display: -webkit-box;
   display: -webkit-flex;
@@ -513,16 +527,20 @@
     flex: 1;
   }
 }
+
 // 重写
-.weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before {
+.weui-cells_checkbox .weui-check:checked + .weui-icon-checked:before {
   color: @brand-success;
 }
+
 .weui-icon-custom {
   color: @brand-success;
 }
+
 .view-bg-color-f2 {
   background-color: #f2f2f2;
 }
+
 #equipment {
   .view-form-text_left {
     text-align: left;
@@ -538,6 +556,7 @@
     background-color: #fff;
   }
 }
+
 .view-btn-group-md {
   .weui-btn {
     padding-left: 10px;
@@ -545,6 +564,7 @@
     font-size: 14px;
   }
 }
+
 #commission {
   .view-tabs_item {
     border-color: #eee;
@@ -574,6 +594,7 @@
   width: 100%;
   padding: 0 15px;
 }
+
 .view-input-withdraw {
   strong {
     padding-right: 10px;
@@ -589,9 +610,12 @@
     color: #000;
   }
 }
+
 .view-footer_withdraw {
+  position: absolute;
   background-color: #fff;
   bottom: 0;
+  z-index: 1000;
   .weui-flex__item {
     text-align: left;
   }
@@ -609,9 +633,11 @@
     color: #333;
   }
 }
+
 .view-infinite-wrap {
   overflow: auto;
 }
+
 .infinite {
   height: 100%;
   body {
@@ -619,5 +645,8 @@
   }
   .view_body {
     padding-bottom: 0;
+  }
+  .view_body-withdraw {
+    padding-bottom: 80px;
   }
 }
