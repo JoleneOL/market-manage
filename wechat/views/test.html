@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" class="infinite">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>我的团队 - 微信管理平台</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <style>
+        .test {
+            z-index: 1;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            width: 100%;
+            -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            -o-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-text-size-adjust: none;
+            -moz-text-size-adjust: none;
+            -ms-text-size-adjust: none;
+            -o-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+    </style>
+</head>
+<body class="view-fs-small">
+<section class="view_body">
+    <div class="weui-cells__title js-extra-h">我的团队</div>
+    <div class="view_team-logo js-extra-h"></div>
+    <div class="weui-flex view_panel-body js-extra-h">
+        <div class="weui-flex__item">
+            <p>成功推荐&nbsp;<strong class="text-big text-error">29</strong>&nbsp;个用户</p>
+        </div>
+        <div>
+            <p class="text-custom text-alignment_team open-popup" data-target="#J_upgradeRules">晋升制度</p>
+        </div>
+    </div>
+    <div class="view_team-list">
+        <div class="view-list-item view_team-header js-extra-h">
+            <div>用户</div>
+            <div>级别</div>
+            <div>加入时间</div>
+            <div>手机号码</div>
+        </div>
+        <!--team-list-start-->
+        <div class="view-infinite-wrap" id="J_teamList" data-loading="0" style="height: 429px; overflow: hidden">
+            <div class="test">
+                <div class="view-list-item">
+                    <div>夏洋</div>
+                    <div>爱心天使</div>
+                    <div>2017-04-30</div>
+                    <div>13560367944</div>
+                </div>
+                <div class="view-list-item">
+                    <div>夏洋</div>
+                    <div>爱心天使</div>
+                    <div>2017-04-30</div>
+                    <div>13560367944</div>
+                </div>
+                <div class="view-list-item">
+                    <div>毛磊</div>
+                    <div>分代理</div>
+                    <div>2017-03-11</div>
+                    <div>13231843768</div>
+                </div>
+                <div class="view-list-item">
+                    <div>沈刚</div>
+                    <div>爱心天使</div>
+                    <div>2017-04-21</div>
+                    <div>13146342323</div>
+                </div>
+                <div class="view-list-item">
+                    <div>于杰</div>
+                    <div>爱心天使</div>
+                    <div>2017-01-08</div>
+                    <div>14662222827</div>
+                </div>
+                <div class="view-list-item">
+                    <div>李艾</div>
+                    <div>爱心天使</div>
+                    <div>2017-05-07</div>
+                    <div>14662222827</div>
+                </div>
+                <div class="view-list-item">
+                    <div>董超</div>
+                    <div>经销商</div>
+                    <div>2017-03-11</div>
+                    <div>13664567439</div>
+                </div>
+                <div class="view-list-item">
+                    <div>方新</div>
+                    <div>经销商</div>
+                    <div>2017-03-11</div>
+                    <div>15664526439</div>
+                </div>
+                <div class="view-list-item">
+                    <div>刘立伟</div>
+                    <div>分代理</div>
+                    <div>2017-03-15</div>
+                    <div>13672438676</div>
+                </div>
+                <div class="view-list-item">
+                    <div>段勇</div>
+                    <div>经销商</div>
+                    <div>2017-01-15</div>
+                    <div>18872438676</div>
+                </div>
+                <div class="view-list-item">
+                    <div>丁丽</div>
+                    <div>经销商</div>
+                    <div>2016-05-11</div>
+                    <div>14660616089</div>
+                </div>
+                <div class="view-list-item">
+                    <div>赵勇</div>
+                    <div>经销商</div>
+                    <div>2017-03-05</div>
+                    <div>13317732922</div>
+                </div>
+                <div class="view-list-item">
+                    <div>常鸿飞</div>
+                    <div>经销商</div>
+                    <div>2017-04-15</div>
+                    <div>14310137348</div>
+                </div>
+                <div class="view-list-item">
+                    <div>李静</div>
+                    <div>爱心天使</div>
+                    <div>2016-03-11</div>
+                    <div>13659833461</div>
+                </div>
+                <div class="view-list-item">
+                    <div>赵天龙</div>
+                    <div>爱心天使</div>
+                    <div>2017-03-21</div>
+                    <div>15334611186</div>
+                </div>
+                <div class="view-list-item">
+                    <div>何俊杰</div>
+                    <div>爱心天使</div>
+                    <div>2017-03-21</div>
+                    <div>13659833461</div>
+                </div>
+                <div class="view-list-item">
+                    <div>刘胡兰</div>
+                    <div>爱心天使</div>
+                    <div>2017-03-21</div>
+                    <div>13659833461</div>
+                </div>
+                <div class="view-list-item">
+                    <div>何俊杰</div>
+                    <div>爱心天使</div>
+                    <div>2017-04-07</div>
+                    <div>14565408271</div>
+                </div>
+                <div class="view-list-item">
+                    <div>刘显然</div>
+                    <div>经销商</div>
+                    <div>2017-01-11</div>
+                    <div>16709003451</div>
+                </div>
+                <div class="view-list-item">
+                    <div>周世伟</div>
+                    <div>经销商</div>
+                    <div>2017-03-11</div>
+                    <div>16709003451</div>
+                </div>
+                <div class="view-list-item">
+                    <div>田阳</div>
+                    <div>经销商</div>
+                    <div>2017-03-11</div>
+                    <div>14509003451</div>
+                </div>
+                <div class="view-list-item">
+                    <div>张智慧</div>
+                    <div>经销商</div>
+                    <div>2017-04-11</div>
+                    <div>13383546746</div>
+                </div>
+                <div class="weui-loadmore">
+                    <i class="weui-loading"></i>
+                    <span class="weui-loadmore__tips">玩了命的加载中...</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
+<script>
+    myScroll = new IScroll('#J_teamList', {
+        probeType: 2
+    });
+
+    function isPassive() {
+        var supportsPassiveOption = false;
+        try {
+            addEventListener("test", null, Object.defineProperty({}, 'passive', {
+                get: function () {
+                    supportsPassiveOption = true;
+                }
+            }));
+        } catch(e) {}
+        return supportsPassiveOption;
+    }
+
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, isPassive() ? {
+        capture: false,
+        passive: false
+    } : false);
+    
+
+    myScroll.on("scroll",function(){
+        console.log(this.y >> 0);
+    });
+</script>
+</html>
