@@ -83,6 +83,9 @@
 .text-gray {
   color: #ccc;
 }
+.text-link {
+  color: #586c94;
+}
 .text-center {
   text-align: center;
 }
@@ -145,6 +148,18 @@
 .view_team-list .weui-flex__item:nth-child(3),
 .view_team-list .weui-flex__item:nth-child(4) {
   width: 33%;
+}
+.view_table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  box-sizing: border-box;
+}
+.view_table th {
+  background-color: #f2f2f2;
+}
+.view_table td {
+  text-align: center;
 }
 .view_team-list-left .weui-flex__item {
   text-align: left;
@@ -577,4 +592,7 @@
 }
 .button_sp_area .weui-btn {
   margin-top: 15px;
+}
+.view-agress_inline {
+  display: inline-block;
 }
