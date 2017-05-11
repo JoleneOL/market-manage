@@ -83,6 +83,12 @@
 .text-gray {
   color: #ccc;
 }
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
 .weui-btn_custom {
   background-color: #009bb6;
 }
@@ -100,17 +106,45 @@
 .view_team-logo {
   width: 100%;
 }
-.view_team-list .weui-flex__item {
-  padding: 6px 8px;
+.view_team-list .view-list-item > div {
+  padding: 6px 0;
   text-align: center;
   color: #333;
+  display: block;
+  box-sizing: border-box;
+  float: left;
+  white-space: nowrap;
+}
+.view_team-list .view-list-item > div:nth-child(1) {
+  width: 16%;
+}
+.view_team-list .view-list-item > div:nth-child(2) {
+  width: 18%;
+}
+.view_team-list .view-list-item > div:nth-child(3),
+.view_team-list .view-list-item > div:nth-child(4) {
+  width: 33%;
+}
+.view_team-list .view-list-item:after {
+  display: table;
+  content: " ";
+  clear: both;
+}
+.view_team-list .view_team-header > div {
+  background-color: #f2f2f2;
+  color: #949494;
+}
+.view_team-list .weui-flex__item:nth-child(1) {
+  padding: 6px 0;
+  width: 16%;
 }
 .view_team-list .weui-flex__item:nth-child(2) {
   padding: 6px 0;
+  width: 18%;
 }
-.view_team-list .view_team-header .weui-flex__item {
-  background-color: #f2f2f2;
-  color: #949494;
+.view_team-list .weui-flex__item:nth-child(3),
+.view_team-list .weui-flex__item:nth-child(4) {
+  width: 33%;
 }
 .view_team-list-left .weui-flex__item {
   text-align: left;
@@ -351,7 +385,6 @@
 }
 .view_form-button-group {
   justify-content: flex-end;
-  line-height: 30px;
 }
 .view_form-button-group .weui-btn:last-of-type {
   margin-top: 5px;
@@ -541,4 +574,7 @@
 }
 .infinite .view_body-withdraw {
   padding-bottom: 80px;
+}
+.button_sp_area .weui-btn {
+  margin-top: 15px;
 }

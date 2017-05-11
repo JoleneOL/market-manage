@@ -2,9 +2,6 @@
  * Created by Chang on 2017/5/7.
  */
 $(function () {
-    $('#J_upgradeRules').click(function () {
-        $.toast("满30个人即可升级", "text");
-    });
 
     var infiniteWrap = $('#J_teamList');
     // 阻止多次请求
@@ -63,11 +60,11 @@ $(function () {
 
 
     function templateStr(obj) {
-        return '<div class="weui-flex">' +
-            '<div class="weui-flex__item">' + obj.name + '</div>' +
-            '<div class="weui-flex__item">' + obj.rank + '</div>' +
-            '<div class="weui-flex__item view_flex-2">' + obj.joinTime + '</div>' +
-            '<div class="weui-flex__item view_flex-2">' + obj.phone + '</div>' +
+        return '<div class="view-list-item">' +
+            '<div>' + obj.name + '</div>' +
+            '<div>' + obj.rank + '</div>' +
+            '<div>' + obj.joinTime + '</div>' +
+            '<div>' + obj.phone + '</div>' +
             '</div>';
     }
 });

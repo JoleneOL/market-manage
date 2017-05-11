@@ -102,22 +102,25 @@
                                             <label class="col-sm-3 control-label">产品类型</label>
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="goodsType" id="J_goodsType">
-                                                    <option value="1" data-deposit="3180" data-need-install="120">净水机
+                                                    <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
+                                                            data-type="净水机">立式净水机
                                                     </option>
-                                                    <option value="2" data-deposit="6000">空气净化器</option>
-                                                    <option value="3" data-deposit="9800">食品优化宝（家用）</option>
-                                                    <option value="4" data-deposit="12800">食品优化宝（商用）</option>
+                                                    <option value="2" data-deposit="3000" data-need-install="180" data-model="hzts02"
+                                                            data-type="净水机">台式净水机
+                                                    </option>
+                                                    <option value="3" data-deposit="3000" data-need-install="180" data-model="hzcx01"
+                                                            data-type="净水机">橱下净水机
+                                                    </option>
+                                                    <option value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器">空气净化器</option>
+                                                    <option value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝">食品优化宝</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">租用机型</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="leasedType" id="J_leasedType">
-                                                    <option value="1">SCRO-200LK-L</option>
-                                                    <option value="2">SCRO-200LK-B</option>
-                                                    <option value="3">SCRO-200LK-K</option>
-                                                </select>
+                                                <input type="text" value="hzls01" class="form-control"
+                                                       disabled name="leasedType" id="J_leasedType" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -147,11 +150,11 @@
                                             <label class="col-sm-3 control-label">用户保证金</label>
                                             <div class="col-sm-3">
                                                 <p class="form-control-static text-danger" id="J_userDeposit">
-                                                    <strong>3180</strong>
+                                                    <strong>3000</strong>
                                                     <span class="unit-txt">元 / 台</span>
                                                 </p>
                                             </div>
-                                            <label class="col-sm-3 control-label js-install">安装费用</label>
+                                            <label class="col-sm-3 control-label js-install">初装费用</label>
                                             <div class="col-sm-3">
                                                 <p class="form-control-static text-danger js-install"
                                                    id="J_installationCost">
@@ -164,10 +167,10 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">订单总金额</label>
                                             <div class="col-sm-9">
-                                                <input type="hidden" name="orderTotal" value="3360">
+                                                <input type="hidden" name="orderTotal" value="3180">
                                                 <p class="form-control-static text-danger order-total"
                                                    id="J_orderTotal">
-                                                    <strong>3360</strong>
+                                                    <strong>3180</strong>
                                                     <span class="unit-txt">元</span>
                                                 </p>
                                             </div>
@@ -213,7 +216,7 @@
                 <tr>
                     <th>序号</th>
                     <th>产品名称</th>
-                    <th>类型</th>
+                    <th>型号</th>
                     <th>一次性支付三年服务费/台</th>
                     <th>每天费用</th>
                     <th>免费赠机使用期限</th>
@@ -222,24 +225,24 @@
                 <tbody>
                 <tr>
                     <td>1</td>
-                    <td>净水机</td>
-                    <td>立式</td>
+                    <td>立式净水机</td>
+                    <td>hzls01</td>
                     <td>3000元</td>
                     <td>2.78元</td>
                     <td>36个月</td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>净水机</td>
-                    <td>台式</td>
+                    <td>台式净水机</td>
+                    <td>hzts02</td>
                     <td>3000元</td>
                     <td>2.78元</td>
                     <td>36个月</td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>净水机</td>
-                    <td>厨下</td>
+                    <td>橱下净水机</td>
+                    <td>hzcx01</td>
                     <td>3000元</td>
                     <td>2.78元</td>
                     <td>36个月</td>
@@ -247,25 +250,17 @@
                 <tr>
                     <td>4</td>
                     <td>空气净化器</td>
-                    <td>家用</td>
-                    <td>6000元</td>
-                    <td>5.56元</td>
+                    <td>ESL-HM01</td>
+                    <td>5000元</td>
+                    <td>4.63元</td>
                     <td>36个月</td>
                 </tr>
                 <tr>
                     <td>5</td>
                     <td>食品优化宝</td>
-                    <td>家用</td>
-                    <td>9800元</td>
-                    <td>9.07元</td>
-                    <td>36个月</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>食品优化宝</td>
-                    <td>商用</td>
-                    <td>12800元</td>
-                    <td>11.85元</td>
+                    <td>SP70</td>
+                    <td>10000元</td>
+                    <td>9.26元</td>
                     <td>36个月</td>
                 </tr>
                 </tbody>

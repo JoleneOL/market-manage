@@ -110,6 +110,8 @@ $(function () {
         var $type = $ele.find('option:checked');
         var deposit = $type.attr('data-deposit');
         var isNeed = $type.attr('data-need-install');
+        var model = $type.attr('data-model');
+
         if (isNeed) {
             $('.js-install').show();
             $('#J_installationCost').find('strong').text(isNeed);
@@ -118,5 +120,6 @@ $(function () {
             $('#J_installationCost').find('strong').text(0);
         }
         $('#J_userDeposit').find('strong').text(deposit);
+        $('#J_leasedType').val(model);
     }
 });
