@@ -596,3 +596,29 @@
 .view-agress_inline {
   display: inline-block;
 }
+.view-scroll-wrap {
+  height: 100%;
+  overflow: hidden;
+}
+.view-scroll-wrap .weui-loadmore {
+  margin: 0 auto;
+  padding: 1.5em 0;
+}
+.view-scroll-wrap .view-scroll-list {
+  z-index: 1;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  width: 100%;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  text-size-adjust: none;
+}

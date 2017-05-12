@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="infinite">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>我的团队 - 微信管理平台</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../assets/css/custom.css">
+</head>
+<body class="view-fs-small">
+<section class="view_body">
+    <div class="weui-cells__title js-extra-h">我的团队</div>
+    <div class="view_team-logo js-extra-h"></div>
+    <div class="weui-flex view_panel-body js-extra-h">
+        <div class="weui-flex__item">
+            <p>成功推荐&nbsp;<strong class="text-big text-error">29</strong>&nbsp;个用户</p>
+        </div>
+        <div>
+            <p class="text-custom text-alignment_team open-popup" data-target="#J_upgradeRules">晋升制度</p>
+        </div>
+    </div>
+    <div class="view_team-list">
+        <div class="view-list-item view_team-header js-extra-h">
+            <div>用户</div>
+            <div>级别</div>
+            <div>加入时间</div>
+            <div>手机号码</div>
+        </div>
+        <!--team-list-start-->
+        <div class="view-infinite-wrap" id="J_teamList" data-loading="0">
+            <div class="view-list-item">
+                <div>夏洋</div>
+                <div>爱心天使</div>
+                <div>2017-04-30</div>
+                <div>13560367944</div>
+            </div>
+            <div class="view-list-item">
+                <div>夏洋</div>
+                <div>爱心天使</div>
+                <div>2017-04-30</div>
+                <div>13560367944</div>
+            </div>
+            <div class="view-list-item">
+                <div>毛磊</div>
+                <div>分代理</div>
+                <div>2017-03-11</div>
+                <div>13231843768</div>
+            </div>
+            <div class="view-list-item">
+                <div>沈刚</div>
+                <div>爱心天使</div>
+                <div>2017-04-21</div>
+                <div>13146342323</div>
+            </div>
+            <div class="view-list-item">
+                <div>于杰</div>
+                <div>爱心天使</div>
+                <div>2017-01-08</div>
+                <div>14662222827</div>
+            </div>
+            <div class="view-list-item">
+                <div>李艾</div>
+                <div>爱心天使</div>
+                <div>2017-05-07</div>
+                <div>14662222827</div>
+            </div>
+            <div class="view-list-item">
+                <div>董超</div>
+                <div>经销商</div>
+                <div>2017-03-11</div>
+                <div>13664567439</div>
+            </div>
+            <div class="view-list-item">
+                <div>方新</div>
+                <div>经销商</div>
+                <div>2017-03-11</div>
+                <div>15664526439</div>
+            </div>
+            <div class="view-list-item">
+                <div>刘立伟</div>
+                <div>分代理</div>
+                <div>2017-03-15</div>
+                <div>13672438676</div>
+            </div>
+            <div class="view-list-item">
+                <div>段勇</div>
+                <div>经销商</div>
+                <div>2017-01-15</div>
+                <div>18872438676</div>
+            </div>
+            <div class="view-list-item">
+                <div>丁丽</div>
+                <div>经销商</div>
+                <div>2016-05-11</div>
+                <div>14660616089</div>
+            </div>
+            <div class="view-list-item">
+                <div>赵勇</div>
+                <div>经销商</div>
+                <div>2017-03-05</div>
+                <div>13317732922</div>
+            </div>
+            <div class="view-list-item">
+                <div>常鸿飞</div>
+                <div>经销商</div>
+                <div>2017-04-15</div>
+                <div>14310137348</div>
+            </div>
+            <div class="view-list-item">
+                <div>李静</div>
+                <div>爱心天使</div>
+                <div>2016-03-11</div>
+                <div>13659833461</div>
+            </div>
+            <div class="view-list-item">
+                <div>赵天龙</div>
+                <div>爱心天使</div>
+                <div>2017-03-21</div>
+                <div>15334611186</div>
+            </div>
+            <div class="view-list-item">
+                <div>何俊杰</div>
+                <div>爱心天使</div>
+                <div>2017-03-21</div>
+                <div>13659833461</div>
+            </div>
+            <div class="view-list-item">
+                <div>刘胡兰</div>
+                <div>爱心天使</div>
+                <div>2017-03-21</div>
+                <div>13659833461</div>
+            </div>
+            <div class="view-list-item">
+                <div>何俊杰</div>
+                <div>爱心天使</div>
+                <div>2017-04-07</div>
+                <div>14565408271</div>
+            </div>
+            <div class="view-list-item">
+                <div>刘显然</div>
+                <div>经销商</div>
+                <div>2017-01-11</div>
+                <div>16709003451</div>
+            </div>
+            <div class="view-list-item">
+                <div>周世伟</div>
+                <div>经销商</div>
+                <div>2017-03-11</div>
+                <div>16709003451</div>
+            </div>
+            <div class="view-list-item">
+                <div>田阳</div>
+                <div>经销商</div>
+                <div>2017-03-11</div>
+                <div>14509003451</div>
+            </div>
+            <div class="view-list-item">
+                <div>张智慧</div>
+                <div>经销商</div>
+                <div>2017-04-11</div>
+                <div>13383546746</div>
+            </div>
+            <div class="weui-loadmore">
+                <i class="weui-loading"></i>
+                <span class="weui-loadmore__tips">玩了命的加载中...</span>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="J_upgradeRules" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <article class="weui-article">
+            <h1 class="text-center">用户晋升制度</h1>
+            <section>
+                <section>
+                    <p>一、总代理：分代理帮助5个经销商成为分代理或直接推荐，升级为空白地区总代理。</p>
+                </section>
+                <section>
+                    <p>二、分代理：经销商帮助5个爱心天使成为经销商或直接推荐，升级为分代理。</p>
+                </section>
+                <section>
+                    <p>三、	经销商：爱心天使帮助5个爱心天使免费，升级为经销商。</p>
+                </section>
+                <section>
+                    <p>四、	爱心天使：用户成功购买一件商品后默认为爱心天使。</p>
+                </section>
+                <section>
+                    <p>五、	备  注：平级推荐满5个晋升一级。</p>
+                </section>
+                <section>
+                    <p class="text-right">利每家科技有限公司</p>
+                </section>
+            </section>
+            <button type="button" class="weui-btn weui-btn_custom close-popup">确定</button>
+        </article>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js"></script>
+<script src="../mock/api.js"></script>
+<!--生产环境请移除 End-->
+
+<script src="../assets/js/myTeam.js"></script>
+</html>

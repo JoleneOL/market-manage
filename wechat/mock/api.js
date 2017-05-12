@@ -39,3 +39,27 @@ Mock.mock(/\/api\/orderList/, "get", {
         }
     ]
 });
+
+/**
+ * equipmentStatus 暂定Number
+ * 0: 正常使用中
+ * 1: 维护中
+ * 2: 维修中
+ * 3: 退款中
+ */
+
+Mock.mock(/\/api\/equipmentList/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|10": [
+        {
+            equipmentId: '@id',
+            id: '@id',
+            equipmentStatus: '@integer(0, 3)',
+            remainingTime: '@integer(1, 1095)',
+            TDS: "@integer(1, 600)",
+            installationAddress: '@county(true)',
+            installationTime: '@now("yyyy-MM-dd")'
+        }
+    ]
+});

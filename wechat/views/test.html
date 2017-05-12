@@ -13,28 +13,6 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
 
     <link rel="stylesheet" href="../assets/css/custom.css">
-    <style>
-        .test {
-            z-index: 1;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
-            width: 100%;
-            -webkit-transform: translateZ(0);
-            -moz-transform: translateZ(0);
-            -ms-transform: translateZ(0);
-            -o-transform: translateZ(0);
-            transform: translateZ(0);
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-text-size-adjust: none;
-            -moz-text-size-adjust: none;
-            -ms-text-size-adjust: none;
-            -o-text-size-adjust: none;
-            text-size-adjust: none;
-        }
-    </style>
 </head>
 <body class="view-fs-small">
 <section class="view_body">
@@ -56,8 +34,8 @@
             <div>手机号码</div>
         </div>
         <!--team-list-start-->
-        <div class="view-infinite-wrap" id="J_teamList" data-loading="0" style="height: 429px; overflow: hidden">
-            <div class="test">
+        <div class="view-scroll-wrap" id="J_teamList" data-loading="0" style="height: 429px; ">
+            <div class="view-scroll-list">
                 <div class="view-list-item">
                     <div>夏洋</div>
                     <div>爱心天使</div>
@@ -201,32 +179,23 @@
 </section>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js"></script>
+<script src="../mock/api.js"></script>
+<!--生产环境请移除 End-->
+<script src="../assets/js/myScroll.js"></script>
 <script>
-    myScroll = new IScroll('#J_teamList', {
-        probeType: 2
-    });
-
-    function isPassive() {
-        var supportsPassiveOption = false;
-        try {
-            addEventListener("test", null, Object.defineProperty({}, 'passive', {
-                get: function () {
-                    supportsPassiveOption = true;
-                }
-            }));
-        } catch(e) {}
-        return supportsPassiveOption;
-    }
-
-    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, isPassive() ? {
-        capture: false,
-        passive: false
-    } : false);
-    
-
-    myScroll.on("scroll",function(){
-        console.log(this.y >> 0);
+    $('#J_teamList').myScroll({
+        template: function (obj) {
+            return '<div class="view-list-item">' +
+                '<div>' + obj.name + '</div>' +
+                '<div>' + obj.rank + '</div>' +
+                '<div>' + obj.joinTime + '</div>' +
+                '<div>' + obj.phone + '</div>' +
+                '</div>';
+        }
     });
 </script>
 </html>

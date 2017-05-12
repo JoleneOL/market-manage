@@ -21,59 +21,96 @@ $(function () {
     tabsItem.click(function (e) {
         e.preventDefault();
     });
+    var maintainURL = 'maintain.html';
+    var repairURL = 'repair.html';
+    var refundURL = 'refund.html';
 
+    var maintainStatusURL = 'maintainStatus.html';
+    var repairStatusURL = 'repairStatus.html';
+    var refundStatusURL = 'refundStatus.html';
 
-    $('#equipment').infinite().on("infinite", function() {
-        var self = $(this);
-        if(self.attr('data-loading') === "1") return;
-        self.attr('data-loading', 1);
-        getEquipment(self);
+    $('#equipment').myScroll({
+        ajaxUrl: '/api/equipmentList',
+        template: function (obj) {
+            return '<div class="weui-form-preview view-mb-20"> ' +
+                '<div class="view-form-preview-ex"> ' +
+                '<div class="weui-form-preview__item"> ' +
+                '<p class="weui-form-preview__value">饮水机编号：' + obj.id + '</p> ' +
+                equipmentTpl.status(obj.equipmentStatus) +
+                '</div> ' +
+                '</div> ' +
+                '<div class="weui-form-preview__hd view-form-text_left view-bg-color-f2"> ' +
+                '<div class="weui-form-preview__item"> ' +
+                '<label class="weui-form-preview__label">剩余使用时间：</label> ' +
+                '<em class="weui-form-preview__value">' + obj.remainingTime + '</em> ' +
+                '</div> ' +
+                '<div class="weui-form-preview__item"> ' +
+                '<label class="weui-form-preview__label">TDS值：</label> ' +
+                '<em class="weui-form-preview__value">' + obj.TDS + '</em> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="weui-form-preview__bd"> ' +
+                '<div class="weui-form-preview__item"> ' +
+                '<label class="weui-form-preview__label"></label> ' +
+                '<span class="weui-form-preview__value">安装地址：' + obj.installationAddress + '</span> ' +
+                '</div> ' +
+                '<div class="weui-form-preview__item"> ' +
+                '<span class="weui-form-preview__value">安装时间：' + obj.installationTime + '</span> ' +
+                '</div> ' +
+                '</div> ' +
+                '<div class="weui-form-preview__ft view_form-button-group"> ' +
+                '<div class="button_sp_area"> ' +
+                equipmentTpl.buttons(obj.equipmentId, obj.equipmentStatus) +
+                '</div> ' +
+                '</div>' +
+                '</div>';
+        }
     });
 
-    function getEquipment($ele) {
-        $.ajax('/api/teamList', {
-            method: 'GET',
-            data: {
-                length: 10
-            },
-            dataType: 'json',
-            success: function (res) {
-                if (res.resultCode !== 200) {
-                    $.toast('请求失败', 'cancel');
-                    $ele.attr('data-loading', 0);
-                    return false;
-                }
-                if(res.data.length > 0) {
-                    // $('.weui-loadmore').before(createDom(res.data));
-                    $ele.attr('data-loading', 0);
-                } else {
-                    // $('.weui-loadmore').text('没有更多内容了');
-                    // $('#J_teamList').destroyInfinite();
-                    $ele.attr('data-loading', 1);
-                }
-            },
-            error: function () {
-                $.toast('服务器异常', 'cancel');
+    var equipmentTpl = {
+        status: function (status) {
+            var dom = '';
+            switch (status) {
+                case 0:
+                    dom = '<label class="weui-form-preview__label text-success">正常使用中</label>';
+                    break;
+                case 1:
+                    dom = '<label class="weui-form-preview__label text-primary">维护中</label>';
+                    break;
+                case 2:
+                    dom = '<label class="weui-form-preview__label text-warn">维修中</label>';
+                    break;
+                case 3:
+                    dom = '<label class="weui-form-preview__label text-error">退款中</label>';
+                    break;
             }
-        });
-    }
-
-
-    function createDom(obj) {
-        var domStr = '';
-        obj.forEach(function (v) {
-            domStr += templateStr(v);
-        });
-        return domStr;
-    }
-
-
-    function templateStr(obj) {
-        return '<div class="weui-flex">' +
-            '<div class="weui-flex__item">' + obj.name + '</div>' +
-            '<div class="weui-flex__item">' + obj.rank + '</div>' +
-            '<div class="weui-flex__item view_flex-2">' + obj.joinTime + '</div>' +
-            '<div class="weui-flex__item view_flex-2">' + obj.phone + '</div>' +
-            '</div>';
-    }
+            return dom;
+        },
+        buttons: function (id, status) {
+            var dom = '';
+            switch (status) {
+                case 0:
+                    dom = '<a href="' + maintainURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维护</a> ' +
+                        '<a href="' + repairURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维修</a> ' +
+                        '<a href="' + refundURL + '?orderId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">退款</a> ';
+                    break;
+                case 1:
+                    dom = '<a href="' + maintainStatusURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维护中</a> ' +
+                        '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">维修</a> ' +
+                        '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">退款</a> ';
+                    break;
+                case 2:
+                    dom = '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">维护</a> ' +
+                        '<a href="' + repairStatusURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维修中</a> ' +
+                        '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">退款中</a> ';
+                    break;
+                case 3:
+                    dom = '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">维护</a> ' +
+                        '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">维修</a> ' +
+                        '<a href="' + refundStatusURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">退款中</a> ';
+                    break;
+            }
+            return dom;
+        }
+    };
 });
