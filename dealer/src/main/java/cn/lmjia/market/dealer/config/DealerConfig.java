@@ -2,13 +2,18 @@ package cn.lmjia.market.dealer.config;
 
 import cn.lmjia.market.core.config.MVCConfig;
 import cn.lmjia.market.core.config.WebModule;
+import cn.lmjia.market.dealer.mvc.AgentLevelArgumentResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
+
+import java.util.List;
 
 /**
  * 可支持配置
@@ -24,6 +29,15 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 @ComponentScan("cn.lmjia.market.dealer.controller")
 @Import({MVCConfig.class, DealerConfig.First.class})
 public class DealerConfig extends WebMvcConfigurerAdapter implements WebModule {
+
+    @Autowired
+    private AgentLevelArgumentResolver agentLevelArgumentResolver;
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        super.addArgumentResolvers(argumentResolvers);
+        argumentResolvers.add(agentLevelArgumentResolver);
+    }
 
     @Override
     public boolean hasOwnTemplateResolver() {

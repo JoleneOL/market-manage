@@ -17,7 +17,7 @@ import org.openqa.selenium.WebElement;
 public class ManagerFlow extends WebTest {
 
     @Test
-    public void go() {
+    public void go() throws Exception {
         newRandomAgentSystemAnd(null);
 
         String rawPassword = randomEmailAddress();
