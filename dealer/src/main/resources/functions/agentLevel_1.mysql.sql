@@ -1,5 +1,3 @@
-DELIMITER //
-
 CREATE FUNCTION `mm_agentLevel`(
   id BIGINT
 )
@@ -38,4 +36,4 @@ CREATE FUNCTION `mm_agentLevel`(
     LEFT JOIN `AGENTLEVEL` AS t10 ON t9.`SUPERIOR_ID` = t10.`ID`
   WHERE t0.`ID` = id;
   RETURN result;
-END//
+END
