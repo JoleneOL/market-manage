@@ -1,4 +1,3 @@
-DROP FUNCTION IF EXISTS `mm_agentLevel`;
 DELIMITER //
 
 CREATE FUNCTION `mm_agentLevel`(
@@ -40,5 +39,3 @@ CREATE FUNCTION `mm_agentLevel`(
   WHERE t0.`ID` = id;
   RETURN result;
 END//
-
-DELIMITER ;

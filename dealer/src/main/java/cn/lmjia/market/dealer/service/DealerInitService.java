@@ -7,6 +7,7 @@ import me.jiangcai.lib.jdbc.JdbcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
@@ -71,8 +72,26 @@ public class DealerInitService {
     }
 
     private void addFunction(String name, Statement statement, String functionName) throws IOException, SQLException {
-        String agentLevel = StreamUtils.copyToString(new ClassPathResource("/functions/" + functionName + "."
-                + name + ".sql").getInputStream(), Charset.forName("UTF-8"));
+        // 分2种情况 一种直接存在，第二种有这么几条
+        final ClassPathResource resource = new ClassPathResource("/functions/" + functionName + "."
+                + name + ".sql");
+        if (resource.exists())
+            executeResource(statement, resource);
+        else {
+            int i = 0;
+            while (true) {
+                final ClassPathResource subResource = new ClassPathResource("/functions/" + functionName + "_"
+                        + (i++) + "." + name + ".sql");
+                if (subResource.exists())
+                    executeResource(statement, subResource);
+                else
+                    break;
+            }
+        }
+    }
+
+    private void executeResource(Statement statement, Resource resource) throws IOException, SQLException {
+        String agentLevel = StreamUtils.copyToString(resource.getInputStream(), Charset.forName("UTF-8"));
         statement.executeUpdate(agentLevel);
     }
 

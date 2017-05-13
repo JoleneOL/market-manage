@@ -1,4 +1,3 @@
-DROP FUNCTION IF EXISTS `mm_agentBelongs`;
 DELIMITER //
 
 CREATE FUNCTION `mm_agentBelongs`(
@@ -21,5 +20,3 @@ CREATE FUNCTION `mm_agentBelongs`(
   WHERE t0.`ID` = id;
   RETURN result;
 END//
-
-DELIMITER ;
