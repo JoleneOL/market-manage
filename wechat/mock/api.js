@@ -29,7 +29,7 @@ Mock.mock(/\/api\/orderList/, "get", {
         {
             orderId: '@id',
             orderTime: '@now("yyyy-MM-dd")',
-            orderStatus: '@pick(["成功", "失败", "取消"])',
+            orderStatus: '成功',
             name: "@cname",
             goodsInfo: '饮水机 u56立式',
             orderAmount: '@integer(3000, 9999999)',
@@ -55,7 +55,7 @@ Mock.mock(/\/api\/equipmentList/, "get", {
         {
             equipmentId: '@id',
             id: '@id',
-            equipmentStatus: '@integer(0, 3)',
+            equipmentStatus: '@integer(0, 2)',
             remainingTime: '@integer(1, 1095)',
             TDS: "@integer(1, 600)",
             installationAddress: '@county(true)',
