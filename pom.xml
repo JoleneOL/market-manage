@@ -13,6 +13,7 @@
         <module>dealer</module>
         <module>web</module>
         <module>manage-service</module>
+        <module>wechat-service</module>
     </modules>
 
     <properties>
