@@ -2,6 +2,7 @@ package cn.lmjia.market.core.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -56,6 +57,11 @@ public class Login implements UserDetails {
     private Login guideUser;
     @OneToOne(cascade = CascadeType.ALL)
     private ContactWay contactWay;
+    /**
+     * 这个身份所关联的用户，通常应该是唯一的
+     */
+    @OneToOne
+    private StandardWeixinUser wechatUser;
 
     @Override
     public boolean equals(Object o) {

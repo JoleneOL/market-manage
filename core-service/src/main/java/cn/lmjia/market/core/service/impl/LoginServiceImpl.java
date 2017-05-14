@@ -6,6 +6,7 @@ import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.service.LoginService;
+import me.jiangcai.wx.model.PublicAccount;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class LoginServiceImpl implements LoginService {
     private ManagerRepository managerRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PublicAccount publicAccount;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -74,5 +77,10 @@ public class LoginServiceImpl implements LoginService {
         if (log.isTraceEnabled())
             log.trace("通过手机可用性检测:" + mobile);
         return true;
+    }
+
+    @Override
+    public Login asWechat(String openId) {
+        return loginRepository.findOne((root, query, cb) -> cb.equal(root.get("wechatUser").get("openId"), openId));
     }
 }

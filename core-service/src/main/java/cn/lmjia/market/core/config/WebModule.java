@@ -3,6 +3,8 @@ package cn.lmjia.market.core.config;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 
+import java.util.function.Supplier;
+
 /**
  * web模块
  *
@@ -35,4 +37,11 @@ public interface WebModule {
      * @see #resourcePathPatterns()
      */
     void resourceHandler(String pattern, ResourceHandlerRegistration registration);
+
+    /**
+     * @return 个性化的类型
+     */
+    default Supplier<SpringResourceTemplateResolver> templateResolverSupplier() {
+        return null;
+    }
 }

@@ -41,6 +41,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,9 +68,9 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     private final Set<WebModule> webModules;
     @Autowired
     private RowDefinitionHandler rowDefinitionHandler;
-//    private final BigDecimalConverter bigDecimalConverter;
-@Autowired
-private LocalDateConverter localDateConverter;
+    //    private final BigDecimalConverter bigDecimalConverter;
+    @Autowired
+    private LocalDateConverter localDateConverter;
 
     @Autowired
     public MVCConfig(ThymeleafViewResolver htmlViewResolver, Environment environment, Set<WebModule> webModules) {
@@ -280,8 +281,11 @@ private LocalDateConverter localDateConverter;
                 return engine;
             }
 
-            private SpringResourceTemplateResolver createHtmlTemplateResolver() {
-                SpringResourceTemplateResolver resolver = new NewSpringResourceTemplateResolver();
+            private SpringResourceTemplateResolver createHtmlTemplateResolver(
+                    Supplier<SpringResourceTemplateResolver> supplier) {
+                if (supplier == null)
+                    supplier = NewSpringResourceTemplateResolver::new;
+                SpringResourceTemplateResolver resolver = supplier.get();
                 resolver.setCacheable(!environment.acceptsProfiles("development")
                         && !environment.acceptsProfiles("test"));
                 resolver.setCharacterEncoding(UTF8);
@@ -296,14 +300,14 @@ private LocalDateConverter localDateConverter;
                 final Set<ITemplateResolver> collect = webModules.stream()
                         .filter(WebModule::hasOwnTemplateResolver)
                         .map(webModule -> {
-                            SpringResourceTemplateResolver resolver = createHtmlTemplateResolver();
+                            SpringResourceTemplateResolver resolver = createHtmlTemplateResolver(webModule.templateResolverSupplier());
                             webModule.templateResolver(resolver);
                             resolver.setOrder(2);
                             return (ITemplateResolver) resolver;
                         })
                         .collect(Collectors.toSet());
 
-                collect.add(createHtmlTemplateResolver());
+                collect.add(createHtmlTemplateResolver(null));
                 return templateEngine(collect);
             }
 
