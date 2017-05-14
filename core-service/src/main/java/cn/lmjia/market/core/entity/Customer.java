@@ -1,15 +1,22 @@
 package cn.lmjia.market.core.entity;
 
+import cn.lmjia.market.core.entity.support.Address;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.wx.model.Gender;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  * 客户
+ * 如果电话和姓名都一样才可以被认为是同一个客户
+ * 但是只要电话一致即可认为是同一个身份
  *
  * @author CJ
  */
@@ -20,4 +27,22 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
+    private Login login;
+    @Column(length = 20)
+    private String mobile;
+    @Column(length = 50)
+    private String name;
+    /**
+     * 所属经销商
+     */
+    @ManyToOne
+    private AgentLevel agentLevel;
+
+
+    private int birthYear;
+    private Gender gender;
+    private Address installAddress;
+
+
 }
