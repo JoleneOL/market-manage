@@ -30,53 +30,43 @@ $(function () {
     $('#equipment').myScroll({
         ajaxUrl: '/api/equipmentList',
         template: function (obj) {
-            return '<div class="weui-form-preview view-mb-20"> ' +
-                '<div class="view-form-preview-ex"> ' +
-                '<div class="weui-form-preview__item"> ' +
-                '<p class="weui-form-preview__value">饮水机编号：' + obj.id + '</p> ' +
+            return '<div class="view-preview view-mb-20">' +
+                '<div class="view-preview_hd"> ' +
+                '<p class="view-preview_header_value pull-left">饮水机编号：' + obj.id + '</p> ' +
                 equipmentTpl.status(obj.equipmentStatus) +
                 '</div> ' +
+                '<div class="view-preview_bd view-bg-color-f2"> ' +
+                '<div class="view-preview_body_item"> ' +
+                '<span>剩余使用时间：</span><p>' + obj.remainingTime + '</p> ' +
                 '</div> ' +
-                '<div class="weui-form-preview__hd view-form-text_left view-bg-color-f2"> ' +
-                '<div class="weui-form-preview__item"> ' +
-                '<label class="weui-form-preview__label">剩余使用时间：</label> ' +
-                '<em class="weui-form-preview__value">' + obj.remainingTime + '</em> ' +
+                '<div class="view-preview_body_item">' +
+                '<span>TDS值：</span><p>' + obj.TDS + '</p>' +
+                '</div>' +
                 '</div> ' +
-                '<div class="weui-form-preview__item"> ' +
-                '<label class="weui-form-preview__label">TDS值：</label> ' +
-                '<em class="weui-form-preview__value">' + obj.TDS + '</em> ' +
+                '<div class="view-preview_sub"> ' +
+                '<div class="view-preview_body_item"><span>安装地址：' + obj.installationAddress + '</span></div>' +
+                '<div class="view-preview_body_item"><span>安装时间：' + obj.installationTime + '</span></div> ' +
                 '</div> ' +
-                '</div> ' +
-                '<div class="weui-form-preview__bd"> ' +
-                '<div class="weui-form-preview__item"> ' +
-                '<label class="weui-form-preview__label"></label> ' +
-                '<span class="weui-form-preview__value">安装地址：' + obj.installationAddress + '</span> ' +
-                '</div> ' +
-                '<div class="weui-form-preview__item"> ' +
-                '<span class="weui-form-preview__value">安装时间：' + obj.installationTime + '</span> ' +
-                '</div> ' +
-                '</div> ' +
-                '<div class="weui-form-preview__ft view_form-button-group"> ' +
+                '<div class="view-preview_ft"> ' +
                 '<div class="button_sp_area"> ' +
                 equipmentTpl.buttons(obj.equipmentId, obj.equipmentStatus) +
                 '</div> ' +
-                '</div>' +
+                '</div> ' +
                 '</div>';
         }
     });
-
     var equipmentTpl = {
         status: function (status) {
             var dom = '';
             switch (status) {
                 case 0:
-                    dom = '<label class="weui-form-preview__label text-success">正常使用中</label>';
+                    dom = '<span class="view-preview_header_label pull-right text-success">正常使用中</span>';
                     break;
                 case 1:
-                    dom = '<label class="weui-form-preview__label text-primary">维护中</label>';
+                    dom = '<span class="view-preview_header_label pull-right text-primary">维护中</span>';
                     break;
                 case 2:
-                    dom = '<label class="weui-form-preview__label text-warn">维修中</label>';
+                    dom = '<span class="view-preview_header_label pull-right text-warn">维修中</span>';
                     break;
             }
             return dom;
@@ -85,16 +75,16 @@ $(function () {
             var dom = '';
             switch (status) {
                 case 0:
-                    dom = '<a href="' + maintainURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维护</a> ' +
-                        '<a href="' + repairURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维修</a> ';
+                    dom = '<a href="' + maintainURL + '?equipmentId=' + id + '" class="view-btn">维护</a> ' +
+                        '<a href="' + repairURL + '?equipmentId=' + id + '" class="view-btn">维修</a> ';
                     break;
                 case 1:
-                    dom = '<a href="' + maintainStatusURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维护中</a> ' +
-                        '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">维修</a> ';
+                    dom = '<a href="' + maintainStatusURL + '?equipmentId=' + id + '" class="view-btn">维护中</a> ' +
+                        '<a href="javascript:;" class="view-btn view-btn_disabled">维修</a> ';
                     break;
                 case 2:
-                    dom = '<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default weui-btn_disabled">维护</a> ' +
-                        '<a href="' + repairStatusURL + '?equipmentId=' + id + '" class="weui-btn weui-btn_mini weui-btn_default">维修中</a> ';
+                    dom = '<a href="javascript:;" class="view-btn view-btn_disabled">维护</a> ' +
+                        '<a href="' + repairStatusURL + '?equipmentId=' + id + '" class="view-btn">维修中</a> ';
                     break;
             }
             return dom;
