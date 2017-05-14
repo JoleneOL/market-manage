@@ -31,12 +31,13 @@ public class WechatConfig implements WebModule {
                     , String ownerTemplate, String template, String resourceName, String characterEncoding
                     , Map<String, Object> templateResolutionAttributes) {
                 // 只处理  xx@wechat 的模板
-                if (!template.endsWith("@wechat"))
+                if (!template.startsWith("wechat@"))
                     return null;
                 // 然后把相关的名字去掉
-                String newTemplate = template.substring(0, template.length() - "@wechat".length());
+//                String newTemplate = template.substring("wechat@".length());
+                resourceName = resourceName.replaceFirst("wechat@", "");
                 SpringResourceTemplateResource resourceTemplateResource = (SpringResourceTemplateResource)
-                        super.computeTemplateResource(configuration, ownerTemplate, newTemplate, resourceName, characterEncoding
+                        super.computeTemplateResource(configuration, ownerTemplate, template, resourceName, characterEncoding
                                 , templateResolutionAttributes);
                 if (resourceTemplateResource.exists())
                     return resourceTemplateResource;

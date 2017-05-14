@@ -27,6 +27,12 @@
             <version>${jiangcai.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>me.jiangcai.wx</groupId>
+            <artifactId>weixin-test</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

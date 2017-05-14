@@ -74,7 +74,7 @@ class SecurityConfig {
 
             registry
                     // 登录跳转页面
-                    .antMatchers("/toLoginWechat").permitAll()
+                    .antMatchers("/toLoginWechat", "/wechatLogin").permitAll()
                     // 手机号码可用性检测
                     .antMatchers("/loginData/mobileValidation").permitAll()
                     // 首页允许访问

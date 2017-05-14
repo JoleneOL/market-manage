@@ -34,6 +34,6 @@ public class WechatController {
 
     @GetMapping("/wechatLogin")
     public String wechatLogin() {
-        return "login.html@wechat";
+        return "wechat@login.html";
     }
 }
