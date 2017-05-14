@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
 
-    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css">
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
 <body class="view-fs-small">
 <section class="view_body">
@@ -213,6 +214,6 @@
 <script src="../mock/mock-min.js"></script>
 <script src="../mock/api.js"></script>
 <!--生产环境请移除 End-->
-<script src="../wechat-resource/assets/js/myScroll.js"></script>
-<script src="../wechat-resource/assets/js/myTeam.js"></script>
+<script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
+<script src="../wechat-resource/assets/js/myTeam.js" th:src="@{/wechat-resource/assets/js/myTeam.js}"></script>
 </html>

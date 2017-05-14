@@ -7,6 +7,7 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.service.LoginService;
 import me.jiangcai.wx.model.PublicAccount;
+import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class LoginServiceImpl implements LoginService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private PublicAccount publicAccount;
+    @Autowired
+    private StandardWeixinUserRepository standardWeixinUserRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -82,5 +85,20 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Login asWechat(String openId) {
         return loginRepository.findOne((root, query, cb) -> cb.equal(root.get("wechatUser").get("openId"), openId));
+    }
+
+    @Override
+    public void bindWechat(String loginName, String rawPassword, String openId) {
+        Login login = loginRepository.findByLoginName(loginName);
+        if (login == null || !login.isEnabled()
+                || !login.isAccountNonExpired()
+                || !login.isAccountNonLocked()
+                || !login.isCredentialsNonExpired())
+            throw new IllegalArgumentException();
+        if (!passwordEncoder.matches(rawPassword, login.getPassword())) {
+            throw new IllegalArgumentException();
+        }
+
+        login.setWechatUser(standardWeixinUserRepository.findByOpenId(openId));
     }
 }

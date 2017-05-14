@@ -57,4 +57,12 @@ public interface LoginService extends UserDetailsService {
      * @return null;如果尚未跟这个微信号产生关联
      */
     Login asWechat(String openId);
+
+    /**
+     * 绑定指定Login和openId
+     *
+     * @throws IllegalArgumentException 密码或者用户名错误
+     */
+    @Transactional
+    void bindWechat(String loginName, String rawPassword, String openId);
 }

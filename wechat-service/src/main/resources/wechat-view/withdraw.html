@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
 
-    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css">
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
 <body class="view-bg-color view-fs-small">
 <section class="view_body view_body-withdraw">
@@ -131,5 +132,5 @@
 </section>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
-<script src="../wechat-resource/assets/js/withdraw.js"></script>
+<script src="../wechat-resource/assets/js/withdraw.js" th:src="@{/wechat-resource/assets/js/withdraw.js}"></script>
 </html>
