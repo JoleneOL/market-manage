@@ -1,5 +1,56 @@
 @brand-success: #009bb6;
 
+.border-1px-bottom(@color) {
+  position: relative;
+  &::after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    border-bottom: 1px solid @color;
+  }
+}
+
+.border-1px-top(@color) {
+  position: relative;
+  &::before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    border-top: 1px solid @color;
+  }
+}
+
+.border-1px(@color) {
+  position: relative;
+  width: auto;
+  height: 100%;
+  &::after {
+    content: ' ';
+    width: 200%;
+    height: 200%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid @color;
+    -webkit-transform: scale(.5);
+    transform: scale(.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    box-sizing: border-box;
+    border-radius: 5px;
+  }
+}
+
 .view-bg-color {
   background-color: #fbf9fe;
 }
@@ -23,6 +74,14 @@
 
 .view-mb-20 {
   margin-bottom: 20px;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
 }
 
 .header_wrap {
@@ -100,15 +159,19 @@
 .text-gray {
   color: #ccc;
 }
+
 .text-link {
   color: #586c94;;
 }
+
 .text-center {
   text-align: center;
 }
+
 .text-right {
   text-align: right;
 }
+
 .weui-btn_custom {
   background-color: @brand-success;
 }
@@ -125,12 +188,89 @@
   height: 38px;
   line-height: 38px;
 }
+
 .view_team-logo {
   width: 100%;
   img {
 
   }
 }
+
+//个人中心
+.view-preview {
+  .view-preview_hd,
+  .view-preview_bd,
+  .view-preview_sub,
+  .view-preview_ft {
+    background-color: #fff;
+    padding: 6px 15px;
+    line-height: 2em;
+    overflow: hidden;
+    &:after {
+      display: table;
+      content: " ";
+      clear: both;
+    }
+  }
+  .view-preview_body_item {
+    &:after {
+      display: table;
+      content: " ";
+      clear: both;
+    }
+  }
+  .view-preview_hd {
+    .border-1px-top(#e5e5e5);
+  }
+  .view-preview_bd {
+    .view-preview_body_item {
+      span {
+        float: left;
+        margin-right: 1em;
+        min-width: 4em;
+      }
+    }
+  }
+  .view-preview_sub {
+    .border-1px-bottom(#e5e5e5);
+    .view-preview_body_item {
+      font-size: .9em;
+      text-align: right;
+      color: #999;
+    }
+  }
+  .view-preview_ft {
+    .border-1px-bottom(#e5e5e5);
+    text-align: right;
+
+    .button_sp_area {
+      padding: .7em 0;
+    }
+    .view-btn {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0 1.32em;
+      box-sizing: border-box;
+      text-align: center;
+      text-decoration: none;
+      line-height: 2;
+      border-radius: 3px;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      color: #000;
+      background-color: #fff;
+      font-size: 13px;
+      .border-1px(fade(#000, 20));
+      &.view-btn_disabled {
+        color: rgba(0, 0, 0, .3);
+        cursor: not-allowed;
+      }
+    }
+  }
+  .view-bg-color-f2 {
+    background-color: #f2f2f2;
+  }
+}
+
 .view_team-list {
   .view-list-item {
     > div {
@@ -710,14 +850,17 @@
     padding-bottom: 80px;
   }
 }
+
 .button_sp_area {
   .weui-btn {
     margin-top: 15px;
   }
 }
+
 .view-agress_inline {
   display: inline-block;
 }
+
 .view-scroll-wrap {
   height: 100%;
   overflow: hidden;
@@ -727,7 +870,7 @@
   }
   .view-scroll-list {
     z-index: 1;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     width: 100%;
     -webkit-transform: translateZ(0);
     -moz-transform: translateZ(0);
@@ -742,5 +885,41 @@
     -moz-text-size-adjust: none;
     -ms-text-size-adjust: none;
     text-size-adjust: none;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+  .border-1px-bottom,
+  .border-1px-top,
+  .border-1px {
+    &::after {
+      -webkit-transform: scaleY(.7);
+      transform: scaleY(.7);
+    }
+  }
+
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+  .border-1px-bottom,
+  .border-1px-top,
+  .border-1px {
+    &::after {
+      -webkit-transform: scaleY(.5);
+      transform: scaleY(.5);
+    }
+  }
+
+}
+
+@media (device-height: 568px) and (-webkit-min-device-pixel-ratio: 2) {
+  /* 兼容iphone5 */
+  .view-preview_hd {
+    font-size: 13px;
+  }
+  .view-btn-group-md .weui-btn {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 12px;
   }
 }
