@@ -63,7 +63,7 @@
         }
 
         function getDate() {
-            if(!s.ajaxUrl) {
+            if (!s.ajaxUrl) {
                 console.error('需要数据请求地址');
                 return '';
             }
@@ -91,7 +91,6 @@
                 }
             });
         }
-
         function createDom(obj) {
             var domStr = '';
             obj.forEach(function (v) {
@@ -99,5 +98,8 @@
             });
             return domStr;
         }
+
+        return $self;
+
     };
 })(jQuery);

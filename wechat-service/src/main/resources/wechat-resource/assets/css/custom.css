@@ -636,6 +636,7 @@
   font-size: 14px;
 }
 #commission {
+  box-sizing: border-box;
   padding: 10px 5px;
 }
 #commission .view-tabs_item {
@@ -739,10 +740,11 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-text-size-adjust: none;
-  -moz-text-size-adjust: none;
-  -ms-text-size-adjust: none;
-  text-size-adjust: none;
+}
+#commission.goAway {
+  display: block;
+  opacity: 0;
+  z-index: -100;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,

@@ -63,3 +63,19 @@ Mock.mock(/\/api\/equipmentList/, "get", {
         }
     ]
 });
+
+Mock.mock(/\/api\/commList/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|10": [
+        {
+            id: '@id',
+            commType: '@pick(["销售收益", "其他收益", "退款", "管理费"])',
+            name: "@cname",
+            commission: "@float(1, 100, 1, 2)",
+            divided: '20%',
+            commInfo: '滤芯01 3年收费 ￥3000',
+            commTime: '@now("yyyy-MM-dd")'
+        }
+    ]
+});
