@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 
 /**
  * 产品信息
@@ -22,6 +23,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * 货物编码
+     */
+    @Column(length = 40, nullable = false, unique = true)
+    private String code;
     @Column(length = 40)
     private String name;
+    /**
+     * 每台租用费用
+     */
+    private BigDecimal deposit;
+    /**
+     * 每台安装费用，没有就0
+     */
+    private BigDecimal install;
 }

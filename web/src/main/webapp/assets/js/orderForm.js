@@ -112,7 +112,10 @@ $(function () {
         var isNeed = $type.attr('data-need-install');
         var model = $type.attr('data-model');
 
-        if (isNeed) {
+        var needNumber = 0;
+        if (isNeed) needNumber = parseInt(isNeed);
+
+        if (needNumber > 0) {
             $('.js-install').show();
             $('#J_installationCost').find('strong').text(isNeed);
         } else {
