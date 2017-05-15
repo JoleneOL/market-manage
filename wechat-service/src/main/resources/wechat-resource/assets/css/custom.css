@@ -259,16 +259,20 @@
   background-color: #f2f2f2;
   color: #949494;
 }
-.view_team-list .weui-flex__item:nth-child(1) {
+.view_team-list .weui-flex__item {
   padding: 6px 0;
+}
+.view_team-list .weui-flex__item:nth-child(1) {
+  text-indent: 2em;
   width: 16%;
 }
 .view_team-list .weui-flex__item:nth-child(2) {
-  padding: 6px 0;
+  text-indent: 1em;
   width: 18%;
 }
 .view_team-list .weui-flex__item:nth-child(3),
 .view_team-list .weui-flex__item:nth-child(4) {
+  text-indent: 1em;
   width: 33%;
 }
 .view_table {
@@ -771,5 +775,8 @@
     padding-left: 8px;
     padding-right: 8px;
     font-size: 12px;
+  }
+  .view-tabs .view-tabs_item {
+    font-size: 13px;
   }
 }

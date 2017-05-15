@@ -54,26 +54,13 @@ $(function () {
             '</div> ' +
             '</div>';
     };
-    $('#J_allComm').myScroll({
-        ajaxUrl:'/api/commList',
-        template: commTpl
-    });
 
-    $('#J_todayComm').myScroll({
-        ajaxUrl:'/api/commList',
-        template: commTpl
-    });
-    $('#J_monthComm').myScroll({
-        ajaxUrl: '/api/commList',
-        template: commTpl
-    });
-    $('#J_lastComm').myScroll({
-        ajaxUrl: '/api/commList',
-        template: commTpl
-    });
-    $('#J_trimesterComm').myScroll({
-        ajaxUrl: '/api/commList',
-        template: commTpl
+    $('.js-commItems').each(function () {
+       var self = $(this);
+        self.myScroll({
+            ajaxUrl: self.attr('data-url'),
+            template: commTpl
+        });
     });
 
     $('#equipment').myScroll({
