@@ -14,6 +14,8 @@ public class OrderServiceTest extends DealerServiceTest {
         Login login1 = randomLogin(false);
         Login login2 = randomLogin(false);
         newRandomOrderFor(login1, login2);
+        newRandomOrderFor(login1, login2);
+        newRandomOrderFor(login1, login2);
     }
 
 }

@@ -2,8 +2,8 @@ package cn.lmjia.market.wechat;
 
 
 import cn.lmjia.market.core.config.MVCConfig;
+import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.wechat.config.WechatConfig;
-import cn.lnjia.market.core.CoreServiceTest;
 import com.gargoylesoftware.htmlunit.WebClient;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.test.WeixinTestConfig;
@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
  * @author CJ
  */
 @ContextConfiguration(classes = {WeixinTestConfig.class, WechatConfig.class, MVCConfig.class})
-public abstract class WechatTestBase extends CoreServiceTest {
+public abstract class WechatTestBase extends DealerServiceTest {
 
     @Autowired
     private WeixinTestConfig weixinTestConfig;

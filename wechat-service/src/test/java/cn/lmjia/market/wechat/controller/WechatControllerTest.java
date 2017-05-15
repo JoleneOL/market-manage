@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author CJ
  */
@@ -38,12 +40,8 @@ public class WechatControllerTest extends WechatTestBase {
 
         // 如何去公众号？
         initPage(IndexPage.class);
-    }
-
-    @Test
-    public void existingWechat() {
-        // 已登录的微信号 直接来到主页
-
+        assertThat(loginService.asWechat(detail.getOpenId()))
+                .isNotNull();
     }
 
 }
