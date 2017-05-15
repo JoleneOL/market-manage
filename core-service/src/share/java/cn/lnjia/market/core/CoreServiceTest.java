@@ -3,15 +3,19 @@ package cn.lnjia.market.core;
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.Order;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.repository.ProductTypeRepository;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.OrderService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
+import me.jiangcai.wx.model.Gender;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,6 +58,10 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private LocalDateConverter localDateConverter;
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -210,7 +218,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Login randomLogin(boolean manager) {
         return loginRepository.findAll((root, query, cb)
                 -> cb.isTrue(root.get("enabled"))).stream()
-                .filter(login -> !(manager && login instanceof Manager))
+                .filter(login -> manager || !(login instanceof Manager))
                 .max(new RandomComparator())
                 .orElseThrow(() -> new IllegalStateException("一个都没有？"));
     }
@@ -225,5 +233,19 @@ public abstract class CoreServiceTest extends SpringWebTest {
         address.setCounty("东城区");
         address.setOtherAddress("其他地址" + RandomStringUtils.randomAlphabetic(10));
         return address;
+    }
+
+    /**
+     * @param who       发起者
+     * @param recommend 推荐者
+     * @return 新增的随机订单
+     */
+    protected Order newRandomOrderFor(Login who, Login recommend) {
+        return orderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
+                , randomMobile(), 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
+                , randomAddress()
+                , productTypeRepository.findAll().stream().max(new RandomComparator()).orElse(null)
+                , 1 + random.nextInt(10)
+                , random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
     }
 }

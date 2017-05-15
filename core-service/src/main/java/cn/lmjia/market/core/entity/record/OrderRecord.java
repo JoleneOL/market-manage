@@ -7,6 +7,8 @@ import me.jiangcai.wx.model.Gender;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -20,7 +22,10 @@ import java.time.LocalDateTime;
 @Getter
 public class OrderRecord {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //    @Id
+//    private Long id;
     @Column(length = 50)
     private String name;
     private int age;

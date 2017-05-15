@@ -39,6 +39,6 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setLogin(customerLogin);
         customer.setName(name);
         customer.setMobile(mobile);
-        return customer;
+        return customerRepository.save(customer);
     }
 }

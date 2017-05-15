@@ -12,8 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
+@Table(name = "mm_order")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +32,7 @@ public class Order {
     /**
      * 原始记录
      */
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @MapsId
+    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private OrderRecord record;
     /**
      * 谁下的单
