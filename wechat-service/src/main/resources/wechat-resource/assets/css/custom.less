@@ -305,18 +305,19 @@
     }
   }
   .weui-flex__item {
-
+    padding: 6px 0;
   }
   .weui-flex__item:nth-child(1) {
-    padding: 6px 0;
+    text-indent: 2em;
     width: 16%;
   }
   .weui-flex__item:nth-child(2) {
-    padding: 6px 0;
+    text-indent: 1em;
     width: 18%;
   }
   .weui-flex__item:nth-child(3),
   .weui-flex__item:nth-child(4) {
+    text-indent: 1em;
     width: 33%;
   }
 }
@@ -766,6 +767,7 @@
 }
 
 #commission {
+  box-sizing: border-box;
   .view-tabs_item {
     border-color: #eee;
   }
@@ -881,13 +883,14 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    -webkit-text-size-adjust: none;
-    -moz-text-size-adjust: none;
-    -ms-text-size-adjust: none;
-    text-size-adjust: none;
   }
 }
-
+// 奇淫技巧
+#commission.goAway {
+  display: block;
+  opacity: 0;
+  z-index: -100;
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom,
   .border-1px-top,
@@ -921,5 +924,8 @@
     padding-left: 8px;
     padding-right: 8px;
     font-size: 12px;
+  }
+  .view-tabs .view-tabs_item {
+    font-size: 13px;
   }
 }

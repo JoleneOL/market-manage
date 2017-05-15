@@ -2,6 +2,11 @@
  * Created by Neo on 2017/5/10.
  */
 $(function () {
+
+    var $comm = $("#commission");
+    // display:none 影响子元素高度的获取
+    $comm.addClass('goAway');
+
     var tabsItem = $('.view-tabs_item');
     var tabsSwiper = $('#tabs-container').swiper({
         observer: true,
@@ -21,11 +26,42 @@ $(function () {
     tabsItem.click(function (e) {
         e.preventDefault();
     });
+
+    var extraHeight = 0;
+    $('.js-extra-h-c').each(function () {
+        extraHeight += $(this).outerHeight(true);
+    });
+    $('.swiper-slide').height($(window).height() - Math.ceil(extraHeight) - 52);
+
+
     var maintainURL = 'maintain.html';
     var maintainStatusURL = 'maintainStatus.html';
 
     var repairURL = 'repair.html';
     var repairStatusURL = 'repairStatus.html';
+
+    var commTpl = function (obj) {
+        return '<div class="view-comm-list_item"> ' +
+            '<div class="weui-flex"> ' +
+            '<div class="weui-flex__item">' + obj.commType + '</div> ' +
+            '<div class="weui-flex__item">' + obj.name + '</div> ' +
+            '<div class="weui-flex__item"><strong>￥' + obj.commission + '</strong></div> ' +
+            '</div> ' +
+            '<div class="weui-flex"> ' +
+            '<div class="weui-flex__item">(' + obj.divided + '分成）</div> ' +
+            '<div class="weui-flex__item">' + obj.commInfo + '</div> ' +
+            '<div class="weui-flex__item text-gray">' + obj.commTime + '</div> ' +
+            '</div> ' +
+            '</div>';
+    };
+
+    $('.js-commItems').each(function () {
+       var self = $(this);
+        self.myScroll({
+            ajaxUrl: self.attr('data-url'),
+            template: commTpl
+        });
+    });
 
     $('#equipment').myScroll({
         ajaxUrl: '/api/equipmentList',
@@ -90,4 +126,7 @@ $(function () {
             return dom;
         }
     };
+
+
+    $comm.removeClass('goAway');
 });

@@ -123,7 +123,7 @@
             </div>
         </div>
         <div id="commission" class="weui-tab__bd-item">
-            <div class="view_panel-commission">
+            <div class="view_panel-commission js-extra-h-c">
                 <div class="view_panel-header">
                     <div class="weui-flex">
                         <div class="weui-flex__item view_flex-3">
@@ -138,14 +138,14 @@
 
                 </div>
             </div>
-            <div class="view-tabs">
+            <div class="view-tabs js-extra-h-c">
                 <a href="#" class="view-tabs_item active">全部</a>
                 <a href="#" class="view-tabs_item">今日获佣</a>
-                <a href="#" class="view-tabs_item">今日本月</a>
-                <a href="#" class="view-tabs_item">上月本月</a>
+                <a href="#" class="view-tabs_item">本月获佣</a>
+                <a href="#" class="view-tabs_item">上月获佣</a>
                 <a href="#" class="view-tabs_item">近三个月</a>
             </div>
-            <div class="view_team-list view_team-list-left">
+            <div class="view_team-list view_team-list-left js-extra-h-c">
                 <div class="weui-flex view_team-header">
                     <div class="weui-flex__item">类型</div>
                     <div class="weui-flex__item">订单详情</div>
@@ -154,8 +154,9 @@
             </div>
             <div id="tabs-container" class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="view-comm-list_item">
+                    <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/all">
+                        <div class="view-scroll-list">
+                            <div class="view-comm-list_item">
                             <div class="weui-flex">
                                 <div class="weui-flex__item">销售收益</div>
                                 <div class="weui-flex__item">李菲菲</div>
@@ -163,212 +164,423 @@
                             </div>
                             <div class="weui-flex">
                                 <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
+                                <div class="weui-flex__item">滤芯01 年收费
                                     ￥3000</div>
                                 <div class="weui-flex__item text-gray">2017.09.09</div>
                             </div>
                         </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
-                            </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
-                            </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
-                            </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
-                            </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
-                            </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
-                            </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
-                            </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
-                            </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
-                            </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
-                            </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
-                            </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="weui-loadmore">
+                                <i class="weui-loading"></i>
+                                <span class="weui-loadmore__tips">玩了命的加载中...</span>
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                    <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/other">
+                        <div class="view-scroll-list">
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="weui-loadmore">
+                                <i class="weui-loading"></i>
+                                <span class="weui-loadmore__tips">玩了命的加载中...</span>
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                    <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/other">
+                        <div class="view-scroll-list">
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="weui-loadmore">
+                                <i class="weui-loading"></i>
+                                <span class="weui-loadmore__tips">玩了命的加载中...</span>
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="view-comm-list_item">
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">销售收益</div>
-                                <div class="weui-flex__item">李菲菲</div>
-                                <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                    <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/other">
+                        <div class="view-scroll-list">
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
                             </div>
-                            <div class="weui-flex">
-                                <div class="weui-flex__item">(20%分成）</div>
-                                <div class="weui-flex__item">滤芯01 2年收费
-                                    ￥3000</div>
-                                <div class="weui-flex__item text-gray">2017.09.09</div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="weui-loadmore">
+                                <i class="weui-loading"></i>
+                                <span class="weui-loadmore__tips">玩了命的加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/other">
+                        <div class="view-scroll-list">
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="view-comm-list_item">
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">销售收益</div>
+                                    <div class="weui-flex__item">李菲菲</div>
+                                    <div class="weui-flex__item"><strong>￥64.9</strong></div>
+                                </div>
+                                <div class="weui-flex">
+                                    <div class="weui-flex__item">(20%分成）</div>
+                                    <div class="weui-flex__item">滤芯01 3年收费
+                                        ￥3000</div>
+                                    <div class="weui-flex__item text-gray">2017.09.09</div>
+                                </div>
+                            </div>
+                            <div class="weui-loadmore">
+                                <i class="weui-loading"></i>
+                                <span class="weui-loadmore__tips">玩了命的加载中...</span>
                             </div>
                         </div>
                     </div>
