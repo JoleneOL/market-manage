@@ -21,7 +21,7 @@
       data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
       th:data-search-login-url="@{/loginData/select2}">
 <section class="view_body">
-    <form action="orderSuccess.html">
+    <form action="orderSuccess.html" method="get" th:action="@{/wechatOrder}" th:method="post">
         <div class="weui-cells__title">我要下单</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -95,10 +95,13 @@
                     <label class="weui-label">产品类型</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-select" name="goodsType" id="J_goodsType">
+                    <select class="weui-select" name="goodId" id="J_goodsType">
                         <!--/*@thymesVar id="goodList" type="java.util.List<cn.lmjia.market.core.entity.MainGood>"*/-->
                         <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
-                                data-type="净水机" th:each="good:${goodList}">立式净水机
+                                data-type="净水机" th:each="good:${goodList}" th:value="${good.id}"
+                                th:data-deposit="${good.product.deposit}"
+                                th:data-need-install="${good.product.install}" th:data-model="${good.product.code}"
+                                th:data-type="${good.id}">立式净水机
                         </option>
                         <option th:remove="all" value="2" data-deposit="3000" data-need-install="180"
                                 data-model="hzts02"
@@ -156,7 +159,7 @@
                     <label class="weui-label">推荐人</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-input" id="recommendId" name="reference"></select>
+                    <select class="weui-input" id="recommendId" name="recommend"></select>
                 </div>
             </div>
             <div class="weui-cell">
