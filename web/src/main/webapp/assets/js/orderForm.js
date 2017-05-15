@@ -29,7 +29,7 @@ $(function () {
     });
     $('#J_orderPlace').validate({
         rules: {
-            customer: "required",
+            name: "required",
             age: {
                 required: true,
                 number: true,
@@ -49,7 +49,7 @@ $(function () {
             isAgree: "required"
         },
         messages: {
-            customer: "请填写客户姓名",
+            name: "请填写客户姓名",
             age: {
                 required: "请填写年龄",
                 digits: "请输入整数"
@@ -115,7 +115,7 @@ $(function () {
         var needNumber = 0;
         if (isNeed) needNumber = parseInt(isNeed);
 
-        if (needNumber > 0) {
+        if (needNumber) {
             $('.js-install').show();
             $('#J_installationCost').find('strong').text(isNeed);
         } else {

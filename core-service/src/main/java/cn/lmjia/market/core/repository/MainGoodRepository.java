@@ -5,10 +5,14 @@ import cn.lmjia.market.core.entity.MainProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 /**
  * @author CJ
  */
 public interface MainGoodRepository extends JpaRepository<MainGood, Long>, JpaSpecificationExecutor<MainGood> {
 
     MainGood findByProduct(MainProduct product);
+
+    List<MainGood> findByEnableTrue();
 }

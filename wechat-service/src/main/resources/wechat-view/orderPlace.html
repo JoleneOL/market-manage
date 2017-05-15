@@ -11,11 +11,15 @@
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
 
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small">
+<body class="view-bg-color view-fs-small"
+      data-search-login-url="../../core-service/src/test/resources/mock/searchLogin.json"
+      th:data-search-login-url="@{/loginData/select2}">
 <section class="view_body">
     <form action="orderSuccess.html">
         <div class="weui-cells__title">我要下单</div>
@@ -25,7 +29,7 @@
                     <label class="weui-label">姓名</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入客户姓名" name="customer">
+                    <input class="weui-input" type="text" placeholder="请输入客户姓名" name="name">
                 </div>
             </div>
             <div class="weui-cell">
@@ -43,8 +47,8 @@
                 <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
                     <label class="weui-cell weui-check__label" for="isMan">
                         <div class="weui-cell__hd">
-                            <input type="radio" class="weui-check" name="sex" id="isMan" checked="checked"
-                                   value="man">
+                            <input type="radio" class="weui-check" name="gender" id="isMan" checked="checked"
+                                   value="1">
                             <i class="weui-icon-checked"></i>
                         </div>
                         <div class="weui-cell__bd">
@@ -53,7 +57,7 @@
                     </label>
                     <label class="weui-cell weui-check__label " for="isFemale">
                         <div class="weui-cell__hd">
-                            <input type="radio" class="weui-check" name="sex" id="isFemale" value="female">
+                            <input type="radio" class="weui-check" name="gender" id="isFemale" value="2">
                             <i class="weui-icon-checked"></i>
                         </div>
                         <div class="weui-cell__bd">
@@ -83,7 +87,7 @@
                     <label class="weui-label">用户电话</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="tel" placeholder="请输入电话" name="phone">
+                    <input class="weui-input" type="tel" placeholder="请输入电话" name="mobile">
                 </div>
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
@@ -92,17 +96,24 @@
                 </div>
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="goodsType" id="J_goodsType">
+                        <!--/*@thymesVar id="goodList" type="java.util.List<cn.lmjia.market.core.entity.MainGood>"*/-->
                         <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
-                                data-type="净水机">立式净水机
+                                data-type="净水机" th:each="good:${goodList}">立式净水机
                         </option>
-                        <option value="2" data-deposit="3000" data-need-install="180" data-model="hzts02"
+                        <option th:remove="all" value="2" data-deposit="3000" data-need-install="180"
+                                data-model="hzts02"
                                 data-type="净水机">台式净水机
                         </option>
-                        <option value="3" data-deposit="3000" data-need-install="180" data-model="hzcx01"
+                        <option th:remove="all" value="3" data-deposit="3000" data-need-install="180"
+                                data-model="hzcx01"
                                 data-type="净水机">橱下净水机
                         </option>
-                        <option value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器">空气净化器</option>
-                        <option value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝">食品优化宝</option>
+                        <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器">
+                            空气净化器
+                        </option>
+                        <option th:remove="all" value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝">
+                            食品优化宝
+                        </option>
                     </select>
                 </div>
             </div>
@@ -145,7 +156,7 @@
                     <label class="weui-label">推荐人</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="tel" name="reference" placeholder="推荐人手机号">
+                    <select class="weui-input" id="recommendId" name="reference"></select>
                 </div>
             </div>
             <div class="weui-cell">
@@ -212,7 +223,9 @@
                     <p>甲乙双方在平等自愿、公平诚信的基础上，基于对乙方提供的产品和服务的了解和需求，达成协议如下：</p>
                 </section>
                 <section>
-                    <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，预存&#95;&#95;&#95;&#95;&#95;&#95;元保证金，并承诺协议期为<u>&nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;</u>个月，即&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日至&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日，甲方承诺在使用期间不退保证金、不退机，不过户，，乙方有权从甲方支付的保证金中按日扣除服务费，详细费用按下表执行：</p>
+                    <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，预存&#95;&#95;&#95;&#95;&#95;&#95;元保证金，并承诺协议期为<u>
+                        &nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;</u>个月，即&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日至&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日，甲方承诺在使用期间不退保证金、不退机，不过户，，乙方有权从甲方支付的保证金中按日扣除服务费，详细费用按下表执行：
+                    </p>
                     <table class="view_table" border="1">
                         <thead>
                         <tr>
@@ -266,7 +279,8 @@
                 <section>
                     <p><strong>第二条</strong>&nbsp;&nbsp;&nbsp;&nbsp;使用条件</p>
                     <p>（一）为保障甲乙双方的权益，协议期内乙方对甲方使用的用户机型与终端IMEI码进行机码匹配核实。</p>
-                    <p>（二）在协议期内，甲方不得提前终止活动。若使用中甲方单方面违约，则甲方需赔偿乙方三年协议期内剩余使用金额的50%作为违约金，甲方将机器送到乙方指定地点后(快递费用由甲方自理)，乙方相关人员核实完毕，在10个工作日内把剩余的款项退还给甲方。</p>
+                    <p>
+                        （二）在协议期内，甲方不得提前终止活动。若使用中甲方单方面违约，则甲方需赔偿乙方三年协议期内剩余使用金额的50%作为违约金，甲方将机器送到乙方指定地点后(快递费用由甲方自理)，乙方相关人员核实完毕，在10个工作日内把剩余的款项退还给甲方。</p>
                     <p>（三）乙方根据甲方的使用情况，在协议期内，为甲方免费提供更换的滤芯。在水质或其他环境因素，无法达到安装或使用条件时，乙方有权与甲方解约，对此，甲方同意乙方的解约要求。</p>
                     <p>（四）若使用期间，机器发生非人为损坏或不能使用，乙方将免费为甲方更换新机或维修，若使用期间，机器发生人为损坏，则由甲方承担维修或更换新机的费用</p>
                     <p>（五）协议期内，机器的所有权归乙方所有，协议期满后，若甲乙双方遵守此协议内约定，结清协议约定费用后，机器归甲方所有。</p>
@@ -274,10 +288,12 @@
                 <section>
                     <p><strong>第三条</strong>&nbsp;&nbsp;&nbsp;&nbsp;违约责任及承担</p>
                     <p>（一）甲方违约责任</p>
-                    <p>1、甲乙双方一致确认，甲方出现本协议所述的违约情形时，甲方应向乙方支付违约金以补偿乙方的损失，乙方有权以甲方账户中尚未解冻的预存款直接抵扣违约金及约定的相关费用，不足部分，乙方保留对甲方追缴的权利。</p>
+                    <p>
+                        1、甲乙双方一致确认，甲方出现本协议所述的违约情形时，甲方应向乙方支付违约金以补偿乙方的损失，乙方有权以甲方账户中尚未解冻的预存款直接抵扣违约金及约定的相关费用，不足部分，乙方保留对甲方追缴的权利。</p>
                     <p>（二）乙方违约责任</p>
                     <p>1、乙方构成违约的，应按国家有关规定，承担违约责任。</p>
-                    <p>2、乙方向甲方直接提供的机器出现质量问题时，甲方应送相关厂商指定的售后网点进行处理，或持厂商指定售后网点出具的检测证明材料到乙方区域网点，乙方按《产品质量法》、《消费者权益保护法》等国家法律法规的规定，承担相应责任并进行处理。</p>
+                    <p>
+                        2、乙方向甲方直接提供的机器出现质量问题时，甲方应送相关厂商指定的售后网点进行处理，或持厂商指定售后网点出具的检测证明材料到乙方区域网点，乙方按《产品质量法》、《消费者权益保护法》等国家法律法规的规定，承担相应责任并进行处理。</p>
                 </section>
                 <section>
                     <p><strong>第四条</strong>&nbsp;&nbsp;&nbsp;&nbsp;协议生效</p>
@@ -311,5 +327,8 @@
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/city-picker.min.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
+<script src="../../web/src/main/webapp/assets/js/common/recommend.js"></script>
 <script src="../wechat-resource/assets/js/orderPlace.js" th:src="@{/wechat-resource/assets/js/orderPlace.js}"></script>
 </html>
