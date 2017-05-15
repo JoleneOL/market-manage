@@ -1,12 +1,12 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.Version;
+import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.entity.Product;
-import cn.lmjia.market.core.entity.ProductType;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.repository.ProductRepository;
-import cn.lmjia.market.core.repository.ProductTypeRepository;
+import cn.lmjia.market.core.repository.MainGoodRepository;
+import cn.lmjia.market.core.repository.MainProductRepository;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Properties;
 
 /**
@@ -32,9 +33,9 @@ public class InitService {
     @Autowired
     private UpgradeService upgradeService;
     @Autowired
-    private ProductTypeRepository productTypeRepository;
+    private MainGoodRepository mainGoodRepository;
     @Autowired
-    private ProductRepository productRepository;
+    private MainProductRepository mainProductRepository;
 
     @PostConstruct
     @Transactional
@@ -49,19 +50,26 @@ public class InitService {
         try (final InputStream inputStream = new ClassPathResource("/defaultProducts.properties").getInputStream()) {
             properties.load(inputStream);
             properties.stringPropertyNames().forEach(type -> {
-                ProductType productType = productTypeRepository.findOne(type);
-                if (productType == null) {
-                    final String productName = properties.getProperty(type);
-                    Product product = productRepository.findByName(productName);
-                    if (product == null) {
-                        product = new Product();
-                        product.setName(productName);
-                        product = productRepository.save(product);
-                    }
-                    productType = new ProductType();
-                    productType.setProduct(product);
-                    productType.setId(type);
-                    productTypeRepository.save(productType);
+                // 货品确认
+                final String value[] = properties.getProperty(type).split(",");
+                final String productName = value[0];
+
+                MainProduct mainProduct = mainProductRepository.findOne(type);
+                if (mainProduct == null) {
+                    mainProduct = new MainProduct();
+                    mainProduct.setCode(type);
+                    mainProduct.setName(productName);
+                    mainProduct.setDeposit(new BigDecimal(value[1]));
+                    mainProduct.setInstall(new BigDecimal(value[2]));
+                    mainProduct = mainProductRepository.save(mainProduct);
+                }
+
+                MainGood mainGood = mainGoodRepository.findByProduct(mainProduct);
+                if (mainGood == null) {
+                    mainGood = new MainGood();
+                    mainGood.setProduct(mainProduct);
+                    mainGood.setEnable(true);
+                    mainGoodRepository.save(mainGood);
                 }
             });
         }

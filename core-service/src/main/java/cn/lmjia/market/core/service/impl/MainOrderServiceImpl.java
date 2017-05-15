@@ -3,14 +3,14 @@ package cn.lmjia.market.core.service.impl;
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.Order;
-import cn.lmjia.market.core.entity.ProductType;
+import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.OrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
-import cn.lmjia.market.core.service.OrderService;
+import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author CJ
  */
 @Service
-public class OrderServiceImpl implements OrderService {
+public class MainOrderServiceImpl implements MainOrderService {
 
     @Autowired
     private CustomerService customerService;
@@ -35,8 +35,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Override
-    public Order newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
-            , Address installAddress, ProductType product, int amount, String mortgageIdentifier) {
+    public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
+            , Address installAddress, MainGood good, int amount, String mortgageIdentifier) {
         // 客户处理
         Customer customer = customerService.getNoNullCustomer(name, mobile, lowestAgentLevel(who), recommendBy);
 
@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         customer.setGender(gender);
         customer.setBirthYear(LocalDate.now().getYear() - age);
 
-        Order order = new Order();
+        MainOrder order = new MainOrder();
         order.setAmount(amount);
         order.setCustomer(customer);
         order.setInstallAddress(installAddress);
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderBy(who);
         order.setRecommendBy(recommendBy);
         order.setOrderTime(LocalDateTime.now());
-        order.setProduct(product);
+        order.setProduct(good);
         order.makeRecord();
         return orderRepository.save(order);
     }

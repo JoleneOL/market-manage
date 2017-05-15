@@ -1,6 +1,6 @@
 package cn.lmjia.market.core.entity;
 
-import cn.lmjia.market.core.entity.record.OrderRecord;
+import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.Address;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Table(name = "mm_order")
-public class Order {
+public class MainOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +34,7 @@ public class Order {
      * 原始记录
      */
     @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private OrderRecord record;
+    private MainOrderRecord record;
     /**
      * 谁下的单
      */
@@ -57,7 +57,7 @@ public class Order {
      * 具体的产品
      */
     @ManyToOne
-    private ProductType product;
+    private MainGood product;
     private int amount;
     /**
      * 按揭识别码
@@ -73,7 +73,7 @@ public class Order {
     public void makeRecord() {
         if (record != null)
             throw new IllegalStateException("I really have a record!");
-        record = new OrderRecord();
+        record = new MainOrderRecord();
         record.setOrderTime(orderTime);
         record.setAge(LocalDate.now().getYear() - customer.getBirthYear());
         record.setAmount(amount);
@@ -83,7 +83,7 @@ public class Order {
         record.setMortgageIdentifier(mortgageIdentifier);
         record.setName(customer.getName());
         record.setProductName(product.getProduct().getName());
-        record.setProductType(product.getId());
+        record.setProductType(product.getProduct().getCode());
         record.setRecommendByMobile(recommendBy.getLoginName());
     }
 }

@@ -5,28 +5,24 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 
 /**
- * 产品信息
+ * 主要货品
  *
  * @author CJ
  */
 @Entity
 @Setter
 @Getter
-public class Product {
+public class MainProduct {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     /**
      * 货物编码
      */
-    @Column(length = 40, nullable = false, unique = true)
+    @Id
+    @Column(length = 20)
     private String code;
     @Column(length = 40)
     private String name;

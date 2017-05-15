@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-public class OrderRecord {
+public class MainOrderRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

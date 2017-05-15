@@ -2,14 +2,14 @@ package cn.lnjia.market.core;
 
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.entity.Order;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.repository.ProductTypeRepository;
+import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
-import cn.lmjia.market.core.service.OrderService;
+import cn.lmjia.market.core.service.MainOrderService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jiangcai.lib.resource.service.ResourceService;
@@ -59,9 +59,9 @@ public abstract class CoreServiceTest extends SpringWebTest {
     @Autowired
     private LoginRepository loginRepository;
     @Autowired
-    private OrderService orderService;
+    private MainOrderService mainOrderService;
     @Autowired
-    private ProductTypeRepository productTypeRepository;
+    private MainGoodRepository mainGoodRepository;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -240,11 +240,11 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @param recommend 推荐者
      * @return 新增的随机订单
      */
-    protected Order newRandomOrderFor(Login who, Login recommend) {
-        return orderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
+    protected MainOrder newRandomOrderFor(Login who, Login recommend) {
+        return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
                 , randomMobile(), 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
                 , randomAddress()
-                , productTypeRepository.findAll().stream().max(new RandomComparator()).orElse(null)
+                , mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null)
                 , 1 + random.nextInt(10)
                 , random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
     }

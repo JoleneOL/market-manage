@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author CJ
  */
-public class OrderServiceTest extends DealerServiceTest {
+public class MainOrderServiceTest extends DealerServiceTest {
 
     @Test
     public void newOrder() throws Exception {
