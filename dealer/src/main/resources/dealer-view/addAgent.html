@@ -30,7 +30,7 @@
 </head>
 <body class="inner-document" data-upload-url="../../../../../core-service/src/test/resources/mock/webUploader.json"
       th:data-upload-url="@{/resourceUpload/webUploader}"
-      data-search-login-url="../../../../../core-service/src/test/resources/mock/searchLogin.json"
+      data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
       th:data-search-login-url="@{/loginData/select2}"
       data-search-agent-url="../mock/agentList.json"
       th:data-search-agent-url="@{/agentData/listRuling}"
@@ -270,6 +270,8 @@
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script src="//cdn.lmjia.cn/jquery.searchableSelect/jquery.searchableSelect.js"></script>
+<script src="/market-manage/web/src/main/webapp/assets/js/common/recommend.js"
+        th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="../dealer-resource/js/addAgent.js"
         th:src="@{/dealer-resource/js/addAgent.js}"></script>
 </html>
