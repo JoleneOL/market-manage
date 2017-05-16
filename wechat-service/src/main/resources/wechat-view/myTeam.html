@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="infinite">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="infinite">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -30,12 +30,12 @@
     <div class="view_team-list">
         <div class="view-list-item view_team-header js-extra-h">
             <div>用户</div>
-            <div>级别</div>
+            <div id="J_changeRank"><i class="weui-icon-search"></i>级别</div>
             <div>加入时间</div>
             <div>手机号码</div>
         </div>
         <!--team-list-start-->
-        <div class="view-scroll-wrap" id="J_teamList">
+        <div class="view-scroll-wrap" id="J_teamList" data-url="/api/teamList" data-rank="all">
             <div class="view-scroll-list">
                 <div class="view-list-item">
                     <div>夏洋</div>
@@ -190,13 +190,13 @@
                     <p>二、分代理：经销商帮助5个爱心天使成为经销商或直接推荐，升级为分代理。</p>
                 </section>
                 <section>
-                    <p>三、	经销商：爱心天使帮助5个爱心天使免费，升级为经销商。</p>
+                    <p>三、 经销商：爱心天使帮助5个爱心天使免费，升级为经销商。</p>
                 </section>
                 <section>
-                    <p>四、	爱心天使：用户成功购买一件商品后默认为爱心天使。</p>
+                    <p>四、 爱心天使：用户成功购买一件商品后默认为爱心天使。</p>
                 </section>
                 <section>
-                    <p>五、	备  注：平级推荐满5个晋升一级。</p>
+                    <p>五、 备 注：平级推荐满5个晋升一级。</p>
                 </section>
                 <section>
                     <p class="text-right">利每家科技有限公司</p>

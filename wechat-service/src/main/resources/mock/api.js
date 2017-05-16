@@ -9,10 +9,10 @@ Mock.setup({
  * 使用正则超级(｡･∀･)ﾉﾞ嗨
  * resultCode 多个200，减少错误概率 ~囧~
  */
-Mock.mock(/\/api\/teamList/, "get", {
+Mock.mock(/^\/api\/teamList\?rank=all$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
-    "data|10": [
+    "data|20": [
         {
             name: "@cname",
             rank: '@pick(["总代理", "分代理", "经销商", "爱心天使"])',
@@ -22,10 +22,60 @@ Mock.mock(/\/api\/teamList/, "get", {
     ]
 });
 
+Mock.mock(/^\/api\/teamList\?rank=1$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|20": [
+        {
+            name: "@cname",
+            rank: '总代理',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1(3|4|5|7|8)\d{9}$/
+        }
+    ]
+});
+
+Mock.mock(/^\/api\/teamList\?rank=2$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|20": [
+        {
+            name: "@cname",
+            rank: '分代理',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1(3|4|5|7|8)\d{9}$/
+        }
+    ]
+});
+Mock.mock(/^\/api\/teamList\?rank=3$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|20": [
+        {
+            name: "@cname",
+            rank: '经销商',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1(3|4|5|7|8)\d{9}$/
+        }
+    ]
+});
+Mock.mock(/^\/api\/teamList\?rank=4$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|0": [
+        {
+            name: "@cname",
+            rank: '爱心天使',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1(3|4|5|7|8)\d{9}$/
+        }
+    ]
+});
+
 Mock.mock(/\/api\/orderList/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
-    "data|10": [
+    "data|20": [
         {
             orderId: '@id',
             orderTime: '@now("yyyy-MM-dd")',
