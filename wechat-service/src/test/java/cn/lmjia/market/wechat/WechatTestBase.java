@@ -40,6 +40,10 @@ public abstract class WechatTestBase extends DealerServiceTest {
         return super.buildMockMVC(builder);
     }
 
+    protected MockHttpServletRequestBuilder wechatPost(String urlTemplate, Object... urlVariables) {
+        return makeWechat(super.post(urlTemplate, urlVariables));
+    }
+
     protected MockHttpServletRequestBuilder wechatGet(String urlTemplate, Object... urlVariables) {
         return makeWechat(super.get(urlTemplate, urlVariables));
     }

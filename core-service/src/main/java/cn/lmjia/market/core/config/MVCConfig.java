@@ -1,9 +1,11 @@
 package cn.lmjia.market.core.config;
 
 import cn.lmjia.market.core.converter.AddressResolver;
+import cn.lmjia.market.core.converter.GenderConverter;
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.row.RowDefinitionHandler;
+import me.jiangcai.wx.model.Gender;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,6 +151,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
         registry.addFormatterForFieldType(LocalDate.class, localDateConverter);
+        registry.addFormatterForFieldType(Gender.class, new GenderConverter());
 //        registry.addFormatterForFieldType(BigDecimal.class, bigDecimalConverter);
 //        registry.addFormatterForFieldType(Date.class, dateConverter);
     }
