@@ -17,7 +17,7 @@
 </head>
 <body class="view-bg-color view-fs-small">
 <section class="view_body">
-    <form>
+    <form id="J_form">
         <div class="weui-cells__title">维修 <a href="repairRecord.html" class="weui-cell_link">维修记录</a></div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -49,8 +49,9 @@
                     <label for="J_maintainTime" class="weui-label">预约时间</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" id="J_maintainTime" type="text" placeholder="输入选择预约时间">
+                    <input class="weui-input" id="J_maintainTime" type="text" placeholder="输入选择预约时间" name="appointment">
                 </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
                 <div class="weui-cell__hd">
@@ -86,5 +87,6 @@
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/moment.js/2.18.1/moment.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="../wechat-resource/assets/js/equipment.js" th:src="@{/wechat-resource/assets/js/equipment.js}"></script>
 </html>

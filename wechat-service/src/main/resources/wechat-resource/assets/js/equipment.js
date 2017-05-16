@@ -28,4 +28,23 @@ $(function () {
         });
     });
 
+    $('#J_form').validate({
+        rules: {
+            appointment: "required"
+        },
+        messages: {
+            appointment: {
+                required: "请选择预约时间"
+            }
+        },
+        errorPlacement: function (error, element) {
+            $.toptip(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).closest('.weui-cell').addClass("weui-cell_warn")
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).closest('.weui-cell').removeClass("weui-cell_warn");
+        }
+    });
 });
