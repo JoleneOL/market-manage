@@ -28,14 +28,19 @@ $(function () {
         });
     });
 
+    $.validator.setDefaults({
+        submitHandler: function (form) {
+            form.submit();
+        }
+    });
+
+
     $('#J_form').validate({
         rules: {
             appointment: "required"
         },
         messages: {
-            appointment: {
-                required: "请选择预约时间"
-            }
+            appointment: "请选择预约时间"
         },
         errorPlacement: function (error, element) {
             $.toptip(error);

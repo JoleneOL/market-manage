@@ -165,7 +165,16 @@
                     <label class="weui-label">推荐人</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-input" id="recommendId" name="recommend"></select>
+                    <input class="weui-input" type="text" name="recommendA" placeholder="请输入推荐人手机号码">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label"></label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="推荐人" readonly>
                 </div>
             </div>
             <div class="weui-cell">
@@ -341,5 +350,8 @@
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
-<script src="../wechat-resource/assets/js/orderPlace.js" th:src="@{/wechat-resource/assets/js/orderPlace.js}"></script>
+<script>
+    var debug = true;
+</script>
+<script src="../wechat-resource/assets/js/orderPlace-A.js" th:src="@{/wechat-resource/assets/js/orderPlace-A.js}"></script>
 </html>

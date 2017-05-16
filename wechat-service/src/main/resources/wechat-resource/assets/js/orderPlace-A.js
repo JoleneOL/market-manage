@@ -62,7 +62,7 @@ $(function () {
 
     $.validator.setDefaults({
         submitHandler: function (form) {
-            form.submit();
+            $.alert("弹出确认在提交")
         }
     });
 
@@ -80,6 +80,10 @@ $(function () {
                 required: true,
                 isPhone: true
             },
+            recommendA: {
+                required: true,
+                isPhone: true
+            },
             amount: {
                 required: true
             },
@@ -93,6 +97,9 @@ $(function () {
             },
             address: "请选择地址",
             fullAddress: "请填写详细地址",
+            recommendA : {
+                required: "请填写推荐人手机号"
+            },
             amount: {
                 required: "请填写购买数量"
             }
