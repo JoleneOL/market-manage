@@ -4,7 +4,7 @@
 $(function () {
 
     if (typeof moment === 'function') {
-        var date = moment().format('yyyy-MM-dd hh:mm');
+        var date = moment().format('YYYY-MM-DD');
         $("#J_maintainTime").datetimePicker({
             title: '预约时间',
             min: date
