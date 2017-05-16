@@ -28,7 +28,6 @@
             probeType: 3,
             click: true
         });
-
         function isPassive() {
             var supportsPassiveOption = false;
             try {
@@ -99,7 +98,20 @@
             return domStr;
         }
 
+        $.extend({
+            myScrollRefresh: function(goTop) {
+                if(goTop === true) myScroll.scrollTo(0, 0);
+                myScroll.refresh();
+            }
+        });
+
+        $self.reset = function (op) {
+            s = $.extend(s, op);
+        };
+
         return $self;
 
     };
+
+
 })(jQuery);

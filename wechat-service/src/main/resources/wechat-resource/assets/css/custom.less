@@ -321,6 +321,14 @@
     width: 33%;
   }
 }
+.view-no-res {
+  > p {
+    padding: 1em 0;
+  }
+  ~ .weui-loadmore {
+    display: none;
+  }
+}
 
 .view_table {
   width: 100%;
@@ -884,6 +892,9 @@
     -ms-user-select: none;
     user-select: none;
   }
+}
+.weui-actionsheet .weui-actionsheet__title {
+  height: auto;
 }
 // 奇淫技巧
 #commission.goAway {

@@ -275,6 +275,12 @@
   text-indent: 1em;
   width: 33%;
 }
+.view-no-res > p {
+  padding: 1em 0;
+}
+.view-no-res ~ .weui-loadmore {
+  display: none;
+}
 .view_table {
   width: 100%;
   border-spacing: 0;
@@ -744,6 +750,9 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.weui-actionsheet .weui-actionsheet__title {
+  height: auto;
 }
 #commission.goAway {
   display: block;
