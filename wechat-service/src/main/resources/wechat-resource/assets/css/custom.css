@@ -693,7 +693,7 @@
   color: #000;
 }
 .view-footer_withdraw {
-  position: absolute;
+  position: fixed;
   background-color: #fff;
   bottom: 0;
   z-index: 1000;
@@ -702,8 +702,8 @@
   text-align: left;
 }
 .view-footer_withdraw .weui-btn_custom {
-  height: 100%;
   border-radius: 0;
+  height: 70px;
 }
 .view-footer_withdraw .weui-cells__title {
   margin-top: 5px;
@@ -728,6 +728,7 @@
 }
 .infinite .view_body-withdraw {
   padding-bottom: 80px;
+  height: auto;
 }
 .button_sp_area .weui-btn {
   margin-top: 15px;
