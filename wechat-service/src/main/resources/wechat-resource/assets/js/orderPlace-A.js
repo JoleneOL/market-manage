@@ -30,6 +30,7 @@ $(function () {
         var amout = +$('#J_goodsAmount').val();
         var total = (deposit + cost) * amout;
         $('#J_orderTotal').find('strong').text(total);
+        $('input[name="orderTotal"]').val(total);
     }
 
     function changeAllMoney($ele) {
@@ -52,6 +53,44 @@ $(function () {
         $('#J_leasedType').val(model);
     }
 
+    //查找推荐人
+
+    $('#J_recommend').on('input', function () {
+        var v = $(this).val();
+        if (/^1(3|4|5|7|8)\d{9}$/.test(v)) {
+            searchRecommend(v);
+        }
+    });
+
+    function searchRecommend(mobile) {
+        $.ajax('/api/recommend', {
+            method: 'POST',
+            data: {mobile: mobile},
+            dataType: 'json',
+            success: function (res) {
+                if (res.resultCode !== 200) {
+                    $.toast('查询失败', 'cancel');
+                    return '';
+                }
+                setInviter(res.data.userName);
+            },
+            error: function () {
+                $.toast('服务器异常', 'cancel');
+            }
+        });
+    }
+
+    function setInviter(val) {
+        var $inviter = $('#J_inviter');
+        var $parent = $inviter.closest('.weui-cell');
+        console.log(val);
+        $inviter.val(val);
+        if (val) {
+            $parent.removeClass("weui-cell_warn");
+        } else {
+            $parent.addClass("weui-cell_warn");
+        }
+    }
 
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
@@ -59,10 +98,56 @@ $(function () {
         return this.optional(element) || (mobile.test(value));
     }, "请正确填写的手机号");
 
+    // 表单提交确认页面
+    function orderDetailTpl() {
+        return '<div class="view-order"> ' +
+            '<div class="view-order-items"> ' +
+            '<span>订单总金额</span> ' +
+            '<p><span>'+ $('input[name="orderTotal"]').val()+'</span></p> ' +
+            '</div> ' +
+            '<div class="view-order-items"> ' +
+            '<span>姓名</span> ' +
+            '<p><span>'+ $('input[name="name"]').val()+'</span></p> ' +
+            '</div> ' +
+            '<div class="view-order-items"> ' +
+            '<span>电话</span> ' +
+            '<p><span class="mobile">'+ $('input[name="mobile"]').val()+'</span></p> ' +
+            '</div> ' +
+            '<div class="view-order-items"> ' +
+            '<span>安装地址</span> ' +
+            '<p><span class="address">'+ $('input[name="address"]').val()+'</span><span class="fullAddress">'+ $('input[name="fullAddress"]').val()+'</span></p> ' +
+            '</div> ' +
+            '<div class="view-order-items"> ' +
+            '<span>产品</span> ' +
+            '<p><span class="goodId">'+ $('select[name="goodId"]').find('option:selected').text()+'</span><span class="leasedType">'+ $('input[name="leasedType"]').val()+'</span></p> ' +
+            '</div> ' +
+            '<div class="view-order-items"> ' +
+            '<span>数量</span> ' +
+            '<p><span class="amount">'+ $('input[name="amount"]').val()+'</span></p> ' +
+            '</div> ' +
+            '<div class="view-order-items"> ' +
+            '<span>推荐人</span> ' +
+            '<p><span class="inviter">'+ $('input[name="inviter"]').val()+'</span><span class="recommend">'+ $('input[name="recommend"]').val()+'</span></p> ' +
+            '</div> ' +
+            '</div>';
+    }
 
     $.validator.setDefaults({
         submitHandler: function (form) {
-            $.alert("弹出确认在提交")
+
+            $.modal({
+                title: "订单确认",
+                text: orderDetailTpl(),
+                buttons: [
+                    {
+                        text: "确认",
+                        onClick: function () {
+                            form.submit();
+                        }
+                    },
+                    {text: "修改", className: "default"}
+                ]
+            });
         }
     });
 
@@ -76,14 +161,15 @@ $(function () {
             },
             address: 'required',
             fullAddress: 'required',
-            phone: {
+            mobile: {
                 required: true,
                 isPhone: true
             },
-            recommendA: {
+            recommend: {
                 required: true,
                 isPhone: true
             },
+            inviter: 'required',
             amount: {
                 required: true
             },
@@ -97,15 +183,15 @@ $(function () {
             },
             address: "请选择地址",
             fullAddress: "请填写详细地址",
-            recommendA : {
+            mobile: {
+                required: "请填写手机号码"
+            },
+            recommend: {
                 required: "请填写推荐人手机号"
             },
-            amount: {
-                required: "请填写购买数量"
-            }
+            amount: "请填写购买数量"
         },
         errorPlacement: function (error, element) {
-            // $.toptip(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').addClass("weui-cell_warn")

@@ -146,3 +146,12 @@ Mock.mock(/\/api\/commList\/all/, "get", {
         }
     ]
 });
+
+Mock.mock(/\/api\/recommend/, "post", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data": {
+        userName: '@pick(["老常", ""])'
+    }
+
+});

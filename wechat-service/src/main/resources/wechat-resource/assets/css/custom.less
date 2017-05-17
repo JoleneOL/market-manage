@@ -54,7 +54,12 @@
 .view-bg-color {
   background-color: #fbf9fe;
 }
-
+.view-placeholder::-webkit-input-placeholder {
+  color: #333;
+}
+.weui-cell_warn input::-webkit-input-placeholder {
+  color: #e64340;
+}
 .displayNone {
   display: none;
 }
@@ -895,6 +900,28 @@
 }
 .weui-actionsheet .weui-actionsheet__title {
   height: auto;
+}
+.view-order {
+  .border-1px-top(#e5e5e5);
+  .view-order-items {
+    font-size: .9em;
+    line-height: 2;
+    > span {
+      float: left;
+      margin-right: 1em;
+      min-width: 4em;
+      text-align: justify;
+      text-align-last: justify;
+    }
+    p {
+      word-wrap: break-word;
+      text-align: right;
+      color: #333;
+      span {
+        margin-right: 5px;
+      }
+    }
+  }
 }
 // 奇淫技巧
 #commission.goAway {

@@ -30,6 +30,7 @@ $(function () {
         var amout = +$('#J_goodsAmount').val();
         var total = (deposit + cost) * amout;
         $('#J_orderTotal').find('strong').text(total);
+        $('input[name="orderTotal"]').val(total);
     }
 
     function changeAllMoney($ele) {
@@ -76,7 +77,7 @@ $(function () {
             },
             address: 'required',
             fullAddress: 'required',
-            phone: {
+            mobile: {
                 required: true,
                 isPhone: true
             },
@@ -90,6 +91,9 @@ $(function () {
             age: {
                 required: "请填写年龄",
                 digits: "请输入整数"
+            },
+            mobile: {
+                required: "请填写手机号码"
             },
             address: "请选择地址",
             fullAddress: "请填写详细地址",

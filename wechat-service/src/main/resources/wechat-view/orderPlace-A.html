@@ -162,20 +162,21 @@
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">推荐人</label>
+                    <label class="weui-label">推荐人手机</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" name="recommendA" placeholder="请输入推荐人手机号码">
+                    <input class="weui-input" type="tel" name="recommend" placeholder="请输入推荐人手机号码" id="J_recommend">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label"></label>
+                    <label class="weui-label">推荐人</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="推荐人" readonly>
+                    <input class="weui-input view-placeholder" type="text" placeholder="暂无推荐人" name="inviter" id="J_inviter" readonly>
                 </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -204,6 +205,7 @@
                     <label class="weui-label">订单总金额</label>
                 </div>
                 <div class="weui-cell__bd">
+                    <input type="hidden" name="orderTotal" value="0">
                     <p class="weui-input text-big" id="J_orderTotal">
                         <strong>0</strong>
                         <span class="unit-txt">元</span>
@@ -348,10 +350,11 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js"></script>
+<script src="../mock/api.js"></script>
+<!--生产环境请移除 End-->
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
-<script>
-    var debug = true;
-</script>
 <script src="../wechat-resource/assets/js/orderPlace-A.js" th:src="@{/wechat-resource/assets/js/orderPlace-A.js}"></script>
 </html>
