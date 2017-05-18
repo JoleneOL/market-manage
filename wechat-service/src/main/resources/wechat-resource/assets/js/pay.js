@@ -6,6 +6,7 @@
 var completeCheck = function (data) {
     // console.log(data);
     if (data && data == true) {
+        $.success = true;//请勿注释
         window.location.href = $('body').attr('data-success-url');
     } else {
         //继续刷

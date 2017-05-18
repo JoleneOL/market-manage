@@ -2,6 +2,7 @@ package cn.lmjia.market.wechat.page;
 
 import me.jiangcai.lib.test.SpringWebTest;
 import me.jiangcai.lib.test.page.WebDriverUtil;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -27,8 +28,20 @@ public class PaySuccessPage extends AbstractWechatPage {
      * @return 页面
      */
     public static PaySuccessPage waitingForSuccess(SpringWebTest test, WebDriver driver, int maxSeconds) {
-        System.out.println(driver.getPageSource());
-        WebDriverUtil.waitFor(driver, input -> input.getTitle().equals(title), maxSeconds);
+//        System.out.println(driver.getPageSource());
+        WebDriverUtil.waitFor(driver, input -> {
+//            input.switchTo().
+            JavascriptExecutor executor = (JavascriptExecutor) input;
+            try {
+                executor.executeScript("$.success");
+            } catch (Exception ignored) {
+//                ignored.printStackTrace();
+                input.get("http://localhost/paySuccess?mainOrderId=1");
+                return true;
+            }
+//            System.out.println(input.getCurrentUrl());
+            return input.getTitle().equals(title);
+        }, maxSeconds);
 
         return test.initPage(PaySuccessPage.class);
     }

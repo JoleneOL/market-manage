@@ -65,9 +65,9 @@ public class WechatMainOrderControllerTest extends WechatTestBase {
 
                     // 使用 driver 打开!
                     driver.get("http://localhost" + result);
-                    mockMvc.perform(wechatGet("/paySuccess?mainOrderId=1"))
-                            .andDo(print());
-                    PaySuccessPage page = PaySuccessPage.waitingForSuccess(this, driver, 2);
+//                    mockMvc.perform(wechatGet("/paySuccess?mainOrderId=1"))
+//                            .andDo(print());
+                    PaySuccessPage page = PaySuccessPage.waitingForSuccess(this, driver, 3);
                     // 然后模拟订单完成支付
                     return null;
                 } catch (AssertionError error) {
