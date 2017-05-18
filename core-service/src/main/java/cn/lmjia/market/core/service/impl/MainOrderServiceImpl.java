@@ -8,13 +8,14 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
-import cn.lmjia.market.core.repository.OrderRepository;
+import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,7 +33,10 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private OrderRepository orderRepository;
+    private MainOrderRepository mainOrderRepository;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -52,9 +56,25 @@ public class MainOrderServiceImpl implements MainOrderService {
         order.setOrderBy(who);
         order.setRecommendBy(recommendBy);
         order.setOrderTime(LocalDateTime.now());
-        order.setProduct(good);
+        order.setGood(good);
         order.makeRecord();
-        return orderRepository.save(order);
+        return mainOrderRepository.save(order);
+    }
+
+    @Override
+    public MainOrder getOrder(long id) {
+        return mainOrderRepository.getOne(id);
+    }
+
+    @Override
+    public boolean isPaySuccess(long id) {
+        return mainOrderRepository.getOne(id).isPay();
+//        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Boolean> criteriaQuery = criteriaBuilder.createQuery(Boolean.class);
+//        Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+//        criteriaQuery = criteriaQuery.select(root.get("pay"));
+//        criteriaQuery = criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id));
+//        return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
 
     /**

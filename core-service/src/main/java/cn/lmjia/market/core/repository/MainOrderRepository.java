@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 /**
  * @author CJ
  */
-public interface OrderRepository extends JpaRepository<MainOrder, Long>, JpaSpecificationExecutor<MainOrder> {
+public interface MainOrderRepository extends JpaRepository<MainOrder, Long>, JpaSpecificationExecutor<MainOrder> {
 }

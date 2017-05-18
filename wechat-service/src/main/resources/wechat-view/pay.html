@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="order" type="cn.lmjia.market.core.entity.MainOrder"*/-->
+<!--/*@thymesVar id="payOrder" type="me.jiangcai.payment.chanpay.entity.ChanpayPayOrder"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>付款</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+</head>
+<body data-check-url="pay.html" th:data-check-url="@{''+${checkUri}}"
+      data-success-url="pay.html" th:data-success-url="@{''+${successUri}}">
+
+<div class="pay-new">
+    <p th:text="${order.orderProductName}">某个净水器</p>
+    <p>
+        ￥<span class="nun"
+               th:text="${#numbers.formatDecimal(order.orderDueAmount,1,'COMMA',2,'POINT')}">123</span>
+    </p>
+    <p><img src="../wechat-resource/assets/img/temp.png" th:src="${payOrder.url}" name="qrCode" id="qrCode"/></p>
+    <p class="weixin">长按二维码可进行支付</p>
+</div>
+
+<p style="display: none" id="loadingFlag"></p>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" th:remove="all"></script>
+<!--<script wx:js=""></script>-->
+<!--<script wx:share="${#share.title(order)}|${#share.desc(order)}|${#share.link(order,#request)}|${#share.imageUrl(order)}"></script>-->
+<script src="../wechat-resource/assets/js/pay.js" th:src="@{/wechat-resource/assets/js/pay.js}"></script>
+</body>
+</html>

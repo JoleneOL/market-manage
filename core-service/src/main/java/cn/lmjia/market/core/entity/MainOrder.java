@@ -4,6 +4,8 @@ import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.Address;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.payment.PayableOrder;
+import me.jiangcai.payment.entity.PayOrder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,7 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -25,8 +28,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@Table(name = "mm_order")
-public class MainOrder {
+public class MainOrder implements PayableOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,7 +59,7 @@ public class MainOrder {
      * 具体的产品
      */
     @ManyToOne
-    private MainGood product;
+    private MainGood good;
     private int amount;
     /**
      * 按揭识别码
@@ -66,6 +68,18 @@ public class MainOrder {
     private String mortgageIdentifier;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime orderTime;
+
+    /**
+     * 成功支付的支付订单
+     */
+    @ManyToOne
+    private PayOrder payOrder;
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime payTime;
+    /**
+     * 支付是否已完成
+     */
+    private boolean pay;
 
     /**
      * 创建下单记录
@@ -82,8 +96,23 @@ public class MainOrder {
         record.setMobile(customer.getMobile());
         record.setMortgageIdentifier(mortgageIdentifier);
         record.setName(customer.getName());
-        record.setProductName(product.getProduct().getName());
-        record.setProductType(product.getProduct().getCode());
+        record.setProductName(good.getProduct().getName());
+        record.setProductType(good.getProduct().getCode());
         record.setRecommendByMobile(recommendBy.getLoginName());
+    }
+
+    @Override
+    public Serializable getPayableOrderId() {
+        return "main-" + id;
+    }
+
+    @Override
+    public BigDecimal getOrderDueAmount() {
+        return good.getTotalPrice().multiply(BigDecimal.valueOf(amount));
+    }
+
+    @Override
+    public String getOrderProductName() {
+        return good.getProduct().getName();
     }
 }

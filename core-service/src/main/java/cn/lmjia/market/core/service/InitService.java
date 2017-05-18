@@ -15,8 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.Properties;
 
@@ -47,8 +48,9 @@ public class InitService {
 
     private void products() throws IOException {
         Properties properties = new Properties();
-        try (final InputStream inputStream = new ClassPathResource("/defaultProducts.properties").getInputStream()) {
-            properties.load(inputStream);
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new ClassPathResource("/defaultProducts.properties").getInputStream(), "UTF-8"))) {
+            properties.load(reader);
             properties.stringPropertyNames().forEach(type -> {
                 // 货品确认
                 final String value[] = properties.getProperty(type).split(",");

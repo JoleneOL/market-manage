@@ -1,4 +1,4 @@
-package cn.lnjia.market.core;
+package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;

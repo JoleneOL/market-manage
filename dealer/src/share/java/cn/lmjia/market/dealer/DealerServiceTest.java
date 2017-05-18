@@ -1,11 +1,11 @@
 package cn.lmjia.market.dealer;
 
+import cn.lmjia.market.core.CoreServiceTest;
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.dealer.config.DealerConfig;
 import cn.lmjia.market.dealer.service.AgentService;
-import cn.lnjia.market.core.CoreServiceTest;
 import me.jiangcai.lib.seext.function.AllBiConsumer;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

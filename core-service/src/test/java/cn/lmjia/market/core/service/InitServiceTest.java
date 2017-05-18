@@ -1,8 +1,8 @@
 package cn.lmjia.market.core.service;
 
+import cn.lmjia.market.core.CoreServiceTest;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.repository.ManagerRepository;
-import cn.lnjia.market.core.CoreServiceTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

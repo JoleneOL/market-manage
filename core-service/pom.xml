@@ -64,6 +64,23 @@
             <artifactId>libseext</artifactId>
             <version>1.3.3</version>
         </dependency>
+        <dependency>
+            <groupId>me.jiangcai.payment</groupId>
+            <artifactId>support-chanpay</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>me.jiangcai.chanpay</groupId>
+            <artifactId>chanpay-test</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.jiangcai.payment</groupId>
+            <artifactId>payment-test</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

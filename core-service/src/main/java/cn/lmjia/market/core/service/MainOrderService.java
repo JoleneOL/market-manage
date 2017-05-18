@@ -34,4 +34,17 @@ public interface MainOrderService {
             , MainGood good
             , int amount, String mortgageIdentifier);
 
+    /**
+     * @param id 订单id
+     * @return 获取订单，never null
+     */
+    @Transactional(readOnly = true)
+    MainOrder getOrder(long id);
+
+    /**
+     * @param id 订单id
+     * @return 订单是否已支付
+     */
+    @Transactional(readOnly = true)
+    boolean isPaySuccess(long id);
 }

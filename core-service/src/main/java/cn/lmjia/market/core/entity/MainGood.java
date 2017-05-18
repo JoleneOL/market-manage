@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
 
 /**
  * 具体的商品，用以销售
@@ -28,4 +29,11 @@ public class MainGood {
     private boolean enable;
     @ManyToOne
     private MainProduct product;
+
+    /**
+     * @return 总价
+     */
+    public BigDecimal getTotalPrice() {
+        return product.getDeposit().add(product.getInstall());
+    }
 }
