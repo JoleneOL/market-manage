@@ -54,9 +54,11 @@
 .view-bg-color {
   background-color: #fbf9fe;
 }
+
 .view-placeholder::-webkit-input-placeholder {
   color: #333;
 }
+
 .displayNone {
   display: none;
 }
@@ -71,6 +73,13 @@
   }
   .weui-btn_mini {
     font-size: 13px;
+  }
+  .weui-vcode-btn {
+    font-size: 13px;
+    min-width: 84px;
+  }
+  .weui-label {
+    width: 80px;
   }
 }
 
@@ -87,10 +96,10 @@
 }
 
 .header_wrap {
-  padding: 35px 0;
+  padding: 20px 0;
   .header_wrap-title {
     text-align: center;
-    font-size: 34px;
+    font-size: 26px;
     color: @brand-success;
     font-weight: 400;
     margin: 0 15%;
@@ -323,6 +332,7 @@
     width: 33%;
   }
 }
+
 .view-no-res {
   > p {
     padding: 1em 0;
@@ -896,9 +906,11 @@
     user-select: none;
   }
 }
+
 .weui-actionsheet .weui-actionsheet__title {
   height: auto;
 }
+
 .view-order {
   .border-1px-top(#e5e5e5);
   .view-order-items {
@@ -921,12 +933,55 @@
     }
   }
 }
+
 // 奇淫技巧
 #commission.goAway {
   display: block;
   opacity: 0;
   z-index: -100;
 }
+
+// 付款页面
+.pay-page {
+  height: 100%;
+  body {
+    height: 100%;
+    background-color: #009bb6;
+  }
+  .header_wrap-title {
+    color: #fff;
+  }
+  .weui-footer {
+    color: #fff;
+  }
+}
+
+.view-pay {
+  background: #fff;
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px 0;
+  border-radius: 3px;
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .5);
+  .view-pay-title {
+    padding-bottom: 10px;
+  }
+  .img-qrCode {
+    margin: 0 auto;
+    width: 50%;
+    display: block;
+  }
+  .view-pay-num {
+    font-size: 32px;
+    text-indent: -16px;
+  }
+  .weixin {
+    font-size: 14px;
+    color: #666;
+  }
+}
+
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom,
   .border-1px-top,
@@ -956,11 +1011,13 @@
   .view-preview_hd {
     font-size: 13px;
   }
+
   .view-btn-group-md .weui-btn {
     padding-left: 8px;
     padding-right: 8px;
     font-size: 12px;
   }
+
   .view-tabs .view-tabs_item {
     font-size: 13px;
   }

@@ -15,38 +15,80 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body>
+<body class="view-fs-small" data-url-sendAuthCode="/api/authCode">
 <header class="header_wrap">
     <h1 class="header_wrap-title">欢迎登录</h1>
 </header>
 <section>
-    <form method="post" action="index.html" th:action="@{/wechatLogin}">
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">账号</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" name="username" type="text" placeholder="请输入账号">
-                </div>
+    <div class="weui-tab">
+        <div class="weui-navbar">
+            <a class="weui-navbar__item weui-bar__item--on" href="#passwordLogin">账号密码登录</a>
+            <a class="weui-navbar__item" href="#messageLogin">手机号快捷登录</a>
+        </div>
+        <div class="weui-tab__bd">
+            <div id="passwordLogin" class="weui-tab__bd-item weui-tab__bd-item--active">
+                <form method="post" action="index.html" th:action="@{/wechatLogin}" id="J_passwordForm">
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label class="weui-label">账号</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" name="username" type="text" placeholder="请输入账号">
+                            </div>
+                            <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label class="weui-label">密码</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" name="password" type="password" placeholder="请输入密码">
+                            </div>
+                            <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+                        </div>
+                    </div>
+                    <div class="weui-btn-area">
+                        <button type="submit" form="J_passwordForm" class="weui-btn weui-btn_custom">登&nbsp;&nbsp;录</button>
+                    </div>
+                </form>
             </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">密码</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" name="password" type="password" placeholder="请输入密码">
-                </div>
+            <div id="messageLogin" class="weui-tab__bd-item">
+                <form method="post" action="index.html" th:action="@{/wechatLogin}" id="J_messageForm">
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell weui-cell_vcode">
+                            <div class="weui-cell__hd">
+                                <label class="weui-label">手机号</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" name="mobile" type="text" placeholder="请输入手机号" id="J_mobile">
+                            </div>
+                            <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+                            <div class="weui-cell__ft">
+                                <button type="button" class="weui-vcode-btn" id="J_authCode">获取验证码</button>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label class="weui-label">验证码</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" name="authCode" type="text" placeholder="请输入验证码">
+                            </div>
+                            <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+                        </div>
+                    </div>
+                    <div class="weui-btn-area">
+                        <button type="submit" form="J_messageForm" class="weui-btn weui-btn_custom">登&nbsp;&nbsp;录</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="weui-btn-area">
-            <button type="submit" class="weui-btn weui-btn_custom">登&nbsp;&nbsp;录</button>
-        </div>
-        <div class="weui-btn-area" th:remove="all">
-            <a href="login.html?type=error" class="weui-btn weui-btn_warn">（测试）如果密码错误的场景</a>
-        </div>
-    </form>
+    </div>
 </section>
+<div class="weui-btn-area" th:remove="all">
+    <a href="login.html?type=error" class="weui-btn weui-btn_warn">（测试）如果密码错误的场景</a>
+</div>
 <footer>
     <div class="weui-footer weui-footer_fixed-bottom">
         <p class="weui-footer__text">Copyright © 2017 利每家</p>
@@ -55,9 +97,10 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
-<script>
-    if (window.document.location.search.indexOf('type=error') >= 0) {
-        $.toptip('用户名或者密码错误');
-    }
-</script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js"></script>
+<script src="../mock/api.js"></script>
+<!--生产环境请移除 End-->
+<script src="../wechat-resource/assets/js/login.js"></script>
 </html>

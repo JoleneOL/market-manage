@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="pay-page">
 <!--/*@thymesVar id="order" type="cn.lmjia.market.core.entity.MainOrder"*/-->
 <!--/*@thymesVar id="payOrder" type="me.jiangcai.payment.chanpay.entity.ChanpayPayOrder"*/-->
 <head>
@@ -20,16 +20,24 @@
 <body data-check-url="pay.html" th:data-check-url="@{''+${checkUri}}"
       data-success-url="pay.html" th:data-success-url="@{''+${successUri}}">
 
-<div class="pay-new">
-    <p th:text="${order.orderProductName}">某个净水器</p>
-    <p>
-        ￥<span class="nun"
+
+<div class="header_wrap">
+    <h1 class="header_wrap-title">订单支付</h1>
+</div>
+<div class="view-pay">
+    <p class="view-pay-title" th:text="${order.orderProductName}">某个净水器</p>
+    <p class="view-pay-qrcode"><img class="img-qrCode" src="../wechat-resource/assets/img/temp.png" th:src="${payOrder.url}" name="qrCode" id="qrCode"/></p>
+    <p class="view-pay-num">
+        ￥<span class="num"
                th:text="${#numbers.formatDecimal(order.orderDueAmount,1,'COMMA',2,'POINT')}">123</span>
     </p>
-    <p><img src="../wechat-resource/assets/img/temp.png" th:src="${payOrder.url}" name="qrCode" id="qrCode"/></p>
     <p class="weixin">长按二维码可进行支付</p>
 </div>
-
+<footer>
+    <div class="weui-footer weui-footer_fixed-bottom">
+        <p class="weui-footer__text">支付账单</p>
+    </div>
+</footer>
 <p style="display: none" id="loadingFlag"></p>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>

@@ -155,3 +155,10 @@ Mock.mock(/\/api\/recommend/, "post", {
     }
 
 });
+
+Mock.mock(/\/api\/authCode/, "post", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data": null
+
+});

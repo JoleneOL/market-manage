@@ -19,6 +19,13 @@
 .view-fs-small .weui-btn_mini {
   font-size: 13px;
 }
+.view-fs-small .weui-vcode-btn {
+  font-size: 13px;
+  min-width: 84px;
+}
+.view-fs-small .weui-label {
+  width: 80px;
+}
 .view-mb-20 {
   margin-bottom: 20px;
 }
@@ -29,11 +36,11 @@
   float: right;
 }
 .header_wrap {
-  padding: 35px 0;
+  padding: 20px 0;
 }
 .header_wrap .header_wrap-title {
   text-align: center;
-  font-size: 34px;
+  font-size: 26px;
   color: #009bb6;
   font-weight: 400;
   margin: 0 15%;
@@ -794,6 +801,44 @@
   display: block;
   opacity: 0;
   z-index: -100;
+}
+.pay-page {
+  height: 100%;
+}
+.pay-page body {
+  height: 100%;
+  background-color: #009bb6;
+}
+.pay-page .header_wrap-title {
+  color: #fff;
+}
+.pay-page .weui-footer {
+  color: #fff;
+}
+.view-pay {
+  background: #fff;
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px 0;
+  border-radius: 3px;
+  text-align: center;
+  box-shadow: 0 4px 8px 0 rgba(7, 17, 27, 0.5);
+}
+.view-pay .view-pay-title {
+  padding-bottom: 10px;
+}
+.view-pay .img-qrCode {
+  margin: 0 auto;
+  width: 50%;
+  display: block;
+}
+.view-pay .view-pay-num {
+  font-size: 32px;
+  text-indent: -16px;
+}
+.view-pay .weixin {
+  font-size: 14px;
+  color: #666;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,
