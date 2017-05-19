@@ -25,7 +25,7 @@ $(function () {
 
     allInBtn.click(function () {
         allInInput
-            .val($(this).attr('data-all-in'))
+            .val(+$(this).attr('data-all-in'))
             .addClass('view-input-big');
 
         amount.text(allInInput.val());
@@ -126,7 +126,9 @@ $(function () {
                 max: "提款最大金额为 {0}"
             }
         },
-        errorPlacement: function (error, element) {},
+        errorPlacement: function (error, element) {
+            console.log(error);
+        },
         highlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').addClass("weui-cell_warn")
         },

@@ -1,0 +1,31 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    background-color: #fff;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", sans-serif;
+}
+section {
+    padding-top: 40px;
+}
+h1 {
+    text-align: center;
+}
+h1 img {
+    margin: 0 auto;
+    display: block;
+    width: 100px;
+    height: auto;
+}
+.img-big {
+    width: 200px;
+}
+h2, p {
+    color: #676a6c;
+    text-align: center;
+}
+.mb-no {
+    margin-bottom: 0;
+}
+.mb-no + h2 {
+    margin-top: 0;
+}
