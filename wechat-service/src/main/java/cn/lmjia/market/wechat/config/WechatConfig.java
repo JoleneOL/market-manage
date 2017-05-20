@@ -16,7 +16,12 @@ import java.util.function.Supplier;
  * @author CJ
  */
 @Configuration
-@ComponentScan("cn.lmjia.market.wechat.controller")
+@ComponentScan(
+        {
+                "cn.lmjia.market.wechat.controller"
+                , "cn.lmjia.market.wechat.service"
+        }
+)
 public class WechatConfig implements WebModule {
     @Override
     public boolean hasOwnTemplateResolver() {

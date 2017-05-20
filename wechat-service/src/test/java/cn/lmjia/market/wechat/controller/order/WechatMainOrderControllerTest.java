@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.MainGoodRepository;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import org.apache.commons.lang.RandomStringUtils;
@@ -33,7 +34,7 @@ public class WechatMainOrderControllerTest extends WechatTestBase {
         // 在微信端发起请求
         Login login1 = randomLogin(false);
         runWith(login1, () -> {
-            mockMvc.perform(wechatGet("/wechatOrder"))
+            mockMvc.perform(wechatGet(SystemService.wechatOrderURi))
 //                    .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(view().name("wechat@orderPlace.html"));
