@@ -36,7 +36,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                         get("/agentData/listRuling")
                 )
 //                        .andDo(print())
-                        .andExpect(similarSelect2("classpath:/mock/agentList.json"));
+                        .andExpect(similarSelect2("classpath:/dealer-view/mock/agentList.json"));
 
                 final String targetListUri = "/agentData/list";
 
@@ -44,7 +44,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                         get(targetListUri)
                 )
 //                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/mock/agentData.json"));
+                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"));
                 // 支持搜索条件 agentName 可以是手机号码 也可以是用户名 也可以是rankName
                 AgentLevel target = agentLevelRepository.getOne(agent.getId()).getSubAgents().stream()
                         .max(new RandomComparator()).orElse(null);
@@ -54,7 +54,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                                 .param("agentName", target.getLogin().getLoginName())
                 )
 //                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/mock/agentData.json"))
+                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
                         .andExpect(jsonPath("$.data.length()").value(1))
                 ;
                 // 级别名称
@@ -63,7 +63,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                                 .param("agentName", target.getRank())
                 )
 //                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/mock/agentData.json"))
+                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
                         .andExpect(jsonPath("$.data.length()").value(1))
                 ;
                 String name = readService.nameForPrincipal(target.getLogin());
@@ -73,7 +73,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                                 .param("agentName", name)
                 )
 //                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/mock/agentData.json"))
+                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
                         .andExpect(jsonPath("$.data.length()").value(1))
                 ;
                 String mobile = readService.mobileFor(target.getLogin());
@@ -83,7 +83,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                                     .param("agentName", mobile)
                     )
 //                            .andDo(print())
-                            .andExpect(similarJQueryDataTable("classpath:/mock/agentData.json"))
+                            .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
                             .andExpect(jsonPath("$.data.length()").value(1))
                     ;
                 }
@@ -104,7 +104,7 @@ public class AgentDataControllerTest extends DealerServiceTest {
                     get("/agentData/listRuling")
             )
 //                    .andDo(print())
-                    .andExpect(similarSelect2("classpath:/mock/agentList.json"));
+                    .andExpect(similarSelect2("classpath:/dealer-view/mock/agentList.json"));
             return null;
         });
 
