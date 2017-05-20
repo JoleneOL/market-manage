@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.config;
 
 import cn.lmjia.market.core.Version;
+import com.huotu.verification.VerificationCodeConfig;
 import me.jiangcai.lib.jdbc.JdbcSpringConfig;
 import me.jiangcai.lib.resource.ResourceSpringConfig;
 import me.jiangcai.lib.spring.logging.LoggingConfig;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import({ResourceSpringConfig.class, UpgradeSpringConfig.class, JdbcSpringConfig.class
+        , VerificationCodeConfig.class
 //        , GAASpringConfig.class
 //        , NoticeSpringConfig.class
         , SystemStringConfig.class
