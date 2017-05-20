@@ -99,8 +99,8 @@
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <!--生产环境请移除 Begin-->
-<script src="../mock/mock-min.js"></script>
-<script src="../mock/api.js"></script>
+<script src="../mock/mock-min.js" th:remove="all"></script>
+<script src="../mock/api.js" th:remove="all"></script>
 <!--生产环境请移除 End-->
-<script src="../wechat-resource/assets/js/login.js"></script>
+<script src="../wechat-resource/assets/js/login.js" th:src="@{/wechat-resource/assets/js/login.js}"></script>
 </html>

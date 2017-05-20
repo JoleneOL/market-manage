@@ -7,6 +7,9 @@ $(function () {
     if (window.document.location.search.indexOf('type=error') >= 0) {
         $.toptip('用户名或者密码错误');
     }
+    if (window.document.location.search.indexOf('type=codeError') >= 0) {
+        $.toptip('用户名或者验证码错误');
+    }
 
     $.validator.setDefaults({
         submitHandler: function (form) {
