@@ -9,7 +9,7 @@ Mock.setup({
  * 使用正则超级(｡･∀･)ﾉﾞ嗨
  * resultCode 多个200，减少错误概率 ~囧~
  */
-Mock.mock(/^\/api\/teamList\?rank=all$/, "get", {
+Mock.mock(/^\/api\/teamList\?rank=all&page=\d$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|20": [
@@ -22,7 +22,7 @@ Mock.mock(/^\/api\/teamList\?rank=all$/, "get", {
     ]
 });
 
-Mock.mock(/^\/api\/teamList\?rank=1$/, "get", {
+Mock.mock(/^\/api\/teamList\?rank=1&page=\d$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|20": [
@@ -35,7 +35,7 @@ Mock.mock(/^\/api\/teamList\?rank=1$/, "get", {
     ]
 });
 
-Mock.mock(/^\/api\/teamList\?rank=2$/, "get", {
+Mock.mock(/^\/api\/teamList\?rank=2&page=\d$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|20": [
@@ -47,7 +47,7 @@ Mock.mock(/^\/api\/teamList\?rank=2$/, "get", {
         }
     ]
 });
-Mock.mock(/^\/api\/teamList\?rank=3$/, "get", {
+Mock.mock(/^\/api\/teamList\?rank=3&page=\d$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|20": [
@@ -59,7 +59,7 @@ Mock.mock(/^\/api\/teamList\?rank=3$/, "get", {
         }
     ]
 });
-Mock.mock(/^\/api\/teamList\?rank=4$/, "get", {
+Mock.mock(/^\/api\/teamList\?rank=4&page=\d$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|0": [
@@ -72,7 +72,7 @@ Mock.mock(/^\/api\/teamList\?rank=4$/, "get", {
     ]
 });
 
-Mock.mock(/\/api\/orderList/, "get", {
+Mock.mock(/\/api\/orderList\?page=\d/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|20": [
@@ -98,7 +98,7 @@ Mock.mock(/\/api\/orderList/, "get", {
  * 3: 退款中
  */
 
-Mock.mock(/\/api\/equipmentList/, "get", {
+Mock.mock(/\/api\/equipmentList\?page=\d/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|10": [
@@ -114,7 +114,7 @@ Mock.mock(/\/api\/equipmentList/, "get", {
     ]
 });
 
-Mock.mock(/\/api\/commList\/other/, "get", {
+Mock.mock(/\/api\/commList\/other\?page=\d/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|10": [
@@ -131,7 +131,7 @@ Mock.mock(/\/api\/commList\/other/, "get", {
 });
 
 // 看看不同的API
-Mock.mock(/\/api\/commList\/all/, "get", {
+Mock.mock(/\/api\/commList\/all\?page=\d/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|10": [
@@ -160,5 +160,4 @@ Mock.mock(/\/api\/authCode/, "post", {
     "resultCode": Mock.Random.boolean() ? 200 : 400,
     "resultMsg": "ok",
     "data": null
-
 });

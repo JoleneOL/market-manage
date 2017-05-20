@@ -22,10 +22,12 @@ $(function () {
     };
 
     var myScroll = infiniteWrap.myScroll({
+        debug: true,
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             rank: infiniteWrap.attr('data-rank')
         },
+        page: +infiniteWrap.attr('data-page'),
         template: listTpl
     });
 
@@ -78,7 +80,7 @@ $(function () {
         var url = infiniteWrap.attr('data-url');
         $.ajax(url, {
             method: "GET",
-            data: {rank: data},
+            data: {rank: data, page: 1},
             dataType: 'json',
             success: function (res) {
                 if (res.resultCode !== 200) {
@@ -91,7 +93,8 @@ $(function () {
                 myScroll.reset({
                     ajaxData: {
                         rank: infiniteWrap.attr('data-rank')
-                    }
+                    },
+                    page: 1
                 });
                 $.myScrollRefresh(true);
             },

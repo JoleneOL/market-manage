@@ -12,6 +12,7 @@
             ajaxUrl: '',
             ajaxMethod: 'GET',
             ajaxData: {},
+            page: 1,
             loadSuccess: function () {},
             template: function () {
                 console.error("需要模板代码");
@@ -66,6 +67,8 @@
                 console.error('需要数据请求地址');
                 return '';
             }
+            s.ajaxData.page = s.page;
+            if(s.debug) console.info(s.ajaxData);
             $.ajax(s.ajaxUrl, {
                 method: s.ajaxMethod,
                 data: s.ajaxData,
@@ -79,6 +82,7 @@
                     if (res.data.length > 0) {
                         $self.find('.weui-loadmore').before(createDom(res.data));
                         myScroll.refresh();
+                        s.page++;
                         s.loading = false;
                     } else {
                         $self.find('.weui-loadmore').text('没有更多内容了');
