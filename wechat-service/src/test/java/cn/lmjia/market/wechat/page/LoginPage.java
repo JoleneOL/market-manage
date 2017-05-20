@@ -6,13 +6,23 @@ import org.openqa.selenium.support.FindBy;
 
 /**
  * login.html
+ *
  * @author CJ
  */
 public class LoginPage extends AbstractWechatPage {
     private WebElement username;
     private WebElement password;
-    @FindBy(css = "[type=submit]")
-    private WebElement submit;
+    @FindBy(css = "[form=J_passwordForm]")
+    private WebElement passwordSubmit;
+    @FindBy(linkText = "手机号快捷登录")
+    private WebElement messageLogin;
+    private WebElement mobile;
+    private WebElement authCode;
+    @FindBy(id = "J_authCode")
+    private WebElement sendButton;
+    @FindBy(css = "[form=J_messageForm]")
+    private WebElement messageSubmit;
+
     public LoginPage(WebDriver webDriver) {
         super(webDriver);
     }
@@ -27,6 +37,20 @@ public class LoginPage extends AbstractWechatPage {
         username.sendKeys(loginName);
         password.clear();
         password.sendKeys(rawPassword);
-        submit.click();
+        passwordSubmit.click();
+    }
+
+    public void sendAuthCode(String mobile) {
+        if (!this.mobile.isDisplayed())
+            messageLogin.click();
+        this.mobile.clear();
+        this.mobile.sendKeys(mobile);
+        sendButton.click();
+    }
+
+    public void loginWithAuthCode(String code) {
+        this.authCode.clear();
+        this.authCode.sendKeys(code);
+        messageSubmit.click();
     }
 }

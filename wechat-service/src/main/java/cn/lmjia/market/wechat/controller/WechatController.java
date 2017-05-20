@@ -3,6 +3,7 @@ package cn.lmjia.market.wechat.controller;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.util.LoginAuthentication;
+import com.huotu.verification.IllegalVerificationCodeException;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.apache.commons.logging.Log;
@@ -14,6 +15,7 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -67,12 +69,19 @@ public class WechatController {
     }
 
     @PostMapping("/wechatLogin")
-    public String bindLogin(@OpenId String openId, String username, String password) {
+    public String bindLogin(@OpenId String openId, String username, String password, String mobile, String authCode) {
         try {
-            loginService.bindWechat(username, password, openId);
+            if (!StringUtils.isEmpty(username))
+                loginService.bindWechat(username, password, openId);
+            else
+                loginService.bindWechatWithCode(mobile, authCode, openId);
         } catch (IllegalArgumentException ex) {
             log.debug("", ex);
-            return "redirect:/wechatLogin?type=error";
+            if (!StringUtils.isEmpty(username))
+                return "redirect:/wechatLogin?type=error";
+            return "redirect:/wechatLogin?type=codeError";
+        } catch (IllegalVerificationCodeException ex) {
+            return "redirect:/wechatLogin?type=codeError";
         }
         return "redirect:/toLoginWechat";
     }

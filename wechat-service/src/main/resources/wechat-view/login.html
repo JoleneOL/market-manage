@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-fs-small" data-url-sendAuthCode="/api/authCode">
+<body class="view-fs-small" data-url-sendAuthCode="/api/authCode" th:data-url-sendAuthCode="@{/misc/sendLoginCode}">
 <header class="header_wrap">
     <h1 class="header_wrap-title">欢迎登录</h1>
 </header>
@@ -49,7 +49,8 @@
                         </div>
                     </div>
                     <div class="weui-btn-area">
-                        <button type="submit" form="J_passwordForm" class="weui-btn weui-btn_custom">登&nbsp;&nbsp;录</button>
+                        <button type="submit" form="J_passwordForm" class="weui-btn weui-btn_custom">登&nbsp;&nbsp;录
+                        </button>
                     </div>
                 </form>
             </div>
@@ -79,7 +80,8 @@
                         </div>
                     </div>
                     <div class="weui-btn-area">
-                        <button type="submit" form="J_messageForm" class="weui-btn weui-btn_custom">登&nbsp;&nbsp;录</button>
+                        <button type="submit" form="J_messageForm" class="weui-btn weui-btn_custom">登&nbsp;&nbsp;录
+                        </button>
                     </div>
                 </form>
             </div>

@@ -6,6 +6,8 @@ import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.service.LoginService;
+import com.huotu.verification.IllegalVerificationCodeException;
+import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
@@ -38,6 +40,8 @@ public class LoginServiceImpl implements LoginService {
     private PublicAccount publicAccount;
     @Autowired
     private StandardWeixinUserRepository standardWeixinUserRepository;
+    @Autowired
+    private VerificationCodeService verificationCodeService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -89,16 +93,28 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void bindWechat(String loginName, String rawPassword, String openId) {
+        Login login = getEnableLogin(loginName);
+        if (!passwordEncoder.matches(rawPassword, login.getPassword())) {
+            throw new IllegalArgumentException();
+        }
+
+        login.setWechatUser(standardWeixinUserRepository.findByOpenId(openId));
+    }
+
+    private Login getEnableLogin(String loginName) {
         Login login = loginRepository.findByLoginName(loginName);
         if (login == null || !login.isEnabled()
                 || !login.isAccountNonExpired()
                 || !login.isAccountNonLocked()
                 || !login.isCredentialsNonExpired())
             throw new IllegalArgumentException();
-        if (!passwordEncoder.matches(rawPassword, login.getPassword())) {
-            throw new IllegalArgumentException();
-        }
+        return login;
+    }
 
+    @Override
+    public void bindWechatWithCode(String mobile, String code, String openId) throws IllegalVerificationCodeException {
+        verificationCodeService.verify(mobile, code, loginVerificationType());
+        Login login = getEnableLogin(mobile);
         login.setWechatUser(standardWeixinUserRepository.findByOpenId(openId));
     }
 }

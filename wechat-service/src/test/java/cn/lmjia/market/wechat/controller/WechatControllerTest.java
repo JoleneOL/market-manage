@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WechatControllerTest extends WechatTestBase {
 
     @Test
-    public void newWechat() throws Exception {
+    public void bindWithPassword() throws Exception {
         WeixinUserDetail detail = nextCurrentWechatAccount();
 
         // 使用一个陌生的微信用户 打开 /toLoginWechat 会跳转到 登录界面
@@ -38,6 +38,45 @@ public class WechatControllerTest extends WechatTestBase {
         // 尝试使用正确的密码登录吧
         loginPage.login(login.getLoginName(), rawPassword);
 
+        // 如何去公众号？
+        initPage(IndexPage.class);
+        assertThat(loginService.asWechat(detail.getOpenId()))
+                .isNotNull();
+    }
+
+    @Test
+    public void bindWithVCCode() throws Exception {
+        WeixinUserDetail detail = nextCurrentWechatAccount();
+
+        // 使用一个陌生的微信用户 打开 /toLoginWechat 会跳转到 登录界面
+        // 完成之后 则立刻跳转到主页
+        // 下次再使用该帐号登录则直接来到主页
+
+        driver.get("http://localhost/toLoginWechat");
+        LoginPage loginPage = initPage(LoginPage.class);
+
+        // 弄一个登录过来
+        String rawPassword = UUID.randomUUID().toString();
+        Login login = newRandomManager(randomMobile(), rawPassword, ManageLevel.root);
+
+        loginPage.sendAuthCode(login.getLoginName());
+        // 这个验证码是错误的！
+        loginPage.loginWithAuthCode("9999");
+        loginPage.assertHaveTooltip();
+
+        loginPage.sendAuthCode(login.getLoginName());
+        //  不能再发啦
+        loginPage.assertHaveTooltip();
+
+        // 重新打开页面
+        driver.get("http://localhost/toLoginWechat");
+        loginPage = initPage(LoginPage.class);
+
+        // 弄一个新用户
+        login = newRandomManager(randomMobile(), rawPassword, ManageLevel.root);
+        loginPage.sendAuthCode(login.getLoginName());
+        loginPage.loginWithAuthCode("1234");
+//        loginPage.assertHaveTooltip();
         // 如何去公众号？
         initPage(IndexPage.class);
         assertThat(loginService.asWechat(detail.getOpenId()))

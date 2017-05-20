@@ -157,7 +157,7 @@ Mock.mock(/\/api\/recommend/, "post", {
 });
 
 Mock.mock(/\/api\/authCode/, "post", {
-    "resultCode": 200,
+    "resultCode": Mock.Random.boolean() ? 200 : 400,
     "resultMsg": "ok",
     "data": null
 

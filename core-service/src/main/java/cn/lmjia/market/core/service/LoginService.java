@@ -2,6 +2,8 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
+import com.huotu.verification.IllegalVerificationCodeException;
+import com.huotu.verification.VerificationType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +13,24 @@ import java.util.List;
  * @author CJ
  */
 public interface LoginService extends UserDetailsService {
+
+    /**
+     * @return 用于登录的验证码
+     */
+    default VerificationType loginVerificationType() {
+        return new VerificationType() {
+            @Override
+            public int id() {
+                return 1;
+            }
+
+            @Override
+            public String message(String code) {
+                return "登录短信验证码为：" + code + "；请勿泄露。";
+            }
+        };
+    }
+
     /**
      * @return 所有管理员
      */
@@ -65,4 +85,11 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional
     void bindWechat(String loginName, String rawPassword, String openId);
+
+    /**
+     * @throws IllegalVerificationCodeException - 验证码无效
+     * @see com.huotu.verification.service.VerificationCodeService#verify(String, String, VerificationType)
+     */
+    @Transactional
+    void bindWechatWithCode(String mobile, String code, String openId) throws IllegalVerificationCodeException;
 }

@@ -1,11 +1,14 @@
 package cn.lmjia.market.core.controller.advice;
 
+import cn.lmjia.market.core.model.ApiResult;
+import com.huotu.verification.FrequentlySendException;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +26,18 @@ public class ControllerSupport {
         if (WeixinWebSpringConfig.isWeixinRequest(request))
             return "wechat@error/systemMaintain.html";
         return "error/systemMaintain.html";
+    }
+
+    @ExceptionHandler(FrequentlySendException.class)
+    @ResponseBody
+    public ApiResult sawFrequentlySendException(FrequentlySendException ex) {
+        return ApiResult.withCodeAndMessage(400, ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(Throwable.class)
+    public void all(Throwable ex) throws Throwable {
+        log.debug("", ex);
+        throw ex;
     }
 
 }

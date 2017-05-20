@@ -57,6 +57,12 @@
             <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.huotu.verification-code</groupId>
+            <artifactId>vc-test</artifactId>
+            <version>1.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

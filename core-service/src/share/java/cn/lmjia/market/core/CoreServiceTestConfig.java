@@ -1,6 +1,7 @@
 package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.config.CoreConfig;
+import com.huotu.vefification.test.VerificationCodeTestConfig;
 import me.jiangcai.chanpay.event.TradeEvent;
 import me.jiangcai.chanpay.test.ChanpayTestSpringConfig;
 import me.jiangcai.lib.test.config.H2DataSourceConfig;
@@ -49,7 +50,7 @@ import java.util.UUID;
 @Configuration
 @ImportResource("classpath:/datasource_local.xml")
 @PropertySource("classpath:/test_wx.properties")
-@Import({CoreConfig.class, ChanpayTestSpringConfig.class, PaymentTestConfig.class})
+@Import({CoreConfig.class, ChanpayTestSpringConfig.class, PaymentTestConfig.class, VerificationCodeTestConfig.class})
 public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcConfigurer {
 
     @Bean

@@ -62,7 +62,7 @@ $(function () {
     $('#J_authCode').click(function () {
         var self = $(this);
         var mobile = $mobile.val();
-        if(!/^1(3|4|5|7|8)\d{9}$/.test(mobile)) {
+        if (!/^1(3|4|5|7|8)\d{9}$/.test(mobile)) {
             $.toptip('请输入正确的手机号');
             return;
         }
@@ -74,6 +74,10 @@ $(function () {
             },
             dataType: 'json',
             success: function (data) {
+                if (data.resultCode == 400) {
+                    $.toptip(data.resultMsg);
+                    return false;
+                }
                 if (data.resultCode !== 200) {
                     $.toptip("发送失败，请重试");
                     return false;
@@ -89,7 +93,7 @@ $(function () {
         ele.prop('disabled', true);
         var s = 30;
         var t = setInterval(function () {
-            ele.text(s--+'秒');
+            ele.text(s-- + '秒');
             if (s === -1) {
                 clearInterval(t);
                 ele.text('获取验证码')
