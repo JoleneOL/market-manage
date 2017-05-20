@@ -14,13 +14,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 几个微信常用控制器
@@ -33,11 +38,12 @@ public class WechatController {
     private static final Log log = LogFactory.getLog(WechatController.class);
     private final SecurityContextRepository httpSessionSecurityContextRepository
             = new HttpSessionSecurityContextRepository();
+    private final RequestCache requestCache = new HttpSessionRequestCache();
     @Autowired
     private LoginService loginService;
 
     @GetMapping("/toLoginWechat")
-    public String login(WeixinUserDetail detail, HttpServletRequest request, HttpServletResponse response) {
+    public String login(WeixinUserDetail detail, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 检查这个是否具备了 身份，有的话 完成自动登录 否者跳到登录界面
         log.debug(detail);
         Login login = loginService.asWechat(detail.getOpenId());
@@ -54,8 +60,19 @@ public class WechatController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         httpSessionSecurityContextRepository.saveContext(context, holder.getRequest(), holder.getResponse());
+        // 跳转回去！
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        return "redirect:/wechatIndex";
+        if (savedRequest == null) {
+            return "redirect:/wechatIndex";
+        }
+
+        if (savedRequest.getRedirectUrl().startsWith("http://localhost:-1/")) {
+            return "redirect:/" + savedRequest.getRedirectUrl().substring("http://localhost:-1/".length());
+        }
+//        new SavedRequestAwareAuthenticationSuccessHandler().onAuthenticationSuccess(request, response, authentication);
+
+        return "redirect:" + savedRequest.getRedirectUrl();
     }
 
     @GetMapping("/wechatIndex")

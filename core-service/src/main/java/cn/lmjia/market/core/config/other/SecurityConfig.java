@@ -1,4 +1,4 @@
-package cn.lmjia.market.web.config;
+package cn.lmjia.market.core.config.other;
 
 import cn.lmjia.market.core.config.MVCConfig;
 import cn.lmjia.market.core.service.LoginService;
@@ -21,7 +21,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 @Import({SecurityConfig.Security.class})
-class SecurityConfig {
+public class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;

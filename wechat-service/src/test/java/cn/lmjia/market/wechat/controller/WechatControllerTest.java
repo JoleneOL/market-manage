@@ -1,5 +1,6 @@
 package cn.lmjia.market.wechat.controller;
 
+import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.wechat.WechatTestBase;
@@ -7,6 +8,7 @@ import cn.lmjia.market.wechat.page.IndexPage;
 import cn.lmjia.market.wechat.page.LoginPage;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.UUID;
 
@@ -15,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
+@ContextConfiguration(classes = SecurityConfig.class)
 public class WechatControllerTest extends WechatTestBase {
 
     @Test
@@ -25,8 +28,7 @@ public class WechatControllerTest extends WechatTestBase {
         // 完成之后 则立刻跳转到主页
         // 下次再使用该帐号登录则直接来到主页
 
-        driver.get("http://localhost/toLoginWechat");
-        LoginPage loginPage = initPage(LoginPage.class);
+        LoginPage loginPage = getLoginPageForBrowseIndex();
 
         // 弄一个登录过来
         String rawPassword = UUID.randomUUID().toString();
@@ -44,6 +46,11 @@ public class WechatControllerTest extends WechatTestBase {
                 .isNotNull();
     }
 
+    private LoginPage getLoginPageForBrowseIndex() {
+        driver.get("http://localhost/wechatIndex");
+        return initPage(LoginPage.class);
+    }
+
     @Test
     public void bindWithVCCode() throws Exception {
         WeixinUserDetail detail = nextCurrentWechatAccount();
@@ -52,8 +59,7 @@ public class WechatControllerTest extends WechatTestBase {
         // 完成之后 则立刻跳转到主页
         // 下次再使用该帐号登录则直接来到主页
 
-        driver.get("http://localhost/toLoginWechat");
-        LoginPage loginPage = initPage(LoginPage.class);
+        LoginPage loginPage = getLoginPageForBrowseIndex();
 
         // 弄一个登录过来
         String rawPassword = UUID.randomUUID().toString();
@@ -69,8 +75,7 @@ public class WechatControllerTest extends WechatTestBase {
         loginPage.assertHaveTooltip();
 
         // 重新打开页面
-        driver.get("http://localhost/toLoginWechat");
-        loginPage = initPage(LoginPage.class);
+        loginPage = getLoginPageForBrowseIndex();
 
         // 弄一个新用户
         login = newRandomManager(randomMobile(), rawPassword, ManageLevel.root);

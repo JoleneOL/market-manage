@@ -2,6 +2,7 @@ package cn.lmjia.market.web.config;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.config.MVCConfig;
+import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.dealer.config.DealerConfig;
 import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.wechat.config.WechatConfig;

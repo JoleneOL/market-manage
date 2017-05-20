@@ -1,4 +1,4 @@
-package cn.lmjia.market.web.controller;
+package cn.lmjia.market.core.controller.index;
 
 import me.jiangcai.wx.web.WeixinEnvironment;
 import org.apache.commons.logging.Log;
