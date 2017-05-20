@@ -176,6 +176,9 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                     );
                 });
 
+        registry.addResourceHandler("/404.html").addResourceLocations("/");
+        registry.addResourceHandler("/500.html").addResourceLocations("/");
+
     }
 
     @Override
