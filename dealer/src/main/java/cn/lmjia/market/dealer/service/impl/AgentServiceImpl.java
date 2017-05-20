@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
+import cn.lmjia.market.core.service.AgentFinancingService;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 @Service
 public class AgentServiceImpl implements AgentService {
 
+    @Autowired
+    private AgentFinancingService agentFinancingService;
     @Autowired
     private AgentLevelRepository agentLevelRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -57,6 +61,12 @@ public class AgentServiceImpl implements AgentService {
         if (count <= 0)
             throw new IllegalStateException("无法给" + superior + "添加下级代理商，违法了现在有的" + systemLevel() + "层架构");
 
+        // 设置货款
+        final BigDecimal goodPayment = BigDecimal.valueOf(firstPayment);
+        login.setCurrentGoodPayment(login.getCurrentGoodPayment().add(goodPayment));
+        agentFinancingService.recordGoodPayment(login, goodPayment, null, null);
+
+
         final LocalDateTime now = LocalDateTime.now();
         while (count-- > 0) {
             AgentLevel top = new AgentLevel();
@@ -67,8 +77,6 @@ public class AgentServiceImpl implements AgentService {
             top.setSuperior(current);
             top.setBeginDate(beginDate);
             top.setEndDate(endDate);
-            top.setFirstPayment(firstPayment);
-            top.setAgencyFee(agencyFee);
             final AgentLevel newAgentLevel = agentLevelRepository.save(top);
             if (current != null) {
                 if (current.getSubAgents() == null)
@@ -81,6 +89,8 @@ public class AgentServiceImpl implements AgentService {
                 topLevel = current;
             }
         }
+        // 设置代理费
+        agentFinancingService.recordAgentFee(login, topLevel, BigDecimal.valueOf(agencyFee), null, null);
         // 先设置最高级别的
         return topLevel;
     }

@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -62,6 +63,18 @@ public class Login implements UserDetails {
      */
     @OneToOne
     private StandardWeixinUser wechatUser;
+
+    // 财务有关
+    /**
+     * 当前货款余额
+     */
+    @Column(scale = 2, precision = 20)
+    private BigDecimal currentGoodPayment = BigDecimal.ZERO;
+    /**
+     * 佣金余额
+     */
+    @Column(scale = 2, precision = 20)
+    private BigDecimal commissionBalance = BigDecimal.ZERO;
 
     @Override
     public boolean equals(Object o) {

@@ -46,14 +46,13 @@ public class AgentLevel {
     /**
      * 添加时间
      */
-    @Column(columnDefinition = "datetime")
+    @Column(columnDefinition = "timestamp")
     private LocalDateTime createdTime;
     @Column(columnDefinition = "date")
     private LocalDate beginDate;
     @Column(columnDefinition = "date")
     private LocalDate endDate;
-    private int firstPayment;
-    private int agencyFee;
+
     /**
      * 上级;作为最顶级的代理商它的superior是null
      */
