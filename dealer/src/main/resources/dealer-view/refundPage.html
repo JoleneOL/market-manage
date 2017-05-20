@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="dealer-resource/css/custom.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -37,23 +37,23 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-tabs nav-dark">
-                    <li class="active">
-                        <a href="#repair" data-toggle="tab">
+                    <li>
+                        <a href="afterSale.html" target="content">
                             <strong>维修</strong>
                         </a>
                     </li>
-                    <li>
-                        <a href="refundPage.html" target="content">
+                    <li class="active">
+                        <a href="#refund" data-toggle="tab">
                             <strong>退款</strong>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="repair">
-                        <!--<div class="col-md-1 mb10">-->
-                            <!--<a href="#" class="btn btn-success btn-block">发起维修</a>-->
-                        <!--</div>-->
-                        <div class="col-md-12">
+                    <div class="tab-pane active" id="refund">
+                        <div class="col-sm-2  col-md-1 mb10">
+                            <a href="refundOperate.html" content="content" class="btn btn-success btn-block">发起退款</a>
+                        </div>
+                        <div class="col-sm-12">
                             <div class="form-inline">
                                 <div class="js-selectToolbar">
                                     <label>
@@ -77,11 +77,11 @@
                                     <div class="input-group input-group-sm">
                                         <input type="text" class="form-control"
                                                placeholder="操作时间" id="datepicker" name="operateDate"
-                                               aria-controls="repairTable">
+                                               aria-controls="refundTable">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                     </div>
                                     <label>
-                                        <select class="form-control input-sm js-repairState" name="repairState">
+                                        <select class="form-control input-sm js-searchRank" name="refundState">
                                             <option value=" " disabled="" selected="" class="hidden">状态</option>
                                             <option value="all">全部</option>
                                             <option value="1">维修中</option>
@@ -92,7 +92,7 @@
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="repairTable" class="table table-hover table-success" cellspacing="0"
+                                <table id="refundTable" class="table table-hover table-success" cellspacing="0"
                                        width="100%"></table>
                             </div>
                         </div>
@@ -111,6 +111,6 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
-<script src="assets/js/afterSale.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="dealer-resource/js/refundPage.js"></script>
+<script src="dealer-resource/js/main.js"></script>
 </html>

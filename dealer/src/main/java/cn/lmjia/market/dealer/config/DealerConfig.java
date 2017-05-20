@@ -51,14 +51,14 @@ public class DealerConfig extends WebMvcConfigurerAdapter implements WebModule {
 
     @Override
     public String[] resourcePathPatterns() {
-        return new String[]{"/dealer-resource/js/**"};
+        return new String[]{"/dealer-resource/**"};
     }
 
     @Override
     public void resourceHandler(String pattern, ResourceHandlerRegistration registration) {
         switch (pattern) {
-            case "/dealer-resource/js/**":
-                registration.addResourceLocations("classpath:/dealer-resource/js/");
+            case "/dealer-resource/**":
+                registration.addResourceLocations("classpath:/dealer-view/dealer-resource/");
                 break;
         }
     }

@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>安装管理 - 代理商后台管理</title>
+    <title>用户订单 - 代理商后台管理</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="dealer-resource/css/custom.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -27,24 +27,38 @@
 <section>
     <div class="pageheader">
         <h2>
-            <i class="fa fa-cogs"></i>
+            <i class="fa fa-address-card-o"></i>
             <ol class="breadcrumb">
-                <li class="active">安装管理</li>
+                <li class="active">用户订单</li>
             </ol>
         </h2>
     </div>
     <div class="contentpanel">
         <div class="row">
+            <div class="col-sm-2 mb30">
+                <button type="button" class="btn btn-success btn-block btn-lg" id="js-buyOrder">我要下单</button>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-12 mb10">
                 <div class="form-inline">
                     <div class="js-selectToolbar">
+                        <input type="search" class="form-control input-sm js-orderId" placeholder="订单编号" name="orderId"
+                               aria-controls="orderTable">
                         <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号" name="phone"
-                               aria-controls="installTable">
-                        <input type="search" class="form-control input-sm js-searchId" placeholder="饮水机编号" name="waterId"
-                               aria-controls="installTable">
+                               aria-controls="orderTable">
+                        <label>
+                            <select class="form-control input-sm js-searchRank" name="agentRank">
+                                <option value=" " disabled="" selected="" class="hidden">商品类型</option>
+                                <option value="all">全部</option>
+                                <option value="1">欧式</option>
+                                <option value="2">法式</option>
+                                <option value="3">中式</option>
+                            </select>
+                        </label>
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control"
-                                   placeholder="安装时间" id="datepicker" name="installDate" aria-controls="installTable">
+                            <input type="text" class="form-control" placeholder="下单日期"
+                                   id="datepicker" name="orderDate" aria-controls="orderTable">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
                         <button type="button" class="btn btn-success btn-xs js-search">查询</button>
@@ -56,25 +70,35 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs nav-dark js-orderStatus">
                     <li class="active">
-                        <a href="#installDatagrid" data-toggle="tab" data-status="0">
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="0">
                             <strong>全部</strong>
                         </a>
                     </li>
                     <li>
-                        <a href="#installDatagrid" data-toggle="tab" data-status="1">
-                            <strong>未安装</strong>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="1">
+                            <strong>待付款</strong>
                         </a>
                     </li>
                     <li>
-                        <a href="#installDatagrid" data-toggle="tab" data-status="2">
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="2">
+                            <strong>待发货</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="3">
+                            <strong>待安装</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="4">
                             <strong>已安装</strong>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="installDatagrid">
+                    <div class="tab-pane active" id="orderDatagrid">
                         <div class="table-responsive">
-                            <table id="installTable" class="table table-hover table-success" cellspacing="0"
+                            <table id="orderTable" class="table table-hover table-success" cellspacing="0"
                                    width="100%"></table>
                         </div>
                     </div>
@@ -91,7 +115,6 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
-<script src="assets/js/installManage.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="dealer-resource/js/orderManage.js"></script>
+<script src="dealer-resource/js/main.js"></script>
 </html>

@@ -8,13 +8,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>用户订单详情 - 代理商后台管理</title>
+    <title>物流信息 - 代理商后台管理</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="dealer-resource/css/custom.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -27,23 +27,47 @@
         <h2>
             <i class="fa fa-info"></i>
             <ol class="breadcrumb">
-                <li><a href="orderManage.html" target="content">用户订单</a></li>
-                <li class="active">用户订单详情</li>
+                <li><a href="logisticsManage.html" target="content">物流管理</a></li>
+                <li class="active">物流信息</li>
             </ol>
         </h2>
     </div>
     <div class="contentpanel">
         <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default panel-commission">
-                    <div class="panel-body">
-                        <div class="col-md-9">
-                            <span class="label label-xlg label-danger">未发货</span>
-                            <span class="label label-xlg label-warning">待收货</span>
-                            <span class="label label-xlg label-success">已签收</span>
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading quote quote-success">
+                        <div class="panel-btns">
+                            <a href="javascript:;" class="minimize"><i class="fa fa-plus" aria-hidden="true"></i></a>
                         </div>
-                        <div class="col-md-3">
-                            <p class="text-right">操作员&nbsp;&nbsp;&nbsp;&nbsp;<strong>超级玛丽</strong></p>
+                        <h3 class="panel-title">商品信息</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">商品型号</td>
+                                    <td>滤芯 u56  立式</td>
+                                </tr>
+                                <tr>
+                                    <td>商品编码</td>
+                                    <td>42857487523234</td>
+                                </tr>
+                                <tr>
+                                    <td>商品数量</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>入库时间</td>
+                                    <td>2017-04-09</td>
+                                </tr>
+                                <tr>
+                                    <td>出库时间</td>
+                                    <td>2017-09-09</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -164,107 +188,9 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading quote quote-success">
-                        <div class="panel-btns">
-                            <a href="javascript:;" class="minimize"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                        </div>
-                        <h3 class="panel-title">用户信息</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <tbody>
-                                <tr>
-                                    <td width="120px">用户</td>
-                                    <td>李菲菲</td>
-                                </tr>
-                                <tr>
-                                    <td>年龄</td>
-                                    <td>24</td>
-                                </tr>
-                                <tr>
-                                    <td>性别</td>
-                                    <td>女</td>
-                                </tr>
-                                <tr>
-                                    <td>手机号</td>
-                                    <td>18958044532</td>
-                                </tr>
-                                <tr>
-                                    <td>订单时间</td>
-                                    <td>2017-09-09</td>
-                                </tr>
-                                <tr>
-                                    <td>购买套餐</td>
-                                    <td>一年时长套餐</td>
-                                </tr>
-                                <tr>
-                                    <td>收货地址</td>
-                                    <td>浙江杭州西湖大西湖国际</td>
-                                </tr>
-                                <tr>
-                                    <td>购买次数</td>
-                                    <td>20</td>
-                                </tr>
-                                <tr>
-                                    <td>订单总金额</td>
-                                    <td>5677.33</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading quote quote-success">
-                        <div class="panel-btns">
-                            <a href="javascript:;" class="minimize"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                        </div>
-                        <h3 class="panel-title">商品信息</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <tbody>
-                                <tr>
-                                    <td width="120px">商品型号</td>
-                                    <td>
-                                        <span>滤芯 u56  立式 </span>
-                                        <span class="label label-success">使用中</span>
-                                        <span class="label label-warning">维修中</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>商品编码</td>
-                                    <td>42857487523234</td>
-                                </tr>
-                                <tr>
-                                    <td>入库时间</td>
-                                    <td>2017-04-09</td>
-                                </tr>
-                                <tr>
-                                    <td>出库时间</td>
-                                    <td>2017-09-09</td>
-                                </tr>
-                                <tr>
-                                    <td>维修记录</td>
-                                    <td>2017-09-09  更改滤芯</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="dealer-resource/js/main.js"></script>
 </html>

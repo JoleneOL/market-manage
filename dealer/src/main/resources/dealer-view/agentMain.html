@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="dealer-resource/css/custom.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -27,7 +27,7 @@
 <section class="main-wrapper">
     <div class="leftpanel">
         <div class="logopanel">
-            <h1><img class="logo" src="assets/images/logo.png" alt="LMJ利每家"></h1>
+            <h1><img class="logo" src="dealer-resource/images/logo.png" alt="LMJ利每家"></h1>
         </div>
         <div class="panel-logo-title">
             <h3><span>&#91;&nbsp;</span>
@@ -44,7 +44,8 @@
                 </li>
                 <li class="divider"></li>
                 <li>
-                    <a href="orderManage.html" target="content"><i class="fa fa-address-card-o"></i>
+                    <a th:href="@{/agentOrderManage}" href="orderManage.html" target="content"><i
+                            class="fa fa-address-card-o"></i>
                         <span>用户订单</span></a>
                 </li>
                 <li class="divider"></li>
@@ -64,7 +65,7 @@
                 <li class="divider"></li>
                 <li>
                     <a th:href="@{/agentManage}"
-                       href="../../../../dealer/src/main/resources/dealer-view/agentManage.html" target="content"><i
+                       href="agentManage.html" target="content"><i
                             class="fa fa-users"></i> <span>代理商管理</span></a>
                 </li>
                 <li>
@@ -112,5 +113,5 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="dealer-resource/js/main.js"></script>
 </html>

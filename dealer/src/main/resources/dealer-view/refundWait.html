@@ -8,14 +8,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>退款操作 - 代理商后台管理</title>
+    <title>退款信息 - 代理商后台管理</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/datetimepicker/css/bootstrap-datetimepicker.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="dealer-resource/css/custom.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -29,36 +29,20 @@
             <i class="fa fa-info"></i>
             <ol class="breadcrumb">
                 <li><a href="refundPage.html" target="content">退货及维修</a></li>
-                <li class="active">退款操作</li>
+                <li class="active">退款信息</li>
             </ol>
         </h2>
     </div>
     <div class="contentpanel">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-default">
+                <div class="panel panel-default panel-commission">
                     <div class="panel-body">
-                        <div class="form-inline js-selectToolbar">
-                            <div class="form-group">
-                                <label>用户手机号</label>
-                                <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号"
-                                       name="phone">
-                            </div>
-                            <div class="form-group">
-                                <label>商品编号</label>
-                                <input type="search" class="form-control input-sm js-goodsId" placeholder="商品编号"
-                                       name="goodsId">
-                            </div>
-                            <div class="form-group">
-                                <label>操作员</label>
-                                <select class="form-control input-sm js-operator" name="operator">
-                                    <option value="1">大大头</option>
-                                    <option value="2">小小头</option>
-                                    <option value="3">哈哈头</option>
-                                    <option value="3">呵呵头</option>
-                                </select>
-                            </div>
-                            <button type="button" class="btn btn-success btn-xs js-confirm">确定</button>
+                        <div class="col-md-9">
+                            <span class="label label-xlg label-warning">待处理</span>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="text-right">操作员&nbsp;&nbsp;&nbsp;&nbsp;<strong>超级玛丽</strong></p>
                         </div>
                     </div>
                 </div>
@@ -176,7 +160,7 @@
                             <div class="form-group">
                                 <div class="col-sm-7">
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <button type="button" class="btn btn-success btn-block">退货</button>
+                                        <button type="button" class="btn btn-success btn-block">同意退货</button>
                                     </div>
                                 </div>
                             </div>
@@ -288,6 +272,14 @@
                         <div class="form-horizontal">
                             <div class="form-group">
                                 <div class="col-sm-7">
+                                    <label class="col-sm-3 control-label">退货原因</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7">
                                     <label class="col-sm-3 control-label">建议上门时间</label>
                                     <div class="col-sm-6">
                                         <div class="input-group date">
@@ -302,14 +294,6 @@
                                                 <i class="fa fa-clock-o"></i>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-7">
-                                    <label class="col-sm-3 control-label">备注</label>
-                                    <div class="col-sm-6">
-                                        <textarea class="form-control" rows="3"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -340,7 +324,7 @@
                             <div class="form-group">
                                 <div class="col-sm-7">
                                     <div class="col-sm-6 col-sm-offset-3">
-                                        <button type="button" class="btn btn-success btn-block">退货</button>
+                                        <button type="button" class="btn btn-success btn-block">同意退货</button>
                                     </div>
                                 </div>
                             </div>
@@ -355,6 +339,6 @@
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 <script src="//cdn.lmjia.cn/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-<script src="assets/js/refundOperate.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="dealer-resource/js/refundOperate.js"></script>
+<script src="dealer-resource/js/main.js"></script>
 </html>
