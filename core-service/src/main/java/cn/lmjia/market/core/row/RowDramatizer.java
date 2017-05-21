@@ -23,7 +23,7 @@ public interface RowDramatizer {
      * @return 排序规则;可以返回null表示不支持排序
      */
     List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
-            , Root<?> root);
+            , Root root);
 
     /**
      * @param webRequest 请求

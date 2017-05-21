@@ -5,8 +5,12 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import me.jiangcai.wx.model.Gender;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 /**
  * @author CJ
@@ -47,4 +51,14 @@ public interface MainOrderService {
      */
     @Transactional(readOnly = true)
     boolean isPaySuccess(long id);
+
+    /**
+     * @param orderId   可选订单号
+     * @param mobile    可选购买者手机号码
+     * @param goodId    可选商品
+     * @param orderDate 可选下单日期
+     * @param status    可选状态；如果为{@link OrderStatus#EMPTY}表示所有
+     * @return 获取数据规格
+     */
+    Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate, OrderStatus status);
 }

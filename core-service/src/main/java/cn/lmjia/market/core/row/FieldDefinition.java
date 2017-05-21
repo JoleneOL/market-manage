@@ -13,15 +13,16 @@ import java.util.function.Function;
  * 字段定义
  *
  * @author CJ
+ * @param <T> 它可以处理的root的类型
  */
-public interface FieldDefinition {
+public interface FieldDefinition<T> {
     /**
      * @param criteriaBuilder cb
      * @param query           查询
      * @param root            from
      * @return 要作为结果集的目标;null 表示本字段依赖其他字段的查询结果，通常这个组合里只有一个是非null的
      */
-    javax.persistence.criteria.Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<?> root);
+    javax.persistence.criteria.Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<T> root);
 
     /**
      * @return 字段名称
@@ -43,5 +44,5 @@ public interface FieldDefinition {
      * @param criteriaBuilder cb
      * @return 排序表达式; null 表示该字段并不支持排序
      */
-    Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder);
+    Expression<?> order(Root<T> root, CriteriaBuilder criteriaBuilder);
 }

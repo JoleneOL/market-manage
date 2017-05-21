@@ -16,8 +16,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -36,10 +38,11 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
         return RowDefinition.class.isAssignableFrom(returnType.getParameterType());
     }
 
+    //    @SuppressWarnings("unchecked")
     @Override
     public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer
             , NativeWebRequest webRequest) throws Exception {
-        RowDefinition<?> rowDefinition = (RowDefinition) returnValue;
+        RowDefinition rowDefinition = (RowDefinition) returnValue;
         if (rowDefinition == null) {
             throw new IllegalStateException("null can not work for Rows.");
         }
@@ -58,16 +61,22 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
         }
 
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<?> originDataQuery = criteriaBuilder.createQuery();
+        CriteriaQuery originDataQuery = criteriaBuilder.createQuery();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
 
-        Root<?> root = originDataQuery.from(rowDefinition.entityClass());
-        Root<?> countRoot = countQuery.from(rowDefinition.entityClass());
+        Root root = originDataQuery.from(rowDefinition.entityClass());
+        Root countRoot = countQuery.from(rowDefinition.entityClass());
 
         final List<FieldDefinition> fieldDefinitions = rowDefinition.fields();
-        CriteriaQuery<?> dataQuery = originDataQuery.multiselect(fieldDefinitions.stream()
-                .map(field
-                        -> field.select(criteriaBuilder, originDataQuery, root))
+        CriteriaQuery dataQuery = originDataQuery.multiselect(fieldDefinitions.stream()
+                .map(new Function<FieldDefinition, Selection>() {
+                    @Override
+                    public Selection apply(FieldDefinition fieldDefinition) {
+//                        field
+//                                -> field.select(criteriaBuilder, originDataQuery, root)
+                        return fieldDefinition.select(criteriaBuilder, originDataQuery, root);
+                    }
+                })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
 

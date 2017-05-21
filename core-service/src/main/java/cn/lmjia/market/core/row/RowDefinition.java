@@ -20,7 +20,7 @@ public interface RowDefinition<T> {
     /**
      * @return 所有字段定义
      */
-    List<FieldDefinition> fields();
+    List<FieldDefinition<T>> fields();
 
     /**
      * @return 数据规格;可以为null

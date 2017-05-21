@@ -5,7 +5,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.field.BasicField;
+import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.ReadService;
@@ -52,10 +52,10 @@ public class AgentDataController {
             }
 
             @Override
-            public List<FieldDefinition> fields() {
+            public List<FieldDefinition<AgentLevel>> fields() {
                 return Arrays.asList(
-                        new BasicField("id")
-                        , new BasicField("rank")
+                        Fields.asBasic("id")
+                        , Fields.asBasic("rank")
                 );
             }
 
@@ -77,11 +77,11 @@ public class AgentDataController {
             }
 
             @Override
-            public List<FieldDefinition> fields() {
+            public List<FieldDefinition<AgentLevel>> fields() {
                 return Arrays.asList(
                         new AgentLevelField() {
                             @Override
-                            public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<?> root) {
+                            public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<AgentLevel> root) {
                                 return root;
                             }
 
@@ -96,7 +96,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
+                            public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("id");
                             }
 
@@ -112,7 +112,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
+                            public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("rank");
                             }
                         }, new AgentLevelField() {
@@ -127,7 +127,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
+                            public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("login");
                             }
                         }, new AgentLevelField() {
@@ -142,7 +142,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
+                            public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
                                 return root.get("login");
                             }
                         }, new AgentLevelField() {
@@ -157,7 +157,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
+                            public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
                                 return null;
                             }
                         }, new AgentLevelField() {
@@ -172,7 +172,7 @@ public class AgentDataController {
                             }
 
                             @Override
-                            public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
+                            public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
                                 return null;
                             }
                         }
@@ -187,9 +187,9 @@ public class AgentDataController {
     }
 
     // 写一个最有可能实现 也是最具备描述性的方案
-    private abstract class AgentLevelField implements FieldDefinition {
+    private abstract class AgentLevelField implements FieldDefinition<AgentLevel> {
         @Override
-        public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<?> root) {
+        public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<AgentLevel> root) {
             return null;
         }
 

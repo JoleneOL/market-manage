@@ -5,8 +5,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.field.BasicExpressionField;
-import cn.lmjia.market.core.row.field.BasicField;
+import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +66,10 @@ public class LoginDataController {
             }
 
             @Override
-            public List<FieldDefinition> fields() {
-                return Arrays.asList(new BasicField("id")
-                        , new BasicExpressionField("name", root -> root.get("contactWay").get("name"))
-                        , new BasicExpressionField("mobile", root -> root.get("contactWay").get("mobile"))
+            public List<FieldDefinition<Login>> fields() {
+                return Arrays.asList(Fields.asBasic("id")
+                        , Fields.asFunction("name", root -> root.get("contactWay").get("name"))
+                        , Fields.asFunction("mobile", root -> root.get("contactWay").get("mobile"))
                 );
             }
 

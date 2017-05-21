@@ -14,12 +14,11 @@ import java.util.List;
  * @author CJ
  */
 public class DefaultRowDramatizer extends AbstractMediaRowDramatizer implements RowDramatizer {
+
     @Override
-    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
-            , Root<?> root) {
+    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder, Root root) {
         return Collections.emptyList();
     }
-
 
     public String getOffsetParameterName() {
         return "offset";

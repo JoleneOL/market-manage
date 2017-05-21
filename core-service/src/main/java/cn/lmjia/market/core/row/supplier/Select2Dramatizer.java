@@ -27,8 +27,7 @@ public class Select2Dramatizer extends AbstractMediaRowDramatizer implements Row
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
-            , Root<?> root) {
+    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder, Root root) {
         return null;
     }
 

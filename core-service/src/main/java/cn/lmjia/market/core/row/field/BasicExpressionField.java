@@ -9,26 +9,44 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
  * 基本字段定义，仅根据表达式(Expression)
  *
+ * @param <T> 它可以处理的root的类型
  * @author CJ
  */
-public class BasicExpressionField implements FieldDefinition {
+public class BasicExpressionField<T> implements FieldDefinition<T> {
 
-    private final Function<Root<?>, Expression<?>> toExpression;
+    private final Function<Root<T>, Expression<?>> toExpression;
+    private final BiFunction<Root<T>, CriteriaBuilder, Expression<?>> toExpression2;
     private final String name;
 
-    public BasicExpressionField(String name, Function<Root<?>, Expression<?>> toExpression) {
+    BasicExpressionField(String name, Function<Root<T>, Expression<?>> toExpression) {
         this.name = name;
         this.toExpression = toExpression;
+        this.toExpression2 = null;
+    }
+
+    BasicExpressionField(String name, BiFunction<Root<T>, CriteriaBuilder, Expression<?>> toExpression) {
+        this.name = name;
+        this.toExpression = null;
+        this.toExpression2 = toExpression;
     }
 
     @Override
-    public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<?> root) {
-        return toExpression.apply(root);
+    public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<T> root) {
+        return innerExpression(criteriaBuilder, root);
+    }
+
+    private Expression<?> innerExpression(CriteriaBuilder criteriaBuilder, Root<T> root) {
+        if (toExpression2 != null)
+            return toExpression2.apply(root, criteriaBuilder);
+        if (toExpression != null)
+            return toExpression.apply(root);
+        throw new IllegalStateException("没有表达式的BasicExpressionField");
     }
 
     @Override
@@ -42,7 +60,7 @@ public class BasicExpressionField implements FieldDefinition {
     }
 
     @Override
-    public Expression<?> order(Root<?> root, CriteriaBuilder criteriaBuilder) {
-        return toExpression.apply(root);
+    public Expression<?> order(Root<T> root, CriteriaBuilder criteriaBuilder) {
+        return innerExpression(criteriaBuilder, root);
     }
 }

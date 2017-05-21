@@ -25,8 +25,7 @@ public class JQueryDataTableDramatizer extends AbstractMediaRowDramatizer implem
     private static final MediaType mediaType = MediaType.APPLICATION_JSON_UTF8;
 
     @Override
-    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder
-            , Root<?> root) {
+    public List<Order> order(List<FieldDefinition> fields, NativeWebRequest webRequest, CriteriaBuilder criteriaBuilder, Root root) {
         // todo sort
         // order[0][column]:2
         // order[0][dir]:desc

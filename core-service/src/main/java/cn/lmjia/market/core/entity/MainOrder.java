@@ -19,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -36,6 +38,7 @@ import java.util.Locale;
 @Setter
 @Getter
 public class MainOrder implements PayableOrder {
+    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
      */
@@ -99,6 +102,13 @@ public class MainOrder implements PayableOrder {
      */
     private OrderStatus orderStatus;
 
+    /**
+     * @param from order表
+     * @return 到登录表的关联
+     */
+    public static Join<MainOrder, Login> getLogin(From<?, MainOrder> from) {
+        return from.join("customer").join("login");
+    }
 
     /**
      * @param root            实体
@@ -106,7 +116,7 @@ public class MainOrder implements PayableOrder {
      * @return 业务订单号表达式
      * @see #getSerialId()
      */
-    public static Expression<String> getSerialIdE(Path<MainOrder> root, CriteriaBuilder criteriaBuilder) {
+    public static Expression<String> getSerialId(Path<MainOrder> root, CriteriaBuilder criteriaBuilder) {
         Expression<String> daily = JpaUtils.LeftPaddingWith(criteriaBuilder, root.get("dailySerialId"), MaxDailySerialIdBit, '0');
         // 然后是日期
         Path<LocalDateTime> orderTime = root.get("orderTime");
@@ -160,10 +170,11 @@ public class MainOrder implements PayableOrder {
 
     /**
      * @return 业务订单号
-     * @see #getSerialIdE(Path, CriteriaBuilder)
+     * @see #getSerialId(Path, CriteriaBuilder)
      */
     public String getSerialId() {
-        return orderTime.format(DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA))
+
+        return orderTime.format(dateTimeFormatter)
                 + String.format("%0" + MaxDailySerialIdBit + "d", dailySerialId);
     }
 
