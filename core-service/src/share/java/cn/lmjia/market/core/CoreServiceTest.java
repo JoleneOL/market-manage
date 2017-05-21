@@ -28,23 +28,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 
 import javax.imageio.ImageIO;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,39 +126,12 @@ public abstract class CoreServiceTest extends SpringWebTest {
     }
 
     @Override
-    protected DefaultMockMvcBuilder buildMockMVC(DefaultMockMvcBuilder builder) {
-        return super.buildMockMVC(builder)
-                .addFilters(new Filter() {
-                    @Override
-                    public void init(FilterConfig filterConfig) throws ServletException {
-
-                    }
-
-                    @Override
-                    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-                        Login login = allRunWith();
-
-                        if (login != null) {
-                            HttpRequestResponseHolder holder = new HttpRequestResponseHolder((HttpServletRequest) request, (HttpServletResponse) response);
-                            SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
-
-                            final LoginAuthentication authentication = new LoginAuthentication(login.getId(), loginService);
-                            context.setAuthentication(authentication);
-//
-                            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                            httpSessionSecurityContextRepository.saveContext(context, holder.getRequest(), holder.getResponse());
-                        }
-                        chain.doFilter(request, response);
-                    }
-
-                    @Override
-                    public void destroy() {
-
-                    }
-                });
+    protected final Authentication autoAuthentication() {
+        Login login = allRunWith();
+        if (login == null)
+            return null;
+        return new LoginAuthentication(login.getId(), loginService);
     }
-
     //</editor-fold>
 
     /**
