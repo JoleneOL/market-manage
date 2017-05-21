@@ -80,7 +80,7 @@ $(function () {
         var url = infiniteWrap.attr('data-url');
         $.ajax(url, {
             method: "GET",
-            data: {rank: data, page: 1},
+            data: {rank: data, page: 0},
             dataType: 'json',
             success: function (res) {
                 if (res.resultCode !== 200) {

@@ -83,7 +83,7 @@ $(function () {
         // 需要获取一些参数供详情跳转
         $('#content', parent.document).attr('src', 'orderModify.html');
     });
-    $('.js-orderStatus').find('a').click(function () {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         table.ajax.reload();
     });
     // 添加额外的参数
