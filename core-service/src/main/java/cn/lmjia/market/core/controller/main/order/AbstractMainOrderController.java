@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public abstract class AbstractMainOrderController {
     private MainOrderService mainOrderService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private MainGoodService mainGoodService;
 
     /**
      * 展示下单页面
@@ -28,7 +31,7 @@ public abstract class AbstractMainOrderController {
      * @param model model
      */
     protected void orderIndex(Login login, Model model) {
-        model.addAttribute("goodList", mainGoodRepository.findByEnableTrue());
+        model.addAttribute("goodList", mainGoodService.forSale());
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender

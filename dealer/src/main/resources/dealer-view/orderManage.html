@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -23,7 +23,7 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="inner-document">
+<body class="inner-document" data-url="mock/orderData.json" th:data-url="@{/orderData/manageableList}">
 <section>
     <div class="pageheader">
         <h2>
@@ -48,12 +48,33 @@
                         <input type="search" class="form-control input-sm js-searchPhone" placeholder="手机号" name="phone"
                                aria-controls="orderTable">
                         <label>
-                            <select class="form-control input-sm js-searchRank" name="agentRank">
+                            <select class="form-control input-sm js-searchRank" name="goodId">
                                 <option value=" " disabled="" selected="" class="hidden">商品类型</option>
-                                <option value="all">全部</option>
-                                <option value="1">欧式</option>
-                                <option value="2">法式</option>
-                                <option value="3">中式</option>
+                                <option value="0">全部</option>
+                                <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
+                                        data-type="净水机" th:each="good:${@mainGoodService.forSale()}"
+                                        th:value="${good.id}"
+                                        th:data-deposit="${good.product.deposit}"
+                                        th:data-need-install="${good.product.install}"
+                                        th:data-model="${good.product.code}"
+                                        th:data-type="${good.id}" th:text="${good.product.name}">立式净水机
+                                </option>
+                                <option th:remove="all" value="2" data-deposit="3000" data-need-install="180"
+                                        data-model="hzts02"
+                                        data-type="净水机">台式净水机
+                                </option>
+                                <option th:remove="all" value="3" data-deposit="3000" data-need-install="180"
+                                        data-model="hzcx01"
+                                        data-type="净水机">橱下净水机
+                                </option>
+                                <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01"
+                                        data-type="空气净化器">
+                                    空气净化器
+                                </option>
+                                <option th:remove="all" value="6" data-deposit="10000" data-model="SP70"
+                                        data-type="食品优化宝">
+                                    食品优化宝
+                                </option>
                             </select>
                         </label>
                         <div class="input-group input-group-sm">

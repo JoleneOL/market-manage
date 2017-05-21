@@ -8,7 +8,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "mock/orderData.json",
+            "url": $('body').attr('data-url'),
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
