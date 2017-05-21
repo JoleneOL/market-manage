@@ -2,6 +2,7 @@ package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -92,10 +93,12 @@ public class MainOrder implements PayableOrder {
     private PayOrder payOrder;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime payTime;
+
     /**
-     * 支付是否已完成
+     * 订单状态
      */
-    private boolean pay;
+    private OrderStatus orderStatus;
+
 
     /**
      * @param root            实体
@@ -162,5 +165,9 @@ public class MainOrder implements PayableOrder {
     public String getSerialId() {
         return orderTime.format(DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA))
                 + String.format("%0" + MaxDailySerialIdBit + "d", dailySerialId);
+    }
+
+    public boolean isPay() {
+        return orderStatus != OrderStatus.EMPTY && orderStatus != OrderStatus.forPay;
     }
 }

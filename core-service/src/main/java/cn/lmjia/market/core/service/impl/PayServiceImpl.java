@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayService;
 import lombok.SneakyThrows;
@@ -71,7 +72,7 @@ public class PayServiceImpl implements PayService {
         if (mainOrder.isPay())
             throw new IllegalStateException("订单已支付");
         mainOrder.setPayTime(LocalDateTime.now());
-        mainOrder.setPay(true);
+        mainOrder.setOrderStatus(OrderStatus.forDeliver);
         mainOrder.setPayOrder(event.getPayOrder());
     }
 
