@@ -29,7 +29,15 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                 , Fields.asBiFunction("orderUser", ((root, criteriaBuilder)
                         -> ReadService.nameForLogin(MainOrder.getLogin(root)
                         , criteriaBuilder)))
-
+                , Fields.asBiFunction("phone", (root, criteriaBuilder)
+                        -> ReadService.mobileForLogin(MainOrder.getLogin(root), criteriaBuilder))
+                , Fields.asFunction("category", root -> root.get("good").get("product").get("name"))
+                , Fields.asFunction("type", root -> root.get("good").get("product").get("code"))
+                , Fields.asBasic("amount")
+                , Fields.asBiFunction("package", ((root, criteriaBuilder)
+                        -> criteriaBuilder.literal("")))
+                , Fields.asBiFunction("method", ((root, criteriaBuilder)
+                        -> criteriaBuilder.literal("")))
         );
     }
 }

@@ -5,7 +5,7 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.jpa.JpaUtils;
+import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import me.jiangcai.lib.jdbc.JdbcService;
@@ -53,7 +53,7 @@ public class InitService {
     }
 
     private void commons() throws SQLException {
-        jdbcService.runJdbcWork(JpaUtils::Enhance);
+        jdbcService.runJdbcWork(JpaFunctionUtils::Enhance);
     }
 
     private void products() throws IOException {

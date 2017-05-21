@@ -10,6 +10,8 @@ public class OrderDataControllerTest extends DealerServiceTest {
     @Test
     public void manageableList() throws Exception {
 
+        newRandomOrderFor(randomLogin(false), randomLogin(true));
+
         mockMvc.perform(
                 get("/orderData/manageableList")
         )

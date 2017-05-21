@@ -2,7 +2,7 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.jpa.JpaUtils;
+import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -29,8 +29,8 @@ public interface ReadService {
         Expression<String> loginName = loginPath.get("loginName");
         Expression<String> name = contactWayJoin.get("mobile");
         //
-        return JpaUtils.ifNull(criteriaBuilder, String.class, name
-                , JpaUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
+                , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
     /**
@@ -43,8 +43,8 @@ public interface ReadService {
         Expression<String> loginName = loginPath.get("loginName");
         Expression<String> name = contactWayJoin.get("name");
         //
-        return JpaUtils.ifNull(criteriaBuilder, String.class, name
-                , JpaUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
+                , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
     /**

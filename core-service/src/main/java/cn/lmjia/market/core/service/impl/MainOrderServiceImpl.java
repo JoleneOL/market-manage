@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.MainOrderRepository;
@@ -29,7 +30,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author CJ
@@ -50,6 +55,10 @@ public class MainOrderServiceImpl implements MainOrderService {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    /**
+     * 保存每日序列号的
+     */
+    private Map<LocalDate, AtomicInteger> dailySerials = Collections.synchronizedMap(new HashMap<>());
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -59,7 +68,8 @@ public class MainOrderServiceImpl implements MainOrderService {
 
         customer.setInstallAddress(installAddress);
         customer.setGender(gender);
-        customer.setBirthYear(LocalDate.now().getYear() - age);
+        final LocalDate now = LocalDate.now();
+        customer.setBirthYear(now.getYear() - age);
 
         MainOrder order = new MainOrder();
         order.setAmount(amount);
@@ -71,6 +81,24 @@ public class MainOrderServiceImpl implements MainOrderService {
         order.setOrderTime(LocalDateTime.now());
         order.setGood(good);
         order.makeRecord();
+
+        if (!dailySerials.containsKey(now)) {
+            // 寻找当前库最大值
+            final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Integer> max = criteriaBuilder.createQuery(Integer.class);
+            Root<MainOrder> root = max.from(MainOrder.class);
+            max = max.where(JpaFunctionUtils.DateEqual(criteriaBuilder, root.get("orderTime")
+                    , now.toString()));
+            max = max.select(criteriaBuilder.max(root.get("dailySerialId")));
+            try {
+                dailySerials.put(now, new AtomicInteger(entityManager.createQuery(max).getSingleResult()));
+            } catch (Exception ignored) {
+                log.debug("", ignored);
+                dailySerials.put(now, new AtomicInteger(0));
+            }
+        }
+
+        order.setDailySerialId(dailySerials.get(now).incrementAndGet());
         return mainOrderRepository.save(order);
     }
 
@@ -102,10 +130,10 @@ public class MainOrderServiceImpl implements MainOrderService {
                     //前面8位是 时间
                     String ymd = orderId.substring(0, 8);
                     predicate = cb.and(predicate, cb.equal(root.get("dailySerialId"), NumberUtils.parseNumber(orderId.substring(8), Integer.class)));
-                    predicate = cb.and(predicate, cb.equal(root.get("orderTime"), LocalDate.from(MainOrder.dateTimeFormatter.parse(ymd))));
+                    predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), LocalDate.from(MainOrder.dateTimeFormatter.parse(ymd)).toString()));
                 } else if (orderDate != null) {
                     log.debug("search order with orderId:" + orderDate);
-                    predicate = cb.and(predicate, cb.equal(root.get("orderTime"), orderDate));
+                    predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), orderDate.toString()));
                 }
                 if (mobile != null) {
                     log.debug("search order with mobile:" + mobile);
