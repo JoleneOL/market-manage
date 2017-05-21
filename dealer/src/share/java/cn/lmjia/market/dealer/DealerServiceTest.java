@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.dealer.config.DealerConfig;
+import cn.lmjia.market.dealer.page.AgentManageMainPage;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.seext.function.AllBiConsumer;
 import org.apache.commons.lang.RandomStringUtils;
@@ -23,6 +24,14 @@ public abstract class DealerServiceTest extends CoreServiceTest {
     protected AgentService agentService;
     @Autowired
     private ContactWayService contactWayService;
+
+    /**
+     * @return 代理商管理入口页面
+     */
+    protected AgentManageMainPage mainPage() {
+        driver.get("http://localhost/agentMain");
+        return initPage(AgentManageMainPage.class);
+    }
 
     /**
      * 新增并且保存一个随机的顶级代理商

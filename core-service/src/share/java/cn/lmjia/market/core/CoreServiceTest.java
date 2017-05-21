@@ -10,6 +10,7 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.util.LoginAuthentication;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jiangcai.lib.resource.service.ResourceService;
@@ -27,11 +28,23 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.web.context.HttpRequestResponseHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 
 import javax.imageio.ImageIO;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,6 +63,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class CoreServiceTest extends SpringWebTest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Log log = LogFactory.getLog(CoreServiceTest.class);
+    private final SecurityContextRepository httpSessionSecurityContextRepository
+            = new HttpSessionSecurityContextRepository();
     @Autowired
     protected LoginService loginService;
     @Autowired
@@ -93,6 +108,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
         return newRandomManager(randomMobile(), rawPassword, levels);
     }
 
+    //<editor-fold desc="自动登录相关">
+
     /**
      * 新增并且保存一个随机的管理员
      *
@@ -109,6 +126,52 @@ public abstract class CoreServiceTest extends SpringWebTest {
     }
 
     /**
+     * 可以覆盖该方法设定每次测试都将以该身份进行
+     *
+     * @return 模拟身份
+     * @see #runWith(Login, Callable)
+     */
+    protected Login allRunWith() {
+        return null;
+    }
+
+    @Override
+    protected DefaultMockMvcBuilder buildMockMVC(DefaultMockMvcBuilder builder) {
+        return super.buildMockMVC(builder)
+                .addFilters(new Filter() {
+                    @Override
+                    public void init(FilterConfig filterConfig) throws ServletException {
+
+                    }
+
+                    @Override
+                    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+                        Login login = allRunWith();
+
+                        if (login != null) {
+                            HttpRequestResponseHolder holder = new HttpRequestResponseHolder((HttpServletRequest) request, (HttpServletResponse) response);
+                            SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
+
+                            final LoginAuthentication authentication = new LoginAuthentication(login.getId(), loginService);
+                            context.setAuthentication(authentication);
+//
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                            httpSessionSecurityContextRepository.saveContext(context, holder.getRequest(), holder.getResponse());
+                        }
+                        chain.doFilter(request, response);
+                    }
+
+                    @Override
+                    public void destroy() {
+
+                    }
+                });
+    }
+
+    //</editor-fold>
+
+    /**
      * 以login身份运行一段代码
      *
      * @param login    身份
@@ -117,48 +180,52 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected void runWith(Login login, Callable<?> callable) throws Exception {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         try {
-            SecurityContextImpl securityContext1 = new SecurityContextImpl();
-            securityContext1.setAuthentication(new Authentication() {
-                @Override
-                public Collection<? extends GrantedAuthority> getAuthorities() {
-                    return login.getAuthorities();
-                }
-
-                @Override
-                public Object getCredentials() {
-                    return login;
-                }
-
-                @Override
-                public Object getDetails() {
-                    return login;
-                }
-
-                @Override
-                public Object getPrincipal() {
-                    return login;
-                }
-
-                @Override
-                public boolean isAuthenticated() {
-                    return true;
-                }
-
-                @Override
-                public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-                }
-
-                @Override
-                public String getName() {
-                    return login.getLoginName();
-                }
-            });
-            SecurityContextHolder.setContext(securityContext1);
+            loginAs(login);
             callable.call();
         } finally {
             SecurityContextHolder.setContext(securityContext);
         }
+    }
+
+    private void loginAs(final Login login) {
+        SecurityContextImpl securityContext1 = new SecurityContextImpl();
+        securityContext1.setAuthentication(new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return login.getAuthorities();
+            }
+
+            @Override
+            public Object getCredentials() {
+                return login;
+            }
+
+            @Override
+            public Object getDetails() {
+                return login;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return login;
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return true;
+            }
+
+            @Override
+            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+            }
+
+            @Override
+            public String getName() {
+                return login.getLoginName();
+            }
+        });
+        SecurityContextHolder.setContext(securityContext1);
     }
 
     protected BufferedImage randomImage() throws IOException {

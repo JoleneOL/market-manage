@@ -11,6 +11,7 @@
         <logger name="cn.lmjia.market" level="debug"/>
 
         <!--<logger name="org.apache.http.wire" level="debug"/>-->
+        <!--<logger name="org.springframework.security.web" level="debug"/>-->
 
         <logger name="org.springframework.web" level="debug"/>
         <logger name="org.springframework.web.context.support.StandardServletEnvironment" level="info"/>

@@ -22,6 +22,11 @@ public class AgentNavigateController {
     @Autowired
     private AgentService agentService;
 
+    @RequestMapping(method = RequestMethod.GET, value = "/agentOrderManage")
+    public String agentOrderManage() {
+        return "orderManage.html";
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/agentMain")
     public String agentMain(@AuthenticationPrincipal Login login, @HighestAgent AgentLevel agentLevel, Model model) {
         if (login.isManageable()) {
