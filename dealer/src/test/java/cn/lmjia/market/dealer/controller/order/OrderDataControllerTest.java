@@ -13,8 +13,8 @@ public class OrderDataControllerTest extends DealerServiceTest {
         mockMvc.perform(
                 get("/orderData/manageableList")
         )
-//                        .andDo(print())
-                .andExpect(similarSelect2("classpath:/dealer-view/mock/orderData.json"));
+                .andDo(print())
+                .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/orderData.json"));
     }
 
 }

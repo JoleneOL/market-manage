@@ -3,7 +3,9 @@ package cn.lmjia.market.dealer.controller.order;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
@@ -39,6 +41,7 @@ public class OrderDataController {
      * 即属于我方代理体系的
      */
     @RequestMapping(method = RequestMethod.GET, value = "/manageableList")
+    @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition manageableList(@AuthenticationPrincipal Login login, String orderId
             , @RequestParam(value = "phone", required = false) String mobile, Long goodId
             , @RequestParam(required = false) LocalDate orderDate, OrderStatus status) {

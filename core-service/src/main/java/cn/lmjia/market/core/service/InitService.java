@@ -5,8 +5,10 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.jpa.JpaUtils;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
+import me.jiangcai.lib.jdbc.JdbcService;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -37,13 +40,20 @@ public class InitService {
     private MainGoodRepository mainGoodRepository;
     @Autowired
     private MainProductRepository mainProductRepository;
+    @Autowired
+    private JdbcService jdbcService;
 
     @PostConstruct
     @Transactional
-    public void init() throws IOException {
+    public void init() throws IOException, SQLException {
+        commons();
         upgrade();
         managers();
         products();
+    }
+
+    private void commons() throws SQLException {
+        jdbcService.runJdbcWork(JpaUtils::Enhance);
     }
 
     private void products() throws IOException {
