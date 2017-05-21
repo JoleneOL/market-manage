@@ -2,6 +2,7 @@ package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.jpa.JpaUtils;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.payment.PayableOrder;
@@ -103,34 +104,20 @@ public class MainOrder implements PayableOrder {
      * @see #getSerialId()
      */
     public static Expression<String> getSerialIdE(Path<MainOrder> root, CriteriaBuilder criteriaBuilder) {
-        Expression<String> daily = LeftPaddingWith(root.get("dailySerialId"), criteriaBuilder, MaxDailySerialIdBit, '0');
+        Expression<String> daily = JpaUtils.LeftPaddingWith(criteriaBuilder, root.get("dailySerialId"), MaxDailySerialIdBit, '0');
         // 然后是日期
         Path<LocalDateTime> orderTime = root.get("orderTime");
         Expression<String> year = criteriaBuilder.function("year", String.class, orderTime);
-        Expression<String> month = LeftPaddingWith(
-                criteriaBuilder.function("month", String.class, orderTime), criteriaBuilder, 2, '0'
+        Expression<String> month = JpaUtils.LeftPaddingWith(
+                criteriaBuilder, criteriaBuilder.function("month", String.class, orderTime), 2, '0'
         );
-        Expression<String> day = LeftPaddingWith(
-                criteriaBuilder.function("day", String.class, orderTime), criteriaBuilder, 2, '0'
+        Expression<String> day = JpaUtils.LeftPaddingWith(
+                criteriaBuilder, criteriaBuilder.function("day", String.class, orderTime), 2, '0'
         );
         return criteriaBuilder.concat(
                 criteriaBuilder.concat(year, month)
                 , criteriaBuilder.concat(day, daily)
         );
-    }
-
-    /**
-     * 左边填充
-     *
-     * @param to              来源表达式
-     * @param criteriaBuilder cb
-     * @param length          达到长度目标
-     * @param with            使用什么字符填充
-     * @return 「左边填充」的表达式
-     */
-    private static Expression<String> LeftPaddingWith(Expression to, CriteriaBuilder criteriaBuilder, int length, char with) {
-        return criteriaBuilder.function("LPAD", String.class, to
-                , criteriaBuilder.literal(length), criteriaBuilder.literal(with));
     }
 
     /**

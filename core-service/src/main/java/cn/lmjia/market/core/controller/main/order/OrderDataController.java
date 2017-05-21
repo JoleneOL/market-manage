@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+
 /**
  * 订单相关的数据服务
  *
@@ -22,6 +24,7 @@ public class OrderDataController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/manageableList")
     public void manageableList(@AuthenticationPrincipal Login login, String orderId
-            , @RequestParam(value = "phone", required = false) String mobile) {
+            , @RequestParam(value = "phone", required = false) String mobile, Long goodId, LocalDate orderDate) {
+        
     }
 }
