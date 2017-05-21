@@ -1,4 +1,4 @@
-package cn.lmjia.market.web.controller;
+package cn.lmjia.market.dealer.controller;
 
 import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * 管理的几个入口页
+ * 代理商导航相关
  *
  * @author CJ
  */
 @Controller
-public class ManageController {
+public class AgentNavigateController {
 
     @Autowired
     private AgentService agentService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/manageMain")
-    public String manageMain(@AuthenticationPrincipal Login login, @HighestAgent AgentLevel agentLevel, Model model) {
+    @RequestMapping(method = RequestMethod.GET, value = "/agentMain")
+    public String agentMain(@AuthenticationPrincipal Login login, @HighestAgent AgentLevel agentLevel, Model model) {
         if (login.isManageable()) {
             model.addAttribute("title", "管理后台");
             model.addAttribute("loginAs", login.getLoginTitle());
@@ -32,7 +32,6 @@ public class ManageController {
             model.addAttribute("loginAs", agentService.loginTitle(agentLevel));
         }
 
-        return "main.html";
+        return "agentMain.html";
     }
-
 }

@@ -1,4 +1,4 @@
-package cn.lmjia.market.web.page;
+package cn.lmjia.market.core.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

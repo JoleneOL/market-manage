@@ -1,5 +1,7 @@
 package cn.lmjia.market.core.row;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
 
+    private static final Log log = LogFactory.getLog(RowDefinitionHandler.class);
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
@@ -61,7 +64,8 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
         Root<?> root = originDataQuery.from(rowDefinition.entityClass());
         Root<?> countRoot = countQuery.from(rowDefinition.entityClass());
 
-        CriteriaQuery<?> dataQuery = originDataQuery.multiselect(rowDefinition.fields().stream()
+        final List<FieldDefinition> fieldDefinitions = rowDefinition.fields();
+        CriteriaQuery<?> dataQuery = originDataQuery.multiselect(fieldDefinitions.stream()
                 .map(field
                         -> field.select(criteriaBuilder, originDataQuery, root))
                 .filter(Objects::nonNull)
@@ -82,7 +86,7 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
             dataQuery = dataQuery.distinct(true);
 
         // sort
-        final List<Order> order = dramatizer.order(rowDefinition.fields(), webRequest, criteriaBuilder, root);
+        final List<Order> order = dramatizer.order(fieldDefinitions, webRequest, criteriaBuilder, root);
         if (!CollectionUtils.isEmpty(order))
             dataQuery = dataQuery.orderBy(order);
 
@@ -94,7 +98,8 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
                 .getResultList();
 
         // 输出到结果
-        dramatizer.writeResponse(total, list, rowDefinition.fields(), webRequest);
+        log.debug("RW Result: total:" + total + ", list:" + list + ", fields:" + fieldDefinitions.size());
+        dramatizer.writeResponse(total, list, fieldDefinitions, webRequest);
         mavContainer.setRequestHandled(true);
     }
 

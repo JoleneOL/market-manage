@@ -1,5 +1,6 @@
-package cn.lmjia.market.web.page;
+package cn.lmjia.market.dealer.page;
 
+import cn.lmjia.market.core.pages.AbstractContentPage;
 import org.openqa.selenium.WebDriver;
 
 /**

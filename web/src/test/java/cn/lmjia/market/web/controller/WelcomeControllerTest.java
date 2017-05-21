@@ -3,7 +3,7 @@ package cn.lmjia.market.web.controller;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.web.page.ManageMainPage;
+import cn.lmjia.market.dealer.page.AgentManageMainPage;
 import cn.lmjia.market.web.page.WebLoginPage;
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class WelcomeControllerTest extends WebTest {
         loginPage.login(manager.getLoginName(), rawPassword);
 
         // 当前页面是主管理界面
-        initPage(ManageMainPage.class);
+        initPage(AgentManageMainPage.class);
 
         createWebDriver();
         Login login = newRandomAgent(rawPassword);
@@ -33,7 +33,7 @@ public class WelcomeControllerTest extends WebTest {
         loginPage.login(login.getLoginName(), rawPassword);
 
         // 当前页面是主管理界面
-        initPage(ManageMainPage.class);
+        initPage(AgentManageMainPage.class);
 
         // 代理商登录
     }

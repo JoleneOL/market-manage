@@ -2,12 +2,11 @@ package cn.lmjia.market.web.controller;
 
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.web.page.AgentDetailPage;
-import cn.lmjia.market.web.page.AgentManagePage;
-import cn.lmjia.market.web.page.ManageMainPage;
+import cn.lmjia.market.dealer.page.AgentDetailPage;
+import cn.lmjia.market.dealer.page.AgentManageMainPage;
+import cn.lmjia.market.dealer.page.AgentManagePage;
 import cn.lmjia.market.web.page.WebLoginPage;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
 
 /**
  * 管理员登录之后干的事儿
@@ -28,14 +27,16 @@ public class ManagerFlow extends WebTest {
         loginPage.login(manager.getLoginName(), rawPassword);
 
         // 当前页面是主管理界面
-        ManageMainPage manageMainPage = initPage(ManageMainPage.class);
+        AgentManageMainPage manageMainPage = initPage(AgentManageMainPage.class);
 
         manageMainPage.selectMenu("fa-users");
 //        manageMainPage.printThisPage();
         AgentManagePage agentManagePage = manageMainPage.currentContext(AgentManagePage.class);
         // 点击查看一个 代理
+        agentManagePage.printThisPage();
         agentManagePage.buttonsForDetail().max(new RandomComparator())
-                .ifPresent(WebElement::click);
+                .orElseThrow(() -> new IllegalStateException("一个代理商都没有？"))
+                .click();
 
         AgentDetailPage agentDetailPage = initPage(AgentDetailPage.class);
         agentDetailPage.printThisPage();

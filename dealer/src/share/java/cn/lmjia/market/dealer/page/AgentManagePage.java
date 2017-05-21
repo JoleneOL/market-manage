@@ -1,15 +1,19 @@
-package cn.lmjia.market.web.page;
+package cn.lmjia.market.dealer.page;
 
-import me.jiangcai.lib.test.page.WebDriverUtil;
+import cn.lmjia.market.core.pages.AbstractContentPage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.stream.Stream;
 
 /**
+ * agentManage.html
+ *
  * @author CJ
  */
 public class AgentManagePage extends AbstractContentPage {
@@ -28,9 +32,18 @@ public class AgentManagePage extends AbstractContentPage {
      * @return 所有查看详情的按钮的流
      */
     public Stream<WebElement> buttonsForDetail() {
-        WebDriverUtil.waitFor(webDriver, webDriver
-                -> !webDriver.findElements(By.className("js-checkUser")).isEmpty(), 1);
+        new WebDriverWait(webDriver, 1)
+                .until(ExpectedConditions.elementToBeClickable(By.className("js-checkUser")));
+//        WebDriverUtil.waitFor(webDriver, webDriver
+//                -> buttonsForDetail(webDriver).count() > 0, 1);
+        return buttonsForDetail(webDriver);
+    }
+
+    private Stream<WebElement> buttonsForDetail(WebDriver webDriver) {
+
         return webDriver.findElements(By.className("js-checkUser")).stream()
-                .filter(WebElement::isDisplayed);
+                .peek(System.out::println)
+                .filter(WebElement::isEnabled)
+                ;
     }
 }

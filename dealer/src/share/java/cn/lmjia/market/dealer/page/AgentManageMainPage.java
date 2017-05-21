@@ -1,15 +1,19 @@
-package cn.lmjia.market.web.page;
+package cn.lmjia.market.dealer.page;
 
+import cn.lmjia.market.core.pages.AbstractContentPage;
+import cn.lmjia.market.core.pages.AbstractPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
- * main.html
+ * agentMain.html
  *
  * @author CJ
  */
-public class ManageMainPage extends AbstractPage {
-    public ManageMainPage(WebDriver webDriver) {
+public class AgentManageMainPage extends AbstractPage {
+    public AgentManageMainPage(WebDriver webDriver) {
         super(webDriver);
     }
 
@@ -36,6 +40,10 @@ public class ManageMainPage extends AbstractPage {
     }
 
     public <T extends AbstractContentPage> T currentContext(Class<T> pageClass) {
+        // 先等到 dataTables_processing 不可见
+//        if (!webDriver.findElements(By.className("dataTables_processing")).isEmpty())
+        new WebDriverWait(webDriver, 2)
+                .until(ExpectedConditions.invisibilityOfElementLocated(By.className("dataTables_processing")));
 //        webDriver.switchTo().
 //        return initPage(pageClass, webDriver.switchTo().frame(webDriver.findElement(By.id("content"))));
         return initPage(pageClass);
