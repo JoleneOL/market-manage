@@ -271,8 +271,18 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 新增的随机订单
      */
     protected MainOrder newRandomOrderFor(Login who, Login recommend) {
+        return newRandomOrderFor(who, recommend, randomMobile());
+    }
+
+    /**
+     * @param who       发起者
+     * @param recommend 推荐者
+     * @param mobile    客户手机号码
+     * @return 新增的随机订单
+     */
+    protected MainOrder newRandomOrderFor(Login who, Login recommend, String mobile) {
         return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
-                , randomMobile(), 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
+                , mobile, 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
                 , randomAddress()
                 , mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null)
                 , 1 + random.nextInt(10)

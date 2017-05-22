@@ -38,7 +38,7 @@ import java.util.Locale;
 @Setter
 @Getter
 public class MainOrder implements PayableOrder {
-    public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
+    public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
      */
@@ -182,7 +182,7 @@ public class MainOrder implements PayableOrder {
      */
     public String getSerialId() {
 
-        return orderTime.format(dateTimeFormatter)
+        return orderTime.format(SerialDateTimeFormatter)
                 + String.format("%0" + MaxDailySerialIdBit + "d", dailySerialId);
     }
 

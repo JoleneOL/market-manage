@@ -104,6 +104,11 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
+    public List<MainOrder> allOrders() {
+        return mainOrderRepository.findAll();
+    }
+
+    @Override
     public MainOrder getOrder(long id) {
         return mainOrderRepository.getOne(id);
     }
@@ -122,33 +127,30 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate
             , OrderStatus status) {
-        return new Specification<MainOrder>() {
-            @Override
-            public Predicate toPredicate(Root<MainOrder> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Predicate predicate = cb.isTrue(cb.literal(true));
-                if (!StringUtils.isEmpty(orderId)) {
-                    log.debug("search order with orderId:" + orderId);
-                    //前面8位是 时间
-                    String ymd = orderId.substring(0, 8);
-                    predicate = cb.and(predicate, cb.equal(root.get("dailySerialId"), NumberUtils.parseNumber(orderId.substring(8), Integer.class)));
-                    predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), LocalDate.from(MainOrder.dateTimeFormatter.parse(ymd)).toString()));
-                } else if (orderDate != null) {
-                    log.debug("search order with orderId:" + orderDate);
-                    predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), orderDate.toString()));
-                }
-                if (mobile != null) {
-                    log.debug("search order with mobile:" + mobile);
-                    predicate = cb.and(predicate, cb.like(ReadService.mobileForLogin(MainOrder.getLogin(root), cb), "%" + mobile + "%"));
-                }
-                if (goodId != null) {
-                    predicate = cb.and(predicate, cb.equal(root.get("good").get("id"), goodId));
-                }
-                if (status != null && status != OrderStatus.EMPTY) {
-                    predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));
-                }
-
-                return predicate;
+        return (root, query, cb) -> {
+            Predicate predicate = cb.isTrue(cb.literal(true));
+            if (!StringUtils.isEmpty(orderId)) {
+                log.debug("search order with orderId:" + orderId);
+                //前面8位是 时间
+                String ymd = orderId.substring(0, 8);
+                predicate = cb.and(predicate, cb.equal(root.get("dailySerialId"), NumberUtils.parseNumber(orderId.substring(8), Integer.class)));
+                predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), LocalDate.from(MainOrder.SerialDateTimeFormatter.parse(ymd)).toString()));
+            } else if (orderDate != null) {
+                log.debug("search order with orderId:" + orderDate);
+                predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), orderDate.toString()));
             }
+            if (mobile != null) {
+                log.debug("search order with mobile:" + mobile);
+                predicate = cb.and(predicate, cb.like(ReadService.mobileForLogin(MainOrder.getLogin(root), cb), "%" + mobile + "%"));
+            }
+            if (goodId != null) {
+                predicate = cb.and(predicate, cb.equal(root.get("good").get("id"), goodId));
+            }
+            if (status != null && status != OrderStatus.EMPTY) {
+                predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));
+            }
+
+            return predicate;
         };
     }
 

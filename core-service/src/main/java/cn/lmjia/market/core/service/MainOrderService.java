@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author CJ
@@ -37,6 +38,12 @@ public interface MainOrderService {
             , Address installAddress
             , MainGood good
             , int amount, String mortgageIdentifier);
+
+    /**
+     * @return 所有订单
+     */
+    @Transactional(readOnly = true)
+    List<MainOrder> allOrders();
 
     /**
      * @param id 订单id
