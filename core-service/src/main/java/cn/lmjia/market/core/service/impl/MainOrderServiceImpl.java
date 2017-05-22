@@ -99,6 +99,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         }
 
         order.setDailySerialId(dailySerials.get(now).incrementAndGet());
+        order.setOrderStatus(OrderStatus.forPay);
         return mainOrderRepository.save(order);
     }
 

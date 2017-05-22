@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 import java.math.BigDecimal;
 
 /**
@@ -29,6 +32,13 @@ public class MainGood {
     private boolean enable;
     @ManyToOne
     private MainProduct product;
+
+    public static Expression<BigDecimal> getTotalPrice(Path<MainGood> path, CriteriaBuilder criteriaBuilder) {
+        final Path<Object> product = path.get("product");
+        return criteriaBuilder.toBigDecimal(
+                criteriaBuilder.sum(product.get("deposit"), product.get("install"))
+        );
+    }
 
     /**
      * @return 总价

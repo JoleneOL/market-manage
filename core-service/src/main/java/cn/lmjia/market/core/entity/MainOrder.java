@@ -110,6 +110,12 @@ public class MainOrder implements PayableOrder {
         return from.join("customer").join("login");
     }
 
+    public static Expression<BigDecimal> getOrderDueAmount(Path<MainOrder> path, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.toBigDecimal(criteriaBuilder.prod(
+                MainGood.getTotalPrice(path.get("good"), criteriaBuilder)
+                , path.get("amount")));
+    }
+
     /**
      * @param root            实体
      * @param criteriaBuilder cb
