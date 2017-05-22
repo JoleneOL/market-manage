@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 
 /**
  * 客户
@@ -43,6 +45,10 @@ public class Customer {
     private int birthYear;
     private Gender gender;
     private Address installAddress;
+
+    public static Expression<String> getMobile(Path<Customer> path) {
+        return path.get("mobile");
+    }
 
 
 }

@@ -107,7 +107,11 @@ public class MainOrder implements PayableOrder {
      * @return 到客户的登录表的关联
      */
     public static Join<MainOrder, Login> getCustomerLogin(From<?, MainOrder> from) {
-        return from.join("customer").join("login");
+        return getCustomer(from).join("login");
+    }
+
+    public static Join<MainOrder, Customer> getCustomer(From<?, MainOrder> from) {
+        return from.join("customer");
     }
 
     public static Expression<BigDecimal> getOrderDueAmount(Path<MainOrder> path, CriteriaBuilder criteriaBuilder) {

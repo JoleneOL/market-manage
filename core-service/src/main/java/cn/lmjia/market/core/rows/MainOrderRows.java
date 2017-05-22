@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.rows;
 
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -37,7 +38,7 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                         -> ReadService.nameForLogin(MainOrder.getCustomerLogin(root)
                         , criteriaBuilder)))
                 , Fields.asBiFunction("phone", (root, criteriaBuilder)
-                        -> ReadService.mobileForLogin(MainOrder.getCustomerLogin(root), criteriaBuilder))
+                        -> Customer.getMobile(MainOrder.getCustomer(root)))
                 , Fields.asFunction("category", root -> root.get("good").get("product").get("name"))
                 , Fields.asFunction("type", root -> root.get("good").get("product").get("code"))
                 , Fields.asBasic("amount")

@@ -13,7 +13,6 @@ import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.MainOrderService;
-import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -141,7 +140,8 @@ public class MainOrderServiceImpl implements MainOrderService {
             }
             if (!StringUtils.isEmpty(mobile)) {
                 log.debug("search order with mobile:" + mobile);
-                predicate = cb.and(predicate, cb.like(ReadService.mobileForLogin(MainOrder.getCustomerLogin(root), cb), "%" + mobile + "%"));
+                // 2个都可以
+                predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root)), "%" + mobile + "%"));
             }
             if (goodId != null) {
                 predicate = cb.and(predicate, cb.equal(root.get("good").get("id"), goodId));
