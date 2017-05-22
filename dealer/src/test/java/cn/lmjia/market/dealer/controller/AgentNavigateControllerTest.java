@@ -6,6 +6,7 @@ import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.dealer.page.AgentManageMainPage;
 import cn.lmjia.market.dealer.page.AgentManagePage;
 import cn.lmjia.market.dealer.page.AgentOrderManagePage;
+import cn.lmjia.market.dealer.page.AgentPlaceOrderPage;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -30,7 +31,13 @@ public class AgentNavigateControllerTest extends DealerServiceTest {
 
         mainPage = mainPage();
         mainPage.selectMenu("fa-address-card-o");
-        mainPage.currentContext(AgentOrderManagePage.class);
+        // 可以到下单页面
+        AgentOrderManagePage agentOrderManagePage = mainPage.currentContext(AgentOrderManagePage.class);
+        String uri = agentOrderManagePage.placeOrderUri();
+        // 打开这个地址 即可抵达
+        driver.get("http://localhost" + uri);
+        initPage(AgentPlaceOrderPage.class);
+
     }
 
 }

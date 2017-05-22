@@ -39,7 +39,7 @@ $(function () {
                 required: true,
                 hasCity: true
             },
-            phone: {
+            mobile: {
                 required: true,
                 isPhone: true
             },

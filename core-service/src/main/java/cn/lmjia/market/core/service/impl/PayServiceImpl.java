@@ -6,9 +6,11 @@ import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayService;
 import lombok.SneakyThrows;
 import me.jiangcai.payment.PayableOrder;
+import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.event.OrderPayCancellation;
 import me.jiangcai.payment.event.OrderPaySuccess;
+import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -32,17 +35,25 @@ public class PayServiceImpl implements PayService {
     private MainOrderService mainOrderService;
 
     @Override
-    public ModelAndView paySuccess(PayableOrder payableOrder, PayOrder payOrder) {
+    public ModelAndView paySuccess(HttpServletRequest request, PayableOrder payableOrder, PayOrder payOrder) {
         MainOrder mainOrder = (MainOrder) payableOrder;
-        return new ModelAndView("redirect:/paySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
+        if (!WeixinWebSpringConfig.isWeixinRequest(request)) {
+            // 非
+            return new ModelAndView("redirect:/agentPaySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
+        }
+        return new ModelAndView("redirect:/wechatPaySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
     }
 
     @Override
     @SneakyThrows
-    public ModelAndView pay(PayableOrder order, PayOrder payOrder, Map<String, Object> additionalParameters) {
+    public ModelAndView pay(HttpServletRequest request, PayableOrder order, PayOrder payOrder, Map<String, Object> additionalParameters) {
+        if (!WeixinWebSpringConfig.isWeixinRequest(request)) {
+            // 非微信下是直接跳转到收银台
+            ChanpayPayOrder chanpayPayOrder = (ChanpayPayOrder) order;
+            return new ModelAndView("redirect:" + chanpayPayOrder.getUrl());
+        }
         MainOrder mainOrder = (MainOrder) order;
-
-        return new ModelAndView("redirect:/paying?mainOrderId=" + mainOrder.getId() + "&payOrderId="
+        return new ModelAndView("redirect:/wechatPaying?mainOrderId=" + mainOrder.getId() + "&payOrderId="
                 + payOrder.getId());
         //"&checkUri="
 //        + URLEncoder.encode(additionalParameters.get("checkUri").toString(), "UTF-8") + "&successUri="

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -28,7 +28,7 @@
         <h2>
             <i class="fa fa-list-alt"></i>
             <ol class="breadcrumb">
-                <li><a href="orderManage.html" target="content">用户订单</a></li>
+                <li><a href="orderManage.html" th:href="@{/agentOrderManage}" target="content">用户订单</a></li>
                 <li class="active">用户下单</li>
             </ol>
         </h2>
@@ -44,7 +44,8 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-7 col-lg-6">
-                                    <form class="form-horizontal mb40" id="J_orderPlace" method="post">
+                                    <form class="form-horizontal mb40" id="J_orderPlace" method="post"
+                                          action="orderSuccess.html" th:action="@{/agentOrder}">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">姓名</label>
                                             <div class="col-sm-6">
@@ -63,11 +64,11 @@
                                             <label class="col-sm-3 control-label">性别</label>
                                             <div class="col-sm-6 control-label radio-inline">
                                                 <div class="rdio rdio-success display-inline mr30">
-                                                    <input type="radio" name="sex" value="0" id="sexMan" checked>
+                                                    <input type="radio" name="sex" value="1" id="sexMan" checked>
                                                     <label for="sexMan">男</label>
                                                 </div>
                                                 <div class="rdio rdio-success display-inline">
-                                                    <input type="radio" name="sex" value="1" id="sexFemale">
+                                                    <input type="radio" name="sex" value="2" id="sexFemale">
                                                     <label for="sexFemale">女</label>
                                                 </div>
                                             </div>
@@ -89,24 +90,41 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">用户电话</label>
                                             <div class="col-sm-6">
-                                                <input type="tel" placeholder="请输入电话" class="form-control" name="phone">
+                                                <input type="tel" placeholder="请输入电话" class="form-control"
+                                                       name="mobile">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">产品类型</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="goodsType" id="J_goodsType">
+                                                <select class="form-control" name="goodId" id="J_goodsType">
                                                     <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
-                                                            data-type="净水机">立式净水机
+                                                            data-type="净水机" th:each="good:${@mainGoodService.forSale()}"
+                                                            th:value="${good.id}"
+                                                            th:data-deposit="${good.product.deposit}"
+                                                            th:data-need-install="${good.product.install}"
+                                                            th:data-model="${good.product.code}"
+                                                            th:data-type="${good.id}" th:text="${good.product.name}">
+                                                        立式净水机
                                                     </option>
-                                                    <option value="2" data-deposit="3000" data-need-install="180" data-model="hzts02"
+                                                    <option th:remove="all" value="2" data-deposit="3000"
+                                                            data-need-install="180"
+                                                            data-model="hzts02"
                                                             data-type="净水机">台式净水机
                                                     </option>
-                                                    <option value="3" data-deposit="3000" data-need-install="180" data-model="hzcx01"
+                                                    <option th:remove="all" value="3" data-deposit="3000"
+                                                            data-need-install="180"
+                                                            data-model="hzcx01"
                                                             data-type="净水机">橱下净水机
                                                     </option>
-                                                    <option value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器">空气净化器</option>
-                                                    <option value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝">食品优化宝</option>
+                                                    <option th:remove="all" value="5" data-deposit="5000"
+                                                            data-model="ESL-HM01" data-type="空气净化器">
+                                                        空气净化器
+                                                    </option>
+                                                    <option th:remove="all" value="6" data-deposit="10000"
+                                                            data-model="SP70" data-type="食品优化宝">
+                                                        食品优化宝
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -200,7 +218,8 @@
         <p class="text-indent0">甲方：</p>
         <p class="text-indent0">乙方：利每家科技有限公司</p>
         <p>甲乙双方在平等自愿、公平诚信的基础上，基于对乙方提供的产品和服务的了解和需求，达成协议如下：</p>
-        <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，缴纳&#95;&#95;&#95;&#95;&#95;&#95;元保证金，并承诺协议期为<u>&nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;</u>个月，即&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日至&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），机具使用费另收，详细费用按下表执行：
+        <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，缴纳&#95;&#95;&#95;&#95;&#95;&#95;元保证金，并承诺协议期为<u>
+            &nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;</u>个月，即&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日至&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），机具使用费另收，详细费用按下表执行：
         </p>
         <div class="table-center">
             <table class="table table-bordered">

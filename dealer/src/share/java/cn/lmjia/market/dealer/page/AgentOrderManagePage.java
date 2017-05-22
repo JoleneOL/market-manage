@@ -1,6 +1,7 @@
 package cn.lmjia.market.dealer.page;
 
 import cn.lmjia.market.core.pages.AbstractContentPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -17,5 +18,9 @@ public class AgentOrderManagePage extends AbstractContentPage {
     @Override
     public void validatePage() {
         assertTitle("用户订单 - 代理商后台管理");
+    }
+
+    public String placeOrderUri() {
+        return webDriver.findElement(By.tagName("body")).getAttribute("data-place-url");
     }
 }
