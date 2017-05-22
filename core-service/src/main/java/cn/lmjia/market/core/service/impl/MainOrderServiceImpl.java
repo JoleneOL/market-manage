@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
@@ -152,6 +153,14 @@ public class MainOrderServiceImpl implements MainOrderService {
 
             return predicate;
         };
+    }
+
+    @Override
+    public void updateOrderTime(LocalDateTime time) {
+        CriteriaUpdate<MainOrder> criteriaUpdate = entityManager.getCriteriaBuilder().createCriteriaUpdate(MainOrder.class);
+        Root<MainOrder> root = criteriaUpdate.from(MainOrder.class);
+        criteriaUpdate = criteriaUpdate.set(root.get("orderTime"), time);
+        entityManager.createQuery(criteriaUpdate).executeUpdate();
     }
 
     /**

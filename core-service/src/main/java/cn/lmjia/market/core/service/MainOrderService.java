@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -68,4 +69,7 @@ public interface MainOrderService {
      * @return 获取数据规格
      */
     Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate, OrderStatus status);
+
+    @Transactional
+    void updateOrderTime(LocalDateTime time);
 }
