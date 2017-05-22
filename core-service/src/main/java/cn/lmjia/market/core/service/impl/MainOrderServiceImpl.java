@@ -136,12 +136,12 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, cb.equal(root.get("dailySerialId"), NumberUtils.parseNumber(orderId.substring(8), Integer.class)));
                 predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), LocalDate.from(MainOrder.SerialDateTimeFormatter.parse(ymd)).toString()));
             } else if (orderDate != null) {
-                log.debug("search order with orderId:" + orderDate);
+                log.debug("search order with orderDate:" + orderDate);
                 predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), orderDate.toString()));
             }
-            if (mobile != null) {
+            if (!StringUtils.isEmpty(mobile)) {
                 log.debug("search order with mobile:" + mobile);
-                predicate = cb.and(predicate, cb.like(ReadService.mobileForLogin(MainOrder.getLogin(root), cb), "%" + mobile + "%"));
+                predicate = cb.and(predicate, cb.like(ReadService.mobileForLogin(MainOrder.getCustomerLogin(root), cb), "%" + mobile + "%"));
             }
             if (goodId != null) {
                 predicate = cb.and(predicate, cb.equal(root.get("good").get("id"), goodId));

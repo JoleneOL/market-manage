@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -30,6 +30,7 @@ public class OrderDataControllerTest extends DealerServiceTest {
                 .andDo(print())
                 .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/orderData.json"));
         // 按业务订单号查询
+        newRandomOrderFor(randomLogin(false), randomLogin(true));
         String serialId = mainOrderService.allOrders().stream()
                 .max(new RandomComparator())
                 .orElse(null)
@@ -43,23 +44,24 @@ public class OrderDataControllerTest extends DealerServiceTest {
         // 按手机号码查询
         // 流程 先查询当前量,再新增，再查询
         String mobile = randomMobile();
-        int mobileCurrent = currentCount(builder -> builder.param("photo", mobile));
+        int mobileCurrent = currentCount(builder -> builder.param("phone", mobile));
+        newRandomOrderFor(randomLogin(false), randomLogin(true));
         newRandomOrderFor(randomLogin(false), randomLogin(true), mobile);
-        assertCurrentCount(builder -> builder.param("photo", mobile), mobileCurrent + 1);
+        assertCurrentCount(builder -> builder.param("phone", mobile), mobileCurrent + 1);
 
     }
 
-    private void assertCurrentCount(Consumer<MockHttpServletRequestBuilder> addParam, int count) throws Exception {
+    private void assertCurrentCount(Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder> addParam, int count) throws Exception {
         MockHttpServletRequestBuilder builder = get("/orderData/manageableList");
-        addParam.accept(builder);
+        builder = addParam.apply(builder);
         mockMvc.perform(
                 builder
         ).andExpect(jsonPath("$.data.length()").value(count));
     }
 
-    private int currentCount(Consumer<MockHttpServletRequestBuilder> addParam) throws Exception {
+    private int currentCount(Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder> addParam) throws Exception {
         MockHttpServletRequestBuilder builder = get("/orderData/manageableList");
-        addParam.accept(builder);
+        builder = addParam.apply(builder);
         return JsonPath.read(
                 mockMvc.perform(
                         builder

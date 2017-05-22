@@ -104,9 +104,9 @@ public class MainOrder implements PayableOrder {
 
     /**
      * @param from order表
-     * @return 到登录表的关联
+     * @return 到客户的登录表的关联
      */
-    public static Join<MainOrder, Login> getLogin(From<?, MainOrder> from) {
+    public static Join<MainOrder, Login> getCustomerLogin(From<?, MainOrder> from) {
         return from.join("customer").join("login");
     }
 
