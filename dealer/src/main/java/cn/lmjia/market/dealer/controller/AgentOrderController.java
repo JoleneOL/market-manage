@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * @author CJ
@@ -46,7 +46,9 @@ public class AgentOrderController extends AbstractMainOrderController {
             throws SystemMaintainException {
         MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile, goodId, amount
                 , activityCode);
-        return paymentService.startPay(request, order, chanpayPaymentForm, Collections.singletonMap("desktop", true));
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("desktop", true);
+        return paymentService.startPay(request, order, chanpayPaymentForm, data);
     }
 
     @GetMapping("/agentPaySuccess")

@@ -49,7 +49,7 @@ public class PayServiceImpl implements PayService {
     public ModelAndView pay(HttpServletRequest request, PayableOrder order, PayOrder payOrder, Map<String, Object> additionalParameters) {
         if (!WeixinWebSpringConfig.isWeixinRequest(request)) {
             // 非微信下是直接跳转到收银台
-            ChanpayPayOrder chanpayPayOrder = (ChanpayPayOrder) order;
+            ChanpayPayOrder chanpayPayOrder = (ChanpayPayOrder) payOrder;
             return new ModelAndView("redirect:" + chanpayPayOrder.getUrl());
         }
         MainOrder mainOrder = (MainOrder) order;

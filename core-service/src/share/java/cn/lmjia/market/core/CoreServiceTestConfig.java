@@ -13,6 +13,7 @@ import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.test.PaymentTestConfig;
 import me.jiangcai.payment.test.service.MockPayToggle;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
@@ -52,6 +53,7 @@ import java.util.UUID;
 @ImportResource("classpath:/datasource_local.xml")
 @PropertySource("classpath:/test_wx.properties")
 @Import({CoreConfig.class, ChanpayTestSpringConfig.class, PaymentTestConfig.class, VerificationCodeTestConfig.class})
+@ComponentScan("cn.lmjia.market.core.test")
 public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcConfigurer {
 
     @Bean
@@ -67,7 +69,12 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
             public PayOrder newPayOrder(HttpServletRequest request, PayableOrder order, Map<String, Object> additionalParameters) throws SystemMaintainException {
                 ChanpayPayOrder chanpayPayOrder = new ChanpayPayOrder();
                 chanpayPayOrder.setPlatformId(UUID.randomUUID().toString());
-                chanpayPayOrder.setUrl(UUID.randomUUID().toString());
+                if (additionalParameters != null && additionalParameters.containsKey("desktop")) {
+                    // successUri
+                    // 给一个uri 直接302 successUri
+                    chanpayPayOrder.setUrl("/redirectSuccessUri");
+                } else
+                    chanpayPayOrder.setUrl(UUID.randomUUID().toString());
                 return chanpayPayOrder;
             }
         };
