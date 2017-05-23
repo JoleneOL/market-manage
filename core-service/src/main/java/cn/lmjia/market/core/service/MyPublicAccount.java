@@ -44,8 +44,8 @@ public class MyPublicAccount extends PublicAccount implements PublicAccountSuppl
         setInterfaceURL(environment.getRequiredProperty("huotao.weixin.url"));
         setInterfaceToken(environment.getRequiredProperty("huotao.weixin.token"));
         //
-        setAccessToken(systemStringService.getSystemString(AccessToken, null, null));
-        setJavascriptTicket(systemStringService.getSystemString(JavascriptTicket, null, null));
+        setAccessToken(systemStringService.getSystemString(AccessToken, String.class, null));
+        setJavascriptTicket(systemStringService.getSystemString(JavascriptTicket, String.class, null));
         setTimeToExpire(systemStringService.getSystemString(TimeToExpire, LocalDateTime.class, null));
         setJavascriptTimeToExpire(systemStringService.getSystemString(JavascriptTimeToExpire, LocalDateTime.class, null));
     }
