@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 import java.time.LocalDate;
 
 /**
@@ -74,23 +75,14 @@ public interface AgentService {
     }
 
     /**
-     * @param agentIdExpression agentIdExpression
-     * @param builder           builder
+     * @param agentPath agentPath
+     * @param builder   builder
      * @return 等级的表达式
      * @see #agentLevel(AgentLevel)
      */
-    default Expression<Integer> agentLevelExpression(Expression<?> agentIdExpression, CriteriaBuilder builder) {
-        return builder.function("mm_agentLevel", Integer.class, agentIdExpression);
-    }
-
-    /**
-     * @param agentId 已知的一个代理的主键
-     * @param builder builder
-     * @return 等级的表达式
-     * @see #agentLevel(AgentLevel)
-     */
-    default Expression<Integer> agentLevelExpression(long agentId, CriteriaBuilder builder) {
-        return builder.function("mm_agentLevel", Integer.class, builder.literal(agentId));
+    default Expression<Integer> agentLevelExpression(Path<? extends AgentLevel> agentPath, CriteriaBuilder builder) {
+//        return builder.function("mm_agentLevel", Integer.class, agentPath);
+        return agentPath.get("level");
     }
 
     /**
@@ -98,14 +90,7 @@ public interface AgentService {
      * @return 代理等级;0 表示最高 应当存在{@link SystemService#systemLevel()}个等级
      */
     default int agentLevel(AgentLevel level) {
-        AgentLevel top = topLevel(level);
-        AgentLevel current = level;
-        int i = 0;
-        while (current != top) {
-            i++;
-            current = current.getSuperior();
-        }
-        return i;
+        return level.getLevel();
     }
 
     /**

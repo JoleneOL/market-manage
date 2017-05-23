@@ -52,7 +52,7 @@ public class AgentServiceImpl implements AgentService {
         CriteriaQuery<Integer> integerCriteriaQuery = criteriaBuilder.createQuery(Integer.class);
         Root<AgentLevel> root = integerCriteriaQuery.from(AgentLevel.class);
 //        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(level.getId(), criteriaBuilder));
-        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(root.get("id"), criteriaBuilder));
+        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(root, criteriaBuilder));
         integerCriteriaQuery = integerCriteriaQuery.where(criteriaBuilder.equal(root.get("id"), level.getId()));
         return entityManager.createQuery(integerCriteriaQuery).getSingleResult();
     }
@@ -129,7 +129,7 @@ public class AgentServiceImpl implements AgentService {
     public Specification<AgentLevel> manageableAndRuling(boolean direct, Login login, String agentName) {
         return new AndSpecification<>(manageable(direct, login, agentName)
                 , (root, query, cb)
-                -> cb.lessThan(agentLevelExpression(root.get("id"), cb), systemService.systemLevel() - 1));
+                -> cb.lessThan(agentLevelExpression(root, cb), systemService.systemLevel() - 1));
     }
 
     @Override
