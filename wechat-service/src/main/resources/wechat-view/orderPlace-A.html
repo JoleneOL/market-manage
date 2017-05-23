@@ -73,7 +73,7 @@
                     <label class="weui-label">安装地址</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" id="J_cityPicker" value="浙江省 杭州市 滨江区" name="address" >
+                    <input class="weui-input" type="text" id="J_cityPicker" value="浙江省 杭州市 滨江区" name="address">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -103,23 +103,27 @@
                     <select class="weui-select" name="goodId" id="J_goodsType">
                         <!--/*@thymesVar id="goodList" type="java.util.List<cn.lmjia.market.core.entity.MainGood>"*/-->
                         <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
-                                data-type="净水机" th:each="good:${goodList}" th:value="${good.id}"
+                                data-type="净水机" data-day-cost="3" th:each="good:${goodList}" th:value="${good.id}"
                                 th:data-deposit="${good.product.deposit}"
                                 th:data-need-install="${good.product.install}" th:data-model="${good.product.code}"
                                 th:data-type="${good.id}" th:text="${good.product.name}">立式净水机
                         </option>
                         <option th:remove="all" value="2" data-deposit="3000" data-need-install="180"
                                 data-model="hzts02"
-                                data-type="净水机">台式净水机
+                                data-type="净水机"
+                                data-day-cost="4">台式净水机
                         </option>
                         <option th:remove="all" value="3" data-deposit="3000" data-need-install="180"
                                 data-model="hzcx01"
-                                data-type="净水机">橱下净水机
+                                data-type="净水机"
+                                data-day-cost="5">橱下净水机
                         </option>
-                        <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器">
+                        <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器"
+                                data-day-cost="5">
                             空气净化器
                         </option>
-                        <option th:remove="all" value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝">
+                        <option th:remove="all" value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝"
+                                data-day-cost="10">
                             食品优化宝
                         </option>
                     </select>
@@ -149,7 +153,7 @@
                     <label class="weui-label">现金支付</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" name="package" value="服务费 3元 / 天" disabled>
+                    <input class="weui-input" type="text" name="package" value="服务费 3元 / 天" disabled id="J_package">
                 </div>
             </div>
             <div class="weui-cell">
@@ -174,7 +178,8 @@
                     <label class="weui-label">推荐人</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input view-placeholder" type="text" placeholder="暂无推荐人" name="inviter" id="J_inviter" readonly>
+                    <input class="weui-input view-placeholder" type="text" placeholder="暂无推荐人" name="inviter"
+                           id="J_inviter" readonly>
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -353,5 +358,6 @@
 <!--生产环境请移除 End-->
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
-<script src="../wechat-resource/assets/js/orderPlace-A.js" th:src="@{/wechat-resource/assets/js/orderPlace-A.js}"></script>
+<script src="../wechat-resource/assets/js/orderPlace-A.js"
+        th:src="@{/wechat-resource/assets/js/orderPlace-A.js}"></script>
 </html>

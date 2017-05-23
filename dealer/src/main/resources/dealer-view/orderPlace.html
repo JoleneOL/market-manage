@@ -106,7 +106,8 @@
                                                     </option>
                                                     <option value="1" data-deposit="3000" data-need-install="180"
                                                             data-model="hzls01"
-                                                            data-type="净水机" th:each="good:${@mainGoodService.forSale()}"
+                                                            data-type="净水机" data-day-cost="3"
+                                                            th:each="good:${@mainGoodService.forSale()}"
                                                             th:value="${good.id}"
                                                             th:data-deposit="${good.product.deposit}"
                                                             th:data-need-install="${good.product.install}"
@@ -117,19 +118,23 @@
                                                     <option th:remove="all" value="2" data-deposit="3000"
                                                             data-need-install="180"
                                                             data-model="hzts02"
-                                                            data-type="净水机">台式净水机
+                                                            data-type="净水机"
+                                                            data-day-cost="4">台式净水机
                                                     </option>
                                                     <option th:remove="all" value="3" data-deposit="3000"
                                                             data-need-install="180"
                                                             data-model="hzcx01"
-                                                            data-type="净水机">橱下净水机
+                                                            data-type="净水机"
+                                                            data-day-cost="5">橱下净水机
                                                     </option>
                                                     <option th:remove="all" value="5" data-deposit="5000"
-                                                            data-model="ESL-HM01" data-type="空气净化器">
+                                                            data-model="ESL-HM01" data-type="空气净化器"
+                                                            data-day-cost="5">
                                                         空气净化器
                                                     </option>
                                                     <option th:remove="all" value="6" data-deposit="10000"
-                                                            data-model="SP70" data-type="食品优化宝">
+                                                            data-model="SP70" data-type="食品优化宝"
+                                                            data-day-cost="10">
                                                         食品优化宝
                                                     </option>
                                                 </select>
@@ -153,7 +158,7 @@
                                             <label class="col-sm-3 control-label">现金支付</label>
                                             <div class="col-sm-6">
                                                 <input type="text" value="服务费 3元 / 天" class="form-control"
-                                                       disabled name="package">
+                                                       disabled name="package" id="J_package">
                                             </div>
                                         </div>
                                         <div class="form-group">

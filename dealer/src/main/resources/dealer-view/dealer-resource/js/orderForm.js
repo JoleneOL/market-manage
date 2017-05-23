@@ -114,6 +114,7 @@ $(function () {
         var deposit = $type.attr('data-deposit');
         var isNeed = $type.attr('data-need-install');
         var model = $type.attr('data-model');
+        var cost = $type.attr('data-day-cost');
 
         var needNumber = 0;
         if (isNeed) needNumber = parseInt(isNeed);
@@ -127,5 +128,6 @@ $(function () {
         }
         $('#J_userDeposit').find('strong').text(deposit);
         $('#J_leasedType').val(model);
+        $('#J_package').val('服务费 ' + cost + '元 / 天');
     }
 });
