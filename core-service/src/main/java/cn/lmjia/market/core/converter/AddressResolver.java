@@ -28,7 +28,7 @@ public class AddressResolver implements HandlerMethodArgumentResolver {
         String basicAddress = webRequest.getParameter(name);
         if (StringUtils.isEmpty(basicAddress))
             return null;
-        String[] basicAddresses = basicAddress.split("/");
+        String[] basicAddresses = basicAddress.split("/|\\s");
         Address address = new Address();
         address.setProvince(basicAddresses[0]);
         address.setPrefecture(basicAddresses[1]);

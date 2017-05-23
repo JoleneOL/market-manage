@@ -5,6 +5,8 @@ import me.jiangcai.wx.model.Menu;
 import me.jiangcai.wx.model.MenuType;
 import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.protocol.Protocol;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import javax.annotation.PostConstruct;
  */
 @Service
 public class WechatInitService {
+
+    private static final Log log = LogFactory.getLog(WechatInitService.class);
 
     @Autowired
     private SystemService systemService;
@@ -32,6 +36,7 @@ public class WechatInitService {
                                 , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
                         }
         );
+        log.info("updated the menus");
     }
 
     private Menu createMenu(String name, String url) {
