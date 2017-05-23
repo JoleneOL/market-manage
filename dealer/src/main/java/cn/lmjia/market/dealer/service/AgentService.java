@@ -1,7 +1,8 @@
 package cn.lmjia.market.dealer.service;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.service.SystemService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,20 +21,20 @@ import java.time.LocalDate;
  * 这个表应该是 memory engine的
  * 它拥有一个主键（同时也是用户表的外键）表明它最高达到的代理级别
  * 以及他的上级分别是哪些（AgentInfo'pk）
- * <p>
+ * </p>
  * 它应该是根据业务需求(而绝不是技术的！）而产生更新需求要刷新重启数据库即可嘛！
  * 服务器开机时则检查该表是否存在即可
+ * 每个代理系统都可以维护n个上级表
+ * <ul>
+ * <li>我的等级id</li>
+ * <li>我的上级等级id</li>
+ * <li>是否直接上级</li>
+ * </ul>\
  *
  * @author CJ
  */
 public interface AgentService {
 
-    /**
-     * @return 代理体系的等级
-     */
-    default int systemLevel() {
-        return 5;
-    }
 
     /*
 当一个订单结算时，会根据它的引导者（自动成为经纪人），以及这个代理体系建立一整套分佣结果
@@ -94,7 +95,7 @@ public interface AgentService {
 
     /**
      * @param level 特定代理商
-     * @return 代理等级;0 表示最高 应当存在{@link #systemLevel()}个等级
+     * @return 代理等级;0 表示最高 应当存在{@link SystemService#systemLevel()}个等级
      */
     default int agentLevel(AgentLevel level) {
         AgentLevel top = topLevel(level);
@@ -121,17 +122,7 @@ public interface AgentService {
     ;
 
     /**
-     * 添加一个最顶级的代理商；按照每个代理都是同时存在的理论；那么会同时创建{@link #systemLevel()}个代理商
-     *
-     * @param login 相关联的登录
-     * @param name  名称
-     * @return 被保存的最顶级的代理商
-     */
-    @Transactional
-    AgentLevel addTopAgent(Login login, String name);
-
-    /**
-     * 添加一个特定等级的代理商；按照每个代理都是同时存在的理论；那么会同时创建{@link #systemLevel()}个代理商
+     * 添加一个特定等级的代理商；按照每个代理都是同时存在的理论；那么会同时创建{@link SystemService#systemLevel()} 个代理商
      *
      * @param who          可选参数；谁添加的代理
      * @param login        相关身份
@@ -140,7 +131,8 @@ public interface AgentService {
      * @param endDate      合同结束时间
      * @param firstPayment 首笔进货款
      * @param agencyFee    代理费
-     * @param superior     上级  @return 被保存的新的最高代理商
+     * @param superior     上级，可以为<code>null</code>
+     * @return 被保存的新的最高代理商
      */
     @Transactional
     AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate, int firstPayment, int agencyFee, AgentLevel superior);

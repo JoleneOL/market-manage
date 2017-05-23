@@ -1,7 +1,7 @@
 package cn.lmjia.market.core.service;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;

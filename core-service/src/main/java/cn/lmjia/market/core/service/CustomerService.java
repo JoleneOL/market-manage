@@ -1,8 +1,8 @@
 package cn.lmjia.market.core.service;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 
 /**
  * 客户相关服务

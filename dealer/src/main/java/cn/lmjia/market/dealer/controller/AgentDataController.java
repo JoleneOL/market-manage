@@ -1,7 +1,7 @@
 package cn.lmjia.market.dealer.controller;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;

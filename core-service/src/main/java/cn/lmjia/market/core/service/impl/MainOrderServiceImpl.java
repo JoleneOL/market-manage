@@ -1,16 +1,16 @@
 package cn.lmjia.market.core.service.impl;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
-import cn.lmjia.market.core.repository.AgentLevelRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.MainOrderRepository;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.wx.model.Gender;

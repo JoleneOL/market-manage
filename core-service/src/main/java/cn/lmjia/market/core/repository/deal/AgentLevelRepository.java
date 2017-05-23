@@ -1,6 +1,6 @@
-package cn.lmjia.market.core.repository;
+package cn.lmjia.market.core.repository.deal;
 
-import cn.lmjia.market.core.entity.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.util.AbstractAgentLevelRepository;
 
 /**

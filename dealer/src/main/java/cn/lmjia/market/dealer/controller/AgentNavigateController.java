@@ -1,7 +1,7 @@
 package cn.lmjia.market.dealer.controller;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.dealer.mvc.HighestAgent;
 import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;

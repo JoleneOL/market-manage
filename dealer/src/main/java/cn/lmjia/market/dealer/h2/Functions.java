@@ -1,6 +1,6 @@
 package cn.lmjia.market.dealer.h2;
 
-import cn.lmjia.market.core.entity.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 
 import java.io.IOException;
 import java.sql.Connection;

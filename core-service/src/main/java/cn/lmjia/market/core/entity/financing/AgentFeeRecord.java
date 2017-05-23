@@ -1,6 +1,6 @@
 package cn.lmjia.market.core.entity.financing;
 
-import cn.lmjia.market.core.entity.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import lombok.Getter;
 import lombok.Setter;
 

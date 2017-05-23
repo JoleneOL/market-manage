@@ -1,7 +1,7 @@
 package cn.lmjia.market.dealer.service;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.repository.AgentLevelRepository;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import me.jiangcai.lib.jdbc.JdbcService;
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 /**
  * @author CJ
@@ -46,7 +47,9 @@ public class DealerInitService {
             Login login = loginService.newLogin(environment.getProperty("default.agent.loginName"
                     , "master"), null
                     , environment.getProperty("default.agent.password", "masterIsMaster"));
-            agentService.addTopAgent(login, environment.getProperty("default.agent.name", "默认名称"));
+            agentService.addAgent(null, login
+                    , environment.getProperty("default.agent.name", "默认名称"), LocalDate.now()
+                    , LocalDate.now().plusYears(1), 0, 0, null);
             contactWayService.updateName(login, environment.getProperty("default.agent.name", "默认名称"));
         }
     }

@@ -1,7 +1,7 @@
 package cn.lmjia.market.web.controller;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.dealer.mvc.HighestAgent;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;

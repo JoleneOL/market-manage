@@ -1,7 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.financing.AgentFeeRecord;
 import cn.lmjia.market.core.entity.financing.AgentGoodPaymentRecord;
 import cn.lmjia.market.core.entity.financing.AgentIncomeRecord;

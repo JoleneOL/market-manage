@@ -1,9 +1,9 @@
 package cn.lmjia.market.dealer.controller;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.repository.AgentLevelRepository;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import org.junit.Test;

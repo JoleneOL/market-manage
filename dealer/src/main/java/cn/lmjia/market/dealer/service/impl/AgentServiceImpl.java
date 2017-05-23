@@ -1,10 +1,13 @@
 package cn.lmjia.market.dealer.service.impl;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.repository.AgentLevelRepository;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentSystem;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
+import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
 import cn.lmjia.market.core.service.AgentFinancingService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,10 @@ public class AgentServiceImpl implements AgentService {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private SystemService systemService;
+    @Autowired
+    private AgentSystemRepository agentSystemRepository;
 
     @Override
     public int agentLevel(AgentLevel level) {
@@ -53,13 +60,30 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate
             , int firstPayment, int agencyFee, AgentLevel superior) {
+        AgentSystem agentSystem;
+        if (superior == null) {
+            // TODO 顶级代理 可不是所有人可以添的
+            // 顶级代理啊
+            agentSystem = new AgentSystem();
+            // 默认属性
+            agentSystem.setOrderRate(systemService.defaultOrderRate());
+            agentSystem.setRates(systemService.defaultAgentRates());
+            agentSystem = agentSystemRepository.save(agentSystem);
+        } else
+            agentSystem = superior.getSystem();
+        return addAgent(who, login, name, beginDate, endDate, firstPayment, agencyFee, superior, agentSystem);
+    }
+
+    private AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate
+            , int firstPayment, int agencyFee, AgentLevel superior, AgentSystem system) {
         AgentLevel topLevel = null;
 
         AgentLevel current = superior;
-        int count = systemLevel() - (current == null ? 0 : agentLevel(superior) + 1);
+        int count = systemService.systemLevel() - (current == null ? 0 : agentLevel(superior) + 1);
         // 几次 如果是最顶级的那么就是 systemLevel次
         if (count <= 0)
-            throw new IllegalStateException("无法给" + superior + "添加下级代理商，违法了现在有的" + systemLevel() + "层架构");
+            throw new IllegalStateException("无法给" + superior + "添加下级代理商，违法了现在有的"
+                    + systemService.systemLevel() + "层架构");
 
         // 设置货款
         final BigDecimal goodPayment = BigDecimal.valueOf(firstPayment);
@@ -70,11 +94,17 @@ public class AgentServiceImpl implements AgentService {
         final LocalDateTime now = LocalDateTime.now();
         while (count-- > 0) {
             AgentLevel top = new AgentLevel();
+            top.setSystem(system);
             top.setCreatedBy(who);
             top.setCreatedTime(now);
             top.setLogin(login);
             top.setRank(name);
             top.setSuperior(current);
+            if (current == null) {
+                top.setLevel(0);
+            } else {
+                top.setLevel(current.getLevel() + 1);
+            }
             top.setBeginDate(beginDate);
             top.setEndDate(endDate);
             final AgentLevel newAgentLevel = agentLevelRepository.save(top);
@@ -96,15 +126,10 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public AgentLevel addTopAgent(Login login, String name) {
-        return addAgent(null, login, name, null, null, 0, 0, null);
-    }
-
-    @Override
     public Specification<AgentLevel> manageableAndRuling(boolean direct, Login login, String agentName) {
         return new AndSpecification<>(manageable(direct, login, agentName)
                 , (root, query, cb)
-                -> cb.lessThan(agentLevelExpression(root.get("id"), cb), systemLevel() - 1));
+                -> cb.lessThan(agentLevelExpression(root.get("id"), cb), systemService.systemLevel() - 1));
     }
 
     @Override

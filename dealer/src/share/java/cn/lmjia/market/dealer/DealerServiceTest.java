@@ -1,9 +1,10 @@
 package cn.lmjia.market.dealer;
 
 import cn.lmjia.market.core.CoreServiceTest;
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.service.ContactWayService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.config.DealerConfig;
 import cn.lmjia.market.dealer.page.AgentManageMainPage;
 import cn.lmjia.market.dealer.service.AgentService;
@@ -22,6 +23,8 @@ public abstract class DealerServiceTest extends CoreServiceTest {
 
     @Autowired
     protected AgentService agentService;
+    @Autowired
+    private SystemService systemService;
     @Autowired
     private ContactWayService contactWayService;
 
@@ -80,7 +83,7 @@ public abstract class DealerServiceTest extends CoreServiceTest {
         Login rootLogin = newRandomAgent(rawPassword);
         AgentLevel rootAgent = agentService.highestAgent(rootLogin);
         // 建立旗下分支
-        i = agentService.systemLevel() - 1;
+        i = systemService.systemLevel() - 1;
         AgentLevel newAgent = rootAgent;
         Login newLogin = rootLogin;
         while (i-- > 0) {

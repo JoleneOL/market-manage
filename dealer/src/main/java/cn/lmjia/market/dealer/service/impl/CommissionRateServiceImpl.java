@@ -1,7 +1,8 @@
 package cn.lmjia.market.dealer.service.impl;
 
-import cn.lmjia.market.core.entity.AgentLevel;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import me.jiangcai.lib.sys.service.SystemStringService;
@@ -20,6 +21,8 @@ public class CommissionRateServiceImpl implements CommissionRateService {
     private AgentService agentService;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private SystemService systemService;
 
     @Override
     public BigDecimal directRate(AgentLevel agent) {
@@ -45,7 +48,7 @@ public class CommissionRateServiceImpl implements CommissionRateService {
             case 4:
                 return direct ? new BigDecimal("0.8") : new BigDecimal("0.2");
             default:
-                throw new IllegalStateException("超过预期" + agentService.systemLevel() + "的级别");
+                throw new IllegalStateException("超过预期" + systemService.systemLevel() + "的级别");
         }
     }
 

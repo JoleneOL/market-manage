@@ -1,5 +1,6 @@
-package cn.lmjia.market.core.entity;
+package cn.lmjia.market.core.entity.deal;
 
+import cn.lmjia.market.core.entity.Login;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +39,12 @@ public class AgentLevel {
      */
     @Column(length = 20)
     private String rank;
+    @ManyToOne(optional = false)
+    private AgentSystem system;
+    /**
+     * 代理等级;0 表示最高
+     */
+    private int level;
     /**
      * 谁添加的
      */
