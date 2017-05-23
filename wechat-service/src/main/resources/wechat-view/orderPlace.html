@@ -73,7 +73,7 @@
                     <label class="weui-label">安装地址</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" id="J_cityPicker" value="浙江省 杭州市 滨江区" name="address" >
+                    <input class="weui-input" type="text" id="J_cityPicker" value="浙江省 杭州市 滨江区" name="address">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -100,7 +100,9 @@
                     <label class="weui-label">产品类型</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-select" name="goodId" id="J_goodsType">
+                    <select class="weui-select" name="goodId" id="J_goodsType" required>
+                        <option value="" disabled="" selected="" class="hidden">产品类型
+                        </option>
                         <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
                                 data-type="净水机" th:each="good:${@mainGoodService.forSale()}" th:value="${good.id}"
                                 th:data-deposit="${good.product.deposit}"

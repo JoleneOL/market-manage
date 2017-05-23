@@ -101,7 +101,9 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">产品类型</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="goodId" id="J_goodsType">
+                                                <select class="form-control" name="goodId" required id="J_goodsType">
+                                                    <option value="" disabled="" selected="" class="hidden">产品类型
+                                                    </option>
                                                     <option value="1" data-deposit="3000" data-need-install="180"
                                                             data-model="hzls01"
                                                             data-type="净水机" th:each="good:${@mainGoodService.forSale()}"
