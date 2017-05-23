@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="view-height-100">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="view-height-100">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -26,7 +26,7 @@
         <div id="equipment" class="weui-tab__bd-item weui-tab__bd-item--active view-scroll-wrap">
             <div class="view-scroll-list">
                 <div class="weui-cells__title js-extra-h-e">饮水机状况</div>
-                <div class="view-preview view-mb-20">
+                <div th:remove="all" class="view-preview view-mb-20">
                     <div class="view-preview_hd">
                         <p class="view-preview_header_value pull-left">饮水机编号：1212112212212</p>
                         <span class="view-preview_header_label pull-right text-success">正常使用中</span>
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="view-preview view-mb-20">
+                <div th:remove="all" class="view-preview view-mb-20">
                     <div class="view-preview_hd">
                         <p class="view-preview_header_value pull-left">饮水机编号：1212112212212</p>
                         <span class="view-preview_header_label pull-right text-primary">维护中</span>
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="view-preview view-mb-20">
+                <div th:remove="all" class="view-preview view-mb-20">
                     <div class="view-preview_hd">
                         <p class="view-preview_header_value pull-left">饮水机编号：1212112212212</p>
                         <span class="view-preview_header_label pull-right text-warn">维修中</span>
