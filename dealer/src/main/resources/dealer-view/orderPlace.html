@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">
     <link rel="stylesheet" href="dealer-resource/css/custom.css">
@@ -98,7 +100,8 @@
                                             <label class="col-sm-3 control-label">产品类型</label>
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="goodId" id="J_goodsType">
-                                                    <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
+                                                    <option value="1" data-deposit="3000" data-need-install="180"
+                                                            data-model="hzls01"
                                                             data-type="净水机" th:each="good:${@mainGoodService.forSale()}"
                                                             th:value="${good.id}"
                                                             th:data-deposit="${good.product.deposit}"
@@ -154,6 +157,12 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="输入按揭码" class="form-control"
                                                        name="activityCode">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="recommendId" class="col-sm-3 control-label">推荐人</label>
+                                            <div class="col-sm-6">
+                                                <select id="recommendId" name="recommend"></select>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -307,5 +316,7 @@
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
+        th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="dealer-resource/js/orderForm.js"></script>
 </html>

@@ -2,6 +2,9 @@
  * Created by Chang on 2017/5/2.
  */
 $(function () {
+
+    $('#recommendId').makeRecommendSelect();
+
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1(3|4|5|7|8)\d{9}$/;

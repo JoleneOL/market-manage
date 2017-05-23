@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.CascadeType;
@@ -92,7 +93,7 @@ public class Login implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptySet();
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + ROLE_AllAgent));
     }
 
     @Override
