@@ -1,20 +1,13 @@
 package cn.lmjia.market.wechat.controller.order;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood;
-import cn.lmjia.market.core.entity.support.Address;
-import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-
-import java.util.UUID;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -26,9 +19,6 @@ public class WechatMainOrderControllerTest extends WechatTestBase {
 
     private static final Log log = LogFactory.getLog(WechatMainOrderControllerTest.class);
 
-    @Autowired
-    private MainGoodRepository mainGoodRepository;
-
     @Test
     public void makeOrder() throws Exception {
         // 在微信端发起请求
@@ -39,27 +29,15 @@ public class WechatMainOrderControllerTest extends WechatTestBase {
                     .andExpect(status().isOk())
                     .andExpect(view().name("wechat@orderPlace.html"));
             // 这波则是开干了
-            Address address = randomAddress();
-            MainGood good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
-            String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
-            Login recommend = randomLogin(true);
             //
             while (true) {
                 try {
+
+                    MockHttpServletRequestBuilder requestBuilder =
+                            orderRequestBuilder(wechatPost("/wechatOrder"), randomOrderRequest());
+
                     String result = mockMvc.perform(
-                            wechatPost("/wechatOrder")
-                                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                    .param("name", "W客户" + RandomStringUtils.randomAlphabetic(6))
-                                    .param("age", String.valueOf(20 + random.nextInt(50)))
-                                    .param("gender", String.valueOf(1 + random.nextInt(2)))
-                                    .param("address", address.getStandardWithoutOther())
-                                    .param("fullAddress", address.getOtherAddress())
-                                    .param("mobile", randomMobile())
-                                    .param("goodId", String.valueOf(good.getId()))
-                                    .param("leasedType", good.getProduct().getCode())
-                                    .param("amount", String.valueOf(1 + random.nextInt(10)))
-                                    .param("activityCode", code)
-                                    .param("recommend", String.valueOf(recommend.getId()))
+                            requestBuilder
                     )
                             .andExpect(status().is3xxRedirection())
                             .andReturn().getResponse().getHeader("Location");

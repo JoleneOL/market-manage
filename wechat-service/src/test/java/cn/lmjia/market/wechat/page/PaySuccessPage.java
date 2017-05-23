@@ -36,7 +36,7 @@ public class PaySuccessPage extends AbstractWechatPage {
                 executor.executeScript("$.success");
             } catch (Exception ignored) {
 //                ignored.printStackTrace();
-                input.get("http://localhost/paySuccess?mainOrderId=1");
+                input.get("http://localhost/wechatPaySuccess?mainOrderId=1");
                 return true;
             }
 //            System.out.println(input.getCurrentUrl());

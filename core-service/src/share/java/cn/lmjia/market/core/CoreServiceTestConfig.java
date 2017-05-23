@@ -37,6 +37,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.security.SignatureException;
@@ -63,7 +64,7 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
             }
 
             @Override
-            public PayOrder newPayOrder(PayableOrder order, Map<String, Object> additionalParameters) throws SystemMaintainException {
+            public PayOrder newPayOrder(HttpServletRequest request, PayableOrder order, Map<String, Object> additionalParameters) throws SystemMaintainException {
                 ChanpayPayOrder chanpayPayOrder = new ChanpayPayOrder();
                 chanpayPayOrder.setPlatformId(UUID.randomUUID().toString());
                 chanpayPayOrder.setUrl(UUID.randomUUID().toString());

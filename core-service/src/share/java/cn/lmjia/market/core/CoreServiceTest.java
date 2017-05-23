@@ -2,10 +2,12 @@ package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -23,16 +25,16 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -53,8 +55,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class CoreServiceTest extends SpringWebTest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Log log = LogFactory.getLog(CoreServiceTest.class);
-    private final SecurityContextRepository httpSessionSecurityContextRepository
-            = new HttpSessionSecurityContextRepository();
     @Autowired
     protected LoginService loginService;
     @Autowired
@@ -287,5 +287,45 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 , mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null)
                 , 1 + random.nextInt(10)
                 , random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+    }
+
+    /**
+     * @param builder 模拟请求构造器
+     * @param request 下单原请求
+     * @return 执行下单请求
+     */
+    protected MockHttpServletRequestBuilder orderRequestBuilder(MockHttpServletRequestBuilder builder, OrderRequest request) {
+        return builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", request.getName())
+                .param("age", String.valueOf(request.getAge()))
+                .param("gender", String.valueOf(request.getGender()))
+                .param("address", request.getAddress().getStandardWithoutOther())
+                .param("fullAddress", request.getAddress().getOtherAddress())
+                .param("mobile", request.getMobile())
+                .param("goodId", String.valueOf(request.getGood().getId()))
+                .param("leasedType", request.getGood().getProduct().getCode())
+                .param("amount", String.valueOf(request.getAmount()))
+                .param("activityCode", request.getCode())
+                .param("recommend", String.valueOf(request.getRecommend().getId()));
+    }
+
+    /**
+     * @return 随机的下单请求原数据
+     */
+    protected OrderRequest randomOrderRequest() {
+        Address address = randomAddress();
+        MainGood good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
+        Login recommend = randomLogin(true);
+        final String name = "W客户" + RandomStringUtils.randomAlphabetic(6);
+        final int age = 20 + random.nextInt(50);
+        final int gender = 1 + random.nextInt(2);
+        final String mobile = randomMobile();
+        final int amount = 1 + random.nextInt(10);
+        return new OrderRequest(
+                address, good, code
+                , recommend, name, age, gender
+                , mobile, amount
+        );
     }
 }
