@@ -12,6 +12,8 @@ import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.test.PaymentTestConfig;
 import me.jiangcai.payment.test.service.MockPayToggle;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -56,6 +58,8 @@ import java.util.UUID;
 @ComponentScan("cn.lmjia.market.core.test")
 public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcConfigurer {
 
+    private static final Log log = LogFactory.getLog(CoreServiceTestConfig.class);
+
     @Bean
     @Primary
     public ChanpayPaymentForm chanpayPaymentForm() {
@@ -67,6 +71,9 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
 
             @Override
             public PayOrder newPayOrder(HttpServletRequest request, PayableOrder order, Map<String, Object> additionalParameters) throws SystemMaintainException {
+                log.debug("准备创建金额为" + order.getOrderDueAmount() + "的" + order.getOrderProductName() + "订单");
+                if (order.getOrderDueAmount().intValue() == 0)
+                    throw new IllegalStateException("错误的金额：" + order.getOrderDueAmount());
                 ChanpayPayOrder chanpayPayOrder = new ChanpayPayOrder();
                 chanpayPayOrder.setPlatformId(UUID.randomUUID().toString());
                 if (additionalParameters != null && additionalParameters.containsKey("desktop")) {
