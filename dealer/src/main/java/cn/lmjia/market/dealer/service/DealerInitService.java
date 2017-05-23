@@ -2,6 +2,7 @@ package cn.lmjia.market.dealer.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.AgentLevelRepository;
+import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import me.jiangcai.lib.jdbc.JdbcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class DealerInitService {
     private AgentLevelRepository agentLevelRepository;
     @Autowired
     private JdbcService jdbcService;
+    @Autowired
+    private ContactWayService contactWayService;
 
     @PostConstruct
     @Transactional
@@ -44,6 +47,7 @@ public class DealerInitService {
                     , "master"), null
                     , environment.getProperty("default.agent.password", "masterIsMaster"));
             agentService.addTopAgent(login, environment.getProperty("default.agent.name", "默认名称"));
+            contactWayService.updateName(login, environment.getProperty("default.agent.name", "默认名称"));
         }
     }
 

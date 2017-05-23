@@ -24,7 +24,9 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="inner-document">
+<body class="inner-document"
+      data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
+      th:data-search-login-url="@{/loginData/select2}">
 <section>
     <div class="pageheader">
         <h2>
@@ -316,6 +318,8 @@
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="dealer-resource/js/orderForm.js"></script>
