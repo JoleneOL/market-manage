@@ -30,7 +30,7 @@
         <dependency>
             <groupId>me.jiangcai.wx</groupId>
             <artifactId>weixin-web</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${wx.version}</version>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>me.jiangcai.payment</groupId>
             <artifactId>support-chanpay</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${payment.version}</version>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.chanpay</groupId>
@@ -78,18 +78,18 @@
         <dependency>
             <groupId>me.jiangcai.payment</groupId>
             <artifactId>payment-test</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${payment.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.huotu.verification-code</groupId>
             <artifactId>vc-service</artifactId>
-            <version>1.2</version>
+            <version>${vc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huotu.verification-code</groupId>
             <artifactId>vc-test</artifactId>
-            <version>1.2</version>
+            <version>${vc.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -36,6 +36,9 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <goods.version>1.0.0-SNAPSHOT</goods.version>
+        <payment.version>1.0-SNAPSHOT</payment.version>
+        <vc.version>1.2</vc.version>
+        <wx.version>1.0-SNAPSHOT</wx.version>
     </properties>
 
     <distributionManagement>
