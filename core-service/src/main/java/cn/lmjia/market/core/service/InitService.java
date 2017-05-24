@@ -72,7 +72,8 @@ public class InitService {
                     mainProduct.setCode(type);
                     mainProduct.setName(productName);
                     mainProduct.setDeposit(new BigDecimal(value[1]));
-                    mainProduct.setInstall(new BigDecimal(value[2]));
+                    mainProduct.setServiceCharge(new BigDecimal(value[2]));
+                    mainProduct.setInstall(new BigDecimal(value[3]));
                     mainProduct = mainProductRepository.save(mainProduct);
                 }
 

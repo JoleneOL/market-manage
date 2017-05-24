@@ -58,7 +58,8 @@
                                         th:data-deposit="${good.product.deposit}"
                                         th:data-need-install="${good.product.install}"
                                         th:data-model="${good.product.code}"
-                                        th:data-type="${good.id}" th:text="${good.product.name}">立式净水机
+                                        th:data-type="${good.id}" th:text="${good.product.name}"
+                                        th:data-day-cost="${good.product.serviceCharge}">立式净水机
                                 </option>
                                 <option th:remove="all" value="2" data-deposit="3000" data-need-install="180"
                                         data-model="hzts02"
