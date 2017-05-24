@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -101,18 +101,42 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">产品类型</label>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="goodsType" id="J_goodsType">
-                                                    <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
-                                                            data-type="净水机">立式净水机
+                                                <select class="form-control" name="goodId" required id="J_goodsType">
+                                                    <option value="" disabled="" selected="" class="hidden">产品类型
                                                     </option>
-                                                    <option value="2" data-deposit="3000" data-need-install="180" data-model="hzts02"
-                                                            data-type="净水机">台式净水机
+                                                    <option value="1" data-deposit="3000" data-need-install="180"
+                                                            data-model="hzls01"
+                                                            data-type="净水机" data-day-cost="3"
+                                                            th:each="good:${@mainGoodService.forSale()}"
+                                                            th:value="${good.id}"
+                                                            th:data-deposit="${good.product.deposit}"
+                                                            th:data-need-install="${good.product.install}"
+                                                            th:data-model="${good.product.code}"
+                                                            th:data-type="${good.id}" th:text="${good.product.name}">
+                                                        立式净水机
                                                     </option>
-                                                    <option value="3" data-deposit="3000" data-need-install="180" data-model="hzcx01"
-                                                            data-type="净水机">橱下净水机
+                                                    <option th:remove="all" value="2" data-deposit="3000"
+                                                            data-need-install="180"
+                                                            data-model="hzts02"
+                                                            data-type="净水机"
+                                                            data-day-cost="4">台式净水机
                                                     </option>
-                                                    <option value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器">空气净化器</option>
-                                                    <option value="6" data-deposit="10000" data-model="SP70" data-type="食品优化宝">食品优化宝</option>
+                                                    <option th:remove="all" value="3" data-deposit="3000"
+                                                            data-need-install="180"
+                                                            data-model="hzcx01"
+                                                            data-type="净水机"
+                                                            data-day-cost="5">橱下净水机
+                                                    </option>
+                                                    <option th:remove="all" value="5" data-deposit="5000"
+                                                            data-model="ESL-HM01" data-type="空气净化器"
+                                                            data-day-cost="5">
+                                                        空气净化器
+                                                    </option>
+                                                    <option th:remove="all" value="6" data-deposit="10000"
+                                                            data-model="SP70" data-type="食品优化宝"
+                                                            data-day-cost="10">
+                                                        食品优化宝
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -132,31 +156,33 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">套餐选择</label>
+                                            <label class="col-sm-3 control-label">现金支付</label>
                                             <div class="col-sm-6">
-                                                <input type="text" value="3年收费" class="form-control"
-                                                       disabled name="package">
+                                                <input type="text" value="服务费 3元 / 天" class="form-control"
+                                                       disabled name="package" id="J_package">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">活动码</label>
+                                            <label class="col-sm-3 control-label">按揭码</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="输入活动码" class="form-control" value="无"
+                                                <input type="text" placeholder="输入按揭码" class="form-control" value="无"
                                                        name="activityCode"
                                                        disabled>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">用户保证金</label>
-                                            <div class="col-sm-3">
-                                                <p class="form-control-static text-danger" id="J_userDeposit">
+                                            <div class="col-sm-9">
+                                                <p class="form-control-static" id="J_userDeposit">
                                                     <strong>3000</strong>
                                                     <span class="unit-txt">元 / 台</span>
                                                 </p>
                                             </div>
-                                            <label class="col-sm-3 control-label js-install">初装费用</label>
-                                            <div class="col-sm-3">
-                                                <p class="form-control-static text-danger js-install"
+                                        </div>
+                                        <div class="form-group js-install">
+                                            <label class="col-sm-3 control-label">初装费用</label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control-static"
                                                    id="J_installationCost">
                                                     <strong>180</strong>
                                                     <span class="unit-txt">元 / 台</span>
@@ -167,10 +193,10 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">订单总金额</label>
                                             <div class="col-sm-9">
-                                                <input type="hidden" name="orderTotal" value="3180">
-                                                <p class="form-control-static text-danger order-total"
+                                                <input type="hidden" name="orderTotal" value="0">
+                                                <p class="form-control-static order-total"
                                                    id="J_orderTotal">
-                                                    <strong>3180</strong>
+                                                    <strong>6360</strong>
                                                     <span class="unit-txt">元</span>
                                                 </p>
                                             </div>

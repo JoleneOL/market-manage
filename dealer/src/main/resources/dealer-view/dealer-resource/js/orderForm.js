@@ -3,7 +3,9 @@
  */
 $(function () {
 
-    $('#recommendId').makeRecommendSelect();
+    if($('#recommendId').length > 0) {
+        $('#recommendId').makeRecommendSelect();
+    }
 
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
