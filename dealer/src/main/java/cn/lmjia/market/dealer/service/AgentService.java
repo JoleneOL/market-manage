@@ -32,7 +32,7 @@ import java.time.LocalDate;
  * <li>我的等级id</li>
  * <li>我的上级等级id</li>
  * <li>是否直接上级</li>
- * </ul>\
+ * </ul>
  *
  * @author CJ
  */
@@ -164,6 +164,14 @@ public interface AgentService {
      */
     @Transactional(readOnly = true)
     AgentLevel highestAgent(Login login);
+
+    /**
+     * @param login 特定身份
+     * @param level 等级{@link AgentLevel#level}
+     * @return 特定层次的代理商
+     */
+    @Transactional(readOnly = true)
+    AgentLevel getAgent(Login login, int level);
 
     /**
      * @param id 代理id

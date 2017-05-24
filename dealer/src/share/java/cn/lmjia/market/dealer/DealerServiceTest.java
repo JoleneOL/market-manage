@@ -39,6 +39,24 @@ public abstract class DealerServiceTest extends CoreServiceTest {
     /**
      * 新增并且保存一个随机的顶级代理商
      *
+     * @return 已保存的代理商的登录
+     */
+    protected Login newRandomAgent() {
+        return newRandomAgent(UUID.randomUUID().toString());
+    }
+
+    /**
+     * 新增并且保存一个随机的顶级代理商
+     *
+     * @return 已保存的代理商的登录
+     */
+    protected Login newRandomAgent(AgentLevel superior) {
+        return newRandomAgent(UUID.randomUUID().toString(), superior);
+    }
+
+    /**
+     * 新增并且保存一个随机的顶级代理商
+     *
      * @param rawPassword 明文密码
      * @return 已保存的代理商的登录
      */

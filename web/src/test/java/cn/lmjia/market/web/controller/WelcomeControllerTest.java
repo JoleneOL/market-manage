@@ -26,7 +26,7 @@ public class WelcomeControllerTest extends WebTest {
         initPage(AgentManageMainPage.class);
 
         createWebDriver();
-        Login login = newRandomAgent(rawPassword);
+        Login login = newRandomAgent();
 
         driver.get("http://localhost/");
         loginPage = initPage(WebLoginPage.class);

@@ -59,17 +59,6 @@ public class AgentServiceImpl implements AgentService {
     private LoginService loginService;
 
     @Override
-    public int agentLevel(AgentLevel level) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Integer> integerCriteriaQuery = criteriaBuilder.createQuery(Integer.class);
-        Root<AgentLevel> root = integerCriteriaQuery.from(AgentLevel.class);
-//        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(level.getId(), criteriaBuilder));
-        integerCriteriaQuery = integerCriteriaQuery.select(agentLevelExpression(root, criteriaBuilder));
-        integerCriteriaQuery = integerCriteriaQuery.where(criteriaBuilder.equal(root.get("id"), level.getId()));
-        return entityManager.createQuery(integerCriteriaQuery).getSingleResult();
-    }
-
-    @Override
     public AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate
             , int firstPayment, int agencyFee, AgentLevel superior) {
         AgentSystem agentSystem;
@@ -223,6 +212,11 @@ public class AgentServiceImpl implements AgentService {
             }
             return current;
         }
+        return null;
+    }
+
+    @Override
+    public AgentLevel getAgent(Login login, int level) {
         return null;
     }
 
