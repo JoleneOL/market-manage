@@ -7,6 +7,7 @@ import me.jiangcai.lib.resource.ResourceSpringConfig;
 import me.jiangcai.lib.spring.logging.LoggingConfig;
 import me.jiangcai.lib.sys.SystemStringConfig;
 import me.jiangcai.lib.sys.service.SystemStringService;
+import me.jiangcai.lib.thread.ThreadConfig;
 import me.jiangcai.lib.upgrade.UpgradeSpringConfig;
 import me.jiangcai.lib.upgrade.VersionInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({ResourceSpringConfig.class, UpgradeSpringConfig.class, JdbcSpringConfig.class
         , VerificationCodeConfig.class
+        , ThreadConfig.class
 //        , GAASpringConfig.class
 //        , NoticeSpringConfig.class
         , SystemStringConfig.class

@@ -37,7 +37,7 @@ public class Customer {
     @Column(length = 50)
     private String name;
     /**
-     * 所属经销商
+     * 所属经销商 ,必然处于代理商链的最低端
      */
     @ManyToOne
     private AgentLevel agentLevel;

@@ -1,10 +1,14 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.repository.ContactWayRepository;
+import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
@@ -42,6 +46,10 @@ public class LoginServiceImpl implements LoginService {
     private StandardWeixinUserRepository standardWeixinUserRepository;
     @Autowired
     private VerificationCodeService verificationCodeService;
+    @Autowired
+    private AgentLevelRepository agentLevelRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -116,5 +124,33 @@ public class LoginServiceImpl implements LoginService {
         verificationCodeService.verify(mobile, code, loginVerificationType());
         Login login = getEnableLogin(mobile);
         login.setWechatUser(standardWeixinUserRepository.findByOpenId(openId));
+    }
+
+    @Override
+    public AgentLevel lowestAgentLevel(Login who) {
+        List<AgentLevel> allAgent = agentLevelRepository.findByLogin(who);
+
+        if (allAgent.isEmpty()) {
+            Customer customer = customerRepository.findByLogin(who);
+            if (customer == null)
+                throw new IllegalStateException("找不到" + who + "所处的经销商");
+            return customer.getAgentLevel();
+        }
+
+        // 排除掉所有
+        AgentLevel[] all = new AgentLevel[allAgent.size()];
+        allAgent.toArray(all);
+
+        for (AgentLevel agentLevel : all) {
+            // 有人以agentLevel为上级?
+            allAgent.stream()
+                    .filter(level
+                            -> level.getSuperior() == agentLevel)
+                    .findAny()
+                    .ifPresent(level
+                            -> allAgent.remove(agentLevel));
+        }
+
+        return allAgent.get(0);
     }
 }

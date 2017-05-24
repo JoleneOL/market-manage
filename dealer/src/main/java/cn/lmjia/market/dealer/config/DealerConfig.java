@@ -27,6 +27,7 @@ import java.util.List;
  */
 @Configuration
 @ComponentScan("cn.lmjia.market.dealer.controller")
+@EnableJpaRepositories("cn.lmjia.market.dealer.repository")
 @Import({MVCConfig.class, DealerConfig.First.class})
 public class DealerConfig extends WebMvcConfigurerAdapter implements WebModule {
 

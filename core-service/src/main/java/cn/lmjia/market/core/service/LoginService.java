@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -92,4 +93,13 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional
     void bindWechatWithCode(String mobile, String code, String openId) throws IllegalVerificationCodeException;
+
+    /**
+     * 这个身份相关的经销商；如果登录者并非任何体系内的代理商；则以客户关系查找它所属的经销商
+     *
+     * @param who 身份
+     * @return 经销商
+     */
+    @Transactional(readOnly = true)
+    AgentLevel lowestAgentLevel(Login who);
 }

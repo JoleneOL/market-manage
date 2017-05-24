@@ -5,12 +5,24 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.Address;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
 import java.io.IOException;
 
 /**
  * @author CJ
  */
 public interface ContactWayService {
+
+    /**
+     * @param login           身份的from
+     * @param criteriaBuilder cb
+     * @return 表示地址的path
+     */
+    static Path<Address> AddressForLogin(From<?, Login> login, CriteriaBuilder criteriaBuilder) {
+        return login.get("contactWay").get("address");
+    }
 
     /**
      * 更新电话号码

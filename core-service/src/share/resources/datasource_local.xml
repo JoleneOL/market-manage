@@ -11,6 +11,7 @@
         </property>
         <property name="packagesToScan">
             <array>
+                <value>cn.lmjia.market.dealer.entity</value>
                 <value>com.huotu.verification.entity</value>
                 <value>me.jiangcai.payment.chanpay.entity</value>
                 <value>me.jiangcai.payment.entity</value>

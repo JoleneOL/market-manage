@@ -258,9 +258,9 @@ public abstract class CoreServiceTest extends SpringWebTest {
      */
     protected Address randomAddress() {
         Address address = new Address();
-        address.setProvince("北京市");
-        address.setPrefecture("北京市");
-        address.setCounty("东城区");
+        address.setProvince(RandomStringUtils.randomAlphabetic(4) + "省");
+        address.setPrefecture(RandomStringUtils.randomAlphabetic(4) + "市");
+        address.setCounty(RandomStringUtils.randomAlphabetic(4) + "区");
         address.setOtherAddress("其他地址" + RandomStringUtils.randomAlphabetic(10));
         return address;
     }

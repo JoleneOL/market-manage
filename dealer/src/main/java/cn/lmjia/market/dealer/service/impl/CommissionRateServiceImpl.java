@@ -1,15 +1,19 @@
 package cn.lmjia.market.dealer.service.impl;
 
-import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentRate;
+import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author CJ
@@ -26,40 +30,45 @@ public class CommissionRateServiceImpl implements CommissionRateService {
 
     @Override
     public BigDecimal directRate(AgentLevel agent) {
-        return rate(agent, true);
-    }
-
-    private BigDecimal rate(AgentLevel agent, boolean direct) {
-        int level = agentService.agentLevel(agent);
-        return systemStringService
-                .getSystemString("commission.rate." + (direct ? "direct" : "indirect") + ".l" + level
-                        , BigDecimal.class, defaultRate(level, direct));
-    }
-
-    private BigDecimal defaultRate(int level, boolean direct) {
-        switch (level) {
-            case 0:
-                return BigDecimal.ZERO;
-            case 1:
-                return BigDecimal.ZERO;
-            case 2:
-            case 3:
-                return direct ? new BigDecimal("0.4") : new BigDecimal("0.1");
-            case 4:
-                return direct ? new BigDecimal("0.8") : new BigDecimal("0.2");
-            default:
-                throw new IllegalStateException("超过预期" + systemService.systemLevel() + "的级别");
-        }
+        return directRate(agent.getSystem(), agent);
     }
 
     @Override
     public BigDecimal indirectRate(AgentLevel agent) {
-        return rate(agent, false);
+        return indirectRate(agent.getSystem(), agent);
     }
 
     @Override
-    public BigDecimal recommend(Login login) {
-        return systemStringService.getSystemString("commission.rate.recommend"
-                , BigDecimal.class, new BigDecimal("0.2"));
+    public BigDecimal saleRate(AgentSystem system) {
+        if (system.getOrderRate() == null)
+            return systemService.defaultOrderRate();
+        return system.getOrderRate();
     }
+
+    @Override
+    public BigDecimal addressRate(AgentLevel agent) {
+        if (agent.getSystem().getAddressRate() == null)
+            return systemService.defaultAddressRate();
+        return agent.getSystem().getAddressRate();
+    }
+
+    @Override
+    public BigDecimal directRate(AgentSystem system, AgentLevel agent) {
+        return rate(system, agent, AgentRate::getMarketRate);
+    }
+
+    private BigDecimal rate(AgentSystem system, AgentLevel agent, Function<AgentRate, BigDecimal> toRate) {
+        Map<Integer, AgentRate> rates = system.getRates();
+        if (CollectionUtils.isEmpty(rates)) {
+            rates = systemService.defaultAgentRates();
+        }
+
+        return toRate.apply(rates.get(agent.getLevel()));
+    }
+
+    @Override
+    public BigDecimal indirectRate(AgentSystem system, AgentLevel agent) {
+        return rate(system, agent, AgentRate::getRecommendRate);
+    }
+
 }

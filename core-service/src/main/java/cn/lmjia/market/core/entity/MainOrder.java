@@ -193,4 +193,8 @@ public class MainOrder implements PayableOrder {
     public boolean isPay() {
         return orderStatus != OrderStatus.EMPTY && orderStatus != OrderStatus.forPay;
     }
+
+    public Object asLocker() {
+        return ("mainOrder-" + id).intern();
+    }
 }

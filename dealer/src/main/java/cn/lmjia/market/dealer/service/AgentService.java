@@ -2,6 +2,8 @@ package cn.lmjia.market.dealer.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentSystem;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.service.SystemService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -170,4 +172,29 @@ public interface AgentService {
      */
     @Transactional(readOnly = true)
     AgentLevel getAgent(long id);
+
+    /**
+     * 这个身份所处的代理体系
+     *
+     * @param login 身份；可能是一个客户也可能是一个代理商身份
+     * @return 代理体系
+     */
+    @Transactional(readOnly = true)
+    AgentSystem agentSystem(Login login);
+
+    /**
+     * 这个身份所处的代理链
+     *
+     * @param login 身份；可能是一个客户也可能是一个代理商身份
+     * @return 长度必然为{@link SystemService#systemLevel()}
+     */
+    @Transactional(readOnly = true)
+    AgentLevel[] agentLine(Login login);
+
+    /**
+     * @param address 相关地址
+     * @return 可选的区域代理
+     */
+    @Transactional(readOnly = true)
+    AgentLevel addressLevel(Address address);
 }

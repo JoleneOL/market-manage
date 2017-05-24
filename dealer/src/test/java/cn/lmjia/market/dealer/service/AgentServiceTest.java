@@ -1,9 +1,15 @@
 package cn.lmjia.market.dealer.service;
 
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentSystem;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
+import cn.lmjia.market.core.service.ContactWayService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +28,45 @@ public class AgentServiceTest extends DealerServiceTest {
 
     @Autowired
     private AgentLevelRepository agentLevelRepository;
+    @Autowired
+    private SystemService systemService;
+    @Autowired
+    private ContactWayService contactWayService;
+
+    @Test
+    public void agentSystem() {
+        Login login = newRandomAgent(UUID.randomUUID().toString());
+
+        AgentSystem system = agentService.agentSystem(login);
+        // 它的下级也是这个熊他那个
+        Login sub = newRandomAgent(UUID.randomUUID().toString(), agentService.highestAgent(login));
+        assertThat(agentService.agentSystem(sub))
+                .isEqualTo(system);
+        MainOrder order = newRandomOrderFor(sub, login);
+
+        assertThat(agentService.agentSystem(order.getCustomer().getLogin()))
+                .isEqualTo(system);
+
+        // line
+        AgentLevel[] line1 = agentService.agentLine(login);
+        assertThat(line1)
+                .hasSize(systemService.systemLevel());
+
+        AgentLevel[] line2 = agentService.agentLine(sub);
+        assertThat(line2)
+                .hasSize(systemService.systemLevel());
+
+        AgentLevel[] line3 = agentService.agentLine(order.getCustomer().getLogin());
+        assertThat(line3)
+                .hasSize(systemService.systemLevel())
+                .containsExactly(line2);
+
+        // 地址相关
+        final Address address = randomAddress();
+        contactWayService.updateAddress(sub, address);
+        assertThat(agentService.addressLevel(address).getLogin())
+                .isEqualTo(sub);
+    }
 
     @Test
     public void manageable() throws Exception {

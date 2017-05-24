@@ -1,12 +1,16 @@
 package cn.lmjia.market.dealer.service.impl;
 
 import cn.lmjia.market.core.entity.ContactWay;
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
 import cn.lmjia.market.core.service.AgentFinancingService;
+import cn.lmjia.market.core.service.ContactWayService;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
@@ -18,8 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
@@ -27,6 +34,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -45,6 +55,8 @@ public class AgentServiceImpl implements AgentService {
     private SystemService systemService;
     @Autowired
     private AgentSystemRepository agentSystemRepository;
+    @Autowired
+    private LoginService loginService;
 
     @Override
     public int agentLevel(AgentLevel level) {
@@ -65,9 +77,6 @@ public class AgentServiceImpl implements AgentService {
             // TODO 顶级代理 可不是所有人可以添的
             // 顶级代理啊
             agentSystem = new AgentSystem();
-            // 默认属性
-            agentSystem.setOrderRate(systemService.defaultOrderRate());
-            agentSystem.setRates(systemService.defaultAgentRates());
             agentSystem = agentSystemRepository.save(agentSystem);
         } else
             agentSystem = superior.getSystem();
@@ -164,11 +173,6 @@ public class AgentServiceImpl implements AgentService {
             return (new AndSpecification<>(belongsTo(highestAgent(login)), nameSpecification));
     }
 
-    @Override
-    public Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable) {
-        return agentLevelRepository.findAll(manageable(true, login, agentName), pageable);
-    }
-
 //    @SuppressWarnings("SpringJavaAutowiringInspection")
 //    @Autowired
 //    private EntityManager entityManager;
@@ -193,6 +197,11 @@ public class AgentServiceImpl implements AgentService {
 ////        entityManager.find
 //        return null;
 //    }
+
+    @Override
+    public Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable) {
+        return agentLevelRepository.findAll(manageable(true, login, agentName), pageable);
+    }
 
     private Specification<AgentLevel> belongsTo(AgentLevel agent) {
         return (root, query, cb) -> cb.equal(agentBelongsExpression(root.get("id"), cb.literal(agent.getId()), cb), 1);
@@ -220,5 +229,71 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public AgentLevel getAgent(long id) {
         return agentLevelRepository.getOne(id);
+    }
+
+    @Override
+    public AgentSystem agentSystem(Login login) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<AgentSystem> systemCriteriaQuery = criteriaBuilder.createQuery(AgentSystem.class);
+        Root<AgentLevel> agentLevelRoot = systemCriteriaQuery.from(AgentLevel.class);
+        systemCriteriaQuery = systemCriteriaQuery.select(agentLevelRoot.get("system"));
+        systemCriteriaQuery = systemCriteriaQuery.where(criteriaBuilder.equal(agentLevelRoot.get("login"), login));
+        systemCriteriaQuery = systemCriteriaQuery.distinct(true);
+        try {
+            return entityManager.createQuery(systemCriteriaQuery).getSingleResult();
+        } catch (NoResultException ex) {
+            systemCriteriaQuery = criteriaBuilder.createQuery(AgentSystem.class);
+            Root<Customer> customerRoot = systemCriteriaQuery.from(Customer.class);
+            systemCriteriaQuery = systemCriteriaQuery.select(customerRoot.get("agentLevel").get("system"));
+            systemCriteriaQuery = systemCriteriaQuery.where(criteriaBuilder.equal(customerRoot.get("login"), login));
+            return entityManager.createQuery(systemCriteriaQuery).getSingleResult();
+        }
+    }
+
+    @Override
+    public AgentLevel[] agentLine(Login login) {
+        AgentLevel agentLevel = loginService.lowestAgentLevel(login);
+        // 该进入查询了
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createTupleQuery();
+        Root<AgentLevel> root = criteriaQuery.from(AgentLevel.class);
+        // 按照level 查询 第一个是最长的……
+        List<From<?, AgentLevel>> selectionList = new ArrayList<>(systemService.systemLevel());
+        selectionList.add(root);
+        int count = systemService.systemLevel() - 1;
+        while (count-- > 0) {
+            // 最后一个selection
+            From<?, AgentLevel> last = selectionList.get(selectionList.size() - 1);
+            selectionList.add(last.join("superior", JoinType.LEFT));
+        }
+
+        Collections.reverse(selectionList);
+        criteriaQuery = criteriaQuery.multiselect(selectionList.stream().map(from -> from).collect(Collectors.toList()));
+        criteriaQuery = criteriaQuery.where(criteriaBuilder.equal(root, agentLevel));
+
+        Tuple tuple = entityManager.createQuery(criteriaQuery).getSingleResult();
+        AgentLevel[] levels = new AgentLevel[systemService.systemLevel()];
+        for (int i = 0; i < levels.length; i++) {
+            levels[i] = tuple.get(i, AgentLevel.class);
+        }
+        return levels;
+    }
+
+    @Override
+    public AgentLevel addressLevel(Address address) {
+        // 地址等同于 代理商
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<AgentLevel> query = criteriaBuilder.createQuery(AgentLevel.class);
+        Root<AgentLevel> root = query.from(AgentLevel.class);
+        query = query.where(
+                criteriaBuilder.and(
+                        Address.AlmostMatch(
+                                ContactWayService.AddressForLogin(root.join("login"), criteriaBuilder)
+                                , address
+                                , criteriaBuilder)
+                        , criteriaBuilder.equal(root.get("level").as(Integer.class), systemService.addressRateForLevel())
+                ));
+        // TODO 如果存在多个。。
+        return entityManager.createQuery(query).getSingleResult();
     }
 }

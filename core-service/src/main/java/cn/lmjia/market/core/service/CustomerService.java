@@ -16,7 +16,7 @@ public interface CustomerService {
      *
      * @param name        姓名
      * @param mobile      电话号码
-     * @param agentLevel  所属经销商
+     * @param agentLevel  所属经销商，必然是代理体系的最低端
      * @param recommendBy 推荐用户
      * @return 必然非null的客户
      */

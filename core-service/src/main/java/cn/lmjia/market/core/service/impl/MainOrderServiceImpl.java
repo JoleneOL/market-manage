@@ -4,14 +4,12 @@ import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
-import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.MainOrderRepository;
-import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.CustomerService;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
@@ -47,9 +45,7 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private AgentLevelRepository agentLevelRepository;
-    @Autowired
-    private CustomerRepository customerRepository;
+    private LoginService loginService;
     @Autowired
     private MainOrderRepository mainOrderRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -64,7 +60,8 @@ public class MainOrderServiceImpl implements MainOrderService {
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress, MainGood good, int amount, String mortgageIdentifier) {
         // 客户处理
-        Customer customer = customerService.getNoNullCustomer(name, mobile, lowestAgentLevel(who), recommendBy);
+        Customer customer = customerService.getNoNullCustomer(name, mobile, loginService.lowestAgentLevel(who)
+                , recommendBy);
 
         customer.setInstallAddress(installAddress);
         customer.setGender(gender);
@@ -161,38 +158,5 @@ public class MainOrderServiceImpl implements MainOrderService {
         Root<MainOrder> root = criteriaUpdate.from(MainOrder.class);
         criteriaUpdate = criteriaUpdate.set(root.get("orderTime"), time);
         entityManager.createQuery(criteriaUpdate).executeUpdate();
-    }
-
-    /**
-     * 这个身份相关的经销商；如果登录者并非任何体系内的代理商；则以客户关系查找它所属的经销商
-     *
-     * @param who 身份
-     * @return 经销商
-     */
-    private AgentLevel lowestAgentLevel(Login who) {
-        List<AgentLevel> allAgent = agentLevelRepository.findByLogin(who);
-
-        if (allAgent.isEmpty()) {
-            Customer customer = customerRepository.findByLogin(who);
-            if (customer == null)
-                throw new IllegalStateException("找不到" + who + "所处的经销商");
-            return customer.getAgentLevel();
-        }
-
-        // 排除掉所有
-        AgentLevel[] all = new AgentLevel[allAgent.size()];
-        allAgent.toArray(all);
-
-        for (AgentLevel agentLevel : all) {
-            // 有人以agentLevel为上级?
-            allAgent.stream()
-                    .filter(level
-                            -> level.getSuperior() == agentLevel)
-                    .findAny()
-                    .ifPresent(level
-                            -> allAgent.remove(agentLevel));
-        }
-
-        return allAgent.get(0);
     }
 }

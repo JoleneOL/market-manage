@@ -4,6 +4,9 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 
 /**
  * @author CJ
@@ -29,6 +32,20 @@ public class Address {
     private String county;
     @Column(length = 100)
     private String otherAddress;
+
+    /**
+     * @param addressPath     地址的path
+     * @param address         地址信息
+     * @param criteriaBuilder cb
+     * @return 是否地址大致一致
+     */
+    public static Predicate AlmostMatch(Path<Address> addressPath, Address address, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.and(
+                criteriaBuilder.equal(addressPath.get("province"), address.getProvince())
+                , criteriaBuilder.equal(addressPath.get("prefecture"), address.getPrefecture())
+                , criteriaBuilder.equal(addressPath.get("county"), address.getCounty())
+        );
+    }
 
     /**
      * @return 把除了otherAddress之外的地址组织成一个标准格式
