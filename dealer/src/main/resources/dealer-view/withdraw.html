@@ -43,36 +43,43 @@
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-7 col-lg-6">
-                                    <form class="form-horizontal mb40">
+                                    <form class="form-horizontal mb40" id="J_form">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">可提现佣金</label>
                                             <div class="col-sm-6">
-                                                <h1 class="total">500999.50</h1>
+                                                <h1 class="total">500999.52</h1>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">提现金额</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入提现金额" data-max="500999.50"
-                                                       class="form-control">
+                                                <input type="text" placeholder="请输入提现金额" name="withdraw" max="500999.52"
+                                                       class="form-control" id="J_withdraw">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">开户行</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入开户行" class="form-control" name="bank">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">收款帐号</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入收款帐号" class="form-control">
+                                                <input type="hidden" name="account">
+                                                <input type="text" placeholder="请输入收款帐号" class="form-control" name="showAccount" id="J_Bank">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">收款人</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入收款人" class="form-control">
+                                                <input type="text" placeholder="请输入收款人" class="form-control" name="payee">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">收款人电话</label>
                                             <div class="col-sm-6">
-                                                <input type="tel" placeholder="请输入电话" class="form-control">
+                                                <input type="tel" placeholder="请输入电话" class="form-control" name="mobile">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -92,27 +99,29 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">发票物流单号</label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" placeholder="请输入单号" class="form-control">
+                                                    <input type="text" placeholder="请输入单号" class="form-control" name="logisticsCode">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">物流公司</label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" placeholder="请输入公司" class="form-control">
+                                                    <input type="text" placeholder="请输入公司" name="logisticsCompany" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">到账金额</label>
                                             <div class="col-sm-6">
-                                                <h1 class="total">4007.50</h1>
+                                                <h1 class="total" id="J_withdrawAmount">0</h1>
                                             </div>
                                         </div>
+
                                         <div class="form-group">
                                             <div class="col-sm-6 col-sm-offset-3 control-label">
-                                                <button type="button" class="btn btn-success btn-block btn-lg">
-                                                    确&nbsp;定
-                                                </button>
+                                                <!--首次提现 begin-->
+                                                <button type="button" class="btn btn-success btn-block btn-lg" id="J_agreement">确&nbsp;定</button>
+                                                <!--首次提现 end-->
+                                                <button type="submit" class="btn btn-success btn-block btn-lg">确&nbsp;定</button>
                                             </div>
                                         </div>
                                     </form>
@@ -126,6 +135,21 @@
     </div>
 </section>
 </body>
+<script type="text/template" id="J_protocol">
+    <h3 class="text-center">第三方合同</h3>
+
+    <div class="form-group">
+        <div class="col-sm-6 control-label">
+            <button type="submit" class="btn btn-success btn-block" form="J_form">确&nbsp;定</button>
+        </div>
+        <div class="col-sm-6 control-label">
+            <button type="button" class="btn btn-white btn-block">取&nbsp;消</button>
+        </div>
+    </div>
+</script>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="dealer-resource/js/drawing.js"></script>
 </html>
