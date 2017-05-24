@@ -79,6 +79,12 @@ public class MainOrderServiceImpl implements MainOrderService {
         order.setGood(good);
         order.makeRecord();
 
+        queryDailySerialId(now, order);
+        order.setOrderStatus(OrderStatus.forPay);
+        return mainOrderRepository.save(order);
+    }
+
+    private synchronized void queryDailySerialId(LocalDate now, MainOrder order) {
         if (!dailySerials.containsKey(now)) {
             // 寻找当前库最大值
             final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -96,8 +102,6 @@ public class MainOrderServiceImpl implements MainOrderService {
         }
 
         order.setDailySerialId(dailySerials.get(now).incrementAndGet());
-        order.setOrderStatus(OrderStatus.forPay);
-        return mainOrderRepository.save(order);
     }
 
     @Override

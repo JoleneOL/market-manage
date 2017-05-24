@@ -60,7 +60,7 @@ import java.util.stream.Stream;
 @Import({MVCConfig.MVCConfigLoader.class})
 public class MVCConfig extends WebMvcConfigurerAdapter {
     private static final String UTF8 = "UTF-8";
-    private static String[] STATIC_RESOURCE_PATHS = new String[]{
+    public static String[] STATIC_RESOURCE_PATHS = new String[]{
             "assets", "_resources"
     };
     private final ThymeleafViewResolver htmlViewResolver;
@@ -163,8 +163,11 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);
-        for (String path : STATIC_RESOURCE_PATHS) {
-            registry.addResourceHandler("/" + path + "/**").addResourceLocations("/" + path + "/");
+        //在单元测试时，则引导到 web 项目目录
+        if (!environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
+            for (String path : STATIC_RESOURCE_PATHS) {
+                registry.addResourceHandler("/" + path + "/**").addResourceLocations("/" + path + "/");
+            }
         }
 
         registry.addResourceHandler("/MP_verify_*.txt").addResourceLocations("/");
@@ -316,7 +319,10 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                         })
                         .collect(Collectors.toSet());
 
-                collect.add(createHtmlTemplateResolver(null));
+                // 添加 web 项目的模板处理
+                if (!environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
+                    collect.add(createHtmlTemplateResolver(null));
+                }
                 return templateEngine(collect);
             }
 

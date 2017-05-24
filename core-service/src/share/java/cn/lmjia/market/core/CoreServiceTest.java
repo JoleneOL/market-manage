@@ -1,5 +1,6 @@
 package cn.lmjia.market.core;
 
+import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
@@ -31,6 +32,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -50,6 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
+@ActiveProfiles({"test", CoreConfig.ProfileUnitTest})
 @ContextConfiguration(classes = CoreServiceTestConfig.class)
 @WebAppConfiguration
 public abstract class CoreServiceTest extends SpringWebTest {

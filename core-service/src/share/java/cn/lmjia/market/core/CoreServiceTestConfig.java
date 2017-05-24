@@ -1,7 +1,10 @@
 package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.config.MVCConfig;
+import cn.lmjia.market.core.config.WebModule;
 import com.huotu.vefification.test.VerificationCodeTestConfig;
+import lombok.SneakyThrows;
 import me.jiangcai.chanpay.event.TradeEvent;
 import me.jiangcai.chanpay.test.ChanpayTestSpringConfig;
 import me.jiangcai.lib.test.config.H2DataSourceConfig;
@@ -35,13 +38,16 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.IOException;
 import java.security.SignatureException;
 import java.util.List;
@@ -56,7 +62,7 @@ import java.util.UUID;
 @PropertySource("classpath:/test_wx.properties")
 @Import({CoreConfig.class, ChanpayTestSpringConfig.class, PaymentTestConfig.class, VerificationCodeTestConfig.class})
 @ComponentScan("cn.lmjia.market.core.test")
-public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcConfigurer {
+public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcConfigurer, WebModule {
 
     private static final Log log = LogFactory.getLog(CoreServiceTestConfig.class);
 
@@ -190,5 +196,41 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
     @Override
     public MessageCodesResolver getMessageCodesResolver() {
         return null;
+    }
+
+    @Override
+    public boolean hasOwnTemplateResolver() {
+        return true;
+    }
+
+    @Override
+    public void templateResolver(SpringResourceTemplateResolver resolver) {
+        resolver.setPrefix(urlToWebApp());
+    }
+
+    @Override
+    public String[] resourcePathPatterns() {
+        String[] d = new String[MVCConfig.STATIC_RESOURCE_PATHS.length];
+        for (int i = 0; i < d.length; i++) {
+            d[i] = "/" + MVCConfig.STATIC_RESOURCE_PATHS[i] + "/**";
+        }
+        return d;
+    }
+
+    @Override
+    public void resourceHandler(String pattern, ResourceHandlerRegistration registration) {
+        pattern = pattern.substring(1, pattern.length() - 3);
+        registration.addResourceLocations(urlToWebApp() + pattern + "/");
+    }
+
+    private String urlToWebApp() {
+        if (new File("./web").exists())
+            return urlToWebApp(new File("./web"));
+        return urlToWebApp(new File("../web"));
+    }
+
+    @SneakyThrows
+    private String urlToWebApp(File file) {
+        return new File(file, "src/main/webapp/").toURI().toURL().toString();
     }
 }
