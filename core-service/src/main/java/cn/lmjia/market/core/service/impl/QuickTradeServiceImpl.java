@@ -2,7 +2,11 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
+import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.QuickTradeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,15 +14,21 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class QuickTradeServiceImpl implements QuickTradeService {
+    @Autowired
+    private MainOrderRepository mainOrderRepository;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Override
     public void makeDone(MainOrder order) {
-        if (order.getOrderStatus() == OrderStatus.afterSale) {
-            // 已经进入售后了
+        if (!order.isPay()) {
+            throw new IllegalArgumentException("该订单尚未支付，无法直接完成。");
         }
-        if (order.isPay()) {
-            // 只接受已支付的订单,将产生事件
-            // dealer 项目独立处理分佣核算已经相关实体
-            // 按代理以及身份 生成分佣表 rate为0 将不产生
+        if (order.getOrderStatus() != OrderStatus.afterSale) {
+            order.setOrderStatus(OrderStatus.afterSale);
+            mainOrderRepository.save(order);
         }
+
+        applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order));
     }
 }
