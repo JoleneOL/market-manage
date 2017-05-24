@@ -217,7 +217,7 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public AgentLevel getAgent(Login login, int level) {
-        return null;
+        return agentLevelRepository.findTopByLoginAndLevel(login, level);
     }
 
     @Override
