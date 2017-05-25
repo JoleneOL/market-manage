@@ -100,12 +100,17 @@ public class MainOrderServiceTest extends DealerServiceTest {
 
         // 好了开始算了
         AgentLevel addressBoundWinLevel = agentService.addressLevel(order.getInstallAddress());
+        if (addressBoundWinLevel != null) {
+            log.info("区域奖励获得者:" + addressBoundWinLevel.getLogin().getId());
+        } else
+            log.info("没有区域奖励获得者");
         // a5应该获得 推荐奖励
         // 其中 0 为sale 1 为 address
         // 2,4,6,8,10 为sale
         // 3,5,7,9,11 为推荐
+//        printRates(nowRate);
         for (BigDecimal aNowRate : nowRate) {
-            System.out.println(aNowRate.multiply(BigDecimal.valueOf(100)));
+            log.info(aNowRate.multiply(BigDecimal.valueOf(100)));
         }
         log.info("销售者:" + saleIndex + ", login:" + als[saleIndex].getId());
         for (int i = 0; i < systemService.systemLevel(); i++) {
@@ -115,7 +120,7 @@ public class MainOrderServiceTest extends DealerServiceTest {
             assertMoney(order, als[i], rate, addressBoundWinLevel, nowRate[1]);
         }
         for (BigDecimal aNowRate : nowRate) {
-            System.out.println(aNowRate.multiply(BigDecimal.valueOf(100)));
+            log.info(aNowRate.multiply(BigDecimal.valueOf(100)));
         }
         log.info("推荐者:" + recommendIndex + ", login:" + bls[recommendIndex].getId());
         // 只有推荐上这条线上的人会获得奖励
