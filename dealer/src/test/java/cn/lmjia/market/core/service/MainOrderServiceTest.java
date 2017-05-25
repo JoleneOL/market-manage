@@ -7,6 +7,10 @@ import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.dealer.service.CommissionRateService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.assertj.core.api.AbstractBigDecimalAssert;
+import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class MainOrderServiceTest extends DealerServiceTest {
 
+    private static final Log log = LogFactory.getLog(MainOrderServiceTest.class);
     @Autowired
     private CommissionRateService commissionRateService;
     @Autowired
@@ -44,41 +49,30 @@ public class MainOrderServiceTest extends DealerServiceTest {
 
         // A5 下单购买 推荐人是B代理体系的 B3
         // 则新用户隶属于A 代理体系，同时 A2,A2,A3,A4,A5 以及B1,B2,B3 都将获得提成
+        Login als[] = new Login[systemService.systemLevel()];
+        AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
+        initAgentSystem(als, as);
 
-
-        Login a1l = newRandomAgent();
-        AgentLevel a1 = agentService.getAgent(a1l, 0);
-        Login a2l = newRandomAgent(a1);
-        AgentLevel a2 = agentService.getAgent(a2l, 1);
-        Login a3l = newRandomAgent(a2);
-        AgentLevel a3 = agentService.getAgent(a3l, 2);
-        Login a4l = newRandomAgent(a3);
-        AgentLevel a4 = agentService.getAgent(a4l, 3);
-        Login a5l = newRandomAgent(a4);
-        AgentLevel a5 = agentService.getAgent(a5l, 4);
-        AgentSystem a = a1.getSystem();
+        AgentSystem a = as[0].getSystem();
 
         // 先断言提成，并且维护提成
 
         // 首先是断言为默认提成
         assertThat(commissionRateService.saleRate(a))
                 .isEqualTo(systemService.defaultOrderRate());
-        assertThat(commissionRateService.addressRate(a1))
+        assertThat(commissionRateService.addressRate(as[0]))
                 .isEqualTo(systemService.defaultAddressRate());
-        hasDefaultRate(a1);
-        hasDefaultRate(a2);
-        hasDefaultRate(a3);
-        hasDefaultRate(a4);
-        hasDefaultRate(a5);
+
+        for (AgentLevel a1 : as) {
+            hasDefaultRate(a1);
+        }
 
         // 再应用新的提成
         // 将0.4 - 0.8 分给诸位
         BigDecimal all = BigDecimal.valueOf(0.4D + Math.abs(random.nextDouble()) * 0.4D);
         // 一共分为 10 + 2
         BigDecimal[] nowRate = randomCute(all, systemService.systemLevel() * 2 + 2);
-        for (int i = 0; i < nowRate.length; i++) {
-            System.out.println(nowRate[i].multiply(BigDecimal.valueOf(100)));
-        }
+
         // 其中 0 为sale 1 为 address
         // 2,4,6,8,10 为sale
         // 3,5,7,9,11 为推荐
@@ -89,19 +83,14 @@ public class MainOrderServiceTest extends DealerServiceTest {
             commissionRateService.updateIndirectRate(a, i, nowRate[i * 2 + 3]);
         }
 //b
-        Login b1l = newRandomAgent();
-        AgentLevel b1 = agentService.getAgent(b1l, 0);
-        Login b2l = newRandomAgent(b1);
-        AgentLevel b2 = agentService.getAgent(b2l, 1);
-        Login b3l = newRandomAgent(b2);
-        AgentLevel b3 = agentService.getAgent(b3l, 2);
-        Login b4l = newRandomAgent(b3);
-        AgentLevel b4 = agentService.getAgent(b4l, 3);
-        Login b5l = newRandomAgent(b4);
-        AgentLevel b5 = agentService.getAgent(b5l, 4);
+        Login bls[] = new Login[systemService.systemLevel()];
+        AgentLevel bs[] = new AgentLevel[systemService.systemLevel()];
+        initAgentSystem(bls, bs);
 
         // 做单
-        MainOrder order = newRandomOrderFor(a5l, b3l);
+        int saleIndex = random.nextInt(als.length);
+        int recommendIndex = random.nextInt(bls.length);
+        MainOrder order = newRandomOrderFor(als[saleIndex], bls[recommendIndex]);
 
         // 完成支付
         makeOrderPay(order);
@@ -110,8 +99,108 @@ public class MainOrderServiceTest extends DealerServiceTest {
         quickTradeService.makeDone(mainOrderRepository.getOne(order.getId()));
 
         // 好了开始算了
+        AgentLevel addressBoundWinLevel = agentService.addressLevel(order.getInstallAddress());
+        // a5应该获得 推荐奖励
+        // 其中 0 为sale 1 为 address
+        // 2,4,6,8,10 为sale
+        // 3,5,7,9,11 为推荐
+        for (BigDecimal aNowRate : nowRate) {
+            System.out.println(aNowRate.multiply(BigDecimal.valueOf(100)));
+        }
+        log.info("销售者:" + saleIndex + ", login:" + als[saleIndex].getId());
+        for (int i = 0; i < systemService.systemLevel(); i++) {
+            // a0 应该获得奖励是 如果 saleIndex<=0 就是全部的推销奖励
+            BigDecimal rate = a(i, saleIndex, nowRate);
+            log.info(als[i] + "应该获得的奖励是" + rate);
+            assertMoney(order, als[i], rate, addressBoundWinLevel, nowRate[1]);
+        }
+        for (BigDecimal aNowRate : nowRate) {
+            System.out.println(aNowRate.multiply(BigDecimal.valueOf(100)));
+        }
+        log.info("推荐者:" + recommendIndex + ", login:" + bls[recommendIndex].getId());
+        // 只有推荐上这条线上的人会获得奖励
+        for (int i = 0; i < systemService.systemLevel(); i++) {
+            BigDecimal rate = b(i, recommendIndex, nowRate, bls);
+            log.info(bls[i] + "应该获得的奖励是" + rate);
+            assertMoney(order, bls[i], rate, addressBoundWinLevel, nowRate[1]);
+        }
+//        assertMoney(order, als[4], nowRate[0], addressBoundWinLevel, nowRate[1]);
+        // sale 2
+        // 0 1
 
 
+    }
+
+    private BigDecimal b(int index, int recommend, BigDecimal[] rates, Login[] login) {
+        // ..|..
+        // 只有|以上的人可以获得推荐奖励
+        if (index < recommend)
+            return rates[index * 2 + 3];
+        else if (index == recommend) {
+            // 可以获得 index .. max 的奖励
+            BigDecimal rate = BigDecimal.ZERO;
+            for (int i = index; i < systemService.systemLevel(); i++) {
+                rate = rate.add(rates[i * 2 + 3]);
+            }
+            return rate;
+        } else
+            return BigDecimal.ZERO;
+    }
+
+    private BigDecimal a(int index, int sale, BigDecimal[] rates) {
+        // index 0 sale 0 所有奖励+直销
+        // index 0 sale 1 0级推销奖励
+        // index 1 sale 1 除了0级之外的所有奖励
+        // index 0 sale 2 0级推销奖励
+        // index 1 sale 2 1级推销奖励
+        // index 2 sale 2 除了0,1级之外的所有奖励
+        // index 2 sale 3 无奖励
+
+        // 如果 sale <= index 则 index获得直销奖励+index的推销奖励
+        if (index > sale) {
+            // 其他人做的生意
+            return BigDecimal.ZERO;
+        } else if (sale == index) {
+            BigDecimal rate = rates[0];
+            for (int i = sale; i < systemService.systemLevel(); i++) {
+                rate = rate.add(rates[i * 2 + 2]);
+            }
+            return rate;
+            // 直销
+            // sale-max 推销奖励
+        } else {
+            // index 推销奖励
+            return rates[index * 2 + 2];
+        }
+    }
+
+    /**
+     * 断言login从order获得了rate的奖励
+     *
+     * @param order
+     * @param login
+     * @param rate
+     * @param addressBoundWinLevel 应该获得区域奖励的等级
+     * @param addressRate          区域奖励
+     */
+    private AbstractBigDecimalAssert<?> assertMoney(MainOrder order, Login login, BigDecimal rate, AgentLevel addressBoundWinLevel, BigDecimal addressRate) {
+        if (addressBoundWinLevel != null && addressBoundWinLevel.getLogin().equals(login)) {
+            rate = rate.add(addressRate);
+        }
+        return assertThat(loginService.get(login.getId()).getCommissionBalance())
+                .as("身份 %d 应该获得准确的奖励", login.getId())
+                .isCloseTo(order.getOrderDueAmount().multiply(rate).setScale(2, BigDecimal.ROUND_HALF_UP), Offset.offset(new BigDecimal("0.00001")));
+    }
+
+    private void initAgentSystem(Login[] logins, AgentLevel[] levels) {
+        for (int i = 0; i < logins.length; i++) {
+            if (i == 0) {
+                logins[i] = newRandomAgent();
+            } else {
+                logins[i] = newRandomAgent(levels[i - 1]);
+            }
+            levels[i] = agentService.getAgent(logins[i], i);
+        }
     }
 
     /**

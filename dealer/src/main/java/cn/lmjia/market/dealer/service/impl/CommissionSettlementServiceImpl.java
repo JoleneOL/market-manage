@@ -62,14 +62,14 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         // 谁可以获得？
         {
             // 销售者
-            saveCommission(orderCommission, null, order.getOrderBy(), commissionRateService.saleRate(system));
+            saveCommission(orderCommission, null, order.getOrderBy(), commissionRateService.saleRate(system), "直销");
         }
 
         AgentLevel[] sales = agentService.agentLine(order.getOrderBy());
         {
             // 以及销售者的代理体系
             for (AgentLevel level : sales) {
-                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.directRate(system, level));
+                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.directRate(system, level), "销售");
             }
         }
 
@@ -78,7 +78,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             // 推荐者
             // 以及推荐者的代理体系
             for (AgentLevel level : recommends) {
-                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, level));
+                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, level), "推荐");
             }
         }
 
@@ -86,17 +86,19 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         if (addressLevel != null) {
             // 以及地域奖励，这个跟系统设定的地址等级有关
             saveCommission(orderCommission, addressLevel, addressLevel.getLogin()
-                    , commissionRateService.addressRate(addressLevel));
+                    , commissionRateService.addressRate(addressLevel), "地域");
         }
     }
 
-    private void saveCommission(OrderCommission orderCommission, AgentLevel level, Login login, BigDecimal rate) {
+    private void saveCommission(OrderCommission orderCommission, AgentLevel level, Login login, BigDecimal rate, String message) {
         Commission commission = new Commission();
         commission.setOrderCommission(orderCommission);
         commission.setAgent(level);
         commission.setWho(login);
         commission.setAmount(orderCommission.getSource().getOrderDueAmount().multiply(rate)
                 .setScale(2, BigDecimal.ROUND_HALF_UP));
+        login.setCommissionBalance(login.getCommissionBalance().add(commission.getAmount()));
         commissionRepository.save(commission);
+        log.debug("因" + message + " login:" + login.getId() + "获得 提成比:" + rate + "，提成:" + commission.getAmount());
     }
 }
