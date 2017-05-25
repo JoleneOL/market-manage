@@ -15,8 +15,15 @@ $(function () {
         var $extra = $(this).closest('.weui-cell_select').next('.J_extra');
         if ($(this).val() === 'other') {
             $extra.show();
+            $('textarea[name="otherType"]').rules('add', {
+                required: true,
+                messages : {
+                    required : "填写原因"
+                }
+            });
         } else {
             $extra.hide();
+            $('textarea[name="otherType"]').rules('remove');
         }
     });
 
@@ -37,10 +44,12 @@ $(function () {
 
     $('#J_form').validate({
         rules: {
-            appointment: "required"
+            logisticsCompany: "required",
+            logisticsCode: "required"
         },
         messages: {
-            appointment: "请选择预约时间"
+            logisticsCompany: "请填入物流公司",
+            logisticsCode: "请填入物流单号"
         },
         errorPlacement: function (error, element) {
             $.toptip(error);
