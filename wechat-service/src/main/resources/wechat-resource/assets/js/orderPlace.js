@@ -83,6 +83,7 @@ $(function () {
                 required: true,
                 isPhone: true
             },
+            recommend: 'required',
             amount: {
                 required: true
             },
@@ -97,6 +98,7 @@ $(function () {
             mobile: {
                 required: "请填写手机号码"
             },
+            recommend: '请填写该项',
             address: "请选择地址",
             fullAddress: "请填写详细地址",
             amount: {
