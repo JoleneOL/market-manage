@@ -2,6 +2,7 @@ package cn.lmjia.market.dealer.service;
 
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -59,4 +60,38 @@ public interface CommissionRateService {
      * @return 区域奖励提成
      */
     BigDecimal addressRate(AgentLevel agent);
+
+    /**
+     * 更新直销奖励
+     *
+     * @param system 代理体系
+     */
+    @Transactional
+    void updateSaleRate(AgentSystem system, BigDecimal rate);
+
+    /**
+     * 更新区域奖励
+     *
+     * @param system 代理体系
+     */
+    @Transactional
+    void updateAddressRate(AgentSystem system, BigDecimal rate);
+
+    /**
+     * 更新直接销售奖励
+     *
+     * @param system 代理体系
+     * @param level  层次
+     */
+    @Transactional
+    void updateDirectRate(AgentSystem system, int level, BigDecimal rate);
+
+    /**
+     * 更新推荐销售奖励
+     *
+     * @param system 代理体系
+     * @param level  层次
+     */
+    @Transactional
+    void updateIndirectRate(AgentSystem system, int level, BigDecimal rate);
 }

@@ -14,6 +14,8 @@ import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,7 @@ import java.util.stream.Collectors;
 @Service
 public class AgentServiceImpl implements AgentService {
 
+    private static final Log log = LogFactory.getLog(AgentServiceImpl.class);
     @Autowired
     private AgentFinancingService agentFinancingService;
     @Autowired
@@ -130,6 +133,31 @@ public class AgentServiceImpl implements AgentService {
                 -> cb.lessThan(agentLevelExpression(root, cb), systemService.systemLevel() - 1));
     }
 
+//    @SuppressWarnings("SpringJavaAutowiringInspection")
+//    @Autowired
+//    private EntityManager entityManager;
+//
+//    private Page<AgentInfo> agentInfo(Specification<AgentLevel> specification, Pageable pageable) {
+//        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<AgentInfo> query = criteriaBuilder.createQuery(AgentInfo.class);
+//        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+//        Root<AgentLevel> root = query.from(AgentLevel.class);
+//        Root<AgentLevel> countRoot = countQuery.from(AgentLevel.class);
+//
+//        countQuery = countQuery.select(criteriaBuilder.count(countRoot));
+//        countQuery = countQuery.where(specification.toPredicate(countRoot,countQuery,criteriaBuilder));
+//        // 数据
+//        Subquery<AgentLevel> query.subquery(AgentLevel.class);
+//        query = query.select(criteriaBuilder.construct(
+//                AgentInfo.class,
+//                root,
+//        ))
+//
+//
+////        entityManager.find
+//        return null;
+//    }
+
     @Override
     public Specification<AgentLevel> manageable(boolean direct, Login login, String agentName) {
         final Specification<AgentLevel> nameSpecification;
@@ -161,31 +189,6 @@ public class AgentServiceImpl implements AgentService {
         else
             return (new AndSpecification<>(belongsTo(highestAgent(login)), nameSpecification));
     }
-
-//    @SuppressWarnings("SpringJavaAutowiringInspection")
-//    @Autowired
-//    private EntityManager entityManager;
-//
-//    private Page<AgentInfo> agentInfo(Specification<AgentLevel> specification, Pageable pageable) {
-//        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<AgentInfo> query = criteriaBuilder.createQuery(AgentInfo.class);
-//        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-//        Root<AgentLevel> root = query.from(AgentLevel.class);
-//        Root<AgentLevel> countRoot = countQuery.from(AgentLevel.class);
-//
-//        countQuery = countQuery.select(criteriaBuilder.count(countRoot));
-//        countQuery = countQuery.where(specification.toPredicate(countRoot,countQuery,criteriaBuilder));
-//        // 数据
-//        Subquery<AgentLevel> query.subquery(AgentLevel.class);
-//        query = query.select(criteriaBuilder.construct(
-//                AgentInfo.class,
-//                root,
-//        ))
-//
-//
-////        entityManager.find
-//        return null;
-//    }
 
     @Override
     public Page<AgentLevel> manageable(Login login, String agentName, Pageable pageable) {
@@ -287,7 +290,14 @@ public class AgentServiceImpl implements AgentService {
                                 , criteriaBuilder)
                         , criteriaBuilder.equal(root.get("level").as(Integer.class), systemService.addressRateForLevel())
                 ));
-        // TODO 如果存在多个。。
-        return entityManager.createQuery(query).getSingleResult();
+        List<AgentLevel> agentLevels = entityManager.createQuery(query).getResultList();
+        // 如何择优？ 它没有更高级别的了！
+        return agentLevels.stream()
+                .filter(agentLevel
+                        -> !agentLevel.getSuperior().getLogin().equals(agentLevel.getLogin()))
+                .peek(agentLevel
+                        -> log.info("过滤之后找到" + agentLevel))
+                .findFirst()
+                .orElse(agentLevels.isEmpty() ? null : agentLevels.get(0));
     }
 }

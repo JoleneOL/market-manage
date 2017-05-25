@@ -3,6 +3,7 @@ package cn.lmjia.market.dealer.service.impl;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentRate;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
+import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
@@ -27,6 +28,8 @@ public class CommissionRateServiceImpl implements CommissionRateService {
     private SystemStringService systemStringService;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private AgentSystemRepository agentSystemRepository;
 
     @Override
     public BigDecimal directRate(AgentLevel agent) {
@@ -50,6 +53,36 @@ public class CommissionRateServiceImpl implements CommissionRateService {
         if (agent.getSystem().getAddressRate() == null)
             return systemService.defaultAddressRate();
         return agent.getSystem().getAddressRate();
+    }
+
+    @Override
+    public void updateSaleRate(AgentSystem system, BigDecimal rate) {
+        system.setOrderRate(rate);
+        agentSystemRepository.save(system);
+    }
+
+    @Override
+    public void updateAddressRate(AgentSystem system, BigDecimal rate) {
+        system.setAddressRate(rate);
+        agentSystemRepository.save(system);
+    }
+
+    @Override
+    public void updateDirectRate(AgentSystem system, int level, BigDecimal rate) {
+        if (CollectionUtils.isEmpty(system.getRates())) {
+            system.setRates(systemService.defaultAgentRates());
+        }
+        system.getRates().get(level).setMarketRate(rate);
+        agentSystemRepository.save(system);
+    }
+
+    @Override
+    public void updateIndirectRate(AgentSystem system, int level, BigDecimal rate) {
+        if (CollectionUtils.isEmpty(system.getRates())) {
+            system.setRates(systemService.defaultAgentRates());
+        }
+        system.getRates().get(level).setRecommendRate(rate);
+        agentSystemRepository.save(system);
     }
 
     @Override

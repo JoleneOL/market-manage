@@ -13,6 +13,7 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.test.QuickPayBean;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -70,6 +72,10 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private MainOrderService mainOrderService;
     @Autowired
     private MainGoodRepository mainGoodRepository;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+    @Autowired
+    private QuickPayBean quickPayBean;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -90,6 +96,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
         return newRandomManager(randomMobile(), UUID.randomUUID().toString(), levels);
     }
 
+    //<editor-fold desc="自动登录相关">
+
     /**
      * 新增并且保存一个随机的管理员
      *
@@ -100,8 +108,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager(String rawPassword, ManageLevel... levels) {
         return newRandomManager(randomMobile(), rawPassword, levels);
     }
-
-    //<editor-fold desc="自动登录相关">
 
     /**
      * 新增并且保存一个随机的管理员
@@ -127,6 +133,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Login allRunWith() {
         return null;
     }
+    //</editor-fold>
 
     @Override
     protected final Authentication autoAuthentication() {
@@ -135,7 +142,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
             return null;
         return new LoginAuthentication(login.getId(), loginService);
     }
-    //</editor-fold>
 
     /**
      * 以login身份运行一段代码
@@ -330,5 +336,14 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 , recommend, name, age, gender
                 , mobile, amount
         );
+    }
+
+    /**
+     * 让这个订单立刻完成支付！
+     *
+     * @param order
+     */
+    protected void makeOrderPay(MainOrder order) {
+        quickPayBean.makePay(order);
     }
 }
