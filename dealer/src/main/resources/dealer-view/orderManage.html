@@ -23,8 +23,7 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="inner-document" data-url="mock/orderData.json" th:data-url="@{/orderData/manageableList}"
-      data-place-url="orderPlace.html" th:data-place-url="@{/agentOrder}">
+<body class="inner-document" data-url="mock/orderData.json" th:data-url="@{/orderData/manageableList}">
 <section>
     <div class="pageheader">
         <h2>
@@ -37,7 +36,7 @@
     <div class="contentpanel">
         <div class="row">
             <div class="col-sm-2 mb30">
-                <button type="button" class="btn btn-success btn-block btn-lg" id="js-buyOrder">我要下单</button>
+                <a href="orderPlace.html" th:href="@{/agentOrder}" content="content" class="btn btn-success btn-block btn-lg">我要下单</a>
             </div>
         </div>
         <div class="row">

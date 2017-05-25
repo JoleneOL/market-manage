@@ -107,7 +107,4 @@ $(function () {
         //TODO
     }
 
-    $('#js-buyOrder').click(function () {
-        $('#content', parent.document).attr('src', $('body').attr('data-place-url'));
-    });
 });
