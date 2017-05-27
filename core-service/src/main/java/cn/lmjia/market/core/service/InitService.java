@@ -109,7 +109,7 @@ public class InitService {
             Manager manager = new Manager();
             manager.setLevel(ManageLevel.root);
             manager.setLoginName("root");
-            loginService.password(manager, "rootIsRoot");
+            loginService.password(manager, "654321");
         }
     }
 }

@@ -46,7 +46,7 @@ public class DealerInitService {
         if (count == 0) {
             Login login = loginService.newLogin(environment.getProperty("default.agent.loginName"
                     , "master"), null
-                    , environment.getProperty("default.agent.password", "masterIsMaster"));
+                    , environment.getProperty("default.agent.password", "123456"));
             agentService.addAgent(null, login
                     , environment.getProperty("default.agent.name", "默认名称"), LocalDate.now()
                     , LocalDate.now().plusYears(1), 0, 0, null);
