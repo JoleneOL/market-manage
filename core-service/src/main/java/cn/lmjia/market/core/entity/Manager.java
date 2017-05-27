@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -29,7 +30,11 @@ public class Manager extends Login {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Stream.of(level.roles())
+//        String[]
+        final String[] roles = level.roles();
+        String[] newRoles = Arrays.copyOf(roles, roles.length + 1);
+        newRoles[newRoles.length - 1] = "ROLE_" + ROLE_MANAGER;
+        return Stream.of(newRoles)
                 .map(role -> {
                     role = role.toUpperCase(Locale.CHINA);
                     if (role.startsWith("ROLE_"))

@@ -40,6 +40,10 @@ public class Login implements UserDetails {
      * 可以管理所有关于代理的项目
      */
     public static final String ROLE_AllAgent = "ALL_AGENT";
+    /**
+     * 公司内部管理员
+     */
+    public static final String ROLE_MANAGER = "MANAGER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
