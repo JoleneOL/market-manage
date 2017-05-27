@@ -1,7 +1,7 @@
 /**
  * Created by Neo on 2017/5/23.
  */
-Mock.mock(/\/agentData.json/, "get", {
+Mock.mock(/\/agentData\/list/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
