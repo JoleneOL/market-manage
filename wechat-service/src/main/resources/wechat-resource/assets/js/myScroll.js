@@ -12,7 +12,7 @@
             ajaxUrl: '',
             ajaxMethod: 'GET',
             ajaxData: {},
-            page: 1,
+            page: 0,
             loadSuccess: function () {},
             template: function () {
                 console.error("需要模板代码");
