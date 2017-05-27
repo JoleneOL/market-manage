@@ -27,13 +27,14 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="inner-document" data-upload-url="../../../../../core-service/src/test/resources/mock/webUploader.json"
+<body class="inner-document"
+      data-upload-url="/market-manage/core-service/src/test/resources/mock/webUploader.json"
       th:data-upload-url="@{/resourceUpload/webUploader}"
       data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
       th:data-search-login-url="@{/loginData/select2}"
-      data-search-agent-url="../mock/agentList.json"
+      data-search-agent-url="/market-manage/dealer/src/main/resources/dealer-view/mock/agentList.json"
       th:data-search-agent-url="@{/agentData/listRuling}"
-      data-mobile-validation-url="../../../../../core-service/src/test/resources/mock/mobileValidation.json"
+      data-mobile-validation-url="/market-manage/core-service/src/test/resources/mock/mobileValidation.json"
       th:data-mobile-validation-url="@{/loginData/mobileValidation}">
 <section>
     <div class="pageheader">
@@ -69,11 +70,12 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">级别</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-3">
                                                 <input type="text" placeholder="请输入代理级别"
                                                        class="form-control" name="rank"
-                                                       value="浙江省代理" th:value="''">
+                                                       value="测试" th:value="''">
                                             </div>
+                                            <span class="col-sm-3" id="rankSuffix"></span>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">代理商姓名</label>
@@ -269,6 +271,11 @@
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script src="//cdn.lmjia.cn/jquery.searchableSelect/jquery.searchableSelect.js"></script>
+<script th:inline="javascript">
+    $.agentTitles = /*[[${@agentService.titles()}]]*/  [
+        "省总代", "市总代", "区县总代", "分代理", "经销商"
+    ]
+</script>
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="dealer-resource/js/addAgent.js" th:src="@{/dealer-resource/js/addAgent.js}"></script>

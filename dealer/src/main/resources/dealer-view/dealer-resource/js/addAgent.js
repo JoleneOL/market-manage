@@ -61,6 +61,17 @@ $(function () {
         }
 
     });
+
+    $('#higherAgent').on('select2:select', function (evt) {
+        var title = $.agentTitles[evt.params.data.level + 1];
+        $('#rankSuffix').text('(' + title + ')');
+    });
+
+    $('#rankSuffix').text('(' + $.agentTitles[0] + ')');
+    $('#higherAgent').on('select2:unselect', function (evt) {
+        $('#rankSuffix').text('(' + $.agentTitles[0] + ')');
+    });
+
     $("#referrerPhone").makeRecommendSelect();
     // var x = $('#referrerPhone').searchableSelect({
     //     afterSelectItem:function (x) {

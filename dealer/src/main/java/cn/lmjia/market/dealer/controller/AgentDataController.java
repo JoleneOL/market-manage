@@ -55,6 +55,7 @@ public class AgentDataController {
             public List<FieldDefinition<AgentLevel>> fields() {
                 return Arrays.asList(
                         Fields.asBasic("id")
+                        , Fields.asBasic("level")
                         , Fields.asBasic("rank")
                 );
             }
@@ -103,7 +104,7 @@ public class AgentDataController {
                         }, new AgentLevelField() {
                             @Override
                             protected Object export(AgentLevel level, Function<List, ?> exportMe) {
-                                return level.getRank();
+                                return level.getRank() + "(" + agentService.loginTitle(level) + ")";
                             }
 
                             @Override
@@ -148,7 +149,7 @@ public class AgentDataController {
                         }, new AgentLevelField() {
                             @Override
                             protected Object export(AgentLevel level, Function<List, ?> exportMe) {
-                                return "???";
+                                return "";
                             }
 
                             @Override

@@ -37,6 +37,7 @@ public class AgentLevel {
     private Login login;
     /**
      * 等级说明
+     * 准确的讲算是区域说明
      */
     @Column(length = 20)
     private String rank;

@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 /**
  * @author CJ
  */
-@Service
+@Service("agentService")
 public class AgentServiceImpl implements AgentService {
 
     private static final Log log = LogFactory.getLog(AgentServiceImpl.class);
@@ -60,6 +60,15 @@ public class AgentServiceImpl implements AgentService {
     private AgentSystemRepository agentSystemRepository;
     @Autowired
     private LoginService loginService;
+
+    @Override
+    public String[] titles() {
+        String[] titles = new String[systemService.systemLevel()];
+        for (int i = 0; i < titles.length; i++) {
+            titles[i] = getLoginTitle(i);
+        }
+        return titles;
+    }
 
     @Override
     public AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate

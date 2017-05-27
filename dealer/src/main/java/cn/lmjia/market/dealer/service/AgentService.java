@@ -49,15 +49,22 @@ public interface AgentService {
      * @return 该身份头衔
      */
     default String loginTitle(AgentLevel level) {
-        switch (agentLevel(level)) {
+        final int i = agentLevel(level);
+        return getLoginTitle(i);
+    }
+
+    String[] titles();
+
+    default String getLoginTitle(int i) {
+        switch (i) {
             case 0:
-                return "省总代理商";
+                return "省总代";
             case 1:
-                return "市总代理商";
+                return "市总代";
             case 2:
-                return "区县总代理商";
+                return "区县总代";
             case 3:
-                return "分代理商";
+                return "分代理";
             case 4:
             default:
                 return "经销商";

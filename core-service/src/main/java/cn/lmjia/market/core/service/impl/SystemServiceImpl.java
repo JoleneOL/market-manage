@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author CJ
  */
-@Service
+@Service("systemService")
 public class SystemServiceImpl implements SystemService {
 
     @Autowired
