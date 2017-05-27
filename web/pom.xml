@@ -98,7 +98,8 @@
                 <version>1.0</version>
                 <configuration>
                     <fromFile>${project.build.directory}/${project.build.finalName}.war</fromFile>
-                    <url>scp://lmj.server.huobanplus.com/home/market/</url>
+                    <url>scp://lmj.server.huobanplus.com/home/deve/tomcat/webapps/</url>
+                    <toFile>ROOT.war</toFile>
                 </configuration>
                 <executions>
                     <execution>
