@@ -10,6 +10,7 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import cn.lmjia.market.dealer.entity.Commission;
+import cn.lmjia.market.dealer.entity.OrderCommission;
 import cn.lmjia.market.dealer.service.CommissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,12 +24,14 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
@@ -57,14 +60,15 @@ public class CommissionController {
             }
 
             @Override
+            public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<Commission> root) {
+                return Collections.singletonList(
+                        criteriaBuilder.asc(root.join("orderCommission").get("generateTime")));
+            }
+
+            @Override
             public Expression<?> count(CriteriaBuilder criteriaBuilder, Root<Commission> root) {
                 // orderCommission 没有传统主键!
-                return criteriaBuilder.concat(
-                        criteriaBuilder.concat(
-                                root.get("orderCommission").get("source").get("id").as(String.class)
-                                , "-")
-                        , root.get("orderCommission").get("refund")
-                );
+                return OrderCommission.getIdSelection(criteriaBuilder, root.join("orderCommission"));
             }
 
             @Override
@@ -74,12 +78,7 @@ public class CommissionController {
                             @Override
                             public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query
                                     , Root<Commission> root) {
-                                return criteriaBuilder.concat(
-                                        criteriaBuilder.concat(
-                                                root.get("orderCommission").get("source").get("id").as(String.class)
-                                                , "-")
-                                        , root.get("orderCommission").get("refund")
-                                );
+                                return OrderCommission.getIdSelection(criteriaBuilder, root.join("orderCommission"));
                             }
 
                             @Override

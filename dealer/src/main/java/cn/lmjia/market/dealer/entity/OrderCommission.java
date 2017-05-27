@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.From;
 import java.time.LocalDateTime;
 
 /**
@@ -40,6 +43,20 @@ public class OrderCommission {
      */
     @Column(columnDefinition = "timestamp")
     private LocalDateTime generateTime;
+
+    /**
+     * @param builder             cb
+     * @param orderCommissionFrom from
+     * @return 可以描述成为id的表达式
+     */
+    public static Expression<String> getIdSelection(CriteriaBuilder builder, From<?, OrderCommission> orderCommissionFrom) {
+        return builder.concat(
+                builder.concat(
+                        orderCommissionFrom.get("source").get("id").as(String.class)
+                        , "-")
+                , orderCommissionFrom.get("refund")
+        );
+    }
 
 
 }

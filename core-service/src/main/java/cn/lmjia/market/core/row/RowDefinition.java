@@ -4,6 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -35,5 +36,14 @@ public interface RowDefinition<T> {
      */
     default Expression<?> count(CriteriaBuilder criteriaBuilder, Root<T> root) {
         return root;
+    }
+
+    /**
+     * @param criteriaBuilder cb
+     * @param root            root
+     * @return 默认排序，如果请求没有明示排序需求；null表示无默认排序
+     */
+    default List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<T> root) {
+        return null;
     }
 }

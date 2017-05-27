@@ -7,17 +7,19 @@ import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.dealer.service.CommissionRateService;
+import me.jiangcai.lib.test.matcher.NumberMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.assertj.core.api.AbstractBigDecimalAssert;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * @author CJ
@@ -134,15 +136,6 @@ public class MainOrderServiceTest extends DealerServiceTest {
         // sale 2
         // 0 1
 
-        for (Login login : als) {
-            runWith(login, () -> {
-                mockMvc.perform(get("/api/commList/today"))
-                        .andDo(print())
-                        .andExpect(status().isOk());
-                return null;
-            });
-        }
-
     }
 
     private BigDecimal b(int index, int recommend, BigDecimal[] rates, Login[] login) {
@@ -197,10 +190,39 @@ public class MainOrderServiceTest extends DealerServiceTest {
      * @param addressBoundWinLevel 应该获得区域奖励的等级
      * @param addressRate          区域奖励
      */
-    private AbstractBigDecimalAssert<?> assertMoney(MainOrder order, Login login, BigDecimal rate, AgentLevel addressBoundWinLevel, BigDecimal addressRate) {
+    private AbstractBigDecimalAssert<?> assertMoney(MainOrder order, Login login, BigDecimal rate, AgentLevel addressBoundWinLevel, BigDecimal addressRate) throws Exception {
         if (addressBoundWinLevel != null && addressBoundWinLevel.getLogin().equals(login)) {
             rate = rate.add(addressRate);
         }
+
+        String[] types = new String[]{
+                "today", "month"
+//                , "previous"
+                , "quarter"
+        };
+        String[] noTypes = new String[]{
+                "previous"
+        };
+
+        if (rate.compareTo(BigDecimal.ZERO) > 0) {
+            runWith(login, () -> {
+                for (String type : types) {
+                    mockMvc.perform(get("/api/commList/{0}", type))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                            .andExpect(jsonPath("$.data.length()").value(NumberMatcher.numberGreatThan(0)));
+                }
+                for (String type : noTypes) {
+                    mockMvc.perform(get("/api/commList/{0}", type))
+                            .andExpect(status().isOk())
+                            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                            .andExpect(jsonPath("$.data.length()").value(0));
+                }
+                return null;
+
+            });
+        }
+
         return assertThat(loginService.get(login.getId()).getCommissionBalance())
                 .as("身份 %d 应该获得准确的奖励", login.getId())
                 .isCloseTo(order.getOrderDueAmount().multiply(rate).setScale(2, BigDecimal.ROUND_HALF_UP), Offset.offset(new BigDecimal("0.00001")));

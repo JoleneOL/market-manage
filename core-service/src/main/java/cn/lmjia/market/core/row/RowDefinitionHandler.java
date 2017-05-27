@@ -41,6 +41,7 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
     }
 
     //    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     @Override
     public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer
             , NativeWebRequest webRequest) throws Exception {
@@ -97,14 +98,21 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
             dataQuery = dataQuery.distinct(true);
 
         // sort
-        final List<Order> order = dramatizer.order(fieldDefinitions, webRequest, criteriaBuilder, root);
+        List<Order> order = dramatizer.order(fieldDefinitions, webRequest, criteriaBuilder, root);
+        if (CollectionUtils.isEmpty(order))
+            order = rowDefinition.defaultOrder(criteriaBuilder, root);
+
         if (!CollectionUtils.isEmpty(order))
             dataQuery = dataQuery.orderBy(order);
 
         // 打包成Object[]
         try {
             long total = entityManager.createQuery(countQuery).getSingleResult();
-            List<?> list = entityManager.createQuery(dataQuery)
+            List<?> list;
+            if (total == 0)
+                list = Collections.emptyList();
+            else
+                list = entityManager.createQuery(dataQuery)
                     .setFirstResult(dramatizer.queryOffset(webRequest))
                     .setMaxResults(dramatizer.querySize(webRequest))
                     .getResultList();
