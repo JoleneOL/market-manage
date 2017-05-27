@@ -2,6 +2,9 @@ package cn.lmjia.market.core.row;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -27,4 +30,10 @@ public interface RowDefinition<T> {
      */
     Specification<T> specification();
 
+    /**
+     * @return 以何表达式作为count参数
+     */
+    default Expression<?> count(CriteriaBuilder criteriaBuilder, Root<T> root) {
+        return root;
+    }
 }

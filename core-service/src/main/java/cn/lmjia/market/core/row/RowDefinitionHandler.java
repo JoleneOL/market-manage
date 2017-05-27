@@ -12,11 +12,13 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -80,15 +82,15 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
 
-
-        if (distinct)
-            countQuery = countQuery.select(criteriaBuilder.countDistinct(countRoot));
-        else
-            countQuery = countQuery.select(criteriaBuilder.count(countRoot));
-
         // where
         dataQuery = where(criteriaBuilder, dataQuery, root, rowDefinition);
         countQuery = where(criteriaBuilder, countQuery, countRoot, rowDefinition);
+
+        if (distinct)
+            countQuery = countQuery.select(criteriaBuilder.countDistinct(rowDefinition.count(criteriaBuilder, countRoot)));
+        else
+            countQuery = countQuery.select(criteriaBuilder.count(rowDefinition.count(criteriaBuilder, countRoot)));
+
 
         // Distinct
         if (distinct)
@@ -100,16 +102,23 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
             dataQuery = dataQuery.orderBy(order);
 
         // 打包成Object[]
-        long total = entityManager.createQuery(countQuery).getSingleResult();
-        List<?> list = entityManager.createQuery(dataQuery)
-                .setFirstResult(dramatizer.queryOffset(webRequest))
-                .setMaxResults(dramatizer.querySize(webRequest))
-                .getResultList();
+        try {
+            long total = entityManager.createQuery(countQuery).getSingleResult();
+            List<?> list = entityManager.createQuery(dataQuery)
+                    .setFirstResult(dramatizer.queryOffset(webRequest))
+                    .setMaxResults(dramatizer.querySize(webRequest))
+                    .getResultList();
 
-        // 输出到结果
-        log.debug("RW Result: total:" + total + ", list:" + list + ", fields:" + fieldDefinitions.size());
-        dramatizer.writeResponse(total, list, fieldDefinitions, webRequest);
-        mavContainer.setRequestHandled(true);
+            // 输出到结果
+            log.debug("RW Result: total:" + total + ", list:" + list + ", fields:" + fieldDefinitions.size());
+            dramatizer.writeResponse(total, list, fieldDefinitions, webRequest);
+            mavContainer.setRequestHandled(true);
+        } catch (NoResultException ex) {
+            log.debug("RW Result: no result found.");
+            dramatizer.writeResponse(0, Collections.emptyList(), fieldDefinitions, webRequest);
+            mavContainer.setRequestHandled(true);
+        }
+
     }
 
     private <T> CriteriaQuery<T> where(CriteriaBuilder criteriaBuilder, CriteriaQuery<T> query, Root<?> root

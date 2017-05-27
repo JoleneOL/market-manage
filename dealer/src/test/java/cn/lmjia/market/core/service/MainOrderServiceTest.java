@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author CJ
@@ -133,6 +134,14 @@ public class MainOrderServiceTest extends DealerServiceTest {
         // sale 2
         // 0 1
 
+        for (Login login : als) {
+            runWith(login, () -> {
+                mockMvc.perform(get("/api/commList/today"))
+                        .andDo(print())
+                        .andExpect(status().isOk());
+                return null;
+            });
+        }
 
     }
 

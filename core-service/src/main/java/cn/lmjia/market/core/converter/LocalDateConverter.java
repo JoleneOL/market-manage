@@ -15,7 +15,7 @@ import java.util.Locale;
 @Component
 public class LocalDateConverter implements Formatter<LocalDate> {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.CHINA);
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.CHINA);
 
     @Override
     public LocalDate parse(String text, Locale locale) throws ParseException {

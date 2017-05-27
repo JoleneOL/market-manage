@@ -37,8 +37,15 @@ public class Commission {
     @ManyToOne
     private AgentLevel agent;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private OrderCommission orderCommission;
+
+    /**
+     * 相关比例
+     * 必然是一个正数
+     */
+    @Column(scale = 8, precision = 10)
+    private BigDecimal rate;
 
     /**
      * 金额，可以是负数

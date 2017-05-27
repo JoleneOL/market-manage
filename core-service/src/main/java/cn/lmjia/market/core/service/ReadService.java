@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.ContactWay;
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 
@@ -45,6 +46,17 @@ public interface ReadService {
         //
         return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
                 , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+    }
+
+    /**
+     * @param customerFrom    登录者
+     * @param criteriaBuilder cb
+     * @return {@link #nameForPrincipal(Object)}
+     */
+    static Expression<String> nameForCustomer(From<?, Customer> customerFrom, CriteriaBuilder criteriaBuilder) {
+        Expression<String> name = customerFrom.get("name");
+        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
+                , nameForLogin(customerFrom.join("login"), criteriaBuilder));
     }
 
     /**
