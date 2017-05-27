@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -76,7 +76,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a class="J_menuItem" href="_agentManage.html">
+                    <a class="J_menuItem" href="_agentManage.html" th:href="@{/agentManage}">
                         <i class="fa fa-users"></i>
                         <span class="nav-label">经销商管理</span>
                     </a>

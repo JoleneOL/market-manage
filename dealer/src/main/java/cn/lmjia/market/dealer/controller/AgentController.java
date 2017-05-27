@@ -32,7 +32,9 @@ public class AgentController {
     private ContactWayService contactWayService;
 
     @GetMapping("/agentManage")
-    public String index() {
+    public String index(@AuthenticationPrincipal Login login) {
+        if (login.isManageable())
+            return "_agentManage.html";
         return "agentManage.html";
     }
 
