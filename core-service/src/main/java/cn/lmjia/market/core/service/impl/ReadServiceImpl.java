@@ -2,6 +2,8 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.lib.seext.NumberUtils;
@@ -43,6 +45,19 @@ public class ReadServiceImpl implements ReadService {
         if (StringUtils.isEmpty(contactWay.getName()))
             return login.getLoginName();
         return contactWay.getName();
+    }
+
+    @Override
+    public Address addressFor(Object principal) {
+        if (principal == null)
+            return null;
+        final Login login;
+        if (principal instanceof AgentLevel) {
+            login = ((AgentLevel) principal).getLogin();
+        } else
+            login = (Login) principal;
+        ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
+        return contactWay.getAddress();
     }
 
     @Override

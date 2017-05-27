@@ -2,6 +2,7 @@ package cn.lmjia.market.dealer.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -15,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -56,7 +58,32 @@ public class AgentDataController {
                 return Arrays.asList(
                         Fields.asBasic("id")
                         , Fields.asBasic("level")
-                        , Fields.asBasic("rank")
+                        , new FieldDefinition<AgentLevel>() {
+                            @Override
+                            public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<AgentLevel> root) {
+                                return JpaFunctionUtils.Contact(criteriaBuilder, root.get("rank")
+                                        , criteriaBuilder.literal(" "), root.get("level"));
+                            }
+
+                            @Override
+                            public String name() {
+                                return "rank";
+                            }
+
+                            @Override
+                            public Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe) {
+                                String data = (String) origin;
+                                int index = data.lastIndexOf(' ');
+                                return data.substring(0, index) + "("
+                                        + agentService.getLoginTitle(NumberUtils.parseNumber(data.substring(index + 1)
+                                        , Integer.class)) + ")";
+                            }
+
+                            @Override
+                            public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
+                                return root.get("rank");
+                            }
+                        }
                 );
             }
 

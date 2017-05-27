@@ -55,7 +55,7 @@
                                 </tr>
                                 <tr>
                                     <td>级别</td>
-                                    <td th:text="${agent.rank}">经销商</td>
+                                    <td th:text="${agent.rank+'('+@agentService.loginTitle(agent)+')'}">经销商</td>
                                 </tr>
                                 <tr>
                                     <td>手机号</td>
@@ -63,11 +63,11 @@
                                 </tr>
                                 <tr>
                                     <td>注册时间</td>
-                                    <td>2015-12-21</td>
+                                    <td th:text="${{agent.createdTime}}">2015-12-21</td>
                                 </tr>
                                 <tr>
                                     <td>代理地址</td>
-                                    <td th:text="'无'">浙江杭州西湖大西湖国际</td>
+                                    <td th:text="${@readService.addressFor(agent)}">浙江杭州西湖大西湖国际</td>
                                 </tr>
                                 <tr>
                                     <td>用户数量</td>

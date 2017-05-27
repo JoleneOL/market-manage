@@ -47,6 +47,11 @@ public class Address {
         );
     }
 
+    @Override
+    public String toString() {
+        return province + "-" + prefecture + "-" + county + otherAddress;
+    }
+
     /**
      * @return 把除了otherAddress之外的地址组织成一个标准格式
      */

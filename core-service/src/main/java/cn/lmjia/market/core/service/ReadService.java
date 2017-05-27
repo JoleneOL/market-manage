@@ -3,6 +3,7 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -70,6 +71,12 @@ public interface ReadService {
      * @return 名字；或者登录名
      */
     String nameForPrincipal(Object principal);
+
+    /**
+     * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}
+     * @return 可选的地址
+     */
+    Address addressFor(Object principal);
 
     /**
      * 以百分比的方式显示数字；如有必要将最多保留2位小数
