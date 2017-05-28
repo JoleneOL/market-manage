@@ -1,11 +1,15 @@
 package cn.lmjia.market.dealer.controller.order;
 
+import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.time.LocalDate;
@@ -17,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
+@ContextConfiguration(classes = SecurityConfig.class)
 public class OrderDataControllerTest extends DealerServiceTest {
 
     @Autowired
@@ -24,34 +29,39 @@ public class OrderDataControllerTest extends DealerServiceTest {
     @Autowired
     private LocalDateConverter localDateConverter;
 
+    private Login testLogin;
+
+    @Override
+    protected Login allRunWith() {
+        if (testLogin != null)
+            return testLogin;
+
+        testLogin = randomLogin(false);
+        return testLogin;
+    }
+
     @Test
     public void manageableList() throws Exception {
 
-        newRandomOrderFor(randomLogin(false), randomLogin(true));
+        final Login order = randomLogin(false);
+        newRandomOrderFor(order, randomLogin(true));
 
-        mockMvc.perform(
-                get("/orderData/manageableList")
-        )
-                .andDo(print())
-                .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/orderData.json"));
+        orderDataList(null);
         // 按业务订单号查询
-        newRandomOrderFor(randomLogin(false), randomLogin(true));
+        newRandomOrderFor(order, randomLogin(true));
         String serialId = mainOrderService.allOrders().stream()
                 .max(new RandomComparator())
                 .orElse(null)
                 .getSerialId();
-        mockMvc.perform(
-                get("/orderData/manageableList")
-                        .param("orderId", serialId)
-        )
-                .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/orderData.json"))
-                .andExpect(jsonPath("$.data.length()").value(1));
+
+        assertCurrentCount(builder -> builder.param("orderId", serialId), 1);
+
         // 按手机号码查询
         // 流程 先查询当前量,再新增，再查询
         String mobile = randomMobile();
         int mobileCurrent = currentCount(builder -> builder.param("phone", mobile));
-        newRandomOrderFor(randomLogin(false), randomLogin(true));
-        newRandomOrderFor(randomLogin(false), randomLogin(true), mobile);
+        newRandomOrderFor(order, randomLogin(true));
+        newRandomOrderFor(order, randomLogin(true), mobile);
         assertCurrentCount(builder -> builder.param("phone", mobile), mobileCurrent + 1);
 
         //按下单时间
@@ -60,18 +70,15 @@ public class OrderDataControllerTest extends DealerServiceTest {
         //再下单 断言为1
         mainOrderService.updateOrderTime(LocalDateTime.now().minusMonths(1));
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 0);
-        newRandomOrderFor(randomLogin(false), randomLogin(true));
+        newRandomOrderFor(order, randomLogin(true));
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 1);
         //状态 略过测试
         //商品 略过测试
     }
 
-    private void assertCurrentCount(Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder> addParam, int count) throws Exception {
-        MockHttpServletRequestBuilder builder = get("/orderData/manageableList");
-        builder = addParam.apply(builder);
-        mockMvc.perform(
-                builder
-        ).andExpect(jsonPath("$.recordsTotal").value(count));
+    private ResultActions assertCurrentCount(Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder> addParam, int count) throws Exception {
+        return orderDataList(addParam, count > 0)
+                .andExpect(jsonPath("$.recordsTotal").value(count));
     }
 
     private int currentCount(Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder> addParam) throws Exception {

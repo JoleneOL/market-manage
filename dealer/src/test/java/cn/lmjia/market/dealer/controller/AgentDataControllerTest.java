@@ -38,56 +38,38 @@ public class AgentDataControllerTest extends DealerServiceTest {
 //                        .andDo(print())
                         .andExpect(similarSelect2("classpath:/dealer-view/mock/agentList.json"));
 
-                final String targetListUri = "/agentData/list";
 
-                mockMvc.perform(
-                        get(targetListUri)
-                )
-//                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"));
+                agentDataList(null);
                 // 支持搜索条件 agentName 可以是手机号码 也可以是用户名 也可以是rankName
                 AgentLevel target = agentLevelRepository.getOne(agent.getId()).getSubAgents().stream()
                         .max(new RandomComparator()).orElse(null);
                 //登录名
-                mockMvc.perform(
-                        get(targetListUri)
-                                .param("agentName", target.getLogin().getLoginName())
+                agentDataList(builder
+                        -> builder.param("agentName", target.getLogin().getLoginName())
                 )
-//                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
-                        .andExpect(jsonPath("$.data.length()").value(1))
-                ;
+                        .andExpect(jsonPath("$.data.length()").value(1));
+
                 // 级别名称
-                mockMvc.perform(
-                        get(targetListUri)
-                                .param("agentName", target.getRank())
+                agentDataList(builder
+                        -> builder.param("agentName", target.getRank())
                 )
-//                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
-                        .andExpect(jsonPath("$.data.length()").value(1))
-                ;
+                        .andExpect(jsonPath("$.data.length()").value(1));
+
                 String name = readService.nameForPrincipal(target.getLogin());
                 // 名字
-                mockMvc.perform(
-                        get(targetListUri)
-                                .param("agentName", name)
+                agentDataList(builder
+                        -> builder.param("agentName", name)
                 )
-//                            .andDo(print())
-                        .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
-                        .andExpect(jsonPath("$.data.length()").value(1))
-                ;
-                String mobile = readService.mobileFor(target.getLogin());
-                if (!StringUtils.isEmpty(mobile)) {
-                    mockMvc.perform(
-                            get(targetListUri)
-                                    .param("agentName", mobile)
-                    )
-//                            .andDo(print())
-                            .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"))
-                            .andExpect(jsonPath("$.data.length()").value(1))
-                    ;
-                }
+                        .andExpect(jsonPath("$.data.length()").value(1));
 
+                String mobile = readService.mobileFor(target.getLogin());
+
+                if (!StringUtils.isEmpty(mobile)) {
+                    agentDataList(builder
+                            -> builder.param("agentName", mobile)
+                    )
+                            .andExpect(jsonPath("$.data.length()").value(1));
+                }
 
                 return null;
             });

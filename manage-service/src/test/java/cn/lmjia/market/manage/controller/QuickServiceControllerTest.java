@@ -1,6 +1,15 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.config.other.SecurityConfig;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.manage.ManageServiceTest;
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * 临时服务
@@ -10,6 +19,40 @@ import cn.lmjia.market.manage.ManageServiceTest;
  *
  * @author CJ
  */
+@ContextConfiguration(classes = SecurityConfig.class)
 public class QuickServiceControllerTest extends ManageServiceTest {
+
+    @Override
+    protected Login allRunWith() {
+        return newRandomManager();
+    }
+
+    @Test
+    public void go() throws Exception {
+        MainOrder order = newRandomOrderFor(randomLogin(false), randomLogin(false));
+
+        orderDataList(builder -> builder.param("orderId", order.getSerialId()), true)
+                .andExpect(jsonPath("$.data[0].quickDoneAble").value(false));
+
+        makeOrderPay(order);
+
+        orderDataList(builder -> builder.param("orderId", order.getSerialId()), true)
+                .andExpect(jsonPath("$.data[0].quickDoneAble").value(true));
+
+        // 执行
+        mockMvc.perform(
+                put("/orderData/quickDone/{0}", order.getId())
+        )
+                .andExpect(status().is2xxSuccessful());
+
+        orderDataList(builder -> builder.param("orderId", order.getSerialId()), true)
+                .andExpect(jsonPath("$.data[0].quickDoneAble").value(false));
+
+        // 页面
+        driver.get("http://localhost/orderManage");
+        assertThat(driver.getTitle())
+                .isEqualTo("用户订单");
+
+    }
 
 }

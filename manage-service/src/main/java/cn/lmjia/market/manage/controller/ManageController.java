@@ -17,4 +17,9 @@ public class ManageController {
         return "_index.html";
     }
 
+    @GetMapping("/orderManage")
+    public String orderManage() {
+        return "_orderManage.html";
+    }
+
 }

@@ -45,9 +45,12 @@ public class OrderDataController {
     public RowDefinition manageableList(@AuthenticationPrincipal Login login, String orderId
             , @RequestParam(value = "phone", required = false) String mobile, Long goodId
             , @RequestParam(required = false) LocalDate orderDate, OrderStatus status) {
-        return new MainOrderRows() {
+        return new MainOrderRows(login) {
             @Override
             public Specification<MainOrder> specification() {
+                // 管理员 自然是全部
+                // 客户 当然是自己
+                // 代理商 则是查自己下的单或者旗下代理商下的单
                 return mainOrderService.search(orderId, mobile, goodId, orderDate, status);
             }
         };

@@ -1,7 +1,9 @@
 package cn.lmjia.market.core.rows;
 
 import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
@@ -23,6 +25,15 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
 
     //    private final LocalDateConverter localDateConverter = new LocalDateConverter();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.CHINA);
+
+    /**
+     * 要渲染这些记录的身份
+     */
+    private final Login login;
+
+    public MainOrderRows(Login login) {
+        this.login = login;
+    }
 
     @Override
     public Class<MainOrder> entityClass() {
@@ -59,6 +70,13 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                 , FieldBuilder.asName(MainOrder.class, "orderTime")
                         .addFormat((data, type)
                                 -> ((LocalDateTime) data).format(formatter))
+                        .build()
+                , FieldBuilder.asName(MainOrder.class, "quickDoneAble")
+                        .addSelect(root -> root.get("orderStatus"))
+                        .addFormat((data, type) -> {
+                            OrderStatus orderStatus = (OrderStatus) data;
+                            return login.isManageable() && orderStatus == OrderStatus.forDeliver;
+                        })
                         .build()
         );
     }

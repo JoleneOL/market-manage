@@ -11,9 +11,16 @@ import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.seext.function.AllBiConsumer;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.UUID;
+import java.util.function.Function;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author CJ
@@ -122,5 +129,57 @@ public abstract class DealerServiceTest extends CoreServiceTest {
             if (work != null)
                 work.accept(currentSuperLogin, currentSuper);
         }
+    }
+
+    /**
+     * 获取代理上数据测试
+     * /agentData/list
+     *
+     * @param requestCustomizer 可选的定制者
+     * @return actions
+     */
+    protected ResultActions agentDataList(Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder> requestCustomizer) throws Exception {
+        final String targetListUri = "/agentData/list";
+
+        MockHttpServletRequestBuilder requestBuilder = get(targetListUri);
+        if (requestCustomizer != null)
+            requestBuilder = requestCustomizer.apply(requestBuilder);
+        return mockMvc.perform(
+                requestBuilder
+        )
+                .andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/agentData.json"));
+    }
+
+    /**
+     * 获取订单数据测试，并且会测试数据结构
+     *
+     * @param requestCustomizer 可选的定制者
+     * @return actions
+     */
+    protected ResultActions orderDataList(Function<MockHttpServletRequestBuilder
+            , MockHttpServletRequestBuilder> requestCustomizer) throws Exception {
+        return orderDataList(requestCustomizer, true);
+    }
+
+    /**
+     * 获取订单数据测试
+     *
+     * @param requestCustomizer 可选的定制者
+     * @param withResultCheck   是否检查数据结构
+     * @return actions
+     */
+    protected ResultActions orderDataList(Function<MockHttpServletRequestBuilder
+            , MockHttpServletRequestBuilder> requestCustomizer, boolean withResultCheck) throws Exception {
+        MockHttpServletRequestBuilder builder = get("/orderData/manageableList");
+        if (requestCustomizer != null)
+            builder = requestCustomizer.apply(builder);
+        ResultActions actions = mockMvc.perform(
+                builder
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+        if (withResultCheck)
+            return actions.andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/orderData.json"));
+        return actions;
     }
 }
