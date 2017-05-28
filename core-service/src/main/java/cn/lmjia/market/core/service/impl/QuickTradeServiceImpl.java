@@ -21,14 +21,18 @@ public class QuickTradeServiceImpl implements QuickTradeService {
 
     @Override
     public void makeDone(MainOrder order) {
+        order = mainOrderRepository.getOne(order.getId());
         if (!order.isPay()) {
             throw new IllegalArgumentException("该订单尚未支付，无法直接完成。");
         }
+        if (order.getOrderStatus() == OrderStatus.afterSale) {
+            throw new IllegalArgumentException("该订单已完成。");
+        }
         if (order.getOrderStatus() != OrderStatus.afterSale) {
             order.setOrderStatus(OrderStatus.afterSale);
-            order = mainOrderRepository.save(order);
+//            order = mainOrderRepository.save(order);
         }
-
+        
         applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order));
     }
 }

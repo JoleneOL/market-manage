@@ -59,7 +59,11 @@ $(function () {
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
                     var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;修改</a>';
-                    if (item.statusCode === 0) return a + b;
+                    if (item.statusCode === 0)
+                        a = a + b;
+                    var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;快速完成订单</a>';
+                    if (item.quickDoneAble)
+                        a = a + c;
                     return a;
                 }
             }
@@ -70,18 +74,31 @@ $(function () {
         }
     });
 
+    var detailForm = $('#detailForm');
+    // data-quick-url
 
     $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止
         table.ajax.reload();
     }).on('click', '.js-checkOrder', function () {
-        // TODO
-        // 需要获取一些参数供详情跳转
-        $('#content', parent.document).attr('src', 'orderDetail.html');
+        $('input[name=id]', detailForm).val($(this).attr('data-id'));
+        detailForm.submit();
+    }).on('click', '.js-quickDone', function () {
+        var url = $('body').attr('data-quick-url');
+        if (!url) {
+            alert('不支持');
+            return;
+        }
+        $.ajax(url + $(this).attr('data-id'), {
+            method: 'put',
+            success: function () {
+                table.ajax.reload();
+            }
+        });
     }).on('click', '.js-modifyOrder', function () {
         // TODO
         // 需要获取一些参数供详情跳转
-        $('#content', parent.document).attr('src', 'orderModify.html');
+        // $('#content', parent.document).attr('src', 'orderModify.html');
     });
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         table.ajax.reload();
