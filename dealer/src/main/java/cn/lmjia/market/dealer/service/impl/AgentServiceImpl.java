@@ -3,6 +3,7 @@ package cn.lmjia.market.dealer.service.impl;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.entity.support.Address;
@@ -82,6 +83,22 @@ public class AgentServiceImpl implements AgentService {
         } else
             agentSystem = superior.getSystem();
         return addAgent(who, login, name, beginDate, endDate, firstPayment, agencyFee, superior, agentSystem);
+    }
+
+    @Override
+    public Specification<MainOrder> manageableOrder(Login login) {
+        if (login.isManageable())
+            return null;
+        // 目前只处理 代理商
+        // 是购买者所可以代表的最低代理商 是否从属于 当前登录者所能代表的最高代理商
+        long id = highestAgent(login).getId();
+        return (root, query, cb)
+                -> cb.equal(agentBelongsExpression(
+                // 下单的人
+                root.get("customer").get("agentLevel").get("id").as(Integer.class)
+                , cb.literal(id).as(Integer.class)
+                , cb
+        ), 1);
     }
 
     private AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate

@@ -10,6 +10,7 @@ import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.dealer.service.AgentService;
+import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -48,10 +49,10 @@ public class OrderDataController {
         return new MainOrderRows(login) {
             @Override
             public Specification<MainOrder> specification() {
-                // 管理员 自然是全部
-                // 客户 当然是自己
-                // 代理商 则是查自己下的单或者旗下代理商下的单
-                return mainOrderService.search(orderId, mobile, goodId, orderDate, status);
+                return new AndSpecification<>(
+                        mainOrderService.search(orderId, mobile, goodId, orderDate, status)
+                        , agentService.manageableOrder(login)
+                );
             }
         };
     }

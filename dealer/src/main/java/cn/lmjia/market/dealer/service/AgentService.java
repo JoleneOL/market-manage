@@ -1,6 +1,7 @@
 package cn.lmjia.market.dealer.service;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.entity.support.Address;
@@ -130,6 +131,17 @@ public interface AgentService {
      */
     @Transactional
     AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate, int firstPayment, int agencyFee, AgentLevel superior);
+
+
+    /**
+     * 管理员 自然是全部
+     * 客户 当然是自己
+     * 代理商 则是查自己下的单或者旗下代理商下的单
+     *
+     * @param login 特定身份
+     * @return 特定身份可管理规格
+     */
+    Specification<MainOrder> manageableOrder(Login login);
 
     /**
      * 通常管理员登录显示的所有代理商；而其他代理商登录则展示自身以下的

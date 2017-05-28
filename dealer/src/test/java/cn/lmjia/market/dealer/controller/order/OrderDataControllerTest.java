@@ -36,19 +36,19 @@ public class OrderDataControllerTest extends DealerServiceTest {
         if (testLogin != null)
             return testLogin;
 
-        testLogin = randomLogin(false);
+        testLogin = randomLogin(false, true);
         return testLogin;
     }
 
     @Test
     public void manageableList() throws Exception {
 
-        final Login order = randomLogin(false);
-        newRandomOrderFor(order, randomLogin(true));
+        final Login order = testLogin;
+        newRandomOrderFor(order, randomLogin(false, true));
 
         orderDataList(null);
         // 按业务订单号查询
-        newRandomOrderFor(order, randomLogin(true));
+        newRandomOrderFor(order, randomLogin(false, true));
         String serialId = mainOrderService.allOrders().stream()
                 .max(new RandomComparator())
                 .orElse(null)
@@ -60,8 +60,8 @@ public class OrderDataControllerTest extends DealerServiceTest {
         // 流程 先查询当前量,再新增，再查询
         String mobile = randomMobile();
         int mobileCurrent = currentCount(builder -> builder.param("phone", mobile));
-        newRandomOrderFor(order, randomLogin(true));
-        newRandomOrderFor(order, randomLogin(true), mobile);
+        newRandomOrderFor(order, randomLogin(false, true));
+        newRandomOrderFor(order, randomLogin(false, true), mobile);
         assertCurrentCount(builder -> builder.param("phone", mobile), mobileCurrent + 1);
 
         //按下单时间
@@ -70,7 +70,7 @@ public class OrderDataControllerTest extends DealerServiceTest {
         //再下单 断言为1
         mainOrderService.updateOrderTime(LocalDateTime.now().minusMonths(1));
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 0);
-        newRandomOrderFor(order, randomLogin(true));
+        newRandomOrderFor(order, randomLogin(false, true));
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 1);
         //状态 略过测试
         //商品 略过测试
