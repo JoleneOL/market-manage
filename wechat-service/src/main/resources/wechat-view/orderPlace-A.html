@@ -102,11 +102,11 @@
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="goodId" id="J_goodsType">
                         <!--/*@thymesVar id="goodList" type="java.util.List<cn.lmjia.market.core.entity.MainGood>"*/-->
-                        <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
+                        <option value="1" data-deposit="3000" data-need-install="180" data-model="hzcx01"
                                 data-type="净水机" data-day-cost="3" th:each="good:${goodList}" th:value="${good.id}"
                                 th:data-deposit="${good.product.deposit}"
                                 th:data-need-install="${good.product.install}" th:data-model="${good.product.code}"
-                                th:data-type="${good.id}" th:text="${good.product.name}">立式净水机
+                                th:data-type="${good.id}" th:text="${good.product.name}">橱下净水机
                         </option>
                         <option th:remove="all" value="2" data-deposit="3000" data-need-install="180"
                                 data-model="hzts02"
@@ -114,9 +114,9 @@
                                 data-day-cost="4">台式净水机
                         </option>
                         <option th:remove="all" value="3" data-deposit="3000" data-need-install="180"
-                                data-model="hzcx01"
+                                data-model="hzls01"
                                 data-type="净水机"
-                                data-day-cost="5">橱下净水机
+                                data-day-cost="5">立式净水机
                         </option>
                         <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器"
                                 data-day-cost="5">
@@ -262,8 +262,8 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>立式净水机</td>
-                            <td>hzls01</td>
+                            <td>橱下净水机</td>
+                            <td>hzcx01</td>
                             <td>3000元</td>
                             <td>3元</td>
                         </tr>
@@ -274,8 +274,8 @@
                             <td>4元</td>
                         </tr>
                         <tr>
-                            <td>橱下净水机</td>
-                            <td>hzcx01</td>
+                            <td>立式净水机</td>
+                            <td>hzls01</td>
                             <td>3000元</td>
                             <td>5元</td>
                         </tr>
