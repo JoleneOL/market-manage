@@ -326,4 +326,10 @@ public class AgentServiceImpl implements AgentService {
                 .findFirst()
                 .orElse(agentLevels.isEmpty() ? null : agentLevels.get(0));
     }
+
+    @Override
+    public void teamList(Login login) {
+        CriteriaQuery<Tuple> query = entityManager.getCriteriaBuilder().createTupleQuery();
+        
+    }
 }

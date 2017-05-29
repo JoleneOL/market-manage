@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity.deal;
 
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,8 +68,16 @@ public class AgentLevel {
      */
     @ManyToOne
     private AgentLevel superior;
+    /**
+     * 最低代理商是没有的
+     */
     @OneToMany(mappedBy = "superior", fetch = FetchType.LAZY)
     private List<AgentLevel> subAgents;
+    /**
+     * 只有最低代理商才有
+     */
+    @OneToMany(mappedBy = "agentLevel", fetch = FetchType.LAZY)
+    private List<Customer> customers;
 
     @Override
     public String toString() {

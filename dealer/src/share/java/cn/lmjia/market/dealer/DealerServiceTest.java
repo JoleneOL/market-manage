@@ -182,4 +182,21 @@ public abstract class DealerServiceTest extends CoreServiceTest {
             return actions.andExpect(similarJQueryDataTable("classpath:/dealer-view/mock/orderData.json"));
         return actions;
     }
+
+    /**
+     * 形成一个具备每个级别都有一个独立代理商的代理系统
+     *
+     * @param login
+     * @param levels
+     */
+    protected void initAgentSystem(Login[] login, AgentLevel[] levels) {
+        for (int i = 0; i < login.length; i++) {
+            if (i == 0) {
+                login[i] = newRandomAgent();
+            } else {
+                login[i] = newRandomAgent(levels[i - 1]);
+            }
+            levels[i] = agentService.getAgent(login[i], i);
+        }
+    }
 }

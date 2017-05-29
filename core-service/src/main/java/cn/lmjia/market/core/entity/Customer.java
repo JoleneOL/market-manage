@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.wx.model.Gender;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
+import java.util.ArrayList;
 
 /**
  * 客户
@@ -39,7 +41,7 @@ public class Customer {
     /**
      * 所属经销商 ,必然处于代理商链的最低端
      */
-    @ManyToOne
+    @ManyToOne(optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private AgentLevel agentLevel;
 
 
@@ -51,5 +53,15 @@ public class Customer {
         return path.get("mobile");
     }
 
-
+    /**
+     * 让这个客户从属于这个经销商
+     *
+     * @param agentLevel 最低端的经销商
+     */
+    public void setupAgentLevel(AgentLevel agentLevel) {
+        setAgentLevel(agentLevel);
+        if (agentLevel.getCustomers() == null)
+            agentLevel.setCustomers(new ArrayList<>());
+        agentLevel.getCustomers().add(this);
+    }
 }

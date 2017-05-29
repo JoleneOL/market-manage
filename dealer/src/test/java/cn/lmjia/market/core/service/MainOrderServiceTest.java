@@ -228,17 +228,6 @@ public class MainOrderServiceTest extends DealerServiceTest {
                 .isCloseTo(order.getOrderDueAmount().multiply(rate).setScale(2, BigDecimal.ROUND_HALF_UP), Offset.offset(new BigDecimal("0.00001")));
     }
 
-    private void initAgentSystem(Login[] logins, AgentLevel[] levels) {
-        for (int i = 0; i < logins.length; i++) {
-            if (i == 0) {
-                logins[i] = newRandomAgent();
-            } else {
-                logins[i] = newRandomAgent(levels[i - 1]);
-            }
-            levels[i] = agentService.getAgent(logins[i], i);
-        }
-    }
-
     /**
      * @return 将切成count份
      */

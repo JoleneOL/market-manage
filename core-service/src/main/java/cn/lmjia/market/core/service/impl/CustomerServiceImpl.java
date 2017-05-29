@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
             // 默认密码是 123456
         }
         customer = new Customer();
-        customer.setAgentLevel(agentLevel);
+        customer.setupAgentLevel(agentLevel);
         customer.setLogin(customerLogin);
         customer.setName(name);
         customer.setMobile(mobile);
