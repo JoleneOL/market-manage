@@ -2,6 +2,7 @@ package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
@@ -9,6 +10,7 @@ import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
+import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -48,6 +50,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -76,6 +79,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     private QuickPayBean quickPayBean;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -86,6 +91,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
         return newRandomManager(ManageLevel.values());
     }
 
+    //<editor-fold desc="自动登录相关">
+
     /**
      * 新增并且保存一个随机的管理员
      *
@@ -95,8 +102,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager(ManageLevel... levels) {
         return newRandomManager(randomMobile(), UUID.randomUUID().toString(), levels);
     }
-
-    //<editor-fold desc="自动登录相关">
 
     /**
      * 新增并且保存一个随机的管理员
@@ -123,6 +128,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
         manager.setLevel(EnumUtils.randomEnum(ManageLevel.class, levels));
         return loginService.password(manager, rawPassword);
     }
+    //</editor-fold>
 
     /**
      * 可以覆盖该方法设定每次测试都将以该身份进行
@@ -133,7 +139,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Login allRunWith() {
         return null;
     }
-    //</editor-fold>
 
     @Override
     protected final Authentication autoAuthentication() {
@@ -255,9 +260,27 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 随便一个已存在的身份
      */
     protected Login randomLogin(boolean manager) {
+        return randomLogin(manager, true);
+    }
+
+    /**
+     * @param manager  管理员可以么？
+     * @param customer 客户可以么？
+     * @return 随便一个已存在的身份
+     */
+    protected Login randomLogin(boolean manager, boolean customer) {
         return loginRepository.findAll((root, query, cb)
                 -> cb.isTrue(root.get("enabled"))).stream()
                 .filter(login -> manager || !(login instanceof Manager))
+                .filter(login -> {
+                    if (customer)
+                        return true;
+                    // 排除掉客户
+                    return !customerRepository.findAll().stream()
+                            .map(Customer::getLogin)
+                            .collect(Collectors.toList())
+                            .contains(login);
+                })
                 .max(new RandomComparator())
                 .orElseThrow(() -> new IllegalStateException("一个都没有？"));
     }

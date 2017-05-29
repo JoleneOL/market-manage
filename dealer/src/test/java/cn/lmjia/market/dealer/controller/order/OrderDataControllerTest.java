@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import com.jayway.jsonpath.JsonPath;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,12 +32,13 @@ public class OrderDataControllerTest extends DealerServiceTest {
 
     private Login testLogin;
 
+    @Before
+    public void startTest() {
+        testLogin = randomLogin(false);
+    }
+
     @Override
     protected Login allRunWith() {
-        if (testLogin != null)
-            return testLogin;
-
-        testLogin = randomLogin(false, true);
         return testLogin;
     }
 
@@ -44,11 +46,11 @@ public class OrderDataControllerTest extends DealerServiceTest {
     public void manageableList() throws Exception {
 
         final Login order = testLogin;
-        newRandomOrderFor(order, randomLogin(false, true));
+        newRandomOrderFor(order, randomLogin(false));
 
         orderDataList(null);
         // 按业务订单号查询
-        newRandomOrderFor(order, randomLogin(false, true));
+        newRandomOrderFor(order, randomLogin(false));
         String serialId = mainOrderService.allOrders().stream()
                 .max(new RandomComparator())
                 .orElse(null)
@@ -60,8 +62,8 @@ public class OrderDataControllerTest extends DealerServiceTest {
         // 流程 先查询当前量,再新增，再查询
         String mobile = randomMobile();
         int mobileCurrent = currentCount(builder -> builder.param("phone", mobile));
-        newRandomOrderFor(order, randomLogin(false, true));
-        newRandomOrderFor(order, randomLogin(false, true), mobile);
+        newRandomOrderFor(order, randomLogin(false));
+        newRandomOrderFor(order, randomLogin(false), mobile);
         assertCurrentCount(builder -> builder.param("phone", mobile), mobileCurrent + 1);
 
         //按下单时间
@@ -70,7 +72,7 @@ public class OrderDataControllerTest extends DealerServiceTest {
         //再下单 断言为1
         mainOrderService.updateOrderTime(LocalDateTime.now().minusMonths(1));
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 0);
-        newRandomOrderFor(order, randomLogin(false, true));
+        newRandomOrderFor(order, randomLogin(false));
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 1);
         //状态 略过测试
         //商品 略过测试
