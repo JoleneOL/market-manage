@@ -225,6 +225,4 @@ public interface AgentService {
     @Transactional(readOnly = true)
     AgentLevel addressLevel(Address address);
 
-    @Transactional(readOnly = true)
-    void teamList(Login login);
 }

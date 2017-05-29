@@ -13,6 +13,7 @@ import cn.lmjia.market.core.service.AgentFinancingService;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.apache.commons.logging.Log;
@@ -61,6 +62,8 @@ public class AgentServiceImpl implements AgentService {
     private AgentSystemRepository agentSystemRepository;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private LoginRelationCacheService loginRelationCacheService;
 
     @Override
     public String[] titles() {
@@ -82,7 +85,9 @@ public class AgentServiceImpl implements AgentService {
             agentSystem = agentSystemRepository.save(agentSystem);
         } else
             agentSystem = superior.getSystem();
-        return addAgent(who, login, name, beginDate, endDate, firstPayment, agencyFee, superior, agentSystem);
+        AgentLevel newLevel = addAgent(who, login, name, beginDate, endDate, firstPayment, agencyFee, superior, agentSystem);
+        loginRelationCacheService.rebuildAgentSystem(agentSystem);
+        return newLevel;
     }
 
     @Override
@@ -327,9 +332,4 @@ public class AgentServiceImpl implements AgentService {
                 .orElse(agentLevels.isEmpty() ? null : agentLevels.get(0));
     }
 
-    @Override
-    public void teamList(Login login) {
-        CriteriaQuery<Tuple> query = entityManager.getCriteriaBuilder().createTupleQuery();
-        
-    }
 }

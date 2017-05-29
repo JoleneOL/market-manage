@@ -7,6 +7,7 @@ import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ public class CustomerServiceImpl implements CustomerService {
     private LoginRepository loginRepository;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private LoginRelationCacheService loginRelationCacheService;
 
     @Override
     public Customer getNoNullCustomer(String name, String mobile, AgentLevel agentLevel, Login recommendBy) {
@@ -39,6 +42,8 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setLogin(customerLogin);
         customer.setName(name);
         customer.setMobile(mobile);
-        return customerRepository.save(customer);
+        customer = customerRepository.save(customer);
+        loginRelationCacheService.addCustomerCache(customer);
+        return customer;
     }
 }

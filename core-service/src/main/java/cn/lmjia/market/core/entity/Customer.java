@@ -29,6 +29,10 @@ import java.util.ArrayList;
 @Setter
 @Getter
 public class Customer {
+    /**
+     * 客户的等级
+     */
+    public static final int LEVEL = 100;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
