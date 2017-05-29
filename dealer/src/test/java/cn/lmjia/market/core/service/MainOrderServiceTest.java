@@ -196,7 +196,7 @@ public class MainOrderServiceTest extends DealerServiceTest {
         }
 
         String[] types = new String[]{
-                "today", "month"
+                "all", "today", "month"
 //                , "previous"
                 , "quarter"
         };

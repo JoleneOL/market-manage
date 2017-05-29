@@ -47,7 +47,7 @@ public class CommissionController {
 
     /**
      * @param login 身份
-     * @param type  today,month,previous,quarter
+     * @param type  today,month,previous,quarter,all
      * @return
      */
     @RowCustom(dramatizer = ApiDramatizer.class, distinct = true)
@@ -237,6 +237,8 @@ public class CommissionController {
 
             @Override
             public Specification<Commission> specification() {
+                if ("all".equals(type))
+                    return commissionService.listSpecification(login, null);
                 return commissionService.listSpecification(login, (root, query, cb) -> {
                     if ("today".equals(type))
                         return JpaFunctionUtils.DateEqual(cb, root.get("orderCommission").get("generateTime")
