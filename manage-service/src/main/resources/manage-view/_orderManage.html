@@ -24,7 +24,8 @@
     <![endif]-->
 </head>
 <body data-url="../../../../../../market-manage/dealer/src/main/resources/dealer-view/mock/orderData.json"
-      th:data-url="@{/orderData/manageableList}" data-quick-url="/orderData/quickDone/">
+      th:data-url="@{/orderData/manageableList}" data-quick-url="/orderData/quickDone/" data-allow-mock-pay="true"
+      th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}">
 
 <form id="detailForm" action="../../../../../../market-manage/dealer/src/main/resources/dealer-view/orderDetail.html"
       method="get">

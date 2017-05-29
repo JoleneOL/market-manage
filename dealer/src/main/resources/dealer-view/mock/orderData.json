@@ -33,6 +33,7 @@
       "total": 5000.00,
       "address": "阡陌路482号智慧E谷B栋",
       "status": "待付款",
+      "statusCode": 1,
       "orderTime": "2999-11-11",
       "quickDoneAble": false
     },

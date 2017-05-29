@@ -4,11 +4,16 @@
 $(function () {
     "use strict";
 
+    var _body = $('body');
+
+    var quickUrl = _body.attr('data-quick-url');
+    var allowMockPay = _body.attr('data-allow-mock-pay') === 'true';
+
     var table = $('#orderTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": $('body').attr('data-url'),
+            "url": _body.attr('data-url'),
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
@@ -62,8 +67,12 @@ $(function () {
                     if (item.statusCode === 0)
                         a = a + b;
                     var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;快速完成订单</a>';
-                    if (item.quickDoneAble)
+                    if (item.quickDoneAble && quickUrl)
                         a = a + c;
+                    var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;模拟支付</a>';
+                    if (item.statusCode === 1 && allowMockPay)
+                        a = a + d;
+                    // 模拟支付
                     return a;
                 }
             }
@@ -75,7 +84,6 @@ $(function () {
     });
 
     var detailForm = $('#detailForm');
-    // data-quick-url
 
     $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止
@@ -83,13 +91,25 @@ $(function () {
     }).on('click', '.js-checkOrder', function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
         detailForm.submit();
-    }).on('click', '.js-quickDone', function () {
-        var url = $('body').attr('data-quick-url');
-        if (!url) {
+    }).on('click', '.js-mockPay', function () {
+        // 模拟支付
+        if (!allowMockPay) {
             alert('不支持');
             return;
         }
-        $.ajax(url + $(this).attr('data-id'), {
+        $.ajax('/orderData/mockPay/' + $(this).attr('data-id'), {
+            method: 'put',
+            success: function () {
+                table.ajax.reload();
+            }
+        });
+    }).on('click', '.js-quickDone', function () {
+
+        if (!quickUrl) {
+            alert('不支持');
+            return;
+        }
+        $.ajax(quickUrl + $(this).attr('data-id'), {
             method: 'put',
             success: function () {
                 table.ajax.reload();
