@@ -1,13 +1,11 @@
 package cn.lmjia.market.core.config;
 
 import cn.lmjia.market.core.converter.AddressResolver;
-import cn.lmjia.market.core.converter.GenderConverter;
+import cn.lmjia.market.core.converter.EnumConverterFactory;
 import cn.lmjia.market.core.converter.LocalDateConverter;
-import cn.lmjia.market.core.converter.OrderStatusConverter;
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
-import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.row.RowDefinitionHandler;
-import me.jiangcai.wx.model.Gender;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.convert.converter.ConverterRegistry;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
@@ -149,12 +148,22 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new AddressResolver());
     }
 
+    @Autowired
+    public void forConverterRegistry(ConverterRegistry registry) {
+        registry.addConverterFactory(new EnumConverterFactory());
+        registry.addConverter(Money.class, String.class, source -> {
+            if (source == null)
+                return null;
+            return source.toString();
+        });
+    }
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
         registry.addFormatterForFieldType(LocalDate.class, localDateConverter);
-        registry.addFormatterForFieldType(Gender.class, new GenderConverter());
-        registry.addFormatterForFieldType(OrderStatus.class, new OrderStatusConverter());
+//        registry.addFormatterForFieldType(Gender.class, new GenderConverter());
+//        registry.addFormatterForFieldType(OrderStatus.class, new OrderStatusConverter());
 //        registry.addFormatterForFieldType(BigDecimal.class, bigDecimalConverter);
 //        registry.addFormatterForFieldType(Date.class, dateConverter);
     }

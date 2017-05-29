@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
@@ -51,17 +52,29 @@ public class ReadServiceImpl implements ReadService {
     public Address addressFor(Object principal) {
         if (principal == null)
             return null;
+        final Login login = toLogin(principal);
+        ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
+        return contactWay.getAddress();
+    }
+
+    private Login toLogin(Object principal) {
         final Login login;
         if (principal instanceof AgentLevel) {
             login = ((AgentLevel) principal).getLogin();
         } else
             login = (Login) principal;
-        ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
-        return contactWay.getAddress();
+        return login;
     }
 
     @Override
     public String percentage(BigDecimal input) {
         return NumberUtils.normalPercentage(input);
+    }
+
+    @Override
+    public Money currentBalance(Object principal) {
+        Login login = toLogin(principal);
+        login = loginRepository.getOne(login.getId());
+        return new Money(login.getCommissionBalance());
     }
 }

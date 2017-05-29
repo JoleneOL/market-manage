@@ -1,10 +1,12 @@
 package cn.lmjia.market.core.service;
 
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -85,5 +87,12 @@ public interface ReadService {
      * @return 诸如 20%或者10.15%
      */
     String percentage(BigDecimal input);
+
+    /**
+     * @param principal 身份，一般是Login
+     * @return 可提现余额
+     */
+    @Transactional(readOnly = true)
+    Money currentBalance(Object principal);
 
 }
