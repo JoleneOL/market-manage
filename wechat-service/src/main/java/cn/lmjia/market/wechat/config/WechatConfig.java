@@ -1,8 +1,10 @@
 package cn.lmjia.market.wechat.config;
 
 import cn.lmjia.market.core.config.WebModule;
+import cn.lmjia.market.dealer.config.DealerConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
@@ -22,6 +24,7 @@ import java.util.function.Supplier;
                 , "cn.lmjia.market.wechat.service"
         }
 )
+@Import(DealerConfig.class)
 public class WechatConfig implements WebModule {
     @Override
     public boolean hasOwnTemplateResolver() {

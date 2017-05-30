@@ -21,10 +21,12 @@
     <div class="view_team-logo js-extra-h"></div>
     <div class="weui-flex view_panel-body js-extra-h">
         <div class="weui-flex__item">
-            <p>成功推荐&nbsp;<strong class="text-big text-error">29</strong>&nbsp;个用户</p>
+            <p>成功推荐&nbsp;<!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
+                <strong class="text-big text-error" th:text="${{allCount}}">29</strong>&nbsp;个用户</p>
         </div>
         <div>
-            <a href="javascript:;" class="text-custom text-alignment_team open-popup" data-target="#J_upgradeRules">晋升制度</a>
+            <a href="javascript:;" class="text-custom text-alignment_team open-popup"
+               data-target="#J_upgradeRules">晋升制度</a>
         </div>
     </div>
     <div class="view_team-list">

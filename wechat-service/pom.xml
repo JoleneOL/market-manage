@@ -25,7 +25,6 @@
             <groupId>cn.lmjia.market-manage</groupId>
             <artifactId>dealer</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
