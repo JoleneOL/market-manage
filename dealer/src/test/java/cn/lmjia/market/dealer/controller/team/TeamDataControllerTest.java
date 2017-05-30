@@ -11,7 +11,6 @@ import cn.lmjia.market.dealer.DealerServiceTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -25,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ActiveProfiles({"mysql"})
+//@ActiveProfiles({"mysql"})
 @ContextConfiguration(classes = SecurityConfig.class)
 public class TeamDataControllerTest extends DealerServiceTest {
 
@@ -44,6 +43,27 @@ public class TeamDataControllerTest extends DealerServiceTest {
 
     @Test
     public void data() throws Exception {
+        userLogin = newRandomAgent();
+        //
+        teamListRequestBuilder(null, 0);
+
+        Login als[] = new Login[systemService.systemLevel()];
+        AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
+        initAgentSystem(als, as);
+
+        teamListRequestBuilder(null, 0);
+        // 引导增加了一个代理商
+        newRandomAgent(as[random.nextInt(systemService.systemLevel() - 1)], userLogin);
+        teamListRequestBuilder(null, 1);
+        // 新增一个订单
+        newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin);
+        teamListRequestBuilder(null, 2);
+        // 但客户只有一个
+        teamListRequestBuilder(builder -> builder.param("rank", "4"), 1);
+    }
+
+    @Test
+    public void dataFor2() throws Exception {
         Login als[] = new Login[systemService.systemLevel()];
         AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
         initAgentSystem(als, as);
@@ -89,7 +109,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
                 }
             }
 
-            teamListRequestBuilder(null, agents + customers);
+            teamList2RequestBuilder(null, agents + customers);
             // // 总 1
             // 分 2
             // 经销 3 我们认定最低级为3的前提下
@@ -98,7 +118,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
             int x = count;
             while (x-- > 0) {
                 int rank = x + 1;
-                teamListRequestBuilder(builder -> builder.param("rank", String.valueOf(rank))
+                teamList2RequestBuilder(builder -> builder.param("rank", String.valueOf(rank))
                         , numbers[numbers.length - (count - x)]);
             }
         }
@@ -111,11 +131,27 @@ public class TeamDataControllerTest extends DealerServiceTest {
 
     }
 
+    private ResultActions teamList2RequestBuilder(Function<MockHttpServletRequestBuilder
+            , MockHttpServletRequestBuilder> b, int expectedSize) throws Exception {
+        return teamList2RequestBuilder(b)
+                .andExpect(jsonPath("$.data.length()").value(expectedSize))
+                .andExpect(jsonPath("$.total_count").value(expectedSize));
+    }
+
+    private ResultActions teamList2RequestBuilder(Function<MockHttpServletRequestBuilder
+            , MockHttpServletRequestBuilder> b) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get("/api/teamList2");
+        if (b != null)
+            requestBuilder = b.apply(requestBuilder);
+        return mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
     private ResultActions teamListRequestBuilder(Function<MockHttpServletRequestBuilder
             , MockHttpServletRequestBuilder> b, int expectedSize) throws Exception {
         return teamListRequestBuilder(b)
-                .andExpect(jsonPath("$.data.length()").value(expectedSize))
-                .andExpect(jsonPath("$.total_count").value(expectedSize));
+                .andExpect(jsonPath("$.data.length()").value(expectedSize));
     }
 
     private ResultActions teamListRequestBuilder(Function<MockHttpServletRequestBuilder

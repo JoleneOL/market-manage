@@ -46,5 +46,5 @@ public interface RowDramatizer {
      * @param webRequest 请求
      * @throws IOException 写入时出现的
      */
-    void writeResponse(long total, List<?> list, List<FieldDefinition> fields, NativeWebRequest webRequest) throws IOException;
+    void writeResponse(long total, List<?> list, List<? extends IndefiniteFieldDefinition> fields, NativeWebRequest webRequest) throws IOException;
 }

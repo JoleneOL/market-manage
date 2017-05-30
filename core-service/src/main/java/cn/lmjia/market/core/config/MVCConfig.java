@@ -5,6 +5,7 @@ import cn.lmjia.market.core.converter.EnumConverterFactory;
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
+import cn.lmjia.market.core.row.IndefiniteRowDefinitionHandler;
 import cn.lmjia.market.core.row.RowDefinitionHandler;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
@@ -71,6 +72,8 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     private final Set<WebModule> webModules;
     @Autowired
     private RowDefinitionHandler rowDefinitionHandler;
+    @Autowired
+    private IndefiniteRowDefinitionHandler indefiniteRowDefinitionHandler;
     //    private final BigDecimalConverter bigDecimalConverter;
     @Autowired
     private LocalDateConverter localDateConverter;
@@ -94,6 +97,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
 //        returnValueHandlers.add(new DrawablePageAndSelectionResolver());
         returnValueHandlers.add(rowDefinitionHandler);
+        returnValueHandlers.add(indefiniteRowDefinitionHandler);
     }
 
     @Override

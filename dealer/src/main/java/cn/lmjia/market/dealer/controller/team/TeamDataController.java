@@ -4,9 +4,12 @@ import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.cache.LoginRelation;
 import cn.lmjia.market.core.row.FieldDefinition;
+import cn.lmjia.market.core.row.IndefiniteFieldDefinition;
+import cn.lmjia.market.core.row.IndefiniteRowDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
+import cn.lmjia.market.core.row.field.IndefiniteFieldBuilder;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.ApiDramatizer;
@@ -22,6 +25,8 @@ import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.Arrays;
 import java.util.List;
 
@@ -58,24 +63,52 @@ public class TeamDataController {
     }
 
     @RowCustom(dramatizer = ApiDramatizer.class, distinct = false)
-    @GetMapping("/api/teamList2")
-    public RowDefinition<LoginRelation> teamList(@AuthenticationPrincipal Login login, String rank) {
+    @GetMapping("/api/teamList")
+    public IndefiniteRowDefinition teamList(@AuthenticationPrincipal Login login, String rank) {
         if (conversionService == null)
             conversionService = applicationContext.getBean(ConversionService.class);
+
         Integer level = fromRank(rank);
         // 推荐的人哦
-        return new LoginRelationRows(level) {
+        return new IndefiniteRowDefinition() {
 
             @Override
-            Specification<LoginRelation> newSpecification() {
-                return null;
+            public List<IndefiniteFieldDefinition> fields() {
+                return Arrays.asList(
+                        IndefiniteFieldBuilder.asName("name").build()
+                        , IndefiniteFieldBuilder.asName("rank")
+                                .addFormat((o, mediaType) -> agentService.getLoginTitle((Integer) o))
+                                .build()
+                        , IndefiniteFieldBuilder.asName("joinTime")
+                                .addFormat((o, mediaType) -> conversionService.convert(o, String.class))
+                                .build()
+                        , IndefiniteFieldBuilder.asName("phone").build()
+                );
+            }
+
+            @Override
+            public Query createQuery(EntityManager entityManager) {
+                Query query = entityManager.createQuery("select " +
+                        "function('IFNULL',cw.name,relation.to.loginName) " +
+                        ",min(relation.level) " +
+                        ",relation.to.createdTime " +
+                        ",function('IFNULL',cw.mobile,relation.to.loginName)" +
+                        "from LoginRelation as relation " +
+                        "left join relation.to.contactWay as cw " +
+                        "where relation.to in (select l from Login as l where  l.guideUser=:current) " +
+                        (level == null ? "" : " and relation.level=:level ") +
+                        "group by relation.to")
+                        .setParameter("current", login);
+                if (level == null)
+                    return query;
+                return query.setParameter("level", level);
             }
         };
     }
 
 
     @RowCustom(dramatizer = ApiDramatizer.class, distinct = false)
-    @GetMapping("/api/teamList")
+    @GetMapping("/api/teamList2")
     public RowDefinition<LoginRelation> teamList2(@AuthenticationPrincipal Login login, String rank) {
         if (conversionService == null)
             conversionService = applicationContext.getBean(ConversionService.class);

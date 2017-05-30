@@ -58,7 +58,18 @@ public abstract class DealerServiceTest extends CoreServiceTest {
      * @return 已保存的代理商的登录
      */
     protected Login newRandomAgent(AgentLevel superior) {
-        return newRandomAgent(UUID.randomUUID().toString(), superior);
+        return newRandomAgent(superior, (Login) null);
+    }
+
+    /**
+     * 新增并且保存一个随机的特定代理商
+     *
+     * @param superior  可选定恩上级代理商
+     * @param recommend 推荐者
+     * @return 已保存的代理商的登录
+     */
+    protected Login newRandomAgent(AgentLevel superior, Login recommend) {
+        return newRandomAgent(UUID.randomUUID().toString(), superior, recommend);
     }
 
     /**
@@ -79,7 +90,19 @@ public abstract class DealerServiceTest extends CoreServiceTest {
      * @return 已保存的代理商的登录
      */
     protected Login newRandomAgent(String rawPassword, AgentLevel superior) {
-        Login login = loginService.newLogin(randomMobile(), null, rawPassword);
+        return newRandomAgent(rawPassword, superior, null);
+    }
+
+    /**
+     * 新增并且保存一个随机的代理商
+     *
+     * @param rawPassword 明文密码
+     * @param superior    作为上级;如果是null则作为顶级代理
+     * @param recommend   推荐者
+     * @return 已保存的代理商的登录
+     */
+    protected Login newRandomAgent(String rawPassword, AgentLevel superior, Login recommend) {
+        Login login = loginService.newLogin(randomMobile(), recommend, rawPassword);
         if (random.nextBoolean()) {
             contactWayService.updateMobile(login, randomMobile());
             contactWayService.updateName(login, "新名字" + RandomStringUtils.randomAlphabetic(6));

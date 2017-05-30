@@ -47,7 +47,7 @@ public abstract class AbstractMediaRowDramatizer implements RowDramatizer {
     }
 
     @Override
-    public void writeResponse(long total, List<?> list, List<FieldDefinition> fields, NativeWebRequest webRequest)
+    public void writeResponse(long total, List<?> list, List<? extends IndefiniteFieldDefinition> fields, NativeWebRequest webRequest)
             throws IOException {
         final HttpServletResponse nativeResponse = webRequest.getNativeResponse(HttpServletResponse.class);
 
@@ -61,7 +61,7 @@ public abstract class AbstractMediaRowDramatizer implements RowDramatizer {
     protected abstract void writeResponse(long total, List<Object> rows, NativeWebRequest webRequest) throws IOException;
 
 
-    private List<Object> drawToRows(List<?> list, List<FieldDefinition> fields) {
+    private List<Object> drawToRows(List<?> list, List<? extends IndefiniteFieldDefinition> fields) {
         List<Object> rows = new ArrayList<>();
         Function<List, ?> function = (input) -> drawToRows(input, fields);
         for (Object data : list) {
@@ -70,12 +70,12 @@ public abstract class AbstractMediaRowDramatizer implements RowDramatizer {
             if (data.getClass().isArray()) {
                 assert Array.getLength(data) == fields.size();
                 for (int i = 0; i < fields.size(); i++) {
-                    FieldDefinition fieldDefinition = fields.get(i);
+                    IndefiniteFieldDefinition fieldDefinition = fields.get(i);
                     outData.put(fieldDefinition.name(), fieldDefinition.export(Array.get(data, i), toMediaType(), function));
                 }
             } else {
                 // 只有一个结果？
-                for (FieldDefinition fieldDefinition : fields) {
+                for (IndefiniteFieldDefinition fieldDefinition : fields) {
                     outData.put(fieldDefinition.name(), fieldDefinition.export(data, toMediaType(), function));
                 }
             }
