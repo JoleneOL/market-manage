@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -78,6 +79,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Login newLogin(String username, Login guide, String rawPassword) {
         Login login = new Login();
+        login.setCreatedTime(LocalDateTime.now());
         login.setLoginName(username);
         login.setGuideUser(guide);
         return password(login, rawPassword);

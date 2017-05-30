@@ -1,5 +1,6 @@
 package cn.lmjia.market.dealer.service;
 
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
@@ -67,6 +68,9 @@ public interface AgentService {
             case 3:
                 return "分代理";
             case 4:
+                return "经销商";
+            case Customer.LEVEL:
+                return "爱心天使";
             default:
                 return "经销商";
         }

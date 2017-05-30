@@ -1,28 +1,49 @@
 package cn.lmjia.market.dealer.controller.team;
 
+import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.cache.LoginRelation;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.Function;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * @author CJ
  */
+@ActiveProfiles({"mysql"})
+@ContextConfiguration(classes = SecurityConfig.class)
 public class TeamDataControllerTest extends DealerServiceTest {
 
     @Autowired
     private SystemService systemService;
     @Autowired
     private LoginRelationRepository loginRelationRepository;
+    @Autowired
+    private LoginRelationCacheService loginRelationCacheService;
+    private Login userLogin;
+
+    @Override
+    protected Login allRunWith() {
+        return userLogin;
+    }
 
     @Test
-    public void data() {
+    public void data() throws Exception {
         Login als[] = new Login[systemService.systemLevel()];
         AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
         initAgentSystem(als, as);
@@ -30,6 +51,8 @@ public class TeamDataControllerTest extends DealerServiceTest {
         for (Login login : als) {
             newRandomOrderFor(login, randomLogin(false));
         }
+
+//        loginRelationCacheService.rebuildAgentSystem(as[0].getSystem());
 
         loginRelationRepository.findBySystem(as[0].getSystem())
                 .stream()
@@ -43,6 +66,66 @@ public class TeamDataControllerTest extends DealerServiceTest {
                 })
                 .forEach(System.out::println);
 
+        for (int i = 0; i < als.length; i++) {
+            userLogin = als[i];
+            // 如果我身处 i 层
+            // 那么我拥有的代理下线有 4-i
+            // 每个人都拥有一个直接客户，所有我这里拥有客户数量是 5-i
+            int agents = systemService.systemLevel() - 1 - i;
+            int customers = systemService.systemLevel() - i;
+
+
+            int[] numbers = new int[systemService.systemLevel() + 1];
+            Arrays.setAll(numbers, (t) -> 0);
+            numbers[numbers.length - 1] = customers;
+            for (int j = 0; j < systemService.systemLevel(); j++) {
+                // j 的数量是多少？
+                if (j > i) {
+                    // 只有高级才可以拥有低级
+                    // i:0 j:1 -> 1
+                    // i:0 j:2 -> 2
+                    // i:1 j:2
+                    numbers[j] = j - i;
+                }
+            }
+
+            teamListRequestBuilder(null, agents + customers);
+            // // 总 1
+            // 分 2
+            // 经销 3 我们认定最低级为3的前提下
+            // 客户 4
+            final int count = 4;
+            int x = count;
+            while (x-- > 0) {
+                int rank = x + 1;
+                teamListRequestBuilder(builder -> builder.param("rank", String.valueOf(rank))
+                        , numbers[numbers.length - (count - x)]);
+            }
+        }
+
+//        for (Login login : als) {
+//            userLogin = login;
+//            mockMvc.perform(get("/api/teamList"))
+//                    .andDo(print());
+//        }
+
+    }
+
+    private ResultActions teamListRequestBuilder(Function<MockHttpServletRequestBuilder
+            , MockHttpServletRequestBuilder> b, int expectedSize) throws Exception {
+        return teamListRequestBuilder(b)
+                .andExpect(jsonPath("$.data.length()").value(expectedSize))
+                .andExpect(jsonPath("$.total_count").value(expectedSize));
+    }
+
+    private ResultActions teamListRequestBuilder(Function<MockHttpServletRequestBuilder
+            , MockHttpServletRequestBuilder> b) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = get("/api/teamList");
+        if (b != null)
+            requestBuilder = b.apply(requestBuilder);
+        return mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
@@ -66,6 +67,8 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery originDataQuery = criteriaBuilder.createQuery();
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+//        Subquery subquery = null;
+//        subquery.from(rowDefinition.entityClass());
 
         Root root = originDataQuery.from(rowDefinition.entityClass());
         Root countRoot = countQuery.from(rowDefinition.entityClass());
@@ -88,10 +91,9 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
         countQuery = where(criteriaBuilder, countQuery, countRoot, rowDefinition);
 
         if (distinct)
-            countQuery = countQuery.select(criteriaBuilder.countDistinct(rowDefinition.count(criteriaBuilder, countRoot)));
+            countQuery = countQuery.select(criteriaBuilder.countDistinct(rowDefinition.count(countQuery, criteriaBuilder, countRoot)));
         else
-            countQuery = countQuery.select(criteriaBuilder.count(rowDefinition.count(criteriaBuilder, countRoot)));
-
+            countQuery = countQuery.select(criteriaBuilder.count(rowDefinition.count(countQuery, criteriaBuilder, countRoot)));
 
         // Distinct
         if (distinct)
@@ -107,15 +109,20 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
 
         // 打包成Object[]
         try {
-            long total = entityManager.createQuery(countQuery).getSingleResult();
+            long total;
+            try {
+                total = entityManager.createQuery(countQuery).getSingleResult();
+            } catch (NonUniqueResultException ex) {
+                total = entityManager.createQuery(countQuery).getResultList().size();
+            }
             List<?> list;
             if (total == 0)
                 list = Collections.emptyList();
             else
                 list = entityManager.createQuery(dataQuery)
-                    .setFirstResult(dramatizer.queryOffset(webRequest))
-                    .setMaxResults(dramatizer.querySize(webRequest))
-                    .getResultList();
+                        .setFirstResult(dramatizer.queryOffset(webRequest))
+                        .setMaxResults(dramatizer.querySize(webRequest))
+                        .getResultList();
 
             // 输出到结果
             log.debug("RW Result: total:" + total + ", list:" + list + ", fields:" + fieldDefinitions.size());

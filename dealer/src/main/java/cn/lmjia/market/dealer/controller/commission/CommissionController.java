@@ -66,7 +66,7 @@ public class CommissionController {
             }
 
             @Override
-            public Expression<?> count(CriteriaBuilder criteriaBuilder, Root<Commission> root) {
+            public Expression<?> count(CriteriaQuery<Long> countQuery, CriteriaBuilder criteriaBuilder, Root<Commission> root) {
                 // orderCommission 没有传统主键!
                 return OrderCommission.getIdSelection(criteriaBuilder, root.join("orderCommission"));
             }

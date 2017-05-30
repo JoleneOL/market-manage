@@ -19,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -55,6 +56,11 @@ public class Login implements UserDetails {
     private String code;
     private String password;
     private boolean enabled = true;
+    /**
+     * 添加时间
+     */
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime createdTime;
     /**
      * 引导者
      */

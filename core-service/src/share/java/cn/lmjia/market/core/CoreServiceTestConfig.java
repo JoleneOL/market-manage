@@ -17,6 +17,7 @@ import me.jiangcai.payment.test.PaymentTestConfig;
 import me.jiangcai.payment.test.service.MockPayToggle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +25,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
@@ -65,6 +68,8 @@ import java.util.UUID;
 public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcConfigurer, WebModule {
 
     private static final Log log = LogFactory.getLog(CoreServiceTestConfig.class);
+    @Autowired
+    private Environment environment;
 
     @Bean
     @Primary
@@ -104,6 +109,13 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
 
     @Bean
     public DataSource dataSource() {
+        if (environment.acceptsProfiles("mysql")) {
+            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+            dataSource.setUrl("jdbc:mysql://localhost/market");
+            dataSource.setUsername("root");
+            return dataSource;
+        }
         return memDataSource("cn/lmjia/market");
     }
 

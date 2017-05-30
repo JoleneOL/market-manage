@@ -55,7 +55,7 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
                     newR.add(relation);
                     // 然后把to 是 我的 from的 也加进来
                     newR.addAll(relations.stream()
-                            .filter(existingRelation -> existingRelation.getTo() == relation.getFrom())
+                            .filter(existingRelation -> existingRelation.getTo().equals(relation.getFrom()))
                             .map(existingRelation
                                     -> createRelationFromLevel(system, existingRelation.getFrom()
                                     , relation.getTo(), relation.getLevel()))
@@ -101,12 +101,15 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
         addExistingRelation(system, relations, loginRelationStream);
 
         // 移除跟自己的关系
+        saveValidRelations(relations);
+    }
+
+    private void saveValidRelations(Set<LoginRelation> relations) {
         loginRelationRepository.save(relations
                 .stream()
                 .filter(relation -> !relation.getFrom().equals(relation.getTo()))
                 .collect(Collectors.toSet())
         );
-
     }
 
     @Override
@@ -124,6 +127,6 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
 
         addExistingRelation(system, relations
                 , Stream.of(createRelationFromLevel(system, from, customer.getLogin(), Customer.LEVEL)));
-        loginRelationRepository.save(relations);
+        saveValidRelations(relations);
     }
 }
