@@ -13,4 +13,9 @@ public class WechatMyController {
     public String my() {
         return "wechat@personalCenter.html";
     }
+
+    @GetMapping(SystemService.wechatMyTeamURi)
+    public String myTeam() {
+        return "wechat@myTeam.html";
+    }
 }

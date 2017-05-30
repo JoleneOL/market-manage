@@ -134,7 +134,8 @@ public interface AgentService {
      * @return 被保存的新的最高代理商
      */
     @Transactional
-    AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate, int firstPayment, int agencyFee, AgentLevel superior);
+    AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate, int firstPayment
+            , int agencyFee, AgentLevel superior);
 
 
     /**
