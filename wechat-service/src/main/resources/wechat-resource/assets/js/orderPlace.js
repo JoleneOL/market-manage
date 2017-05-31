@@ -25,7 +25,8 @@ $(function () {
 
 
     function countTotal() {
-        var deposit = +$('#J_userDeposit').find('span').eq(0).text();
+        // var deposit = +$('#J_userDeposit').find('span').eq(0).text();
+        var deposit = +$('#J_userCost').find('span').eq(0).text();
         var cost = +$('#J_installationCost').find('span').eq(0).text();
         var amout = +$('#J_goodsAmount').val();
         var total = (deposit + cost) * amout;
@@ -50,9 +51,11 @@ $(function () {
             $('.js-install').hide();
             $('#J_installationCost').find('span').eq(0).text(0);
         }
-        $('#J_userDeposit').find('span').eq(0).text(deposit);
+        $('#J_userCost').find('span').eq(0).text(deposit);
         $('#J_leasedType').val(model);
-        $('#J_package').val('服务费 ' + cost + '元 / 天');
+
+        // $('#J_userDeposit').find('span').eq(0).text(deposit);
+        // $('#J_package').val('服务费 ' + cost + '元 / 天');
     }
 
 

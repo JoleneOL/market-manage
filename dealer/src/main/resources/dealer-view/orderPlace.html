@@ -116,18 +116,18 @@
                                                             th:data-day-cost="${good.product.serviceCharge}">
                                                         橱下净水机
                                                     </option>
-                                                    <option th:remove="all" value="2" data-deposit="3000"
-                                                            data-need-install="180"
-                                                            data-model="hzts02"
-                                                            data-type="净水机"
-                                                            data-day-cost="4">台式净水机
-                                                    </option>
-                                                    <option th:remove="all" value="3" data-deposit="3000"
-                                                            data-need-install="180"
-                                                            data-model="hzls01"
-                                                            data-type="净水机"
-                                                            data-day-cost="5">立式净水机
-                                                    </option>
+                                                    <!--<option th:remove="all" value="2" data-deposit="3000"-->
+                                                            <!--data-need-install="180"-->
+                                                            <!--data-model="hzts02"-->
+                                                            <!--data-type="净水机"-->
+                                                            <!--data-day-cost="4">台式净水机-->
+                                                    <!--</option>-->
+                                                    <!--<option th:remove="all" value="3" data-deposit="3000"-->
+                                                            <!--data-need-install="180"-->
+                                                            <!--data-model="hzls01"-->
+                                                            <!--data-type="净水机"-->
+                                                            <!--data-day-cost="5">立式净水机-->
+                                                    <!--</option>-->
                                                     <option th:remove="all" value="5" data-deposit="5000"
                                                             data-model="ESL-HM01" data-type="空气净化器"
                                                             data-day-cost="5">
@@ -155,35 +155,44 @@
                                                        name="amount" id="J_goodsAmount">
                                             </div>
                                         </div>
+                                        <!--<div class="form-group">-->
+                                            <!--<label class="col-sm-3 control-label">现金支付</label>-->
+                                            <!--<div class="col-sm-6">-->
+                                                <!--<input type="text" value="服务费 3元 / 天" class="form-control"-->
+                                                       <!--disabled name="package" id="J_package">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">现金支付</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" value="服务费 3元 / 天" class="form-control"
-                                                       disabled name="package" id="J_package">
+                                            <label class="col-sm-3 control-label">使用费</label>
+                                            <div class="col-sm-9">
+                                                <p class="form-control-static" id="J_userCost">
+                                                    <strong>3000</strong>
+                                                    <span class="unit-txt">元 / 三年 / 台</span>
+                                                </p>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">按揭码</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" placeholder="输入按揭码" class="form-control"
-                                                       name="activityCode">
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group">-->
+                                            <!--<label class="col-sm-3 control-label">按揭码</label>-->
+                                            <!--<div class="col-sm-6">-->
+                                                <!--<input type="text" placeholder="输入按揭码" class="form-control"-->
+                                                       <!--name="activityCode">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                         <div class="form-group">
                                             <label for="recommendId" class="col-sm-3 control-label">推荐人</label>
                                             <div class="col-sm-6">
                                                 <select id="recommendId" name="recommend"></select>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">用户保证金</label>
-                                            <div class="col-sm-9">
-                                                <p class="form-control-static" id="J_userDeposit">
-                                                    <strong>3000</strong>
-                                                    <span class="unit-txt">元 / 台</span>
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group">-->
+                                            <!--<label class="col-sm-3 control-label">用户保证金</label>-->
+                                            <!--<div class="col-sm-9">-->
+                                                <!--<p class="form-control-static" id="J_userDeposit">-->
+                                                    <!--<strong>3000</strong>-->
+                                                    <!--<span class="unit-txt">元 / 台</span>-->
+                                                <!--</p>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                         <div class="form-group js-install">
                                             <label class="col-sm-3 control-label">初装费用</label>
                                             <div class="col-sm-9">
@@ -204,6 +213,18 @@
                                                     <strong>0</strong>
                                                     <span class="unit-txt">元</span>
                                                 </p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">按揭码</label>
+                                            <div class="col-sm-6">
+                                                <div class="input-group">
+                                                    <input type="tel" class="form-control" placeholder="请输入按揭码"
+                                                           name="phone">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-success" type="button" id="J_sendAuthCode">校验</button>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -239,55 +260,37 @@
         <p class="text-indent0">甲方：</p>
         <p class="text-indent0">乙方：利每家科技有限公司</p>
         <p>甲乙双方在平等自愿、公平诚信的基础上，基于对乙方提供的产品和服务的了解和需求，达成协议如下：</p>
-        <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，缴纳&#95;&#95;&#95;&#95;&#95;&#95;元保证金，并承诺协议期为<u>
-            &nbsp;&nbsp;36&nbsp;&nbsp;&nbsp;</u>个月，即&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日至&#95;&#95;&#95;年&#95;&#95;&#95;月&#95;&#95;&#95;日，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），机具使用费另收，详细费用按下表执行：
+        <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，用户支付设备费或保证金，并承诺协议期为<u>
+            &nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;</u>年，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），详细费用按下表执行：
         </p>
         <div class="table-center">
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th>序号</th>
                     <th>产品名称</th>
                     <th>型号</th>
-                    <th>一次性支付三年保证金/台</th>
-                    <th>每天费用</th>
+                    <th>一次性支付设备费或保证金</th>
+                    <th>设备使用费</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>1</td>
-                    <td>橱下净水机</td>
+                    <td>厨下净水机</td>
                     <td>hzcx01</td>
-                    <td>3000元</td>
-                    <td>3元</td>
+                    <td>3000 元/台</td>
+                    <td>3000 元/三年</td>
                 </tr>
                 <tr>
-                    <td>2</td>
-                    <td>台式净水机</td>
-                    <td>hzts02</td>
-                    <td>3000元</td>
-                    <td>4元</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>立式净水机</td>
-                    <td>hzls01</td>
-                    <td>3000元</td>
-                    <td>5元</td>
-                </tr>
-                <tr>
-                    <td>4</td>
                     <td>空气净化器</td>
                     <td>ESL-HM01</td>
-                    <td>5000元</td>
-                    <td>5元</td>
+                    <td>5000 元/台</td>
+                    <td>5000 元/三年</td>
                 </tr>
                 <tr>
-                    <td>5</td>
                     <td>食品优化宝</td>
                     <td>SP70</td>
-                    <td>10000元</td>
-                    <td>10元</td>
+                    <td>10000 元/台</td>
+                    <td>10000 元/三年</td>
                 </tr>
                 </tbody>
             </table>
@@ -296,14 +299,17 @@
         <p><strong>第二条</strong>&nbsp;&nbsp;&nbsp;&nbsp;使用条件</p>
         <p>（一）为保障甲乙双方的权益，协议期内乙方对甲方使用的用户机型与终端IMEI码进行机码匹配核实。</p>
         <p>
-            （二）在协议期内，甲方不得提前终止协议。若使用中甲方单方面违约，乙方有权从甲方支付的保证金帐户中扣除使用费及逾期利息，逾期利率按万分之五/天计算，且保证金不够扣使用费及违约金时，机具归甲方所有，合同终止。</p>
-        <p>（三）乙方根据甲方的使用情况，在协议期内，为甲方免费提供更换的滤芯。在水质或其他环境因素，无法达到安装或使用条件时，乙方有权与甲方解约，对此，甲方同意乙方的解约要求。</p>
+            （二）在协议期内，甲方不得提前终止协议。若使用中甲方单方面违约，乙方有权从甲方支付的保证金帐户中扣除设备使用费，机具归甲方所有，合同终止。</p>
+        <p>（三）乙方根据甲方的使用情况，在协议期内，为甲方免费提供更换设备部件。在水质或其他环境因素，无法达到安装或使用条件时，乙方有权与甲方解约，对此，甲方同意乙方的解约要求。</p>
         <p>（四）若使用期间，机器发生非人为损坏或不能使用，乙方将免费为甲方更换新机或维修，若使用期间，机器发生人为损坏，则由甲方承担维修或更换新机的费用。</p>
         <p>（五）协议期内，机器的所有权归乙方所有，协议期满后，机器归甲方所有，机器的后续 服务乙方概不负责。</p>
         <p><strong>第三条</strong>&nbsp;&nbsp;&nbsp;&nbsp;违约责任及承担</p>
         <p>（一）甲方违约责任</p>
-        <p>1、甲乙双方一致确认，甲方出现本协议所述的违约情形时，甲方应向乙方支付违约金以补偿乙方的损失，乙方有权以甲方账户中尚未解冻的预存款直接抵扣违约金及约定的相关费用，不足部分，乙方保留对甲方追缴的权利。</p>
-        <p>2、甲方下单后，乙方未发货，全额退还保证金；机具已发货，但未安装，退还75%的保证金给甲方；机具已安装，不退还保证金，作为违约金赔偿给乙方，机具归甲方所有。</p>
+        <p>
+            1、甲乙双方一致确认，甲方出现本协议所述的违约情形时，甲方应向乙方支付违约金以补偿乙方的损失，乙方有权以甲方账户中尚未解冻的预存款直接抵扣违约金及约定的相关费用，不足部分，乙方保留对甲方追缴的权利。</p>
+        <p>
+            2、甲方下单后，提出退款，若乙方未发货，全额退还保证金或设备款；机具已发货，但未安装，退还75%的保证金或设备款给甲方；机具已安装，不退还保证金或设备款，机具归甲方所有。
+        </p>
         <p>（二）乙方违约责任</p>
         <p>1、乙方构成违约的，应按国家有关规定，承担违约责任。</p>
         <p>
