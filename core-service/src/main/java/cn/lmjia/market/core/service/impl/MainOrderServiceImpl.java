@@ -96,7 +96,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             try {
                 dailySerials.put(now, new AtomicInteger(entityManager.createQuery(max).getSingleResult()));
             } catch (Exception ignored) {
-                log.debug("", ignored);
+                log.trace("", ignored);
                 dailySerials.put(now, new AtomicInteger(0));
             }
         }

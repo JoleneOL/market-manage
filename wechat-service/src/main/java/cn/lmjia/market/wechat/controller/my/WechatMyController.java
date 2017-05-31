@@ -2,7 +2,7 @@ package cn.lmjia.market.wechat.controller.my;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.SystemService;
-import cn.lmjia.market.dealer.controller.team.TeamDataController;
+import cn.lmjia.market.dealer.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import javax.persistence.EntityManager;
 public class WechatMyController {
 
     @Autowired
-    private TeamDataController teamDataController;
+    private TeamService teamService;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
@@ -32,9 +32,7 @@ public class WechatMyController {
     @GetMapping(SystemService.wechatMyTeamURi)
     @Transactional(readOnly = true)
     public String myTeam(@AuthenticationPrincipal Login login, Model model) {
-        model.addAttribute("allCount", teamDataController.getTeamRowDefinition(login, null)
-                .createQuery(entityManager)
-                .getResultList().size());
+        model.addAttribute("allCount", teamService.all(login));
         return "wechat@myTeam.html";
     }
 }

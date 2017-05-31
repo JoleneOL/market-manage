@@ -8,6 +8,7 @@ import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.DealerServiceTest;
+import cn.lmjia.market.dealer.service.TeamService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Function;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -35,6 +37,8 @@ public class TeamDataControllerTest extends DealerServiceTest {
     @Autowired
     private LoginRelationCacheService loginRelationCacheService;
     private Login userLogin;
+    @Autowired
+    private TeamService teamService;
 
     @Override
     protected Login allRunWith() {
@@ -45,20 +49,35 @@ public class TeamDataControllerTest extends DealerServiceTest {
     public void data() throws Exception {
         userLogin = newRandomAgent();
         //
+        assertThat(teamService.all(userLogin))
+                .as("一开始的时候自然是0")
+                .isEqualTo(0);
         teamListRequestBuilder(null, 0);
 
         Login als[] = new Login[systemService.systemLevel()];
         AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
         initAgentSystem(als, as);
 
+        assertThat(teamService.all(userLogin))
+                .as("一开始的时候自然是0")
+                .isEqualTo(0);
         teamListRequestBuilder(null, 0);
         // 引导增加了一个代理商
         newRandomAgent(as[random.nextInt(systemService.systemLevel() - 1)], userLogin);
+        assertThat(teamService.all(userLogin))
+                .as("多了一个代理商")
+                .isEqualTo(1);
         teamListRequestBuilder(null, 1);
         // 新增一个订单
         newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin);
+        assertThat(teamService.all(userLogin))
+                .as("又多了一个客户")
+                .isEqualTo(2);
         teamListRequestBuilder(null, 2);
         // 但客户只有一个
+        assertThat(teamService.customers(userLogin))
+                .as("客户还是只有一个的")
+                .isEqualTo(1);
         teamListRequestBuilder(builder -> builder.param("rank", "4"), 1);
     }
 

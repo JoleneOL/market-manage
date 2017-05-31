@@ -72,8 +72,7 @@ public class TeamDataController {
         return getTeamRowDefinition(login, level);
     }
 
-    // TODO 直接开放用于查询数量，当然这里是有优化控件的
-    public IndefiniteRowDefinition getTeamRowDefinition(final Login login, final Integer level) {
+    private IndefiniteRowDefinition getTeamRowDefinition(final Login login, final Integer level) {
         // 推荐的人哦
         return new IndefiniteRowDefinition() {
 
