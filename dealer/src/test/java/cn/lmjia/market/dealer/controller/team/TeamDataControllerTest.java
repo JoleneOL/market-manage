@@ -2,9 +2,11 @@ package cn.lmjia.market.dealer.controller.team;
 
 import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.cache.LoginRelation;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
+import cn.lmjia.market.core.service.QuickTradeService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.DealerServiceTest;
@@ -39,6 +41,8 @@ public class TeamDataControllerTest extends DealerServiceTest {
     private Login userLogin;
     @Autowired
     private TeamService teamService;
+    @Autowired
+    private QuickTradeService quickTradeService;
 
     @Override
     protected Login allRunWith() {
@@ -69,7 +73,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
                 .isEqualTo(1);
         teamListRequestBuilder(null, 1);
         // 新增一个订单
-        newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin);
+        MainOrder order1 = newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin);
         assertThat(teamService.all(userLogin))
                 .as("又多了一个客户")
                 .isEqualTo(2);
@@ -78,7 +82,14 @@ public class TeamDataControllerTest extends DealerServiceTest {
         assertThat(teamService.customers(userLogin))
                 .as("客户还是只有一个的")
                 .isEqualTo(1);
+        assertThat(teamService.validCustomers(userLogin))
+                .as("但是有效客户还是没有")
+                .isEqualTo(0);
         teamListRequestBuilder(builder -> builder.param("rank", "4"), 1);
+
+        makeOrderPay(order1);
+
+
     }
 
     @Test

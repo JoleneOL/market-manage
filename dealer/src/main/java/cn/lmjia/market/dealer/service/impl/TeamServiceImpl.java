@@ -21,10 +21,15 @@ public class TeamServiceImpl implements TeamService {
     private EntityManager entityManager;
 
     private int createQuery(Login login, Integer level) {
+        return createQuery(login, level, false);
+    }
+
+    private int createQuery(Login login, Integer level, boolean valid) {
         Query query = entityManager.createQuery("select " +
                         "count( distinct relation.to) " +
                         "from LoginRelation as relation " +
-                        "where relation.to in (select l from Login as l where  l.guideUser=:current) " +
+                        (valid ? "" : "where relation.to in (select l from Login as l where  l.guideUser=:current) ") +
+                        (!valid ? "" : "where relation.to in (select cw.login from Customer as cw where cw.login.guideUser=:current and cw.successOrder=true ) ") +
 //                (level == null ? "" : " and min(relation.level)=:level ") +
                         "group by relation.to " +
                         (level == null ? "" : " having min(relation.level)=:level ")
@@ -50,7 +55,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public int validCustomers(Login login) {
-        return createQuery(login, Customer.LEVEL);
+        return createQuery(login, Customer.LEVEL, true);
     }
 
     @Override

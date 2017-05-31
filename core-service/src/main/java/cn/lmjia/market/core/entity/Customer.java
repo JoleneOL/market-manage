@@ -47,6 +47,10 @@ public class Customer {
      */
     @ManyToOne(optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private AgentLevel agentLevel;
+    /**
+     * https://github.com/JoleneOL/market-manage/wiki/%E5%AE%9A%E4%B9%89#%E6%9C%89%E6%95%88%E7%94%A8%E6%88%B7
+     */
+    private boolean successOrder;
 
 
     private int birthYear;
