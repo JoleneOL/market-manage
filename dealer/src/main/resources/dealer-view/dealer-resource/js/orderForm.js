@@ -104,7 +104,8 @@ $(function () {
 
 
     function countTotal() {
-        var deposit = +$('#J_userDeposit').find('strong').text();
+        // var deposit = +$('#J_userDeposit').find('strong').text();
+        var deposit = +$('#J_userCost').find('strong').text();
         var cost = +$('#J_installationCost').find('strong').text();
         var amout = +$('#J_goodsAmount').val();
         var total = (deposit + cost) * amout;
@@ -128,8 +129,10 @@ $(function () {
             $('.js-install').hide();
             $('#J_installationCost').find('strong').text(0);
         }
-        $('#J_userDeposit').find('strong').text(deposit);
+        $('#J_userCost').find('strong').text(deposit);
         $('#J_leasedType').val(model);
-        $('#J_package').val('服务费 ' + cost + '元 / 天');
+
+        // $('#J_userDeposit').find('strong').text(deposit);
+        // $('#J_package').val('服务费 ' + cost + '元 / 天');
     }
 });

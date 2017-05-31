@@ -2,9 +2,9 @@
  * Created by Neo on 2017/5/10.
  */
 // 模拟延迟
-Mock.setup({
-    timeout: '1000'
-});
+// Mock.setup({
+//     timeout: '1000'
+// });
 
 Mock.mock(/^\/api\/teamList\?rank=all&page=\d$/, "get", {
     "resultCode": 200,
