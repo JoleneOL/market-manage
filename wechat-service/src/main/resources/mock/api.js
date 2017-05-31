@@ -3,12 +3,9 @@
  */
 // 模拟延迟
 Mock.setup({
-    timeout: '2000'
+    timeout: '1000'
 });
-/**
- * 使用正则超级(｡･∀･)ﾉﾞ嗨
- * resultCode 多个200，减少错误概率 ~囧~
- */
+
 Mock.mock(/^\/api\/teamList\?rank=all&page=\d$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
@@ -114,7 +111,24 @@ Mock.mock(/\/api\/equipmentList\?page=\d/, "get", {
     ]
 });
 
-Mock.mock(/\/api\/commList\/other\?page=\d/, "get", {
+// 看看不同的API
+Mock.mock(/\/api\/commList\/all\?page=\d/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|10": [
+        {
+            id: '@id',
+            commType: '@pick(["销售收益", "其他收益", "退款", "管理费"])',
+            name: "@cname",
+            commission: "@float(1, 100, 1, 2)",
+            divided: '70%',
+            commInfo: '滤芯01 3年收费 ￥6000',
+            commTime: '@now("yyyy-MM-dd")'
+        }
+    ]
+});
+
+Mock.mock(/\/api\/commList\/today\?page=\d/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|10": [
@@ -130,8 +144,7 @@ Mock.mock(/\/api\/commList\/other\?page=\d/, "get", {
     ]
 });
 
-// 看看不同的API
-Mock.mock(/\/api\/commList\/all\?page=\d/, "get", {
+Mock.mock(/\/api\/commList\/month\?page=\d/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|10": [
@@ -140,8 +153,40 @@ Mock.mock(/\/api\/commList\/all\?page=\d/, "get", {
             commType: '@pick(["销售收益", "其他收益", "退款", "管理费"])',
             name: "@cname",
             commission: "@float(1, 100, 1, 2)",
-            divided: '70%',
-            commInfo: '滤芯01 3年收费 ￥6000',
+            divided: '20%',
+            commInfo: '滤芯01 3年收费 ￥3000',
+            commTime: '@now("yyyy-MM-dd")'
+        }
+    ]
+});
+
+Mock.mock(/\/api\/commList\/previous\?page=\d/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|10": [
+        {
+            id: '@id',
+            commType: '@pick(["销售收益", "其他收益", "退款", "管理费"])',
+            name: "@cname",
+            commission: "@float(1, 100, 1, 2)",
+            divided: '20%',
+            commInfo: '滤芯01 3年收费 ￥3000',
+            commTime: '@now("yyyy-MM-dd")'
+        }
+    ]
+});
+
+Mock.mock(/\/api\/commList\/quarter\?page=\d/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|10": [
+        {
+            id: '@id',
+            commType: '@pick(["销售收益", "其他收益", "退款", "管理费"])',
+            name: "@cname",
+            commission: "@float(1, 100, 1, 2)",
+            divided: '20%',
+            commInfo: '滤芯01 3年收费 ￥3000',
             commTime: '@now("yyyy-MM-dd")'
         }
     ]

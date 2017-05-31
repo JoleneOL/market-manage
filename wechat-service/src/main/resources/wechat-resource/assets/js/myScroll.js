@@ -11,6 +11,7 @@
             loading: false,
             ajaxUrl: '',
             ajaxMethod: 'GET',
+            isAjax: true,
             ajaxData: {},
             page: 0,
             loadSuccess: function () {},
@@ -94,6 +95,17 @@
                 }
             });
         }
+
+        // 判断是客户端渲染还是服务器渲染
+        if(s.isAjax) {
+            if (s.loading) return;
+            s.loading = true;
+            getDate();
+        } else {
+            // 服务器渲染的话，加载从第二页开始
+            s.page = 1;
+        }
+
         function createDom(obj) {
             var domStr = '';
             obj.forEach(function (v) {

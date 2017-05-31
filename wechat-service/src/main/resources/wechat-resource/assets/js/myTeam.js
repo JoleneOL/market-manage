@@ -27,7 +27,6 @@ $(function () {
         ajaxData: {
             rank: infiniteWrap.attr('data-rank')
         },
-        page: +infiniteWrap.attr('data-page'),
         template: listTpl
     });
 
