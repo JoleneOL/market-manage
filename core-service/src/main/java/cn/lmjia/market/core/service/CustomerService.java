@@ -3,6 +3,9 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
+import me.jiangcai.lib.thread.ThreadSafe;
+import org.springframework.context.event.EventListener;
 
 /**
  * 客户相关服务
@@ -21,4 +24,13 @@ public interface CustomerService {
      * @return 必然非null的客户
      */
     Customer getNoNullCustomer(String name, String mobile, AgentLevel agentLevel, Login recommendBy);
+
+    /**
+     * 客户也需要知道这个事情
+     *
+     * @param event e
+     */
+    @EventListener(MainOrderFinishEvent.class)
+    @ThreadSafe
+    void orderFinish(MainOrderFinishEvent event);
 }

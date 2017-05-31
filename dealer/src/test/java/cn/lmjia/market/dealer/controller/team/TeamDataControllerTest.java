@@ -88,8 +88,25 @@ public class TeamDataControllerTest extends DealerServiceTest {
         teamListRequestBuilder(builder -> builder.param("rank", "4"), 1);
 
         makeOrderPay(order1);
+        quickTradeService.makeDone(order1);
+        assertThat(teamService.validCustomers(userLogin))
+                .as("现在有了")
+                .isEqualTo(1);
+        assertThat(teamService.customers(userLogin))
+                .as("客户还是只有一个的")
+                .isEqualTo(1);
 
+        // 就算这个客户再下一单 同样也是1
+        MainOrder order2 = newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin, order1.getCustomer().getMobile());
+        makeOrderPay(order2);
+        quickTradeService.makeDone(order2);
 
+        assertThat(teamService.validCustomers(userLogin))
+                .as("现在有了")
+                .isEqualTo(1);
+        assertThat(teamService.customers(userLogin))
+                .as("客户还是只有一个的")
+                .isEqualTo(1);
     }
 
     @Test
