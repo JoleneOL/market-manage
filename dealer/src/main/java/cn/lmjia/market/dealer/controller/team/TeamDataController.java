@@ -99,9 +99,11 @@ public class TeamDataController {
                         ",function('IFNULL',cw.mobile,relation.to.loginName)" +
                         "from LoginRelation as relation " +
                         "left join relation.to.contactWay as cw " +
-                        "where relation.to in (select l from Login as l where  l.guideUser=:current) " +
-                        (level == null ? "" : " and relation.level=:level ") +
-                        "group by relation.to")
+                        ((level != null && level == Customer.LEVEL)
+                                ? "where relation.to in (select cw.login from Customer as cw where cw.login.guideUser=:current and cw.successOrder=true ) "
+                                : "where relation.to in (select l from Login as l where  l.guideUser=:current) ") +
+                        "group by relation.to " +
+                        (level == null ? "" : " having min(relation.level)=:level "))
                         .setParameter("current", login);
                 if (level == null)
                     return query;

@@ -85,7 +85,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
         assertThat(teamService.validCustomers(userLogin))
                 .as("但是有效客户还是没有")
                 .isEqualTo(0);
-        teamListRequestBuilder(builder -> builder.param("rank", "4"), 1);
+        teamListRequestBuilder(builder -> builder.param("rank", "4"), 0);
 
         makeOrderPay(order1);
         quickTradeService.makeDone(order1);
@@ -95,6 +95,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
         assertThat(teamService.customers(userLogin))
                 .as("客户还是只有一个的")
                 .isEqualTo(1);
+        teamListRequestBuilder(builder -> builder.param("rank", "4"), 1);
 
         // 就算这个客户再下一单 同样也是1
         MainOrder order2 = newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin, order1.getCustomer().getMobile());
@@ -107,6 +108,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
         assertThat(teamService.customers(userLogin))
                 .as("客户还是只有一个的")
                 .isEqualTo(1);
+        teamListRequestBuilder(builder -> builder.param("rank", "4"), 1);
     }
 
     @Test

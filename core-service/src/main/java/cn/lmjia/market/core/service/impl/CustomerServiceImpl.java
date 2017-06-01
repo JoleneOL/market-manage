@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
@@ -26,6 +27,8 @@ public class CustomerServiceImpl implements CustomerService {
     private LoginService loginService;
     @Autowired
     private LoginRelationCacheService loginRelationCacheService;
+    @Autowired
+    private ContactWayService contactWayService;
 
     @Override
     public Customer getNoNullCustomer(String name, String mobile, AgentLevel agentLevel, Login recommendBy) {
@@ -37,6 +40,9 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerLogin == null) {
             customerLogin = loginService.newLogin(mobile, recommendBy, "123456");
             // 默认密码是 123456
+            contactWayService.updateName(customerLogin, name);
+            contactWayService.updateMobile(customerLogin, mobile);
+//            contactWayService.u
         }
         customer = new Customer();
         customer.setupAgentLevel(agentLevel);
