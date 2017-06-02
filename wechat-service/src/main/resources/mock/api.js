@@ -6,7 +6,7 @@
 //     timeout: '1000'
 // });
 
-Mock.mock(/^\/api\/teamList\?rank=all&page=\d$/, "get", {
+Mock.mock(/^\/api\/teamList\?rank=all&page=\d{1,100}$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|20": [

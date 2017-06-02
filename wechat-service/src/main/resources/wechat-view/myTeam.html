@@ -21,20 +21,26 @@
     <div class="view_team-logo js-extra-h"></div>
     <div class="weui-flex view_panel-body js-extra-h">
         <div class="weui-flex__item">
-            <p>成功推荐&nbsp;<!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
-                <strong class="text-big text-error" th:text="${{allCount}}">29</strong>&nbsp;个用户</p>
+            <p>徐春峰共发展&nbsp;<!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
+                <strong class="text-big text-error" th:text="${{allCount}}">29</strong>&nbsp;人</p>
         </div>
         <div>
             <a href="javascript:;" class="text-custom text-alignment_team open-popup"
                data-target="#J_upgradeRules">晋升制度</a>
         </div>
     </div>
+    <div class="weui-flex js-extra-h">
+        <div class="weui-flex__item text-center">总代理 2人</div>
+        <div class="weui-flex__item text-center">分代理 6人</div>
+        <div class="weui-flex__item text-center">经销商 5人</div>
+        <div class="weui-flex__item text-center">爱心天使 17人</div>
+    </div>
     <div class="view_team-list">
         <div class="view-list-item view_team-header js-extra-h">
             <div>用户</div>
+            <div>手机号码</div>
             <div id="J_changeRank"><i class="weui-icon-search"></i>级别</div>
             <div>加入时间</div>
-            <div>手机号码</div>
         </div>
         <!--team-list-start-->
         <div class="view-scroll-wrap" id="J_teamList" data-url="/api/teamList" data-rank="all">

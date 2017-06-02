@@ -15,9 +15,9 @@ $(function () {
     var listTpl = function (obj) {
         return '<div class="view-list-item">' +
             '<div>' + obj.name + '</div>' +
+            '<div>' + obj.phone + '</div>' +
             '<div>' + obj.rank + '</div>' +
             '<div>' + obj.joinTime + '</div>' +
-            '<div>' + obj.phone + '</div>' +
             '</div>';
     };
 

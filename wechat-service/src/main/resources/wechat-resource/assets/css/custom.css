@@ -256,10 +256,10 @@
 .view_team-list .view-list-item > div:nth-child(1) {
   width: 16%;
 }
-.view_team-list .view-list-item > div:nth-child(2) {
+.view_team-list .view-list-item > div:nth-child(3) {
   width: 18%;
 }
-.view_team-list .view-list-item > div:nth-child(3),
+.view_team-list .view-list-item > div:nth-child(2),
 .view_team-list .view-list-item > div:nth-child(4) {
   width: 33%;
 }
