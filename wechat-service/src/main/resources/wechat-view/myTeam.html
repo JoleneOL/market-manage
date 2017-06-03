@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="infinite">
+<!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count0" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count1" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count2" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count3" type="java.lang.Number"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -21,7 +26,7 @@
     <div class="view_team-logo js-extra-h"></div>
     <div class="weui-flex view_panel-body js-extra-h">
         <div class="weui-flex__item">
-            <p>徐春峰共发展&nbsp;<!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
+            <p>徐春峰共发展&nbsp;
                 <strong class="text-big text-error" th:text="${{allCount}}">29</strong>&nbsp;人</p>
         </div>
         <div>
@@ -30,10 +35,10 @@
         </div>
     </div>
     <div class="weui-flex js-extra-h">
-        <div class="weui-flex__item text-center">总代理 2人</div>
-        <div class="weui-flex__item text-center">分代理 6人</div>
-        <div class="weui-flex__item text-center">经销商 5人</div>
-        <div class="weui-flex__item text-center">爱心天使 17人</div>
+        <div class="weui-flex__item text-center">总代理 <span th:text="${count0}">2</span>人</div>
+        <div class="weui-flex__item text-center">分代理 <span th:text="${count1}">6</span>人</div>
+        <div class="weui-flex__item text-center">经销商 <span th:text="${count2}">5</span>人</div>
+        <div class="weui-flex__item text-center">爱心天使 <span th:text="${count3}">17</span>人</div>
     </div>
     <div class="view_team-list">
         <div class="view-list-item view_team-header js-extra-h">

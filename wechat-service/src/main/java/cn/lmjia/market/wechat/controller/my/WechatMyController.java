@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.persistence.EntityManager;
-
 /**
  * @author CJ
  */
@@ -20,9 +18,8 @@ public class WechatMyController {
 
     @Autowired
     private TeamService teamService;
-    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
-    private EntityManager entityManager;
+    private SystemService systemService;
 
     @GetMapping(SystemService.wechatMyURi)
     public String my() {
@@ -33,6 +30,12 @@ public class WechatMyController {
     @Transactional(readOnly = true)
     public String myTeam(@AuthenticationPrincipal Login login, Model model) {
         model.addAttribute("allCount", teamService.all(login));
+
+        int lowestLevel = systemService.systemLevel() - 1;
+        model.addAttribute("count0", teamService.agents(login, lowestLevel - 2));
+        model.addAttribute("count1", teamService.agents(login, lowestLevel - 1));
+        model.addAttribute("count2", teamService.agents(login, lowestLevel));
+        model.addAttribute("count3", teamService.validCustomers(login));
         return "wechat@myTeam.html";
     }
 }
