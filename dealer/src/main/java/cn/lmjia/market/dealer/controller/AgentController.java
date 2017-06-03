@@ -6,6 +6,7 @@ import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -57,7 +58,8 @@ public class AgentController {
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "')")
     @Transactional
     public String addAgent(@AuthenticationPrincipal Login login, Long superiorId, String rank, String agentName
-            , int firstPayment, int agencyFee, @RequestParam LocalDate beginDate, @RequestParam LocalDate endDate
+            , int firstPayment, int agencyFee, @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam LocalDate beginDate
+            , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam LocalDate endDate
             , String mobile, String password
             , long guideUser, Address address, String cardFrontPath, String cardBackPath) throws IOException {
         Login guide = loginService.get(guideUser);

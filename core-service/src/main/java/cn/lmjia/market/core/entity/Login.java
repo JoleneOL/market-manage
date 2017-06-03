@@ -21,6 +21,7 @@ import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -102,7 +103,7 @@ public class Login implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 //        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + ROLE_AllAgent));
-        return null;
+        return Collections.emptySet();
     }
 
     @Override

@@ -94,7 +94,7 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
         }
 
         // 然后是客户么
-        Stream<LoginRelation> loginRelationStream = customerRepository.findByAgentLevel_System(system).stream()
+        Stream<LoginRelation> loginRelationStream = customerRepository.findByAgentLevel_SystemAndSuccessOrderTrue(system).stream()
                 .map(customer
                         -> createRelationFromLevel(system, customer.getAgentLevel().getLogin(), customer.getLogin()
                         , Customer.LEVEL));
@@ -125,8 +125,10 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
         Set<LoginRelation> relations = loginRelationRepository.findBySystemAndTo(system
                 , from);
 
+        final Login customerLogin = customer.getLogin();
+        // 如果该关系已存在 则不重复添加！
         addExistingRelation(system, relations
-                , Stream.of(createRelationFromLevel(system, from, customer.getLogin(), Customer.LEVEL)));
+                , Stream.of(createRelationFromLevel(system, from, customerLogin, Customer.LEVEL)));
         saveValidRelations(relations);
     }
 }

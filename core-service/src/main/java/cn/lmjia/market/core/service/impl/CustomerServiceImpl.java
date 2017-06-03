@@ -50,7 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setName(name);
         customer.setMobile(mobile);
         customer = customerRepository.save(customer);
-        loginRelationCacheService.addCustomerCache(customer);
         return customer;
     }
 
@@ -58,6 +57,9 @@ public class CustomerServiceImpl implements CustomerService {
     public void orderFinish(MainOrderFinishEvent event) {
         Customer customer = event.getMainOrder().getCustomer();
         customer = customerRepository.getOne(customer.getId());
-        customer.setSuccessOrder(true);
+        if (!customer.isSuccessOrder()) {
+            customer.setSuccessOrder(true);
+            loginRelationCacheService.addCustomerCache(customer);
+        }
     }
 }

@@ -13,6 +13,7 @@ import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +46,8 @@ public class OrderDataController {
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition manageableList(@AuthenticationPrincipal Login login, String orderId
             , @RequestParam(value = "phone", required = false) String mobile, Long goodId
-            , @RequestParam(required = false) LocalDate orderDate, OrderStatus status) {
+            , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate orderDate
+            , OrderStatus status) {
         return new MainOrderRows(login) {
             @Override
             public Specification<MainOrder> specification() {

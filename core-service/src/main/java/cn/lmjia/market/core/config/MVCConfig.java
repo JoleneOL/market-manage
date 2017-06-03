@@ -42,7 +42,6 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -167,7 +166,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         super.addFormatters(registry);
-        registry.addFormatterForFieldType(LocalDate.class, localDateConverter);
+//        registry.addFormatterForFieldType(LocalDate.class, localDateConverter);
 //        registry.addFormatterForFieldType(Gender.class, new GenderConverter());
 //        registry.addFormatterForFieldType(OrderStatus.class, new OrderStatusConverter());
 //        registry.addFormatterForFieldType(BigDecimal.class, bigDecimalConverter);

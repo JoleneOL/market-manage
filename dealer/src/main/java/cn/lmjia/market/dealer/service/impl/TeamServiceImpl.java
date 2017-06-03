@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 /**
  * @author CJ
@@ -50,7 +54,17 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public int customers(Login login) {
-        return createQuery(login, Customer.LEVEL);
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Customer> customerRoot = countQuery.from(Customer.class);
+        final Path<Object> loginPath = customerRoot.get("login");
+        countQuery = countQuery.where(criteriaBuilder.equal(loginPath.get("guideUser"), login));
+        countQuery = countQuery.select(criteriaBuilder.countDistinct(loginPath));
+        try {
+            return Math.toIntExact(entityManager.createQuery(countQuery).getSingleResult());
+        } catch (NoResultException ignored) {
+            return 0;
+        }
     }
 
     @Override

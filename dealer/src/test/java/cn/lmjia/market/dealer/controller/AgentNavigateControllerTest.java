@@ -36,6 +36,7 @@ public class AgentNavigateControllerTest extends DealerServiceTest {
         String uri = agentOrderManagePage.placeOrderUri();
         // 打开这个地址 即可抵达
         driver.get("http://localhost" + uri);
+        System.out.println(driver.getPageSource());
         initPage(AgentPlaceOrderPage.class);
 
     }

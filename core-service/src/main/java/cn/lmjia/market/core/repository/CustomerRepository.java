@@ -19,5 +19,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSp
     /**
      * @return 这个代理体系的所有客户
      */
-    List<Customer> findByAgentLevel_System(AgentSystem system);
+    List<Customer> findByAgentLevel_SystemAndSuccessOrderTrue(AgentSystem system);
 }
