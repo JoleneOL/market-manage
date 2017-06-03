@@ -62,7 +62,7 @@ import java.util.UUID;
  */
 @Configuration
 @ImportResource("classpath:/datasource_local.xml")
-@PropertySource("classpath:/test_wx.properties")
+@PropertySource({"classpath:/test_wx.properties", "classpath:/test_paymax.properties"})
 @Import({CoreConfig.class, ChanpayTestSpringConfig.class, PaymentTestConfig.class, VerificationCodeTestConfig.class})
 @ComponentScan("cn.lmjia.market.core.test")
 public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcConfigurer, WebModule {

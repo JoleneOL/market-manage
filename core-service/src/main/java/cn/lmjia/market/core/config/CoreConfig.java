@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.config;
 
 import me.jiangcai.payment.chanpay.PaymentChanpayConfig;
+import me.jiangcai.payment.paymax.PaymentPaymaxConfig;
 import me.jiangcai.wx.standard.StandardWeixinConfig;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,7 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
  */
 @Configuration
 @Import({CommonConfig.class, DataSupportConfig.class,
-        StandardWeixinConfig.class, PaymentChanpayConfig.class
+        StandardWeixinConfig.class, PaymentChanpayConfig.class, PaymentPaymaxConfig.class
 //        ServiceConfig.class
 })
 @ComponentScan({

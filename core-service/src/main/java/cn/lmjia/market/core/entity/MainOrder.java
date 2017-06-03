@@ -180,6 +180,11 @@ public class MainOrder implements PayableOrder {
         return good.getProduct().getName();
     }
 
+    @Override
+    public String getOrderBody() {
+        return amount + "个" + good.getProduct().getName();
+    }
+
     /**
      * @return 业务订单号
      * @see #getSerialId(Path, CriteriaBuilder)

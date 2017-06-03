@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="pay-page">
 <!--/*@thymesVar id="order" type="cn.lmjia.market.core.entity.MainOrder"*/-->
-<!--/*@thymesVar id="payOrder" type="me.jiangcai.payment.chanpay.entity.ChanpayPayOrder"*/-->
+<!--/*@thymesVar id="qrCodeUrl" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -26,7 +26,8 @@
 </div>
 <div class="view-pay">
     <p class="view-pay-title" th:text="${order.orderProductName}">某个净水器</p>
-    <p class="view-pay-qrcode"><img class="img-qrCode" src="../wechat-resource/assets/img/temp.png" th:src="${payOrder.url}" name="qrCode" id="qrCode"/></p>
+    <p class="view-pay-qrcode"><img class="img-qrCode" src="../wechat-resource/assets/img/temp.png"
+                                    th:src="${qrCodeUrl}" name="qrCode" id="qrCode"/></p>
     <p class="view-pay-num">
         ￥<span class="num"
                th:text="${#numbers.formatDecimal(order.orderDueAmount,1,'COMMA',2,'POINT')}">123</span>

@@ -7,6 +7,7 @@ import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.row.IndefiniteRowDefinitionHandler;
 import cn.lmjia.market.core.row.RowDefinitionHandler;
+import cn.lmjia.market.core.util.ImageResolver;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
 //        returnValueHandlers.add(new DrawablePageAndSelectionResolver());
+        returnValueHandlers.add(0, new ImageResolver());
         returnValueHandlers.add(rowDefinitionHandler);
         returnValueHandlers.add(indefiniteRowDefinitionHandler);
     }

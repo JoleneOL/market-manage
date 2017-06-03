@@ -62,11 +62,16 @@
         <dependency>
             <groupId>org.luffy.libs</groupId>
             <artifactId>libseext</artifactId>
-            <version>1.3.4</version>
+            <version>1.3.5</version>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.payment</groupId>
             <artifactId>support-chanpay</artifactId>
+            <version>${payment.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.jiangcai.payment</groupId>
+            <artifactId>support-paymax</artifactId>
             <version>${payment.version}</version>
         </dependency>
         <dependency>
@@ -97,6 +102,11 @@
             <artifactId>h2</artifactId>
             <version>1.4.192</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.2.1</version>
         </dependency>
     </dependencies>
 
