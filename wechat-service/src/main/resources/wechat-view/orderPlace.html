@@ -22,7 +22,8 @@
       th:data-search-login-url="@{/loginData/select2}">
 <section class="view_body">
     <form action="orderSuccess.html" method="post" th:action="@{/wechatOrder}" th:method="post" id="J_form">
-        <div class="weui-cells__title">我要下单 <a href="orderList.html" class="weui-cell_link">订单列表</a></div>
+        <div class="weui-cells__title">我要下单 <a href="orderList.html" th:href="@{/wechatOrderList}"
+                                               class="weui-cell_link">订单列表</a></div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">

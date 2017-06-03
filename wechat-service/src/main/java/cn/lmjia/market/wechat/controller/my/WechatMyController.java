@@ -21,6 +21,11 @@ public class WechatMyController {
     @Autowired
     private SystemService systemService;
 
+    @GetMapping("/wechatOrderList")
+    public String wechatOrderList() {
+        return "wechat@orderList.html";
+    }
+
     @GetMapping(SystemService.wechatMyURi)
     public String my() {
         return "wechat@personalCenter.html";
