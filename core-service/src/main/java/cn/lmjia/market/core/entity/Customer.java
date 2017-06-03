@@ -72,4 +72,13 @@ public class Customer {
             agentLevel.setCustomers(new ArrayList<>());
         agentLevel.getCustomers().add(this);
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "login=" + login +
+                ", mobile='" + mobile + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

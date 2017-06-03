@@ -11,6 +11,8 @@ import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ import java.util.stream.Stream;
 @Service
 public class LoginRelationCacheServiceImpl implements LoginRelationCacheService {
 
+    private static final Log log = LogFactory.getLog(LoginRelationCacheServiceImpl.class);
     @Autowired
     private LoginRelationRepository loginRelationRepository;
     @Autowired
@@ -126,6 +129,11 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
                 , from);
 
         final Login customerLogin = customer.getLogin();
+        if (!loginRelationRepository.findBySystemAndFromAndToAndLevel(system, from, customerLogin, Customer.LEVEL).isEmpty()) {
+            log.debug("客户" + customer + "的关系缓存已存在");
+            return;
+        }
+
         // 如果该关系已存在 则不重复添加！
         addExistingRelation(system, relations
                 , Stream.of(createRelationFromLevel(system, from, customerLogin, Customer.LEVEL)));

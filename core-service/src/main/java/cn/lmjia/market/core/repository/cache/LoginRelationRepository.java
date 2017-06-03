@@ -21,4 +21,6 @@ public interface LoginRelationRepository extends JpaRepository<LoginRelation, Lo
     List<LoginRelation> findBySystem(AgentSystem system);
 
     Set<LoginRelation> findBySystemAndTo(AgentSystem system, Login login);
+
+    List<LoginRelation> findBySystemAndFromAndToAndLevel(AgentSystem system, Login from, Login to, int level);
 }
