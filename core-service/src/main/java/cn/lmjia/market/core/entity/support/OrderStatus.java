@@ -26,7 +26,12 @@ public enum OrderStatus {
     /**
      * 订单完成，进入售后状态
      */
-    afterSale("已安装");
+    afterSale("已安装"),
+    /**
+     * 总而言之是在退款
+     * 这个状态并不会实际用于订单状态中，仅仅表示一个模糊值
+     */
+    almostRefund("退款状态");
 
     private final String message;
 
