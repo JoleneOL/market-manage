@@ -5,6 +5,7 @@
 <!--/*@thymesVar id="count1" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="count2" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="count3" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="agentLevel" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -27,13 +28,15 @@
         <div class="view-wrapper weui-flex">
             <div class="weui-flex__item">
                 <div class="view_avatar">
-                    <img src="../wechat-resource/assets/img/avatar.jpg">
+                    <img src="../wechat-resource/assets/img/avatar.jpg"
+                         th:src="${@readService.avatarFor(#authentication.principal)}">
                 </div>
             </div>
             <div class="weui-flex__item">
                 <div class="view_info">
-                    <p><span>徐春风</span></p>
-                    <p><span class="label">滨江区总代</span></p>
+                    <p><span th:text="${@readService.nameForPrincipal(#authentication.principal)}">徐春风</span></p>
+                    <p>
+                        <span class="label" th:text="${agentLevel}">滨江区总代</span></p>
                 </div>
             </div>
         </div>

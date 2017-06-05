@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.lib.seext.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class ReadServiceImpl implements ReadService {
 
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private SystemService systemService;
 
     @Override
     public String mobileFor(Object principal) {
@@ -76,5 +79,14 @@ public class ReadServiceImpl implements ReadService {
         Login login = toLogin(principal);
         login = loginRepository.getOne(login.getId());
         return new Money(login.getCommissionBalance());
+    }
+
+    @Override
+    public String avatarFor(Object principal) {
+        Login login = toLogin(principal);
+        login = loginRepository.getOne(login.getId());
+        if (login.getWechatUser() != null)
+            return login.getWechatUser().getHeadImageUrl();
+        return systemService.toUrl("/wechat-resource/assets/img/avatar.jpg");
     }
 }

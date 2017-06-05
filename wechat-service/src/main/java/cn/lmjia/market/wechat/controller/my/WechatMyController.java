@@ -2,6 +2,7 @@ package cn.lmjia.market.wechat.controller.my;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +21,8 @@ public class WechatMyController {
     private TeamService teamService;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private AgentService agentService;
 
     @GetMapping("/wechatOrderList")
     public String wechatOrderList() {
@@ -34,6 +37,8 @@ public class WechatMyController {
     @GetMapping(SystemService.wechatMyTeamURi)
     @Transactional(readOnly = true)
     public String myTeam(@AuthenticationPrincipal Login login, Model model) {
+        model.addAttribute("agentLevel", agentService.loginTitle(agentService.highestAgent(login)));
+        // 微信头像 名字 等级
         model.addAttribute("allCount", teamService.all(login));
 
         int lowestLevel = systemService.systemLevel() - 1;

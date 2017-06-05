@@ -95,4 +95,11 @@ public interface ReadService {
     @Transactional(readOnly = true)
     Money currentBalance(Object principal);
 
+    /**
+     * @param principal 身份，一般是Login
+     * @return 头像
+     */
+    @Transactional(readOnly = true)
+    String avatarFor(Object principal);
+
 }
