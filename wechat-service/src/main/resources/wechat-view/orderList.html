@@ -11,173 +11,340 @@
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
 
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
 <body class="view-bg-color view-fs-small">
-<section class="view_body view_pb-more view-scroll-wrap" id="J_orderList">
-    <div class="view-scroll-list">
-        <div class="weui-cells__title">我的列表</div>
-        <div class="weui-form-preview view-mb-20 view-form-card_line">
-            <div class="view-form-preview-ex">
-                <div class="weui-form-preview__item">
-                    <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
-                    <label class="weui-form-preview__label text-black">成功</label>
+<section class="view_body view_pb-more">
+    <div class="weui-cells__title">我的列表</div>
+    <div class="weui-search-bar js-extra-h-c">
+        <form class="weui-search-bar__form">
+            <div class="weui-search-bar__box">
+                <i class="weui-icon-search"></i>
+                <input type="search" class="weui-search-bar__input" placeholder="搜索" name="search">
+                <a href="javascript:" class="weui-icon-clear"></a>
+            </div>
+            <label class="weui-search-bar__label">
+                <i class="weui-icon-search"></i>
+                <span>搜索</span>
+            </label>
+        </form>
+        <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+    </div>
+    <div class="view-tabs js-extra-h-c">
+        <a href="#" class="view-tabs_item active">全部</a>
+        <a href="#" class="view-tabs_item">待发货</a>
+        <a href="#" class="view-tabs_item">待收货</a>
+        <a href="#" class="view-tabs_item">待安装</a>
+        <a href="#" class="view-tabs_item">退款</a>
+    </div>
+    <div id="tabs-container" class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/orderList">
+                <div class="view-scroll-list">
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">成功</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">成功</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">成功</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">成功</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">成功</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">成功</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-loadmore">
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">玩了命的加载中...</span>
+                    </div>
                 </div>
             </div>
-            <div class="weui-form-preview__bd">
-                <div class="weui-flex">
-                    <div class="weui-flex__item">李菲菲</div>
-                    <div class="weui-flex__item">饮水机 u56立式</div>
-                    <div class="weui-flex__item">￥3000</div>
-                </div>
-                <div class="weui-flex">
-                    <div class="weui-flex__item">189****4566</div>
-                    <div class="weui-flex__item">2年收费 730天</div>
-                    <div class="weui-flex__item">x1</div>
-                </div>
-            </div>
-            <div class="weui-form-preview__ft view_form-button-group">
-                <div class="button_sp_area">
-                    <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
-                    <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-form-preview view-mb-20 view-form-card_line">
-            <div class="view-form-preview-ex">
-                <div class="weui-form-preview__item">
-                    <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
-                    <label class="weui-form-preview__label text-black">成功</label>
-                </div>
-            </div>
-            <div class="weui-form-preview__bd">
-                <div class="weui-flex">
-                    <div class="weui-flex__item">李菲菲</div>
-                    <div class="weui-flex__item">饮水机 u56立式</div>
-                    <div class="weui-flex__item">￥3000</div>
-                </div>
-                <div class="weui-flex">
-                    <div class="weui-flex__item">189****4566</div>
-                    <div class="weui-flex__item">2年收费 730天</div>
-                    <div class="weui-flex__item">x1</div>
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/orderList">
+                <div class="view-scroll-list">
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">待发货</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="#" class="weui-btn weui-btn_mini weui-btn_default_custom">退款</a>
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-loadmore">
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">玩了命的加载中...</span>
+                    </div>
                 </div>
             </div>
-            <div class="weui-form-preview__ft view_form-button-group">
-                <div class="button_sp_area">
-                    <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
-                    <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/orderList">
+                <div class="view-scroll-list">
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">待收货</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="#" class="weui-btn weui-btn_mini weui-btn_default_custom">退款</a>
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-loadmore">
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">玩了命的加载中...</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="weui-form-preview view-mb-20 view-form-card_line">
-            <div class="view-form-preview-ex">
-                <div class="weui-form-preview__item">
-                    <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
-                    <label class="weui-form-preview__label text-black">成功</label>
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/orderList">
+                <div class="view-scroll-list">
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">待安装</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="#" class="weui-btn weui-btn_mini weui-btn_default_custom">退款</a>
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-loadmore">
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">玩了命的加载中...</span>
+                    </div>
                 </div>
             </div>
-            <div class="weui-form-preview__bd">
-                <div class="weui-flex">
-                    <div class="weui-flex__item">李菲菲</div>
-                    <div class="weui-flex__item">饮水机 u56立式</div>
-                    <div class="weui-flex__item">￥3000</div>
-                </div>
-                <div class="weui-flex">
-                    <div class="weui-flex__item">189****4566</div>
-                    <div class="weui-flex__item">2年收费 730天</div>
-                    <div class="weui-flex__item">x1</div>
-                </div>
-            </div>
-            <div class="weui-form-preview__ft view_form-button-group">
-                <div class="button_sp_area">
-                    <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
-                    <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-form-preview view-mb-20 view-form-card_line">
-            <div class="view-form-preview-ex">
-                <div class="weui-form-preview__item">
-                    <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
-                    <label class="weui-form-preview__label text-black">成功</label>
-                </div>
-            </div>
-            <div class="weui-form-preview__bd">
-                <div class="weui-flex">
-                    <div class="weui-flex__item">李菲菲</div>
-                    <div class="weui-flex__item">饮水机 u56立式</div>
-                    <div class="weui-flex__item">￥3000</div>
-                </div>
-                <div class="weui-flex">
-                    <div class="weui-flex__item">189****4566</div>
-                    <div class="weui-flex__item">2年收费 730天</div>
-                    <div class="weui-flex__item">x1</div>
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/orderList">
+                <div class="view-scroll-list">
+                    <div class="weui-form-preview view-mb-20 view-form-card_line">
+                        <div class="view-form-preview-ex">
+                            <div class="weui-form-preview__item">
+                                <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
+                                <label class="weui-form-preview__label text-black">退款</label>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__bd">
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">李菲菲</div>
+                                <div class="weui-flex__item">饮水机 u56立式</div>
+                                <div class="weui-flex__item">￥3000</div>
+                            </div>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item">189****4566</div>
+                                <div class="weui-flex__item">2年收费 730天</div>
+                                <div class="weui-flex__item">x1</div>
+                            </div>
+                        </div>
+                        <div class="weui-form-preview__ft view_form-button-group">
+                            <div class="button_sp_area">
+                                <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
+                                <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-loadmore">
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">玩了命的加载中...</span>
+                    </div>
                 </div>
             </div>
-            <div class="weui-form-preview__ft view_form-button-group">
-                <div class="button_sp_area">
-                    <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
-                    <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-form-preview view-mb-20 view-form-card_line">
-            <div class="view-form-preview-ex">
-                <div class="weui-form-preview__item">
-                    <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
-                    <label class="weui-form-preview__label text-black">成功</label>
-                </div>
-            </div>
-            <div class="weui-form-preview__bd">
-                <div class="weui-flex">
-                    <div class="weui-flex__item">李菲菲</div>
-                    <div class="weui-flex__item">饮水机 u56立式</div>
-                    <div class="weui-flex__item">￥3000</div>
-                </div>
-                <div class="weui-flex">
-                    <div class="weui-flex__item">189****4566</div>
-                    <div class="weui-flex__item">2年收费 730天</div>
-                    <div class="weui-flex__item">x1</div>
-                </div>
-            </div>
-            <div class="weui-form-preview__ft view_form-button-group">
-                <div class="button_sp_area">
-                    <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
-                    <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-form-preview view-mb-20 view-form-card_line">
-            <div class="view-form-preview-ex">
-                <div class="weui-form-preview__item">
-                    <p class="weui-form-preview__value">订单时间：2017-12-12 12:12 </p>
-                    <label class="weui-form-preview__label text-black">成功</label>
-                </div>
-            </div>
-            <div class="weui-form-preview__bd">
-                <div class="weui-flex">
-                    <div class="weui-flex__item">李菲菲</div>
-                    <div class="weui-flex__item">饮水机 u56立式</div>
-                    <div class="weui-flex__item">￥3000</div>
-                </div>
-                <div class="weui-flex">
-                    <div class="weui-flex__item">189****4566</div>
-                    <div class="weui-flex__item">2年收费 730天</div>
-                    <div class="weui-flex__item">x1</div>
-                </div>
-            </div>
-            <div class="weui-form-preview__ft view_form-button-group">
-                <div class="button_sp_area">
-                    <a href="orderDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>
-                    <a href="logisticsDetail.html" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-loadmore">
-            <i class="weui-loading"></i>
-            <span class="weui-loadmore__tips">玩了命的加载中...</span>
         </div>
     </div>
 </section>
@@ -191,6 +358,7 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
 <!--生产环境请移除 Begin-->
 <script src="../mock/mock-min.js" th:remove="all"></script>

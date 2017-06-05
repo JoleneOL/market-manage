@@ -551,7 +551,12 @@
   margin-right: 15px;
 }
 .weui-cells__title .weui-cell_link {
+  padding-left: 16px;
   float: right;
+  color: #009bb6;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAANlBMVEUAAAAAl7cAn78AmrYAm7cAnLYAm7YAm7cAm7UAmrUAm7YAmrYAm7UAm7YAmrYAmrUAmrUAm7b8hRyfAAAAEXRSTlMAIBA/QFBwf4CfoK+wv8DP0CRIkVUAAACESURBVHjaxdIFksQwDETRTsxs3f+yu8OySxmGVxT4AQO+SSsOE9No0gyYSFGvYFYdKbDnieXSxR4hiA0npCHQdDlaIVhJD2kuTMK/KbCesUIw+kgQCxOkoDLxNz9p3c66HeS6s0jB9mKxVGDo1obp9285RApq3LQqkB/yTpNuMNEDfNEf+P8J/+aWBm0AAAAASUVORK5CYII=) no-repeat;
+  background-position: left center;
+  background-size: 14px auto;
 }
 .view_panel-commission {
   padding-bottom: 10px;
