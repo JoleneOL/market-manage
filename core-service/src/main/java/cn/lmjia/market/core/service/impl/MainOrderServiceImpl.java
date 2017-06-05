@@ -157,6 +157,26 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
+    public Specification<MainOrder> search(String search, OrderStatus status) {
+        if (StringUtils.isEmpty(search) && (status == null || status == OrderStatus.EMPTY))
+            return null;
+        return (root, query, cb) -> {
+            Predicate predicate = cb.isTrue(cb.literal(true));
+            if (!StringUtils.isEmpty(search)) {
+                log.debug("search order with mobile:" + search);
+                // 2个都可以
+                predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root)), "%" + search + "%"));
+            }
+
+            if (status != null && status != OrderStatus.EMPTY) {
+                predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));
+            }
+
+            return predicate;
+        };
+    }
+
+    @Override
     public void updateOrderTime(LocalDateTime time) {
         CriteriaUpdate<MainOrder> criteriaUpdate = entityManager.getCriteriaBuilder().createCriteriaUpdate(MainOrder.class);
         Root<MainOrder> root = criteriaUpdate.from(MainOrder.class);

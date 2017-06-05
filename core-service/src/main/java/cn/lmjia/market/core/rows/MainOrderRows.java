@@ -10,9 +10,13 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +37,11 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
 
     public MainOrderRows(Login login) {
         this.login = login;
+    }
+
+    @Override
+    public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<MainOrder> root) {
+        return Collections.singletonList(criteriaBuilder.desc(root.get("orderTime")));
     }
 
     @Override

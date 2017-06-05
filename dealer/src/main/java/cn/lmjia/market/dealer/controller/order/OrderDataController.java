@@ -9,6 +9,7 @@ import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.util.ApiDramatizer;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import java.time.LocalDate;
  * @author CJ
  */
 @Controller
-@RequestMapping("/orderData")
 public class OrderDataController {
 
     @Autowired
@@ -39,10 +39,27 @@ public class OrderDataController {
     private MainOrderService mainOrderService;
 
     /**
+     * @return 仅仅显示我的订单
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/api/orderList")
+    @RowCustom(distinct = true, dramatizer = ApiDramatizer.class)
+    public RowDefinition myOrder(@AuthenticationPrincipal Login login, String search, OrderStatus status) {
+        return new MainOrderRows(login) {
+            @Override
+            public Specification<MainOrder> specification() {
+                return new AndSpecification<>(
+                        mainOrderService.search(search, status)
+                        , (root, query, cb) -> cb.equal(root.get("orderBy"), login)
+                );
+            }
+        };
+    }
+
+    /**
      * 仅仅处理自己可以管辖的订单
      * 即属于我方代理体系的
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/manageableList")
+    @RequestMapping(method = RequestMethod.GET, value = "/orderData/manageableList")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition manageableList(@AuthenticationPrincipal Login login, String orderId
             , @RequestParam(value = "phone", required = false) String mobile, Long goodId

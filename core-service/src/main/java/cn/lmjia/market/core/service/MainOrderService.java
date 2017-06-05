@@ -70,6 +70,15 @@ public interface MainOrderService {
      */
     Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate, OrderStatus status);
 
+    /**
+     * 全文搜索
+     *
+     * @param search 可选的搜索字段
+     * @param status 可选状态；如果为{@link OrderStatus#EMPTY}表示所有
+     * @return 获取数据规格
+     */
+    Specification<MainOrder> search(String search, OrderStatus status);
+
     @Transactional
     void updateOrderTime(LocalDateTime time);
 }
