@@ -5,6 +5,7 @@ import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
@@ -80,6 +81,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     }
 
     private ModelAndView payOrder(String openId, HttpServletRequest request, MainOrder order) throws SystemMaintainException {
+        if (order.getOrderStatus() != OrderStatus.forPay)
+            throw new IllegalStateException("订单并不在待支付状态");
         if (environment.acceptsProfiles("wechatChanpay"))
             return paymentService.startPay(request, order, chanpayPaymentForm, null);
         Map<String, Object> parameters = new HashMap<>();

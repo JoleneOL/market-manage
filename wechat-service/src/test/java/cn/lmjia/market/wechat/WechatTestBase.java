@@ -7,6 +7,7 @@ import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.wechat.config.WechatConfig;
 import cn.lmjia.market.wechat.page.WechatMyPage;
 import cn.lmjia.market.wechat.page.WechatMyTeamPage;
+import cn.lmjia.market.wechat.page.WechatOrderListPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.test.WeixinTestConfig;
@@ -80,4 +81,10 @@ public abstract class WechatTestBase extends DealerServiceTest {
         driver.get("http://localhost" + SystemService.wechatMyTeamURi);
         return initPage(WechatMyTeamPage.class);
     }
+
+    protected WechatOrderListPage getWechatOrderListPage() {
+        driver.get("http://localhost/wechatOrderList");
+        return initPage(WechatOrderListPage.class);
+    }
+
 }

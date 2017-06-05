@@ -20,6 +20,7 @@ public class WechatMyControllerTest extends WechatTestBase {
     @Test
     public void go() {
         getWechatMyPage();
-        getWechatMyTeamPage().printThisPage();
+        getWechatMyTeamPage();
+        getWechatOrderListPage();
     }
 }
