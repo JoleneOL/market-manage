@@ -220,10 +220,11 @@
                     <label class="weui-label">按揭码</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" name="activityCode" placeholder="请输入按揭码">
+                    <input type="hidden" name="isValid" title="判断是否检查通过">
+                    <input class="weui-input" type="text" name="mortgageCode" placeholder="请输入按揭码" id="J_mortgageCode">
                 </div>
                 <div class="weui-cell__ft">
-                    <button type="button" class="weui-vcode-btn">校验</button>
+                    <button type="button" class="weui-vcode-btn" id="J_checkBtn">校验</button>
                 </div>
             </div>
         </div>
@@ -343,6 +344,10 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js" th:remove="all"></script>
+<script src="../mock/api.js" th:remove="all"></script>
+<!--生产环境请移除 End-->
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="../wechat-resource/assets/js/orderPlace.js" th:src="@{/wechat-resource/assets/js/orderPlace.js}"></script>

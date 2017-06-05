@@ -58,7 +58,51 @@ $(function () {
         // $('#J_package').val('服务费 ' + cost + '元 / 天');
     }
 
+    var $mortgageCode = $('#J_mortgageCode');
+    var isValid = $('input[name="isValid"]');
+    $mortgageCode.on('keyup mouseout input', function () {
+        var $this = $(this);
+        var v = $this.val();
+        if (v) {
+            isValid.rules('add', {
+                required: true,
+                messages : {
+                    required : "校验按揭码失败"
+                }
+            });
+        } else {
+            isValid.rules('remove');
+            isValid.val('');
+        }
+    });
 
+    $('#J_checkBtn').click(function () {
+        var mortgageCode = $mortgageCode.val();
+        if (!mortgageCode) return '';
+        $.ajax('/api/mortgageCode', {
+            method: 'POST',
+            data: {
+                mortgageCode: mortgageCode
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.resultCode === 400) {
+                    $.toptip(data.resultMsg);
+                    isValid.val('');
+                    return false;
+                }
+                if (data.resultCode !== 200) {
+                    $.toptip("发送失败，请重试");
+                    return false;
+                }
+                $.toptip("校验成功","success");
+                isValid.val('ok');
+            },
+            error: function () {
+                $.toptip("系统错误");
+            }
+        })
+    });
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1(3|4|5|7|8)\d{9}$/;
@@ -73,6 +117,7 @@ $(function () {
     });
 
     $('#J_form').validate({
+        ignore: "",
         rules: {
             name: "required",
             age: {
@@ -106,10 +151,11 @@ $(function () {
             fullAddress: "请填写详细地址",
             amount: {
                 required: "请填写购买数量"
-            }
+            },
+            isAgree: "请同意《用户协议》"
         },
         errorPlacement: function (error, element) {
-            // $.toptip(error);
+            $.toptip(error);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').addClass("weui-cell_warn")

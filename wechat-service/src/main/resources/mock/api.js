@@ -227,3 +227,9 @@ Mock.mock(/\/api\/authCode/, "post", {
     "resultMsg": "ok",
     "data": null
 });
+
+Mock.mock(/\/api\/mortgageCode/, "post", {
+    "resultCode": "@pick([200, 400])",
+    "resultMsg": "ok",
+    "data": null
+});
