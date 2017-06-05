@@ -21,6 +21,7 @@ import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -115,6 +116,14 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
+    public MainOrder getOrder(String orderId) {
+        MainOrder order = mainOrderRepository.findOne((root, query, cb) -> orderIdPredicate(orderId, root, cb));
+        if (order == null)
+            throw new EntityNotFoundException();
+        return order;
+    }
+
+    @Override
     public boolean isPaySuccess(long id) {
         return mainOrderRepository.getOne(id).isPay();
 //        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -133,9 +142,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             if (!StringUtils.isEmpty(orderId)) {
                 log.debug("search order with orderId:" + orderId);
                 //前面8位是 时间
-                String ymd = orderId.substring(0, 8);
-                predicate = cb.and(predicate, cb.equal(root.get("dailySerialId"), NumberUtils.parseNumber(orderId.substring(8), Integer.class)));
-                predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), LocalDate.from(MainOrder.SerialDateTimeFormatter.parse(ymd)).toString()));
+                predicate = cb.and(predicate, orderIdPredicate(orderId, root, cb));
             } else if (orderDate != null) {
                 log.debug("search order with orderDate:" + orderDate);
                 predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), orderDate.toString()));
@@ -154,6 +161,15 @@ public class MainOrderServiceImpl implements MainOrderService {
 
             return predicate;
         };
+    }
+
+    private Predicate orderIdPredicate(String orderId, Root<MainOrder> root, CriteriaBuilder cb) {
+        String ymd = orderId.substring(0, 8);
+        return cb.and(
+                cb.equal(root.get("dailySerialId"), NumberUtils.parseNumber(orderId.substring(8), Integer.class))
+                , JpaFunctionUtils.DateEqual(cb, root.get("orderTime")
+                        , LocalDate.from(MainOrder.SerialDateTimeFormatter.parse(ymd)).toString())
+        );
     }
 
     @Override

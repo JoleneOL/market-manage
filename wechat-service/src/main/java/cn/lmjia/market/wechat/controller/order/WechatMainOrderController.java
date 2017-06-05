@@ -58,6 +58,17 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "wechat@orderPlace.html";
     }
 
+    @GetMapping("/wechatOrderPay")
+    public ModelAndView pay(@OpenId String openId, String orderId, HttpServletRequest request) throws SystemMaintainException {
+        return payOrder(openId, request, from(orderId, null));
+    }
+
+    @GetMapping("/wechatOrderDetail")
+    public String detail(String orderId, Model model) {
+        model.addAttribute("order", from(orderId, null));
+        return "wechat@orderDetail.html";
+    }
+
     // name=%E5%A7%93%E5%90%8D&age=99&gender=2
     // &address=%E6%B5%99%E6%B1%9F%E7%9C%81+%E6%9D%AD%E5%B7%9E%E5%B8%82+%E6%BB%A8%E6%B1%9F%E5%8C%BA
     // &fullAddress=%E6%B1%9F%E7%95%94%E6%99%95%E5%95%A6&mobile=18606509616&goodId=2&leasedType=hzts02&amount=0&activityCode=xzs&recommend=2
@@ -65,6 +76,10 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, int age, Gender gender, Address address, String mobile, long goodId, int amount
             , String activityCode, long recommend, @AuthenticationPrincipal Login login, Model model) throws SystemMaintainException {
         MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile, goodId, amount, activityCode);
+        return payOrder(openId, request, order);
+    }
+
+    private ModelAndView payOrder(String openId, HttpServletRequest request, MainOrder order) throws SystemMaintainException {
         if (environment.acceptsProfiles("wechatChanpay"))
             return paymentService.startPay(request, order, chanpayPaymentForm, null);
         Map<String, Object> parameters = new HashMap<>();

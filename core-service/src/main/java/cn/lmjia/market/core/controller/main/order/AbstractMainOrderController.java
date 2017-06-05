@@ -10,6 +10,7 @@ import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 
 /**
  * @author CJ
@@ -23,6 +24,14 @@ public abstract class AbstractMainOrderController {
     private LoginService loginService;
     @Autowired
     private MainGoodService mainGoodService;
+
+    protected MainOrder from(String orderId, Long id) {
+        if (id != null)
+            return mainOrderService.getOrder(id);
+        if (!StringUtils.isEmpty(orderId))
+            return mainOrderService.getOrder(orderId);
+        return null;
+    }
 
     /**
      * 展示下单页面

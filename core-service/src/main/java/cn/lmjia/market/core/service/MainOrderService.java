@@ -10,6 +10,8 @@ import me.jiangcai.wx.model.Gender;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,6 +56,13 @@ public interface MainOrderService {
     MainOrder getOrder(long id);
 
     /**
+     * @param orderId {@link MainOrder#getSerialId(Path, CriteriaBuilder)}
+     * @return 获取订单，never null
+     */
+    @Transactional(readOnly = true)
+    MainOrder getOrder(String orderId);
+
+    /**
      * @param id 订单id
      * @return 订单是否已支付
      */
@@ -81,4 +90,6 @@ public interface MainOrderService {
 
     @Transactional
     void updateOrderTime(LocalDateTime time);
+
+
 }
