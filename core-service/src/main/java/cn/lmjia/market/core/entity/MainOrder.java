@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity;
 
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
@@ -173,6 +174,10 @@ public class MainOrder implements PayableOrder {
     @Override
     public BigDecimal getOrderDueAmount() {
         return good.getTotalPrice().multiply(BigDecimal.valueOf(amount));
+    }
+
+    public Money getOrderDueAmountMoney() {
+        return new Money(getOrderDueAmount());
     }
 
     @Override

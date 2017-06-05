@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.Address;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * @author CJ
@@ -88,5 +90,10 @@ public class ReadServiceImpl implements ReadService {
         if (login.getWechatUser() != null)
             return login.getWechatUser().getHeadImageUrl();
         return systemService.toUrl("/wechat-resource/assets/img/avatar.jpg");
+    }
+
+    @Override
+    public int ageForCustomer(Customer customer) {
+        return LocalDate.now().getYear() - customer.getBirthYear();
     }
 }

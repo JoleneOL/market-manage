@@ -102,4 +102,10 @@ public interface ReadService {
     @Transactional(readOnly = true)
     String avatarFor(Object principal);
 
+    /**
+     * @param customer 客户
+     * @return 客户的年纪
+     */
+    int ageForCustomer(Customer customer);
+
 }

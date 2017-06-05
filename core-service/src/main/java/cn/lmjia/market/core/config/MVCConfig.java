@@ -8,6 +8,7 @@ import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.row.IndefiniteRowDefinitionHandler;
 import cn.lmjia.market.core.row.RowDefinitionHandler;
 import cn.lmjia.market.core.util.ImageResolver;
+import me.jiangcai.wx.model.Gender;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,6 +161,16 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             if (source == null)
                 return null;
             return source.toString();
+        });
+        registry.addConverter(Gender.class, String.class, source -> {
+            switch (source) {
+                case female:
+                    return "女";
+                case male:
+                    return "男";
+                default:
+                    return "";
+            }
         });
     }
 
