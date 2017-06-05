@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -20,6 +21,7 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
  * @author CJ
  */
 @Configuration
+@PropertySource("classpath:/defaultSystem.properties")
 @Import({CommonConfig.class, DataSupportConfig.class,
         StandardWeixinConfig.class, PaymentChanpayConfig.class, PaymentPaymaxConfig.class
 //        ServiceConfig.class

@@ -5,6 +5,7 @@ import cn.lmjia.market.core.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,6 +39,8 @@ public class SecurityConfig {
     public static class Security extends WebSecurityConfigurerAdapter {
 
         private final MVCConfig mvcConfig;
+        @Autowired
+        private Environment environment;
 
         @Autowired
         public Security(MVCConfig mvcConfig) {
@@ -58,7 +61,9 @@ public class SecurityConfig {
                     .antMatchers("/404.html", "/500.html")
                     // 畅捷支付回调
                     .antMatchers("/cash/notify/chanpay")
-            ;
+                    // paymax 支付回调
+                    .antMatchers(environment
+                            .getRequiredProperty("com.paymax.spring.hookUriWithoutAppId") + "/**");
         }
 
         @Override
