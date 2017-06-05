@@ -1,3 +1,8 @@
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .weui-vcode-btn {
   color: #009bb6;
 }
@@ -157,6 +162,9 @@
   padding-right: 15px;
   border-right: 1px solid #e5e5e5;
 }
+.view_team-logo .weui-flex__item:last-of-type {
+  padding-left: 15px;
+}
 .view_team-logo .view_avatar {
   float: right;
   width: 60px;
@@ -166,7 +174,6 @@
   border: 3px solid #009bb6;
 }
 .view_team-logo .view_info {
-  padding-left: 15px;
   float: left;
   line-height: 2;
 }
@@ -177,11 +184,6 @@
   color: #fff;
   border-radius: 5px;
   font-size: 12px;
-}
-.view_team-logo .rule {
-  position: absolute;
-  top: 0;
-  right: 10px;
 }
 .view_cell {
   padding: 10px 15px;
@@ -655,6 +657,9 @@
   background-position: left center;
   background-size: 14px auto;
 }
+.weui-cells__title .weui-cell_link.open-popup {
+  background: none;
+}
 .view_panel-commission {
   padding-bottom: 10px;
 }
@@ -974,5 +979,8 @@
   }
   .view-tabs .view-tabs_item {
     font-size: 13px;
+  }
+  .view_info .ellipsis {
+    width: 140px;
   }
 }

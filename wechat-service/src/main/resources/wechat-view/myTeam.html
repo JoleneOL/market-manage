@@ -23,7 +23,8 @@
 </head>
 <body class="view-fs-small view-bg-color">
 <section class="view_body">
-    <div class="weui-cells__title js-extra-h">我的团队</div>
+    <div class="weui-cells__title js-extra-h">我的团队 <a href="javascript:;" class="weui-cell_link open-popup"
+                                                      data-target="#J_upgradeRules">晋升制度</a></div>
     <div class="view_team-logo js-extra-h">
         <div class="view-wrapper weui-flex">
             <div class="weui-flex__item">
@@ -34,15 +35,11 @@
             </div>
             <div class="weui-flex__item">
                 <div class="view_info">
-                    <p><span th:text="${@readService.nameForPrincipal(#authentication.principal)}">徐春风</span></p>
-                    <p>
+                    <p class="ellipsis"><span th:text="${@readService.nameForPrincipal(#authentication.principal)}">利每家科技有限公司</span></p>
+                    <p class="ellipsis">
                         <span class="label" th:text="${agentLevel}">滨江区总代</span></p>
                 </div>
             </div>
-        </div>
-        <div class="rule">
-            <a href="javascript:;" class="text-custom text-alignment_team open-popup"
-               data-target="#J_upgradeRules">晋升制度</a>
         </div>
     </div>
     <div class="weui-flex view_panel-body view_cell js-extra-h">
