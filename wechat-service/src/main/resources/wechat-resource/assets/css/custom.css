@@ -126,7 +126,104 @@
   line-height: 38px;
 }
 .view_team-logo {
+  position: relative;
   width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  background-color: #fff;
+  margin-bottom: 12px;
+}
+.view_team-logo:after {
+  content: " ";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-bottom: 1px solid #e5e5e5;
+  color: #e5e5e5;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  z-index: 2;
+}
+.view_team-logo img {
+  width: 100%;
+  display: inline-block;
+}
+.view_team-logo .weui-flex__item:first-of-type {
+  padding-right: 15px;
+  border-right: 1px solid #e5e5e5;
+}
+.view_team-logo .view_avatar {
+  float: right;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 3px solid #009bb6;
+}
+.view_team-logo .view_info {
+  padding-left: 15px;
+  float: left;
+  line-height: 2;
+}
+.view_team-logo .label {
+  padding: 0 5px;
+  display: inline-block;
+  background: #009bb6;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 12px;
+}
+.view_team-logo .rule {
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+.view_cell {
+  padding: 10px 15px;
+  background: #fff;
+  margin-bottom: 12px;
+  position: relative;
+}
+.view_cell:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #e5e5e5;
+  color: #e5e5e5;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  z-index: 2;
+}
+.view_cell:after {
+  content: " ";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-bottom: 1px solid #e5e5e5;
+  color: #e5e5e5;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  z-index: 2;
+}
+.view_cell .weui-flex__item {
+  border-right: 1px solid #eee;
+}
+.view_cell .weui-flex__item:last-of-type {
+  border-right: none;
 }
 .view-preview .view-preview_hd,
 .view-preview .view-preview_bd,
@@ -751,6 +848,7 @@
 .view-scroll-wrap {
   height: 100%;
   overflow: hidden;
+  background: #fff;
 }
 .view-scroll-wrap .weui-loadmore {
   margin: 0 auto;

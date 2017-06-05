@@ -50,9 +50,11 @@
     border-radius: 5px;
   }
 }
+
 .weui-vcode-btn {
   color: @brand-success;
 }
+
 .view-bg-color {
   background-color: #fbf9fe;
 }
@@ -188,6 +190,7 @@
 .weui-btn_custom {
   background-color: @brand-success;
 }
+
 .weui-btn_default_custom {
   color: @brand-success;
   background-color: #fff;
@@ -202,9 +205,105 @@
 }
 
 .view_team-logo {
+  position: relative;
   width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+  background-color: #fff;
+  margin-bottom: 12px;
+  &:after {
+    content: " ";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #e5e5e5;
+    color: #e5e5e5;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    z-index: 2;
+  }
   img {
+    width: 100%;
+    display: inline-block;
+  }
+  .weui-flex__item:first-of-type {
+    padding-right: 15px;
+    border-right: 1px solid #e5e5e5;
+  }
+  .view_avatar {
+    float: right;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 3px solid @brand-success;
+  }
+  .view_info {
+    padding-left: 15px;
+    float: left;
+    line-height: 2;
+  }
+  .label {
+    padding: 0 5px;
+    display: inline-block;
+    background: @brand-success;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+  .rule {
+    position: absolute;
+    top: 0;
+    right: 10px;
+  }
 
+}
+
+.view_cell {
+  padding: 10px 15px;
+  background: #fff;
+  margin-bottom: 12px;
+  position: relative;
+  &:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-top: 1px solid #e5e5e5;
+    color: #e5e5e5;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    z-index: 2;
+  }
+  &:after {
+    content: " ";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #e5e5e5;
+    color: #e5e5e5;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    z-index: 2;
+  }
+  .weui-flex__item {
+    border-right: 1px solid #eee;
+    &:last-of-type {
+      border-right: none;
+    }
   }
 }
 
@@ -893,6 +992,7 @@
 .view-scroll-wrap {
   height: 100%;
   overflow: hidden;
+  background: #fff;
   .weui-loadmore {
     margin: 0 auto;
     padding: 1.5em 0;
