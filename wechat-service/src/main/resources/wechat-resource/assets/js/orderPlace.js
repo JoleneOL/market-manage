@@ -7,7 +7,7 @@ $(function () {
 
     $('#recommendId').makeRecommendSelect();
 
-    $('#J_cityPicker').cityPicker({
+    $('#J_cityPicker, #J_invoiceAddress').cityPicker({
         title: "请选择收货地址",
         onChange: function () {
             $('#J_cityPicker').closest('.weui-cell').removeClass('weui-cell_warn');
@@ -187,25 +187,78 @@ $(function () {
             ]
         })
     });
+    $('#J_invoiceOK').click(function () {
+        console.log(invoiceFunc.validate());
+    });
     $('#J_invoiceCancel').click(function () {
         $.closePopup();
+        invoiceFunc.clearWarn();
     });
     function disableInput() {
         $('#J_invoiceArea').find('input[type="hidden"]').each(function () {
             $(this).prop('disabled', true)
         });
     }
-    
+
     var invoiceFunc = {
+        addressee: $('.js-invoiceAddressee'),
+        address: $('.js-invoiceAddress'),
+        fullAddress: $('.js-invoiceFullAddress'),
+        mobile: $('.js-invoiceMobile'),
         setData: function () {
-            $('.js-invoiceAddressee').val($('input[name="name"]').val());
-            $('.js-invoiceAddress').val($('input[name="address"]').val());
-            $('.js-invoiceFullAddress').val($('input[name="fullAddress"]').val());
-            $('.js-invoiceMobile').val($('input[name="mobile"]').val());
-            $('.js-invoiceTotal').val('￥'+ $('input[name="orderTotal"]').val())
+            if (!this.addressee.val()) this.addressee.val($('input[name="name"]').val());
+            if (!this.address.val()) this.address.val($('input[name="address"]').val());
+            if (!this.fullAddress.val()) this.fullAddress.val($('input[name="fullAddress"]').val());
+            if (!this.mobile.val()) this.mobile.val($('input[name="mobile"]').val());
+            $('.js-invoiceTotal').val('￥' + $('input[name="orderTotal"]').val())
         },
-        clearData: function () {
-            
+        clearWarn: function () {
+            $('#J_editInvoice').find('.weui-cell').removeClass("weui-cell_warn");
+        },
+        getData: function () {
+            console.log(this.address.val());
+        },
+        validate: function () {
+            var flag = true;
+            $('#J_editInvoice').find('input').each(function () {
+                if ($(this).attr('type') === 'tel') {
+                    var val = $(this).val();
+                    var mobile = /^1(3|4|5|7|8)\d{9}$/;
+                    if(!mobile.test(val)) {
+                        $(this).closest('.weui-cell').addClass("weui-cell_warn");
+                        flag = false;
+                    }
+                }
+                if (!$(this).val()) {
+                    $(this).closest('.weui-cell').addClass("weui-cell_warn");
+                    flag = false;
+                }
+            });
+            return flag;
+        },
+        highlight: function () {
+            $('#J_editInvoice').find('input').each(function () {
+                $(this).on('input', function () {
+                    if ($(this).attr('type') === 'tel') {
+                        var val = $(this).val();
+                        var mobile = /^1(3|4|5|7|8)\d{9}$/;
+                        if(mobile.test(val)) {
+                            $(this).closest('.weui-cell').removeClass("weui-cell_warn");
+                        } else {
+                            $(this).closest('.weui-cell').addClass("weui-cell_warn");
+                        }
+                    }
+                    if ($(this).val()) {
+                        $(this).closest('.weui-cell').removeClass("weui-cell_warn");
+                    } else {
+                        $(this).closest('.weui-cell').addClass("weui-cell_warn");
+                    }
+                });
+            });
+        },
+        init: function () {
+            invoiceFunc.highlight();
         }
-    }
+    };
+    invoiceFunc.init();
 });
