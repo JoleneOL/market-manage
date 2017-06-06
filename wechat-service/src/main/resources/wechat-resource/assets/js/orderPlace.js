@@ -171,7 +171,7 @@ $(function () {
             actions: [
                 {
                     text: "填写发票信息",
-                    className: "color-primary",
+                    className: "text-primary",
                     onClick: function () {
                         invoiceFunc.setData();
                         $('#J_editInvoice').popup();

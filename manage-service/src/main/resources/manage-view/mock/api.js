@@ -11,10 +11,10 @@ Mock.mock(/\/agentData\/list/, "get", {
             'rank': '@province()总代理',
             'name': '@cname',
             'phone': '15988888888',
-            'subordinate': "分代理（2%）14 经销商（2%）12 经纪人（1%）5200",
+            'subordinate': "代理商（2%）14 经销商（2%）12 经纪人（1%）5200",
             'children|1-2': [{
                 'id|+10': 1,
-                'rank': '@county()分代理',
+                'rank': '@county()代理商',
                 'name': '@cname',
                 'phone': '15988887777',
                 'subordinate': "经销商（2%） 12 经纪人（1%）2000",

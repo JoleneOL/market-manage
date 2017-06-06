@@ -36,7 +36,7 @@ $(function () {
             actions: [
                 {
                     text: "全部",
-                    className: "color-primary",
+                    className: "text-primary",
                     onClick: function () {
                         $.showLoading();
                         getRankList('all');
@@ -50,7 +50,7 @@ $(function () {
                     }
                 },
                 {
-                    text: "分代理",
+                    text: "代理商",
                     onClick: function () {
                         $.showLoading();
                         getRankList(2);
