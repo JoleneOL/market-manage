@@ -105,7 +105,7 @@ $(function () {
     });
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
-        var mobile = /^1(3|4|5|7|8)\d{9}$/;
+        var mobile = /^1([34578])\d{9}$/;
         return this.optional(element) || (mobile.test(value));
     }, "请正确填写的手机号");
 
@@ -223,7 +223,7 @@ $(function () {
             $('#J_editInvoice').find('input').each(function () {
                 if ($(this).attr('type') === 'tel') {
                     var val = $(this).val();
-                    var mobile = /^1(3|4|5|7|8)\d{9}$/;
+                    var mobile = /^1([34578])\d{9}$/;
                     if(!mobile.test(val)) {
                         $(this).closest('.weui-cell').addClass("weui-cell_warn");
                         flag = false;
@@ -241,7 +241,7 @@ $(function () {
                 $(this).on('input', function () {
                     if ($(this).attr('type') === 'tel') {
                         var val = $(this).val();
-                        var mobile = /^1(3|4|5|7|8)\d{9}$/;
+                        var mobile = /^1([34578])\d{9}$/;
                         if(mobile.test(val)) {
                             $(this).closest('.weui-cell').removeClass("weui-cell_warn");
                         } else {

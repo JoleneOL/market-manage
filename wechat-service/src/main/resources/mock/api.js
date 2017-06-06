@@ -14,7 +14,7 @@ Mock.mock(/^\/api\/teamList\?rank=all&page=\d{1,100}$/, "get", {
             name: "@cname",
             rank: '@pick(["总代理", "代理商", "经销商", "爱心天使"])',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1(3|4|5|7|8)\d{9}$/
+            phone: /^1([34578])\d{9}$/
         }
     ]
 });
@@ -27,7 +27,7 @@ Mock.mock(/^\/api\/teamList\?rank=1&page=\d$/, "get", {
             name: "@cname",
             rank: '总代理',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1(3|4|5|7|8)\d{9}$/
+            phone: /^1([34578])\d{9}$/
         }
     ]
 });
@@ -40,7 +40,7 @@ Mock.mock(/^\/api\/teamList\?rank=2&page=\d$/, "get", {
             name: "@cname",
             rank: '代理商',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1(3|4|5|7|8)\d{9}$/
+            phone: /^1([34578])\d{9}$/
         }
     ]
 });
@@ -52,7 +52,7 @@ Mock.mock(/^\/api\/teamList\?rank=3&page=\d$/, "get", {
             name: "@cname",
             rank: '经销商',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1(3|4|5|7|8)\d{9}$/
+            phone: /^1([34578])\d{9}$/
         }
     ]
 });
@@ -64,7 +64,7 @@ Mock.mock(/^\/api\/teamList\?rank=4&page=\d$/, "get", {
             name: "@cname",
             rank: '爱心天使',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1(3|4|5|7|8)\d{9}$/
+            phone: /^1([34578])\d{9}$/
         }
     ]
 });
@@ -84,7 +84,7 @@ Mock.mock(/\/api\/orderList\?page=\d/, "get", {
             total: '@integer(3000, 9999999)',
             package: '3年收费 730天',
             amount: '@integer(1, 100)',
-            phone: /^1(3|4|5|7|8)\d{9}$/
+            phone: /^1([34578])\d{9}$/
         }
     ]
 });
@@ -104,7 +104,7 @@ Mock.mock(/\/api\/orderList\?status=\d&page=\d/, "get", {
             total: '@integer(3000, 9999999)',
             package: '3年收费 730天',
             amount: '@integer(1, 100)',
-            phone: /^1(3|4|5|7|8)\d{9}$/
+            phone: /^1([34578])\d{9}$/
         }
     ]
 });

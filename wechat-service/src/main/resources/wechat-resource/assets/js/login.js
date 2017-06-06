@@ -62,7 +62,7 @@ $(function () {
     $('#J_authCode').click(function () {
         var self = $(this);
         var mobile = $mobile.val();
-        if (!/^1(3|4|5|7|8)\d{9}$/.test(mobile)) {
+        if (!/^1([34578])\d{9}$/.test(mobile)) {
             $.toptip('请输入正确的手机号');
             return;
         }

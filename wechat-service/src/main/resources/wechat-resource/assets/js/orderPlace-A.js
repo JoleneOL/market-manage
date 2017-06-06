@@ -59,7 +59,7 @@ $(function () {
 
     $('#J_recommend').on('input', function () {
         var v = $(this).val();
-        if (/^1(3|4|5|7|8)\d{9}$/.test(v)) {
+        if (/^1([34578])\d{9}$/.test(v)) {
             searchRecommend(v);
         }
     });
@@ -96,7 +96,7 @@ $(function () {
 
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
-        var mobile = /^1(3|4|5|7|8)\d{9}$/;
+        var mobile = /^1([34578])\d{9}$/;
         return this.optional(element) || (mobile.test(value));
     }, "请正确填写的手机号");
 
