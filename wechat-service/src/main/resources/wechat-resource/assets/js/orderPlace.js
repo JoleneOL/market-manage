@@ -66,8 +66,8 @@ $(function () {
         if (v) {
             isValid.rules('add', {
                 required: true,
-                messages : {
-                    required : "校验按揭码失败"
+                messages: {
+                    required: "校验按揭码失败"
                 }
             });
         } else {
@@ -95,7 +95,7 @@ $(function () {
                     $.toptip("发送失败，请重试");
                     return false;
                 }
-                $.toptip("校验成功","success");
+                $.toptip("校验成功", "success");
                 isValid.val('ok');
             },
             error: function () {
@@ -155,7 +155,7 @@ $(function () {
             isAgree: "请同意《用户协议》"
         },
         errorPlacement: function (error, element) {
-            $.toptip(error);
+            $.toptip(error, 1000);
         },
         highlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').addClass("weui-cell_warn")
@@ -164,4 +164,48 @@ $(function () {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
         }
     });
+    $('#J_needInvoice').click(function () {
+        var that = $(this);
+        $.actions({
+            title: "选择是否开票",
+            actions: [
+                {
+                    text: "填写发票信息",
+                    className: "color-primary",
+                    onClick: function () {
+                        invoiceFunc.setData();
+                        $('#J_editInvoice').popup();
+                    }
+                },
+                {
+                    text: "不需要发票",
+                    onClick: function () {
+                        that.html('不需要发票');
+                        disableInput();
+                    }
+                }
+            ]
+        })
+    });
+    $('#J_invoiceCancel').click(function () {
+        $.closePopup();
+    });
+    function disableInput() {
+        $('#J_invoiceArea').find('input[type="hidden"]').each(function () {
+            $(this).prop('disabled', true)
+        });
+    }
+    
+    var invoiceFunc = {
+        setData: function () {
+            $('.js-invoiceAddressee').val($('input[name="name"]').val());
+            $('.js-invoiceAddress').val($('input[name="address"]').val());
+            $('.js-invoiceFullAddress').val($('input[name="fullAddress"]').val());
+            $('.js-invoiceMobile').val($('input[name="mobile"]').val());
+            $('.js-invoiceTotal').val('￥'+ $('input[name="orderTotal"]').val())
+        },
+        clearData: function () {
+            
+        }
+    }
 });

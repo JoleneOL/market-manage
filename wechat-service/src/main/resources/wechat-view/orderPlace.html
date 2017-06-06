@@ -192,6 +192,22 @@
             <!--</p>-->
             <!--</div>-->
             <!--</div>-->
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">发票</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p class="weui-select" id="J_needInvoice">不需要发票</p>
+                </div>
+            </div>
+            <!--发票相关-->
+            <div id="J_invoiceArea">
+                <input type="hidden" title="公司抬头" name="company" disabled>
+                <input type="hidden" title="收件人" name="invoiceAddressee" disabled>
+                <input type="hidden" title="收件地址" name="invoiceAddress" disabled>
+                <input type="hidden" title="详细地址" name="invoiceFullAddress" disabled>
+                <input type="hidden" title="联系电话" name="invoiceMobile" disabled>
+            </div>
             <div class="weui-cell js-install">
                 <div class="weui-cell__hd">
                     <label class="weui-label">初装费用</label>
@@ -335,6 +351,87 @@
             </section>
             <button type="button" class="weui-btn weui-btn_custom close-popup">确定</button>
         </article>
+    </div>
+</div>
+<div id="J_editInvoice" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal view-popup__modal">
+        <div class="weui-cells__title">开票</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">公司抬头</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-company" type="text" placeholder="请输入公司抬头">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">发票内容</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入发票内容" value="消费" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">发票金额</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceTotal" type="text" placeholder="请输入发票金额" value="￥0" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收件人</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceAddressee" type="text" placeholder="请输入收件人">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收件地址</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceAddress" type="text" id="J_invoiceAddress" placeholder="请输入收件地址">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label"></label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceFullAddress" type="text" placeholder="请输入详细地址">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">联系电话</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceMobile" type="tel" placeholder="请输入联系电话">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">&nbsp;</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p class="text-warn">开票视同购买设备，并无法退款</p>
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" id="J_invoiceOK">确定</a>
+            <a class="weui-btn weui-btn_default" href="javascript:" id="J_invoiceCancel">取消</a>
+        </div>
     </div>
 </div>
 </body>
