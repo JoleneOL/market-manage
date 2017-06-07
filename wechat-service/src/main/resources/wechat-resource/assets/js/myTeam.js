@@ -36,7 +36,7 @@ $(function () {
             actions: [
                 {
                     text: "全部",
-                    className: "text-primary",
+                    className: "text-custom",
                     onClick: function () {
                         $.showLoading();
                         getRankList('all');

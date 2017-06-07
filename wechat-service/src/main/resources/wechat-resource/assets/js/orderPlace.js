@@ -110,12 +110,6 @@ $(function () {
     }, "请正确填写的手机号");
 
 
-    $.validator.setDefaults({
-        submitHandler: function (form) {
-            form.submit();
-        }
-    });
-
     $('#J_form').validate({
         ignore: "",
         rules: {
@@ -162,6 +156,9 @@ $(function () {
         },
         unhighlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
+        },
+        submitHandler: function (form) {
+            form.submit();
         }
     });
     $('#J_needInvoice').click(function () {
@@ -171,7 +168,7 @@ $(function () {
             actions: [
                 {
                     text: "填写发票信息",
-                    className: "text-primary",
+                    className: "text-custom",
                     onClick: function () {
                         invoiceFunc.setData();
                         $('#J_editInvoice').popup();
@@ -188,7 +185,12 @@ $(function () {
         })
     });
     $('#J_invoiceOK').click(function () {
-        console.log(invoiceFunc.validate());
+        var flag = $("#J_invoiceForm").valid();
+        if(flag) {
+            invoiceFunc.setCompany();
+            invoiceFunc.setHiddenData();
+            $.closePopup();
+        }
     });
     $('#J_invoiceCancel').click(function () {
         $.closePopup();
@@ -200,6 +202,36 @@ $(function () {
         });
     }
 
+    $('#J_invoiceForm').validate({
+        rules: {
+            company: "required",
+            invoiceAddressee: 'required',
+            invoiceAddress: 'required',
+            invoiceFullAddress: "required",
+            invoiceMobile: {
+                required: true,
+                isPhone: true
+            }
+        },
+        messages: {
+            company: "请填写公司抬头",
+            invoiceAddressee: "请填写公司抬头",
+            invoiceAddress: "请填写收件地址",
+            invoiceFullAddress: "请填写详细地址",
+            invoiceMobile: {
+                required: "请填写联系电话"
+            }
+        },
+        errorPlacement: function (error, element) {
+            $.toptip(error, 1000);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).closest('.weui-cell').addClass("weui-cell_warn")
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).closest('.weui-cell').removeClass("weui-cell_warn");
+        }
+    });
     var invoiceFunc = {
         addressee: $('.js-invoiceAddressee'),
         address: $('.js-invoiceAddress'),
@@ -215,50 +247,14 @@ $(function () {
         clearWarn: function () {
             $('#J_editInvoice').find('.weui-cell').removeClass("weui-cell_warn");
         },
-        getData: function () {
-            console.log(this.address.val());
-        },
-        validate: function () {
-            var flag = true;
-            $('#J_editInvoice').find('input').each(function () {
-                if ($(this).attr('type') === 'tel') {
-                    var val = $(this).val();
-                    var mobile = /^1([34578])\d{9}$/;
-                    if(!mobile.test(val)) {
-                        $(this).closest('.weui-cell').addClass("weui-cell_warn");
-                        flag = false;
-                    }
-                }
-                if (!$(this).val()) {
-                    $(this).closest('.weui-cell').addClass("weui-cell_warn");
-                    flag = false;
-                }
-            });
-            return flag;
-        },
-        highlight: function () {
-            $('#J_editInvoice').find('input').each(function () {
-                $(this).on('input', function () {
-                    if ($(this).attr('type') === 'tel') {
-                        var val = $(this).val();
-                        var mobile = /^1([34578])\d{9}$/;
-                        if(mobile.test(val)) {
-                            $(this).closest('.weui-cell').removeClass("weui-cell_warn");
-                        } else {
-                            $(this).closest('.weui-cell').addClass("weui-cell_warn");
-                        }
-                    }
-                    if ($(this).val()) {
-                        $(this).closest('.weui-cell').removeClass("weui-cell_warn");
-                    } else {
-                        $(this).closest('.weui-cell').addClass("weui-cell_warn");
-                    }
-                });
+        setHiddenData: function () {
+            $('#J_invoiceArea').find('input[type="hidden"]').each(function () {
+                var name = $(this).attr('name');
+                $(this).val($('#J_invoiceForm').find('input[name="'+name+'"]').val()).prop('disabled', false);
             });
         },
-        init: function () {
-            invoiceFunc.highlight();
+        setCompany: function () {
+            $('#J_needInvoice').html($('#J_invoiceForm').find('.js-company').val());
         }
     };
-    invoiceFunc.init();
 });
