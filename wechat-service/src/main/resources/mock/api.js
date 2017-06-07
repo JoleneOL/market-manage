@@ -112,8 +112,7 @@ Mock.mock(/\/api\/orderList\?status=\d&page=\d/, "get", {
  * equipmentStatus 暂定Number
  * 0: 正常使用中
  * 1: 维护中
- * 2: 维修中
- * 3: 退款中
+ * 2: 已移机
  */
 
 Mock.mock(/\/api\/equipmentList\?page=\d/, "get", {
@@ -123,7 +122,15 @@ Mock.mock(/\/api\/equipmentList\?page=\d/, "get", {
         {
             equipmentId: '@id',
             id: '@id',
-            equipmentStatus: '@integer(0, 2)',
+            model: '尼维柯立式净水机 SCRO-200LK-L',
+            status: '@integer(0, 2)',
+            years: '3年',
+            cost: '3000',
+            service: '更换滤芯',
+            transferAddress: '@county(true)',
+            transferPhone: /^1([34578])\d{9}$/,
+            transferUser: '@cname',
+            transferTime: '@now("yyyy-MM-dd")',
             remainingTime: '@integer(1, 1095)',
             TDS: "@integer(1, 600)",
             installationAddress: '@county(true)',

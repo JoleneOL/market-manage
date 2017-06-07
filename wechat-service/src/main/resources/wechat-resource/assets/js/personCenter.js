@@ -56,7 +56,7 @@ $(function () {
     };
 
     $('.js-commItems').each(function () {
-       var self = $(this);
+        var self = $(this);
         self.myScroll({
             ajaxUrl: self.attr('data-url'),
             template: commTpl
@@ -69,59 +69,95 @@ $(function () {
             return '<div class="view-preview view-mb-20">' +
                 '<div class="view-preview_hd"> ' +
                 '<p class="view-preview_header_value pull-left">饮水机编号：' + obj.id + '</p> ' +
-                equipmentTpl.status(obj.equipmentStatus) +
+                equipmentTpl.status(obj) +
+                '<p class="view-preview_header_value">产品型号：' + obj.model + '</p>' +
                 '</div> ' +
                 '<div class="view-preview_bd view-bg-color-f2"> ' +
-                '<div class="view-preview_body_item"> ' +
-                '<span>剩余使用时间：</span><p>' + obj.remainingTime + '</p> ' +
-                '</div> ' +
-                '<div class="view-preview_body_item">' +
-                '<span>TDS值：</span><p>' + obj.TDS + '</p>' +
-                '</div>' +
+                equipmentTpl.content(obj) +
                 '</div> ' +
                 '<div class="view-preview_sub"> ' +
-                '<div class="view-preview_body_item"><span>安装地址：' + obj.installationAddress + '</span></div>' +
-                '<div class="view-preview_body_item"><span>安装时间：' + obj.installationTime + '</span></div> ' +
+                equipmentTpl.sub(obj) +
                 '</div> ' +
-                '<div class="view-preview_ft"> ' +
-                '<div class="button_sp_area"> ' +
-                equipmentTpl.buttons(obj.equipmentId, obj.equipmentStatus) +
-                '</div> ' +
-                '</div> ' +
+                equipmentTpl.buttons(obj) +
                 '</div>';
         }
     });
     var equipmentTpl = {
-        status: function (status) {
+        status: function (obj) {
             var dom = '';
-            switch (status) {
+            switch (obj.status) {
                 case 0:
                     dom = '<span class="view-preview_header_label pull-right text-success">正常使用中</span>';
                     break;
                 case 1:
-                    dom = '<span class="view-preview_header_label pull-right text-primary">维护中</span>';
+                    dom = '<span class="view-preview_header_label pull-right text-warn">维护中</span>';
                     break;
                 case 2:
-                    dom = '<span class="view-preview_header_label pull-right text-warn">维修中</span>';
+                    dom = '<span class="view-preview_header_label pull-right text-primary">已移机</span>';
                     break;
             }
             return dom;
         },
-        buttons: function (id, status) {
+        content: function (obj) {
             var dom = '';
-            switch (status) {
+            switch (obj.status) {
                 case 0:
-                    dom = '<a href="' + maintainURL + '?equipmentId=' + id + '" class="view-btn">维护</a> ' +
-                        '<a href="' + repairURL + '?equipmentId=' + id + '" class="view-btn">维修</a> ';
+                    dom = '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">使用费</span>' +
+                        '<p class="weui-form-preview__value">￥' + obj.cost + '</p>' +
+                        '</div>' +
+                        '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">使用年限</span>' +
+                        '<p class="weui-form-preview__value">' + obj.years + '</p>' +
+                        '</div>';
                     break;
                 case 1:
-                    dom = '<a href="' + maintainStatusURL + '?equipmentId=' + id + '" class="view-btn">维护中</a> ' +
-                        '<a href="javascript:;" class="view-btn view-btn_disabled">维修</a> ';
+                    dom = '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">使用费</span>' +
+                        '<p class="weui-form-preview__value">￥' + obj.cost + '</p>' +
+                        '</div>' +
+                        '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">使用年限</span>' +
+                        '<p class="weui-form-preview__value">' + obj.years + '</p>' +
+                        '</div>' +
+                        '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">服务内容</span>' +
+                        '<p class="weui-form-preview__value">' + obj.service + '</p>' +
+                        '</div>';
                     break;
                 case 2:
-                    dom = '<a href="javascript:;" class="view-btn view-btn_disabled">维护</a> ' +
-                        '<a href="' + repairStatusURL + '?equipmentId=' + id + '" class="view-btn">维修中</a> ';
+                    dom = '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">移机地址</span>' +
+                        '<p class="weui-form-preview__value">' + obj.transferAddress + '</p>' +
+                        '</div>' +
+                        '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">联系人</span>' +
+                        '<p class="weui-form-preview__value">' + obj.transferPhone + '</p>' +
+                        '</div>' +
+                        '<div class="view-preview_body_item">' +
+                        '<span class="weui-form-preview__label">联系电话</span>' +
+                        '<p class="weui-form-preview__value">' + obj.transferUser + '</p>' +
+                        '</div>';
                     break;
+            }
+            return dom;
+        },
+        sub: function (obj) {
+            if (obj.status === 2) {
+                return '<div class="view-preview_body_item"><span>申请移机时间：' + obj.transferTime + '</span></div>'
+            }
+            return '<div class="view-preview_body_item"><span>TDS值：<strong>' + obj.TDS + '</strong></span></div>' +
+                '<div class="view-preview_body_item"><span>安装地址：' + obj.installationAddress + '</span></div>' +
+                '<div class="view-preview_body_item"><span>安装时间：' + obj.installationTime + '</span></div> ';
+        },
+        buttons: function (obj) {
+            var dom = '';
+            if (obj.status !== 2) {
+                dom = '<div class="view-preview_ft">' +
+                    '<div class="button_sp_area">' +
+                    '<a href="' + maintainURL + '?equipmentId=' + obj.equipmentId + '" class="view-btn">维护</a>' +
+                    '</div>' +
+                    '</div>';
             }
             return dom;
         }

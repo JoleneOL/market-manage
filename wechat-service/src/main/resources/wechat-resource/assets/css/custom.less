@@ -332,13 +332,21 @@
   }
   .view-preview_hd {
     .border-1px-top(#e5e5e5);
+    .view-preview_header_value {
+      clear: both;
+    }
   }
   .view-preview_bd {
+    text-align: right;
+    font-size: .9em;
     .view-preview_body_item {
       span {
         float: left;
         margin-right: 1em;
         min-width: 4em;
+        color: #999;
+        text-align: justify;
+        text-align-last: justify;
       }
     }
   }
@@ -348,6 +356,10 @@
       font-size: .9em;
       text-align: right;
       color: #999;
+    }
+    strong {
+      font-weight: normal;
+      color: #333;
     }
   }
   .view-preview_ft {
@@ -730,18 +742,6 @@
 
 .view_navbar-fixed {
   position: fixed;
-}
-
-#equipment {
-  .weui-form-preview__label {
-    text-align-last: left;
-  }
-  .weui-form-preview__hd {
-    line-height: 2em;
-    .weui-form-preview__value {
-      font-size: 1.2em;
-    }
-  }
 }
 
 .view_form-button-group {
@@ -1136,5 +1136,8 @@
     .ellipsis {
       width: 140px;
     }
+  }
+  .view-preview_header_value.ellipsis {
+    width: 216px;
   }
 }
