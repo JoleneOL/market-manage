@@ -48,7 +48,7 @@ public class DealerInitService {
                     , "master"), null
                     , environment.getProperty("default.agent.password", "123456"));
             agentService.addAgent(null, login
-                    , environment.getProperty("default.agent.name", "默认名称"), LocalDate.now()
+                    , environment.getProperty("default.agent.name", "默认名称"), null, LocalDate.now()
                     , LocalDate.now().plusYears(1), 0, 0, null);
             contactWayService.updateName(login, environment.getProperty("default.agent.name", "默认名称"));
         }

@@ -129,15 +129,15 @@ public interface AgentService {
      * @param who          可选参数；谁添加的代理
      * @param login        相关身份
      * @param name         名称
+     * @param levelTitle   可选的特定等级名称
      * @param beginDate    合同起始时间
      * @param endDate      合同结束时间
      * @param firstPayment 首笔进货款
      * @param agencyFee    代理费
-     * @param superior     上级，可以为<code>null</code>
-     * @return 被保存的新的最高代理商
+     * @param superior     上级，可以为<code>null</code>      @return 被保存的新的最高代理商
      */
     @Transactional
-    AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate, int firstPayment
+    AgentLevel addAgent(Login who, Login login, String name, String levelTitle, LocalDate beginDate, LocalDate endDate, int firstPayment
             , int agencyFee, AgentLevel superior);
 
 

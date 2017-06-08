@@ -107,7 +107,7 @@ public abstract class DealerServiceTest extends CoreServiceTest {
             contactWayService.updateMobile(login, randomMobile());
             contactWayService.updateName(login, "新名字" + RandomStringUtils.randomAlphabetic(6));
         }
-        agentService.addAgent(null, login, "随机代理" + RandomStringUtils.randomAlphabetic(4), null, null, 0, 0, superior);
+        agentService.addAgent(null, login, "随机代理" + RandomStringUtils.randomAlphabetic(4), null, null, null, 0, 0, superior);
         return login;
     }
 

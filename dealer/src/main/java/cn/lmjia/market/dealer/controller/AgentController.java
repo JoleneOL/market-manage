@@ -57,7 +57,8 @@ public class AgentController {
     @PostMapping("/addAgent")
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "')")
     @Transactional
-    public String addAgent(@AuthenticationPrincipal Login login, Long superiorId, String rank, String agentName
+    public String addAgent(@AuthenticationPrincipal Login login, Long superiorId, String rank, String levelTitle
+            , String agentName
             , int firstPayment, int agencyFee, @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam LocalDate beginDate
             , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam LocalDate endDate
             , String mobile, String password
@@ -70,7 +71,7 @@ public class AgentController {
         contactWayService.updateAddress(newLogin, address);
         contactWayService.updateIDCardImages(newLogin, cardFrontPath, cardBackPath);
 
-        agentService.addAgent(login, newLogin, rank, beginDate, endDate, firstPayment, agencyFee
+        agentService.addAgent(login, newLogin, rank, levelTitle, beginDate, endDate, firstPayment, agencyFee
                 , superiorId == null ? null : agentService.getAgent(superiorId));
 
         return "redirect:/agentManage";

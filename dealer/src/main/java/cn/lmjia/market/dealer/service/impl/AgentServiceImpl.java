@@ -75,7 +75,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate
+    public AgentLevel addAgent(Login who, Login login, String name, String levelTitle, LocalDate beginDate, LocalDate endDate
             , int firstPayment, int agencyFee, AgentLevel superior) {
         AgentSystem agentSystem;
         if (superior == null) {
@@ -85,7 +85,7 @@ public class AgentServiceImpl implements AgentService {
             agentSystem = agentSystemRepository.save(agentSystem);
         } else
             agentSystem = superior.getSystem();
-        AgentLevel newLevel = addAgent(who, login, name, beginDate, endDate, firstPayment, agencyFee, superior, agentSystem);
+        AgentLevel newLevel = addAgent(who, login, name, levelTitle, beginDate, endDate, firstPayment, agencyFee, superior, agentSystem);
         loginRelationCacheService.rebuildAgentSystem(agentSystem);
         return newLevel;
     }
@@ -106,7 +106,7 @@ public class AgentServiceImpl implements AgentService {
         ), 1);
     }
 
-    private AgentLevel addAgent(Login who, Login login, String name, LocalDate beginDate, LocalDate endDate
+    private AgentLevel addAgent(Login who, Login login, String name, String firstLevelTitle, LocalDate beginDate, LocalDate endDate
             , int firstPayment, int agencyFee, AgentLevel superior, AgentSystem system) {
         AgentLevel topLevel = null;
 
@@ -153,6 +153,9 @@ public class AgentServiceImpl implements AgentService {
         }
         // 设置代理费
         agentFinancingService.recordAgentFee(login, topLevel, BigDecimal.valueOf(agencyFee), null, null);
+        if (!StringUtils.isEmpty(firstLevelTitle)) {
+            topLevel.setLevelTitle(firstLevelTitle);
+        }
         // 先设置最高级别的
         return topLevel;
     }
