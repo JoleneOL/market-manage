@@ -66,7 +66,7 @@ public interface AgentService {
             case 2:
                 return "区县总代";
             case 3:
-                return "分代理";
+                return "代理商";
             case 4:
                 return "经销商";
             case Customer.LEVEL:
