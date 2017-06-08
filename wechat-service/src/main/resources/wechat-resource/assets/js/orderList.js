@@ -8,6 +8,7 @@ $(function () {
     var payURL = $body.attr('data-pay-url');
     var logisticsDetailURL = 'logisticsDetail.html';
     var orderTpl = function (obj) {
+        console.log(obj.hasInvoice);
         var toPay = obj.statusCode === 1 ? '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">支付</a>' : '';
         return '<div class="weui-form-preview view-mb-20 view-form-card_line">' +
             '<div class="view-form-preview-ex"> <div class="weui-form-preview__item">' +
