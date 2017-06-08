@@ -108,6 +108,47 @@ Mock.mock(/\/api\/orderList\?status=\d&page=\d/, "get", {
         }
     ]
 });
+
+Mock.mock(/\/api\/orderList\?search=(.*)&page=\d/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data": [
+        {
+            orderId: '@id',
+            orderTime: '@now("yyyy-MM-dd")',
+            status: '成功',
+            statusCode: 5,
+            orderUser: "@cname",
+            category: "饮水机",
+            type: "u56 立式",
+            total: '@integer(3000, 9999999)',
+            package: '3年收费 730天',
+            amount: '@integer(1, 100)',
+            phone: /^1([34578])\d{9}$/
+        }
+    ]
+});
+
+Mock.mock(/\/api\/orderList\?status=\d&search=(.*)&page=\d/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data": [
+        {
+            orderId: '@id',
+            orderTime: '@now("yyyy-MM-dd")',
+            status: '待收货',
+            statusCode: 1,
+            orderUser: "@cname",
+            category: "饮水机",
+            type: "u56 立式",
+            total: '@integer(3000, 9999999)',
+            package: '3年收费 730天',
+            amount: '@integer(1, 100)',
+            phone: /^1([34578])\d{9}$/
+        }
+    ]
+});
+
 /**
  * equipmentStatus 暂定Number
  * 0: 正常使用中

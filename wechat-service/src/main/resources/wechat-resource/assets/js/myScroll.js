@@ -128,6 +128,17 @@
         $self.reset = function (op) {
             s = $.extend(s, op);
         };
+        
+        $self.reload = function (op) {
+            if(s.isAjax) {
+                op.page = 0;
+            } else {
+                op.page = 1;
+            }
+            s = $.extend(s, op);
+            $self.find(op.removeEle).remove();
+            getDate(extra);
+        };
 
         return $self;
 

@@ -959,6 +959,9 @@
 .view-popup__modal {
   background: #fff;
 }
+.weui-search-bar__cancel-btn {
+  color: #009bb6;
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,
   .border-1px-top::after,
