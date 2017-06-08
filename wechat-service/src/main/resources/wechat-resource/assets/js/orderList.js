@@ -37,11 +37,6 @@ $(function () {
             '</div>';
     };
 
-    // $('#J_orderList').myScroll({
-    //     ajaxUrl: '/api/orderList',
-    //     template: orderTpl
-    // });
-
     var tabsItem = $('.view-tabs_item');
     var tabsSwiper = $('#tabs-container').swiper({
         observer: true,
