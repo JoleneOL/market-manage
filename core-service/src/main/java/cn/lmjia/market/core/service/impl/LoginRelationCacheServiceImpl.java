@@ -139,4 +139,36 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
                 , Stream.of(createRelationFromLevel(system, from, customerLogin, Customer.LEVEL)));
         saveValidRelations(relations);
     }
+
+    @Override
+    public void addLowestAgentLevelCache(AgentLevel level) {
+        if (level.getSuperior() == null) {
+            // 对于顶级关系已经没什么需要做的了
+            log.info("对于顶级关系已经没什么需要做的了");
+            return;
+        }
+        final AgentSystem system = level.getSystem();
+        final Login login = level.getLogin();
+        // 上下2层关系
+        // 原来to 我的关系 应该增加一个等级；如果from比我还高并且属于同一个代理体系
+        // A-L-x + A-L-level
+        // A-l-100 A-l-6
+        // 原来跟他有关系的人 都应该新增一个关系 level!
+        // 原来等级
+
+        // 我原来的等级
+//        int originLevel = level.getLevel() == systemService.systemLevel() - 1 ? Customer.LEVEL : level.getLevel() + 1;
+//        // 即将建立的新关系
+//        Stream<LoginRelation> newRelations = loginRelationRepository.findByToAndLevel(login,originLevel)
+//                .stream()
+//                .map(loginRelation -> createRelationFromLevel(loginRelation.getSystem(),loginRelation.getFrom(),login,level.getLevel()));
+
+        Set<LoginRelation> relations = loginRelationRepository.findBySystemAndTo(system
+                , level.getSuperior().getLogin());
+
+        addExistingRelation(system, relations
+                , Stream.of(createRelationFromLevel(system, level.getSuperior().getLogin(), login, level.getLevel())));
+        saveValidRelations(relations);
+
+    }
 }

@@ -3,11 +3,11 @@ package cn.lmjia.market.dealer.service.impl;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.event.LoginRelationChangedEvent;
-import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.PromotionService;
 import cn.lmjia.market.dealer.service.TeamService;
@@ -15,7 +15,6 @@ import me.jiangcai.lib.sys.service.SystemStringService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,7 +27,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     private static final Log log = LogFactory.getLog(PromotionServiceImpl.class);
     @Autowired
-    private LoginRelationRepository loginRelationRepository;
+    private LoginRelationCacheService loginRelationCacheService;
     @Autowired
     private AgentService agentService;
     @Autowired
@@ -38,8 +37,6 @@ public class PromotionServiceImpl implements PromotionService {
     @Autowired
     private SystemService systemService;
     @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
-    @Autowired
     private AgentLevelRepository agentLevelRepository;
     @Autowired
     private ReadService readService;
@@ -47,7 +44,7 @@ public class PromotionServiceImpl implements PromotionService {
     private LoginService loginService;
 
     @Override
-    public void tryPromotion(LoginRelationChangedEvent event) {
+    public LoginRelationChangedEvent tryPromotion(LoginRelationChangedEvent event) {
         // 检查升级
         // 如果它还只是一个客户，则检查是否推荐了足够的「有效用户」
         final Login who = event.getWho();
@@ -55,7 +52,7 @@ public class PromotionServiceImpl implements PromotionService {
 
         if (agentLevel != null && agentLevel.getLevel() == 0) {
             log.trace(who + "已无升级必要");
-            return;
+            return null;
         }
 
         int requireCount;
@@ -76,10 +73,12 @@ public class PromotionServiceImpl implements PromotionService {
             agentLevelUpgrade(who, agentLevel);
 
             // 完成，顺便处理下我的推荐者
-            if (who.getGuideUser() != null)
-                applicationEventPublisher.publishEvent(new LoginRelationChangedEvent(who.getGuideUser()));
+            if (who.getGuideUser() != null) {
+                return new LoginRelationChangedEvent(who.getGuideUser());
+            }
         } else
             log.trace(event.getWho() + "的晋升需要满足" + requireCount + ",但只有" + currentCount);
+        return null;
     }
 
     /**
@@ -107,6 +106,9 @@ public class PromotionServiceImpl implements PromotionService {
             top.setLevel(level.getLevel() - 1);
             top = agentLevelRepository.save(top);
             level.setSuperior(top);
+            // 原来跟我的关系需要复制成新的等级
+            // 原来我跟其他人的关系
+            loginRelationCacheService.addLowestAgentLevelCache(top);
             log.info(login + "升级到" + top.getLevel() + "代理商");
         } else {
             //新增一个代理商！
@@ -128,6 +130,7 @@ public class PromotionServiceImpl implements PromotionService {
             top.setSuperior(level.getSuperior());
             top.setLevel(systemService.systemLevel() - 1);
             top = agentLevelRepository.save(top);
+            loginRelationCacheService.addLowestAgentLevelCache(top);
             log.info(login + "升级到" + top.getLevel() + "代理商");
         }
     }

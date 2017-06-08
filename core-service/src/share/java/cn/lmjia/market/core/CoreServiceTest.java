@@ -15,6 +15,7 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.QuickTradeService;
 import cn.lmjia.market.core.test.QuickPayBean;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -81,6 +82,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private QuickPayBean quickPayBean;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private QuickTradeService quickTradeService;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -368,5 +371,14 @@ public abstract class CoreServiceTest extends SpringWebTest {
      */
     protected void makeOrderPay(MainOrder order) {
         quickPayBean.makePay(order);
+    }
+
+    /**
+     * 让订单立马完成
+     *
+     * @param order order
+     */
+    protected void makeOrderDone(MainOrder order) {
+        quickTradeService.makeDone(order);
     }
 }

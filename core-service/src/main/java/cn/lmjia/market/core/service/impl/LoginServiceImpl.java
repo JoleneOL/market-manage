@@ -133,10 +133,10 @@ public class LoginServiceImpl implements LoginService {
         List<AgentLevel> allAgent = agentLevelRepository.findByLogin(who);
 
         if (allAgent.isEmpty()) {
-            Customer customer = customerRepository.findByLogin(who);
-            if (customer == null)
+            List<Customer> customers = customerRepository.findByLogin(who);
+            if (customers.isEmpty())
                 throw new IllegalStateException("找不到" + who + "所处的经销商");
-            return customer.getAgentLevel();
+            return customers.get(0).getAgentLevel();
         }
 
         // 排除掉所有

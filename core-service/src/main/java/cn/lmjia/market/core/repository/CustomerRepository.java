@@ -14,7 +14,7 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
     Customer findByNameAndMobile(String name, String mobile);
 
-    Customer findByLogin(Login login);
+    List<Customer> findByLogin(Login login);
 
     /**
      * @return 这个代理体系的所有客户

@@ -3,6 +3,7 @@ package cn.lmjia.market.core.service.impl;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.event.LoginRelationChangedEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
@@ -54,12 +55,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void orderFinish(MainOrderFinishEvent event) {
+    public LoginRelationChangedEvent orderFinish(MainOrderFinishEvent event) {
         Customer customer = event.getMainOrder().getCustomer();
         customer = customerRepository.getOne(customer.getId());
         if (!customer.isSuccessOrder()) {
             customer.setSuccessOrder(true);
             loginRelationCacheService.addCustomerCache(customer);
+            // 如果它有推荐则产生改变
+            if (customer.getLogin().getGuideUser() != null)
+                return new LoginRelationChangedEvent(customer.getLogin().getGuideUser());
         }
+        return null;
     }
 }

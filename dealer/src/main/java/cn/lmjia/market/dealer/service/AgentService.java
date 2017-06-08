@@ -187,7 +187,7 @@ public interface AgentService {
 
     /**
      * @param login 特定身份
-     * @return 最高可表达的代理商
+     * @return 最高可表达的代理商，可能为null如果它还没有成为代理商
      */
     @Transactional(readOnly = true)
     AgentLevel highestAgent(Login login);

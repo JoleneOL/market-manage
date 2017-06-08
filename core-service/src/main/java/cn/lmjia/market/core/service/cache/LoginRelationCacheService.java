@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.cache;
 
 import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,4 +33,11 @@ public interface LoginRelationCacheService {
     @Transactional
     void addCustomerCache(Customer customer);
 
+    /**
+     * 最低级的的代理商
+     *
+     * @param level 新的代理商
+     */
+    @Transactional
+    void addLowestAgentLevelCache(AgentLevel level);
 }
