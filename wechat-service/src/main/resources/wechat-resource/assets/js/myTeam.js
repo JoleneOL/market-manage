@@ -22,7 +22,6 @@ $(function () {
     };
 
     var myScroll = infiniteWrap.myScroll({
-        debug: true,
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             rank: infiniteWrap.attr('data-rank')

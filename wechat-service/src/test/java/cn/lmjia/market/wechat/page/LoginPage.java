@@ -29,7 +29,7 @@ public class LoginPage extends AbstractWechatPage {
 
     @Override
     public void validatePage() {
-        assertTitle("登录 - 微信管理平台");
+        assertTitle("登录");
     }
 
     public void login(String loginName, String rawPassword) {

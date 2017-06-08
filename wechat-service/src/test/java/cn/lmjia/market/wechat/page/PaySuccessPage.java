@@ -13,7 +13,7 @@ import org.openqa.selenium.WebDriver;
  */
 public class PaySuccessPage extends AbstractWechatPage {
 
-    private static final String title = "下单成功 - 微信管理平台";
+    private static final String title = "下单成功";
 
     public PaySuccessPage(WebDriver webDriver) {
         super(webDriver);

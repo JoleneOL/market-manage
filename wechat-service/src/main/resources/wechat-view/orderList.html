@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>订单列表 - 微信管理平台</title>
+    <title>订单列表</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -21,17 +21,17 @@
 <section class="view_body view_pb-more">
     <div class="weui-cells__title">我的列表</div>
     <div class="weui-search-bar js-extra-h-c">
-        <form class="weui-search-bar__form">
+        <div class="weui-search-bar__form">
             <div class="weui-search-bar__box">
                 <i class="weui-icon-search"></i>
-                <input type="search" class="weui-search-bar__input" placeholder="搜索" name="search">
+                <input type="search" class="weui-search-bar__input" placeholder="搜索" name="search" id="J_searchInput">
                 <a href="javascript:" class="weui-icon-clear"></a>
             </div>
             <label class="weui-search-bar__label">
                 <i class="weui-icon-search"></i>
                 <span>搜索</span>
             </label>
-        </form>
+        </div>
         <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
     </div>
     <div class="view-tabs js-extra-h-c">

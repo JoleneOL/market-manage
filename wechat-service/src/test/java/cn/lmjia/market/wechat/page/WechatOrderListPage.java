@@ -15,6 +15,6 @@ public class WechatOrderListPage extends AbstractWechatPage {
 
     @Override
     public void validatePage() {
-        assertTitle("订单列表 - 微信管理平台");
+        assertTitle("订单列表");
     }
 }

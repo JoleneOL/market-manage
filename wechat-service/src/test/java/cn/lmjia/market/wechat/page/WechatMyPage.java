@@ -14,6 +14,6 @@ public class WechatMyPage extends AbstractWechatPage {
 
     @Override
     public void validatePage() {
-        assertTitle("我的 - 微信管理平台");
+        assertTitle("我的");
     }
 }

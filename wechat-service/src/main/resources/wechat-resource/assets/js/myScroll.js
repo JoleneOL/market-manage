@@ -63,7 +63,8 @@
             getDate();
         }
 
-        function getDate() {
+        function getDate(obj) {
+            var extra = obj || {};
             if (!s.ajaxUrl) {
                 console.error('需要数据请求地址');
                 return '';
@@ -80,7 +81,7 @@
                         s.loading = false;
                         return '';
                     }
-                    if (res.data.length > 0) {
+                    if (res.data && res.data.length > 0) {
                         $self.find('.weui-loadmore').before(createDom(res.data));
                         myScroll.refresh();
                         s.page++;
@@ -89,6 +90,7 @@
                         $self.find('.weui-loadmore').text('没有更多内容了');
                         s.loading = true;
                     }
+                    if(extra.again) getDate();
                 },
                 error: function () {
                     $.toast('服务器异常', 'cancel');
@@ -98,9 +100,11 @@
 
         // 判断是客户端渲染还是服务器渲染
         if(s.isAjax) {
+            var extra = {};
+            extra.again = true;
             if (s.loading) return;
             s.loading = true;
-            getDate();
+            getDate(extra);
         } else {
             // 服务器渲染的话，加载从第二页开始
             s.page = 1;

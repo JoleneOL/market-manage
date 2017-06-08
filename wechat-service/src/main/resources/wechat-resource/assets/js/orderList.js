@@ -76,4 +76,12 @@ $(function () {
         });
     });
 
+    $('#J_searchInput').on('keypress', function (e) {
+       var keyCode = e.keyCode;
+       var input = $(this).val();
+       if(keyCode == '13') {
+           e.preventDefault();
+           alert(input)
+       }
+    });
 });
