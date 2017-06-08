@@ -32,6 +32,8 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 })
 @EnableJpaRepositories("cn.lmjia.market.core.repository")
 public class CoreConfig extends WeixinWebSpringConfig implements WebModule {
+    // SchedulingConfigurer
+    // @EnableScheduling
 
     public static final String ProfileUnitTest = "unit_test";
 

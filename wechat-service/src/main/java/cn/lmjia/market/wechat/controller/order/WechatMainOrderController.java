@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.repository.PayOrderRepository;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
@@ -14,10 +15,14 @@ import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.paymax.PaymaxChannel;
 import me.jiangcai.payment.paymax.PaymaxPaymentForm;
 import me.jiangcai.payment.paymax.entity.PaymaxPayOrder;
+import me.jiangcai.payment.service.PaymentGatewayService;
 import me.jiangcai.payment.service.PaymentService;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.Gender;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -30,6 +35,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author CJ
@@ -37,6 +45,7 @@ import java.util.Map;
 @Controller
 public class WechatMainOrderController extends AbstractMainOrderController {
 
+    private static final Log log = LogFactory.getLog(WechatMainOrderController.class);
     @Autowired
     private PaymentService paymentService;
     @Autowired
@@ -49,6 +58,13 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     private Environment environment;
     @Autowired
     private QRController qrController;
+    @Autowired
+    private PayOrderRepository payOrderRepository;
+    @Autowired
+    private PaymentGatewayService paymentGatewayService;
+    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * @return 展示下单页面
@@ -83,6 +99,27 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     private ModelAndView payOrder(String openId, HttpServletRequest request, MainOrder order) throws SystemMaintainException {
         if (order.getOrderStatus() != OrderStatus.forPay)
             throw new IllegalStateException("订单并不在待支付状态");
+
+        if (environment.acceptsProfiles("autoPay")) {
+            // 3 秒之后自动付款
+            log.warn("3秒之后自动付款:" + order.getSerialId());
+            executorService.schedule(()
+                            -> {
+                        log.info("发布付款事件");
+                        PayOrder payOrder = payOrderRepository.findByPayableOrderId(order.getPayableOrderId().toString())
+                                .stream()
+                                .findFirst().orElseThrow(() -> new IllegalStateException("找不到付款订单"));
+
+                        paymentGatewayService.paySuccess(payOrder);
+//                        ChargeChangeEvent chargeChangeEvent = new ChargeChangeEvent();
+//                        chargeChangeEvent.setData(new Charge());
+//                        applicationEventPublisher
+//                                .publishEvent(new OrderPaySuccess(mainOrderService.getOrder(order.getId()), null));
+
+                    }
+                    , 3, TimeUnit.SECONDS);
+        }
+
         if (environment.acceptsProfiles("wechatChanpay"))
             return paymentService.startPay(request, order, chanpayPaymentForm, null);
         Map<String, Object> parameters = new HashMap<>();
