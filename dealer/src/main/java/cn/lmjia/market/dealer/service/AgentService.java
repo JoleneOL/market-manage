@@ -233,4 +233,11 @@ public interface AgentService {
     @Transactional(readOnly = true)
     AgentLevel addressLevel(Address address);
 
+    /**
+     * 安全检查
+     *
+     * @param system 系统
+     */
+    @Transactional(readOnly = true)
+    void healthCheck(AgentSystem system);
 }

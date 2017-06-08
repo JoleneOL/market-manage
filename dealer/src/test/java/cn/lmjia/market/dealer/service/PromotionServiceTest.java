@@ -2,11 +2,18 @@ package cn.lmjia.market.dealer.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.cache.LoginRelation;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentSystem;
+import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Comparator;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +28,10 @@ public class PromotionServiceTest extends DealerServiceTest {
     private PromotionService promotionService;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private LoginRelationCacheService loginRelationCacheService;
+    @Autowired
+    private LoginRelationRepository loginRelationRepository;
 
     @Test
     public void go() {
@@ -46,7 +57,27 @@ public class PromotionServiceTest extends DealerServiceTest {
         // ok 现在需要升级了 从等级中倒过来
         Login login = firstOrder.getCustomer().getLogin();
 
-        makeLoginTo(agentLoginRoot, login, ups, 0);
+        makeLoginTo(agentLoginRoot, login, ups, systemService.systemLevel() - 3);
+
+        // 第一步 检查所有的代理商逻辑是OK的
+        final AgentSystem system = agentRoot.getSystem();
+        agentService.healthCheck(system);
+        // 这下是深层次了
+        long current = loginRelationRepository.countBySystem(system);
+        List<LoginRelation> currentList = loginRelationRepository.findBySystem(system);
+        final Comparator<LoginRelation> c = (o1, o2) -> (int) (o1.getFrom().getId() * 1000000 - o2.getFrom().getId() * 1000000 + o1.getTo().getId() * 1000 - o2.getTo().getId() * 1000 + o1.getLevel() - o2.getLevel());
+        currentList.sort(c);
+        loginRelationCacheService.rebuildAgentSystem(system);
+
+        List<LoginRelation> allList = loginRelationRepository.findBySystem(system);
+        allList.sort(c);
+        allList.removeAll(currentList);
+        allList.forEach(System.out::println);
+
+        assertThat(loginRelationRepository.countBySystem(system))
+                .isEqualTo(current);
+
+
     }
 
     /**
