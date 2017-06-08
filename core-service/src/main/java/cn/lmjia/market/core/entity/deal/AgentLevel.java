@@ -49,6 +49,11 @@ public class AgentLevel {
      */
     private int level;
     /**
+     * 可选的自定义title
+     */
+    @Column(length = 10)
+    private String levelTitle;
+    /**
      * 谁添加的
      */
     @ManyToOne

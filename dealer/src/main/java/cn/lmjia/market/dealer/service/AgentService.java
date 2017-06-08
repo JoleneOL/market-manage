@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -51,6 +52,8 @@ public interface AgentService {
      * @return 该身份头衔
      */
     default String loginTitle(AgentLevel level) {
+        if (!StringUtils.isEmpty(level.getLevelTitle()))
+            return level.getLevelTitle();
         final int i = agentLevel(level);
         return getLoginTitle(i);
     }
