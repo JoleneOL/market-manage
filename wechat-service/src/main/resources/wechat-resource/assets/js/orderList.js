@@ -8,7 +8,8 @@ $(function () {
     var payURL = $body.attr('data-pay-url');
     var logisticsDetailURL = 'logisticsDetail.html';
     var orderTpl = function (obj) {
-        var toPay = obj.statusCode == 1 ? '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">支付</a>' : '';
+        console.log(obj.hasInvoice);
+        var toPay = obj.statusCode === 1 ? '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">支付</a>' : '';
         return '<div class="weui-form-preview view-mb-20 view-form-card_line">' +
             '<div class="view-form-preview-ex"> <div class="weui-form-preview__item">' +
             '<p class="weui-form-preview__value">订单时间：' + obj.orderTime + '</p>' +
@@ -37,11 +38,6 @@ $(function () {
             '</div>';
     };
 
-    // $('#J_orderList').myScroll({
-    //     ajaxUrl: '/api/orderList',
-    //     template: orderTpl
-    // });
-
     var tabsItem = $('.view-tabs_item');
     var tabsSwiper = $('#tabs-container').swiper({
         observer: true,
@@ -68,20 +64,28 @@ $(function () {
     });
     $('.swiper-slide').height($(window).height() - Math.ceil(extraHeight) - 52);
 
+    var myScrolls = [];
     $('.js-commItems').each(function () {
         var self = $(this);
-        self.myScroll({
+        var myScroll = self.myScroll({
             ajaxUrl: self.attr('data-url'),
             template: orderTpl
         });
+        myScrolls.push(myScroll)
     });
 
     $('#J_searchInput').on('keypress', function (e) {
        var keyCode = e.keyCode;
        var input = $(this).val();
-       if(keyCode == '13') {
+       if(keyCode === 13) {
            e.preventDefault();
-           alert(input)
+           $.each(myScrolls, function (i,v) {
+               v.reload({
+                   debug: true,
+                   ajaxData: {search: input},
+                   removeEle: '.view-form-card_line'
+               })
+           });
        }
     });
 });

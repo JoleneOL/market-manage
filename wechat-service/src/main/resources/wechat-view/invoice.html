@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>开票</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+</head>
+<body class="view-bg-color view-fs-small">
+<section class="view_body">
+    <form action="orderSuccess.html" method="post" id="J_invoiceForm">
+        <div class="weui-cells__title">开票</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">公司抬头</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-company" type="text" placeholder="请输入公司抬头" name="company" required>
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">发票内容</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入发票内容" value="消费" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">发票金额</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceTotal" type="text" placeholder="请输入发票金额" value="￥3000" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收件人</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceAddressee" type="text" placeholder="请输入收件人"
+                           name="invoiceAddressee" value="常鸿飞" required>
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收件地址</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceAddress" type="text" id="J_invoiceAddress" placeholder="请输入收件地址"
+                           name="invoiceAddress" value="浙江省 杭州市 滨江区" required>
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label"></label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceFullAddress" type="text" placeholder="请输入详细地址"
+                           name="invoiceFullAddress" required>
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">联系电话</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input js-invoiceMobile" type="tel" placeholder="请输入联系电话" name="invoiceMobile" required>
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">&nbsp;</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p class="text-warn">开票视同购买设备，并无法退款</p>
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area">
+            <button type="submit" class="weui-btn weui-btn_custom">确&nbsp;&nbsp;定</button>
+        </div>
+    </form>
+</section>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/city-picker.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="../wechat-resource/assets/js/invoice.js" th:src="@{/wechat-resource/assets/js/invoice.js}"></script>
+</html>
