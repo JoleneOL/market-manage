@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>退款详情</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+</head>
+<body class="view-bg-color view-fs-small">
+<section class="view_body">
+    <form id="J_form">
+        <div class="weui-cells__title">退款详情</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">机器ID号</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入机器ID号" name="machineId" value="12121212" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">姓名</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入姓名" name="name" value="刘德华" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">手机号码</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="tel" placeholder="输入手机号码" name="phone" value="15899884457" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">服务选择</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入服务选择" name="serviceType" value="退款" readonly>
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">退款原因</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select class="weui-select" name="refundReason" id="J_Reason">
+                        <option value="1">不想要了</option>
+                        <option value="2">质量问题</option>
+                        <option value="3">协商解决</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="weui-cell view_textarea-other J_extra displayNone">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" placeholder="请输入文本" rows="3" name="otherType"></textarea>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">退款金额</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" placeholder="输入退款金额" name="refundAmount" value="1000">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">&nbsp;</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p class="text-gray">剩余金额2000 可退回剩余金额50%</p>
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area view-btn-group">
+            <button type="button" class="weui-btn weui-btn_default" id="J_Cancel">取消退款</button>
+            <button type="submit" class="weui-btn weui-btn_custom">修改退款</button>
+        </div>
+    </form>
+</section>
+<footer>
+    <div class="weui-footer weui-footer_fixed-bottom">
+        <p class="weui-footer__text weui-footer__links">客服电话 <a href="tel:400-0895558">400-0895558</a></p>
+    </div>
+</footer>
+</body>
+</html>

@@ -126,6 +126,13 @@
 .weui-btn_default_custom:after {
   border: none;
 }
+.weui-btn_default_disabled {
+  color: rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+}
+.weui-btn_default_disabled:after {
+  border: none;
+}
 .text-alignment_team {
   height: 38px;
   line-height: 38px;
