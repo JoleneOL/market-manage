@@ -3,6 +3,7 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.event.LoginRelationChangedEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.lib.thread.ThreadSafe;
 import org.springframework.context.event.EventListener;
@@ -29,8 +30,9 @@ public interface CustomerService {
      * 客户也需要知道这个事情
      *
      * @param event e
+     * @return 是否产生新的事件
      */
     @EventListener(MainOrderFinishEvent.class)
     @ThreadSafe
-    void orderFinish(MainOrderFinishEvent event);
+    LoginRelationChangedEvent orderFinish(MainOrderFinishEvent event);
 }

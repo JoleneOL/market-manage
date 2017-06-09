@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -333,6 +334,38 @@ public class AgentServiceImpl implements AgentService {
                         -> log.info("过滤之后找到" + agentLevel))
                 .findFirst()
                 .orElse(agentLevels.isEmpty() ? null : agentLevels.get(0));
+    }
+
+    @Override
+    public void healthCheck(AgentSystem system) {
+        //  = null 的 必然是0 依次类推
+        Set<AgentLevel> superiors = null;
+        int level = 0;
+        while (true) {
+            List<AgentLevel> list;
+            if (superiors == null)
+                list = agentLevelRepository.findBySuperiorAndSystem(null, system);
+            else
+                list = agentLevelRepository.findBySystemAndSuperiorIn(system, superiors);
+
+            if (list.isEmpty()) {
+                log.info(system + "健康检查完成");
+                return;
+            }
+
+            // level 都是等于 level
+            int targetLevel = level;
+            list.stream()
+                    .filter(agentLevel -> agentLevel.getLevel() != targetLevel)
+                    .findFirst()
+                    .ifPresent(agentLevel -> {
+                        throw new IllegalStateException(agentLevel + "等级不正确，应该是：" + targetLevel);
+                    });
+
+            superiors = list.stream()
+                    .collect(Collectors.toSet());
+            level++;
+        }
     }
 
 }

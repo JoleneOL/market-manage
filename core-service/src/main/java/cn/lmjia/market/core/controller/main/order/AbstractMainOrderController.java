@@ -45,7 +45,8 @@ public abstract class AbstractMainOrderController {
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
             , Address address, String mobile, long goodId, int amount, String mortgageIdentifier) {
-        return mainOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age, gender, address
+        return mainOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age
+                , gender, address
                 , mainGoodRepository.getOne(goodId), amount, mortgageIdentifier);
     }
 }

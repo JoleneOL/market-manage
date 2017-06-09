@@ -14,11 +14,12 @@ public interface PromotionService {
 
     /**
      * @param event 触发事件
+     * @return 是否迭代产生新的事件
      */
     @Transactional
     @EventListener(LoginRelationChangedEvent.class)
     @ThreadSafe
-    void tryPromotion(LoginRelationChangedEvent event);
+    LoginRelationChangedEvent tryPromotion(LoginRelationChangedEvent event);
 
     /**
      * 如果level为最低代理商，就是客户晋升为最低代理商所需的有效用户数量

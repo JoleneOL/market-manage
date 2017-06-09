@@ -32,10 +32,19 @@ public class LoginRelation {
      */
     @ManyToOne(optional = false)
     private AgentSystem system;
+    /**
+     * 关系的上级
+     */
     @ManyToOne(optional = false)
     private Login from;
+    /**
+     * 关系的下级
+     */
     @ManyToOne(optional = false)
     private Login to;
+    /**
+     * 下级的等级
+     */
     private int level;
 
     @Override

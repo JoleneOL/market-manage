@@ -6,7 +6,6 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.cache.LoginRelation;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
-import cn.lmjia.market.core.service.QuickTradeService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.DealerServiceTest;
@@ -45,8 +44,6 @@ public class TeamDataControllerTest extends DealerServiceTest {
     private Login userLogin;
     @Autowired
     private TeamService teamService;
-    @Autowired
-    private QuickTradeService quickTradeService;
 
     @Override
     protected Login allRunWith() {
@@ -92,7 +89,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
         teamListRequestBuilder(builder -> builder.param("rank", "4"), 0);
 
         makeOrderPay(order1);
-        quickTradeService.makeDone(order1);
+        makeOrderDone(order1);
         assertThat(teamService.validCustomers(userLogin))
                 .as("现在有了")
                 .isEqualTo(1);
@@ -108,7 +105,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
         log.info("再下一单");
         MainOrder order2 = newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin, order1.getCustomer().getMobile());
         makeOrderPay(order2);
-        quickTradeService.makeDone(order2);
+        makeOrderDone(order2);
 
         assertThat(teamService.validCustomers(userLogin))
                 .as("现在有了")

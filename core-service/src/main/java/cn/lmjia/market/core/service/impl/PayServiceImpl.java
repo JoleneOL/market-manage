@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayService;
 import lombok.SneakyThrows;
@@ -33,6 +34,8 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     private MainOrderService mainOrderService;
+    @Autowired
+    private MainOrderRepository mainOrderRepository;
 
     @Override
     public ModelAndView paySuccess(HttpServletRequest request, PayableOrder payableOrder, PayOrder payOrder) {
@@ -79,12 +82,14 @@ public class PayServiceImpl implements PayService {
     @Override
     @EventListener(OrderPaySuccess.class)
     public void paySuccess(OrderPaySuccess event) {
+        log.info("处理付款成功事件");
         MainOrder mainOrder = (MainOrder) event.getPayableOrder();
         if (mainOrder.isPay())
             throw new IllegalStateException("订单已支付");
         mainOrder.setPayTime(LocalDateTime.now());
         mainOrder.setOrderStatus(OrderStatus.forDeliver);
         mainOrder.setPayOrder(event.getPayOrder());
+        mainOrderRepository.save(mainOrder);
     }
 
     @Override
