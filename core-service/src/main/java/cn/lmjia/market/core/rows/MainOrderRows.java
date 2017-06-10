@@ -14,11 +14,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
+import java.util.function.Function;
 
 /**
  * 展示订单数据的格式
@@ -28,15 +27,16 @@ import java.util.Locale;
 public abstract class MainOrderRows implements RowDefinition<MainOrder> {
 
     //    private final LocalDateConverter localDateConverter = new LocalDateConverter();
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.CHINA);
 
     /**
      * 要渲染这些记录的身份
      */
     private final Login login;
+    private final Function<LocalDateTime, String> orderTimeFormatter;
 
-    public MainOrderRows(Login login) {
+    public MainOrderRows(Login login, Function<LocalDateTime, String> orderTimeFormatter) {
         this.login = login;
+        this.orderTimeFormatter = orderTimeFormatter;
     }
 
     @Override
@@ -78,7 +78,7 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                         .build()
                 , FieldBuilder.asName(MainOrder.class, "orderTime")
                         .addFormat((data, type)
-                                -> ((LocalDateTime) data).format(formatter))
+                                -> orderTimeFormatter.apply(((LocalDateTime) data)))
                         .build()
                 , FieldBuilder.asName(MainOrder.class, "quickDoneAble")
                         .addSelect(root -> root.get("orderStatus"))

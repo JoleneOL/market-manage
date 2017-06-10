@@ -13,6 +13,7 @@ import cn.lmjia.market.core.util.ApiDramatizer;
 import cn.lmjia.market.dealer.service.AgentService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * 订单相关的数据服务
@@ -31,12 +34,15 @@ import java.time.LocalDate;
 @Controller
 public class OrderDataController {
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.CHINA);
     @Autowired
     private ReadService readService;
     @Autowired
     private AgentService agentService;
     @Autowired
     private MainOrderService mainOrderService;
+    @Autowired
+    private ConversionService conversionService;
 
     /**
      * @return 仅仅显示我的订单
@@ -44,7 +50,7 @@ public class OrderDataController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/orderList")
     @RowCustom(distinct = true, dramatizer = ApiDramatizer.class)
     public RowDefinition myOrder(@AuthenticationPrincipal Login login, String search, OrderStatus status) {
-        return new MainOrderRows(login) {
+        return new MainOrderRows(login, t -> t.format(formatter)) {
             @Override
             public Specification<MainOrder> specification() {
                 return new AndSpecification<>(
@@ -65,7 +71,7 @@ public class OrderDataController {
             , @RequestParam(value = "phone", required = false) String mobile, Long goodId
             , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate orderDate
             , OrderStatus status) {
-        return new MainOrderRows(login) {
+        return new MainOrderRows(login, t -> conversionService.convert(t, String.class)) {
             @Override
             public Specification<MainOrder> specification() {
                 return new AndSpecification<>(
