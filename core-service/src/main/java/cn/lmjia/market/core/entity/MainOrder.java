@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
+import cn.lmjia.market.core.util.CommissionSource;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.payment.PayableOrder;
@@ -38,7 +39,7 @@ import java.util.Locale;
 @Entity
 @Setter
 @Getter
-public class MainOrder implements PayableOrder {
+public class MainOrder implements PayableOrder, CommissionSource {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
@@ -206,5 +207,10 @@ public class MainOrder implements PayableOrder {
 
     public Object asLocker() {
         return ("mainOrder-" + id).intern();
+    }
+
+    @Override
+    public BigDecimal getCommissioningAmount() {
+        return good.getProduct().getDeposit().multiply(BigDecimal.valueOf(amount));
     }
 }

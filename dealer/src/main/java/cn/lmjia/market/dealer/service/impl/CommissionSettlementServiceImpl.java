@@ -96,7 +96,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         commission.setAgent(level);
         commission.setWho(login);
         commission.setRate(rate);
-        commission.setAmount(orderCommission.getSource().getOrderDueAmount().multiply(rate)
+        commission.setAmount(orderCommission.getSource().getCommissioningAmount().multiply(rate)
                 .setScale(2, BigDecimal.ROUND_HALF_UP));
         login.setCommissionBalance(login.getCommissionBalance().add(commission.getAmount()));
         commissionRepository.save(commission);
