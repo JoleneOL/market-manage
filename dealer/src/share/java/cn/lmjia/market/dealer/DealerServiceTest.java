@@ -1,6 +1,7 @@
 package cn.lmjia.market.dealer;
 
 import cn.lmjia.market.core.CoreServiceTest;
+import cn.lmjia.market.core.config.MVCConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.service.ContactWayService;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ContextConfiguration(classes = {DealerConfig.class})
+@ContextConfiguration(classes = {DealerConfig.class, MVCConfig.class})
 public abstract class DealerServiceTest extends CoreServiceTest {
 
     @Autowired
