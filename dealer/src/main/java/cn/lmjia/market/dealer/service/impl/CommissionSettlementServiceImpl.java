@@ -44,13 +44,16 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     @Override
     public void orderFinish(MainOrderFinishEvent event) {
         final MainOrder order = event.getMainOrder();
-        log.debug("start commission settlement for:" + order);
         OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
         if (orderCommission != null) {
             throw new IllegalStateException("该订单已结算。");
         }
+        doSettlement(order, new OrderCommission());
+    }
 
-        orderCommission = new OrderCommission();
+    private void doSettlement(MainOrder order, OrderCommission orderCommission) {
+        log.debug("start commission settlement for:" + order);
+//        orderCommission = new OrderCommission();
         orderCommission.setGenerateTime(LocalDateTime.now());
         orderCommission.setRefund(false);
         orderCommission.setSource(order);
@@ -89,6 +92,23 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             saveCommission(orderCommission, addressLevel, addressLevel.getLogin()
                     , commissionRateService.addressRate(addressLevel), "地域");
         }
+    }
+
+    @Override
+    public void reSettlement(MainOrder order) {
+        OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
+        if (orderCommission == null) {
+            throw new IllegalStateException("该订单尚未结算。");
+        }
+
+        commissionRepository.findByOrderCommission(orderCommission)
+                .forEach(commission -> {
+                    commission.getWho().setCommissionBalance(commission.getWho().getCommissionBalance().subtract(commission.getAmount()));
+                    commissionRepository.delete(commission);
+                });
+//        orderCommissionRepository.delete(orderCommission);
+
+        doSettlement(order, orderCommission);
     }
 
     private void saveCommission(OrderCommission orderCommission, AgentLevel level, Login login, BigDecimal rate, String message) {

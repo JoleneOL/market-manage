@@ -15,6 +15,6 @@ public class MainOrderFinishEvent implements ThreadLocker {
 
     @Override
     public Object lockObject() {
-        return mainOrder.asLocker();
+        return mainOrder.lockObject();
     }
 }

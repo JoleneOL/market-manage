@@ -1,5 +1,6 @@
 package cn.lmjia.market.dealer.service;
 
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.lib.thread.ThreadSafe;
 import org.springframework.context.event.EventListener;
@@ -16,5 +17,14 @@ public interface CommissionSettlementService {
     @ThreadSafe
     @Transactional
     void orderFinish(MainOrderFinishEvent event);
+
+    /**
+     * 重新结算这个订单
+     *
+     * @param order 订单
+     */
+    @ThreadSafe
+    @Transactional
+    void reSettlement(MainOrder order);
 
 }

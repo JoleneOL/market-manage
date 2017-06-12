@@ -43,6 +43,8 @@ public class CommissionSettlementServiceTest extends DealerServiceTest {
     private LoginRepository loginRepository;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private CommissionSettlementService commissionSettlementService;
 
     private void hasDefaultRate(AgentLevel level) {
         assertThat(commissionRateService.directRate(level))
@@ -156,6 +158,9 @@ public class CommissionSettlementServiceTest extends DealerServiceTest {
                     currentBalances[j] = currentBalances[j].add(decimal);
                 }
             }
+            assertCurrentBalances(als, currentBalances);
+            // 重新结算也一样
+            commissionSettlementService.reSettlement(mainOrderRepository.getOne(order.getId()));
             assertCurrentBalances(als, currentBalances);
         }
 

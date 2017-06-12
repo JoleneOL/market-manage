@@ -8,6 +8,7 @@ import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.util.CommissionSource;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.lib.thread.ThreadLocker;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 
@@ -39,7 +40,7 @@ import java.util.Locale;
 @Entity
 @Setter
 @Getter
-public class MainOrder implements PayableOrder, CommissionSource {
+public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
@@ -205,12 +206,13 @@ public class MainOrder implements PayableOrder, CommissionSource {
         return orderStatus != OrderStatus.EMPTY && orderStatus != OrderStatus.forPay;
     }
 
-    public Object asLocker() {
-        return ("mainOrder-" + id).intern();
-    }
-
     @Override
     public BigDecimal getCommissioningAmount() {
         return good.getProduct().getDeposit().multiply(BigDecimal.valueOf(amount));
+    }
+
+    @Override
+    public Object lockObject() {
+        return ("mainOrder-" + id).intern();
     }
 }
