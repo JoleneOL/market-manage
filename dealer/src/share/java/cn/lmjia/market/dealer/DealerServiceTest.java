@@ -223,4 +223,21 @@ public abstract class DealerServiceTest extends CoreServiceTest {
             levels[i] = agentService.getAgent(login[i], i);
         }
     }
+
+    /**
+     * 形成一个具备每个级别都有一个独立代理商的代理系统,并且从左推荐到右
+     *
+     * @param login
+     * @param levels
+     */
+    protected void initAgentSystemWithRecommend(Login[] login, AgentLevel[] levels) {
+        for (int i = 0; i < login.length; i++) {
+            if (i == 0) {
+                login[i] = newRandomAgent();
+            } else {
+                login[i] = newRandomAgent(levels[i - 1], login[i - 1]);
+            }
+            levels[i] = agentService.getAgent(login[i], i);
+        }
+    }
 }

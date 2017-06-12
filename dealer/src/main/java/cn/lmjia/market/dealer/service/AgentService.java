@@ -221,10 +221,19 @@ public interface AgentService {
      * 这个身份所处的代理链
      *
      * @param login 身份；可能是一个客户也可能是一个代理商身份
-     * @return 长度必然为{@link SystemService#systemLevel()}
+     * @return 长度必然为 {@link SystemService#systemLevel()}
      */
     @Transactional(readOnly = true)
     AgentLevel[] agentLine(Login login);
+
+    /**
+     * 这个身份所处的推荐链
+     *
+     * @param login 身份；可能是一个客户也可能是一个代理商身份
+     * @return 长度必然为 {@link SystemService#systemLevel()} 但可能为null
+     */
+    @Transactional(readOnly = true)
+    AgentLevel[] recommendAgentLine(Login login);
 
     /**
      * @param address 相关地址
@@ -240,4 +249,5 @@ public interface AgentService {
      */
     @Transactional(readOnly = true)
     void healthCheck(AgentSystem system);
+
 }

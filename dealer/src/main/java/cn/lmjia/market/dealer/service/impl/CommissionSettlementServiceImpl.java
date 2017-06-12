@@ -73,12 +73,13 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             }
         }
 
-        AgentLevel[] recommends = agentService.agentLine(order.getRecommendBy());
+        AgentLevel[] recommends = agentService.recommendAgentLine(order.getOrderBy());
         {
             // 推荐者
             // 以及推荐者的代理体系
             for (AgentLevel level : recommends) {
-                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, level), "推荐");
+                if (level != null)
+                    saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, level), "推荐");
             }
         }
 

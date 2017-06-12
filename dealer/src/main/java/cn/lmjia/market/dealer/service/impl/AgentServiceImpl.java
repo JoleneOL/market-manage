@@ -312,6 +312,24 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public AgentLevel[] recommendAgentLine(Login login) {
+        // 获得一个完整的推荐链，第一个必然是 level 0 然后是 1,2,3,etc...
+        // 最多执行n次查询
+        AgentLevel current = highestAgent(login);
+        //
+        int levelGap = current.getLevel();
+
+        // 自己并不在推荐列表中！
+        AgentLevel[] result = new AgentLevel[systemService.systemLevel()];
+        while (levelGap-- > 0) {
+            result[levelGap] = agentLevelRepository.findByLevelAndLoginAndSystem(levelGap, current.getLogin().getGuideUser(), current.getSystem());
+            current = result[levelGap];
+        }
+
+        return result;
+    }
+
+    @Override
     public AgentLevel addressLevel(Address address) {
         // 地址等同于 代理商
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
