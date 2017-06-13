@@ -74,7 +74,21 @@
                                                        class="form-control" name="rank"
                                                        value="测试" th:value="''">
                                             </div>
-                                            <span class="col-sm-3" id="rankSuffix"></span>
+                                            <span class="col-sm-2 control-label text-left" id="rankSuffix"></span>
+                                            <div class="col-sm-4 control-label">
+                                                <div class="ckbox ckbox-success">
+                                                    <input type="checkbox" id="J_customLevel">
+                                                    <label for="J_customLevel">自定义代理等级</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group display-none" id="J_customLevelBox">
+                                            <label class="col-sm-3 control-label">自定义代理等级</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入自定义代理等级"
+                                                       class="form-control" name="levelTitle"
+                                                       value="总代理" th:value="''" disabled>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">代理商姓名</label>

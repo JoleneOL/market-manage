@@ -79,6 +79,16 @@ $(function () {
     //     }
     // });
     // console.log(x);
+    $('#J_customLevel').click(function () {
+        var box = $('#J_customLevelBox');
+        if ($(this).is(':checked')) {
+            box.show()
+                .find('input').prop('disabled', false);
+        } else {
+            box.hide()
+                .find('input').prop('disabled', true);
+        }
+    });
 
     var uploaderFront = createUploader('#J_uploadFront', 'cardFront');
     var uploaderBack = createUploader('#J_uploadBack', 'cardBack');
