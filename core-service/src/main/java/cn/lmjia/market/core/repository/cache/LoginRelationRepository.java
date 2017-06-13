@@ -18,6 +18,8 @@ public interface LoginRelationRepository extends JpaRepository<LoginRelation, Lo
      */
     long deleteBySystem(AgentSystem system);
 
+    long deleteByFromAndTo(Login from, Login to);
+
     long countBySystem(AgentSystem system);
 
     List<LoginRelation> findBySystem(AgentSystem system);

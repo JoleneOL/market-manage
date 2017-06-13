@@ -95,6 +95,10 @@ public class PromotionServiceImpl implements PromotionService {
 //        contactWayService.updateIDCardImages(newLogin, cardFrontPath, cardBackPath);
         if (level != null) {
             // 升级比较好处理
+            // 断裂时 应当放弃所有因  之前Login,我 而产生的所有关联 既 from是之前Login,
+            if (level.getSuperior().getSuperior() == null || !level.getSuperior().getLogin().equals(level.getSuperior().getSuperior().getLogin()))
+                loginRelationCacheService.breakConnection(level);
+
             AgentLevel top = new AgentLevel();
             top.setSystem(level.getSystem());
             top.setCreatedBy(null);
@@ -105,11 +109,10 @@ public class PromotionServiceImpl implements PromotionService {
             top.setSuperior(level.getSuperior().getSuperior());
             top.setLevel(level.getLevel() - 1);
             top = agentLevelRepository.save(top);
+
             level.setSuperior(top);
             // 原来跟我的关系需要复制成新的等级
             // 原来我跟其他人的关系
-            // TODO 此处存在严重BUG，在升级时可能会产生关系断裂；即 top.S(可能为null)(3) 的login不再等同于 level之前的 s.login(4)
-            // 断裂时 应当放弃所有因  之前Login,我 而产生的所有关联 既 from是之前Login,
             loginRelationCacheService.addLowestAgentLevelCache(top);
             log.info(login + "升级到" + top.getLevel() + "代理商");
         } else {

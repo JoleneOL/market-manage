@@ -40,4 +40,12 @@ public interface LoginRelationCacheService {
      */
     @Transactional
     void addLowestAgentLevelCache(AgentLevel level);
+
+    /**
+     * 打断level和它上级的关联；其他因此所建立的关联也应该被放弃
+     *
+     * @param level level
+     */
+    @Transactional
+    void breakConnection(AgentLevel level);
 }

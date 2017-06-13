@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +41,9 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
     private SystemService systemService;
     @Autowired
     private AgentSystemRepository agentSystemRepository;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
 
     /**
      * 将新关系添加到关系库中去
@@ -170,5 +174,34 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
                 , Stream.of(createRelationFromLevel(system, level.getSuperior().getLogin(), login, level.getLevel())));
         saveValidRelations(relations);
 
+    }
+
+    @Override
+    public void breakConnection(AgentLevel level) {
+        if (level.getSuperior() == null) {
+            // 对于顶级关系已经没什么需要做的了
+            log.info("对于顶级关系已经没什么需要做的了");
+            return;
+        }
+
+        log.debug("准备移除从" + level.getSuperior().getLogin().getId() + "到" + level.getLogin().getId() + "的关系");
+
+        int deleted = entityManager.createQuery("delete from LoginRelation as l where l.from in " +
+                "(select toSuperiorRelation.from from LoginRelation as toSuperiorRelation where toSuperiorRelation.to = :s)" +
+                " and l.to in " +
+                "(select fromLevelRelation.to from LoginRelation as fromLevelRelation where fromLevelRelation.from = :self) ")
+                .setParameter("s", level.getSuperior().getLogin())
+                .setParameter("self", level.getLogin())
+                .executeUpdate();
+
+        log.debug("已移除关系删除缓存关系(次级):" + deleted);
+
+        // 还有删除我自己
+        deleted = entityManager.createQuery("delete from LoginRelation as l where l.from=:s and l.to = :self")
+                .setParameter("s", level.getSuperior().getLogin())
+                .setParameter("self", level.getLogin())
+                .executeUpdate();
+//        long removed = loginRelationRepository.deleteByFromAndTo(level.getSuperior().getLogin(), level.getLogin());
+        log.debug("已移除关系删除缓存关系(主级):" + deleted);
     }
 }

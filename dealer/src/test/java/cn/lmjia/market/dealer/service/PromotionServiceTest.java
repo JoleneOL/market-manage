@@ -57,12 +57,13 @@ public class PromotionServiceTest extends DealerServiceTest {
         // ok 现在需要升级了 从等级中倒过来
         Login login = firstOrder.getCustomer().getLogin();
 
-        makeLoginTo(agentLoginRoot, login, ups, systemService.systemLevel() - 3);
+        makeLoginTo(agentLoginRoot, login, ups, systemService.systemLevel() - 2);
 
         // 第一步 检查所有的代理商逻辑是OK的
         final AgentSystem system = agentRoot.getSystem();
         agentService.healthCheck(system);
         // 这下是深层次了
+        // 41
         long current = loginRelationRepository.countBySystem(system);
         List<LoginRelation> currentList = loginRelationRepository.findBySystem(system);
         final Comparator<LoginRelation> c = (o1, o2) -> (int) (o1.getFrom().getId() * 1000000 - o2.getFrom().getId() * 1000000 + o1.getTo().getId() * 1000 - o2.getTo().getId() * 1000 + o1.getLevel() - o2.getLevel());
