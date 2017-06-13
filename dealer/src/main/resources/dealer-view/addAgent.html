@@ -68,7 +68,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">代理名称</label>
+                                            <label class="col-sm-3 control-label">代理商公司名称</label>
                                             <div class="col-sm-3">
                                                 <input type="text" placeholder="请输入代理级别"
                                                        class="form-control" name="rank"
@@ -91,9 +91,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">代理商姓名</label>
+                                            <label class="col-sm-3 control-label">负责人姓名</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入代理商姓名"
+                                                <input type="text" placeholder="请输入负责人姓名"
                                                        class="form-control" name="agentName"
                                                        value="徐北方" th:value="''">
                                             </div>
@@ -248,6 +248,34 @@
                                                 <div class="col-sm-6">
                                                     <div class="upload-demo-container">
                                                         <div class="upload-demo-back"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">添加营业执照</label>
+                                            <div class="col-sm-6">
+                                                <p class="form-control-static">营业执照（格式：3M以下的jpg、jpeg和png）</p>
+                                                <input type="hidden" name="businessLicensePath"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-9 col-sm-offset-3">
+                                                <div class="col-sm-6">
+                                                    <div class="upload-container">
+                                                        <div class="upload-default js-uploadLicense">
+                                                            <div class="js-uploadShow"></div>
+                                                            <span class="has-error">
+                                                                <i class="fa fa-exclamation" aria-hidden="true"></i>
+                                                                <strong>请上传图片</strong>
+                                                            </span>
+                                                        </div>
+                                                        <div id="J_uploadLicense"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="upload-demo-container">
+                                                        <div class="upload-demo-license"></div>
                                                     </div>
                                                 </div>
                                             </div>

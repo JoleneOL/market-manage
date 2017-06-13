@@ -523,6 +523,12 @@ input[type=checkbox] {
   background-position: 0 -124px;
   background-image: url(../images/id-card.png);
 }
+.upload-demo-container .upload-demo-license {
+  height: 114px;
+  background-repeat: no-repeat;
+  background-image: url(../images/yyzz.jpg);
+  background-size: contain;
+}
 .has-error ~ .error {
   color: #a94442;
 }

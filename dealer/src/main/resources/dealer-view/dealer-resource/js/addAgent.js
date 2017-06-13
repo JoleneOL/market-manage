@@ -92,12 +92,15 @@ $(function () {
 
     var uploaderFront = createUploader('#J_uploadFront', 'cardFront');
     var uploaderBack = createUploader('#J_uploadBack', 'cardBack');
+    var uploadLicense = createUploader('#J_uploadLicense', 'businessLicense');
 
     uploadMakeThumb(uploaderFront, '.js-uploadFront');
     uploadMakeThumb(uploaderBack, '.js-uploadBack');
+    uploadMakeThumb(uploadLicense, '.js-uploadLicense');
     uploadError(uploaderFront, '.js-uploadFront');
     uploadError(uploaderBack, '.js-uploadBack');
-    uploadSuccess(uploaderFront, uploaderBack);
+    uploadError(uploadLicense, '.js-uploadLicense');
+    uploadSuccess(uploaderFront, uploaderBack, uploadLicense);
 
 
     function createUploader(id, fileName) {
@@ -132,23 +135,34 @@ $(function () {
         });
     }
 
-    function uploadSuccess(uploader1, uploader2) {
+    //偷个懒
+    function uploadSuccess(uploader1, uploader2, uploader3) {
         function successForEach(uploader, name) {
             uploader.on('uploadSuccess', function (file, response) {
                 layer.msg('上传成功');
                 uploadSuccessMsg(name);
                 $('[name=' + name + ']').val(response.id);
-                if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0)
+                if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0 && uploader3.uploader2.getStats().successNum > 0 )
                     $('#J_submitBtn').prop('disabled', false);
             });
         }
 
         successForEach(uploader1, 'cardFrontPath');
         successForEach(uploader2, 'cardBackPath');
+        successForEach(uploader3, 'businessLicensePath')
     }
 
     function uploadSuccessMsg(msg) {
-        var $msg = (msg === 'cardFrontPath' ) ? $('.js-uploadFront') : $('.js-uploadBack');
+        var $msg = null;
+        if(msg === 'cardFrontPath') {
+            $msg =  $('.js-uploadFront');
+        }
+        if(msg === 'cardBackPath') {
+            $msg =  $('.js-uploadBack');
+        }
+        if(msg === 'businessLicensePath') {
+            $msg =  $('.js-uploadLicense');
+        }
         message('success', $msg, '上传成功');
     }
 
