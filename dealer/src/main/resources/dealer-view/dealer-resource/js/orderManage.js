@@ -8,6 +8,7 @@ $(function () {
 
     var quickUrl = _body.attr('data-quick-url');
     var allowMockPay = _body.attr('data-allow-mock-pay') === 'true';
+    var allowSettlement = _body.attr('data-allow-settlement') === 'true';
 
     var table = $('#orderTable').DataTable({
         "processing": true,
@@ -72,6 +73,9 @@ $(function () {
                     var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;模拟支付</a>';
                     if (item.statusCode === 1 && allowMockPay)
                         a = a + d;
+                    var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;重新结算</a>';
+                    if (item.statusCode === 5 && allowSettlement)
+                        a = a + e;
                     // 模拟支付
                     return a;
                 }
@@ -91,6 +95,14 @@ $(function () {
     }).on('click', '.js-checkOrder', function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
         detailForm.submit();
+    }).on('click', '.js-settlement', function () {
+        // 重新接收端
+        $.ajax('/orderData/settlement/' + $(this).attr('data-id'), {
+            method: 'put',
+            success: function () {
+                alert('重新结算完成');
+            }
+        });
     }).on('click', '.js-mockPay', function () {
         // 模拟支付
         if (!allowMockPay) {

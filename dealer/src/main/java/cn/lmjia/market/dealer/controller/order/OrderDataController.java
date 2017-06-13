@@ -11,16 +11,24 @@ import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import cn.lmjia.market.dealer.service.AgentService;
+import cn.lmjia.market.dealer.service.CommissionSettlementService;
 import me.jiangcai.lib.spring.data.AndSpecification;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,6 +43,7 @@ import java.util.Locale;
 public class OrderDataController {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.CHINA);
+    private static final Log log = LogFactory.getLog(OrderDataController.class);
     @Autowired
     private ReadService readService;
     @Autowired
@@ -43,6 +52,8 @@ public class OrderDataController {
     private MainOrderService mainOrderService;
     @Autowired
     private ConversionService conversionService;
+    @Autowired
+    private CommissionSettlementService commissionSettlementService;
 
     /**
      * @return 仅仅显示我的订单
@@ -60,6 +71,17 @@ public class OrderDataController {
             }
         };
     }
+
+    // 需权限校验
+    @PutMapping("/orderData/settlement/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void mockPay(@AuthenticationPrincipal Login login, @PathVariable("id") long id) {
+        MainOrder order = mainOrderService.getOrder(id);
+        log.info(readService.nameForPrincipal(login) + "尝试重新结算订单" + order.getSerialId());
+        commissionSettlementService.reSettlement(order);
+    }
+
 
     /**
      * 仅仅处理自己可以管辖的订单
