@@ -1,7 +1,6 @@
-package cn.lmjia.market.dealer.entity;
+package cn.lmjia.market.core.entity.deal;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.deal.AgentLevel;
 import lombok.Getter;
 import lombok.Setter;
 

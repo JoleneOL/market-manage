@@ -169,6 +169,7 @@ public class CommissionSettlementServiceTest extends DealerServiceTest {
     private void assertCurrentBalances(Login[] logins, BigDecimal[] balances) {
         for (int i = 0; i < logins.length; i++) {
             assertThat(readService.currentBalance(logins[i]).getAmount())
+                    .as(logins[i] + "的余额应该是期望的值")
                     .isCloseTo(balances[i], Offset.offset(new BigDecimal("0.001")));
         }
     }

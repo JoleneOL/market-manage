@@ -4,12 +4,12 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
+import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.entity.deal.OrderCommission;
+import cn.lmjia.market.core.entity.deal.pk.OrderCommissionPK;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
-import cn.lmjia.market.dealer.entity.Commission;
-import cn.lmjia.market.dealer.entity.OrderCommission;
-import cn.lmjia.market.dealer.entity.pk.OrderCommissionPK;
-import cn.lmjia.market.dealer.repository.CommissionRepository;
-import cn.lmjia.market.dealer.repository.OrderCommissionRepository;
+import cn.lmjia.market.core.repository.deal.CommissionRepository;
+import cn.lmjia.market.core.repository.deal.OrderCommissionRepository;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import cn.lmjia.market.dealer.service.CommissionSettlementService;
@@ -103,7 +103,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
 
         commissionRepository.findByOrderCommission(orderCommission)
                 .forEach(commission -> {
-                    commission.getWho().setCommissionBalance(commission.getWho().getCommissionBalance().subtract(commission.getAmount()));
+//                    commission.getWho().setCommissionBalance(commission.getWho().getCommissionBalance().subtract(commission.getAmount()));
                     commissionRepository.delete(commission);
                 });
 //        orderCommissionRepository.delete(orderCommission);
@@ -119,7 +119,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         commission.setRate(rate);
         commission.setAmount(orderCommission.getSource().getCommissioningAmount().multiply(rate)
                 .setScale(2, BigDecimal.ROUND_HALF_UP));
-        login.setCommissionBalance(login.getCommissionBalance().add(commission.getAmount()));
+//        login.setCommissionBalance(login.getCommissionBalance().add(commission.getAmount()));
         commissionRepository.save(commission);
         log.debug("因" + message + " login:" + login.getId() + "获得 提成比:" + rate + "，提成:" + commission.getAmount());
     }

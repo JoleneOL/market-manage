@@ -1,7 +1,7 @@
-package cn.lmjia.market.dealer.repository;
+package cn.lmjia.market.core.repository.deal;
 
-import cn.lmjia.market.dealer.entity.Commission;
-import cn.lmjia.market.dealer.entity.OrderCommission;
+import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.entity.deal.OrderCommission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

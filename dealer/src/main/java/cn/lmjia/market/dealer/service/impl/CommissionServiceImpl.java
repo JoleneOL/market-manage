@@ -1,7 +1,7 @@
 package cn.lmjia.market.dealer.service.impl;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.dealer.entity.Commission;
+import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.dealer.service.CommissionService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.data.jpa.domain.Specification;

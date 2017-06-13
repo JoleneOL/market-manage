@@ -1,7 +1,7 @@
-package cn.lmjia.market.dealer.entity;
+package cn.lmjia.market.core.entity.deal;
 
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.dealer.entity.pk.OrderCommissionPK;
+import cn.lmjia.market.core.entity.deal.pk.OrderCommissionPK;
 import lombok.Getter;
 import lombok.Setter;
 

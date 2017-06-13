@@ -5,8 +5,10 @@ import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.lib.seext.NumberUtils;
@@ -14,6 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -27,6 +34,11 @@ public class ReadServiceImpl implements ReadService {
     private LoginRepository loginRepository;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private CommissionRepository commissionRepository;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public String mobileFor(Object principal) {
@@ -80,7 +92,18 @@ public class ReadServiceImpl implements ReadService {
     public Money currentBalance(Object principal) {
         Login login = toLogin(principal);
         login = loginRepository.getOne(login.getId());
-        return new Money(login.getCommissionBalance());
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<BigDecimal> sumQuery = criteriaBuilder.createQuery(BigDecimal.class);
+        Root<Commission> root = sumQuery.from(Commission.class);
+        sumQuery = sumQuery.select(criteriaBuilder.sum(root.get("amount")))
+                .where(criteriaBuilder.equal(root.get("who"), login));
+        // TODO 还应该减去提现的
+        try {
+            return new Money(entityManager.createQuery(sumQuery).getSingleResult().add(login.getCommissionBalance()));
+        } catch (NoResultException | NullPointerException ignored) {
+            return new Money(login.getCommissionBalance());
+        }
+
     }
 
     @Override

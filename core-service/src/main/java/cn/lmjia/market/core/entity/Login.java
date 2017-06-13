@@ -82,7 +82,7 @@ public class Login implements UserDetails {
     @Column(scale = 2, precision = 20)
     private BigDecimal currentGoodPayment = BigDecimal.ZERO;
     /**
-     * 佣金余额
+     * 佣金余额，结算佣金余额
      */
     @Column(scale = 2, precision = 20)
     private BigDecimal commissionBalance = BigDecimal.ZERO;

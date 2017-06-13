@@ -1,4 +1,4 @@
-package cn.lmjia.market.dealer.entity.pk;
+package cn.lmjia.market.core.entity.deal.pk;
 
 import cn.lmjia.market.core.entity.MainOrder;
 import lombok.AllArgsConstructor;
