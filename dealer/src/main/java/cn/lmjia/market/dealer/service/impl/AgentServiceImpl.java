@@ -311,23 +311,58 @@ public class AgentServiceImpl implements AgentService {
         return levels;
     }
 
+//    @Override
+//    public AgentLevel[] recommendAgentLine(Login login) {
+//        // 获得一个完整的推荐链，第一个必然是 level 0 然后是 1,2,3,etc...
+//        // 最多执行n次查询
+//        AgentLevel current = highestAgent(login);
+//        //
+//        int levelGap = current.getLevel();
+//
+//        // 自己并不在推荐列表中！
+//        AgentLevel[] result = new AgentLevel[systemService.systemLevel()];
+//        while (levelGap-- > 0) {
+//            result[levelGap] = agentLevelRepository.findByLevelAndLoginAndSystem(levelGap, current.getLogin().getGuideUser(), current.getSystem());
+//            current = result[levelGap];
+//        }
+//
+//        return result;
+//    }
+
     @Override
     public AgentLevel[] recommendAgentLine(Login login) {
         // 获得一个完整的推荐链，第一个必然是 level 0 然后是 1,2,3,etc...
         // 最多执行n次查询
-        AgentLevel current = highestAgent(login);
-        //
-        int levelGap = current.getLevel();
-
-        // 自己并不在推荐列表中！
+        // 获取 平行推荐，然后上一级 再找平行推荐
         AgentLevel[] result = new AgentLevel[systemService.systemLevel()];
-        while (levelGap-- > 0) {
-            result[levelGap] = agentLevelRepository.findByLevelAndLoginAndSystem(levelGap, current.getLogin().getGuideUser(), current.getSystem());
-            current = result[levelGap];
+        AgentLevel current = highestAgent(login);
+        int levelGap = current.getLevel();
+        int startNull = systemService.systemLevel();
+        for (int i = 0; i < result.length; i++) {
+            if (i == 0)
+                result[i] = parallelRecommend(current, levelGap--);
+            else
+                result[i] = parallelRecommend(result[i - 1], levelGap--);
+            if (result[i] == null && startNull == systemService.systemLevel())
+                startNull = i;
         }
-
-        return result;
+        // 反过来,并且让null放后头
+        AgentLevel[] result2 = new AgentLevel[systemService.systemLevel()];
+        for (int i = 0; i < result2.length; i++) {
+            if (i < startNull) {
+                // 是否有值？
+                result2[i] = result[startNull - i - 1];
+            }
+        }
+        return result2;
     }
+
+    private AgentLevel parallelRecommend(AgentLevel current, int level) {
+        if (current == null || level < 0)
+            return null;
+        return agentLevelRepository.findByLevelAndLoginAndSystem(level, current.getLogin().getGuideUser(), current.getSystem());
+    }
+
 
     @Override
     public AgentLevel addressLevel(Address address) {

@@ -80,10 +80,15 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         {
             // 推荐者
             // 以及推荐者的代理体系
-            for (AgentLevel level : recommends) {
+            for (int i = 0; i < recommends.length; i++) {
+                AgentLevel level = recommends[i];
                 if (level != null)
-                    saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, level), "推荐");
+                    saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, i), "推荐");
             }
+//            for (AgentLevel level : recommends) {
+//                if (level != null)
+//                    saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, level), "推荐");
+//            }
         }
 
         AgentLevel addressLevel = agentService.addressLevel(order.getInstallAddress());
@@ -101,11 +106,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             throw new IllegalStateException("该订单尚未结算。");
         }
 
-        commissionRepository.findByOrderCommission(orderCommission)
-                .forEach(commission -> {
-//                    commission.getWho().setCommissionBalance(commission.getWho().getCommissionBalance().subtract(commission.getAmount()));
-                    commissionRepository.delete(commission);
-                });
+        commissionRepository.deleteByOrderCommission(orderCommission);
 //        orderCommissionRepository.delete(orderCommission);
 
         doSettlement(order, orderCommission);

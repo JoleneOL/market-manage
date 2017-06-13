@@ -56,6 +56,15 @@ public interface CommissionRateService {
     BigDecimal indirectRate(AgentSystem system, AgentLevel agent);
 
     /**
+     * 「代理」所引导的代理体系产生的订单给予「代理」的分佣奖励
+     *
+     * @param system 代理体系
+     * @param level  奖励层次
+     * @return 间接分佣比例
+     */
+    BigDecimal indirectRate(AgentSystem system, int level);
+
+    /**
      * @param agent 代理
      * @return 区域奖励提成
      */
@@ -94,4 +103,5 @@ public interface CommissionRateService {
      */
     @Transactional
     void updateIndirectRate(AgentSystem system, int level, BigDecimal rate);
+
 }

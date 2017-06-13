@@ -87,21 +87,26 @@ public class CommissionRateServiceImpl implements CommissionRateService {
 
     @Override
     public BigDecimal directRate(AgentSystem system, AgentLevel agent) {
-        return rate(system, agent, AgentRate::getMarketRate);
+        return rate(system, agent.getLevel(), AgentRate::getMarketRate);
     }
 
-    private BigDecimal rate(AgentSystem system, AgentLevel agent, Function<AgentRate, BigDecimal> toRate) {
+    private BigDecimal rate(AgentSystem system, int level, Function<AgentRate, BigDecimal> toRate) {
         Map<Integer, AgentRate> rates = system.getRates();
         if (CollectionUtils.isEmpty(rates)) {
             rates = systemService.defaultAgentRates();
         }
 
-        return toRate.apply(rates.get(agent.getLevel()));
+        return toRate.apply(rates.get(level));
     }
 
     @Override
     public BigDecimal indirectRate(AgentSystem system, AgentLevel agent) {
-        return rate(system, agent, AgentRate::getRecommendRate);
+        return rate(system, agent.getLevel(), AgentRate::getRecommendRate);
+    }
+
+    @Override
+    public BigDecimal indirectRate(AgentSystem system, int level) {
+        return rate(system, level, AgentRate::getRecommendRate);
     }
 
 }

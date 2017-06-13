@@ -14,4 +14,6 @@ public interface CommissionRepository extends JpaRepository<Commission, Long>, J
 
     List<Commission> findByOrderCommission(OrderCommission orderCommission);
 
+    long deleteByOrderCommission(OrderCommission orderCommission);
+
 }
