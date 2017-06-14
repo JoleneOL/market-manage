@@ -87,6 +87,8 @@ $(function () {
         }
     });
 
+    $._table = table;
+
     var detailForm = $('#detailForm');
 
     $(document).on('click', '.js-search', function () {

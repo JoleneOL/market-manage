@@ -78,6 +78,7 @@
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
                         <button type="button" class="btn btn-success btn-xs js-search">查询</button>
+                        <button type="button" class="btn btn-success btn-xs js-orderMaintain">订单状态维护</button>
                     </div>
                 </div>
             </div>
@@ -135,4 +136,18 @@
         src="../../../../../../market-manage/dealer/src/main/resources/dealer-view/dealer-resource/js/orderManage.js"></script>
 <script th:src="@{/dealer-resource/js/main.js}"
         src="../../../../../../market-manage/dealer/src/main/resources/dealer-view/dealer-resource/js/main.js"></script>
+<script>
+    $(function () {
+        $('.js-orderMaintain').click(function () {
+            $.ajax(
+                '/order/orderMaintain', {
+                    method: 'put',
+                    success: function () {
+                        $._table.ajax.reload();
+                    }
+                }
+            );
+        });
+    });
+</script>
 </html>
