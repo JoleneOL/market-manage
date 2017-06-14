@@ -3,6 +3,7 @@ package cn.lmjia.market.core.service.impl;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.MainOrderRepository;
+import cn.lmjia.market.core.repository.PayOrderRepository;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayService;
 import lombok.SneakyThrows;
@@ -36,6 +37,8 @@ public class PayServiceImpl implements PayService {
     private MainOrderService mainOrderService;
     @Autowired
     private MainOrderRepository mainOrderRepository;
+    @Autowired
+    private PayOrderRepository payOrderRepository;
 
     @Override
     public ModelAndView paySuccess(HttpServletRequest request, PayableOrder payableOrder, PayOrder payOrder) {
@@ -56,7 +59,7 @@ public class PayServiceImpl implements PayService {
             return new ModelAndView("redirect:" + chanpayPayOrder.getUrl());
         }
         MainOrder mainOrder = (MainOrder) order;
-        return new ModelAndView("redirect:/wechatPaying?mainOrderId=" + mainOrder.getId() + "&payOrderId="
+        return new ModelAndView("redirect:/_pay/paying?mainOrderId=" + mainOrder.getId() + "&payOrderId="
                 + payOrder.getId());
         //"&checkUri="
 //        + URLEncoder.encode(additionalParameters.get("checkUri").toString(), "UTF-8") + "&successUri="
@@ -95,6 +98,7 @@ public class PayServiceImpl implements PayService {
     @Override
     @EventListener(OrderPayCancellation.class)
     public void payCancel(OrderPayCancellation event) {
-        log.warn(event.getPayableOrder() + "放弃了支付");
+        log.info(event.getPayableOrder() + "放弃了支付");
+        payOrderRepository.delete(event.getPayOrder());
     }
 }

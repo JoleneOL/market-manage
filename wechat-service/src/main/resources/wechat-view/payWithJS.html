@@ -43,7 +43,7 @@
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" th:remove="all"></script>
 <script wx:js=""></script>
-<script th:text="${scriptCode}"></script>
+<script th:utext="${scriptCode}"></script>
 <!--<script wx:share="${#share.title(order)}|${#share.desc(order)}|${#share.link(order,#request)}|${#share.imageUrl(order)}"></script>-->
 <script src="../wechat-resource/assets/js/pay.js" th:src="@{/wechat-resource/assets/js/pay.js}"></script>
 </body>
