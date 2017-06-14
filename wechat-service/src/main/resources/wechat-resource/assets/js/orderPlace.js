@@ -79,6 +79,7 @@ $(function () {
     $('#J_checkBtn').click(function () {
         var mortgageCode = $mortgageCode.val();
         if (!mortgageCode) return '';
+        $.showLoading('数据校验中');
         $.ajax('/api/mortgageCode', {
             method: 'POST',
             data: {
@@ -89,16 +90,20 @@ $(function () {
                 if (data.resultCode === 400) {
                     $.toptip(data.resultMsg);
                     isValid.val('');
+                    $.hideLoading();
                     return false;
                 }
                 if (data.resultCode !== 200) {
                     $.toptip("发送失败，请重试");
+                    $.hideLoading();
                     return false;
                 }
+                $.hideLoading();
                 $.toptip("校验成功", "success");
                 isValid.val('ok');
             },
             error: function () {
+                $.hideLoading();
                 $.toptip("系统错误");
             }
         })
