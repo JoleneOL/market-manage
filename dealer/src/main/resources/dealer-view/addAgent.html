@@ -199,10 +199,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">添加身份证</label>
-                                            <div class="col-sm-6">
-                                                <p class="form-control-static">个人信息面 （格式：3M以下的jpg、jpeg和png）</p>
+                                            <div class="col-sm-6 img-wrap">
+                                                <p class="form-control-static img-tips">个人信息面 （格式：3M以下的jpg、jpeg和png）</p>
                                                 <input type="hidden" name="cardFrontPath"/>
-                                                <input type="hidden" name="cardBackPath"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -227,8 +226,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-6 col-sm-offset-3">
-                                                <p class="form-control-static">国徽面 （格式：3M以下的jpg、jpeg和png）</p>
+                                            <div class="col-sm-6 col-sm-offset-3 img-wrap">
+                                                <p class="form-control-static img-tips">国徽面 （格式：3M以下的jpg、jpeg和png）</p>
+                                                <input type="hidden" name="cardBackPath"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -254,8 +254,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">添加营业执照</label>
-                                            <div class="col-sm-6">
-                                                <p class="form-control-static">营业执照（格式：3M以下的jpg、jpeg和png）</p>
+                                            <div class="col-sm-6 img-wrap">
+                                                <p class="form-control-static img-tips">营业执照（格式：3M以下的jpg、jpeg和png）</p>
                                                 <input type="hidden" name="businessLicensePath"/>
                                             </div>
                                         </div>
@@ -283,7 +283,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-6 col-sm-offset-3 control-label">
                                                 <button type="submit" class="btn btn-success btn-block btn-lg"
-                                                        id="J_submitBtn" disabled>
+                                                        id="J_submitBtn">
                                                     开通代理
                                                 </button>
                                             </div>
