@@ -36,6 +36,8 @@
 
         <property name="jpaPropertyMap">
             <map>
+                <!--在发布初期使用无缓存模式-->
+                <entry key="eclipselink.cache.shared.default" value="false"/>
                 <!--<entry key="eclipselink.session.customizer" value="me.jiangcai.dating.jpa.MysqlSessionCustomizer"/>-->
                 <entry key="javax.persistence.schema-generation.database.action" value="create"/>
                 <entry key="eclipselink.logging.level" value="OFF"/>
