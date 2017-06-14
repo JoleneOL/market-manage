@@ -10,6 +10,9 @@ $(function () {
     if (window.document.location.search.indexOf('type=codeError') >= 0) {
         $.toptip('用户名或者验证码错误');
     }
+    if (window.document.location.search.indexOf('type=typeError') >= 0) {
+        $.toptip('该用户无法在此登录');
+    }
 
     $.validator.setDefaults({
         submitHandler: function (form) {

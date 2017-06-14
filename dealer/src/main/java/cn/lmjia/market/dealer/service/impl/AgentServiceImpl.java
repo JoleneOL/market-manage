@@ -421,4 +421,10 @@ public class AgentServiceImpl implements AgentService {
         }
     }
 
+    @Override
+    public boolean isAgentLogin(String loginName) {
+        Login login = loginService.byLoginName(loginName);
+        return login != null && highestAgent(login) != null;
+    }
+
 }

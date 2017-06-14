@@ -102,4 +102,7 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional(readOnly = true)
     AgentLevel lowestAgentLevel(Login who);
+
+    @Transactional(readOnly = true)
+    Login byLoginName(String loginName);
 }

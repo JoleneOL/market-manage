@@ -24,6 +24,10 @@
     <loggers>
         <logger name="cn.lmjia.market" level="debug"/>
 
+        <logger name="cn.lmjia.market.core.row.RowDefinitionHandler" level="info"/>
+        <logger name="me.jiangcai.payment" level="debug"/>
+        <logger name="com.paymax" level="debug"/>
+        Œ
         <!--<logger name="me.jiangcai" level="debug"/>-->
         <!--建立一个默认的root的logger-->
         <root level="info">

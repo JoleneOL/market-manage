@@ -250,4 +250,10 @@ public interface AgentService {
     @Transactional(readOnly = true)
     void healthCheck(AgentSystem system);
 
+    /**
+     * @param loginName 登录名
+     * @return 是否为代理商
+     */
+    @Transactional(readOnly = true)
+    boolean isAgentLogin(String loginName);
 }

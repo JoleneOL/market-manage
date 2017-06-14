@@ -3,6 +3,7 @@ package cn.lmjia.market.wechat.controller;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.util.LoginAuthentication;
+import cn.lmjia.market.dealer.service.AgentService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.WeixinUserDetail;
@@ -41,6 +42,8 @@ public class WechatController {
     private final RequestCache requestCache = new HttpSessionRequestCache();
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private AgentService agentService;
 
     @GetMapping("/toLoginWechat")
     public String login(WeixinUserDetail detail, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -88,6 +91,10 @@ public class WechatController {
     @PostMapping("/wechatLogin")
     public String bindLogin(@OpenId String openId, String username, String password, String mobile, String authCode) {
         try {
+            // 只有代理商可以登录
+            if (!agentService.isAgentLogin(username))
+                return "redirect:/wechatLogin?type=typeError";
+
             if (!StringUtils.isEmpty(username))
                 loginService.bindWechat(username, password, openId);
             else

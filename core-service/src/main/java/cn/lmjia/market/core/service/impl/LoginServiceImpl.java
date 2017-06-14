@@ -155,4 +155,9 @@ public class LoginServiceImpl implements LoginService {
 
         return allAgent.get(0);
     }
+
+    @Override
+    public Login byLoginName(String loginName) {
+        return loginRepository.findByLoginName(loginName);
+    }
 }
