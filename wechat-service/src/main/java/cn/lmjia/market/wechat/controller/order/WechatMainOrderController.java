@@ -133,7 +133,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         if (environment.acceptsProfiles("wechatChanpay"))
             return paymentService.startPay(request, order, chanpayPaymentForm, null);
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("channel", PaymaxChannel.wechatScan);
+        parameters.put("channel", PaymaxChannel.wechat);
         parameters.put("openId", openId);
         return paymentService.startPay(request, order, paymaxPaymentForm, parameters);
     }
@@ -144,19 +144,33 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             , String successUri, Model model) {
         final PayOrder payOrder = paymentService.payOrder(payOrderId);
         String qrCodeUrl;
-        if (payOrder instanceof ChanpayPayOrder)
+        String scriptCode;
+        if (payOrder instanceof ChanpayPayOrder) {
             qrCodeUrl = ((ChanpayPayOrder) payOrder).getUrl();
-        else if (payOrder instanceof PaymaxPayOrder) {
+            scriptCode = null;
+        } else if (payOrder instanceof PaymaxPayOrder) {
             // 我们自己写了一个控制器 可以让一个地址变成一个二维码
-            qrCodeUrl = qrController.urlForText(((PaymaxPayOrder) payOrder).getScanUrl()).toString();
+            // 公众号支付页面是有点不同的 我们叫它额外JS支付
+            final PaymaxPayOrder paymaxPayOrder = (PaymaxPayOrder) payOrder;
+            if (paymaxPayOrder.getScanUrl() == null) {
+                qrCodeUrl = null;
+                scriptCode = paymaxPayOrder.getJavascriptToPay();
+            } else {
+                qrCodeUrl = qrController.urlForText(paymaxPayOrder.getScanUrl()).toString();
+                scriptCode = null;
+            }
+
         } else
             throw new IllegalStateException("尚未支持扫码的支付系统");
 
         model.addAttribute("order", mainOrderService.getOrder(mainOrderId));
 //        model.addAttribute("payOrder", payOrder);
         model.addAttribute("qrCodeUrl", qrCodeUrl);
+        model.addAttribute("scriptCode", scriptCode);
         model.addAttribute("checkUri", checkUri);
         model.addAttribute("successUri", successUri);
+        if (scriptCode != null)
+            return "wechat@payWithJS.html";
         return "wechat@pay.html";
     }
 
