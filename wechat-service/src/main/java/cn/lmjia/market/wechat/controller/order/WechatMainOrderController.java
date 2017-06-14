@@ -29,6 +29,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -76,8 +77,15 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     }
 
     @GetMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, String orderId, HttpServletRequest request) throws SystemMaintainException {
-        return payOrder(openId, request, from(orderId, null));
+    public String pay(String orderId) throws SystemMaintainException {
+        final MainOrder order = from(orderId, null);
+        return "redirect:/_pay/" + order.getId();
+    }
+
+    @GetMapping("/_pay/{id}")
+    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
+            throws SystemMaintainException {
+        return payOrder(openId, request, from(null, id));
     }
 
     @GetMapping("/wechatOrderDetail")
@@ -90,10 +98,12 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     // &address=%E6%B5%99%E6%B1%9F%E7%9C%81+%E6%9D%AD%E5%B7%9E%E5%B8%82+%E6%BB%A8%E6%B1%9F%E5%8C%BA
     // &fullAddress=%E6%B1%9F%E7%95%94%E6%99%95%E5%95%A6&mobile=18606509616&goodId=2&leasedType=hzts02&amount=0&activityCode=xzs&recommend=2
     @PostMapping("/wechatOrder")
-    public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, int age, Gender gender, Address address, String mobile, long goodId, int amount
-            , String activityCode, long recommend, @AuthenticationPrincipal Login login, Model model) throws SystemMaintainException {
-        MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile, goodId, amount, activityCode);
-        return payOrder(openId, request, order);
+    public String newOrder(String name, int age, Gender gender, Address address, String mobile, long goodId, int amount
+            , String activityCode, long recommend, @AuthenticationPrincipal Login login, Model model)
+            throws SystemMaintainException {
+        MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile, goodId, amount
+                , activityCode);
+        return "redirect:/_pay/" + order.getId();
     }
 
     private ModelAndView payOrder(String openId, HttpServletRequest request, MainOrder order) throws SystemMaintainException {
