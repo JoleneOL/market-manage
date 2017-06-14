@@ -142,7 +142,7 @@ $(function () {
                 layer.msg('上传成功');
                 uploadSuccessMsg(name);
                 $('[name=' + name + ']').val(response.id);
-                if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0 && uploader3.uploader2.getStats().successNum > 0 )
+                if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0 && uploader3.getStats().successNum > 0 )
                     $('#J_submitBtn').prop('disabled', false);
             });
         }
