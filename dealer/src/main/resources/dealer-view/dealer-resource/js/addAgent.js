@@ -142,8 +142,8 @@ $(function () {
                 layer.msg('上传成功');
                 uploadSuccessMsg(name);
                 $('[name=' + name + ']').val(response.id);
-                if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0 && uploader3.uploader2.getStats().successNum > 0 )
-                    $('#J_submitBtn').prop('disabled', false);
+                // if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0 && uploader3.getStats().successNum > 0 )
+                //     $('#J_submitBtn').prop('disabled', false);
             });
         }
 
@@ -227,6 +227,7 @@ $(function () {
         }
     });
     $('#J_addAgentForm').validate({
+        ignore: "",
         rules: {
             rank: "required",
             agentName: 'required',
@@ -259,12 +260,18 @@ $(function () {
             fullAddress: {
                 required: true,
                 hasCity: true
-            }
+            },
+            cardFrontPath: "required",
+            cardBackPath: "required",
+            businessLicensePath: "required"
         },
         messages: {
             mobile: {
                 remote: '该手机号码当前不可用'
-            }
+            },
+            cardFrontPath: "请上传图片",
+            cardBackPath: "请上传图片",
+            businessLicensePath: "请上传图片"
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
