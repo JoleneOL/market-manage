@@ -92,7 +92,7 @@ public class PayServiceImpl implements PayService {
         mainOrder.setPayTime(LocalDateTime.now());
         mainOrder.setOrderStatus(OrderStatus.forDeliver);
         mainOrder.setPayOrder(event.getPayOrder());
-        mainOrderRepository.save(mainOrder);
+//        mainOrderRepository.save(mainOrder);
     }
 
     @Override

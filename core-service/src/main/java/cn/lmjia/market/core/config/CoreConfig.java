@@ -35,6 +35,9 @@ public class CoreConfig extends WeixinWebSpringConfig implements WebModule {
     // SchedulingConfigurer
     // @EnableScheduling
 
+    /**
+     * 单元测试的时候
+     */
     public static final String ProfileUnitTest = "unit_test";
 
     @Bean

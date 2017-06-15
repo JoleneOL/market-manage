@@ -1,5 +1,6 @@
 package cn.lmjia.market.wechat.controller.order;
 
+import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.controller.main.order.AbstractMainOrderController;
 import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
@@ -113,26 +114,19 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             // 3 秒之后自动付款
             log.warn("3秒之后自动付款:" + order.getSerialId());
             executorService.schedule(()
-                            -> {
-                        log.info("发布付款事件");
-                        PayOrder payOrder = payOrderRepository.findByPayableOrderId(order.getPayableOrderId().toString())
-                                .stream()
-                                .findFirst().orElseThrow(() -> new IllegalStateException("找不到付款订单"));
-
-                        paymentGatewayService.paySuccess(payOrder);
-//                        ChargeChangeEvent chargeChangeEvent = new ChargeChangeEvent();
-//                        chargeChangeEvent.setData(new Charge());
-//                        applicationEventPublisher
-//                                .publishEvent(new OrderPaySuccess(mainOrderService.getOrder(order.getId()), null));
-
-                    }
+                            -> paymentService.mockPay(order)
                     , 3, TimeUnit.SECONDS);
         }
 
         if (environment.acceptsProfiles("wechatChanpay"))
             return paymentService.startPay(request, order, chanpayPaymentForm, null);
+
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("channel", PaymaxChannel.wechat);
+        // 单元测试的时候 无法建立公众号付款
+        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
+            parameters.put("channel", PaymaxChannel.wechatScan);
+        }
         parameters.put("openId", openId);
         return paymentService.startPay(request, order, paymaxPaymentForm, parameters);
     }
