@@ -91,14 +91,18 @@ public class WechatController {
     @PostMapping("/wechatLogin")
     public String bindLogin(@OpenId String openId, String username, String password, String mobile, String authCode) {
         try {
-            // 只有代理商可以登录
-            if (!agentService.isAgentLogin(username))
-                return "redirect:/wechatLogin?type=typeError";
 
-            if (!StringUtils.isEmpty(username))
+            if (!StringUtils.isEmpty(username)) {
+                // 只有代理商可以登录
+                if (!agentService.isAgentLogin(username))
+                    return "redirect:/wechatLogin?type=typeError";
                 loginService.bindWechat(username, password, openId);
-            else
+            } else {
+                if (!agentService.isAgentLogin(mobile))
+                    return "redirect:/wechatLogin?type=typeError";
                 loginService.bindWechatWithCode(mobile, authCode, openId);
+            }
+
         } catch (IllegalArgumentException ex) {
             log.debug("", ex);
             if (!StringUtils.isEmpty(username))

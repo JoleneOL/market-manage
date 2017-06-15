@@ -2,7 +2,6 @@ package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.IndexPage;
 import cn.lmjia.market.wechat.page.LoginPage;
@@ -32,7 +31,7 @@ public class WechatControllerTest extends WechatTestBase {
 
         // 弄一个登录过来
         String rawPassword = UUID.randomUUID().toString();
-        Login login = newRandomManager(rawPassword, ManageLevel.root);
+        Login login = newRandomAgent(rawPassword);
 
         loginPage.login(login.getLoginName(), rawPassword + 1);
         loginPage.assertHaveTooltip();
@@ -63,7 +62,7 @@ public class WechatControllerTest extends WechatTestBase {
 
         // 弄一个登录过来
         String rawPassword = UUID.randomUUID().toString();
-        Login login = newRandomManager(randomMobile(), rawPassword, ManageLevel.root);
+        Login login = newRandomAgent(rawPassword);
 
         loginPage.sendAuthCode(login.getLoginName());
         // 这个验证码是错误的！
@@ -78,7 +77,7 @@ public class WechatControllerTest extends WechatTestBase {
         loginPage = getLoginPageForBrowseIndex();
 
         // 弄一个新用户
-        login = newRandomManager(randomMobile(), rawPassword, ManageLevel.root);
+        login = newRandomAgent(rawPassword);
         loginPage.sendAuthCode(login.getLoginName());
         loginPage.loginWithAuthCode("1234");
 //        loginPage.assertHaveTooltip();

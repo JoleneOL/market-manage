@@ -97,7 +97,10 @@ public class AgentServiceImpl implements AgentService {
             return null;
         // 目前只处理 代理商
         // 是购买者所可以代表的最低代理商 是否从属于 当前登录者所能代表的最高代理商
-        long id = highestAgent(login).getId();
+        final AgentLevel agentLevel = highestAgent(login);
+        if (agentLevel == null) // 客户？
+            return (root, query, cb) -> cb.equal(MainOrder.getCustomerLogin(root), login);
+        long id = agentLevel.getId();
         return (root, query, cb)
                 -> cb.equal(agentBelongsExpression(
                 // 下单的人
