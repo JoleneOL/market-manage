@@ -33,6 +33,7 @@ public class AgentSystem {
     /**
      * 销售提成
      */
+    @Column(scale = 8, precision = 10)
     private BigDecimal orderRate;
 
     /**
