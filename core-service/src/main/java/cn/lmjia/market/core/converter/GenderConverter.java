@@ -6,5 +6,5 @@ import me.jiangcai.wx.model.Gender;
 /**
  * @author CJ
  */
-public class GenderConverter extends EnumFormatter<Gender> {
+class GenderConverter extends EnumFormatter<Gender> {
 }

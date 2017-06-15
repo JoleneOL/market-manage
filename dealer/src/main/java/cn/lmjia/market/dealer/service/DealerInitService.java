@@ -44,7 +44,7 @@ public class DealerInitService {
     public void defaultAgents() {
         long count = agentLevelRepository.count((root, query, cb) -> cb.isNull(root.get("superior")));
         if (count == 0) {
-            Login login = loginService.newLogin(environment.getProperty("default.agent.loginName"
+            Login login = loginService.newLogin(Login.class, environment.getProperty("default.agent.loginName"
                     , "master"), null
                     , environment.getProperty("default.agent.password", "123456"));
             agentService.addAgent(null, login

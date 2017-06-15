@@ -77,8 +77,13 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Login newLogin(String username, Login guide, String rawPassword) {
-        Login login = new Login();
+    public <T extends Login> T newLogin(Class<T> type, String username, Login guide, String rawPassword) {
+        T login;
+        try {
+            login = type.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
         login.setCreatedTime(LocalDateTime.now());
         login.setLoginName(username);
         login.setGuideUser(guide);

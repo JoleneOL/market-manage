@@ -95,6 +95,11 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
                     chanpayPayOrder.setUrl(UUID.randomUUID().toString());
                 return chanpayPayOrder;
             }
+
+            @Override
+            public void orderMaintain() {
+
+            }
         };
     }
 

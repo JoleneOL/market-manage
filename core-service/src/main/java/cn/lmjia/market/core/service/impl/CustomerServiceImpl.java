@@ -39,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Login customerLogin = loginRepository.findByLoginName(mobile);
         if (customerLogin == null) {
-            customerLogin = loginService.newLogin(mobile, recommendBy, "123456");
+            customerLogin = loginService.newLogin(Login.class, mobile, recommendBy, "123456");
             // 默认密码是 123456
             contactWayService.updateName(customerLogin, name);
             contactWayService.updateMobile(customerLogin, mobile);

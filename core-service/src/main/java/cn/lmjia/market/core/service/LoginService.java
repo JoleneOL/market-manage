@@ -53,13 +53,15 @@ public interface LoginService extends UserDetailsService {
     /**
      * 新增普通登录
      *
+     *
+     * @param type 类型
      * @param username    登录名
      * @param guide       引导者
      * @param rawPassword 明文密码
      * @return
      */
     @Transactional
-    Login newLogin(String username, Login guide, String rawPassword);
+    <T extends Login> T newLogin(Class<T> type, String username, Login guide, String rawPassword);
 
     /**
      * 手机号码可用性校验

@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.converter;
 
+import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.core.convert.converter.Converter;
@@ -18,6 +19,7 @@ public class EnumConverterFactory implements ConverterFactory<String, Enum> {
     {
         converterMap.put(Gender.class, new GenderConverter());
         converterMap.put(OrderStatus.class, new OrderStatusConverter());
+        converterMap.put(ManageLevel.class, new ManageLevelConverter());
     }
 
     @SuppressWarnings("unchecked")

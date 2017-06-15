@@ -9,6 +9,11 @@ import cn.lmjia.market.core.entity.Login;
  */
 public enum ManageLevel {
     root("超级管理员", "ROOT"),
+    /**
+     * 经理，可以干绝大部分的事儿除了财务之外；并且可以管理员工
+     * 但是管理员工的范围是管辖范围之类的
+     */
+    manager("经理", Login.ROLE_AllAgent, Login.ROLE_GRANT),
     agentManager("代理管理员", Login.ROLE_AllAgent);
 
     private final String[] roles;

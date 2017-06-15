@@ -44,6 +44,10 @@ public class Login implements UserDetails {
      * 公司内部管理员
      */
     public static final String ROLE_MANAGER = "MANAGER";
+    /**
+     * 可以管理员工列表；没有这个权限则只可以查看
+     */
+    public static final String ROLE_GRANT = "GRANT";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

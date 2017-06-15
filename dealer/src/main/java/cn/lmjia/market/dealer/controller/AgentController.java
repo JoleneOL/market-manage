@@ -65,7 +65,7 @@ public class AgentController {
             , long guideUser, Address address, String cardFrontPath, String cardBackPath) throws IOException {
         Login guide = loginService.get(guideUser);
 
-        Login newLogin = loginService.newLogin(mobile, guide, password);
+        Login newLogin = loginService.newLogin(Login.class, mobile, guide, password);
         contactWayService.updateName(newLogin, agentName);
         contactWayService.updateMobile(newLogin, mobile);
         contactWayService.updateAddress(newLogin, address);
