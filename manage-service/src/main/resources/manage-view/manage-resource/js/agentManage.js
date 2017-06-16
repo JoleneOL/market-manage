@@ -1,9 +1,6 @@
 /**
  * Created by Neo on 2017/5/23.
  */
-/**
- * Created by Chang on 2017/4/25.
- */
 $(function () {
     "use strict";
 

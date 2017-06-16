@@ -17,6 +17,7 @@
     <!--重置库-->
     <!--<link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">-->
     <link rel="stylesheet" href="manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -77,8 +78,8 @@
                                    id="datepicker" name="orderDate" aria-controls="orderTable">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
-                        <button type="button" class="btn btn-success btn-xs js-search">查询</button>
-                        <button type="button" class="btn btn-success btn-xs js-orderMaintain">订单状态维护</button>
+                        <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                        <button type="button" class="btn btn-primary btn-sm js-orderMaintain">订单状态维护</button>
                     </div>
                 </div>
             </div>
@@ -89,6 +90,11 @@
                     <li class="active">
                         <a href="#orderDatagrid" data-toggle="tab" data-status="0">
                             <strong>全部</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="6">
+                            <strong>待派单</strong>
                         </a>
                     </li>
                     <li>

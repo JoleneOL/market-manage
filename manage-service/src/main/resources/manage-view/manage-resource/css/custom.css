@@ -1,0 +1,8 @@
+.input-sm {
+    font-size: 12px;
+}
+.table-action a, .table-action-hide a, .table-operate a {
+    display: inline-block;
+    margin-right: 5px;
+    color: #1ab394;
+}
