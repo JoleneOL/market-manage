@@ -84,9 +84,16 @@ $(function () {
         if ($(this).is(':checked')) {
             box.show()
                 .find('input').prop('disabled', false);
+            $('input[name="levelTitle"]').rules('add', {
+                required: true,
+                messages : {
+                    required : "填写自定义代理等级"
+                }
+            });
         } else {
             box.hide()
                 .find('input').prop('disabled', true);
+            $('input[name="levelTitle"]').rules('remove');
         }
     });
 
@@ -135,15 +142,12 @@ $(function () {
         });
     }
 
-    //偷个懒
     function uploadSuccess(uploader1, uploader2, uploader3) {
         function successForEach(uploader, name) {
             uploader.on('uploadSuccess', function (file, response) {
                 layer.msg('上传成功');
                 uploadSuccessMsg(name);
                 $('[name=' + name + ']').val(response.id);
-                // if (uploader1.getStats().successNum > 0 && uploader2.getStats().successNum > 0 && uploader3.getStats().successNum > 0 )
-                //     $('#J_submitBtn').prop('disabled', false);
             });
         }
 
@@ -203,6 +207,12 @@ $(function () {
         $ele.find('strong').text(msg);
     }
 
+    //LMJ的密码
+    $.validator.addMethod("isPassword", function (value, element) {
+        var mobile = /^[a-zA-Z0-9_]{6,12}$/;
+        return this.optional(element) || (mobile.test(value));
+    }, "请正确填写的密码");
+
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1([34578])\d{9}$/;
@@ -223,7 +233,6 @@ $(function () {
     $.validator.setDefaults({
         submitHandler: function (form) {
             form.submit();
-            // layer.msg('OK');
         }
     });
     $('#J_addAgentForm').validate({
@@ -244,7 +253,8 @@ $(function () {
             beginDate: "required",
             endDate: "required",
             password: {
-                required: true
+                required: true,
+                isPassword: true
             },
             guideUser: {
                 required: true
@@ -262,20 +272,18 @@ $(function () {
                 hasCity: true
             },
             cardFrontPath: "required",
-            cardBackPath: "required",
-            businessLicensePath: "required"
+            cardBackPath: "required"
         },
         messages: {
             mobile: {
                 remote: '该手机号码当前不可用'
             },
             cardFrontPath: "请上传图片",
-            cardBackPath: "请上传图片",
-            businessLicensePath: "请上传图片"
+            cardBackPath: "请上传图片"
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
-            error.addClass("help-block")
+            error.addClass("help-block");
             if (element.parent('.input-group').length > 0) {
                 $(element).siblings('.input-group-btn').find('.btn').prop('disabled', true);
                 error.insertAfter(element.parent());

@@ -60,7 +60,7 @@
                                     <form class="form-horizontal mb40" id="J_addAgentForm" method="post"
                                           th:action="@{/addAgent}">
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">上级代理</label>
+                                            <label class="col-sm-3 control-label">上级代理 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <select class="form-control" name="superiorId" id="higherAgent"
                                                         title="请选择上级代理">
@@ -68,7 +68,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">代理商公司名称</label>
+                                            <label class="col-sm-3 control-label">代理商公司名称 <span class="asterisk">*</span></label>
                                             <div class="col-sm-3">
                                                 <input type="text" placeholder="请输入代理级别"
                                                        class="form-control" name="rank"
@@ -83,7 +83,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group display-none" id="J_customLevelBox">
-                                            <label class="col-sm-3 control-label">自定义代理等级</label>
+                                            <label class="col-sm-3 control-label">自定义代理等级 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入自定义代理等级"
                                                        class="form-control" name="levelTitle"
@@ -91,7 +91,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">负责人姓名</label>
+                                            <label class="col-sm-3 control-label">负责人姓名 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入负责人姓名"
                                                        class="form-control" name="agentName"
@@ -99,7 +99,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">首笔进货款</label>
+                                            <label class="col-sm-3 control-label">首笔进货款 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="元"
                                                        class="form-control" name="firstPayment"
@@ -107,7 +107,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">代理费</label>
+                                            <label class="col-sm-3 control-label">代理费 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="元"
                                                        class="form-control" name="agencyFee"
@@ -115,7 +115,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">协议时间</label>
+                                            <label class="col-sm-3 control-label">协议时间 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <div class="row">
                                                     <div class="col-sm-5">
@@ -152,7 +152,7 @@
                                         <!--</div>-->
                                         <!--</div>-->
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">手机号</label>
+                                            <label class="col-sm-3 control-label">手机号 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入手机号"
                                                        class="form-control" name="mobile" value="18829901010"
@@ -160,9 +160,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">初始登录密码</label>
+                                            <label class="col-sm-3 control-label">初始登录密码 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="最小六位，含大小写字母，数字，下换线，至少包括其中两种"
+                                                <input type="text" placeholder="6~12位，含大小写字母，数字，下换线"
                                                        class="form-control" name="password" value="123456">
                                             </div>
                                         </div>
@@ -175,7 +175,7 @@
                                         <!--</div>-->
                                         <!--</div>-->
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">推荐人</label>
+                                            <label class="col-sm-3 control-label">推荐人 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <select class="form-control select2-single" name="guideUser"
                                                         id="referrerPhone"
@@ -184,7 +184,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">办公地址</label>
+                                            <label class="col-sm-3 control-label">办公地址 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input class="form-control" id="J_cityPicker" readonly type="text"
                                                        data-responsive="true" data-toggle="city-picker"
@@ -198,7 +198,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">添加身份证</label>
+                                            <label class="col-sm-3 control-label">添加身份证 <span class="asterisk">*</span></label>
                                             <div class="col-sm-6 img-wrap">
                                                 <p class="form-control-static img-tips">个人信息面 （格式：3M以下的jpg、jpeg和png）</p>
                                                 <input type="hidden" name="cardFrontPath"/>
@@ -253,7 +253,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">添加营业执照</label>
+                                            <label class="col-sm-3 control-label">添加营业执照（可选）</label>
                                             <div class="col-sm-6 img-wrap">
                                                 <p class="form-control-static img-tips">营业执照（格式：3M以下的jpg、jpeg和png）</p>
                                                 <input type="hidden" name="businessLicensePath"/>
