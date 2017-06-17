@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.entity.deal.OrderCommission;
 import cn.lmjia.market.core.entity.deal.pk.OrderCommissionPK;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.repository.deal.OrderCommissionRepository;
@@ -117,13 +118,14 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
 
     @Override
     public void reSettlement(MainOrder order) {
-        OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
-        if (orderCommission == null) {
-            throw new IllegalStateException("该订单尚未结算。");
+        if (order.getOrderStatus() == OrderStatus.forPay
+                || order.getOrderStatus() == OrderStatus.EMPTY) {
+            throw new IllegalArgumentException("无法结算。");
         }
-
-        commissionRepository.deleteByOrderCommission(orderCommission);
-//        orderCommissionRepository.delete(orderCommission);
+        OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
+        if (orderCommission != null) {
+            commissionRepository.deleteByOrderCommission(orderCommission);
+        }
 
         doSettlement(order);
     }

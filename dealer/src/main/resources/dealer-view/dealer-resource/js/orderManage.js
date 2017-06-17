@@ -74,7 +74,7 @@ $(function () {
                     if (item.statusCode === 1 && allowMockPay)
                         a = a + d;
                     var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;重新结算</a>';
-                    if (item.statusCode === 5 && allowSettlement)
+                    if (item.statusCode !== 0 && item.statusCode !== 1 && allowSettlement)
                         a = a + e;
                     // 模拟支付
                     return a;
