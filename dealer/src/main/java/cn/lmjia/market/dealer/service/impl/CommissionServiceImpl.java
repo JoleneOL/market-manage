@@ -18,12 +18,26 @@ import javax.persistence.criteria.Root;
 @Service
 public class CommissionServiceImpl implements CommissionService {
     @Override
-    public Specification<Commission> listSpecification(Login login, Specification<Commission> specification) {
+    public Specification<Commission> listAllSpecification(Login login, Specification<Commission> specification) {
         return new AndSpecification<>(new Specification<Commission>() {
             @Override
             public Predicate toPredicate(Root<Commission> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 query = query.groupBy(root.get("orderCommission"));
                 return cb.equal(root.get("who"), login);
+            }
+        }, specification);
+    }
+
+    @Override
+    public Specification<Commission> listRealitySpecification(Login login, Specification<Commission> specification) {
+        return new AndSpecification<>(new Specification<Commission>() {
+            @Override
+            public Predicate toPredicate(Root<Commission> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query = query.groupBy(root.get("orderCommission"));
+                return cb.and(
+                        cb.equal(root.get("who"), login)
+                        , Commission.Reality(root, cb)
+                );
             }
         }, specification);
     }

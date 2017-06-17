@@ -3,6 +3,7 @@ package cn.lmjia.market.dealer.service;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.lib.thread.ThreadSafe;
+import me.jiangcai.payment.event.OrderPaySuccess;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,10 @@ public interface CommissionSettlementService {
     @ThreadSafe
     @Transactional
     void orderFinish(MainOrderFinishEvent event);
+
+    @EventListener(OrderPaySuccess.class)
+    @Transactional
+    void orderPaySuccess(OrderPaySuccess event);
 
     /**
      * 重新结算这个订单

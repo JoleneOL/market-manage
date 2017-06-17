@@ -11,13 +11,17 @@ import org.springframework.data.jpa.domain.Specification;
  */
 public interface CommissionService {
 
-
     /**
-     * 查询
-     *
      * @param login         当前身份
      * @param specification 既定规则
-     * @return 佣金记录的规格
+     * @return 属于当前身份真实可用佣金记录的规格
      */
-    Specification<Commission> listSpecification(Login login, Specification<Commission> specification);
+    Specification<Commission> listRealitySpecification(Login login, Specification<Commission> specification);
+
+    /**
+     * @param login         当前身份
+     * @param specification 既定规则
+     * @return 属于当前身份所有佣金记录的规格
+     */
+    Specification<Commission> listAllSpecification(Login login, Specification<Commission> specification);
 }

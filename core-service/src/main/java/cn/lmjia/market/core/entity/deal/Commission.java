@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 
 /**
@@ -52,4 +55,12 @@ public class Commission {
     @Column(scale = 2, precision = 20)
     private BigDecimal amount;
 
+    /**
+     * @param commissionFrom  佣金from
+     * @param criteriaBuilder cb
+     * @return 该佣金是否真实可用的
+     */
+    public static Predicate Reality(From<?, Commission> commissionFrom, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.isFalse(commissionFrom.get("orderCommission").get("pending"));
+    }
 }

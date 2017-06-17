@@ -14,6 +14,7 @@ import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import cn.lmjia.market.dealer.service.CommissionSettlementService;
 import me.jiangcai.lib.thread.ThreadSafe;
+import me.jiangcai.payment.event.OrderPaySuccess;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +46,30 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     public void orderFinish(MainOrderFinishEvent event) {
         final MainOrder order = event.getMainOrder();
         OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
-        if (orderCommission != null) {
-            throw new IllegalStateException("该订单已结算。");
+        if (orderCommission == null) {
+            doSettlement(order);
+            orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
         }
-        doSettlement(order, new OrderCommission());
+
+        assert orderCommission != null;
+        orderCommission.setPending(false);
     }
 
-    private void doSettlement(MainOrder order, OrderCommission orderCommission) {
+    @Override
+    public void orderPaySuccess(OrderPaySuccess event) {
+        doSettlement((MainOrder) event.getPayableOrder());
+    }
+
+    /**
+     * 执行结算，如果未结算锅则结算,反之则重新结算
+     *
+     * @param order 订单
+     */
+    private void doSettlement(MainOrder order) {
         log.debug("start commission settlement for:" + order);
-//        orderCommission = new OrderCommission();
+        OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
+        if (orderCommission == null)
+            orderCommission = new OrderCommission();
         orderCommission.setGenerateTime(LocalDateTime.now());
         orderCommission.setRefund(false);
         orderCommission.setSource(order);
@@ -109,7 +125,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         commissionRepository.deleteByOrderCommission(orderCommission);
 //        orderCommissionRepository.delete(orderCommission);
 
-        doSettlement(order, orderCommission);
+        doSettlement(order);
     }
 
     private void saveCommission(OrderCommission orderCommission, AgentLevel level, Login login, BigDecimal rate, String message) {

@@ -43,6 +43,10 @@ public class OrderCommission {
      */
     @Column(columnDefinition = "timestamp")
     private LocalDateTime generateTime;
+    /**
+     * 尚未到账
+     */
+    private boolean pending = true;
 
     /**
      * @param builder             cb

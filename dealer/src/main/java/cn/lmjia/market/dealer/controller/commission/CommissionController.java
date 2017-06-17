@@ -237,9 +237,13 @@ public class CommissionController {
 
             @Override
             public Specification<Commission> specification() {
+                if ("pending".equals(type))
+                    return commissionService.listAllSpecification(login, (root, query, cb)
+                            -> Commission.Reality(root, cb).not());
+
                 if ("all".equals(type))
-                    return commissionService.listSpecification(login, null);
-                return commissionService.listSpecification(login, (root, query, cb) -> {
+                    return commissionService.listRealitySpecification(login, null);
+                return commissionService.listRealitySpecification(login, (root, query, cb) -> {
                     if ("today".equals(type))
                         return JpaFunctionUtils.DateEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now());

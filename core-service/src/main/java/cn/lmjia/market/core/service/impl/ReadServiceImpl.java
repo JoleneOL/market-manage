@@ -96,7 +96,12 @@ public class ReadServiceImpl implements ReadService {
         CriteriaQuery<BigDecimal> sumQuery = criteriaBuilder.createQuery(BigDecimal.class);
         Root<Commission> root = sumQuery.from(Commission.class);
         sumQuery = sumQuery.select(criteriaBuilder.sum(root.get("amount")))
-                .where(criteriaBuilder.equal(root.get("who"), login));
+                .where(
+                        criteriaBuilder.and(
+                                criteriaBuilder.equal(root.get("who"), login)
+                                , Commission.Reality(root, criteriaBuilder)
+                        )
+                );
         // TODO 还应该减去提现的
         try {
             return new Money(entityManager.createQuery(sumQuery).getSingleResult().add(login.getCommissionBalance()));
