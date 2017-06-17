@@ -30,7 +30,8 @@
                     <label class="weui-label">姓名</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入客户姓名" name="name">
+                    <input class="weui-input" type="text" placeholder="请输入客户姓名" name="name"
+                           th:value="${@environment.acceptsProfiles('staging')?'测试用户'+#strings.randomAlphanumeric(5):''}">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -39,7 +40,8 @@
                     <label class="weui-label">年龄</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="number" min="1" max="99" placeholder="请输入年龄" name="age">
+                    <input class="weui-input" type="number" min="1" max="99" placeholder="请输入年龄" name="age"
+                           th:value="${@environment.acceptsProfiles('staging')?'33':''}">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -83,7 +85,8 @@
                     <label class="weui-label"></label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入详细地址" name="fullAddress">
+                    <input class="weui-input" type="text" placeholder="请输入详细地址" name="fullAddress"
+                           th:value="${@environment.acceptsProfiles('staging')?'地址'+#strings.randomAlphanumeric(5):''}">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -139,7 +142,7 @@
                 </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="text" placeholder="请输入租用机型" name="leasedType"
-                           id="J_leasedType" value="hzls01" readonly>
+                           id="J_leasedType" readonly>
                 </div>
             </div>
             <div class="weui-cell">
@@ -148,7 +151,7 @@
                 </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="number" placeholder="请输入数量" min="1" name="amount"
-                           id="J_goodsAmount">
+                           id="J_goodsAmount" th:value="${@environment.acceptsProfiles('staging')?'1':''}">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -399,7 +402,8 @@
                         <label class="weui-label">收件地址</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input js-invoiceAddress" type="text" id="J_invoiceAddress" placeholder="请输入收件地址"
+                        <input class="weui-input js-invoiceAddress" type="text" id="J_invoiceAddress"
+                               placeholder="请输入收件地址"
                                name="invoiceAddress">
                     </div>
                     <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
@@ -419,7 +423,8 @@
                         <label class="weui-label">联系电话</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input js-invoiceMobile" type="tel" placeholder="请输入联系电话" name="invoiceMobile">
+                        <input class="weui-input js-invoiceMobile" type="tel" placeholder="请输入联系电话"
+                               name="invoiceMobile">
                     </div>
                     <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                 </div>

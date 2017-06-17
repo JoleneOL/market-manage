@@ -124,7 +124,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("channel", PaymaxChannel.wechat);
         // 单元测试的时候 无法建立公众号付款
-        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
+        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest, "wechatScanOnly")) {
             parameters.put("channel", PaymaxChannel.wechatScan);
         }
         parameters.put("openId", openId);

@@ -34,7 +34,8 @@
                                 <label class="weui-label">账号</label>
                             </div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" name="username" type="text" placeholder="请输入账号">
+                                <input class="weui-input" name="username" type="text" placeholder="请输入账号"
+                                       th:value="${@environment.acceptsProfiles('staging')?@environment.getProperty('default.agent.loginName', 'master'):''}">
                             </div>
                             <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                         </div>
@@ -43,7 +44,8 @@
                                 <label class="weui-label">密码</label>
                             </div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" name="password" type="password" placeholder="请输入密码">
+                                <input class="weui-input" name="password" type="password" placeholder="请输入密码"
+                                       th:value="${@environment.acceptsProfiles('staging')?@environment.getProperty('default.agent.password', '123456'):''}">
                             </div>
                             <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                         </div>
