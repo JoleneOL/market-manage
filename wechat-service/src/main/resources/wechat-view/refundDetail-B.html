@@ -27,6 +27,11 @@
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="text" placeholder="请输入机器ID号" name="machineId" value="12121212" readonly>
                 </div>
+                <div class="weui-cell__ft">
+                    <!--<span class="view_badge view_badge-custom">xxx</span>-->
+                    <!--<span class="view_badge view_badge-error">xxx</span>-->
+                    <span class="view_badge view_badge-warn">审核中</span>
+                </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -49,7 +54,7 @@
                     <label class="weui-label">服务选择</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入服务选择" name="serviceType" value="退款" readonly>
+                    <input class="weui-input" type="text" placeholder="请输入服务选择" name="serviceType" value="未安装退款" readonly>
                 </div>
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
@@ -59,8 +64,6 @@
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="refundReason" id="J_Reason">
                         <option value="1">不想要了</option>
-                        <option value="2">质量问题</option>
-                        <option value="3">协商解决</option>
                         <option value="other">其他</option>
                     </select>
                 </div>
@@ -69,13 +72,14 @@
                 <div class="weui-cell__bd">
                     <textarea class="weui-textarea" placeholder="请输入文本" rows="3" name="otherType"></textarea>
                 </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">退款金额</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="number" placeholder="输入退款金额" name="refundAmount" value="1000">
+                    <input class="weui-input" type="number" placeholder="输入退款金额" name="refundAmount" value="2250" readonly>
                 </div>
             </div>
             <div class="weui-cell">
@@ -83,8 +87,26 @@
                     <label class="weui-label">&nbsp;</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="text-gray">剩余金额2000 可退回剩余金额50%</p>
+                    <p class="text-gray">退回75%的保证金</p>
                 </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">物流公司</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="tel" placeholder="输入物流公司" name="logisticsCompany">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">物流单号</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="tel" placeholder="输入物流单号" name="logisticsCode">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
         </div>
         <div class="weui-btn-area view-btn-group">
@@ -99,4 +121,8 @@
     </div>
 </footer>
 </body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="../wechat-resource/assets/js/equipment.js" th:src="@{/wechat-resource/assets/js/equipment.js}"></script>
 </html>
