@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 
 /**
  * @author CJ
@@ -23,7 +24,11 @@ public class CommissionServiceImpl implements CommissionService {
             @Override
             public Predicate toPredicate(Root<Commission> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 query = query.groupBy(root.get("orderCommission"));
-                return cb.equal(root.get("who"), login);
+                return cb.and(
+                        cb.equal(root.get("who"), login)
+                        , cb.notEqual((root.get("amount")), BigDecimal.ZERO)
+//                        , Commission.Reality(root, cb)
+                );
             }
         }, specification);
     }
@@ -36,6 +41,7 @@ public class CommissionServiceImpl implements CommissionService {
                 query = query.groupBy(root.get("orderCommission"));
                 return cb.and(
                         cb.equal(root.get("who"), login)
+                        , cb.notEqual((root.get("amount")), BigDecimal.ZERO)
                         , Commission.Reality(root, cb)
                 );
             }

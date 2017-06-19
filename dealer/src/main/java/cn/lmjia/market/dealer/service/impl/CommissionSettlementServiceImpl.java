@@ -130,7 +130,12 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         doSettlement(order);
     }
 
-    private void saveCommission(OrderCommission orderCommission, AgentLevel level, Login login, BigDecimal rate, String message) {
+    private void saveCommission(OrderCommission orderCommission, AgentLevel level, Login login, BigDecimal rate
+            , String message) {
+        if (rate.equals(BigDecimal.ZERO)) {
+            // 0 没有处理的必要
+            return;
+        }
         Commission commission = new Commission();
         commission.setOrderCommission(orderCommission);
         commission.setAgent(level);

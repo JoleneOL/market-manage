@@ -50,10 +50,10 @@
             </div>
             <div class="view-tabs js-extra-h-c">
                 <a href="#" class="view-tabs_item active">全部</a>
+                <a href="#" class="view-tabs_item">即将获佣</a>
                 <a href="#" class="view-tabs_item">今日获佣</a>
                 <a href="#" class="view-tabs_item">本月获佣</a>
                 <!--<a href="#" class="view-tabs_item">上月获佣</a>-->
-                <a href="#" class="view-tabs_item">即将获佣</a>
                 <a href="#" class="view-tabs_item">近三个月</a>
             </div>
             <div class="view_team-list view_team-list-left js-extra-h-c">
@@ -66,6 +66,14 @@
             <div id="tabs-container" class="swiper-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/all">
+                        <div class="view-scroll-list">
+                            <div class="weui-loadmore">
+                                <i class="weui-loading"></i>
+                                <span class="weui-loadmore__tips">数据加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/pending">
                         <div class="view-scroll-list">
                             <div class="weui-loadmore">
                                 <i class="weui-loading"></i>
@@ -97,14 +105,6 @@
                     <!--</div>-->
                     <!--</div>-->
                     <!--</div>-->
-                    <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/pending">
-                        <div class="view-scroll-list">
-                            <div class="weui-loadmore">
-                                <i class="weui-loading"></i>
-                                <span class="weui-loadmore__tips">数据加载中...</span>
-                            </div>
-                        </div>
-                    </div>
                     <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/quarter">
                         <div class="view-scroll-list">
                             <div class="weui-loadmore">
