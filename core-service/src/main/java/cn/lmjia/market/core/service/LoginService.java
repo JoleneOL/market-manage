@@ -114,4 +114,12 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional(readOnly = true)
     boolean isManager(String loginName);
+
+    /**
+     * 解除登录的微信号绑定
+     *
+     * @param loginName 登录名
+     */
+    @Transactional
+    void unbindWechat(String loginName);
 }

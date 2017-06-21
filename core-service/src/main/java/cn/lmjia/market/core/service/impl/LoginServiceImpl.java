@@ -171,4 +171,9 @@ public class LoginServiceImpl implements LoginService {
         Login login = byLoginName(loginName);
         return login != null && login.isManageable();
     }
+
+    @Override
+    public void unbindWechat(String loginName) {
+        byLoginName(loginName).setWechatUser(null);
+    }
 }

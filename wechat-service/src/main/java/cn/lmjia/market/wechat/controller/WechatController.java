@@ -2,6 +2,7 @@ package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import cn.lmjia.market.dealer.service.AgentService;
 import com.huotu.verification.IllegalVerificationCodeException;
@@ -10,6 +11,7 @@ import me.jiangcai.wx.model.WeixinUserDetail;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
@@ -78,9 +80,17 @@ public class WechatController {
         return "redirect:" + savedRequest.getRedirectUrl();
     }
 
+    @GetMapping("/wechatLogout")
+    public String logout(@AuthenticationPrincipal Login login) {
+        // 登出并且解绑当前登录
+        loginService.unbindWechat(login.getLoginName());
+        return "redirect:/logout";
+    }
+
     @GetMapping("/wechatIndex")
     public String index() {
-        return "wechat@index.html";
+//        return "wechat@index.html";
+        return "redirect:" + SystemService.wechatMyURi;
     }
 
     @GetMapping("/wechatLogin")
