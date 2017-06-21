@@ -107,4 +107,11 @@ public interface LoginService extends UserDetailsService {
 
     @Transactional(readOnly = true)
     Login byLoginName(String loginName);
+
+    /**
+     * @param loginName 登录名
+     * @return 是否为管理员
+     */
+    @Transactional(readOnly = true)
+    boolean isManager(String loginName);
 }

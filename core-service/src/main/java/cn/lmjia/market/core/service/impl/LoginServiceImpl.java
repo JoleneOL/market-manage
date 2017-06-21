@@ -165,4 +165,10 @@ public class LoginServiceImpl implements LoginService {
     public Login byLoginName(String loginName) {
         return loginRepository.findByLoginName(loginName);
     }
+
+    @Override
+    public boolean isManager(String loginName) {
+        Login login = byLoginName(loginName);
+        return login != null && login.isManageable();
+    }
 }

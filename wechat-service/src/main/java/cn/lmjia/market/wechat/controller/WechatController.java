@@ -94,11 +94,11 @@ public class WechatController {
 
             if (!StringUtils.isEmpty(username)) {
                 // 只有代理商可以登录
-                if (!agentService.isAgentLogin(username))
+                if (loginService.isManager(username))
                     return "redirect:/wechatLogin?type=typeError";
                 loginService.bindWechat(username, password, openId);
             } else {
-                if (!agentService.isAgentLogin(mobile))
+                if (loginService.isManager(mobile))
                     return "redirect:/wechatLogin?type=typeError";
                 loginService.bindWechatWithCode(mobile, authCode, openId);
             }
