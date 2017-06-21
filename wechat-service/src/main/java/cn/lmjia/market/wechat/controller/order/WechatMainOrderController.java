@@ -152,7 +152,9 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 qrCodeUrl = qrController.urlForText(paymaxPayOrder.getScanUrl()).toString();
                 scriptCode = null;
             }
-
+        } else if (payOrder.isTestOrder()) {
+            qrCodeUrl = "";
+            scriptCode = "";
         } else
             throw new IllegalStateException("尚未支持扫码的支付系统");
 

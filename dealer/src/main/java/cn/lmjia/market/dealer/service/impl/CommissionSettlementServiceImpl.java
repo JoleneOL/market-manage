@@ -57,6 +57,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     }
 
     @Override
+    @EventListener(OrderPaySuccess.class)
     public void orderPaySuccess(OrderPaySuccess event) {
         doSettlement((MainOrder) event.getPayableOrder());
     }

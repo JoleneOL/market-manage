@@ -9,6 +9,8 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.concurrent.Callable;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -23,7 +25,7 @@ public class WechatMainOrderControllerTest extends WechatTestBase {
     public void makeOrder() throws Exception {
         // 在微信端发起请求
         Login login1 = randomLogin(false);
-        runWith(login1, () -> {
+        final Callable<Object> callable = () -> {
             mockMvc.perform(wechatGet(SystemService.wechatOrderURi))
 //                    .andDo(print())
                     .andExpect(status().isOk())
@@ -57,7 +59,12 @@ public class WechatMainOrderControllerTest extends WechatTestBase {
                 }
 
             }
-        });
+        };
+        runWith(login1, callable);
+        // 客户也可以下单
+        final String customerMobile = randomMobile();
+        newRandomOrderFor(login1, login1, customerMobile);
+        runWith(loginService.byLoginName(customerMobile), callable);
     }
 
 }

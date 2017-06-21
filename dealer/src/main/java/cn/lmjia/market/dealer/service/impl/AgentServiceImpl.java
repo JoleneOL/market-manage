@@ -339,6 +339,10 @@ public class AgentServiceImpl implements AgentService {
         // 获取 平行推荐，然后上一级 再找平行推荐
         AgentLevel[] result = new AgentLevel[systemService.systemLevel()];
         AgentLevel current = highestAgent(login);
+        if (current == null) {
+            // 如果login是一个客户，那么应该采用它引导者
+            return recommendAgentLine(login.getGuideUser());
+        }
         int levelGap = current.getLevel();
         int startNull = systemService.systemLevel();
         for (int i = 0; i < result.length; i++) {

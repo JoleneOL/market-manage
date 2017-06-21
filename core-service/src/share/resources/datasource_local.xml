@@ -19,6 +19,8 @@
         <!--</property>-->
         <property name="packagesToScan">
             <array>
+                <!--测试专用的模拟支付系统-->
+                <value>me.jiangcai.demo.pay.entity</value>
                 <value>cn.lmjia.market.dealer.entity</value>
                 <value>com.huotu.verification.entity</value>
                 <value>me.jiangcai.payment.chanpay.entity</value>
