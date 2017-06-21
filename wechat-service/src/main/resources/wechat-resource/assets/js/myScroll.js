@@ -15,6 +15,7 @@
             ajaxData: {},
             page: 0,
             loadSuccess: function () {},
+            tabRefresh: function () {},
             template: function () {
                 console.error("需要模板代码");
             }
@@ -139,6 +140,8 @@
             $self.find(op.removeEle).remove();
             getDate(extra);
         };
+
+        s.tabRefresh(myScroll);
 
         return $self;
 

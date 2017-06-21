@@ -3,10 +3,6 @@
  */
 $(function () {
 
-    var $comm = $("#commission");
-    // display:none 影响子元素高度的获取
-    $comm.addClass('goAway');
-
     var tabsItem = $('.view-tabs_item');
     var tabsSwiper = $('#tabs-container').swiper({
         observer: true,
@@ -24,6 +20,27 @@ $(function () {
         tabsSwiper.slideTo($(this).index())
     });
     tabsItem.click(function (e) {
+        e.preventDefault();
+    });
+
+
+    var navbarItem = $('.view-navbar_item');
+    var navbarSwiper = $('#navbar-container').swiper({
+        observer: true,
+        observeParents: true,
+        speed: 500,
+        onSlideChangeStart: function () {
+            $(".weui-navbar .on").removeClass('on');
+            navbarItem.eq(navbarSwiper.activeIndex).addClass('on');
+        }
+    });
+    navbarItem.on('touchstart mousedown', function (e) {
+        e.preventDefault();
+        $(".weui-navbar .on").removeClass('on');
+        $(this).addClass('on');
+        navbarSwiper.slideTo($(this).index())
+    });
+    navbarItem.click(function (e) {
         e.preventDefault();
     });
 
@@ -163,6 +180,4 @@ $(function () {
         }
     };
 
-
-    $comm.removeClass('goAway');
 });
