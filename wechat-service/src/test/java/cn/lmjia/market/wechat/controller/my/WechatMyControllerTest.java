@@ -12,13 +12,27 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = SecurityConfig.class)
 public class WechatMyControllerTest extends WechatTestBase {
 
+    private Login login;
+
     @Override
     protected Login allRunWith() {
-        return randomLogin(false);
+        return login;
     }
 
     @Test
     public void go() {
+        login = randomLogin(false);
+        visitWechat();
+
+        // 弄一个订单
+        final String mobile = randomMobile();
+        newRandomOrderFor(login, login, mobile);
+        login = loginService.byLoginName(mobile);
+
+        visitWechat();
+    }
+
+    private void visitWechat() {
         getWechatMyPage();
         getWechatMyTeamPage();
         getWechatOrderListPage();

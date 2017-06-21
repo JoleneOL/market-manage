@@ -52,6 +52,8 @@ public interface AgentService {
      * @return 该身份头衔
      */
     default String loginTitle(AgentLevel level) {
+        if (level == null)
+            return getLoginTitle(Customer.LEVEL);
         if (!StringUtils.isEmpty(level.getLevelTitle()))
             return level.getLevelTitle();
         final int i = agentLevel(level);
