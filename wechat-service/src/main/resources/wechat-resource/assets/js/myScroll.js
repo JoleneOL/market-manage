@@ -14,8 +14,10 @@
             isAjax: true,
             ajaxData: {},
             page: 0,
-            loadSuccess: function () {},
-            tabRefresh: function () {},
+            loadSuccess: function () {
+            },
+            tabRefresh: function () {
+            },
             template: function () {
                 console.error("需要模板代码");
             }
@@ -31,6 +33,7 @@
             probeType: 3,
             click: true
         });
+
         function isPassive() {
             var supportsPassiveOption = false;
             try {
@@ -71,7 +74,7 @@
                 return '';
             }
             s.ajaxData.page = s.page;
-            if(s.debug) console.info(s.ajaxData);
+            if (s.debug) console.info(s.ajaxData);
             $.ajax(s.ajaxUrl, {
                 method: s.ajaxMethod,
                 data: s.ajaxData,
@@ -91,7 +94,7 @@
                         $self.find('.weui-loadmore').text('没有更多内容了');
                         s.loading = true;
                     }
-                    if(extra.again) getDate();
+                    if (extra.again) getDate();
                 },
                 error: function () {
                     $.toast('服务器异常', 'cancel');
@@ -100,7 +103,7 @@
         }
 
         // 判断是客户端渲染还是服务器渲染
-        if(s.isAjax) {
+        if (s.isAjax) {
             var extra = {};
             extra.again = true;
             if (s.loading) return;
@@ -120,8 +123,8 @@
         }
 
         $.extend({
-            myScrollRefresh: function(goTop) {
-                if(goTop === true) myScroll.scrollTo(0, 0);
+            myScrollRefresh: function (goTop) {
+                if (goTop === true) myScroll.scrollTo(0, 0);
                 myScroll.refresh();
             }
         });
@@ -129,9 +132,9 @@
         $self.reset = function (op) {
             s = $.extend(s, op);
         };
-        
+
         $self.reload = function (op) {
-            if(s.isAjax) {
+            if (s.isAjax) {
                 op.page = 0;
             } else {
                 op.page = 1;
