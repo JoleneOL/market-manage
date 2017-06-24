@@ -1,11 +1,15 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.payment.event.OrderPaySuccess;
+import me.jiangcai.user.notice.NoticeChannel;
+import me.jiangcai.user.notice.User;
 import me.jiangcai.user.notice.UserNoticeService;
 import me.jiangcai.user.notice.UserNoticeType;
 import me.jiangcai.user.notice.wechat.WechatSendSupplier;
+import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageStyle;
@@ -17,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author CJ
@@ -33,6 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void init() {
+
         wechatSendSupplier.registerTemplateMessage(new PaySuccessToOrder(), new TemplateMessageStyle() {
             @Override
             public Collection<? extends TemplateMessageParameter> parameterStyles() {
@@ -74,7 +80,23 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void orderPaySuccess(OrderPaySuccess event) {
+        // 前提是 该用户绑定了微信
+        MainOrder order = (MainOrder) event.getPayableOrder();
+        WeixinUserDetail detail = order.getOrderBy().getWechatUser();
+        if (detail != null) {
+            userNoticeService.sendMessage(null, new User() {
+                        @Override
+                        public boolean supportNoticeChannel(NoticeChannel channel) {
+                            return false;
+                        }
 
+                        @Override
+                        public Map<String, Object> channelCredential(NoticeChannel channel) {
+                            return null;
+                        }
+                    }, null, new PaySuccessToOrder(), new Date(), order.getId(), order.getSerialId()
+                    , order.getOrderProductName(), order.getOrderDueAmount());
+        }
     }
 
     private class PaySuccessToOrder implements UserNoticeType {

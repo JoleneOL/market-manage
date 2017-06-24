@@ -11,6 +11,10 @@
 package cn.lmjia.market.core.service;
 
 import me.jiangcai.lib.sys.service.SystemStringService;
+import me.jiangcai.user.notice.BusinessOwner;
+import me.jiangcai.user.notice.NoticeChannel;
+import me.jiangcai.user.notice.singleton.SingletonBusinessOwner;
+import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
 import me.jiangcai.wx.PublicAccountSupplier;
 import me.jiangcai.wx.TokenType;
 import me.jiangcai.wx.model.PublicAccount;
@@ -20,7 +24,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 我的公众号
@@ -28,13 +34,18 @@ import java.util.List;
  * @author CJ
  */
 @Component
-public class MyPublicAccount extends PublicAccount implements PublicAccountSupplier {
+public class MyPublicAccount extends PublicAccount implements PublicAccountSupplier, SingletonBusinessOwner, BusinessOwner {
 
     private static final String AccessToken = "huotao.weixin.accessToken";
     private static final String JavascriptTicket = "huotao.weixin.javascriptTicket";
     private static final String TimeToExpire = "huotao.weixin.timeToExpire";
     private static final String JavascriptTimeToExpire = "huotao.weixin.javascriptTimeToExpire";
     private final SystemStringService systemStringService;
+    private final Map<String, Object> channelCredential = new HashMap<>();
+
+    {
+        channelCredential.put(WechatNoticeChannel.PublicAccountCredentialFrom, this);
+    }
 
     @Autowired
     public MyPublicAccount(SystemStringService systemStringService, Environment environment) {
@@ -84,5 +95,25 @@ public class MyPublicAccount extends PublicAccount implements PublicAccountSuppl
     @Override
     public PublicAccountSupplier getSupplier() {
         return this;
+    }
+
+    @Override
+    public BusinessOwner globalBusinessOwner() {
+        return this;
+    }
+
+    @Override
+    public String id() {
+        return "_";
+    }
+
+    @Override
+    public boolean supportNoticeChannel(NoticeChannel channel) {
+        return channel == WechatNoticeChannel.templateMessage;
+    }
+
+    @Override
+    public Map<String, Object> channelCredential(NoticeChannel channel) {
+        return channelCredential;
     }
 }
