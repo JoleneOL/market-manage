@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
@@ -8,18 +9,22 @@ import me.jiangcai.user.notice.NoticeChannel;
 import me.jiangcai.user.notice.User;
 import me.jiangcai.user.notice.UserNoticeService;
 import me.jiangcai.user.notice.UserNoticeType;
+import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
 import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -35,7 +40,14 @@ public class NoticeServiceImpl implements NoticeService {
     private WechatSendSupplier wechatSendSupplier;
     @Autowired
     private UserNoticeService userNoticeService;
+    @Autowired
+    private Environment environment;
 
+    private boolean useLocal() {
+        return environment.acceptsProfiles("staging") || environment.acceptsProfiles(CoreConfig.ProfileUnitTest);
+    }
+
+    @PostConstruct
     @Override
     public void init() {
 
@@ -68,7 +80,7 @@ public class NoticeServiceImpl implements NoticeService {
 
             @Override
             public String getTemplateId() {
-                return "ieAp4pLGQtEE9DZbbAP0_76xNrnjpoHNpQYe2DT8ID0";
+                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "ieAp4pLGQtEE9DZbbAP0_76xNrnjpoHNpQYe2DT8ID0";
             }
 
             @Override
@@ -87,12 +99,14 @@ public class NoticeServiceImpl implements NoticeService {
             userNoticeService.sendMessage(null, new User() {
                         @Override
                         public boolean supportNoticeChannel(NoticeChannel channel) {
-                            return false;
+                            return channel == WechatNoticeChannel.templateMessage;
                         }
 
                         @Override
                         public Map<String, Object> channelCredential(NoticeChannel channel) {
-                            return null;
+                            Map<String, Object> map = new HashMap<>();
+                            map.put(WechatNoticeChannel.OpenIdCredentialTo, detail.getOpenId());
+                            return map;
                         }
                     }, null, new PaySuccessToOrder(), new Date(), order.getId(), order.getSerialId()
                     , order.getOrderProductName(), order.getOrderDueAmount());
