@@ -8,9 +8,10 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": "mock/withdraw.json",
-        "ordering": false,
+        "ordering": true,
         "lengthChange": false,
         "searching": false,
+        "colReorder": true,
         "columns": [
             {
                 "title": "提现金额", "data": "amount", "name": "amount"
@@ -41,6 +42,13 @@ $(function () {
         "buttons": [{
             "extend": "excel",
             "text": "导出 Excel",
+            "className": "btn-success btn-xs",
+            "exportOptions": {
+                "columns": ":not(.table-action)"
+            }
+        },{
+            "extend": 'colvis',
+            "text": "筛选列",
             "className": "btn-success btn-xs"
         }]
     });

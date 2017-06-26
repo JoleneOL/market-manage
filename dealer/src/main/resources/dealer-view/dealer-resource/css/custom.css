@@ -700,3 +700,6 @@ input[type=checkbox] {
 .img-wrap .error {
   display: none !important;
 }
+.js-selectToolbar {
+  margin-bottom: 10px;
+}

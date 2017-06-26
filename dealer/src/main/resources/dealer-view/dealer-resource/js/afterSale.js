@@ -13,9 +13,10 @@ $(function () {
                 return $.extend({}, d, extendData());
             }
         },
-        "ordering": false,
+        "ordering": true,
         "lengthChange": false,
         "searching": false,
+        "colReorder": true,
         "columns": [
             {
                 "title": "购买用户", "data": "user", "name": "user"
@@ -52,7 +53,22 @@ $(function () {
         "displayLength": 15,
         "drawCallback": function () {
             clearSearchValue();
-        }
+        },
+        "dom": "<'row'<'col-sm-12'B>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "buttons": [{
+            "extend": "excel",
+            "text": "导出 Excel",
+            "className": "btn-success btn-xs",
+            "exportOptions": {
+                "columns": ":not(.table-action)"
+            }
+        },{
+            "extend": 'colvis',
+            "text": "筛选列",
+            "className": "btn-success btn-xs"
+        }]
     });
 
     $(document).on('click', '.js-search', function () {
