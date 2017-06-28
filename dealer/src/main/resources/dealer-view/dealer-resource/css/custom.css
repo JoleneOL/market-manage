@@ -204,6 +204,9 @@ fieldset[disabled] .btn-success.focus {
 .inner-document .table-action a {
   color: #009bb6;
 }
+.inner-document .table-action .btn {
+  color: #fff;
+}
 .panel-success .panel-heading {
   background-color: #009bb6;
 }

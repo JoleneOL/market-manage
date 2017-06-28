@@ -100,6 +100,23 @@
       "status": "已安装",
       "orderTime": "2999-11-11",
       "quickDoneAble": false
+    },
+    {
+      "id": 6,
+      "orderId": "20164100145",
+      "orderUser": "放假哦发生的",
+      "phone": 15677776666,
+      "category": "饮水机",
+      "type": "u56 立式",
+      "amount": 456,
+      "package": "一月时长套餐",
+      "method": "全款",
+      "total": 5000.00,
+      "address": "阡陌路482号智慧E谷B栋",
+      "status": "待派单",
+      "statusCode": 6,
+      "orderTime": "2999-11-11",
+      "quickDoneAble": false
     }
   ]
 }

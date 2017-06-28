@@ -78,6 +78,9 @@ $(function () {
                     if (item.statusCode !== 0 && item.statusCode !== 1 && allowSettlement)
                         a = a + e;
                     // 模拟支付
+                    var f = '<a href="javascript:;" class="btn btn-primary btn-xs js-dispatch" data-id="' + item.id + '">派单</a>';
+                    if (item.statusCode === 6)
+                        a = a + f;
                     return a;
                 }
             }
