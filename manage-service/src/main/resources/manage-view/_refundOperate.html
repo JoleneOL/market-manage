@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>退款操作</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body data-agent-url="/agentData/list">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_refundPage.html">退货</a></li>
+                <li><strong>退款信息</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <div class="col-md-9">
+                            <span class="label label-xlg label-warning">待处理</span>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="text-right">操作员&nbsp;&nbsp;&nbsp;&nbsp;<strong>超级玛丽</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--未使用的商品退款-->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        用户信息
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">用户</td>
+                                    <td>李菲菲</td>
+                                </tr>
+                                <tr>
+                                    <td>手机号</td>
+                                    <td>18958044532</td>
+                                </tr>
+                                <tr>
+                                    <td>订单编号</td>
+                                    <td>20170909-01</td>
+                                </tr>
+                                <tr>
+                                    <td>订单时间</td>
+                                    <td>2017-09-09</td>
+                                </tr>
+                                <tr>
+                                    <td>剩余时间</td>
+                                    <td>96天</td>
+                                </tr>
+                                <tr>
+                                    <td>收货地址</td>
+                                    <td>浙江杭州西湖大西湖国际</td>
+                                </tr>
+                                <tr>
+                                    <td>购买数量</td>
+                                    <td>20</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        商品信息
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">商品型号</td>
+                                    <td>
+                                        <span>滤芯 u56  立式 </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>商品编码</td>
+                                    <td>42857487523234</td>
+                                </tr>
+                                <tr>
+                                    <td>入库时间</td>
+                                    <td>无</td>
+                                </tr>
+                                <tr>
+                                    <td>出库时间</td>
+                                    <td>2017-09-09</td>
+                                </tr>
+                                <tr>
+                                    <td>维修记录</td>
+                                    <td>无</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        退货操作
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="col-sm-3 control-label">退货原因</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" rows="3"></textarea>
+                                        <p class="form-control-static">未安装退货需要支付20%的违约金</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <button type="button" class="btn btn-primary btn-block">同意退货</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--使用过的商品退款-->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        用户信息
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">用户</td>
+                                    <td>李菲菲</td>
+                                </tr>
+                                <tr>
+                                    <td>手机号</td>
+                                    <td>18958044532</td>
+                                </tr>
+                                <tr>
+                                    <td>订单编号</td>
+                                    <td>20170909-01</td>
+                                </tr>
+                                <tr>
+                                    <td>购买时间</td>
+                                    <td>2017-09-09</td>
+                                </tr>
+                                <tr>
+                                    <td>购买套餐</td>
+                                    <td>三年时长套餐</td>
+                                </tr>
+                                <tr>
+                                    <td>收货地址</td>
+                                    <td>浙江杭州西湖大西湖国际</td>
+                                </tr>
+                                <tr>
+                                    <td>购买数量</td>
+                                    <td>20</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        商品信息
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td width="120px">商品型号</td>
+                                    <td>
+                                        <span>滤芯 u56  立式 </span>
+                                        <span class="label label-primary">使用中</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>商品编码</td>
+                                    <td>42857487523234</td>
+                                </tr>
+                                <tr>
+                                    <td>入库时间</td>
+                                    <td>2017-04-09</td>
+                                </tr>
+                                <tr>
+                                    <td>出库时间</td>
+                                    <td>2017-09-09</td>
+                                </tr>
+                                <tr>
+                                    <td>维修记录</td>
+                                    <td>2017-09-09  更改滤芯</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        用户报修信息
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="col-sm-3 control-label">退货原因</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="col-sm-3 control-label">建议上门时间</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control" placeholder="日期" id="J_date"
+                                                   name="date" value="2017-5-1">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="text" class="form-control" placeholder="时间" id="J_time"
+                                                   name="time">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="col-sm-3 control-label">剩余费用</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" value="500" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="col-sm-3 control-label">可退回费用</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" value="250" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <label class="col-sm-3 control-label">需退回佣金</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" value="300" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <button type="button" class="btn btn-primary btn-block">同意退货</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+</html>

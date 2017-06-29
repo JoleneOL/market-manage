@@ -9,3 +9,6 @@
 .table-action .btn {
     color: #FFFFFF;
 }
+textarea {
+    resize: none;
+}

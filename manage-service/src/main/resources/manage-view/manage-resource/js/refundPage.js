@@ -64,8 +64,7 @@ $(function () {
     }).on('click', '.js-checkInfo', function () {
         // TODO
         // 需要获取一些参数供详情跳转
-        var url = Math.random() > 0.5 ? 'refundWait.html': 'refundSuccess.html';
-        $('#content', parent.document).attr('src', url);
+        window.location.href = '_refundOperate.html'
     }).on('click', '.js-checkLogistics', function () {
         $('#content', parent.document).attr('src', 'refundLogisticsDetail.html');
     });
