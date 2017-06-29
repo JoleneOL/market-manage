@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>新仓库</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css">
+    <!--重置库-->
+    <!--<link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">-->
+    <link rel="stylesheet" href="manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<!--可以展示-->
+<!--可以添加 新页面去POST?-->
+<!--可以禁用|启用-->
+<body>
+
+<form action="_depotManage.html" th:action="@{/manage/depotList}" method="post">
+    <label>
+        名称
+        <input type="text" name="name" required maxlength="100"/>
+    </label> <br/>
+    <label for="J_cityPicker">地址</label><input class="form-control" id="J_cityPicker" readonly type="text"
+                                               data-responsive="true" data-toggle="city-picker"
+                                               data-simple="true" name="address" required>
+    <br/>
+    <input type="text" placeholder="详细地址" class="form-control"
+           name="fullAddress" required>
+    <br/>
+    <label>
+        日日顺仓库编号
+        <input type="text" name="haierCode" required maxlength="32"/>
+    </label>
+    <br/>
+    <input type="submit" value="提交"/>
+</form>
+
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
+<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="manage-resource/js/depotManage.js"></script>
+<script th:src="@{/dealer-resource/js/main.js}"
+        src="../../../../../../market-manage/dealer/src/main/resources/dealer-view/dealer-resource/js/main.js"></script>
+</html>
