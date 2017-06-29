@@ -50,13 +50,6 @@ $(function () {
     });
     $('.swiper-slide').height($(window).height() - Math.ceil(extraHeight) - 52);
 
-
-    var maintainURL = 'maintain.html';
-    var maintainStatusURL = 'maintainStatus.html';
-
-    var repairURL = 'repair.html';
-    var repairStatusURL = 'repairStatus.html';
-
     var commTpl = function (obj) {
         return '<div class="view-comm-list_item"> ' +
             '<div class="weui-flex"> ' +
@@ -80,104 +73,119 @@ $(function () {
         });
     });
 
-    $('#equipment').myScroll({
-        ajaxUrl: '/api/equipmentList',
-        template: function (obj) {
-            return '<div class="view-preview view-mb-20">' +
-                '<div class="view-preview_hd"> ' +
-                '<p class="view-preview_header_value pull-left">饮水机编号：' + obj.id + '</p> ' +
-                equipmentTpl.status(obj) +
-                '<p class="view-preview_header_value">产品型号：' + obj.model + '</p>' +
-                '</div> ' +
-                '<div class="view-preview_bd view-bg-color-f2"> ' +
-                equipmentTpl.content(obj) +
-                '</div> ' +
-                '<div class="view-preview_sub"> ' +
-                equipmentTpl.sub(obj) +
-                '</div> ' +
-                equipmentTpl.buttons(obj) +
-                '</div>';
-        }
+
+    // 我的团队逻辑
+    var infiniteWrap = $('#J_teamList');
+
+    var extraHeight_team = 0;
+    $('.js-extra-h').each(function () {
+        extraHeight_team += $(this).outerHeight(true);
     });
-    var equipmentTpl = {
-        status: function (obj) {
-            var dom = '';
-            switch (obj.status) {
-                case 0:
-                    dom = '<span class="view-preview_header_label pull-right text-success">正常使用中</span>';
-                    break;
-                case 1:
-                    dom = '<span class="view-preview_header_label pull-right text-warn">维护中</span>';
-                    break;
-                case 2:
-                    dom = '<span class="view-preview_header_label pull-right text-primary">已移机</span>';
-                    break;
-            }
-            return dom;
-        },
-        content: function (obj) {
-            var dom = '';
-            switch (obj.status) {
-                case 0:
-                    dom = '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">使用费</span>' +
-                        '<p class="weui-form-preview__value">￥' + obj.cost + '</p>' +
-                        '</div>' +
-                        '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">使用年限</span>' +
-                        '<p class="weui-form-preview__value">' + obj.years + '</p>' +
-                        '</div>';
-                    break;
-                case 1:
-                    dom = '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">使用费</span>' +
-                        '<p class="weui-form-preview__value">￥' + obj.cost + '</p>' +
-                        '</div>' +
-                        '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">使用年限</span>' +
-                        '<p class="weui-form-preview__value">' + obj.years + '</p>' +
-                        '</div>' +
-                        '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">服务内容</span>' +
-                        '<p class="weui-form-preview__value">' + obj.service + '</p>' +
-                        '</div>';
-                    break;
-                case 2:
-                    dom = '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">移机地址</span>' +
-                        '<p class="weui-form-preview__value">' + obj.transferAddress + '</p>' +
-                        '</div>' +
-                        '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">联系人</span>' +
-                        '<p class="weui-form-preview__value">' + obj.transferPhone + '</p>' +
-                        '</div>' +
-                        '<div class="view-preview_body_item">' +
-                        '<span class="weui-form-preview__label">联系电话</span>' +
-                        '<p class="weui-form-preview__value">' + obj.transferUser + '</p>' +
-                        '</div>';
-                    break;
-            }
-            return dom;
-        },
-        sub: function (obj) {
-            if (obj.status === 2) {
-                return '<div class="view-preview_body_item"><span>申请移机时间：' + obj.transferTime + '</span></div>'
-            }
-            return '<div class="view-preview_body_item"><span>TDS值：<strong>' + obj.TDS + '</strong></span></div>' +
-                '<div class="view-preview_body_item"><span>安装地址：' + obj.installationAddress + '</span></div>' +
-                '<div class="view-preview_body_item"><span>安装时间：' + obj.installationTime + '</span></div> ';
-        },
-        buttons: function (obj) {
-            var dom = '';
-            if (obj.status !== 2) {
-                dom = '<div class="view-preview_ft">' +
-                    '<div class="button_sp_area">' +
-                    '<a href="' + maintainURL + '?equipmentId=' + obj.equipmentId + '" class="view-btn">维护</a>' +
-                    '</div>' +
-                    '</div>';
-            }
-            return dom;
-        }
+
+    infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
+
+    var listTpl = function (obj) {
+        return '<div class="view-list-item">' +
+            '<div class="ellipsis">' + obj.name + '</div>' +
+            '<div>' + obj.phone + '</div>' +
+            '<div>' + obj.rank + '</div>' +
+            '<div>' + obj.joinTime + '</div>' +
+            '</div>';
     };
 
+    var myScroll = infiniteWrap.myScroll({
+        ajaxUrl: infiniteWrap.attr('data-url'),
+        ajaxData: {
+            rank: infiniteWrap.attr('data-rank')
+        },
+        template: listTpl
+    });
+
+    $('#J_changeRank').click(function () {
+        $.actions({
+            title: "选择级别",
+            actions: [
+                {
+                    text: "全部",
+                    className: "text-custom",
+                    onClick: function () {
+                        $.showLoading();
+                        getRankList('all');
+                    }
+                },
+                {
+                    text: "总代理",
+                    onClick: function () {
+                        $.showLoading();
+                        getRankList(1);
+                    }
+                },
+                {
+                    text: "代理商",
+                    onClick: function () {
+                        $.showLoading();
+                        getRankList(2);
+                    }
+                },
+                {
+                    text: "经销商",
+                    onClick: function () {
+                        $.showLoading();
+                        getRankList(3);
+                    }
+                },
+                {
+                    text: "爱心天使",
+                    onClick: function () {
+                        $.showLoading();
+                        getRankList(4);
+                    }
+                }
+            ]
+        });
+    });
+
+
+    function getRankList(data) {
+        var url = infiniteWrap.attr('data-url');
+        $.ajax(url, {
+            method: "GET",
+            data: {rank: data, page: 0},
+            dataType: 'json',
+            success: function (res) {
+                if (res.resultCode !== 200) {
+                    $.toast('请求失败', 'cancel');
+                    return '';
+                }
+                setRankList(res.data);
+                $.hideLoading();
+                infiniteWrap.attr('data-rank', data);
+                myScroll.reset({
+                    ajaxData: {
+                        rank: infiniteWrap.attr('data-rank')
+                    },
+                    page: 1
+                });
+                $.myScrollRefresh(true);
+            },
+            error: function () {
+                $.toast('服务器异常', 'cancel');
+            }
+        });
+    }
+
+    function setRankList(obj) {
+        var domStr = '';
+        if (obj.length > 0) {
+            obj.forEach(function (v) {
+                domStr += listTpl(v);
+            });
+        } else {
+            domStr = '<div class="view-list-item view-no-res"><p class="text-center">暂无数据</p></div>'
+        }
+        infiniteWrap
+            .find('.view-list-item').remove()
+            .end()
+            .find('.weui-loadmore').before(domStr);
+    }
 });

@@ -1007,6 +1007,12 @@
   box-sizing: border-box;
   padding-top: 50px;
 }
+#myTeam {
+  height: 100% !important;
+}
+#J_upgradeRules {
+  z-index: 501;
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,
   .border-1px-top::after,
