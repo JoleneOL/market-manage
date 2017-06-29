@@ -12,6 +12,6 @@ public class WechatMyTeamPage extends AbstractWechatPage {
 
     @Override
     public void validatePage() {
-        assertTitle("推广");
+        assertTitle("我的团队");
     }
 }
