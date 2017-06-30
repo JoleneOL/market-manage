@@ -65,7 +65,7 @@ Mock.mock(/\/afterSale\/list/, "get", {
             'time': '2017-09-09',
             'operator': '大大头',
             'status': '待处理',
-            'statusCode': '@pick([0,1,2,3,4])'
+            'statusCode': '@pick([0,1,2])'
         }
     ]
 });

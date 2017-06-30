@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>维修派单</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_afterSale.html">维修</a></li>
+                <li><strong>维修派单</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="contentpanel">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        维修地址
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td>用户姓名</td>
+                                    <td>李菲菲</td>
+                                </tr>
+                                <tr>
+                                    <td>联系方式</td>
+                                    <td>18958434567</td>
+                                </tr>
+                                <tr>
+                                    <td>联系地址</td>
+                                    <td>江苏省南京市栖霞区仙林诚品城34栋205</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        维修流程
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-md-6">
+                            <div class="ivu-steps ivu-steps-horizontal ivu-item3">
+                                <div class="ivu-steps-item ivu-steps-status-finish">
+                                    <div class="ivu-steps-tail"><i></i></div>
+                                    <div class="ivu-steps-head">
+                                        <div class="ivu-steps-head-inner">
+                                            <!--<span>1</span>-->
+                                            <span class="fa fa-check"></span>
+                                        </div>
+                                    </div>
+                                    <div class="ivu-steps-main">
+                                        <div class="ivu-steps-title">客服电话沟通</div>
+                                    </div>
+                                </div>
+                                <div class="ivu-steps-item ivu-steps-status-process">
+                                    <div class="ivu-steps-tail"><i></i></div>
+                                    <div class="ivu-steps-head">
+                                        <div class="ivu-steps-head-inner"><span>2</span></div>
+                                    </div>
+                                    <div class="ivu-steps-main">
+                                        <div class="ivu-steps-title">户帮户上门维修</div>
+                                    </div>
+                                </div>
+                                <div class="ivu-steps-item ivu-steps-status-wait">
+                                    <div class="ivu-steps-tail"><i></i></div>
+                                    <div class="ivu-steps-head">
+                                        <div class="ivu-steps-head-inner"><span>3</span></div>
+                                    </div>
+                                    <div class="ivu-steps-main">
+                                        <div class="ivu-steps-title">维修完成</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-7 col-lg-6">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">产品类型</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" required>
+                                                <option value="1">户帮户</option>
+                                                <option value="2">户帮户1</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">预约安装时间</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control"
+                                                   placeholder="日期" id="J_datePicker">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control"
+                                                   placeholder="时间" id="J_timePicker">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">安装商品</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" required>
+                                                <option value="1">滤芯</option>
+                                                <option value="2">机器</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                                确&nbsp;定
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/flatpickr/2.6.3/l10n/zh.js"></script>
+<script src="manage-resource/js/repairDetail.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+</html>

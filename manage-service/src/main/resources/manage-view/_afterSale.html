@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
     <link rel="stylesheet" href="./manage-resource/css/custom.css">
@@ -23,13 +24,27 @@
 </head>
 <body data-agent-url="/agentData/list">
 <div class="wrapper wrapper-content">
-
     <div class="row">
         <div class="col-sm-10">
             <div class="form-inline">
                 <div class="js-selectToolbar">
                     <input type="search" class="form-control input-sm js-searchName" placeholder="手机号"
                            name="mobile">
+                    <input type="search" class="form-control input-sm js-searchName" placeholder="用户名"
+                           name="name">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control"
+                               placeholder="操作时间" id="J_datePicker" name="operateDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                    <label>
+                        <select class="form-control input-sm js-repairState" name="repairState">
+                            <option value=" " disabled="" selected="" class="hidden">状态</option>
+                            <option value="all">全部</option>
+                            <option value="1">维修中</option>
+                            <option value="2">已维修</option>
+                        </select>
+                    </label>
                     <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
                 </div>
             </div>
@@ -46,7 +61,8 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="http://resali.huobanplus.com/cdn/flatpickr/2.6.3/l10n/zh.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>

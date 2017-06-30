@@ -46,7 +46,11 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    return '<a href="javascript:;" class="js-checkUser" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                    var a = '<a href="javascript:;" class="js-checkUser" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                    var b = '<a href="javascript:;" class="btn btn-primary btn-xs js-dispatch" data-id="' + item.id + '">派单</a>';
+                    if (item.statusCode === 0)
+                        a += b;
+                    return a;
                 }
             }
         ],
@@ -77,7 +81,11 @@ $(function () {
     }).on('click', '.js-checkUser', function () {
         // TODO
         // 需要获取一些参数供详情跳转
-        $('#content', parent.document).attr('src', 'repairDetail.html');
+        window.location.href = '_repairDetail.html'
+    }).on('click', '.js-dispatch', function () {
+        // TODO
+        // 需要获取一些参数供详情跳转
+        window.location.href = '_repairOperate.html'
     });
 
     // 添加额外的参数
@@ -98,4 +106,9 @@ $(function () {
     function clearSearchValue() {
         //TODO
     }
+
+    $('#J_datePicker').flatpickr({
+        maxDate: new Date(),
+        locale: 'zh'
+    });
 });
