@@ -86,6 +86,9 @@
 .vertical-middle {
   vertical-align: middle;
 }
+.text-middle {
+  font-size: 18px;
+}
 .text-big {
   font-size: 24px;
 }
@@ -128,6 +131,10 @@
 }
 .weui-btn_default_custom:after {
   border: none;
+}
+.weui-btn_default_primary {
+  color: #fff;
+  background-color: #009bb6;
 }
 .weui-btn_default_disabled {
   color: rgba(0, 0, 0, 0.3);
@@ -1012,6 +1019,25 @@
 }
 #J_upgradeRules {
   z-index: 501;
+}
+.view-order-wrap {
+  padding-top: 8px;
+  background: #efeff4;
+}
+.view-order-wrap .weui-flex__item {
+  background: #fff;
+}
+.view-order-wrap .weui-flex__item p {
+  box-sizing: border-box;
+}
+.view-order-wrap .weui-flex__item p:first-of-type {
+  margin-top: 12px;
+}
+.view-order-wrap .weui-flex__item p:last-of-type {
+  margin-bottom: 12px;
+}
+.view-order-wrap .weui-flex__item:first-of-type p {
+  border-right: 1px solid #e5e5e5;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,

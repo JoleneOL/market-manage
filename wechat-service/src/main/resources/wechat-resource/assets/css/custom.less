@@ -152,7 +152,9 @@
 .vertical-middle {
   vertical-align: middle;
 }
-
+.text-middle {
+  font-size: 18px;
+}
 .text-big {
   font-size: 24px;
 }
@@ -208,7 +210,10 @@
     border: none;
   }
 }
-
+.weui-btn_default_primary {
+  color: #fff;
+  background-color: @brand-success;
+}
 .weui-btn_default_disabled {
   color: rgba(0, 0, 0, .3);
   background-color: #fff;
@@ -1158,6 +1163,27 @@
   z-index: 501;
 }
 
+.view-order-wrap {
+  padding-top: 8px;
+  background: #efeff4;
+  .weui-flex__item {
+    background: #fff;
+    p {
+      box-sizing: border-box;
+    }
+    p:first-of-type {
+      margin-top: 12px;
+    }
+    p:last-of-type {
+      margin-bottom: 12px;
+    }
+    &:first-of-type {
+      p {
+        border-right: 1px solid #e5e5e5;
+      }
+    }
+  }
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom,
   .border-1px-top,

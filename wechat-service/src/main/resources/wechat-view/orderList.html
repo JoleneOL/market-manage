@@ -23,7 +23,19 @@
       th:data-detail-url="@{/wechatOrderDetail}"
       th:data-pay-url="@{/wechatOrderPay}">
 <section class="view_body view_pb-more">
-    <div class="weui-cells__title">我的列表</div>
+    <div class="weui-cells__title">订单列表</div>
+    <div class="view-order-wrap">
+        <div class="weui-flex">
+            <div class="weui-flex__item text-center">
+                <p class="text-gray">可下单数量</p>
+                <p class="text-middle">100</p>
+            </div>
+            <div class="weui-flex__item text-center">
+                <p class="text-gray">已下单数量</p>
+                <p class="text-middle">200</p>
+            </div>
+        </div>
+    </div>
     <div class="weui-search-bar js-extra-h-c">
         <div class="weui-search-bar__form">
             <div class="weui-search-bar__box">
