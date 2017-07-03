@@ -1039,6 +1039,27 @@
 .view-order-wrap .weui-flex__item:first-of-type p {
   border-right: 1px solid #e5e5e5;
 }
+.view-body_share {
+  padding-top: 20%;
+}
+.view-body_share h1 {
+  font-weight: normal;
+  font-size: 30px;
+}
+.view-body_share h2 {
+  font-weight: normal;
+  font-size: 14px;
+  color: #333;
+}
+.view-body_share .view-share-qc {
+  padding-top: 20px;
+  padding-left: 20%;
+  padding-right: 20%;
+}
+.view-body_share .view-share-qc img {
+  width: 160px;
+  height: 160px;
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,
   .border-1px-top::after,
