@@ -15,6 +15,6 @@ public class IndexPage extends AbstractWechatPage {
 
     @Override
     public void validatePage() {
-        assertTitle("模拟页面");
+        assertTitle("我的");
     }
 }
