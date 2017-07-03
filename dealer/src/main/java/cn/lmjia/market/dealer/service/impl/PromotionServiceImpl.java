@@ -45,6 +45,10 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public LoginRelationChangedEvent tryPromotion(LoginRelationChangedEvent event) {
+        if (systemStringService.getSystemString("custom.stopPromotion", Boolean.class, false)) {
+            log.debug("我方系统已经停止自动升级");
+            return null;
+        }
         // 检查升级
         // 如果它还只是一个客户，则检查是否推荐了足够的「有效用户」
         final Login who = event.getWho();
