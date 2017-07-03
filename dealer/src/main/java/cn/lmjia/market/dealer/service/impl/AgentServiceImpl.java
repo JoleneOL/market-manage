@@ -384,6 +384,7 @@ public class AgentServiceImpl implements AgentService {
                                 , address
                                 , criteriaBuilder)
                         , criteriaBuilder.equal(root.get("level").as(Integer.class), systemService.addressRateForLevel())
+                        , criteriaBuilder.isNull(root.get("levelTitle"))
                 ));
         List<AgentLevel> agentLevels = entityManager.createQuery(query).getResultList();
         // 如何择优？ 它没有更高级别的了！
