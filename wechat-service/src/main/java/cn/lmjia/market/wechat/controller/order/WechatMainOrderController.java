@@ -98,9 +98,10 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     // &address=%E6%B5%99%E6%B1%9F%E7%9C%81+%E6%9D%AD%E5%B7%9E%E5%B8%82+%E6%BB%A8%E6%B1%9F%E5%8C%BA
     // &fullAddress=%E6%B1%9F%E7%95%94%E6%99%95%E5%95%A6&mobile=18606509616&goodId=2&leasedType=hzts02&amount=0&activityCode=xzs&recommend=2
     @PostMapping("/wechatOrder")
-    public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, int age, Gender gender, Address address, String mobile, long goodId, int amount
+    public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender, Address address, String mobile, long goodId, int amount
             , String activityCode, @AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException {
+        int age = 20;
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile, goodId, amount
                 , activityCode);
         return payOrder(openId, request, order);

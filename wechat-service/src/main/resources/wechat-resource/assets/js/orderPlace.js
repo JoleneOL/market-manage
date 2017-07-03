@@ -119,11 +119,11 @@ $(function () {
         ignore: "",
         rules: {
             name: "required",
-            age: {
-                required: true,
-                number: true,
-                digits: true
-            },
+            // age: {
+            //     required: true,
+            //     number: true,
+            //     digits: true
+            // },
             address: 'required',
             fullAddress: 'required',
             mobile: {
@@ -138,10 +138,10 @@ $(function () {
         },
         messages: {
             name: "请填写客户姓名",
-            age: {
-                required: "请填写年龄",
-                digits: "请输入整数"
-            },
+            // age: {
+            //     required: "请填写年龄",
+            //     digits: "请输入整数"
+            // },
             mobile: {
                 required: "请填写手机号码"
             },
