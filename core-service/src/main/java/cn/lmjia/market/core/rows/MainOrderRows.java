@@ -67,7 +67,7 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                 , Fields.asBiFunction("method", ((root, criteriaBuilder)
                         -> criteriaBuilder.literal("")))
                 , Fields.asBiFunction("total", (MainOrder::getOrderDueAmount))
-                , Fields.asFunction("address", root -> root.get("installAddress").get("otherAddress"))
+                , Fields.asFunction("address", root -> root.get("installAddress"))
                 , FieldBuilder.asName(MainOrder.class, "status")
                         .addSelect(root -> root.get("orderStatus"))
                         .addFormat((data, type) -> data == null ? null : data.toString())
