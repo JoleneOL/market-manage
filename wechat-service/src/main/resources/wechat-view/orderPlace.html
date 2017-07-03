@@ -35,16 +35,16 @@
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">年龄</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="number" min="1" max="99" placeholder="请输入年龄" name="age"
-                           th:value="${@environment.acceptsProfiles('staging')?'33':''}">
-                </div>
-                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
-            </div>
+            <!--<div class="weui-cell">-->
+                <!--<div class="weui-cell__hd">-->
+                    <!--<label class="weui-label">年龄</label>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<input class="weui-input" type="number" min="1" max="99" placeholder="请输入年龄" name="age"-->
+                           <!--th:value="${@environment.acceptsProfiles('staging')?'33':''}">-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>-->
+            <!--</div>-->
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">性别</label>
@@ -113,7 +113,7 @@
                                 th:data-deposit="${good.product.deposit}"
                                 th:data-need-install="${good.product.install}" th:data-model="${good.product.code}"
                                 th:data-type="${good.id}" th:text="${good.product.name}"
-                                th:data-day-cost="${good.product.serviceCharge}">厨下净水机
+                                th:data-day-cost="${good.product.serviceCharge}">量子橱下净水器
                         </option>
                         <!--<option th:remove="all" value="2" data-deposit="3000" data-need-install="180"-->
                         <!--data-model="hzts02"-->
@@ -127,11 +127,11 @@
                         <!--</option>-->
                         <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器"
                                 data-day-cost="5">
-                            空气净化器
+                            量子空气净化器
                         </option>
                         <option th:remove="all" value="6" data-deposit="9800" data-model="SP70" data-type="食品优化宝"
                                 data-day-cost="10">
-                            食品优化宝
+                            量子食品优化宝
                         </option>
                     </select>
                 </div>
@@ -166,12 +166,13 @@
             <!--</div>-->
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">使用费</label>
+                    <label class="weui-label">会员价</label>
                 </div>
                 <div class="weui-cell__bd">
                     <p class="weui-input" id="J_userCost">
                         <span>3000</span>
-                        <span class="unit-txt">元 / 三年 / 台</span>
+                        <!--<span class="unit-txt">元 / 三年 / 台</span>-->
+                        <span class="unit-txt">元</span>
                     </p>
                 </div>
             </div>
