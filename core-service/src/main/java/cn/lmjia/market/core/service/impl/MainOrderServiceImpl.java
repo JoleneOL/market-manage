@@ -135,6 +135,15 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
+    public Login getEnjoyability(MainOrder order) {
+        Login orderBy = order.getOrderBy();
+        while (!loginService.isRegularLogin(orderBy)) {
+            orderBy = orderBy.getGuideUser();
+        }
+        return orderBy;
+    }
+
+    @Override
     public Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate
             , OrderStatus status) {
         return (root, query, cb) -> {

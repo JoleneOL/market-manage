@@ -96,11 +96,15 @@ public class Login implements UserDetails {
         if (this == o) return true;
         if (!(o instanceof Login)) return false;
         Login login = (Login) o;
+        if (id != null)
+            return Objects.equals(id, login.id);
         return Objects.equals(loginName, login.loginName);
     }
 
     @Override
     public int hashCode() {
+        if (id != null)
+            return Objects.hash(id);
         return Objects.hash(loginName);
     }
 

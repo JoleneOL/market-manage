@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.payment.event.OrderPaySuccess;
@@ -42,6 +43,8 @@ public class NoticeServiceImpl implements NoticeService {
     private UserNoticeService userNoticeService;
     @Autowired
     private Environment environment;
+    @Autowired
+    private MainOrderService mainOrderService;
 
     private boolean useLocal() {
         return environment.acceptsProfiles("staging") || environment.acceptsProfiles(CoreConfig.ProfileUnitTest);
@@ -88,6 +91,44 @@ public class NoticeServiceImpl implements NoticeService {
 
             }
         }, systemService.toUrl("/wechatOrderDetail?orderId={2}"));
+
+        wechatSendSupplier.registerTemplateMessage(new PaySuccessToJustOrder(), new TemplateMessageStyle() {
+            @Override
+            public Collection<? extends TemplateMessageParameter> parameterStyles() {
+                return Arrays.asList(
+                        new SimpleTemplateMessageParameter("first", "您的订单已成功支付。")
+                        , new SimpleTemplateMessageParameter("keyword1", "{3}")
+                        , new SimpleTemplateMessageParameter("keyword2", "{2}")
+                        , new SimpleTemplateMessageParameter("keyword3", "{4,number,￥,###.##}")
+                        , new SimpleTemplateMessageParameter("remark", "谢谢您的惠顾。")
+                );
+            }
+
+            @Override
+            public String getTemplateIdShort() {
+                return null;
+            }
+
+            @Override
+            public String getTemplateTitle() {
+                return null;
+            }
+
+            @Override
+            public String getIndustryId() {
+                return null;
+            }
+
+            @Override
+            public String getTemplateId() {
+                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "ieAp4pLGQtEE9DZbbAP0_76xNrnjpoHNpQYe2DT8ID0";
+            }
+
+            @Override
+            public void setTemplateId(String templateId) {
+
+            }
+        }, systemService.toUrl("/wechatOrderDetail?orderId={2}"));
     }
 
     @Override
@@ -96,6 +137,7 @@ public class NoticeServiceImpl implements NoticeService {
         MainOrder order = (MainOrder) event.getPayableOrder();
         WeixinUserDetail detail = order.getOrderBy().getWechatUser();
         if (detail != null) {
+            // 需要确保收益者和下单人是同一个人
             userNoticeService.sendMessage(null, new User() {
                         @Override
                         public boolean supportNoticeChannel(NoticeChannel channel) {
@@ -108,8 +150,21 @@ public class NoticeServiceImpl implements NoticeService {
                             map.put(WechatNoticeChannel.OpenIdCredentialTo, detail.getOpenId());
                             return map;
                         }
-                    }, null, new PaySuccessToOrder(), new Date(), order.getId(), order.getSerialId()
+                    }, null
+                    , mainOrderService.getEnjoyability(order).equals(order.getOrderBy()) ? new PaySuccessToOrder()
+                            : new PaySuccessToJustOrder(), new Date(), order.getId(), order.getSerialId()
                     , order.getOrderProductName(), order.getOrderDueAmount());
+        }
+    }
+
+
+    /**
+     * 区别是 并非订单收益者
+     */
+    private class PaySuccessToJustOrder extends PaySuccessToOrder {
+        @Override
+        public String title() {
+            return super.title() + "（非收益者）";
         }
     }
 

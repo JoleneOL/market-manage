@@ -70,6 +70,13 @@ public interface MainOrderService {
     boolean isPaySuccess(long id);
 
     /**
+     * @param order 订单
+     * @return 享受该订单受益者
+     */
+    @Transactional(readOnly = true)
+    Login getEnjoyability(MainOrder order);
+
+    /**
      * @param orderId   可选订单号
      * @param mobile    可选购买者手机号码
      * @param goodId    可选商品
