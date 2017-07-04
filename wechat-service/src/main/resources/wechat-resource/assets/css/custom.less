@@ -1190,9 +1190,11 @@
     }
   }
 }
-
+.money-button {
+  padding: 5%;
+  box-sizing: border-box;
+}
 .view-body_share {
-  padding-top: 20%;
   h1 {
     font-weight: normal;
     font-size: 30px;
@@ -1213,6 +1215,20 @@
   }
 }
 
+.view-change {
+  background: url("../img/money-bg.jpg") no-repeat;
+  background-size: cover;
+}
+
+.view_footer-noBg {
+  .weui-footer_fixed-bottom {
+    border-top: none;
+    background-color: transparent;
+  }
+  .weui-btn_custom {
+    background-color: rgba(0,155,182, .7)
+  }
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom,
   .border-1px-top,
