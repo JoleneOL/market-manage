@@ -17,6 +17,10 @@ public interface SystemService {
      */
     String wechatMyURi = "/wechatMy";
     /**
+     * 推广URI
+     */
+    String wechatPromotionUri = "/wechatPromotion";
+    /**
      * 我的团队URI
      */
     String wechatMyTeamURi = "/wechatMyTeam";

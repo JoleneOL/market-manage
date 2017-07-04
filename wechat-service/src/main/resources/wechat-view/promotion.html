@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" class="infinite">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:wx="http://weixin.jiangcai.me" lang="en" class="infinite">
+<!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
+<!--/*@thymesVar id="qrCodeUrl" type="java.lang.String"*/-->
+<!--/*@thymesVar id="url" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -18,9 +21,17 @@
 </head>
 <body class="view-fs-small view-bg-color">
 <section class="view_body">
-    <h1><img src="../wechat-resource/assets/img/repair.png" alt="维护中"></h1>
-    <h2>系统正在维护中</h2>
-    <p>带来不便，敬请谅解！</p>
+    <div class="view-pay">
+        <p class="view-pay-title" th:text="${@readService.nameForPrincipal(#authentication.principal)}">某用户</p>
+        <p class="view-pay-title">
+            ID:
+            <span th:text="${login.id+100000000}">1000001</span></p>
+        <p class="view-pay-qrcode">
+            <img class="img-qrCode" src="../wechat-resource/assets/img/temp.png"
+                 th:src="${qrCodeUrl}" name="qrCode" id="qrCode"/></p>
+    </div>
 </section>
+<script wx:js=""></script>
+<script wx:share="分享标题|分享描述|${url}|http://img1.juimg.com/150410/330561-1504101044559.jpg"></script>
 </body>
 </html>
