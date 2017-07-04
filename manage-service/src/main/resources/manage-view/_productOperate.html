@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>新增商品</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_productCenter.html">产品中心</a></li>
+                <li><strong>新增商品</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    添加商品
+                </div>
+                <div class="ibox-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-7 col-lg-6">
+                                <form class="form-horizontal" id="J_productForm" method="post"
+                                      action="_productCenter.html">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">产品品类 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入产品品类" class="form-control"
+                                                   name="category" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">型号 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入型号" class="form-control"
+                                                   name="type" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">厂家 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入厂家" class="form-control"
+                                                   name="supplier" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">厂家地址 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入厂家地址" class="form-control"
+                                                   name="address" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">单价(元） <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="number" placeholder="请输入厂家地址" class="form-control"
+                                                   name="price" min="0" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">使用费(元） <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="number" placeholder="请输入使用费" class="form-control"
+                                                   name="cost" min="0" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">安装费(元）</label>
+                                        <div class="col-sm-6">
+                                            <input type="number" placeholder="请输入安装费" class="form-control"
+                                                   name="installFee" min="0">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">可分期数</label>
+                                        <div class="col-sm-6">
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="stagesTime" value="3">3期</label>
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="stagesTime" value="6">6期</label>
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="stagesTime" value="9">9期</label>
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="stagesTime" value="12">12期</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">分期产品</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入分期产品" class="form-control"
+                                                   name="stagesType" value="花呗">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">产品描述 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <textarea class="form-control" rows="3">请使用之前的CKEditor，我这就偷个懒</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                                添&nbsp;加
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/icheck.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="manage-resource/js/productAdd.js"></script>
+</html>
