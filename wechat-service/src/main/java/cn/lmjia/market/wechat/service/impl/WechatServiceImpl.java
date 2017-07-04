@@ -45,6 +45,8 @@ public class WechatServiceImpl implements WechatService {
 
     @Override
     public void shareTo(long loginId, String openId) {
+        // 其实应该是这个openId 根本不应该存在！
+        // 现在简单点 只要它没有绑定帐号即可
 
     }
 

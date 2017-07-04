@@ -219,6 +219,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public void unbindWechat(String loginName) {
+        if (loginName == null)
+            throw new IllegalStateException("未设置登录名的帐号是无法解绑微信的");
         byLoginName(loginName).setWechatUser(null);
     }
 }
