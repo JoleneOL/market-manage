@@ -19,11 +19,11 @@ public interface SystemService {
     /**
      * 推广URI
      */
-    String wechatPromotionUri = "/wechatPromotion";
+    String wechatShareUri = "/wechatShare";
     /**
      * 推广URI，更多（賺钱计划）
      */
-    String wechatPromotionMoreUri = "/wechatPromotionMore";
+    String wechatShareMoreUri = "/wechatShareMore";
     /**
      * 我的团队URI
      */

@@ -52,14 +52,19 @@ public class WechatMyController {
     // 如果已关注，go S1,然后引导至下单页
     //
     // 所以我们得先解决 永久二维码问题
-    @GetMapping(SystemService.wechatPromotionUri)
-    public String promotion(@AuthenticationPrincipal Login login, Model model) {
+    @GetMapping(SystemService.wechatShareUri)
+    public String share(@AuthenticationPrincipal Login login, Model model) {
         if (!loginService.isRegularLogin(login))
-            return "redirect:" + SystemService.wechatPromotionMoreUri;
+            return "redirect:" + SystemService.wechatShareMoreUri;
         model.addAttribute("login", login);
         model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(login).getImageUrl());
         model.addAttribute("url", systemService.toUrl("/wechatJoin?id=" + login.getId()));
-        return "wechat@promotion.html";
+        return "wechat@shareQC.html";
+    }
+
+    @GetMapping(SystemService.wechatShareMoreUri)
+    public String shareMore() {
+        return "wechat@chance.html";
     }
 
     @GetMapping("/wechatJoin")
