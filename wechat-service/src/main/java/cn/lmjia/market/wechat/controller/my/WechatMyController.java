@@ -1,6 +1,5 @@
 package cn.lmjia.market.wechat.controller.my;
 
-import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
@@ -32,8 +31,6 @@ public class WechatMyController {
     private AgentService agentService;
     @Autowired
     private LoginService loginService;
-    @Autowired
-    private QRController qrController;
     @Autowired
     private WechatService wechatService;
     @Autowired

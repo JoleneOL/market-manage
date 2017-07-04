@@ -16,6 +16,7 @@ import cn.lmjia.market.core.service.LoginService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.wx.model.PublicAccount;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -100,6 +101,12 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public <T extends Login> T newLogin(Class<T> type, String username, Login guide, String rawPassword) {
+        T login = newLogin(type, guide);
+        login.setLoginName(username);
+        return password(login, rawPassword);
+    }
+
+    private <T extends Login> T newLogin(Class<T> type, Login guide) {
         T login;
         try {
             login = type.newInstance();
@@ -107,9 +114,15 @@ public class LoginServiceImpl implements LoginService {
             throw new IllegalStateException(e);
         }
         login.setCreatedTime(LocalDateTime.now());
-        login.setLoginName(username);
         login.setGuideUser(guide);
-        return password(login, rawPassword);
+        return login;
+    }
+
+    @Override
+    public <T extends Login> T newLogin(Class<T> type, Login guide, StandardWeixinUser weixinUser) {
+        T login = newLogin(type, guide);
+        login.setWechatUser(weixinUser);
+        return loginRepository.save(login);
     }
 
     @Override

@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,10 +58,21 @@ public interface LoginService extends UserDetailsService {
      * @param username    登录名
      * @param guide       引导者
      * @param rawPassword 明文密码
-     * @return
+     * @return 新增身份
      */
     @Transactional
     <T extends Login> T newLogin(Class<T> type, String username, Login guide, String rawPassword);
+
+    /**
+     * 新增普通登录
+     *
+     * @param type       类型
+     * @param guide      引导者
+     * @param weixinUser 微信用户
+     * @return 新增身份
+     */
+    @Transactional
+    <T extends Login> T newLogin(Class<T> type, Login guide, StandardWeixinUser weixinUser);
 
     /**
      * 手机号码可用性校验
