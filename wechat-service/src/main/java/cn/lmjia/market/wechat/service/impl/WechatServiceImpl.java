@@ -36,10 +36,10 @@ public class WechatServiceImpl implements WechatService {
         if (code != null)
             return code;
         //最多才 100000看着办吧
-        LimitQRCode maxId = limitQRCodeRepository.findTopOrderByIdDesc();
+        LimitQRCode maxId = limitQRCodeRepository.findTopByOrderByIdDesc();
         if (maxId != null && maxId.getId() >= 100000) {
             // 释放掉一个最长时间没用的了
-            LimitQRCode newOne = limitQRCodeRepository.findTopOrderByLastUseTimeAsc();
+            LimitQRCode newOne = limitQRCodeRepository.findTopByOrderByLastUseTimeAsc();
             return forLogin(newOne, login);
         }
         LimitQRCode newOne = new LimitQRCode();

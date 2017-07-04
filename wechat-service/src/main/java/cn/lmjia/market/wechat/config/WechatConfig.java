@@ -2,6 +2,7 @@ package cn.lmjia.market.wechat.config;
 
 import cn.lmjia.market.core.config.WebModule;
 import cn.lmjia.market.dealer.config.DealerConfig;
+import me.jiangcai.wx.WeixinSpringConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
                 , "cn.lmjia.market.wechat.service"
         }
 )
-@Import(DealerConfig.class)
+@Import({DealerConfig.class, WeixinSpringConfig.class})
 @EnableJpaRepositories(basePackages = "cn.lmjia.market.wechat.repository")
 public class WechatConfig implements WebModule {
     @Override

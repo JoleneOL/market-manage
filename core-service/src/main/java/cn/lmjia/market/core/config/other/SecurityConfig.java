@@ -58,6 +58,8 @@ public class SecurityConfig {
                     )
                     // 微信校验
                     .antMatchers("/MP_verify_*.txt", "/**/favicon.ico", "/weixin/sdk/config")
+                    // 微信事件
+                    .antMatchers("/_weixin_event/")
                     .antMatchers("/404.html", "/500.html")
                     // 畅捷支付回调
                     .antMatchers("/cash/notify/chanpay")

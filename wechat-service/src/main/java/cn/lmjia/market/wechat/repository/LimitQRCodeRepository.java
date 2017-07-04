@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface LimitQRCodeRepository extends JpaRepository<LimitQRCode, Integer> {
 
     //id最大的
-    LimitQRCode findTopOrderByIdDesc();
+    LimitQRCode findTopByOrderByIdDesc();
 
     //最长没用的
-    LimitQRCode findTopOrderByLastUseTimeAsc();
+    LimitQRCode findTopByOrderByLastUseTimeAsc();
 
     LimitQRCode findByLogin(Login login);
 

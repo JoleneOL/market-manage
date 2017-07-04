@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ public class LimitQRCode {
      * 场景二维码的id
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     /**
      * 创建者
