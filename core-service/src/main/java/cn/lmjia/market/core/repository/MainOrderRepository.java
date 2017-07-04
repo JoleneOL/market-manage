@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author CJ
  */
 public interface MainOrderRepository extends JpaRepository<MainOrder, Long>, JpaSpecificationExecutor<MainOrder> {
+
 }

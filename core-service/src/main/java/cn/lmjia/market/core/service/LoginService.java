@@ -53,8 +53,7 @@ public interface LoginService extends UserDetailsService {
     /**
      * 新增普通登录
      *
-     *
-     * @param type 类型
+     * @param type        类型
      * @param username    登录名
      * @param guide       引导者
      * @param rawPassword 明文密码
@@ -114,6 +113,13 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional(readOnly = true)
     boolean isManager(String loginName);
+
+    /**
+     * @param login 身份
+     * @return 是否为正式用户，依据为是否为代理商，是否成功下单并且支付
+     */
+    @Transactional(readOnly = true)
+    boolean isRegularLogin(Login login);
 
     /**
      * 解除登录的微信号绑定

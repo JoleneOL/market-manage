@@ -23,6 +23,12 @@ public interface AbstractAgentLevelRepository<T extends AgentLevel>
      */
     List<T> findByLogin(Login login);
 
+    /**
+     * @param login 登录者
+     * @return 代理信息数量
+     */
+    long countByLogin(Login login);
+
     AgentLevel findByLevelAndLoginAndSystem(int level, Login login, AgentSystem system);
 
     List<T> findBySuperior(AgentLevel agentLevel);

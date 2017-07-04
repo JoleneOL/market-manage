@@ -2,11 +2,14 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -22,8 +25,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author CJ
@@ -32,7 +42,7 @@ import java.util.List;
 public class LoginServiceImpl implements LoginService {
 
     private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
-
+    private final Set<OrderStatus> payStatus = new HashSet<>();
     @Autowired
     private LoginRepository loginRepository;
     @Autowired
@@ -51,6 +61,18 @@ public class LoginServiceImpl implements LoginService {
     private AgentLevelRepository agentLevelRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private MainOrderRepository mainOrderRepository;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
+
+    {
+        payStatus.add(OrderStatus.forDeliver);
+        payStatus.add(OrderStatus.forDeliverConfirm);
+        payStatus.add(OrderStatus.forInstall);
+        payStatus.add(OrderStatus.afterSale);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -170,6 +192,29 @@ public class LoginServiceImpl implements LoginService {
     public boolean isManager(String loginName) {
         Login login = byLoginName(loginName);
         return login != null && login.isManageable();
+    }
+
+    @Override
+    public boolean isRegularLogin(Login login) {
+        if (agentLevelRepository.countByLogin(login) > 0)
+            return true;
+        // 看下是否为已支付用户
+        if (customerRepository.countByLoginAndSuccessOrderTrue(login) > 0)
+            return true;
+        // 订单是否存在
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+        try {
+            return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("orderBy"), login)
+                    , root.get("orderStatus").in(payStatus)
+            ))
+                    .select(criteriaBuilder.count(root)))
+                    .getSingleResult() > 0;
+        } catch (NoResultException ignored) {
+            return false;
+        }
     }
 
     @Override

@@ -11,6 +11,7 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.repository.deal.OrderCommissionRepository;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import cn.lmjia.market.dealer.service.CommissionSettlementService;
@@ -40,6 +41,8 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     private CommissionRateService commissionRateService;
     @Autowired
     private CommissionRepository commissionRepository;
+    @Autowired
+    private LoginService loginService;
 
     @EventListener(MainOrderFinishEvent.class)
     @ThreadSafe
@@ -78,15 +81,21 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
 
         orderCommission = orderCommissionRepository.save(orderCommission);
 
-        AgentSystem system = agentService.agentSystem(order.getOrderBy());
+        // 给予奖励的目标
+        Login orderBy = order.getOrderBy();
+        while (!loginService.isRegularLogin(orderBy)) {
+            orderBy = orderBy.getGuideUser();
+        }
+
+        AgentSystem system = agentService.agentSystem(orderBy);
         // 开始分派！
         // 谁可以获得？
         {
             // 销售者
-            saveCommission(orderCommission, null, order.getOrderBy(), commissionRateService.saleRate(system), "直销");
+            saveCommission(orderCommission, null, orderBy, commissionRateService.saleRate(system), "直销");
         }
 
-        AgentLevel[] sales = agentService.agentLine(order.getOrderBy());
+        AgentLevel[] sales = agentService.agentLine(orderBy);
         {
             // 以及销售者的代理体系
             for (AgentLevel level : sales) {
@@ -94,7 +103,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             }
         }
 
-        AgentLevel[] recommends = agentService.recommendAgentLine(order.getOrderBy());
+        AgentLevel[] recommends = agentService.recommendAgentLine(orderBy);
         {
             // 推荐者
             // 以及推荐者的代理体系

@@ -61,7 +61,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private MainOrderRecord record;
     /**
-     * 谁下的单
+     * 谁下的单，并不意味着它即可获得收益，需要确保该用户是否是正式用户（即下过一单或者是一个代理商，如果不是则给他的引导者）
      */
     @ManyToOne
     private Login orderBy;

@@ -17,6 +17,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSp
     List<Customer> findByLogin(Login login);
 
     /**
+     * @return 该login已完成订单的客户数
+     */
+    long countByLoginAndSuccessOrderTrue(Login login);
+
+    /**
      * @return 这个代理体系的所有客户
      */
     List<Customer> findByAgentLevel_SystemAndSuccessOrderTrue(AgentSystem system);
