@@ -5,6 +5,7 @@ import cn.lmjia.market.dealer.config.DealerConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
@@ -25,6 +26,7 @@ import java.util.function.Supplier;
         }
 )
 @Import(DealerConfig.class)
+@EnableJpaRepositories(basePackages = "cn.lmjia.market.wechat.repository")
 public class WechatConfig implements WebModule {
     @Override
     public boolean hasOwnTemplateResolver() {
