@@ -1072,6 +1072,25 @@
 .view_footer-noBg .weui-btn_custom {
   background-color: rgba(0, 155, 182, 0.7);
 }
+.extra-badge {
+  font-size: 12px;
+}
+.view-step {
+  display: none;
+}
+.view-step.on {
+  display: block;
+}
+.webuploader-container label {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.webuploader-pick {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,
   .border-1px-top::after,
