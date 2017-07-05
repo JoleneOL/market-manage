@@ -301,3 +301,10 @@ Mock.mock(/\/api\/mortgageCode/, "post", {
     "resultMsg": "ok",
     "data": null
 });
+
+var uploaderImg = Mock.Random.image('228x178', '#50B347', '#FFF', 'Mock.js');
+
+Mock.mock(/\/resourceUpload\/webUploader/, {
+    "id": "filePath",
+    "url": uploaderImg
+});
