@@ -1,51 +1,23 @@
 /**
- * Created by Neo on 2017/5/19.
+ * Created by Chang on 2017/7/5.
  */
 $(function () {
     "use strict";
 
-    if (window.document.location.search.indexOf('type=error') >= 0) {
-        $.toptip('用户名或者密码错误');
-    }
     if (window.document.location.search.indexOf('type=codeError') >= 0) {
-        $.toptip('用户名或者验证码错误');
-    }
-    if (window.document.location.search.indexOf('type=typeError') >= 0) {
-        $.toptip('该用户无法在此登录');
+        $.toptip('验证码错误');
     }
 
-    $.validator.setDefaults({
-        submitHandler: function (form) {
-            form.submit();
-        }
-    });
+    //TODO 是否需要验证手机号是否注册
 
-    $('#J_passwordForm').validate({
+    $('#J_registerForm').validate({
         rules: {
-            username: "required",
-            password: "required"
-        },
-        messages: {
-            username: "请填写账户",
-            password: "请填写密码"
-        },
-        errorPlacement: function (error, element) {
-            $.toptip(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).closest('.weui-cell').addClass("weui-cell_warn")
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).closest('.weui-cell').removeClass("weui-cell_warn");
-        }
-    });
-
-    $('#J_messageForm').validate({
-        rules: {
+            name: "required",
             mobile: "required",
             authCode: "required"
         },
         messages: {
+            username: "请填写姓名",
             mobile: "请填写手机号",
             authCode: "请填写验证码"
         },
@@ -57,8 +29,12 @@ $(function () {
         },
         unhighlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
+        },
+        submitHandler: function (form) {
+            form.submit();
         }
     });
+
     var $mobile = $('#J_mobile');
     var sendAuthCodeUrl = $('body').attr('data-url-sendAuthCode');
 
@@ -77,7 +53,7 @@ $(function () {
             },
             dataType: 'json',
             success: function (data) {
-                if (data.resultCode == 400) {
+                if (data.resultCode === 400) {
                     $.toptip(data.resultMsg);
                     return false;
                 }
