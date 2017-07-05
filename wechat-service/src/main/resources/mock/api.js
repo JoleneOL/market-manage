@@ -6,6 +6,19 @@ Mock.setup({
     timeout: '1000'
 });
 
+Mock.mock(/^\/api\/teamList\?page=\d{1,100}$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|5": [
+        {
+            name: "@cname",
+            rank: '@pick(["总代理", "代理商", "经销商", "爱心天使"])',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1([34578])\d{9}$/
+        }
+    ]
+});
+
 Mock.mock(/^\/api\/teamList\?rank=all&page=\d{1,100}$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",

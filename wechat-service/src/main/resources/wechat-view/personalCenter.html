@@ -31,30 +31,26 @@
     <div class="view-tab_bd swiper-container" id="navbar-container">
         <div class="swiper-wrapper view-tab_wrap">
             <div id="myTeam" class="swiper-slide view-scroll-wrap">
-                <div class="weui-cells__title js-extra-h">我的团队
-                    <a href="login.html" th:if="${#authentication.name!=null}" th:href="@{/wechatLogout}"
-                       class="weui-btn weui-btn_mini weui-btn_default vertical-middle">更换帐号</a>
-                    <!--<a href="javascript:;" class="weui-cell_link open-popup" -->
-                       <!--data-target="#J_upgradeRules">晋升制度</a>-->
+                <div class="weui-cells__title text-right js-extra-h">
+                    <a href="chance.html" class="weui-btn weui-btn_mini weui-btn_default vertical-middle">成为合伙人</a>
+                    <!--<a href="chance.html" class="weui-btn weui-btn_mini weui-btn_default vertical-middle">升级合伙人</a>-->
                 </div>
-                <div class="view_team-logo js-extra-h">
-                    <div class="view-wrapper weui-flex">
-                        <div class="weui-flex__item">
-                            <div class="view_avatar">
-                                <img src="../wechat-resource/assets/img/avatar.jpg"
-                                     th:src="${@readService.avatarFor(#authentication.principal)}">
-                            </div>
+                <div class="weui-cells js-extra-h">
+                    <a href="userInfo.html" class="weui-cell weui-cell_access">
+                        <div class="weui-cell__hd view-avatar_normal">
+                            <img src="../wechat-resource/assets/img/avatar.jpg"
+                                 th:src="${@readService.avatarFor(#authentication.principal)}">
                         </div>
-                        <div class="weui-flex__item">
-                            <div class="view_info">
-                                <p class="ellipsis"><span
-                                        th:text="${@readService.nameForPrincipal(#authentication.principal)}">利每家科技有限公司</span>
-                                </p>
-                                <p class="ellipsis">
-                                    <span class="label" th:text="${agentLevel}">滨江区总代</span></p>
-                            </div>
+                        <div class="weui-cell__bd">
+                            <p class="view-info_normal">
+                                <span class="ellipsis"
+                                      th:text="${@readService.nameForPrincipal(#authentication.principal)}">利每家科技有限公司</span>
+                                <span class="label" th:text="${agentLevel}">滨江区总代</span>
+                            </p>
+                            <p style="font-size: 13px;color: #888888;">ID:10010101010010011101</p>
                         </div>
-                    </div>
+                        <div class="weui-cell__ft"></div>
+                    </a>
                 </div>
                 <div class="view-order-wrap js-extra-h">
                     <div class="weui-flex">
@@ -68,44 +64,51 @@
                         </div>
                     </div>
                 </div>
-                <!--<div class="weui-flex view_panel-body view_cell js-extra-h">-->
-                    <!--<div class="weui-flex__item">-->
-                        <!--<p>您共发展&nbsp;-->
-                            <!--<strong class="text-error" th:text="${{allCount}}">29</strong>&nbsp;人</p>-->
-                    <!--</div>-->
-
-                <!--</div>-->
-                <!--<div class="weui-flex view_cell js-extra-h">-->
-                    <!--<div class="weui-flex__item text-center">-->
-                        <!--<p>总代理</p>-->
-                        <!--<p><span th:text="${count0}">2</span>人</p>-->
-                    <!--</div>-->
-                    <!--<div class="weui-flex__item text-center">-->
-                        <!--<p>代理商</p>-->
-                        <!--<p><span th:text="${count1}">6</span>人</p>-->
-                    <!--</div>-->
-                    <!--<div class="weui-flex__item text-center">-->
-                        <!--<p>经销商</p>-->
-                        <!--<p><span th:text="${count2}">5</span>人</p>-->
-                    <!--</div>-->
-                    <!--<div class="weui-flex__item text-center">-->
-                        <!--<p>爱心天使</p>-->
-                        <!--<p><span th:text="${count3}">17</span>人</p>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <div class="view_team-list">
-                    <div class="view-list-item view_team-header js-extra-h">
-                        <div>用户</div>
-                        <div>手机号码</div>
-                        <div id="J_changeRank"><i class="weui-icon-search"></i>级别</div>
-                        <div>加入时间</div>
+                <div class="view-tabs js-teams js-extra-h">
+                    <a href="#" class="view-tabs_item js-team active">全部</a>
+                    <a href="#" class="view-tabs_item js-team">总代理</a>
+                    <a href="#" class="view-tabs_item js-team">经销商</a>
+                    <a href="#" class="view-tabs_item js-team">爱心天使</a>
+                </div>
+                <div class="view_team-list js-extra-h">
+                    <div class="weui-flex view_team-header">
+                        <div class="weui-flex__item text-center">用户</div>
+                        <div class="weui-flex__item text-center">级别</div>
+                        <div class="weui-flex__item text-center">加入时间</div>
                     </div>
-                    <!--team-list-start-->
-                    <div class="view-scroll-wrap" id="J_teamList" data-url="/api/teamList" data-rank="all">
-                        <div class="view-scroll-list">
-                            <div class="weui-loadmore">
-                                <i class="weui-loading"></i>
-                                <span class="weui-loadmore__tips">数据加载中...</span>
+                </div>
+                <div id="tabs-teams" class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList">
+                            <div class="view-scroll-list">
+                                <div class="weui-loadmore">
+                                    <i class="weui-loading"></i>
+                                    <span class="weui-loadmore__tips">数据加载中...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList">
+                            <div class="view-scroll-list">
+                                <div class="weui-loadmore">
+                                    <i class="weui-loading"></i>
+                                    <span class="weui-loadmore__tips">数据加载中...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList">
+                            <div class="view-scroll-list">
+                                <div class="weui-loadmore">
+                                    <i class="weui-loading"></i>
+                                    <span class="weui-loadmore__tips">数据加载中...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList">
+                            <div class="view-scroll-list">
+                                <div class="weui-loadmore">
+                                    <i class="weui-loading"></i>
+                                    <span class="weui-loadmore__tips">数据加载中...</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -128,12 +131,12 @@
 
                     </div>
                 </div>
-                <div class="view-tabs js-extra-h-c">
-                    <a href="#" class="view-tabs_item active">全部</a>
-                    <a href="#" class="view-tabs_item">即将获佣</a>
-                    <a href="#" class="view-tabs_item">今日获佣</a>
-                    <a href="#" class="view-tabs_item">本月获佣</a>
-                    <a href="#" class="view-tabs_item">近三个月</a>
+                <div class="view-tabs js-comms js-extra-h-c">
+                    <a href="#" class="view-tabs_item js-comm active">全部</a>
+                    <a href="#" class="view-tabs_item js-comm">即将获佣</a>
+                    <a href="#" class="view-tabs_item js-comm">今日获佣</a>
+                    <a href="#" class="view-tabs_item js-comm">本月获佣</a>
+                    <a href="#" class="view-tabs_item js-comm">近三个月</a>
                 </div>
                 <div class="view_team-list view_team-list-left js-extra-h-c">
                     <div class="weui-flex view_team-header">

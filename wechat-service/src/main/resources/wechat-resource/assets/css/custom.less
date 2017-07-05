@@ -416,8 +416,18 @@
     background-color: #f2f2f2;
   }
 }
-
 .view_team-list {
+  .weui-flex__item {
+    padding: 6px 0;
+  }
+  .view_team-header {
+    > div {
+      background-color: rgba(242, 242, 242, 1);
+      color: #949494;
+    }
+  }
+}
+.view_team-list-left {
   .view-list-item {
     > div {
       padding: 6px 0;
@@ -450,9 +460,6 @@
       color: #949494;
     }
   }
-  .weui-flex__item {
-    padding: 6px 0;
-  }
   .weui-flex__item:nth-child(1) {
     text-indent: 2em;
     width: 16%;
@@ -465,6 +472,22 @@
   .weui-flex__item:nth-child(4) {
     text-indent: 1em;
     width: 33%;
+  }
+  .view_team-header-3,
+  .view-list-item-3 {
+    > div {
+      background: #efeff4;
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(3) {
+        width: 33.33%;
+      }
+    }
+  }
+  .view-list-item-3 {
+    > div {
+      background: #fff;
+    }
   }
 }
 
@@ -1171,6 +1194,7 @@
 
 .view-order-wrap {
   padding-top: 8px;
+  padding-bottom: 8px;
   background: #efeff4;
   .weui-flex__item {
     background: #fff;
@@ -1266,6 +1290,37 @@
   background-color: @brand-success;
 }
 
+.view-avatar_normal {
+  margin-right: 15px;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 3px solid #009bb6;
+  img {
+    width: 100%;
+    display: inline-block;
+  }
+}
+
+.view-info_normal {
+  .label {
+    padding: 0 5px;
+    display: inline-block;
+    background: #009bb6;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+}
+
+.weui-uploader__file {
+  img {
+    width: 100%;
+    display: inline-block;
+  }
+}
+
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom,
   .border-1px-top,
@@ -1306,7 +1361,11 @@
     font-size: 13px;
   }
 
-  .view_info {
+  .view-avatar_normal {
+    margin-right: 10px;
+  }
+
+  .view_info, .view-info_normal {
     .ellipsis {
       width: 140px;
     }

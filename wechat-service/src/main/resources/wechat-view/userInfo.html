@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>个人信息</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
+
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+</head>
+<body class="view-fs-small view-bg-color">
+<section class="view_body">
+    <div class="weui-cells__title">升级资料</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">姓名</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="节菲菲" readonly>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">协议时间</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="2017.09.10-2020.10.09" readonly>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">代理级别</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="省代理" readonly>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">分享资格</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="90000" readonly>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">分成比例</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="20%" readonly>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">公司地址</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="浙江杭州江干区富春路120号" readonly>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">身份证</label>
+            </div>
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files">
+                            <li class="weui-uploader__file">
+                                <img src="http://placehold.it/228x178?text=UPLOADED">
+                            </li>
+                            <li class="weui-uploader__file">
+                                <img src="http://placehold.it/228x178?text=UPLOADED">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">营业执照</label>
+            </div>
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files">
+                            <li class="weui-uploader__file">
+                                <img src="http://placehold.it/228x178?text=UPLOADED">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">ID</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="235624527" readonly>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">手机号码</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" value="18955554567" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="weui-btn-area">
+        <a href="login.html" th:if="${#authentication.name!=null}" th:href="@{/wechatLogout}"
+           class="weui-btn weui-btn_default">更换帐号</a>
+    </div>
+</section>
+</body>
+</html>
