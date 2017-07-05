@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>成为经销商</title>
+    <title>我要升级</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -18,162 +18,97 @@
 </head>
 <body class="view-fs-small view-bg-color">
 <section class="view_body">
-    <div id="J_stepOne" class="view-step">
-        <div class="weui-cells__title">个人资料</div>
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">姓名</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入姓名" name="name" value="哈哈哈">
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="extra-badge">可修改</span>
-                    <i class="weui-icon-warn"></i>
-                </div>
+    <form action="orderSuccess.html" method="post" id="J_updateForm"></form>
+    <div class="weui-cells__title">升级资料</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">升级到</label>
             </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">姓名</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入姓名" name="mobile" value="15879997654">
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="extra-badge">可修改</span>
-                    <i class="weui-icon-warn"></i>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">目前级别</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" name="oldLevel" value="爱心天使" readonly>
-                    </div>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">推荐人ID</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" name="recommender" value="2346236" readonly>
-                    </div>
-                </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" name="newLevel" value="经销商" readonly>
             </div>
         </div>
-        <div class="weui-btn-area">
-            <button type="button" class="weui-btn weui-btn_custom">下一步</button>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">经销商地址</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" id="J_cityPicker" value="浙江省杭州市滨江区智慧e谷 A101" name="address">
+            </div>
+            <div class="weui-cell__ft">
+                <span class="extra-badge">必填</span>
+                <i class="weui-icon-warn"></i>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">身份证正面</label>
+            </div>
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files"></ul>
+                        <div class="weui-uploader__input-box"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cell__ft">
+                <span class="extra-badge">必填</span>
+                <i class="weui-icon-warn"></i>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">身份证反面</label>
+            </div>
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files"></ul>
+                        <div class="weui-uploader__input-box"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cell__ft">
+                <span class="extra-badge">必填</span>
+                <i class="weui-icon-warn"></i>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">营业执照</label>
+            </div>
+            <div class="weui-cell__bd">
+                <div class="weui-uploader">
+                    <div class="weui-uploader__bd">
+                        <ul class="weui-uploader__files"></ul>
+                        <div class="weui-uploader__input-box"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div id="J_stepTwo" class="view-step on">
-        <div class="weui-cells__title">升级资料</div>
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">升级到</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" name="newLevel" value="经销商" readonly>
-                </div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">直升费用</label>
             </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">安装地址</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" id="J_cityPicker" value="浙江省 杭州市 滨江区" name="address">
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="extra-badge">必填</span>
-                    <i class="weui-icon-warn"></i>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label"></label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入详细地址" name="fullAddress">
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="extra-badge">必填</span>
-                    <i class="weui-icon-warn"></i>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">身份证正面</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <div class="weui-uploader">
-                        <div class="weui-uploader__bd">
-                            <ul class="weui-uploader__files"></ul>
-                            <div class="weui-uploader__input-box"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="extra-badge">必填</span>
-                    <i class="weui-icon-warn"></i>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">身份证反面</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <div class="weui-uploader">
-                        <div class="weui-uploader__bd">
-                            <ul class="weui-uploader__files"></ul>
-                            <div class="weui-uploader__input-box"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="extra-badge">必填</span>
-                    <i class="weui-icon-warn"></i>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">营业执照</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <div class="weui-uploader">
-                        <div class="weui-uploader__bd">
-                            <ul class="weui-uploader__files"></ul>
-                            <div class="weui-uploader__input-box"></div>
-                        </div>
-                    </div>
-                </div>
+            <div class="weui-cell__bd">
+                <p class="text-big text-right">￥<span>30000.00</span></p>
             </div>
         </div>
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">直升费用</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p class="text-big text-right">￥<span>30000.00</span></p>
-                </div>
-            </div>
-        </div>
-        <label for="weuiAgree" class="weui-agree view-agress_inline">
-            <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">
-            <span class="weui-agree__text">
+    </div>
+    <div class="weui-btn-area">
+        <button type="submit" class="weui-btn weui-btn_custom">支&nbsp;&nbsp;付</button>
+    </div>
+    <label for="weuiAgree" class="weui-agree view-agress_inline">
+        <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">
+        <span class="weui-agree__text">
                 同意<a href="javascript:;">《经销商电子协议》</a>
             </span>
-        </label>
-        <a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules">查看</a>
-        <div class="weui-btn-area">
-            <button type="submit" class="weui-btn weui-btn_custom">支&nbsp;&nbsp;付</button>
-        </div>
-    </div>
+    </label>
+    <!--<a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules">查看</a>-->
 </section>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
