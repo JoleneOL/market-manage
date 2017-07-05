@@ -31,6 +31,9 @@ $(function () {
         onSlideChangeStart: function () {
             $(".js-teams .active").removeClass('active');
             teamItem.eq(teamSwiper.activeIndex).addClass('active');
+
+            $('.view-total .on').removeClass('on');
+            $('.view-total li').eq(teamSwiper.activeIndex).addClass('on');
         }
     });
     teamItem.on('touchstart mousedown', function (e) {

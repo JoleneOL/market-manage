@@ -422,8 +422,9 @@
   }
   .view_team-header {
     > div {
-      background-color: rgba(242, 242, 242, 1);
+      background-color: #fff;
       color: #949494;
+      border-bottom: 1px solid #f2f2f2;
     }
   }
 }
@@ -1321,6 +1322,16 @@
   }
 }
 
+.view-total {
+  padding: 10px 15px;
+  background: #efeff4;
+  li {
+    display: none;
+    &.on {
+      display: block;
+    }
+  }
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom,
   .border-1px-top,

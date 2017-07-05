@@ -378,8 +378,9 @@
   padding: 6px 0;
 }
 .view_team-list .view_team-header > div {
-  background-color: #f2f2f2;
+  background-color: #fff;
   color: #949494;
+  border-bottom: 1px solid #f2f2f2;
 }
 .view_team-list-left .view-list-item > div {
   padding: 6px 0;
@@ -1143,6 +1144,16 @@
 .weui-uploader__file img {
   width: 100%;
   display: inline-block;
+}
+.view-total {
+  padding: 10px 15px;
+  background: #efeff4;
+}
+.view-total li {
+  display: none;
+}
+.view-total li.on {
+  display: block;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,
