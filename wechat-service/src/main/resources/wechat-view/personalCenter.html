@@ -76,8 +76,8 @@
                     <a href="#" class="view-tabs_item js-team">爱心天使</a>
                 </div>
                 <ul class="view-total">
-                    <li class="on">您共发展了100个人</li>
-                    <li>您共发展了18省个总代理</li>
+                    <li class="on">您共发展了<span th:text="${{allCount}}">29</span>个人</li>
+                    <li>您共发展了0个省总代理</li>
                     <li>您共发展了100个经销商</li>
                     <li>您共发展了1000个爱心天使</li>
                 </ul>
@@ -239,8 +239,8 @@
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
 <!--生产环境请移除 Begin-->
-<script src="../mock/mock-min.js" th:remove="all"></script>
-<script src="../mock/api.js" th:remove="all"></script>
+<!--<script src="../mock/mock-min.js" th:remove="all"></script>-->
+<!--<script src="../mock/api.js" th:remove="all"></script>-->
 <!--生产环境请移除 End-->
 <script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
 <script src="../wechat-resource/assets/js/personCenter.js"
