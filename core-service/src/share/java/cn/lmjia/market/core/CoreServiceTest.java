@@ -129,7 +129,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
         Manager manager = new Manager();
         manager.setLoginName(loginName);
         manager.setLevel(EnumUtils.randomEnum(ManageLevel.class, levels));
-        return loginService.password(manager, rawPassword);
+        return loginService.password(manager, null, rawPassword);
     }
     //</editor-fold>
 

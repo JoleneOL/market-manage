@@ -1,11 +1,13 @@
 package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import cn.lmjia.market.dealer.service.AgentService;
 import com.huotu.verification.IllegalVerificationCodeException;
+import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.apache.commons.logging.Log;
@@ -21,6 +23,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +49,37 @@ public class WechatController {
     private LoginService loginService;
     @Autowired
     private AgentService agentService;
+    @Autowired
+    private VerificationCodeService verificationCodeService;
+    @Autowired
+    private ContactWayService contactWayService;
+
+    // name mobile  authCode
+    @PostMapping("/wechatRegister")
+    @Transactional
+    public String wechatRegister(@OpenId String openId, String name, String mobile, String authCode) {
+        Login login = loginService.asWechat(openId);
+        log.trace("微信号已绑定身份：" + login);
+        // 用户名是否存在
+        final Login mobileLogin = loginService.byLoginName(mobile);
+        log.trace("特定手机已绑定身份：" + mobileLogin);
+        if (login == null || mobileLogin != null) {
+            return "redirect:/wechatRegister";
+        }
+        verificationCodeService.verify(mobile, authCode, loginService.registerVerificationType());
+        // 继续
+        login = loginService.password(login, mobile, "123456");
+
+        contactWayService.updateMobile(login, mobile);
+        contactWayService.updateName(login, name);
+
+        return "redirect:" + SystemService.wechatOrderURi;
+    }
+
+    @GetMapping("/wechatRegister")
+    public String wechatRegister() {
+        return "wechat@register.html";
+    }
 
     @GetMapping("/toLoginWechat")
     public String login(WeixinUserDetail detail, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -89,7 +89,9 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public <T extends Login> T password(T login, String rawPassword) {
+    public <T extends Login> T password(T login, String loginName, String rawPassword) {
+        if (loginName != null)
+            login.setLoginName(loginName);
         login.setPassword(passwordEncoder.encode(rawPassword));
         return loginRepository.save(login);
     }
@@ -102,8 +104,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public <T extends Login> T newLogin(Class<T> type, String username, Login guide, String rawPassword) {
         T login = newLogin(type, guide);
-        login.setLoginName(username);
-        return password(login, rawPassword);
+        return password(login, username, rawPassword);
     }
 
     private <T extends Login> T newLogin(Class<T> type, Login guide) {
