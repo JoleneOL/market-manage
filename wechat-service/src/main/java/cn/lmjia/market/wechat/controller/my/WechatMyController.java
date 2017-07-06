@@ -88,7 +88,9 @@ public class WechatMyController {
     }
 
     @GetMapping(SystemService.wechatMyURi)
-    public String my() {
+    public String my(@AuthenticationPrincipal Login login, Model model) {
+        myTeam(login, model);
+        model.addAttribute("login", login);
         return "wechat@personalCenter.html";
     }
 

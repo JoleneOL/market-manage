@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="view-height-100">
+<!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
 <!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="count0" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="count1" type="java.lang.Number"*/-->
@@ -32,7 +33,8 @@
         <div class="swiper-wrapper view-tab_wrap">
             <div id="myTeam" class="swiper-slide view-scroll-wrap">
                 <div class="weui-cells__title text-right js-extra-h">
-                    <a href="chance.html" class="weui-btn weui-btn_mini weui-btn_default vertical-middle">成为合伙人</a>
+                    <a href="chance.html" th:href="@{/wechatShareMore}"
+                       class="weui-btn weui-btn_mini weui-btn_default vertical-middle">成为合伙人</a>
                     <!--<a href="chance.html" class="weui-btn weui-btn_mini weui-btn_default vertical-middle">升级合伙人</a>-->
                 </div>
                 <div class="weui-cells js-extra-h">
@@ -47,7 +49,8 @@
                                       th:text="${@readService.nameForPrincipal(#authentication.principal)}">利每家科技有限公司</span>
                                 <span class="label" th:text="${agentLevel}">滨江区总代</span>
                             </p>
-                            <p style="font-size: 13px;color: #888888;">ID:10010101010010011101</p>
+                            <p style="font-size: 13px;color: #888888;">ID:<span
+                                    th:text="${login.id+100000000}">12446968</span></p>
                         </div>
                         <div class="weui-cell__ft"></div>
                     </a>
