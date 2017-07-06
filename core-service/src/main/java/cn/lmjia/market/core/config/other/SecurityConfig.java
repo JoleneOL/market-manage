@@ -84,9 +84,9 @@ public class SecurityConfig {
 
             registry
                     // misc
-                    .antMatchers("/misc/sendLoginCode").permitAll()
+                    .antMatchers("/misc/sendLoginCode", "/misc/sendRegisterCode").permitAll()
                     // 登录跳转页面
-                    .antMatchers("/wechatJoin").permitAll()
+                    .antMatchers("/wechatJoin", "/wechatRegister").permitAll()
                     .antMatchers("/toLoginWechat", "/wechatLogin").permitAll()
                     // 手机号码可用性检测
                     .antMatchers("/loginData/mobileValidation").permitAll()

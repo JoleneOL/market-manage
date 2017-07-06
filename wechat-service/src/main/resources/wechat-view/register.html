@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-fs-small view-bg-color" data-url-sendAuthCode="/api/authCode" th:data-url-sendAuthCode="@{/misc/sendLoginCode}">
+<body class="view-fs-small view-bg-color" data-url-sendAuthCode="/api/authCode"
+      th:data-url-sendAuthCode="@{/misc/sendRegisterCode}">
 <section class="view_body">
     <form method="post" action="shareQC.html" id="J_registerForm">
         <div class="weui-cells__title">个人资料</div>
@@ -26,7 +27,7 @@
                     <label class="weui-label">姓名</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入姓名" name="name" value="节菲菲">
+                    <input class="weui-input" type="text" placeholder="请输入姓名" name="name" value="节菲菲" th:value="''">
                 </div>
                 <div class="weui-cell__ft">
                     <i class="weui-icon-warn"></i>
@@ -54,18 +55,18 @@
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
         </div>
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">推荐人ID</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" name="recommender" value="2346236" readonly>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!--<div class="weui-cells weui-cells_form">-->
+        <!--<div class="weui-cell">-->
+        <!--<div class="weui-cell__hd">-->
+        <!--<label class="weui-label">推荐人ID</label>-->
+        <!--</div>-->
+        <!--<div class="weui-cell__bd">-->
+        <!--<div class="weui-cell__bd">-->
+        <!--<input class="weui-input" type="text" name="recommender" value="2346236" readonly>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_custom">注&nbsp;&nbsp;册</button>
         </div>

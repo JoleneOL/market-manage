@@ -34,6 +34,23 @@ public interface LoginService extends UserDetailsService {
     }
 
     /**
+     * @return 用于注册的验证码
+     */
+    default VerificationType registerVerificationType() {
+        return new VerificationType() {
+            @Override
+            public int id() {
+                return 2;
+            }
+
+            @Override
+            public String message(String code) {
+                return "注册短信验证码为：" + code + "；请勿泄露。";
+            }
+        };
+    }
+
+    /**
      * @return 所有管理员
      */
     @Transactional(readOnly = true)
@@ -116,6 +133,10 @@ public interface LoginService extends UserDetailsService {
     @Transactional(readOnly = true)
     AgentLevel lowestAgentLevel(Login who);
 
+    /**
+     * @param loginName 登录名
+     * @return null or 身份
+     */
     @Transactional(readOnly = true)
     Login byLoginName(String loginName);
 

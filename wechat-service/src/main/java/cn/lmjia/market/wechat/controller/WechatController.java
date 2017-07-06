@@ -54,6 +54,10 @@ public class WechatController {
         Login login = loginService.asWechat(detail.getOpenId());
         if (login == null)
             return "redirect:/wechatLogin";
+        // 只有存在用户名才可以登录
+        if (StringUtils.isEmpty(login.getUsername())) {
+            return "redirect:/wechatRegister";
+        }
         // 执行登录
 
         HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
