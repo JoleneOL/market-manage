@@ -113,18 +113,16 @@
                                 th:data-deposit="${good.product.deposit}"
                                 th:data-need-install="${good.product.install}" th:data-model="${good.product.code}"
                                 th:data-type="${good.id}" th:text="${good.product.name}"
-                                th:data-day-cost="${good.product.serviceCharge}">量子橱下净水器
+                                th:data-day-cost="${good.product.serviceCharge}">量子橱下净水机
                         </option>
-                        <!--<option th:remove="all" value="2" data-deposit="3000" data-need-install="180"-->
-                        <!--data-model="hzts02"-->
-                        <!--data-type="净水机"-->
-                        <!--data-day-cost="4">台式净水机-->
-                        <!--</option>-->
-                        <!--<option th:remove="all" value="3" data-deposit="3000" data-need-install="180"-->
-                        <!--data-model="hzls01"-->
-                        <!--data-type="净水机"-->
-                        <!--data-day-cost="5">立式净水机-->
-                        <!--</option>-->
+                        <option th:remove="all" value="7" data-deposit="3000" data-model="LZXP01" data-type="能量芯片"
+                                data-day-cost="5">
+                            量子能量芯片
+                        </option>
+                        <option th:remove="all" value="8" data-deposit="3000" data-model="LZXL01" data-type="项链"
+                                data-day-cost="5">
+                            量子项链
+                        </option>
                         <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器"
                                 data-day-cost="5">
                             量子空气净化器
@@ -278,8 +276,7 @@
                     <p>甲乙双方在平等自愿、公平诚信的基础上，基于对乙方提供的产品和服务的了解和需求，达成协议如下：</p>
                 </section>
                 <section>
-                    <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，用户支付设备费或保证金，并承诺协议期为<u>
-                        &nbsp;&nbsp;3&nbsp;&nbsp;&nbsp;</u>年，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），详细费用按下表执行：
+                    <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□空气净化器、□食品优化宝租机优惠活动，用户支付设备费或保证金，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），详细费用按下表执行：
                     </p>
                     <table class="view_table" border="1">
                         <thead>
@@ -287,27 +284,33 @@
                             <th>产品名称</th>
                             <th>型号</th>
                             <th>一次性支付设备费或保证金</th>
-                            <th>设备使用费</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>厨下净水机</td>
+                            <td>量子能量芯片</td>
+                            <td>LZXP01</td>
+                            <td>3000 元/盒</td>
+                        </tr>
+                        <tr>
+                            <td>量子厨下净水机</td>
                             <td>hzcx01</td>
                             <td>3000 元/台</td>
-                            <td>3000 元/三年</td>
                         </tr>
                         <tr>
-                            <td>空气净化器</td>
+                            <td>量子项链</td>
+                            <td>LZXL01</td>
+                            <td>3000 元/条</td>
+                        </tr>
+                        <tr>
+                            <td>量子空气净化器</td>
                             <td>ESL-HM01</td>
                             <td>5000 元/台</td>
-                            <td>5000 元/三年</td>
                         </tr>
                         <tr>
-                            <td>食品优化宝</td>
+                            <td>量子食品优化宝</td>
                             <td>SP70</td>
                             <td>9800 元/台</td>
-                            <td>9800 元/三年</td>
                         </tr>
                         </tbody>
                     </table>
