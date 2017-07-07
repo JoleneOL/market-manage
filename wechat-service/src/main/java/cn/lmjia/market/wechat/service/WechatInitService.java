@@ -31,7 +31,7 @@ public class WechatInitService {
         Protocol.forAccount(publicAccount).createMenu(
                 new Menu[]
                         {
-                                createMenu("我的团队", systemService.toUrl(SystemService.wechatMyTeamURi))
+                                createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
                                 , createMenu("下单", systemService.toUrl(SystemService.wechatOrderURi))
                                 , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
                         }

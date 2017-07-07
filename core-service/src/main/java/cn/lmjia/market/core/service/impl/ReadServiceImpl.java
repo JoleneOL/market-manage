@@ -12,6 +12,7 @@ import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.lib.seext.NumberUtils;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -56,13 +57,23 @@ public class ReadServiceImpl implements ReadService {
     public String nameForPrincipal(Object principal) {
         if (principal == null)
             return "";
-        final Login login = (Login) principal;
+        final Login login = toLogin(principal);
         ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
         if (contactWay == null)
             return login.getLoginName();
         if (StringUtils.isEmpty(contactWay.getName()))
             return login.getLoginName();
         return contactWay.getName();
+    }
+
+    @Override
+    public String wechatNickNameForPrincipal(Object principal) {
+        final Login login = toLogin(principal);
+        // 这个时候不见得有 刷新下
+        StandardWeixinUser user = loginRepository.getOne(login.getId()).getWechatUser();
+        if (user != null)
+            return user.getNickname();
+        return nameForPrincipal(principal);
     }
 
     @Override
