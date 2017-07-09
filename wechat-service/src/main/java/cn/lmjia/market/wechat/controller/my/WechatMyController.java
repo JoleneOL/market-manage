@@ -7,7 +7,6 @@ import cn.lmjia.market.dealer.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -41,9 +40,7 @@ public class WechatMyController {
         return "redirect:" + SystemService.wechatMyURi;
     }
 
-    @GetMapping(SystemService.wechatMyTeamURi)
-    @Transactional(readOnly = true)
-    public String myTeam(@AuthenticationPrincipal Login login, Model model) {
+    private String myTeam(@AuthenticationPrincipal Login login, Model model) {
         model.addAttribute("agentLevel", agentService.loginTitle(agentService.highestAgent(login)));
         // 微信头像 名字 等级
         model.addAttribute("allCount", teamService.all(login));

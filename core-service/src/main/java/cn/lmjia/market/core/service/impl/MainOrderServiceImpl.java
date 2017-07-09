@@ -61,7 +61,7 @@ public class MainOrderServiceImpl implements MainOrderService {
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress, MainGood good, int amount, String mortgageIdentifier) {
         // 客户处理
-        Customer customer = customerService.getNoNullCustomer(name, mobile, loginService.lowestAgentLevel(who)
+        Customer customer = customerService.getNoNullCustomer(name, mobile, loginService.lowestAgentLevel(getEnjoyability(who))
                 , recommendBy);
 
         customer.setInstallAddress(installAddress);
@@ -137,6 +137,11 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public Login getEnjoyability(MainOrder order) {
         Login orderBy = order.getOrderBy();
+        return getEnjoyability(orderBy);
+    }
+
+    @Override
+    public Login getEnjoyability(Login orderBy) {
         while (!loginService.isRegularLogin(orderBy)) {
             orderBy = orderBy.getGuideUser();
         }

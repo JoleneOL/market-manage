@@ -34,7 +34,7 @@ public class WechatMyControllerTest extends WechatTestBase {
 
     private void visitWechat() {
         getWechatMyPage();
-        getWechatMyTeamPage();
+//        getWechatMyTeamPage();
         getWechatOrderListPage();
     }
 }

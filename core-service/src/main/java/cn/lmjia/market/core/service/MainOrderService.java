@@ -77,6 +77,13 @@ public interface MainOrderService {
     Login getEnjoyability(MainOrder order);
 
     /**
+     * @param orderBy 下单人
+     * @return 如果该人下单则何人获得收益
+     */
+    @Transactional(readOnly = true)
+    Login getEnjoyability(Login orderBy);
+
+    /**
      * @param orderId   可选订单号
      * @param mobile    可选购买者手机号码
      * @param goodId    可选商品
