@@ -3,7 +3,6 @@
 <!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
 <!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="count0" type="java.lang.Number"*/-->
-<!--/*@thymesVar id="count1" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="count2" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="count3" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="agentLevel" type="java.lang.String"*/-->
@@ -59,13 +58,11 @@
                     <div class="weui-flex">
                         <div class="weui-flex__item text-center">
                             <p class="text-gray">平台省代理商</p>
-                            <!--直接展示-->
-                            <p class="text-middle">30/34</p>
+                            <p class="text-middle"><span th:text="${{count0}}">29</span>/34</p>
                         </div>
                         <div class="weui-flex__item text-center">
                             <p class="text-gray">我的经销商</p>
-                            <!--旗下经销商数量/300-->
-                            <p class="text-middle">100/300</p>
+                            <p class="text-middle"><span th:text="${{count2}}">100</span>/300</p>
                         </div>
                     </div>
                 </div>
@@ -74,14 +71,14 @@
                     <a href="#" class="view-tabs_item js-team">总代理</a>
                     <a href="#" class="view-tabs_item js-team">经销商</a>
                     <a href="#" class="view-tabs_item js-team">爱心天使</a>
-                    <a href="#" class="view-tabs_item js-team">普通用户</a>
+                    <!--<a href="#" class="view-tabs_item js-team">普通用户</a>-->
                 </div>
                 <ul class="view-total">
                     <li class="on">您共发展了<span th:text="${{allCount}}">29</span>个人</li>
-                    <li>您共发展了0个省总代理</li>
-                    <li>您共发展了100个经销商</li>
-                    <li>您共发展了1000个爱心天使</li>
-                    <li>您共发展了1000个普通用户</li>
+                    <li>您共发展了<span th:text="${{count0}}">29</span>个省总代理</li>
+                    <li>您共发展了<span th:text="${{count2}}">29</span>个经销商</li>
+                    <li>您共发展了<span th:text="${{count3}}">29</span>个爱心天使</li>
+                    <!--<li>您共发展了1000个普通用户</li>-->
                 </ul>
                 <div class="view_team-list js-extra-h">
                     <div class="weui-flex view_team-header">
@@ -124,14 +121,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=5">
-                            <div class="view-scroll-list">
-                                <div class="weui-loadmore">
-                                    <i class="weui-loading"></i>
-                                    <span class="weui-loadmore__tips">数据加载中...</span>
-                                </div>
-                            </div>
-                        </div>
+                        <!--<div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=5">-->
+                        <!--<div class="view-scroll-list">-->
+                        <!--<div class="weui-loadmore">-->
+                        <!--<i class="weui-loading"></i>-->
+                        <!--<span class="weui-loadmore__tips">数据加载中...</span>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>

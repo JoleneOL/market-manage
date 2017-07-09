@@ -37,6 +37,11 @@ public class WechatMyController {
     }
 
     @GetMapping(SystemService.wechatMyTeamURi)
+    public String originMyTeam() {
+        return "redirect:" + SystemService.wechatMyURi;
+    }
+
+    @GetMapping(SystemService.wechatMyTeamURi)
     @Transactional(readOnly = true)
     public String myTeam(@AuthenticationPrincipal Login login, Model model) {
         model.addAttribute("agentLevel", agentService.loginTitle(agentService.highestAgent(login)));
@@ -44,9 +49,9 @@ public class WechatMyController {
         model.addAttribute("allCount", teamService.all(login));
 
         int lowestLevel = systemService.systemLevel() - 1;
-        model.addAttribute("count0", teamService.agents(login, lowestLevel - 2));
+        model.addAttribute("count0", teamService.agents(login, lowestLevel - 3));
         // 所谓的省代 其实是区(特殊的title)
-        model.addAttribute("count1", teamService.agents(login, lowestLevel - 1));
+//        model.addAttribute("count1", teamService.agents(login, lowestLevel - 1));
         // 最低等级（经销商）
         model.addAttribute("count2", teamService.agents(login, lowestLevel));
         // 客户

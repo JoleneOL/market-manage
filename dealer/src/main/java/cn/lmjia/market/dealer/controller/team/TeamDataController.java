@@ -45,11 +45,12 @@ public class TeamDataController {
     @Autowired
     private ApplicationContext applicationContext;
 
-    // all
-    // 总 1
-    // 分 2
-    // 经销 3
-    // 客户 4 100
+    // all 全部
+    // 总 1 所谓省总代
+    // 分 2 总代理 移除
+    // 经销 3 经销商
+    // 客户 4 100 爱心天使
+    // 非正式用户 5
     private Integer fromRank(String rank) {
         // 系统的最底层 我们认为是3
         if (StringUtils.isEmpty(rank))
