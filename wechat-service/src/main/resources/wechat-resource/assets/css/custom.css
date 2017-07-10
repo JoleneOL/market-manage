@@ -1042,7 +1042,6 @@
 }
 .view-order-wrap {
   padding-top: 8px;
-  padding-bottom: 8px;
   background: #efeff4;
 }
 .view-order-wrap .weui-flex__item {
@@ -1085,7 +1084,6 @@
 .view-poster img {
   width: 100%;
   max-width: 100%;
-  min-height: 100%;
 }
 .view_footer-noBg .weui-footer_fixed-bottom {
   border-top: none;
