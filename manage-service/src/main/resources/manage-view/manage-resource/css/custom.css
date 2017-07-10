@@ -4,10 +4,15 @@
 
 .table-action a, .table-action-hide a, .table-operate a {
     display: inline-block;
-    margin-right: 5px;
+    padding: 2px;
+    margin-right: 6px;
     color: #1ab394;
+    border: 1px solid transparent;
+    border-radius: 3px;
 }
-
+.table-action a:hover, .table-action-hide a:hover, .table-operate a:hover {
+    border: 1px solid #1ab394;
+}
 .table-action .btn {
     color: #FFFFFF;
 }

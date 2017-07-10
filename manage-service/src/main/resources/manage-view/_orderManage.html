@@ -46,31 +46,15 @@
                             <select class="form-control input-sm js-searchRank" name="goodId">
                                 <option value=" " disabled="" selected="" class="hidden">商品类型</option>
                                 <option value="0">全部</option>
-                                <option value="1" data-deposit="3000" data-need-install="180" data-model="hzls01"
-                                        data-type="净水机" th:each="good:${@mainGoodService.forSale()}"
+                                <option value="1"
+                                        th:each="good:${@mainGoodService.forSale()}"
                                         th:value="${good.id}"
-                                        th:data-deposit="${good.product.deposit}"
-                                        th:data-need-install="${good.product.install}"
-                                        th:data-model="${good.product.code}"
-                                        th:data-type="${good.id}" th:text="${good.product.name}"
-                                        th:data-day-cost="${good.product.serviceCharge}">立式净水机
+                                        th:text="${good.product.name}">立式净水机
                                 </option>
-                                <option th:remove="all" value="2" data-deposit="3000" data-need-install="180"
-                                        data-model="hzts02"
-                                        data-type="净水机">台式净水机
-                                </option>
-                                <option th:remove="all" value="3" data-deposit="3000" data-need-install="180"
-                                        data-model="hzcx01"
-                                        data-type="净水机">橱下净水机
-                                </option>
-                                <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01"
-                                        data-type="空气净化器">
-                                    空气净化器
-                                </option>
-                                <option th:remove="all" value="6" data-deposit="10000" data-model="SP70"
-                                        data-type="食品优化宝">
-                                    食品优化宝
-                                </option>
+                                <option th:remove="all" value="2">台式净水机</option>
+                                <option th:remove="all" value="3">橱下净水机</option>
+                                <option th:remove="all" value="5">空气净化器</option>
+                                <option th:remove="all" value="6">食品优化宝</option>
                             </select>
                         </label>
                         <div class="input-group input-group-sm">

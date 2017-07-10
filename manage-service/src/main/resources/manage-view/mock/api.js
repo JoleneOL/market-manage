@@ -77,7 +77,7 @@ Mock.mock(/\/product\/list/, "get", {
     "data|10": [
         {
             'id|+1': 1,
-            'category': '量子'+'@pick(["橱下净水器","空气净化器","食品优化宝"])',
+            'category': '量子' + '@pick(["橱下净水器","空气净化器","食品优化宝"])',
             'type': '@string(10,15)',
             'supplier': '慈溪市海燕环保科技有限公司',
             'price': 400,
@@ -89,7 +89,40 @@ Mock.mock(/\/product\/list/, "get", {
     ]
 });
 
+Mock.mock(/\/user\/list/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id|+1': 1,
+            'name': 'test' + '@string(3)',
+            'department': '@pick(财务,技术,运营,客服,推广)',
+            'realName': '@cname()',
+            'wechatId': '@title(1)' + '@natural(10, 1000)',
+            'role|1-3': '@pick(超管,普通,运营,客服,推广)' + ' ',
+            'state': '@pick(启用, 禁用)',
+            'stateCode': '@pick([0, 1])',
+            'remark': ''
+        }
+    ]
+});
+
 Mock.mock(/\/products\/\d/, {
+    "resultCode": 200,
+    "resultMsg": "ok"
+});
+
+Mock.mock(/\/user\/\d\/disable/, {
+    "resultCode": 200,
+    "resultMsg": "ok"
+});
+
+Mock.mock(/\/user\/\d\/enable/, {
+    "resultCode": 200,
+    "resultMsg": "ok"
+});
+Mock.mock(/\/user\/\d\/delete/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });
