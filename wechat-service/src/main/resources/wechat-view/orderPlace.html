@@ -107,21 +107,24 @@
                     <select class="weui-select" name="goodId" id="J_goodsType" required>
                         <option value="" disabled="" selected="" class="hidden">产品类型
                         </option>
-                        <option value="1" data-deposit="3000" data-need-install="180" data-model="hzcx01"
+                        <option value="1" data-deposit="2820" data-need-install="180" data-model="HZCX01"
                                 data-type="净水机" data-day-cost="3" th:each="good:${@mainGoodService.forSale()}"
                                 th:value="${good.id}"
                                 th:data-deposit="${good.product.deposit}"
                                 th:data-need-install="${good.product.install}" th:data-model="${good.product.code}"
                                 th:data-type="${good.id}" th:text="${good.product.name}"
-                                th:data-day-cost="${good.product.serviceCharge}">量子橱下净水机
+                                th:data-day-cost="${good.product.serviceCharge}">厨下净水机
                         </option>
-                        <option th:remove="all" value="7" data-deposit="3000" data-model="LZXP01" data-type="能量芯片"
-                                data-day-cost="5">
-                            量子能量芯片
+                        <option value="2" data-deposit="3980" data-need-install="180" data-model="LZCX01"
+                                data-type="净水机" data-day-cost="3">量子厨下净水机
                         </option>
-                        <option th:remove="all" value="8" data-deposit="3000" data-model="LZXL01" data-type="项链"
+                        <option th:remove="all" value="7" data-deposit="100" data-model="LZXP01" data-type="能量芯片"
                                 data-day-cost="5">
-                            量子项链
+                            量子防辐射芯片
+                        </option>
+                        <option th:remove="all" value="8" data-deposit="3000" data-model="LZSB01" data-type="水宝"
+                                data-day-cost="5">
+                            量子水宝
                         </option>
                         <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器"
                                 data-day-cost="5">
@@ -233,13 +236,15 @@
                     </p>
                 </div>
             </div>
+        </div>
+        <div class="weui-cells weui-cells_form">
             <div class="weui-cell weui-cell_switch">
                 <div class="weui-cell__bd">花呗分期</div>
                 <div class="weui-cell__ft">
-                    <input class="weui-switch view-switch" name="installmentHuabai" type="checkbox" value="1">
+                    <input class="weui-switch view-switch" name="installmentHuabai" id="J_installment" type="checkbox" value="1">
                 </div>
             </div>
-            <div class="weui-cell weui-cell_vcode">
+            <div class="weui-cell weui-cell_vcode displayNone" id="J_checkCode">
                 <div class="weui-cell__hd">
                     <label class="weui-label">按揭码</label>
                 </div>
@@ -252,6 +257,9 @@
                 </div>
             </div>
         </div>
+        <div class="weui-btn-area">
+            <button type="submit" class="weui-btn weui-btn_custom" id="J_submitBtn">下&nbsp;&nbsp;单</button>
+        </div>
         <label for="weuiAgree" class="weui-agree view-agress_inline">
             <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">
             <span class="weui-agree__text">
@@ -259,9 +267,6 @@
             </span>
         </label>
         <a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules">查看</a>
-        <div class="weui-btn-area">
-            <button type="submit" class="weui-btn weui-btn_custom">下&nbsp;&nbsp;单</button>
-        </div>
     </form>
 </section>
 <div id="J_upgradeRules" class="weui-popup__container">
@@ -288,19 +293,24 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>量子能量芯片</td>
+                            <td>量子防辐射芯片</td>
                             <td>LZXP01</td>
-                            <td>3000 元/盒</td>
+                            <td>100 元/个</td>
+                        </tr>
+                        <tr>
+                            <td>厨下净水机</td>
+                            <td>HZCX01</td>
+                            <td>2820 元/台</td>
+                        </tr>
+                        <tr>
+                            <td>量子水宝</td>
+                            <td>LZSB01</td>
+                            <td>3000 元/条</td>
                         </tr>
                         <tr>
                             <td>量子厨下净水机</td>
-                            <td>hzcx01</td>
-                            <td>3000 元/台</td>
-                        </tr>
-                        <tr>
-                            <td>量子项链</td>
-                            <td>LZXL01</td>
-                            <td>3000 元/条</td>
+                            <td>LZCX01</td>
+                            <td>3980 元/台</td>
                         </tr>
                         <tr>
                             <td>量子空气净化器</td>

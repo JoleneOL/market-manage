@@ -60,6 +60,18 @@ $(function () {
 
     var $mortgageCode = $('#J_mortgageCode');
     var isValid = $('input[name="isValid"]');
+    var installment = $('#J_installment');
+    var submitBtn = $('#J_submitBtn');
+
+    installment.change(function () {
+        if ($(this).is(':checked')) {
+            $('#J_checkCode').removeClass('displayNone');
+            submitBtn.text('提交分期订单');
+        } else {
+            $('#J_checkCode').addClass('displayNone');
+            submitBtn.html('下&nbsp;&nbsp;单');
+        }
+    });
     $mortgageCode.on('keyup mouseout input', function () {
         var $this = $(this);
         var v = $this.val();
@@ -191,7 +203,7 @@ $(function () {
     });
     $('#J_invoiceOK').click(function () {
         var flag = $("#J_invoiceForm").valid();
-        if(flag) {
+        if (flag) {
             invoiceFunc.setCompany();
             invoiceFunc.setHiddenData();
             $.closePopup();
@@ -255,7 +267,7 @@ $(function () {
         setHiddenData: function () {
             $('#J_invoiceArea').find('input[type="hidden"]').each(function () {
                 var name = $(this).attr('name');
-                $(this).val($('#J_invoiceForm').find('input[name="'+name+'"]').val()).prop('disabled', false);
+                $(this).val($('#J_invoiceForm').find('input[name="' + name + '"]').val()).prop('disabled', false);
             });
         },
         setCompany: function () {
