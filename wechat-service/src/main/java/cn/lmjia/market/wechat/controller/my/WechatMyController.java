@@ -1,12 +1,14 @@
 package cn.lmjia.market.wechat.controller.my;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -22,6 +24,8 @@ public class WechatMyController {
     private SystemService systemService;
     @Autowired
     private AgentService agentService;
+    @Autowired
+    private LoginService loginService;
 
     @GetMapping("/wechatOrderList")
     public String wechatOrderList() {
@@ -29,6 +33,7 @@ public class WechatMyController {
     }
 
     @GetMapping(SystemService.wechatMyURi)
+    @Transactional(readOnly = true)
     public String my(@AuthenticationPrincipal Login login, Model model) {
         myTeam(login, model);
         model.addAttribute("login", login);
@@ -41,7 +46,11 @@ public class WechatMyController {
     }
 
     private String myTeam(@AuthenticationPrincipal Login login, Model model) {
-        model.addAttribute("agentLevel", agentService.loginTitle(agentService.highestAgent(login)));
+        login = loginService.get(login.getId());
+        if (loginService.isRegularLogin(login))
+            model.addAttribute("agentLevel", agentService.loginTitle(agentService.highestAgent(login)));
+        else
+            model.addAttribute("agentLevel", "普通用户");
         // 微信头像 名字 等级
         model.addAttribute("allCount", teamService.all(login));
 
