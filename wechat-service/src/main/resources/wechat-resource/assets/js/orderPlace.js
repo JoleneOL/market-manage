@@ -67,15 +67,6 @@ $(function () {
         if ($(this).is(':checked')) {
             $('#J_checkCode').removeClass('displayNone');
             submitBtn.text('提交分期订单');
-        } else {
-            $('#J_checkCode').addClass('displayNone');
-            submitBtn.html('下&nbsp;&nbsp;单');
-        }
-    });
-    $mortgageCode.on('keyup mouseout input', function () {
-        var $this = $(this);
-        var v = $this.val();
-        if (v) {
             isValid.rules('add', {
                 required: true,
                 messages: {
@@ -83,10 +74,27 @@ $(function () {
                 }
             });
         } else {
+            $('#J_checkCode').addClass('displayNone');
+            submitBtn.html('下&nbsp;&nbsp;单');
             isValid.rules('remove');
             isValid.val('');
         }
     });
+    // $mortgageCode.on('keyup mouseout input', function () {
+    //     var $this = $(this);
+    //     var v = $this.val();
+    //     if (v) {
+    //         isValid.rules('add', {
+    //             required: true,
+    //             messages: {
+    //                 required: "校验按揭码失败"
+    //             }
+    //         });
+    //     } else {
+    //         isValid.rules('remove');
+    //         isValid.val('');
+    //     }
+    // });
 
     $('#J_checkBtn').click(function () {
         var mortgageCode = $mortgageCode.val();
