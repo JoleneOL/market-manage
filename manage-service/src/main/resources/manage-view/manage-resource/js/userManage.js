@@ -30,7 +30,7 @@ $(function () {
                 "title": "真实姓名", "data": "realName", "name": "realName"
             },
             {
-                "title": "微信账号", "data": "wechatId", "name": "wechatId"
+                "title": "微信号码", "data": "wechatID", "name": "wechatID"
             },
             {
                 "title": "角色", "data": "role", "name": "role"

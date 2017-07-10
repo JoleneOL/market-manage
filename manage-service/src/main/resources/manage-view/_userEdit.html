@@ -1,10 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>新增用户</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
-    编辑用户
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_userManage.html">公司用户管理</a></li>
+                <li><strong>新增用户</strong></li>
+                <!--TODO 一页两用-->
+                <!--<li><strong>编辑用户</strong></li>-->
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    添加商品
+                    <!--编辑用户-->
+                </div>
+                <div class="ibox-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-7 col-lg-6">
+                                <form class="form-horizontal" id="J_userForm" method="post"
+                                      action="_userManage.html">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">用户名 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入用户名" class="form-control"
+                                                   name="name" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">部门 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" name="department" required>
+                                                <option value="0">财务</option>
+                                                <option th:remove="all" value="1">技术</option>
+                                                <option th:remove="all" value="2">运营</option>
+                                                <option th:remove="all" value="3">客服</option>
+                                                <option th:remove="all" value="5">推广</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">真实姓名</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入真实姓名" class="form-control"
+                                                   name="realName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">微信号码</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入微信号码" class="form-control"
+                                                   name="wechatID">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">分配角色 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role[]" value="1">Leader</label>
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role[]" value="2">MT</label>
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role[]" value="3">治疗</label>
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role[]" value="4">DPS</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">立即启用</label>
+                                        <div class="col-sm-6">
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="enable" value="1">启用</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">备注</label>
+                                        <div class="col-sm-6">
+                                            <textarea title="备注" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                                添&nbsp;加
+                                                <!--修&nbsp;改-->
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/icheck.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="manage-resource/js/userDetail.js"></script>
 </html>

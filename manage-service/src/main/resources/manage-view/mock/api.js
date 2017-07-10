@@ -99,7 +99,7 @@ Mock.mock(/\/user\/list/, "get", {
             'name': 'test' + '@string(3)',
             'department': '@pick(财务,技术,运营,客服,推广)',
             'realName': '@cname()',
-            'wechatId': '@title(1)' + '@natural(10, 1000)',
+            'wechatID': '@title(1)' + '@natural(10, 1000)',
             'role|1-3': '@pick(超管,普通,运营,客服,推广)' + ' ',
             'state': '@pick(启用, 禁用)',
             'stateCode': '@pick([0, 1])',
