@@ -36,14 +36,14 @@
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
             <!--<div class="weui-cell">-->
-                <!--<div class="weui-cell__hd">-->
-                    <!--<label class="weui-label">年龄</label>-->
-                <!--</div>-->
-                <!--<div class="weui-cell__bd">-->
-                    <!--<input class="weui-input" type="number" min="1" max="99" placeholder="请输入年龄" name="age"-->
-                           <!--th:value="${@environment.acceptsProfiles('staging')?'33':''}">-->
-                <!--</div>-->
-                <!--<div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">年龄</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<input class="weui-input" type="number" min="1" max="99" placeholder="请输入年龄" name="age"-->
+            <!--th:value="${@environment.acceptsProfiles('staging')?'33':''}">-->
+            <!--</div>-->
+            <!--<div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>-->
             <!--</div>-->
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -105,35 +105,27 @@
                 </div>
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="goodId" id="J_goodsType" required>
-                        <option value="" disabled="" selected="" class="hidden">产品类型
+                        <option value="" disabled selected class="hidden">产品类型
                         </option>
-                        <option value="1" data-deposit="2820" data-need-install="180" data-model="HZCX01"
-                                data-type="净水机" data-day-cost="3" th:each="good:${@mainGoodService.forSale()}"
+                        <!--data-price 价格 原data-deposit-->
+                        <!--data-service-charge 服务费-->
+                        <!--data-model 型号-->
+                        <option value="1" data-price="2820" data-model="HZCX01"
+                                th:each="good:${@mainGoodService.forSale()}"
                                 th:value="${good.id}"
-                                th:data-deposit="${good.product.deposit}"
-                                th:data-need-install="${good.product.install}" th:data-model="${good.product.code}"
-                                th:data-type="${good.id}" th:text="${good.product.name}"
-                                th:data-day-cost="${good.product.serviceCharge}">厨下净水机
+                                th:data-price="${good.product.deposit}"
+                                th:data-model="${good.product.code}"
+                                th:text="${good.product.name}">厨下净水机
                         </option>
-                        <option value="2" data-deposit="3980" data-need-install="180" data-model="LZCX01"
-                                data-type="净水机" data-day-cost="3">量子厨下净水机
-                        </option>
-                        <option th:remove="all" value="7" data-deposit="100" data-model="LZXP01" data-type="能量芯片"
-                                data-day-cost="5">
-                            量子防辐射芯片
-                        </option>
-                        <option th:remove="all" value="8" data-deposit="3000" data-model="LZSB01" data-type="水宝"
-                                data-day-cost="5">
-                            量子水宝
-                        </option>
-                        <option th:remove="all" value="5" data-deposit="5000" data-model="ESL-HM01" data-type="空气净化器"
-                                data-day-cost="5">
-                            量子空气净化器
-                        </option>
-                        <option th:remove="all" value="6" data-deposit="9800" data-model="SP70" data-type="食品优化宝"
-                                data-day-cost="10">
-                            量子食品优化宝
-                        </option>
+                        <option th:remove="all" value="2" data-price="2820" data-model="/">台式净水器</option>
+                        <option th:remove="all" value="3" data-price="2820" data-model="/">立式净水器</option>
+                        <option th:remove="all" value="4" data-price="3000" data-service-charge="980" data-model="/">量子厨下水机套餐</option>
+                        <option th:remove="all" value="5" data-price="3000" data-service-charge="980" data-model="/">量子台式水机套餐</option>
+                        <option th:remove="all" value="6" data-price="3000" data-service-charge="980" data-model="/">量子净水机套餐</option>
+                        <option th:remove="all" value="7" data-price="5000" data-model="ESL-HM01">量子空气净化器</option>
+                        <option th:remove="all" value="8" data-price="9800" data-model="SP70">量子食品优化宝</option>
+                        <option th:remove="all" value="9" data-price="100" data-model="LZXP01">量子芯片（片）</option>
+                        <option th:remove="all" value="10" data-price="3000" data-model="LZSB01">量子水宝</option>
                     </select>
                 </div>
             </div>
@@ -167,12 +159,11 @@
             <!--</div>-->
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">会员价</label>
+                    <label class="weui-label">设备款</label>
                 </div>
                 <div class="weui-cell__bd">
                     <p class="weui-input" id="J_userCost">
-                        <span>3000</span>
-                        <!--<span class="unit-txt">元 / 三年 / 台</span>-->
+                        <span>0</span>
                         <span class="unit-txt">元</span>
                     </p>
                 </div>
@@ -213,14 +204,25 @@
                 <input type="hidden" title="详细地址" name="invoiceFullAddress" disabled>
                 <input type="hidden" title="联系电话" name="invoiceMobile" disabled>
             </div>
-            <div class="weui-cell js-install">
+            <!--<div class="weui-cell js-install">-->
+                <!--<div class="weui-cell__hd">-->
+                    <!--<label class="weui-label">初装费用</label>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<p class="weui-input" id="J_installationCost">-->
+                        <!--<span>180</span>-->
+                        <!--<span class="unit-txt">元 / 台</span>-->
+                    <!--</p>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="weui-cell displayNone js-service">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">初装费用</label>
+                    <label class="weui-label">服务费</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="weui-input" id="J_installationCost">
-                        <span>180</span>
-                        <span class="unit-txt">元 / 台</span>
+                    <p class="weui-input" id="J_serviceCharge">
+                        <span>0</span>
+                        <span class="unit-txt">元</span>
                     </p>
                 </div>
             </div>
@@ -241,7 +243,8 @@
             <div class="weui-cell weui-cell_switch">
                 <div class="weui-cell__bd">花呗分期</div>
                 <div class="weui-cell__ft">
-                    <input class="weui-switch view-switch" name="installmentHuabai" id="J_installment" type="checkbox" value="1">
+                    <input class="weui-switch view-switch" name="installmentHuabai" id="J_installment" type="checkbox"
+                           value="1">
                 </div>
             </div>
             <div class="weui-cell weui-cell_vcode displayNone" id="J_checkCode">
@@ -256,6 +259,9 @@
                     <button type="button" class="weui-vcode-btn" id="J_checkBtn">校验</button>
                 </div>
             </div>
+        </div>
+        <div class="weui-cells__tips text-right displayNone" id="J_installmentInfo">
+            分期金额￥<span class="js-total">**</span>.00&nbsp;&nbsp;分24期&nbsp;￥<span class="js-installment">**</span>/期
         </div>
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_custom" id="J_submitBtn">下&nbsp;&nbsp;单</button>

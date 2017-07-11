@@ -25,33 +25,36 @@ $(function () {
 
 
     function countTotal() {
-        // var deposit = +$('#J_userDeposit').find('span').eq(0).text();
-        var deposit = +$('#J_userCost').find('span').eq(0).text();
-        var cost = +$('#J_installationCost').find('span').eq(0).text();
+        var price = +$('#J_userCost').find('span').eq(0).text();
+        var cost = +$('#J_serviceCharge').find('span').eq(0).text();
         var amout = +$('#J_goodsAmount').val();
-        var total = (deposit + cost) * amout;
+        var total = (price + cost) * amout;
         $('#J_orderTotal').find('strong').text(total);
+        // installmentFunc(total);
         $('input[name="orderTotal"]').val(total);
     }
 
     function changeAllMoney($ele) {
         var $type = $ele.find('option:checked');
-        var deposit = $type.attr('data-deposit');
-        var isNeed = $type.attr('data-need-install');
+        // var deposit = $type.attr('data-deposit');
+        // var isNeed = $type.attr('data-need-install');
+        // var cost = $type.attr('data-day-cost');
+
+        var price = $type.attr('data-price');
         var model = $type.attr('data-model');
-        var cost = $type.attr('data-day-cost');
+        var serviceCharge = $type.attr('data-service-charge');
 
-        var needNumber = 0;
-        if (isNeed) needNumber = parseInt(isNeed);
 
-        if (needNumber > 0) {
-            $('.js-install').show();
-            $('#J_installationCost').find('span').eq(0).text(isNeed);
+        var fee = serviceCharge ? parseInt(serviceCharge) : 0;
+
+        if (fee > 0) {
+            $('.js-service').removeClass('displayNone');
+            $('#J_serviceCharge').find('span').eq(0).text(fee);
         } else {
-            $('.js-install').hide();
-            $('#J_installationCost').find('span').eq(0).text(0);
+            $('.js-service').addClass('displayNone');
+            $('#J_serviceCharge').find('span').eq(0).text(0);
         }
-        $('#J_userCost').find('span').eq(0).text(deposit);
+        $('#J_userCost').find('span').eq(0).text(price);
         $('#J_leasedType').val(model);
 
         // $('#J_userDeposit').find('span').eq(0).text(deposit);
@@ -62,10 +65,11 @@ $(function () {
     var isValid = $('input[name="isValid"]');
     var installment = $('#J_installment');
     var submitBtn = $('#J_submitBtn');
-
+    var info =  $('#J_installmentInfo');
     installment.change(function () {
         if ($(this).is(':checked')) {
             $('#J_checkCode').removeClass('displayNone');
+            // info.removeClass('displayNone');
             submitBtn.text('提交分期订单');
             isValid.rules('add', {
                 required: true,
@@ -75,11 +79,19 @@ $(function () {
             });
         } else {
             $('#J_checkCode').addClass('displayNone');
+            // info.addClass('displayNone');
             submitBtn.html('下&nbsp;&nbsp;单');
             isValid.rules('remove');
             isValid.val('');
         }
     });
+
+    function installmentFunc(total) {
+        var num = +total;
+        info.find('.js-total').text(num);
+        info.find('.js-installment').text((num / 24).toFixed(2));
+    }
+
     // $mortgageCode.on('keyup mouseout input', function () {
     //     var $this = $(this);
     //     var v = $this.val();
