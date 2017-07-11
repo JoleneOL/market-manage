@@ -1059,6 +1059,9 @@
 .view-order-wrap .weui-flex__item:first-of-type p {
   border-right: 1px solid #e5e5e5;
 }
+.view-order-wrap-b {
+  padding-bottom: 8px;
+}
 .money-button {
   padding: 5%;
   box-sizing: border-box;

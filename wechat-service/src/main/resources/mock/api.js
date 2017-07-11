@@ -12,7 +12,7 @@ Mock.mock(/^\/api\/teamList\?rank=all&page=\d{1,100}$/, "get", {
     "data|5": [
         {
             name: "@cname",
-            rank: '@pick(["总代理", "代理商", "经销商", "爱心天使"])',
+            rank: '@pick(["市代理", "经销商", "爱心天使"])',
             joinTime: '@now("yyyy-MM-dd")',
             phone: /^1([34578])\d{9}$/
         }
@@ -38,7 +38,7 @@ Mock.mock(/^\/api\/teamList\?rank=2&page=\d$/, "get", {
     "data|20": [
         {
             name: "@cname",
-            rank: '代理商',
+            rank: '市代理',
             joinTime: '@now("yyyy-MM-dd")',
             phone: /^1([34578])\d{9}$/
         }
