@@ -13,9 +13,10 @@ $(function () {
                 return $.extend({}, d, extendData());
             }
         },
-        "ordering": false,
+        "ordering": true,
         "lengthChange": false,
         "searching": false,
+        "colReorder": true,
         "columns": [
             {
                 "data": "id", "name": "id"
@@ -43,7 +44,7 @@ $(function () {
             },
             {
                 title: "操作",
-                className: 'table-operate',
+                className: 'table-action',
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-edit"></i>&nbsp;编辑</a>';
                     a += '<a href="javascript:;" class="js-resetPassword" data-id="' + item.id + '"><i class="fa fa-repeat"></i>&nbsp;重置密码</a>';
@@ -59,7 +60,22 @@ $(function () {
         "displayLength": 15,
         "drawCallback": function () {
             clearSearchValue();
-        }
+        },
+        "dom": "<'row'<'col-sm-12'B>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "buttons": [{
+            "extend": "excel",
+            "text": "导出 Excel",
+            "className": "btn-xs",
+            "exportOptions": {
+                "columns": ":not(.table-action)"
+            }
+        }, {
+            "extend": 'colvis',
+            "text": "筛选列",
+            "className": "btn-xs"
+        }]
     });
 
     $(document).on('click', '.js-search', function () {

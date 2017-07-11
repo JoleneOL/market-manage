@@ -44,7 +44,7 @@ $(function () {
             },
             {
                 title: "操作",
-                className: 'table-operate',
+                className: 'table-action',
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;退款详情</a>';
                     var b = '<a href="javascript:;" class="js-checkLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看物流</a>';
