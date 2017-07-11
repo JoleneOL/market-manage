@@ -176,7 +176,7 @@ public class LoginServiceImpl implements LoginService {
         if (allAgent.isEmpty()) {
             List<Customer> customers = customerRepository.findByLogin(who);
             if (customers.isEmpty())
-                throw new IllegalStateException("找不到" + who + "所处的经销商");
+                lowestAgentLevel(who.getGuideUser());
             return customers.get(0).getAgentLevel();
         }
 
