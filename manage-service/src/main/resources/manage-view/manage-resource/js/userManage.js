@@ -28,23 +28,24 @@ $(function () {
                 "title": "部门", "data": "department", "name": "department"
             },
             {
-                "title": "真实姓名", "data": "realName", "name": "realName"
+                "title": "真实姓名", "data": "realName", "name": "realName", "orderable": false
             },
             {
-                "title": "微信号码", "data": "wechatID", "name": "wechatID"
+                "title": "微信号码", "data": "wechatID", "name": "wechatID", "orderable": false
             },
             {
-                "title": "角色", "data": "role", "name": "role"
+                "title": "角色", "data": "role", "name": "role", "orderable": false
             },
             {
                 "title": "状态", "data": "state", "name": "state"
             },
             {
-                "title": "备注", "data": "remark", "name": "remark"
+                "title": "备注", "data": "remark", "name": "remark", "orderable": false
             },
             {
-                title: "操作",
-                className: 'table-action',
+                "title": "操作",
+                "className": 'table-action',
+                "orderable": false,
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-edit"></i>&nbsp;编辑</a>';
                     a += '<a href="javascript:;" class="js-resetPassword" data-id="' + item.id + '"><i class="fa fa-repeat"></i>&nbsp;重置密码</a>';
