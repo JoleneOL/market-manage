@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -128,7 +129,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager(String loginName, String rawPassword, ManageLevel... levels) {
         Manager manager = new Manager();
         manager.setLoginName(loginName);
-        manager.setLevel(EnumUtils.randomEnum(ManageLevel.class, levels));
+        manager.setLevelSet(Collections.singleton(EnumUtils.randomEnum(ManageLevel.class, levels)));
         return loginService.password(manager, null, rawPassword);
     }
     //</editor-fold>

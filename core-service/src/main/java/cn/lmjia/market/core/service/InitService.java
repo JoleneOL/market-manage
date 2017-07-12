@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -107,7 +108,7 @@ public class InitService {
         if (loginService.managers().isEmpty()) {
             // 添加一个主管理员
             Manager manager = new Manager();
-            manager.setLevel(ManageLevel.root);
+            manager.setLevelSet(Collections.singleton(ManageLevel.root));
             manager.setLoginName("root");
             loginService.password(manager, null, "654321");
         }

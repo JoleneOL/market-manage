@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,8 +39,6 @@ public class Manager extends Login {
      */
     @Column(length = 200)
     private String comment;
-    @Enumerated(EnumType.STRING)
-    private ManageLevel level;
     /**
      * 新的等级设置
      */
@@ -51,9 +50,9 @@ public class Manager extends Login {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 固定的权限
         Stream<String> fixed = Stream.of("ROLE_" + ROLE_MANAGER);
-        if (level != null) {
-            fixed = Stream.concat(fixed, Stream.of(level.roles()));
-        }
+//        if (level != null) {
+//            fixed = Stream.concat(fixed, Stream.of(level.roles()));
+//        }
         if (levelSet != null) {
             fixed = Stream.concat(fixed, levelSet.stream()
                     .flatMap(level1 -> Stream.of(level1.roles())));
@@ -72,6 +71,10 @@ public class Manager extends Login {
 
     @Override
     public String getLoginTitle() {
-        return level.title();
+        // 最高的显示
+        return levelSet.stream()
+                .min(Comparator.comparingInt(Enum::ordinal))
+                .orElse(ManageLevel.root)
+                .title();
     }
 }
