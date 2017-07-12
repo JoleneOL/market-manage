@@ -118,18 +118,22 @@ public class ManageManagerController {
                         FieldBuilder.asName(Manager.class, "id")
                                 .addSelect(managerRoot -> managerRoot)
                                 .addFormat(toBi(Login::getId))
+                                .addOrder(managerRoot -> managerRoot.get("id"))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "name")
                                 .addSelect(managerRoot -> null)
                                 .addFormat(toBi(Login::getLoginName))
+                                .addOrder(managerRoot -> managerRoot.get("loginName"))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "department")
                                 .addSelect(managerRoot -> null)
                                 .addFormat(toBi(Manager::getDepartment))
+                                .addOrder(managerRoot -> managerRoot.get("department"))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "realName")
                                 .addSelect(managerRoot -> null)
                                 .addFormat(toBi(Manager::getRealName))
+                                .addOrder(managerRoot -> managerRoot.get("realName"))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "wechatID")
                                 .addSelect(managerRoot -> null)
@@ -139,6 +143,7 @@ public class ManageManagerController {
                                         return null;
                                     return user.getOpenId();
                                 }))
+                                .withoutOrder()
                                 .build()
                         , FieldBuilder.asName(Manager.class, "role")
                                 .addSelect(managerRoot -> null)
@@ -148,10 +153,12 @@ public class ManageManagerController {
                                             .map(ManageLevel::title)
                                             .collect(Collectors.toList());
                                 }))
+                                .withoutOrder()
                                 .build()
                         , FieldBuilder.asName(Manager.class, "remark")
                                 .addSelect(managerRoot -> null)
                                 .addFormat(toBi(Manager::getComment))
+                                .addOrder(managerRoot -> managerRoot.get("comment"))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "state")
                                 .addSelect(managerRoot -> null)
@@ -159,6 +166,7 @@ public class ManageManagerController {
                                     boolean state = manager.isEnabled();
                                     return state ? "启用" : "禁用";
                                 }))
+                                .addOrder(managerRoot -> managerRoot.get("enabled"))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "stateCode")
                                 .addSelect(managerRoot -> null)
@@ -166,6 +174,7 @@ public class ManageManagerController {
                                     boolean state = manager.isEnabled();
                                     return state ? 0 : 1;
                                 }))
+                                .addOrder(managerRoot -> managerRoot.get("enabled"))
                                 .build()
                 );
             }

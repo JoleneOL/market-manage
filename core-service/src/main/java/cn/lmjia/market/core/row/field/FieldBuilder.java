@@ -72,7 +72,7 @@ public class FieldBuilder<T> {
         return this;
     }
 
-    public FieldBuilder<T> withOrder() {
+    public FieldBuilder<T> withoutOrder() {
         this.noOrder = true;
         return this;
     }
