@@ -53,7 +53,8 @@ public class WechatShareController {
     }
 
     @GetMapping(SystemService.wechatShareMoreUri)
-    public String shareMore() {
+    public String shareMore(@AuthenticationPrincipal Login login, Model model) {
+        model.addAttribute("regular", loginService.isRegularLogin(login));
         return "wechat@chance.html";
     }
 

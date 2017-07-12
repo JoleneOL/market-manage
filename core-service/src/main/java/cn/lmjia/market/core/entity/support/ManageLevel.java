@@ -1,6 +1,13 @@
 package cn.lmjia.market.core.entity.support;
 
 import cn.lmjia.market.core.entity.Login;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 管理员级别
@@ -14,7 +21,7 @@ public enum ManageLevel {
      * 但是管理员工的范围是管辖范围之类的
      */
     manager("经理", Login.ROLE_AllAgent, Login.ROLE_GRANT),
-    agentManager("代理管理员", Login.ROLE_AllAgent);
+    agentManager("代理商管理员", Login.ROLE_AllAgent);
 
     private final String[] roles;
     private final String title;
@@ -24,11 +31,25 @@ public enum ManageLevel {
         this.roles = roles;
     }
 
+    public static String roleNameToRole(String role) {
+        role = role.toUpperCase(Locale.CHINA);
+        if (role.startsWith("ROLE_"))
+            return role;
+        return "ROLE_" + role;
+    }
+
     /**
      * @return role names
      */
     public String[] roles() {
         return roles;
+    }
+
+    public Collection<? extends GrantedAuthority> authorities() {
+        return Stream.of(roles)
+                .map(ManageLevel::roleNameToRole)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     public String title() {

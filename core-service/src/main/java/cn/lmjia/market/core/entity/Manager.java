@@ -6,12 +6,13 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,22 +26,41 @@ import java.util.stream.Stream;
 @Getter
 public class Manager extends Login {
 
+    @Column(length = 10)
+    private String department;
+    /**
+     * 真实姓名
+     */
+    @Column(length = 10)
+    private String realName;
+    /**
+     * 备注
+     */
+    @Column(length = 200)
+    private String comment;
     @Enumerated(EnumType.STRING)
     private ManageLevel level;
+    /**
+     * 新的等级设置
+     */
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private Set<ManageLevel> levelSet;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        String[]
-        final String[] roles = level.roles();
-        String[] newRoles = Arrays.copyOf(roles, roles.length + 1);
-        newRoles[newRoles.length - 1] = "ROLE_" + ROLE_MANAGER;
-        return Stream.of(newRoles)
-                .map(role -> {
-                    role = role.toUpperCase(Locale.CHINA);
-                    if (role.startsWith("ROLE_"))
-                        return role;
-                    return "ROLE_" + role;
-                })
+        // 固定的权限
+        Stream<String> fixed = Stream.of("ROLE_" + ROLE_MANAGER);
+        if (level != null) {
+            fixed = Stream.concat(fixed, Stream.of(level.roles()));
+        }
+        if (levelSet != null) {
+            fixed = Stream.concat(fixed, levelSet.stream()
+                    .flatMap(level1 -> Stream.of(level1.roles())));
+        }
+
+        return fixed
+                .map(ManageLevel::roleNameToRole)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
     }

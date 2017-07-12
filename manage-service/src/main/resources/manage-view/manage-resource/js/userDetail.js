@@ -12,7 +12,7 @@ $(function () {
         rules: {
             name: "required",
             department: "required",
-            "role[]": {
+            "role": {
                 required: true,
                 minlength: 1
             }

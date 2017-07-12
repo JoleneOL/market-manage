@@ -42,6 +42,16 @@ public class FieldBuilder<T> {
         return new FieldBuilder<>(name);
     }
 
+    /**
+     * 开始一个构造器
+     *
+     * @param name {@link FieldDefinition#name()}
+     * @return 新的构造器
+     */
+    public static <X> FieldBuilder<X> asName(String name) {
+        return new FieldBuilder<X>(name);
+    }
+
     public FieldBuilder<T> addBiSelect(BiFunction<Root<T>, CriteriaBuilder, Expression<?>> function) {
         this.biSelect = function;
         return this;

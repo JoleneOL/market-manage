@@ -48,7 +48,7 @@
                         <div class="row">
                             <div class="col-sm-7 col-lg-6">
                                 <form class="form-horizontal" id="J_userForm" method="post"
-                                      action="_userManage.html">
+                                      action="_userManage.html" th:action="@{/manage/managers}">
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">用户名 <span
                                                 class="asterisk">*</span></label>
@@ -61,11 +61,11 @@
                                         <label class="col-sm-3 control-label">部门 <span class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <select class="form-control" name="department" required>
-                                                <option value="0">财务</option>
-                                                <option th:remove="all" value="1">技术</option>
-                                                <option th:remove="all" value="2">运营</option>
-                                                <option th:remove="all" value="3">客服</option>
-                                                <option th:remove="all" value="5">推广</option>
+                                                <option value="办公室">办公室</option>
+                                                <option value="技术部">技术部</option>
+                                                <option value="运营部">运营部</option>
+                                                <option value="市场部">市场部</option>
+                                                <option value="财务部">财务部</option>
                                             </select>
                                         </div>
                                     </div>
@@ -85,15 +85,17 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">分配角色 <span class="asterisk">*</span></label>
+                                        <!--/*@thymesVar id="levels" type="java.util.Collection<cn.lmjia.market.core.entity.support.ManageLevel>"*/-->
                                         <div class="col-sm-6">
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role[]" value="1">Leader</label>
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role[]" value="2">MT</label>
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role[]" value="3">治疗</label>
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role[]" value="4">DPS</label>
+                                            <label th:each="level:${levels}" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="1" th:value="${level.name()}"
+                                                       th:text="${level.title()}">Leader</label>
+                                            <label th:remove="all" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="2">MT</label>
+                                            <label th:remove="all" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="3">治疗</label>
+                                            <label th:remove="all" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="4">DPS</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -106,7 +108,8 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">备注</label>
                                         <div class="col-sm-6">
-                                            <textarea title="备注" class="form-control" rows="3"></textarea>
+                                            <textarea title="备注" name="comment" class="form-control"
+                                                      rows="3"></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
