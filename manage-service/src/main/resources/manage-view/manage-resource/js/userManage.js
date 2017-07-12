@@ -48,7 +48,7 @@ $(function () {
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-edit"></i>&nbsp;编辑</a>';
                     a += '<a href="javascript:;" class="js-resetPassword" data-id="' + item.id + '"><i class="fa fa-repeat"></i>&nbsp;重置密码</a>';
-                    if (item.stateCode)
+                    if (item.stateCode == 0)
                         a += '<a href="javascript:;" class="js-disableUser" data-id="' + item.id + '" ><i class="fa fa-lock"></i>&nbsp;禁用</a>';
                     else
                         a += '<a href="javascript:;" class="js-enableUser" data-id="' + item.id + '"><i class="fa fa-unlock"></i>&nbsp;启用</a>';
@@ -82,9 +82,8 @@ $(function () {
         // 点击搜索方法。但如果数据为空，是否阻止
         table.ajax.reload();
     }).on('click', '.js-edit', function () {
-        // TODO
         // 需要获取一些参数供详情跳转
-        window.location.href = '_userEdit.html?id=' + $(this).data('id');
+        window.location.href = $('body').attr('data-edit-url') + '?id=' + $(this).data('id');
     }).on('click', '.js-resetPassword', function () {
         var id = $(this).data('id');
         layer.confirm('确定重置密码？', {

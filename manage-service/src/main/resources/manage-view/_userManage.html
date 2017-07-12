@@ -21,13 +21,14 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body>
+<body data-edit-url="_userEdit.html" th:data-edit-url="@{/manageManagerEdit}">
 <div class="wrapper wrapper-content">
     <div class="row m-b-sm">
         <div class="col-md-12">
             <div class="form-inline">
                 <div>
-                    <a class="btn btn-primary btn-sm js-new" href="_userEdit.html">新增用户</a>
+                    <a class="btn btn-primary btn-sm js-new" href="_userEdit.html"
+                       th:href="@{/manageManagerAdd}">新增用户</a>
                 </div>
             </div>
         </div>
@@ -92,5 +93,5 @@
 <script src="mock/mock-min.js" th:remove="all"></script>
 <script src="mock/api.js" th:remove="all"></script>
 <!--生产环境请移除 End-->
-<script src="./manage-resource/js/userManage.js"></script>
+<script src="./manage-resource/js/userManage.js?170712"></script>
 </html>

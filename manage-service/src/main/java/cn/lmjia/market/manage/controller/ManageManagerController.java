@@ -3,6 +3,7 @@ package cn.lmjia.market.manage.controller;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -14,12 +15,15 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +32,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,6 +57,8 @@ public class ManageManagerController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private LoginRepository loginRepository;
 
     /**
      * @param login 身份
@@ -82,6 +90,19 @@ public class ManageManagerController {
         return "_userManage.html";
     }
 
+    @GetMapping("/manageManagerAdd")
+    public String addIndex(@AuthenticationPrincipal Login login, Model model) {
+        model.addAttribute("levels", manageable(loginService.get(login.getId())));
+        return "_userEdit.html";
+    }
+
+    @GetMapping("/manageManagerEdit")
+    public String editIndex(long id, @AuthenticationPrincipal Login login, Model model) {
+        model.addAttribute("manager", loginService.get(id));
+        model.addAttribute("levels", manageable(loginService.get(login.getId())));
+        return "_userEdit.html";
+    }
+
     @GetMapping("/manage/managers")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition list(String name, String department, String realName) {
@@ -94,52 +115,57 @@ public class ManageManagerController {
             @Override
             public List<FieldDefinition<Manager>> fields() {
                 return Arrays.asList(
-                        FieldBuilder.asName(Manager.class, "id").build()
-                        , FieldBuilder.asName(Manager.class, "name")
-                                .addSelect(managerRoot -> managerRoot.get("loginName"))
+                        FieldBuilder.asName(Manager.class, "id")
+                                .addSelect(managerRoot -> managerRoot)
+                                .addFormat(toBi(Login::getId))
                                 .build()
-                        , FieldBuilder.asName(Manager.class, "department").build()
-                        , FieldBuilder.asName(Manager.class, "realName").build()
+                        , FieldBuilder.asName(Manager.class, "name")
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(Login::getLoginName))
+                                .build()
+                        , FieldBuilder.asName(Manager.class, "department")
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(Manager::getDepartment))
+                                .build()
+                        , FieldBuilder.asName(Manager.class, "realName")
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(Manager::getRealName))
+                                .build()
                         , FieldBuilder.asName(Manager.class, "wechatID")
-                                .addSelect(managerRoot -> managerRoot.join("wechatUser", JoinType.LEFT))
-                                .addFormat((wechatUser, type) -> {
-                                    StandardWeixinUser user = (StandardWeixinUser) wechatUser;
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(manager -> {
+                                    StandardWeixinUser user = manager.getWechatUser();
                                     if (user == null)
                                         return null;
                                     return user.getOpenId();
-                                })
+                                }))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "role")
-                                .addSelect(managerRoot -> managerRoot.get("levelSet"))
-                                .addFormat((set, type) -> {
-                                    if (set == null)
-                                        return Collections.emptyList();
-                                    if (set instanceof ManageLevel) {
-                                        return Collections.singletonList(((ManageLevel) set).title());
-                                    }
-                                    @SuppressWarnings("unchecked")
-                                    Set<ManageLevel> levelSet = (Set<ManageLevel>) set;
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(manager -> {
+                                    Set<ManageLevel> levelSet = manager.getLevelSet();
                                     return levelSet.stream()
                                             .map(ManageLevel::title)
                                             .collect(Collectors.toList());
-                                })
+                                }))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "remark")
-                                .addSelect(managerRoot -> managerRoot.get("comment"))
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(Manager::getComment))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "state")
-                                .addSelect(managerRoot -> managerRoot.get("enabled"))
-                                .addFormat((enable, type) -> {
-                                    boolean state = (boolean) enable;
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(manager -> {
+                                    boolean state = manager.isEnabled();
                                     return state ? "启用" : "禁用";
-                                })
+                                }))
                                 .build()
                         , FieldBuilder.asName(Manager.class, "stateCode")
-                                .addSelect(managerRoot -> managerRoot.get("enabled"))
-                                .addFormat((enable, type) -> {
-                                    boolean state = (boolean) enable;
+                                .addSelect(managerRoot -> null)
+                                .addFormat(toBi(manager -> {
+                                    boolean state = manager.isEnabled();
                                     return state ? 0 : 1;
-                                })
+                                }))
                                 .build()
                 );
             }
@@ -173,34 +199,63 @@ public class ManageManagerController {
         };
     }
 
+    private BiFunction<Object, MediaType, Object> toBi(Function<Manager, Object> function) {
+        return (o, mediaType) -> {
+            if (o == null)
+                return null;
+            Manager manager = (Manager) o;
+            return function.apply(manager);
+        };
+    }
+
+    @PreAuthorize("hasAnyRole('ROOT','" + ROLE_GRANT + "')")
+    @PostMapping("/manage/manager")
+    @Transactional
+    public String updateUser(String name, String department, String realName, boolean enable, String comment
+            , String[] role, @AuthenticationPrincipal Login login, long id) {
+        updateManagerInfo(department, realName, enable, comment, role, loginService.get(login.getId())
+                , () -> (Manager) loginService.get(id));
+        return "redirect:/manageManager";
+    }
+
     @PreAuthorize("hasAnyRole('ROOT','" + ROLE_GRANT + "')")
     @PostMapping("/manage/managers")
     @Transactional
     public String addUser(String name, String department, String realName, boolean enable, String comment
             , String[] role, @AuthenticationPrincipal Login login, RedirectAttributes redirectAttributes) {
+
+        Login current = loginService.get(login.getId());
+        final String rawPassword = RandomStringUtils.randomAlphabetic(6);
+
+        Supplier<Manager> managerSupplier = () -> {
+            if (loginService.byLoginName(name) != null)
+                throw new IllegalArgumentException(name + "已存在");
+            return loginService.newLogin(Manager.class, name, current, rawPassword);
+        };
+
+        updateManagerInfo(department, realName, enable, comment, role, current, managerSupplier);
+
+        redirectAttributes.addAttribute("rawPassword", rawPassword);
+        return "redirect:/manageManager";
+    }
+
+    private void updateManagerInfo(String department, String realName, boolean enable, String comment, String[] role, Login current, Supplier<Manager> managerSupplier) {
         Set<ManageLevel> levelSet = Stream.of(role)
                 .map(ManageLevel::valueOf)
                 .collect(Collectors.toSet());
         if (levelSet.isEmpty())
             throw new IllegalArgumentException("角色不可为空。");
-        if (loginService.byLoginName(name) != null)
-            throw new IllegalArgumentException(name + "已存在");
-        login = loginService.get(login.getId());
-        if (!manageable(login).containsAll(levelSet)) {
+        if (!manageable(current).containsAll(levelSet)) {
             throw new IllegalArgumentException("越权操作。");
         }
 
-        final String rawPassword = RandomStringUtils.randomAlphabetic(6);
-        Manager manager = loginService.newLogin(Manager.class, name, login, rawPassword);
+        Manager manager = managerSupplier.get();
 
         manager.setLevelSet(levelSet);
         manager.setRealName(realName);
         manager.setComment(comment);
         manager.setDepartment(department);
         manager.setEnabled(enable);
-
-        redirectAttributes.addAttribute("rawPassword", rawPassword);
-        return "redirect:/manageManager";
     }
 
     @PutMapping("/login/{id}/disable")
@@ -237,6 +292,15 @@ public class ManageManagerController {
         final Login login = loginService.get(id);
         manageLogin(current, login);
         login.setEnabled(true);
+    }
+
+    @DeleteMapping("/login/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void delete(@PathVariable("id") long id, @AuthenticationPrincipal Login current) {
+        final Login login = loginService.get(id);
+        manageLogin(current, login);
+        loginRepository.delete(login);
     }
 
     @PutMapping("/login/{id}/password")

@@ -3,16 +3,18 @@ package cn.lmjia.market.manage.controller;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.manage.ManageServiceTest;
-import me.jiangcai.lib.seext.EnumUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ManageManagerControllerTest extends ManageServiceTest {
 
     private Login current;
+    @Autowired
+    private LoginRepository loginRepository;
 
     @Before
     public void before() {
@@ -32,6 +36,18 @@ public class ManageManagerControllerTest extends ManageServiceTest {
     @Override
     protected Login allRunWith() {
         return current;
+    }
+
+    @Test
+    public void pages() throws Exception {
+        driver.get("http://localhost/manageManagerAdd");
+        System.out.println(driver.getPageSource());
+        addUser();
+        // manageManagerEdit
+        // 随便找一个来编辑
+        Login lastOne = loginRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0);
+        driver.get("http://localhost/manageManagerEdit?id=" + lastOne.getId());
+        System.out.println(driver.getPageSource());
     }
 
     @Test
@@ -50,11 +66,12 @@ public class ManageManagerControllerTest extends ManageServiceTest {
     public void addUser() throws Exception {
         final String loginName = randomMobile();
         // 随便给几个权限
-        Set<ManageLevel> levelSet = randomLevel();
+        Collection<ManageLevel> levelSet = randomLevel();
         mockMvc.perform(
                 paramLevel(post("/manage/managers")
                         .param("name", loginName)
                         .param("department", RandomStringUtils.randomAlphabetic(10))
+//                        .param("department","运营部")
                         .param("realName", RandomStringUtils.randomAlphabetic(10))
                         .param("enable", "1")
                         .param("comment", RandomStringUtils.randomAlphabetic(10)), levelSet)
@@ -71,15 +88,18 @@ public class ManageManagerControllerTest extends ManageServiceTest {
                 .isTrue();
     }
 
-    private RequestBuilder paramLevel(MockHttpServletRequestBuilder builder, Set<ManageLevel> levelSet) {
+    private RequestBuilder paramLevel(MockHttpServletRequestBuilder builder, Collection<ManageLevel> levelSet) {
         for (ManageLevel level : levelSet) {
             builder = builder.param("role", level.name());
         }
         return builder;
     }
 
-    private Set<ManageLevel> randomLevel() {
-        return Collections.singleton(EnumUtils.randomEnum(ManageLevel.class));
+    private Collection<ManageLevel> randomLevel() {
+//        return Collections.singleton(EnumUtils.randomEnum(ManageLevel.class));
+        return Arrays.asList(
+                ManageLevel.manager, ManageLevel.agentManager
+        );
     }
 
 }

@@ -8,7 +8,13 @@ $(function () {
         radioClass: "iradio_square-green"
     });
 
-    $('#J_userForm').validate({
+    var form = $('#J_userForm');
+    var dataId = form.attr('data-id');
+    if (dataId) {
+        form.attr('action', form.attr('data-edit-action'));
+    }
+
+    form.validate({
         rules: {
             name: "required",
             department: "required",
