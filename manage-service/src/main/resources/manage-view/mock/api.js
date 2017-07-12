@@ -89,7 +89,7 @@ Mock.mock(/\/product\/list/, "get", {
     ]
 });
 
-Mock.mock(/\/user\/list/, "get", {
+Mock.mock(/\/manage\/managers/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
@@ -113,16 +113,18 @@ Mock.mock(/\/products\/\d/, {
     "resultMsg": "ok"
 });
 
-Mock.mock(/\/user\/\d\/disable/, {
+Mock.mock(/\/login\/\d\/disable/, "put", {
     "resultCode": 200,
     "resultMsg": "ok"
 });
 
-Mock.mock(/\/user\/\d\/enable/, {
+Mock.mock(/\/login\/\d\/password/, "put", "@string(10)");
+
+Mock.mock(/\/login\/\d\/enable/, "put", {
     "resultCode": 200,
     "resultMsg": "ok"
 });
-Mock.mock(/\/user\/\d\/delete/, {
+Mock.mock(/\/login\/\d/, "delete", {
     "resultCode": 200,
     "resultMsg": "ok"
 });

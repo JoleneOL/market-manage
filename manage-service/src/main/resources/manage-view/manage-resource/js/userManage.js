@@ -8,7 +8,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/user/list",
+            "url": "/manage/managers",
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
@@ -90,10 +90,11 @@ $(function () {
         layer.confirm('确定重置密码？', {
             btn: ['确定', '取消'] //按钮
         }, function (index) {
-            $.ajax('/password/' + id + '/reset', {
+            $.ajax('/login/' + id + '/password', {
                 method: 'put',
-                success: function () {
+                success: function (res) {
                     table.ajax.reload();
+                    layer.alert('新密码是：' + res + '，这是最后一次以明文形式显示，系统将不再保留。');
                     layer.close(index);
                 },
                 error: function () {
@@ -106,7 +107,7 @@ $(function () {
         layer.confirm('确定禁用该用户？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/user/' + id + '/disable', {
+            $.ajax('/login/' + id + '/disable', {
                 method: 'put',
                 success: function () {
                     table.ajax.reload();
@@ -122,7 +123,7 @@ $(function () {
         layer.confirm('确定启用该用户？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/user/' + id + '/enable', {
+            $.ajax('/login/' + id + '/enable', {
                 method: 'put',
                 success: function () {
                     table.ajax.reload();
@@ -138,7 +139,7 @@ $(function () {
         layer.confirm('确定删除该用户？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/user/' + id + '/delete', {
+            $.ajax('/login/' + id, {
                 method: 'delete',
                 success: function () {
                     table.ajax.reload();
