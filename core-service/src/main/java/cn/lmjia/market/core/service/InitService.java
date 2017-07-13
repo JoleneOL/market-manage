@@ -58,6 +58,8 @@ public class InitService {
     }
 
     private void products() throws IOException {
+        if (mainProductRepository.count() > 0)
+            return;
         Properties properties = new Properties();
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(
                 new ClassPathResource("/defaultProducts.properties").getInputStream(), "UTF-8"))) {
