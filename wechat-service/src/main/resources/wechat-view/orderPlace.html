@@ -114,6 +114,7 @@
                                 th:each="good:${@mainGoodService.forSale()}"
                                 th:value="${good.id}"
                                 th:data-price="${good.product.deposit}"
+                                th:data-service-charge="${good.product.install}"
                                 th:data-model="${good.product.code}"
                                 th:text="${good.product.name}">厨下净水机
                         </option>
