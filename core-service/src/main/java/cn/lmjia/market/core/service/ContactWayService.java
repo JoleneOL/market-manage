@@ -55,10 +55,12 @@ public interface ContactWayService {
      * 更新身份证证件照
      * 资源将被转存
      *
-     * @param login
-     * @param frontResourcePath 个人信息面
-     * @param backResourcePath  国徽面
+     * @param login                       身份
+     * @param frontResourcePath           个人信息面
+     * @param backResourcePath            国徽面
+     * @param businessLicenseResourcePath 可选的营业执照
      */
     @Transactional
-    ContactWay updateIDCardImages(Login login, String frontResourcePath, String backResourcePath) throws IOException;
+    ContactWay updateIDCardImages(Login login, String frontResourcePath, String backResourcePath
+            , String businessLicenseResourcePath) throws IOException;
 }

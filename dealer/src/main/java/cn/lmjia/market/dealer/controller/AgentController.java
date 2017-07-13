@@ -62,14 +62,14 @@ public class AgentController {
             , int firstPayment, int agencyFee, @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam LocalDate beginDate
             , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam LocalDate endDate
             , String mobile, String password
-            , long guideUser, Address address, String cardFrontPath, String cardBackPath) throws IOException {
+            , long guideUser, Address address, String cardFrontPath, String cardBackPath, String businessLicensePath) throws IOException {
         Login guide = loginService.get(guideUser);
 
         Login newLogin = loginService.newLogin(Login.class, mobile, guide, password);
         contactWayService.updateName(newLogin, agentName);
         contactWayService.updateMobile(newLogin, mobile);
         contactWayService.updateAddress(newLogin, address);
-        contactWayService.updateIDCardImages(newLogin, cardFrontPath, cardBackPath);
+        contactWayService.updateIDCardImages(newLogin, cardFrontPath, cardBackPath, businessLicensePath);
 
         agentService.addAgent(login, newLogin, rank, levelTitle, beginDate, endDate, firstPayment, agencyFee
                 , superiorId == null ? null : agentService.getAgent(superiorId));

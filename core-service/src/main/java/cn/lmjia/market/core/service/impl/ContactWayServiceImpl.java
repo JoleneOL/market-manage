@@ -8,6 +8,7 @@ import cn.lmjia.market.core.service.ContactWayService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -51,16 +52,25 @@ public class ContactWayServiceImpl implements ContactWayService {
     }
 
     @Override
-    public ContactWay updateIDCardImages(Login login, String frontResourcePath, String backResourcePath)
+    public ContactWay updateIDCardImages(Login login, String frontResourcePath, String backResourcePath
+            , String businessLicenseResourcePath)
             throws IOException {
         String id = UUID.randomUUID().toString();
         String frontPath = "contact/" + id + "/front." + ext(frontResourcePath);
         String backPath = "contact/" + id + "/back." + ext(backResourcePath);
         resourceService.moveResource(frontPath, frontResourcePath);
         resourceService.moveResource(backPath, backResourcePath);
+        String businessLicensePath;
+        if (!StringUtils.isEmpty(businessLicenseResourcePath)) {
+            businessLicensePath = "contact/" + id + "/businessLicense." + ext(businessLicenseResourcePath);
+            resourceService.moveResource(businessLicensePath, businessLicenseResourcePath);
+        } else
+            businessLicensePath = null;
         return updateContactWay(login, contactWay -> {
             contactWay.setFrontImagePath(frontPath);
             contactWay.setBackImagePath(backPath);
+            if (businessLicensePath != null)
+                contactWay.setBusinessLicensePath(businessLicensePath);
         });
     }
 

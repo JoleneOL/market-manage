@@ -42,6 +42,8 @@ public class ContactWay {
     private String frontImagePath;
     @Column(length = 60)
     private String backImagePath;
+    @Column(length = 68)
+    private String businessLicensePath;
 
     @Override
     public String toString() {

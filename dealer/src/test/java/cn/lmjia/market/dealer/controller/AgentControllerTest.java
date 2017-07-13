@@ -46,6 +46,7 @@ public class AgentControllerTest extends DealerServiceTest {
             Address address = randomAddress();
             String cardFrontPath = newRandomImagePath();
             String cardBackPath = newRandomImagePath();
+            String businessLicensePath = newRandomImagePath();
 
             mockMvc.perform(post("/addAgent")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -62,6 +63,7 @@ public class AgentControllerTest extends DealerServiceTest {
                     .param("fullAddress", address.getOtherAddress())
                     .param("cardFrontPath", cardFrontPath)
                     .param("cardBackPath", cardBackPath)
+                    .param("businessLicensePath", businessLicensePath)
             )
                     .andDo(print())
                     .andExpect(status().isFound())
