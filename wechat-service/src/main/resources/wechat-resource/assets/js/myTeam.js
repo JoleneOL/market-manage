@@ -1,120 +1,54 @@
 /**
- * Created by Chang on 2017/5/7.
+ * Created by Neo on 2017/7/14.
  */
 $(function () {
+    var teamItem = $('.js-team');
+    var teamSwiper = $('#tabs-teams').swiper({
+        observer: true,
+        observeParents: true,
+        speed: 500,
+        onSlideChangeStart: function () {
+            $(".js-teams .active").removeClass('active');
+            teamItem.eq(teamSwiper.activeIndex).addClass('active');
 
-    var infiniteWrap = $('#J_teamList');
-
-    var extraHeight = 0;
-    $('.js-extra-h').each(function () {
-        extraHeight += $(this).outerHeight(true);
+            $('.view-total .on').removeClass('on');
+            $('.view-total li').eq(teamSwiper.activeIndex).addClass('on');
+        }
+    });
+    teamItem.on('touchstart mousedown', function (e) {
+        e.preventDefault();
+        $(".js-teams .active").removeClass('active');
+        $(this).addClass('active');
+        teamSwiper.slideTo($(this).index())
+    });
+    teamItem.click(function (e) {
+        e.preventDefault();
     });
 
-    infiniteWrap.height($(window).height() - Math.ceil(extraHeight));
+    // 我的团队逻辑
+    var infiniteWrap = $('.swiper-slide');
+
+    var extraHeight_team = 0;
+    $('.js-extra-h').each(function () {
+        extraHeight_team += $(this).outerHeight(true);
+    });
+
+    infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
 
     var listTpl = function (obj) {
-        return '<div class="view-list-item">' +
-            '<div class="ellipsis">' + obj.name + '</div>' +
-            '<div>' + obj.phone + '</div>' +
-            '<div>' + obj.rank + '</div>' +
-            '<div>' + obj.joinTime + '</div>' +
+        return '<div class="weui-flex view_team-list">' +
+            '<div class="weui-flex__item text-center">' + obj.name + '</div>' +
+            '<div class="weui-flex__item text-center">' + obj.rank + '</div>' +
+            '<div class="weui-flex__item text-center">' + obj.joinTime + '</div>' +
             '</div>';
     };
 
-    var myScroll = infiniteWrap.myScroll({
-        ajaxUrl: infiniteWrap.attr('data-url'),
-        ajaxData: {
-            rank: infiniteWrap.attr('data-rank')
-        },
-        template: listTpl
-    });
-
-    $('#J_changeRank').click(function () {
-        $.actions({
-            title: "选择级别",
-            actions: [
-                {
-                    text: "全部",
-                    className: "text-custom",
-                    onClick: function () {
-                        $.showLoading();
-                        getRankList('all');
-                    }
-                },
-                {
-                    text: "总代理",
-                    onClick: function () {
-                        $.showLoading();
-                        getRankList(1);
-                    }
-                },
-                {
-                    text: "代理商",
-                    onClick: function () {
-                        $.showLoading();
-                        getRankList(2);
-                    }
-                },
-                {
-                    text: "经销商",
-                    onClick: function () {
-                        $.showLoading();
-                        getRankList(3);
-                    }
-                },
-                {
-                    text: "爱心天使",
-                    onClick: function () {
-                        $.showLoading();
-                        getRankList(4);
-                    }
-                }
-            ]
+    $('.js-teamItems').each(function () {
+        var self = $(this);
+        self.myScroll({
+            ajaxUrl: self.attr('data-url'),
+            template: listTpl
         });
-    });
+    })
 
-
-    function getRankList(data) {
-        var url = infiniteWrap.attr('data-url');
-        $.ajax(url, {
-            method: "GET",
-            data: {rank: data, page: 0},
-            dataType: 'json',
-            success: function (res) {
-                if (res.resultCode !== 200) {
-                    $.toast('请求失败', 'cancel');
-                    return '';
-                }
-                setRankList(res.data);
-                $.hideLoading();
-                infiniteWrap.attr('data-rank', data);
-                myScroll.reset({
-                    ajaxData: {
-                        rank: infiniteWrap.attr('data-rank')
-                    },
-                    page: 1
-                });
-                $.myScrollRefresh(true);
-            },
-            error: function () {
-                $.toast('服务器异常', 'cancel');
-            }
-        });
-    }
-
-    function setRankList(obj) {
-        var domStr = '';
-        if (obj.length > 0) {
-            obj.forEach(function (v) {
-                domStr += listTpl(v);
-            });
-        } else {
-            domStr = '<div class="view-list-item view-no-res"><p class="text-center">暂无数据</p></div>'
-        }
-        infiniteWrap
-            .find('.view-list-item').remove()
-            .end()
-            .find('.weui-loadmore').before(domStr);
-    }
 });
-

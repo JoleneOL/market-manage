@@ -67,10 +67,11 @@ $(function () {
     });
 
     var extraHeight = 0;
+    var commItems = $('.js-commItems');
     $('.js-extra-h-c').each(function () {
         extraHeight += $(this).outerHeight(true);
     });
-    $('.swiper-slide').height($(window).height() - Math.ceil(extraHeight) - 52);
+    commItems.height($(window).height() - Math.ceil(extraHeight) - 52);
 
     var commTpl = function (obj) {
         return '<div class="view-comm-list_item"> ' +
@@ -87,7 +88,7 @@ $(function () {
             '</div>';
     };
 
-    $('.js-commItems').each(function () {
+    commItems.each(function () {
         var self = $(this);
         self.myScroll({
             ajaxUrl: self.attr('data-url'),
@@ -97,14 +98,14 @@ $(function () {
 
 
     // 我的团队逻辑
-    var infiniteWrap = $('#J_teamList');
+    var teamItems = $('.js-teamItems');
 
     var extraHeight_team = 0;
     $('.js-extra-h').each(function () {
         extraHeight_team += $(this).outerHeight(true);
     });
 
-    infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
+    teamItems.height($(window).height() - Math.ceil(extraHeight_team) -52);
 
     var listTpl = function (obj) {
         return '<div class="weui-flex view_team-list">' +
@@ -114,7 +115,7 @@ $(function () {
             '</div>';
     };
 
-    $('.js-teamItems').each(function () {
+    teamItems.each(function () {
         var self = $(this);
         self.myScroll({
             ajaxUrl: self.attr('data-url'),
