@@ -23,9 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = SecurityConfig.class)
 public class WechatShareControllerTest extends WechatTestBase {
 
+    protected Login currentLogin;
     @Autowired
     private WeixinTestConfig weixinTestConfig;
-    private Login currentLogin;
 
     @Override
     protected Login allRunWith() {
@@ -35,6 +35,12 @@ public class WechatShareControllerTest extends WechatTestBase {
     @Test
     public void share() throws Exception {
         // 正常用户进入
+        final Login newUser = createNewUserByShare();
+
+        System.out.println(newUser);
+    }
+
+    protected Login createNewUserByShare() {
         Login origin = randomLogin(false, false);
         currentLogin = origin;
         // 打开分享页面
@@ -45,6 +51,7 @@ public class WechatShareControllerTest extends WechatTestBase {
         currentLogin = null;
         WeixinUserDetail weixinUser = WeixinUserMocker.randomWeixinUserDetail();
         weixinTestConfig.setNextDetail(weixinUser);
+        final Login newUser;
         try {
             createWebDriver();// 这个时候的driver就是新用户专用的了
 
@@ -62,11 +69,14 @@ public class WechatShareControllerTest extends WechatTestBase {
                     .isEqualTo("我的下单");
 
             // 这个用户肯定是来自 origin 的
-            assertThat(loginService.byLoginName(mobile).getGuideUser())
+            newUser = loginService.byLoginName(mobile);
+            assertThat(newUser.getGuideUser())
                     .isEqualTo(origin);
         } finally {
             weixinTestConfig.setNextDetail(null);
+            originDriver.close();
         }
+        return newUser;
     }
 
 }

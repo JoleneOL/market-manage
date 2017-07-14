@@ -2,6 +2,8 @@ package cn.lmjia.market.wechat;
 
 
 import cn.lmjia.market.core.config.MVCConfig;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.wechat.config.WechatConfig;
@@ -9,7 +11,10 @@ import cn.lmjia.market.wechat.page.WechatMyPage;
 import cn.lmjia.market.wechat.page.WechatMyTeamPage;
 import cn.lmjia.market.wechat.page.WechatOrderListPage;
 import com.gargoylesoftware.htmlunit.WebClient;
+import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.model.WeixinUserDetail;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
+import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import me.jiangcai.wx.test.WeixinTestConfig;
 import me.jiangcai.wx.test.WeixinUserMocker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,12 @@ public abstract class WechatTestBase extends DealerServiceTest {
 
     @Autowired
     private WeixinTestConfig weixinTestConfig;
+    @Autowired
+    private StandardWeixinUserRepository standardWeixinUserRepository;
+    @Autowired
+    private LoginRepository loginRepository;
+    @Autowired
+    private PublicAccount publicAccount;
 
     /**
      * @return 生成一个新的微信帐号，并且应用在系统中
@@ -87,4 +98,21 @@ public abstract class WechatTestBase extends DealerServiceTest {
         return initPage(WechatOrderListPage.class);
     }
 
+    /**
+     * 绑定开发者微信号到该登录
+     *
+     * @param login 登录
+     */
+    protected void bindDeveloperWechat(Login login) {
+        StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId("oiKvNt0neOAB8ddS0OzM_7QXQDZw");
+        if (weixinUser == null) {
+            weixinUser = new StandardWeixinUser();
+            weixinUser.setOpenId("oiKvNt0neOAB8ddS0OzM_7QXQDZw");
+            weixinUser.setAppId(publicAccount.getAppID());
+            weixinUser = standardWeixinUserRepository.save(weixinUser);
+        }
+        login = loginRepository.getOne(login.getId());
+        login.setWechatUser(weixinUser);
+        loginRepository.save(login);
+    }
 }

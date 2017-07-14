@@ -58,7 +58,7 @@ public class PayServiceImpl implements PayService {
             }
             return new ModelAndView("redirect:/wechatPaySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
         } else if (payableOrder instanceof PromotionRequest) {
-            return new ModelAndView("redirect:/wechatUpgradeChecking");
+            return new ModelAndView("redirect:/wechatUpgradeApplySuccess");
         } else
             throw new IllegalStateException("暂时不支持：" + payableOrder);
     }

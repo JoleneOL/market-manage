@@ -67,7 +67,8 @@ public class PromotionRequest implements PayableOrder {
     /**
      * 类型,不知道以后还有什么 就用int了
      * 1: 经销商
-     * 2: 省代理（其实是区代理）
+     * 2: 代理商
+     * 3: 省代理（其实是区代理）
      */
     private int type;
     @Column(length = 60)
