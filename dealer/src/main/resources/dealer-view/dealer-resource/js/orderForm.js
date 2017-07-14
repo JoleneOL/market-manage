@@ -6,7 +6,10 @@ $(function () {
     if($('#recommendId').length > 0) {
         $('#recommendId').makeRecommendSelect();
     }
-
+    $('#J_cityPicker').on('cp:updated',function(){
+        var val = $(this).val();
+        $(this).val(val.replace(/\//g,' '));
+    });
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1([34578])\d{9}$/;
@@ -15,7 +18,7 @@ $(function () {
     // 曲线救国验证 地址是否选择
     $.validator.addMethod("hasCity", function (value, element) {
         var val = $('#J_cityPicker').val();
-        return val.split("/").length === 3;
+        return val.split(' ').length === 3;
     }, "请选择完整的地址");
 
     $('#J_isAgree').click(function () {
