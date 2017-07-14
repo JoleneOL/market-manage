@@ -210,3 +210,14 @@ textarea {
     border-left: 1px solid #e7eaec;
     box-sizing: border-box;
 }
+.img-small {
+    display: inline-block;
+    margin-right: 10px;
+    width: 40px;
+    height: auto;
+    padding: 4px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}

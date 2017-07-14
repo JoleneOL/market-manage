@@ -108,6 +108,33 @@ Mock.mock(/\/manage\/managers/, "get", {
     ]
 });
 
+Mock.mock(/\/update\/agent/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id|+1': 1,
+            'name': '@cname',
+            'currentLevel': '爱心天使',
+            'applicationLevel': '@pick(经销商,市代理,省代理)',
+            'address': '@county(true)',
+            'mobile': /^1([34578])\d{9}$/,
+            'IDCard': {
+                'cardFront': Mock.Random.image('240x151', '#FF6600', '前面'),
+                'cardBack': Mock.Random.image('240x151', '#50B347', '后面')
+            },
+            'businessLicense|0-1': Mock.Random.image('240x151', '#894FC4', '营业'),
+            'applicationCost': 3000,
+            'applicationType': '付费升级',
+            'applicationDate': '@now("yyyy-MM-dd")',
+            'operator': '@pick(["-", "@cname"])',
+            'status': '@pick(["待处理", "已处理"])',
+            'stateCode': '@pick([0, 1])'
+        }
+    ]
+});
+
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
@@ -124,6 +151,12 @@ Mock.mock(/\/login\/\d\/enable/, "put", {
     "resultCode": 200,
     "resultMsg": "ok"
 });
+
+Mock.mock(/\/agent\/\d\/update/, "put", {
+    "resultCode": 200,
+    "resultMsg": "ok"
+});
+
 Mock.mock(/\/login\/\d/, "delete", {
     "resultCode": 200,
     "resultMsg": "ok"
