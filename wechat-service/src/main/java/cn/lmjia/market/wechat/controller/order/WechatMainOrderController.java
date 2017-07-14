@@ -1,30 +1,23 @@
 package cn.lmjia.market.wechat.controller.order;
 
-import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.controller.main.order.AbstractMainOrderController;
 import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
-import cn.lmjia.market.core.entity.support.OrderStatus;
-import cn.lmjia.market.core.repository.PayOrderRepository;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.PayAssistanceService;
+import cn.lmjia.market.core.service.PayService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
-import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
-import me.jiangcai.payment.paymax.PaymaxChannel;
-import me.jiangcai.payment.paymax.PaymaxPaymentForm;
 import me.jiangcai.payment.paymax.entity.PaymaxPayOrder;
-import me.jiangcai.payment.service.PaymentGatewayService;
 import me.jiangcai.payment.service.PaymentService;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author CJ
@@ -50,22 +38,13 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     @Autowired
     private PaymentService paymentService;
     @Autowired
-    private ChanpayPaymentForm chanpayPaymentForm;
-    @Autowired
-    private PaymaxPaymentForm paymaxPaymentForm;
-    @Autowired
     private MainOrderService mainOrderService;
-    @Autowired
-    private Environment environment;
     @Autowired
     private QRController qrController;
     @Autowired
-    private PayOrderRepository payOrderRepository;
+    private PayAssistanceService payAssistanceService;
     @Autowired
-    private PaymentGatewayService paymentGatewayService;
-    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
+    private PayService payService;
 
     /**
      * @return 展示下单页面
@@ -76,17 +55,17 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "wechat@orderPlace.html";
     }
 
-    @GetMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId) throws SystemMaintainException {
-        final MainOrder order = from(orderId, null);
-        return payOrder(openId, request, order);
-    }
-
 //    @GetMapping("/_pay/{id}")
 //    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
 //            throws SystemMaintainException {
 //        return payOrder(openId, request, from(null, id));
 //    }
+
+    @GetMapping("/wechatOrderPay")
+    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId) throws SystemMaintainException {
+        final MainOrder order = from(orderId, null);
+        return payAssistanceService.payOrder(openId, request, order);
+    }
 
     @GetMapping("/wechatOrderDetail")
     public String detail(String orderId, Model model) {
@@ -104,37 +83,12 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         int age = 20;
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile, goodId, amount
                 , activityCode);
-        return payOrder(openId, request, order);
-    }
-
-    private ModelAndView payOrder(String openId, HttpServletRequest request, MainOrder order) throws SystemMaintainException {
-        if (order.getOrderStatus() != OrderStatus.forPay)
-            throw new IllegalStateException("订单并不在待支付状态");
-
-        if (environment.acceptsProfiles("autoPay")) {
-            // 3 秒之后自动付款
-            log.warn("3秒之后自动付款:" + order.getSerialId());
-            executorService.schedule(()
-                            -> paymentService.mockPay(order)
-                    , 3, TimeUnit.SECONDS);
-        }
-
-        if (environment.acceptsProfiles("wechatChanpay"))
-            return paymentService.startPay(request, order, chanpayPaymentForm, null);
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("channel", PaymaxChannel.wechat);
-        // 单元测试的时候 无法建立公众号付款
-        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest, "wechatScanOnly")) {
-            parameters.put("channel", PaymaxChannel.wechatScan);
-        }
-        parameters.put("openId", openId);
-        return paymentService.startPay(request, order, paymaxPaymentForm, parameters);
+        return payAssistanceService.payOrder(openId, request, order);
     }
 
     @GetMapping("/_pay/paying")
     @Transactional(readOnly = true)
-    public String paying(long mainOrderId, long payOrderId, String checkUri
+    public String paying(String payableOrderId, long payOrderId, String checkUri
             , String successUri, Model model) {
         final PayOrder payOrder = paymentService.payOrder(payOrderId);
         String qrCodeUrl;
@@ -159,7 +113,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         } else
             throw new IllegalStateException("尚未支持扫码的支付系统");
 
-        model.addAttribute("order", mainOrderService.getOrder(mainOrderId));
+        model.addAttribute("order", payService.getOrder(payableOrderId));
 //        model.addAttribute("payOrder", payOrder);
         model.addAttribute("qrCodeUrl", qrCodeUrl);
         model.addAttribute("scriptCode", scriptCode);

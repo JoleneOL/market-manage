@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.support.PaymentStatus;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -26,7 +28,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-public class PromotionRequest {
+public class PromotionRequest implements PayableOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +46,8 @@ public class PromotionRequest {
     private Manager changer;
     private PromotionRequestStatus requestStatus;
     private PaymentStatus paymentStatus;
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime PayTime;
 
     /**
      * 成功支付的支付订单
@@ -74,4 +78,25 @@ public class PromotionRequest {
     private String businessLicensePath;
 
 
+    @Override
+    public Serializable getPayableOrderId() {
+        return "PromotionRequest-" + getId();
+    }
+
+    @Override
+    public BigDecimal getOrderDueAmount() {
+        if (type == 1)
+            return price;
+        return null;
+    }
+
+    @Override
+    public String getOrderProductName() {
+        return "经销商开通费";
+    }
+
+    @Override
+    public String getOrderBody() {
+        return "经销商开通费";
+    }
 }

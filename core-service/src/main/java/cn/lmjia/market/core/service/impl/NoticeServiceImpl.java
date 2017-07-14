@@ -2,9 +2,12 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.service.request.PromotionRequestService;
+import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import me.jiangcai.user.notice.NoticeChannel;
 import me.jiangcai.user.notice.User;
@@ -15,7 +18,6 @@ import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageParameter;
-import me.jiangcai.wx.model.message.TemplateMessageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,8 @@ public class NoticeServiceImpl implements NoticeService {
     private Environment environment;
     @Autowired
     private MainOrderService mainOrderService;
+    @Autowired
+    private PromotionRequestService promotionRequestService;
 
     private boolean useLocal() {
         return environment.acceptsProfiles("staging") || environment.acceptsProfiles(CoreConfig.ProfileUnitTest);
@@ -53,8 +57,9 @@ public class NoticeServiceImpl implements NoticeService {
     @PostConstruct
     @Override
     public void init() {
+        promotionRequestService.registerNotices(wechatSendSupplier);
 
-        wechatSendSupplier.registerTemplateMessage(new PaySuccessToOrder(), new TemplateMessageStyle() {
+        wechatSendSupplier.registerTemplateMessage(new PaySuccessToOrder(), new AbstractTemplateMessageStyle() {
             @Override
             public Collection<? extends TemplateMessageParameter> parameterStyles() {
                 return Arrays.asList(
@@ -67,32 +72,13 @@ public class NoticeServiceImpl implements NoticeService {
             }
 
             @Override
-            public String getTemplateIdShort() {
-                return null;
-            }
-
-            @Override
-            public String getTemplateTitle() {
-                return null;
-            }
-
-            @Override
-            public String getIndustryId() {
-                return null;
-            }
-
-            @Override
             public String getTemplateId() {
                 return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "ieAp4pLGQtEE9DZbbAP0_76xNrnjpoHNpQYe2DT8ID0";
             }
 
-            @Override
-            public void setTemplateId(String templateId) {
-
-            }
         }, systemService.toUrl("/wechatOrderDetail?orderId={2}"));
 
-        wechatSendSupplier.registerTemplateMessage(new PaySuccessToJustOrder(), new TemplateMessageStyle() {
+        wechatSendSupplier.registerTemplateMessage(new PaySuccessToJustOrder(), new AbstractTemplateMessageStyle() {
             @Override
             public Collection<? extends TemplateMessageParameter> parameterStyles() {
                 return Arrays.asList(
@@ -105,56 +91,54 @@ public class NoticeServiceImpl implements NoticeService {
             }
 
             @Override
-            public String getTemplateIdShort() {
-                return null;
-            }
-
-            @Override
-            public String getTemplateTitle() {
-                return null;
-            }
-
-            @Override
-            public String getIndustryId() {
-                return null;
-            }
-
-            @Override
             public String getTemplateId() {
                 return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "ieAp4pLGQtEE9DZbbAP0_76xNrnjpoHNpQYe2DT8ID0";
             }
 
-            @Override
-            public void setTemplateId(String templateId) {
-
-            }
         }, systemService.toUrl("/wechatOrderDetail?orderId={2}"));
     }
 
     @Override
     public void orderPaySuccess(OrderPaySuccess event) {
-        // 前提是 该用户绑定了微信
-        MainOrder order = (MainOrder) event.getPayableOrder();
-        WeixinUserDetail detail = order.getOrderBy().getWechatUser();
-        if (detail != null) {
-            // 需要确保收益者和下单人是同一个人
-            userNoticeService.sendMessage(null, new User() {
-                        @Override
-                        public boolean supportNoticeChannel(NoticeChannel channel) {
-                            return channel == WechatNoticeChannel.templateMessage;
-                        }
-
-                        @Override
-                        public Map<String, Object> channelCredential(NoticeChannel channel) {
-                            Map<String, Object> map = new HashMap<>();
-                            map.put(WechatNoticeChannel.OpenIdCredentialTo, detail.getOpenId());
-                            return map;
-                        }
-                    }, null
-                    , mainOrderService.getEnjoyability(order).equals(order.getOrderBy()) ? new PaySuccessToOrder()
-                            : new PaySuccessToJustOrder(), new Date(), order.getId(), order.getSerialId()
-                    , order.getOrderProductName(), order.getOrderDueAmount());
+        if (event.getPayableOrder() instanceof MainOrder) {
+            // 前提是 该用户绑定了微信
+            MainOrder order = (MainOrder) event.getPayableOrder();
+            WeixinUserDetail detail = order.getOrderBy().getWechatUser();
+            if (detail != null) {
+                // 需要确保收益者和下单人是同一个人
+                userNoticeService.sendMessage(null, toUser(detail), null
+                        , mainOrderService.getEnjoyability(order).equals(order.getOrderBy()) ? new PaySuccessToOrder()
+                                : new PaySuccessToJustOrder(), new Date(), order.getId(), order.getSerialId()
+                        , order.getOrderProductName(), order.getOrderDueAmount());
+            }
+        } else if (event.getPayableOrder() instanceof PromotionRequest) {
+            PromotionRequest request = (PromotionRequest) event.getPayableOrder();
+            WeixinUserDetail detail = request.getWhose().getWechatUser();
+            if (detail != null) {
+                userNoticeService.sendMessage(null, toUser(detail), null, promotionRequestService.getPaySuccessMessage()
+                        , detail.getNickname()
+                        , request.getId()
+                        , request.getOrderDueAmount()
+                        , new Date());
+            }
         }
+
+    }
+
+    private User toUser(final WeixinUserDetail detail) {
+        return new User() {
+            @Override
+            public boolean supportNoticeChannel(NoticeChannel channel) {
+                return channel == WechatNoticeChannel.templateMessage;
+            }
+
+            @Override
+            public Map<String, Object> channelCredential(NoticeChannel channel) {
+                Map<String, Object> map = new HashMap<>();
+                map.put(WechatNoticeChannel.OpenIdCredentialTo, detail.getOpenId());
+                return map;
+            }
+        };
     }
 
 

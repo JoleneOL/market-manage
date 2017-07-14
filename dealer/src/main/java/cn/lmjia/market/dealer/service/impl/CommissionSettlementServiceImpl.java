@@ -17,6 +17,7 @@ import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import cn.lmjia.market.dealer.service.CommissionSettlementService;
 import me.jiangcai.lib.thread.ThreadSafe;
+import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,7 +66,9 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     @Override
     @EventListener(OrderPaySuccess.class)
     public void orderPaySuccess(OrderPaySuccess event) {
-        doSettlement((MainOrder) event.getPayableOrder());
+        final PayableOrder payableOrder = event.getPayableOrder();
+        if (payableOrder instanceof MainOrder)
+            doSettlement((MainOrder) payableOrder);
     }
 
     /**
