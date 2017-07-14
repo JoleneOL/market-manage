@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="infinite">
+<!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count0" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count1" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count2" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="count3" type="java.lang.Number"*/-->
+<!--/*@thymesVar id="agentLevel" type="java.lang.String"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>我的团队</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+</head>
+<body class="view-fs-small view-bg-color">
+<section class="view_body">
+    <div class="weui-cells__title js-extra-h">我的团队 <a href="login.html" th:if="${#authentication.name!=null}"
+                                                      th:href="@{/wechatLogout}"
+                                                      class="weui-btn weui-btn_mini weui-btn_default vertical-middle">更换帐号</a>
+        <a
+                href="javascript:;"
+                class="weui-cell_link open-popup"
+                data-target="#J_upgradeRules">晋升制度</a>
+    </div>
+    <div class="view_team-logo js-extra-h">
+        <div class="view-wrapper weui-flex">
+            <div class="weui-flex__item">
+                <div class="view_avatar">
+                    <img src="../wechat-resource/assets/img/avatar.jpg"
+                         th:src="${@readService.avatarFor(#authentication.principal)}">
+                </div>
+            </div>
+            <div class="weui-flex__item">
+                <div class="view_info">
+                    <p class="ellipsis"><span th:text="${@readService.nameForPrincipal(#authentication.principal)}">利每家科技有限公司</span>
+                    </p>
+                    <p class="ellipsis">
+                        <span class="label" th:text="${agentLevel}">滨江区总代</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="weui-flex view_panel-body view_cell js-extra-h">
+        <div class="weui-flex__item">
+            <p>您共发展&nbsp;
+                <strong class="text-error" th:text="${{allCount}}">29</strong>&nbsp;人</p>
+        </div>
+
+    </div>
+    <div class="weui-flex view_cell js-extra-h">
+        <div class="weui-flex__item text-center">
+            <p>总代理</p>
+            <p><span th:text="${count0}">2</span>人</p>
+        </div>
+        <div class="weui-flex__item text-center">
+            <p>代理商</p>
+            <p><span th:text="${count1}">6</span>人</p>
+        </div>
+        <div class="weui-flex__item text-center">
+            <p>经销商</p>
+            <p><span th:text="${count2}">5</span>人</p>
+        </div>
+        <div class="weui-flex__item text-center">
+            <p>爱心天使</p>
+            <p><span th:text="${count3}">17</span>人</p>
+        </div>
+    </div>
+    <div class="view_team-list">
+        <div class="view-list-item view_team-header js-extra-h">
+            <div>用户</div>
+            <div>手机号码</div>
+            <div id="J_changeRank"><i class="weui-icon-search"></i>级别</div>
+            <div>加入时间</div>
+        </div>
+        <!--team-list-start-->
+        <div class="view-scroll-wrap" id="J_teamList" data-url="/api/teamList" data-rank="all">
+            <div class="view-scroll-list">
+                <div class="weui-loadmore">
+                    <i class="weui-loading"></i>
+                    <span class="weui-loadmore__tips">数据加载中...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="J_upgradeRules" class="weui-popup__container">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <article class="weui-article">
+            <h1 class="text-center">用户晋升制度</h1>
+            <section>
+                <section>
+                    <p>一、总代理：代理商帮助5个经销商成为代理商或直接推荐，升级为空白地区总代理。</p>
+                </section>
+                <section>
+                    <p>二、代理商：经销商帮助5个爱心天使成为经销商或直接推荐，升级为代理商。</p>
+                </section>
+                <section>
+                    <p>三、 经销商：爱心天使帮助5个爱心天使免费，升级为经销商。</p>
+                </section>
+                <section>
+                    <p>四、 爱心天使：用户成功购买一件商品后默认为爱心天使。</p>
+                </section>
+                <section>
+                    <p>五、 备 注：平级推荐满5个晋升一级。</p>
+                </section>
+                <section>
+                    <p class="text-right">利每家科技有限公司</p>
+                </section>
+            </section>
+            <button type="button" class="weui-btn weui-btn_custom close-popup">确定</button>
+        </article>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js" th:remove="all"></script>
+<script src="../mock/api.js" th:remove="all"></script>
+<!--生产环境请移除 End-->
+<script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
+<script src="../wechat-resource/assets/js/myTeam-7.14.js" th:src="@{/wechat-resource/assets/js/myTeam-7
+14.js}"></script>
+</html>
