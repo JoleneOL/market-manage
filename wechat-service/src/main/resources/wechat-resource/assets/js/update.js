@@ -6,6 +6,16 @@ $(function () {
     var updateCost = $('#J_updateCost');
     var submit = $('#J_submit');
     var input = $('input[name="businessLicensePath"]');
+    var radio = $('input[name="upgradeMode"]');
+    var check = $('input[name="upgradeMode"]:checked');
+
+    $('#J_cityPicker').cityPicker({
+        title: "请选择公司地址",
+        onChange: function () {
+            $('#J_cityPicker').closest('.weui-cell').removeClass('weui-cell_warn');
+        }
+    });
+
     $('#J_updateLevel').change(function () {
         if ($(this).val() === '1') {
             license.find('.extra-badge').hide();
@@ -13,21 +23,48 @@ $(function () {
             submit.text('支  付');
             input.closest('.weui-cell').removeClass('weui-cell_warn');
             input.rules('remove');
+            if(check.val() !== radio.val()) {
+                radio.val(1);
+            }
         }
 
         if ($(this).val() === '2') {
+            license.find('.extra-badge').hide();
+            updateCost.hide();
+            submit.text('申  请');
+            input.closest('.weui-cell').removeClass('weui-cell_warn');
+            input.rules('remove');
+            if(check.val() === 1) {
+                radio.val(2);
+            }
+        }
+
+        if ($(this).val() === '3') {
             license.find('.extra-badge').show();
             updateCost.hide();
             submit.text('申  请');
             input.rules('add', {
                 required: true,
-                messages : {
-                    required : "填写物流单号"
+                messages: {
+                    required: "请上传营业执照"
                 }
             });
+            if(check.val() === 1) {
+                radio.val(2);
+            }
         }
+
     });
 
+    radio.change(function () {
+        if ($(this).val() === '1') {
+            $('#J_paymentBox').show();
+            submit.text('支  付');
+        } else {
+            $('#J_paymentBox').hide();
+            submit.text('申  请');
+        }
+    });
 
     var Uploader = {
         fileQueued: function (uploader, target) {
@@ -111,12 +148,14 @@ $(function () {
     $('#J_updateForm').validate({
         ignore: '',
         rules: {
-            address: "required",
+            address: 'required',
+            fullAddress: 'required',
             cardFrontPath: "required",
             cardBackPath: "required"
         },
         messages: {
-            address: "请填写公司地址",
+            address: "请选择地址",
+            fullAddress: "请填写详细地址",
             cardFrontPath: "请上传图片",
             cardBackPath: "请上传图片"
         },

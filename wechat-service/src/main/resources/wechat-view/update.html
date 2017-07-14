@@ -48,7 +48,8 @@
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="newLevel" id="J_updateLevel" required>
                         <option value="1">经销商</option>
-                        <option value="2">省总代</option>
+                        <option value="2">市代理</option>
+                        <option value="3">省总代</option>
                     </select>
                 </div>
             </div>
@@ -57,7 +58,19 @@
                     <label class="weui-label">公司地址</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" id="J_cityPicker" name="address">
+                    <input class="weui-input" type="text" id="J_cityPicker" value="浙江省 杭州市 滨江区" name="address">
+                </div>
+                <div class="weui-cell__ft">
+                    <span class="extra-badge">必填</span>
+                    <i class="weui-icon-warn"></i>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label"></label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入详细地址" name="fullAddress">
                 </div>
                 <div class="weui-cell__ft">
                     <span class="extra-badge">必填</span>
@@ -119,8 +132,35 @@
                 </div>
             </div>
         </div>
+        <!--爱心天使会有改选项-->
         <div class="weui-cells weui-cells_form" id="J_updateCost">
             <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">升级方式</label>
+                </div>
+                <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
+                    <label class="weui-cell weui-check__label" for="isPayment">
+                        <div class="weui-cell__hd">
+                            <input type="radio" class="weui-check" name="upgradeMode" id="isPayment" checked="checked"
+                                   value="1">
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p>付费</p>
+                        </div>
+                    </label>
+                    <label class="weui-cell weui-check__label " for="isApplication">
+                        <div class="weui-cell__hd">
+                            <input type="radio" class="weui-check" name="upgradeMode" id="isApplication" value="2">
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p>申请</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="weui-cell" id="J_paymentBox">
                 <div class="weui-cell__hd">
                     <label class="weui-label">直升费用</label>
                 </div>
@@ -133,6 +173,8 @@
         </div>
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_custom" id="J_submit">支&nbsp;&nbsp;付</button>
+            <!--除了爱心天使，其他都是申请-->
+            <!--<button type="submit" class="weui-btn weui-btn_custom" id="J_submit">申&nbsp;&nbsp;请</button>-->
         </div>
         <label for="weuiAgree" class="weui-agree view-agress_inline">
             <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">
