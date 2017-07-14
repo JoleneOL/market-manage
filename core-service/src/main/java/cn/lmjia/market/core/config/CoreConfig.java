@@ -5,11 +5,13 @@ import me.jiangcai.payment.paymax.PaymentPaymaxConfig;
 import me.jiangcai.user.notice.wechat.UserNoticeWechatConfig;
 import me.jiangcai.wx.standard.StandardWeixinConfig;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -65,5 +67,14 @@ public class CoreConfig extends WeixinWebSpringConfig implements WebModule {
     @Override
     public void resourceHandler(String pattern, ResourceHandlerRegistration registration) {
 
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
+        resourceBundleMessageSource.setDefaultEncoding("UTF-8");
+        resourceBundleMessageSource.setBasenames("coreMessage");
+        resourceBundleMessageSource.setUseCodeAsDefaultMessage(true);
+        return resourceBundleMessageSource;
     }
 }

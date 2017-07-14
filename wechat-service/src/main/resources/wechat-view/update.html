@@ -20,7 +20,7 @@
       data-upload-url="/resourceUpload/webUploader"
       th:data-upload-url="@{/resourceUpload/webUploader}">
 <section class="view_body">
-    <form action="updateSuccess.html" method="post" id="J_updateForm">
+    <form action="updateSuccess.html" th:action="@{/wechatUpgrade}" method="post" id="J_updateForm">
         <div class="weui-cells__title">升级资料</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -28,7 +28,8 @@
                     <label class="weui-label">姓名</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" value="利美家" readonly>
+                    <input class="weui-input" type="text" value="利美家"
+                           th:value="${@readService.nameForPrincipal(#authentication.principal)}" readonly>
                 </div>
             </div>
             <div class="weui-cell">
@@ -36,7 +37,8 @@
                     <label class="weui-label">手机号</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" value="18888888888" readonly>
+                    <input class="weui-input" type="text" value="18888888888"
+                           th:value="${@readService.mobileFor(#authentication.principal)}" readonly>
                 </div>
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
@@ -123,7 +125,9 @@
                     <label class="weui-label">直升费用</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p class="text-big text-right">￥<span>30000.00</span></p>
+                    <p class="text-big text-right">
+                        <!--/*@thymesVar id="price" type="cn.lmjia.market.core.define.Money"*/-->
+                        <span th:text="${price}">￥30000.00</span></p>
                 </div>
             </div>
         </div>
