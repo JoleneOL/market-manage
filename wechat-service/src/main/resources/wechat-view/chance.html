@@ -26,7 +26,8 @@
     <div class="weui-footer weui-footer_fixed-bottom">
         <div class="weui-btn-area">
             <a th:if="${!regular}" href="orderPlace.html" th:href="@{/wechatOrder}" class="weui-btn weui-btn_custom">成为合伙人</a>
-            <a th:if="${regular}" href="update.html" class="weui-btn weui-btn_custom">升级合伙人</a>
+            <a th:if="${regular}" href="update.html" th:href="@{/wechatUpgrade}"
+               class="weui-btn weui-btn_custom">升级合伙人</a>
         </div>
     </div>
 </footer>

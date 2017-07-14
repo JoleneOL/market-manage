@@ -130,7 +130,7 @@ public interface AgentService {
      *
      * @param who          可选参数；谁添加的代理
      * @param login        相关身份
-     * @param name         名称
+     * @param name         机构名称
      * @param levelTitle   可选的特定等级名称
      * @param beginDate    合同起始时间
      * @param endDate      合同结束时间

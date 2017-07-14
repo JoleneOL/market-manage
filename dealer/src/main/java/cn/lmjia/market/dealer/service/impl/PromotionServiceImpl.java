@@ -45,7 +45,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public LoginRelationChangedEvent tryPromotion(LoginRelationChangedEvent event) {
-        if (systemStringService.getSystemString("custom.stopPromotion", Boolean.class, false)) {
+        if (systemStringService.getCustomSystemString("custom.stopPromotion", null, true, Boolean.class, false)) {
             log.debug("我方系统已经停止自动升级");
             return null;
         }
@@ -146,7 +146,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public int promotionCountForAgentLevel(int level) {
-        return systemStringService.getSystemString("market.promotion.for" + level, Integer.class, 5);
+        return systemStringService.getCustomSystemString("market.promotion.for" + level, "market.promotion.comment", true, Integer.class, 5);
     }
 
     @Override

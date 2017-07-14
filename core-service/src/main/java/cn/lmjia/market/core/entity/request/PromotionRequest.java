@@ -1,17 +1,22 @@
 package cn.lmjia.market.core.entity.request;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.PaymentStatus;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.payment.entity.PayOrder;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 提升申请
@@ -31,6 +36,12 @@ public class PromotionRequest {
      */
     @ManyToOne
     private Login whose;
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime requestTime;
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime changeTime;
+    @ManyToOne
+    private Manager changer;
     private PromotionRequestStatus requestStatus;
     private PaymentStatus paymentStatus;
 
@@ -40,9 +51,27 @@ public class PromotionRequest {
     @ManyToOne
     private PayOrder payOrder;
     /**
+     * 需支付金额 可为null
+     */
+    @Column(scale = 2, precision = 20)
+    private BigDecimal price;
+    /**
      * 公司名称
      */
     private String name;
+    private Address address;
+    /**
+     * 类型,不知道以后还有什么 就用int了
+     * 1: 经销商
+     * 2: 省代理（其实是区代理）
+     */
+    private int type;
+    @Column(length = 60)
+    private String frontImagePath;
+    @Column(length = 60)
+    private String backImagePath;
+    @Column(length = 68)
+    private String businessLicensePath;
 
 
 }
