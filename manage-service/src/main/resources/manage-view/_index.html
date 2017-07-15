@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://security.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -88,8 +88,9 @@
                         <li>
                             <a class="J_menuItem" href="_agentManage.html" th:href="@{/agentManage}">查看经销商</a>
                         </li>
-                        <li th:remove="all">
-                            <a class="J_menuItem" href="_agentUpdate.html">升级合伙人申请</a>
+                        <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','PROMOTION')">
+                            <a class="J_menuItem" href="_agentUpdate.html"
+                               th:href="@{/managePromotionRequest}">升级合伙人申请</a>
                         </li>
                     </ul>
                 </li>

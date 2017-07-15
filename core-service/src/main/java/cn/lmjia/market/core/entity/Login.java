@@ -41,6 +41,10 @@ public class Login implements UserDetails {
      */
     public static final String ROLE_AllAgent = "ALL_AGENT";
     /**
+     * 升级代理
+     */
+    public static final String ROLE_PROMOTION = "PROMOTION";
+    /**
      * 公司内部管理员
      */
     public static final String ROLE_MANAGER = "MANAGER";

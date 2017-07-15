@@ -8,7 +8,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/update/agent",
+            "url": "/manage/promotionRequests",
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }

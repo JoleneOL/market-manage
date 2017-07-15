@@ -108,7 +108,7 @@ Mock.mock(/\/manage\/managers/, "get", {
     ]
 });
 
-Mock.mock(/\/update\/agent/, "get", {
+Mock.mock(/\/manage\/promotionRequests/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
