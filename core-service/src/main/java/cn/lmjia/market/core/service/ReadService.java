@@ -37,6 +37,10 @@ public interface ReadService {
                 , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
+    static Expression<Integer> agentLevelForLogin(From<?, Login> loginPath, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.function("LoginAgentLevel", Integer.class, loginPath.get("id"));
+    }
+
     /**
      * @param loginPath       登录者
      * @param criteriaBuilder cb
@@ -113,5 +117,12 @@ public interface ReadService {
      * @return 客户的年纪
      */
     int ageForCustomer(Customer customer);
+
+    /**
+     * @param principal 身份，一般是Login
+     * @return 代理级别
+     */
+    @Transactional(readOnly = true)
+    int agentLevelForPrincipal(Object principal);
 
 }

@@ -135,4 +135,16 @@ public class ReadServiceImpl implements ReadService {
     public int ageForCustomer(Customer customer) {
         return LocalDate.now().getYear() - customer.getBirthYear();
     }
+
+    @Override
+    public int agentLevelForPrincipal(Object principal) {
+        final Login login = toLogin(principal);
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Integer> integerCriteriaQuery = criteriaBuilder.createQuery(Integer.class);
+        Root<Login> root = integerCriteriaQuery.from(Login.class);
+        integerCriteriaQuery.select(ReadService.agentLevelForLogin(root, criteriaBuilder))
+                .where(criteriaBuilder.equal(root, login))
+        ;
+        return entityManager.createQuery(integerCriteriaQuery).getSingleResult();
+    }
 }

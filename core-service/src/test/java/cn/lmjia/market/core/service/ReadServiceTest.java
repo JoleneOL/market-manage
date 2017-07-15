@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.support.ManageLevel;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.EntityManager;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +20,9 @@ public class ReadServiceTest extends CoreServiceTest {
     private ReadService readService;
     @Autowired
     private ContactWayService contactWayService;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     public void mobileFor() throws Exception {
@@ -37,6 +41,8 @@ public class ReadServiceTest extends CoreServiceTest {
         contactWayService.updateName(manager, name);
         assertThat(readService.nameForPrincipal(manager))
                 .isEqualTo(name);
+
+        System.out.println(readService.agentLevelForPrincipal(manager));
     }
 
 }

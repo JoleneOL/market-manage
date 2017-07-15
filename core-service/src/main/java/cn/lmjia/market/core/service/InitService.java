@@ -8,20 +8,25 @@ import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
+import me.jiangcai.lib.jdbc.ConnectionProvider;
 import me.jiangcai.lib.jdbc.JdbcService;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StreamUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -43,14 +48,41 @@ public class InitService {
     private MainProductRepository mainProductRepository;
     @Autowired
     private JdbcService jdbcService;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @PostConstruct
     @Transactional
     public void init() throws IOException, SQLException {
         commons();
+        database();
         upgrade();
         managers();
         products();
+    }
+
+    private void database() throws SQLException {
+        jdbcService.runJdbcWork(connection -> {
+            if (connection.profile().isH2()) {
+                executeSQLCode(connection, "LoginAgentLevel.h2.sql");
+            } else if (connection.profile().isMySQL()) {
+                try (Statement statement = connection.getConnection().createStatement()) {
+                    statement.executeUpdate("DROP FUNCTION IF EXISTS `LoginAgentLevel`");
+                }
+                executeSQLCode(connection, "LoginAgentLevel.mysql.sql");
+            }
+        });
+    }
+
+    private void executeSQLCode(ConnectionProvider connection, String resourceName) throws SQLException {
+        try {
+            String code = StreamUtils.copyToString(applicationContext.getResource("classpath:/" + resourceName).getInputStream(), Charset.forName("UTF-8"));
+            try (Statement statement = connection.getConnection().createStatement()) {
+                statement.executeUpdate(code);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private void commons() throws SQLException {
