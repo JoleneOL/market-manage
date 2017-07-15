@@ -125,8 +125,7 @@ Mock.mock(/\/manage\/promotionRequests/, "get", {
                 'cardBack': Mock.Random.image('240x151', '#50B347', '后面')
             },
             'businessLicense|0-1': Mock.Random.image('240x151', '#894FC4', '营业'),
-            'applicationCost': 3000,
-            'applicationType': '付费升级',
+            'paymentStatus': '@pick(["未支付", "已支付"])',
             'applicationDate': '@now("yyyy-MM-dd")',
             'operator': '@pick(["-", "@cname"])',
             'status': '@pick(["待处理", "已处理"])',

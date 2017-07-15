@@ -5,10 +5,17 @@ import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.PaymentStatus;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
+import cn.lmjia.market.core.jpa.JpaFunctionUtils;
+import cn.lmjia.market.core.row.FieldDefinition;
+import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.field.FieldBuilder;
+import cn.lmjia.market.core.service.ReadService;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +23,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 提升申请
@@ -78,6 +93,67 @@ public class PromotionRequest implements PayableOrder {
     @Column(length = 68)
     private String businessLicensePath;
 
+    public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile) {
+        return new RowDefinition<PromotionRequest>() {
+            @Override
+            public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<PromotionRequest> root) {
+                return Collections.singletonList(criteriaBuilder.desc(root.get("requestTime")));
+            }
+
+            @Override
+            public Class<PromotionRequest> entityClass() {
+                return PromotionRequest.class;
+            }
+
+            @Override
+            public List<FieldDefinition<PromotionRequest>> fields() {
+                return Arrays.asList(
+                        FieldBuilder.asName(PromotionRequest.class, "id")
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "name")
+                                .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.nameForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
+                                .build()
+                );
+            }
+
+            @Override
+            public Specification<PromotionRequest> specification() {
+                return (root, query, cb) -> {
+                    Predicate predicate = cb.equal(root.get("requestStatus"), PromotionRequestStatus.requested);
+                    if (!StringUtils.isEmpty(mobile)) {
+                        predicate = cb.and(predicate
+                                , cb.like(ReadService.mobileForLogin(root.join("whose"), cb), "%" + mobile + "%")
+                        );
+                    }
+                    if (!StringUtils.isEmpty(applicationDate)) {
+                        if (applicationDate.equalsIgnoreCase("month"))
+                            predicate = cb.and(predicate
+                                    , JpaFunctionUtils.YearAndMonthEqual(cb, root.get("requestTime")
+                                            , LocalDate.now()));
+                        else if (applicationDate.equalsIgnoreCase("quarter"))
+                            predicate = cb.and(predicate
+                                    , JpaFunctionUtils.YM(cb, root.get("requestTime")
+                                            , LocalDate.now()
+                                            , (criteriaBuilder, integerExpression, integerExpression2) -> {
+                                                // >= ym-3
+                                                return criteriaBuilder.greaterThanOrEqualTo(integerExpression,
+                                                        criteriaBuilder.sum(integerExpression2, -3));
+                                            }));
+                        else
+                            predicate = cb.and(predicate
+                                    , JpaFunctionUtils.YM(cb, root.get("requestTime")
+                                            , LocalDate.now()
+                                            , (criteriaBuilder, integerExpression, integerExpression2) -> {
+                                                // >= ym-3
+                                                return criteriaBuilder.greaterThanOrEqualTo(integerExpression,
+                                                        criteriaBuilder.sum(integerExpression2, -12));
+                                            }));
+                    }
+                    return predicate;
+                };
+            }
+        };
+    }
 
     @Override
     public Serializable getPayableOrderId() {

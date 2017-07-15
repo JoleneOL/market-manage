@@ -52,11 +52,11 @@ $(function () {
                     return '';
                 }
             },
+            // {
+            //     "title": "升级费用", "data": "applicationCost", "name": "applicationCost"
+            // },
             {
-                "title": "升级费用", "data": "applicationCost", "name": "applicationCost"
-            },
-            {
-                "title": "费用类型", "data": "applicationType", "name": "applicationType"
+                "title": "线上支付", "data": "paymentStatus", "name": "paymentStatus"
             },
             {
                 "title": "时间", "data": "applicationDate", "name": "applicationDate"
