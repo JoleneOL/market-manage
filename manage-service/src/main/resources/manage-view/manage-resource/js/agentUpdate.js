@@ -31,10 +31,10 @@ $(function () {
                 "title": "地址", "data": "address", "name": "address"
             },
             {
-                "title": "身份证", "data": "mobile", "name": "mobile"
+                "title": "手机号", "data": "mobile", "name": "mobile"
             },
             {
-                "title": "手机号",
+                "title": "身份证",
                 "name": "IDCard",
                 data: function (item) {
                     var a = '<img class="img-small js-feedback-big" src="' + item.IDCard.cardFront + '">';
