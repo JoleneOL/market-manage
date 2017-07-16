@@ -67,6 +67,31 @@ public interface ReadService {
     }
 
     /**
+     * @param i 登录者级别；可以视作代理级别
+     * @return 登录标题
+     */
+    default String getLoginTitle(int i) {
+        switch (i) {
+            case 0:
+                return "省总代";
+            case 1:
+                return "市总代";
+            case 2:
+                return "区县总代";
+            case 3:
+                return "代理商";
+            case 4:
+                return "经销商";
+            case Customer.LEVEL:
+                return "爱心天使";
+            case Customer.LEVEL * 2:
+                return "普通用户";
+            default:
+                return "经销商";
+        }
+    }
+
+    /**
      * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}
      * @return 手机号码；或者一个空字符串
      */

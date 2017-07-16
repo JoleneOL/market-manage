@@ -176,8 +176,9 @@ public class LoginServiceImpl implements LoginService {
         if (allAgent.isEmpty()) {
             List<Customer> customers = customerRepository.findByLogin(who);
             if (customers.isEmpty())
-                lowestAgentLevel(who.getGuideUser());
+                return lowestAgentLevel(who.getGuideUser());
             return customers.get(0).getAgentLevel();
+//            return lowestAgentLevel(who.getGuideUser());
         }
 
         // 排除掉所有

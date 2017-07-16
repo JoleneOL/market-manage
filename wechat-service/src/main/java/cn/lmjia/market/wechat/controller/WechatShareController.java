@@ -44,6 +44,7 @@ public class WechatShareController {
     // 所以我们得先解决 永久二维码问题
     @GetMapping(SystemService.wechatShareUri)
     public String share(@AuthenticationPrincipal Login login, Model model) {
+        login = loginService.get(login.getId());
         if (!loginService.isRegularLogin(login))
             return "redirect:" + SystemService.wechatShareMoreUri;
         model.addAttribute("login", login);

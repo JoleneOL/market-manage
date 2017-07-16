@@ -35,16 +35,18 @@ $(function () {
             },
             {
                 "title": "身份证",
-                "name": "IDCard",
+                // "name": "IDCard",
+                "orderable": false,
                 data: function (item) {
-                    var a = '<img class="img-small js-feedback-big" src="' + item.IDCard.cardFront + '">';
-                    var b = '<img class="img-small js-feedback-big" src="' + item.IDCard.cardBack + '">';
+                    var a = '<img class="img-small js-feedback-big" src="' + item.cardFront + '">';
+                    var b = '<img class="img-small js-feedback-big" src="' + item.cardBack + '">';
                     return a + b;
                 }
             },
             {
                 "title": "营业证",
                 "name": "businessLicense",
+                "orderable": false,
                 data: function (item) {
                     if (item.businessLicense)
                         return '<img class="img-small js-feedback-big" src="' + item.businessLicense + '">';

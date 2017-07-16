@@ -60,26 +60,12 @@ public interface AgentService {
         return getLoginTitle(i);
     }
 
-    String[] titles();
-
-    default String getLoginTitle(int i) {
-        switch (i) {
-            case 0:
-                return "省总代";
-            case 1:
-                return "市总代";
-            case 2:
-                return "区县总代";
-            case 3:
-                return "代理商";
-            case 4:
-                return "经销商";
-            case Customer.LEVEL:
-                return "爱心天使";
-            default:
-                return "经销商";
-        }
-    }
+    /**
+     * 不推荐使用
+     *
+     * @see cn.lmjia.market.core.service.ReadService#getLoginTitle(int)
+     */
+    String getLoginTitle(int i);
 
     /**
      * @param agentIdExpression agentIdExpression

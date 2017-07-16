@@ -1,4 +1,4 @@
-package cn.lmjia.market.dealer.entity;
+package cn.lmjia.market.core.entity.request;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
@@ -12,8 +12,10 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.service.ReadService;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -24,9 +26,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -93,7 +97,20 @@ public class PromotionRequest implements PayableOrder {
     @Column(length = 68)
     private String businessLicensePath;
 
-    public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile) {
+    public static String toLevelName(int type) {
+        switch (type) {
+            case 1:
+                return "经销商";
+            case 2:
+                return "代理商";
+            case 3:
+                return "省代理";
+            default:
+                return "经销商";
+        }
+    }
+
+    public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile, ReadService readService, ResourceService resourceService, ConversionService conversionService) {
         return new RowDefinition<PromotionRequest>() {
             @Override
             public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<PromotionRequest> root) {
@@ -115,11 +132,76 @@ public class PromotionRequest implements PayableOrder {
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "currentLevel")
                                 .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.agentLevelForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
-//                                .addFormat((object,type)->{
-//
-//                                })
+                                .addFormat((object, type) -> readService.getLoginTitle((int) object))
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "applicationLevel")
+                                .addSelect(promotionRequestRoot -> promotionRequestRoot.get("type"))
+                                .addFormat((object, type) -> toLevelName((int) object))
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "address")
+                                .addFormat((object, type) -> object.toString())
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "mobile")
+                                .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.mobileForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
+                                .build()
+                        , resourceUrl(resourceService, "cardFront", "frontImagePath")
+                        , resourceUrl(resourceService, "cardBack", "backImagePath")
+                        , resourceUrl(resourceService, "businessLicense", "businessLicensePath")
+                        , FieldBuilder.asName(PromotionRequest.class, "paymentStatus")
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "applicationDate")
+                                .addSelect(promotionRequestRoot -> promotionRequestRoot.get("requestTime"))
+                                .addFormat((object, type) -> conversionService.convert(object, String.class))
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "operator")
+                                .addBiSelect(((promotionRequestRoot, criteriaBuilder) ->
+                                        ReadService.nameForLogin(promotionRequestRoot.join("changer", JoinType.LEFT), criteriaBuilder)
+                                ))
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "status")
+                                .addSelect(promotionRequestRoot -> promotionRequestRoot.get("requestStatus"))
+                                .addFormat((object, type) -> {
+                                    PromotionRequestStatus status = (PromotionRequestStatus) object;
+                                    switch (status) {
+                                        case rejected:
+                                            return "已拒绝";
+                                        case approved:
+                                            return "已批准";
+                                        default:
+                                            return "未处理";
+                                    }
+                                })
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "stateCode")
+                                .addSelect(promotionRequestRoot -> promotionRequestRoot.get("requestStatus"))
+                                .addFormat((object, type) -> {
+                                    PromotionRequestStatus status = (PromotionRequestStatus) object;
+                                    switch (status) {
+                                        case rejected:
+                                            return 2;
+                                        case approved:
+                                            return 1;
+                                        default:
+                                            return 0;
+                                    }
+                                })
                                 .build()
                 );
+            }
+
+            private FieldDefinition<PromotionRequest> resourceUrl(ResourceService resourceService, String name, String fieldName) {
+                return FieldBuilder.asName(PromotionRequest.class, name)
+                        .addSelect(promotionRequestRoot -> promotionRequestRoot.get(fieldName))
+                        .addFormat((object, type) -> {
+                            if (StringUtils.isEmpty(object))
+                                return null;
+                            try {
+                                return resourceService.getResource(object.toString()).httpUrl().toString();
+                            } catch (IOException e) {
+                                throw new InternalError("no", e);
+                            }
+                        })
+                        .build();
             }
 
             @Override

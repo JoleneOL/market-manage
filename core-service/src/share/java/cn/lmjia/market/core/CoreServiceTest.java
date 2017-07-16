@@ -85,6 +85,9 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private CustomerRepository customerRepository;
     @Autowired
     private QuickTradeService quickTradeService;
+    private Login allRunWith;
+
+    //<editor-fold desc="自动登录相关">
 
     /**
      * 新增并且保存一个随机的管理员
@@ -94,8 +97,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager() {
         return newRandomManager(ManageLevel.values());
     }
-
-    //<editor-fold desc="自动登录相关">
 
     /**
      * 新增并且保存一个随机的管理员
@@ -117,6 +118,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager(String rawPassword, ManageLevel... levels) {
         return newRandomManager(randomMobile(), rawPassword, levels);
     }
+    //</editor-fold>
 
     /**
      * 新增并且保存一个随机的管理员
@@ -132,7 +134,14 @@ public abstract class CoreServiceTest extends SpringWebTest {
         manager.setLevelSet(Collections.singleton(EnumUtils.randomEnum(ManageLevel.class, levels)));
         return loginService.password(manager, null, rawPassword);
     }
-    //</editor-fold>
+
+    /**
+     * @param target
+     * @see #allRunWith()
+     */
+    protected void updateAllRunWith(Login target) {
+        allRunWith = target;
+    }
 
     /**
      * 可以覆盖该方法设定每次测试都将以该身份进行
@@ -141,7 +150,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @see #runWith(Login, Callable)
      */
     protected Login allRunWith() {
-        return null;
+        return allRunWith;
     }
 
     @Override

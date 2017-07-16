@@ -1,7 +1,6 @@
 package cn.lmjia.market.dealer.service.impl;
 
 import cn.lmjia.market.core.entity.ContactWay;
-import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
@@ -12,6 +11,7 @@ import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
 import cn.lmjia.market.core.service.AgentFinancingService;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.service.AgentService;
@@ -65,14 +65,12 @@ public class AgentServiceImpl implements AgentService {
     private LoginService loginService;
     @Autowired
     private LoginRelationCacheService loginRelationCacheService;
+    @Autowired
+    private ReadService readService;
 
     @Override
-    public String[] titles() {
-        String[] titles = new String[systemService.systemLevel()];
-        for (int i = 0; i < titles.length; i++) {
-            titles[i] = getLoginTitle(i);
-        }
-        return titles;
+    public String getLoginTitle(int i) {
+        return readService.getLoginTitle(i);
     }
 
     @Override
@@ -277,11 +275,12 @@ public class AgentServiceImpl implements AgentService {
         try {
             return entityManager.createQuery(systemCriteriaQuery).getSingleResult();
         } catch (NoResultException ex) {
-            systemCriteriaQuery = criteriaBuilder.createQuery(AgentSystem.class);
-            Root<Customer> customerRoot = systemCriteriaQuery.from(Customer.class);
-            systemCriteriaQuery = systemCriteriaQuery.select(customerRoot.get("agentLevel").get("system"));
-            systemCriteriaQuery = systemCriteriaQuery.where(criteriaBuilder.equal(customerRoot.get("login"), login));
-            return entityManager.createQuery(systemCriteriaQuery).getSingleResult();
+            return agentSystem(login.getGuideUser());
+//            systemCriteriaQuery = criteriaBuilder.createQuery(AgentSystem.class);
+//            Root<Customer> customerRoot = systemCriteriaQuery.from(Customer.class);
+//            systemCriteriaQuery = systemCriteriaQuery.select(customerRoot.get("agentLevel").get("system"));
+//            systemCriteriaQuery = systemCriteriaQuery.where(criteriaBuilder.equal(customerRoot.get("login"), login));
+//            return entityManager.createQuery(systemCriteriaQuery).getSingleResult();
         }
     }
 

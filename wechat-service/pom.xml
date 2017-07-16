@@ -62,6 +62,12 @@
             <version>${vc.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.lmjia.market-manage</groupId>
+            <artifactId>manage-service</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

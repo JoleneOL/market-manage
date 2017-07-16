@@ -2,12 +2,12 @@ package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.SystemService;
-import cn.lmjia.market.dealer.entity.PromotionRequest;
-import cn.lmjia.market.dealer.service.PromotionRequestService;
+import cn.lmjia.market.core.service.request.PromotionRequestService;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

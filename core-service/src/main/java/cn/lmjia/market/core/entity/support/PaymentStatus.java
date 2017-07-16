@@ -6,9 +6,20 @@ package cn.lmjia.market.core.entity.support;
  * @author CJ
  */
 public enum PaymentStatus {
-    wait,
-    payed,
-    partialPayed,
-    refund,
-    partialRefund
+    wait("未支付"),
+    payed("已支付"),
+    partialPayed("部分支付"),
+    refund("已退款"),
+    partialRefund("部分退款");
+
+    private final String message;
+
+    PaymentStatus(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return message;
+    }
 }

@@ -1,13 +1,13 @@
-package cn.lmjia.market.dealer.service.impl;
+package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
+import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
+import cn.lmjia.market.core.service.request.PromotionRequestService;
 import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
-import cn.lmjia.market.dealer.entity.PromotionRequest;
-import cn.lmjia.market.dealer.repository.PromotionRequestRepository;
-import cn.lmjia.market.dealer.service.PromotionRequestService;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.user.notice.UserNoticeType;
 import me.jiangcai.user.notice.wechat.WechatSendSupplier;
@@ -49,7 +49,10 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
     }
 
     @Override
-    public PromotionRequest initRequest(Login login, int type, Address address, String cardBackPath, String cardFrontPath, String businessLicensePath) {
+    public PromotionRequest initRequest(Login login, int type, Address address, String cardBackPath
+            , String cardFrontPath, String businessLicensePath) {
+        // 初始化配置，并且进行转存
+
         return null;
     }
 
