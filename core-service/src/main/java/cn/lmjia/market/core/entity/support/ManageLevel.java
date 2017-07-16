@@ -20,8 +20,9 @@ public enum ManageLevel {
      * 经理，可以干绝大部分的事儿除了财务之外；并且可以管理员工
      * 但是管理员工的范围是管辖范围之类的
      */
-    manager("经理", Login.ROLE_AllAgent, Login.ROLE_GRANT),
-    agentManager("代理商管理员", Login.ROLE_AllAgent);
+    manager("经理", Login.ROLE_PROMOTION, Login.ROLE_AllAgent, Login.ROLE_GRANT),
+    agentManager("代理商管理员", Login.ROLE_AllAgent),
+    promotion("升级专员", Login.ROLE_PROMOTION);
 
     private final String[] roles;
     private final String title;
