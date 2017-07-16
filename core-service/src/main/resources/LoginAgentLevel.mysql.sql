@@ -13,8 +13,8 @@ CREATE FUNCTION `LoginAgentLevel`(
   SET @result = -1;
   SELECT COUNT(`id`)
   INTO result
-  FROM `customer`
-  WHERE `LOGIN_ID` = id AND `successOrder` = 1;
+  FROM `MainOrder`
+  WHERE `ORDERBY_ID` = id AND `ORDERSTATUS` IN (2, 3, 4, 5);
   IF (result > 0)
   THEN RETURN 100;
   ELSE RETURN 200; END IF;

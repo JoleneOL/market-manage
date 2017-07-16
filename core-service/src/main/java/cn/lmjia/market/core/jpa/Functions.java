@@ -28,7 +28,7 @@ public class Functions {
             }
         }
 
-        try (PreparedStatement statement = connection.prepareStatement("SELECT `id` FROM `customer` WHERE `LOGIN_ID`=? AND `successOrder`=1")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT `id` FROM `MainOrder` WHERE `ORDERBY_ID`=? AND `ORDERSTATUS` IN (2,3,4,5)")) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.getFetchSize() == 1 && resultSet.next()) {
