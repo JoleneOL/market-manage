@@ -12,12 +12,15 @@ import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.manage.controller.ManagePromotionRequestController;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
+import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -82,9 +85,11 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
 
         // 这个时候业务算是完成了；我们可以看到后端请求了
         assertExistingRequest(user);
-        // TODO
         // 我们批准它
+        approvedOnlyRequest(user, "我的省代理");
         // 断言等级
+        assertThat(readService.agentLevelForPrincipal(user))
+                .isEqualTo(4);
         // 然后继续升级
         // 断言申请
         // 再批准
@@ -95,11 +100,30 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         // 断言等级
     }
 
+    private void approvedOnlyRequest(Login user, String title) throws Exception {
+        runWith(newRandomManager(ManageLevel.root), () -> {
+            Number id = JsonPath.read(mockMvc.perform(
+                    get("/manage/promotionRequests")
+                            .param("mobile", readService.mobileFor(user))
+            )
+                    .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), "$.data[0].id");
+            mockMvc.perform(put("/manage/promotionRequests/" + id + "/approved")
+                    .contentType(MediaType.parseMediaType("text/plain; charset=UTF-8"))
+                    .content(title)
+            )
+                    .andExpect(status().isNoContent());
+            return null;
+        });
+    }
+
     private void assertExistingRequest(Login user) throws Exception {
         runWith(newRandomManager(ManageLevel.root), () -> {
-            assertThat(promotionRequestRepository.findAll(managePromotionRequestController.data(null, readService.mobileFor(user))
-                    .specification()))
-                    .isNotEmpty();
+            mockMvc.perform(
+                    get("/manage/promotionRequests")
+                            .param("mobile", readService.mobileFor(user))
+            )
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.length()").value(1));
             return null;
         });
 

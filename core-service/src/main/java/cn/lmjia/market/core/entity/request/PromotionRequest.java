@@ -138,6 +138,8 @@ public class PromotionRequest implements PayableOrder {
                                 .addSelect(promotionRequestRoot -> promotionRequestRoot.get("type"))
                                 .addFormat((object, type) -> toLevelName((int) object))
                                 .build()
+//                        , FieldBuilder.asName(PromotionRequest.class, "type")
+//                                .build()
                         , FieldBuilder.asName(PromotionRequest.class, "address")
                                 .addFormat((object, type) -> object.toString())
                                 .build()

@@ -114,7 +114,7 @@ $(function () {
         layer.confirm('通过申请？', {
             btn: ['通过', '取消'] //按钮
         }, function (index) {
-            $.ajax('/agent/' + id + '/update', {
+            $.ajax('/manage/promotionRequests/' + id + '/approved', {
                 method: 'put',
                 success: function (res) {
                     table.ajax.reload();
@@ -129,11 +129,12 @@ $(function () {
         var id = $(this).data('id');
         layer.prompt({
             title: '自定义代理级别',
-            formType: 1
+            formType: 0
         }, function (pass, index) {
-            $.ajax('/login/' + id + '/disable', {
+            $.ajax('/manage/promotionRequests/' + id + '/approved', {
                 method: 'put',
-                data: {customLevel: pass},
+                contentType: 'text/plain;charset=UTF-8',
+                data: pass,
                 success: function () {
                     table.ajax.reload();
                     layer.close(index);

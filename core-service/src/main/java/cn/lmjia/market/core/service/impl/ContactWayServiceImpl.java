@@ -7,6 +7,8 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ContactWayService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -21,6 +23,7 @@ import java.util.function.Consumer;
 @Service
 public class ContactWayServiceImpl implements ContactWayService {
 
+    private static final Log log = LogFactory.getLog(ContactWayServiceImpl.class);
     @Autowired
     private LoginRepository loginRepository;
     @Autowired
@@ -68,6 +71,17 @@ public class ContactWayServiceImpl implements ContactWayService {
         } else
             businessLicensePath = null;
         return updateContactWay(login, contactWay -> {
+
+            try {
+                if (!StringUtils.isEmpty(contactWay.getFrontImagePath()))
+                    resourceService.deleteResource(contactWay.getFrontImagePath());
+                if (!StringUtils.isEmpty(contactWay.getBackImagePath()))
+                    resourceService.deleteResource(contactWay.getBackImagePath());
+                if (businessLicensePath != null && !StringUtils.isEmpty(contactWay.getBusinessLicensePath()))
+                    resourceService.deleteResource(contactWay.getBusinessLicensePath());
+            } catch (IOException e) {
+                log.trace("", e);
+            }
             contactWay.setFrontImagePath(frontPath);
             contactWay.setBackImagePath(backPath);
             if (businessLicensePath != null)

@@ -85,14 +85,8 @@ public class PromotionServiceImpl implements PromotionService {
         return null;
     }
 
-    /**
-     * 代理商晋升
-     * 如果当前还没有代理商身份，则晋升成为推荐者的下线代理商
-     *
-     * @param login 身份
-     * @param level 当前代理
-     */
-    private void agentLevelUpgrade(Login login, AgentLevel level) {
+    @Override
+    public AgentLevel agentLevelUpgrade(Login login, AgentLevel level) {
 //        contactWayService.updateName(newLogin, agentName);
 //        contactWayService.updateMobile(newLogin, mobile);
 //        contactWayService.updateAddress(newLogin, address);
@@ -119,6 +113,7 @@ public class PromotionServiceImpl implements PromotionService {
             // 原来我跟其他人的关系
             loginRelationCacheService.addLowestAgentLevelCache(top);
             log.info(login + "升级到" + top.getLevel() + "代理商");
+            return top;
         } else {
             //新增一个代理商！
             //应该是将它放置到它的引导者旗下
@@ -141,6 +136,7 @@ public class PromotionServiceImpl implements PromotionService {
             top = agentLevelRepository.save(top);
             loginRelationCacheService.addLowestAgentLevelCache(top);
             log.info(login + "升级到" + top.getLevel() + "代理商");
+            return top;
         }
     }
 

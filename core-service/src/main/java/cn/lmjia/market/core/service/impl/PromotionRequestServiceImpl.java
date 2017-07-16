@@ -93,7 +93,9 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
 
     @Override
     public void submitRequest(PromotionRequest request) {
-
+        request.setRequestStatus(PromotionRequestStatus.requested);
+        request.setChangeTime(LocalDateTime.now());
+        promotionRequestRepository.save(request);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class Functions {
         try (PreparedStatement statement = connection.prepareStatement("SELECT min(`LEVEL`) FROM `agentLevel` WHERE `LOGIN_ID`=?")) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.getFetchSize() == 1 && resultSet.next()) {
+                if (!resultSet.isLast() && resultSet.next() && resultSet.getObject(1) != null) {
                     return resultSet.getInt(1);
                 }
             }
@@ -31,7 +31,7 @@ public class Functions {
         try (PreparedStatement statement = connection.prepareStatement("SELECT `id` FROM `MainOrder` WHERE `ORDERBY_ID`=? AND `ORDERSTATUS` IN (2,3,4,5)")) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.getFetchSize() == 1 && resultSet.next()) {
+                if (!resultSet.isLast() && resultSet.next()) {
                     return Customer.LEVEL;
                 }
             }

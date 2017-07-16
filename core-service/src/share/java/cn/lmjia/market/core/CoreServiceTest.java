@@ -34,7 +34,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ActiveProfiles;
@@ -168,12 +167,15 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @param callable 代码
      */
     protected void runWith(Login login, Callable<?> callable) throws Exception {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Login oldAll = allRunWith;
+        updateAllRunWith(login);
+//        SecurityContext securityContext = SecurityContextHolder.getContext();
         try {
-            loginAs(login);
+//            loginAs(login);
             callable.call();
         } finally {
-            SecurityContextHolder.setContext(securityContext);
+            updateAllRunWith(oldAll);
+//            SecurityContextHolder.setContext(securityContext);
         }
     }
 

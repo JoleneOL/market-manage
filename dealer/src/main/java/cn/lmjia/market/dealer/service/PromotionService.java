@@ -1,5 +1,7 @@
 package cn.lmjia.market.dealer.service;
 
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.event.LoginRelationChangedEvent;
 import me.jiangcai.lib.thread.ThreadSafe;
 import org.springframework.context.event.EventListener;
@@ -20,6 +22,17 @@ public interface PromotionService {
     @EventListener(LoginRelationChangedEvent.class)
     @ThreadSafe
     LoginRelationChangedEvent tryPromotion(LoginRelationChangedEvent event);
+
+    /**
+     * 代理商晋升
+     * 如果当前还没有代理商身份，则晋升成为推荐者的下线代理商
+     *
+     * @param login 身份
+     * @param level 当前代理
+     * @return 新增的代理商
+     */
+    @Transactional
+    AgentLevel agentLevelUpgrade(Login login, AgentLevel level);
 
     /**
      * 如果level为最低代理商，就是客户晋升为最低代理商所需的有效用户数量

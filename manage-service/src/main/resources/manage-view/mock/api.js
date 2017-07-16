@@ -149,7 +149,7 @@ Mock.mock(/\/login\/\d\/enable/, "put", {
     "resultMsg": "ok"
 });
 
-Mock.mock(/\/agent\/\d\/update/, "put", {
+Mock.mock(/\/manage\/promotionRequests\/\d\/approved/, "put", {
     "resultCode": 200,
     "resultMsg": "ok"
 });
