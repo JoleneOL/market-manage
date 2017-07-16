@@ -1,10 +1,10 @@
 package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.dealer.entity.PromotionRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

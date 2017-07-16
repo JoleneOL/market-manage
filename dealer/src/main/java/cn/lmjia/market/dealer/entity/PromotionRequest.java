@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.entity.request;
+package cn.lmjia.market.dealer.entity;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
@@ -112,6 +112,12 @@ public class PromotionRequest implements PayableOrder {
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "name")
                                 .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.nameForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
+                                .build()
+                        , FieldBuilder.asName(PromotionRequest.class, "currentLevel")
+                                .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.agentLevelForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
+//                                .addFormat((object,type)->{
+//
+//                                })
                                 .build()
                 );
             }
