@@ -41,6 +41,14 @@
                            th:value="${@readService.mobileFor(#authentication.principal)}" readonly>
                 </div>
             </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label" for="agentName">公司名称</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" name="agentName" id="agentName">
+                </div>
+            </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
                 <div class="weui-cell__hd">
                     <label class="weui-label">升级到</label>

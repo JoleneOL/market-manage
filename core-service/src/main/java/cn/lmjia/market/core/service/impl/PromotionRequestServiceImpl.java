@@ -4,10 +4,13 @@ import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.entity.support.PaymentStatus;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
 import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
 import cn.lmjia.market.core.service.request.PromotionRequestService;
 import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
+import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.user.notice.UserNoticeType;
 import me.jiangcai.user.notice.wechat.WechatSendSupplier;
@@ -16,8 +19,11 @@ import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -35,6 +41,8 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
     private Environment environment;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private ResourceService resourceService;
 
     private boolean useLocal() {
         return environment.acceptsProfiles("staging") || environment.acceptsProfiles(CoreConfig.ProfileUnitTest);
@@ -49,11 +57,38 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
     }
 
     @Override
-    public PromotionRequest initRequest(Login login, int type, Address address, String cardBackPath
-            , String cardFrontPath, String businessLicensePath) {
+    public PromotionRequest initRequest(Login login, String agentName, int type, Address address, String cardBackPath
+            , String cardFrontPath, String businessLicensePath) throws IOException {
         // 初始化配置，并且进行转存
+        PromotionRequest request = new PromotionRequest();
+        request.setPaymentStatus(PaymentStatus.wait);
+        request.setName(agentName);
+        request.setAddress(address);
+        request.setPrice(getPriceFor1());
+        request.setRequestStatus(PromotionRequestStatus.init);
+        request.setRequestTime(LocalDateTime.now());
+        request.setType(type);
+        request.setWhose(login);
+        // 转存资源
+        request = promotionRequestRepository.saveAndFlush(request);
 
-        return null;
+        String cardBackResource = "promotionRequest/" + request.getId() + "/back." + FileUtils.fileExtensionName(cardBackPath);
+        String cardFrontResource = "promotionRequest/" + request.getId() + "/front." + FileUtils.fileExtensionName(cardFrontPath);
+        String businessLicenseResource;
+        if (!StringUtils.isEmpty(businessLicensePath)) {
+            businessLicenseResource = "promotionRequest/" + request.getId() + "/businessLicense." + FileUtils.fileExtensionName(businessLicensePath);
+            resourceService.moveResource(businessLicenseResource, businessLicensePath);
+        } else {
+            businessLicenseResource = null;
+        }
+        resourceService.moveResource(cardBackResource, cardBackPath);
+        resourceService.moveResource(cardFrontResource, cardFrontPath);
+
+        request.setBackImagePath(cardBackResource);
+        request.setFrontImagePath(cardFrontResource);
+        request.setBusinessLicensePath(businessLicenseResource);
+
+        return request;
     }
 
     @Override
@@ -107,10 +142,10 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
             @Override
             public Collection<? extends TemplateMessageParameter> parameterStyles() {
                 return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "{1}，您好，您的经销商升级订单已支付。")
-                        , new SimpleTemplateMessageParameter("keyword1", "{2}")
-                        , new SimpleTemplateMessageParameter("keyword2", "{3,number,￥,###.##}")
-                        , new SimpleTemplateMessageParameter("keyword3", "{4}")
+                        new SimpleTemplateMessageParameter("first", "{0}，您好，您的经销商升级订单已支付。")
+                        , new SimpleTemplateMessageParameter("keyword1", "{1}")
+                        , new SimpleTemplateMessageParameter("keyword2", "{2,number,￥,###.##}")
+                        , new SimpleTemplateMessageParameter("keyword3", "{3}")
                         , new SimpleTemplateMessageParameter("keyword4", "微信支付")
                         , new SimpleTemplateMessageParameter("remark", "请耐心等待审核。")
                 );

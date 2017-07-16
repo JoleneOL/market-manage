@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ContactWayService;
 import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.seext.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -56,13 +57,13 @@ public class ContactWayServiceImpl implements ContactWayService {
             , String businessLicenseResourcePath)
             throws IOException {
         String id = UUID.randomUUID().toString();
-        String frontPath = "contact/" + id + "/front." + ext(frontResourcePath);
-        String backPath = "contact/" + id + "/back." + ext(backResourcePath);
+        String frontPath = "contact/" + id + "/front." + FileUtils.fileExtensionName(frontResourcePath);
+        String backPath = "contact/" + id + "/back." + FileUtils.fileExtensionName(backResourcePath);
         resourceService.moveResource(frontPath, frontResourcePath);
         resourceService.moveResource(backPath, backResourcePath);
         String businessLicensePath;
         if (!StringUtils.isEmpty(businessLicenseResourcePath)) {
-            businessLicensePath = "contact/" + id + "/businessLicense." + ext(businessLicenseResourcePath);
+            businessLicensePath = "contact/" + id + "/businessLicense." + FileUtils.fileExtensionName(businessLicenseResourcePath);
             resourceService.moveResource(businessLicensePath, businessLicenseResourcePath);
         } else
             businessLicensePath = null;
@@ -74,8 +75,4 @@ public class ContactWayServiceImpl implements ContactWayService {
         });
     }
 
-    private String ext(String path) {
-        int index = path.lastIndexOf(".");
-        return path.substring(index + 1, path.length());
-    }
 }

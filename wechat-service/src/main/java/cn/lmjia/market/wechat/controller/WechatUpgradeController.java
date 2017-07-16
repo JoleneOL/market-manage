@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * @author CJ
@@ -64,10 +65,11 @@ public class WechatUpgradeController {
 
     @PostMapping("/wechatUpgrade")
     @Transactional
-    public ModelAndView upgrade(@AuthenticationPrincipal Login login, int newLevel, Address address, String cardFrontPath
-            , String cardBackPath, String businessLicensePath, String upgradeMode, HttpServletRequest servletRequest) throws SystemMaintainException {
+    public ModelAndView upgrade(@AuthenticationPrincipal Login login, String agentName, int newLevel, Address address
+            , String cardFrontPath
+            , String cardBackPath, String businessLicensePath, String upgradeMode, HttpServletRequest servletRequest) throws SystemMaintainException, IOException {
         // 申请之后。如果是区代理则进入申请成功界面；反之则进入支付界面（允许选择使用支付方式）
-        PromotionRequest request = promotionRequestService.initRequest(login, newLevel, address, cardBackPath
+        PromotionRequest request = promotionRequestService.initRequest(login, agentName, newLevel, address, cardBackPath
                 , cardFrontPath, businessLicensePath);
 
         // 如果是申请省代理 则现在就结束

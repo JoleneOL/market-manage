@@ -7,6 +7,7 @@ import me.jiangcai.user.notice.UserNoticeType;
 import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
@@ -25,13 +26,37 @@ public interface PromotionRequestService {
     @Transactional(readOnly = true)
     PromotionRequest currentRequest(Login login);
 
-    PromotionRequest initRequest(Login login, int type, Address address, String cardBackPath, String cardFrontPath, String businessLicensePath);
+    /**
+     * 初始化一个申请，但还尚未提交
+     *
+     * @param login               申请者
+     * @param agentName           公司名称
+     * @param type                升级类型
+     * @param address             公司地址
+     * @param cardBackPath        身份证背后
+     * @param cardFrontPath       身份前面
+     * @param businessLicensePath 可选的营业执照
+     * @return 申请信息
+     */
+    @Transactional
+    PromotionRequest initRequest(Login login, String agentName, int type, Address address, String cardBackPath, String cardFrontPath, String businessLicensePath) throws IOException;
 
+    /**
+     * 提交这个申请，让管理员可见
+     *
+     * @param request 申请
+     */
+    @Transactional
     void submitRequest(PromotionRequest request);
 
     UserNoticeType getPaySuccessMessage();
 
     void registerNotices(WechatSendSupplier wechatSendSupplier);
 
+    /**
+     * 升级至经销商的价格
+     *
+     * @return 价格
+     */
     BigDecimal getPriceFor1();
 }

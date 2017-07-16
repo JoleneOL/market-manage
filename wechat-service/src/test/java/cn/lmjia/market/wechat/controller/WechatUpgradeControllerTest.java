@@ -3,6 +3,7 @@ package cn.lmjia.market.wechat.controller;
 import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
 import cn.lmjia.market.core.service.MainOrderService;
@@ -11,6 +12,7 @@ import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.manage.controller.ManagePromotionRequestController;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,12 +58,14 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
 
 
         int level = 1;
+        String agentName = RandomStringUtils.randomAlphabetic(10);
         Address address = randomAddress();
         String cardFrontPath = newRandomImagePath();
         String cardBackPath = newRandomImagePath();
         String businessLicensePath = newRandomImagePath();
         // upgradeMode
         String payUri = mockMvc.perform(wechatPost("/wechatUpgrade")
+                .param("agentName", agentName)
                 .param("newLevel", String.valueOf(level))
                 .param("address", address.getStandardWithoutOther())
                 .param("fullAddress", address.getOtherAddress())
@@ -91,10 +95,14 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         // 断言等级
     }
 
-    private void assertExistingRequest(Login user) {
-        assertThat(promotionRequestRepository.findAll(managePromotionRequestController.data(null, readService.mobileFor(user))
-                .specification()))
-                .isNotEmpty();
+    private void assertExistingRequest(Login user) throws Exception {
+        runWith(newRandomManager(ManageLevel.root), () -> {
+            assertThat(promotionRequestRepository.findAll(managePromotionRequestController.data(null, readService.mobileFor(user))
+                    .specification()))
+                    .isNotEmpty();
+            return null;
+        });
+
     }
 
 }

@@ -148,12 +148,14 @@ $(function () {
     $('#J_updateForm').validate({
         ignore: '',
         rules: {
+            agentName: 'required',
             address: 'required',
             fullAddress: 'required',
             cardFrontPath: "required",
             cardBackPath: "required"
         },
         messages: {
+            agentName: '请输入公司名称',
             address: "请选择地址",
             fullAddress: "请填写详细地址",
             cardFrontPath: "请上传图片",
