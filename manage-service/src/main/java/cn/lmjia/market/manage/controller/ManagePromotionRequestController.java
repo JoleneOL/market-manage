@@ -76,6 +76,18 @@ public class ManagePromotionRequestController {
         return PromotionRequest.Rows(applicationDate, mobile, readService, resourceService, conversionService);
     }
 
+
+    @PutMapping("/manage/promotionRequests/{id}/rejected")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void rejected(@AuthenticationPrincipal Manager manager, @PathVariable("id") long id) {
+        PromotionRequest request = promotionRequestRepository.getOne(id);
+
+        request.setRequestStatus(PromotionRequestStatus.rejected);
+        request.setChanger(manager);
+        request.setChangeTime(LocalDateTime.now());
+    }
+
     @PutMapping("/manage/promotionRequests/{id}/approved")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional

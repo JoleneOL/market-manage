@@ -19,7 +19,7 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "姓名", "data": "name", "name": "name"
+                "title": "姓名", "data": "name", "name": "name", "orderable": false
             },
             {
                 "title": "目前代理级别", "data": "currentLevel", "name": "currentLevel"
@@ -76,6 +76,7 @@ $(function () {
                         a += '<a href="javascript:;" class="js-custom" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;通过</a>';
                     else
                         a += '<a href="javascript:;" class="js-agree" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;通过</a>';
+                    a += '<a href="javascript:;" class="js-rejected" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;拒绝</a>';
                     if (item.stateCode === 0)
                         return a;
                     return '';
@@ -109,6 +110,22 @@ $(function () {
     }).on('click', '.js-edit', function () {
         // 需要获取一些参数供详情跳转
         window.location.href = '_agentUpdateEdit.html' + '?id=' + $(this).data('id');
+    }).on('click', '.js-rejected', function () {
+        var id = $(this).data('id');
+        layer.confirm('拒绝申请？', {
+            btn: ['拒绝', '取消'] //按钮
+        }, function (index) {
+            $.ajax('/manage/promotionRequests/' + id + '/rejected', {
+                method: 'put',
+                success: function (res) {
+                    table.ajax.reload();
+                    layer.close(index);
+                },
+                error: function () {
+                    layer.msg('服务器异常');
+                }
+            });
+        });
     }).on('click', '.js-agree', function () {
         var id = $(this).data('id');
         layer.confirm('通过申请？', {

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author CJ
@@ -54,6 +55,7 @@ public class JQueryDataTableDramatizer extends AbstractMediaRowDramatizer implem
             Expression<?> toOrder = fields.stream()
                     .filter(fieldDefinition -> fieldDefinition.name().equals(orderName))
                     .map(fieldDefinition -> fieldDefinition.order(root, criteriaBuilder))
+                    .filter(Objects::nonNull)
                     .findFirst()
                     .orElse(null);
 
