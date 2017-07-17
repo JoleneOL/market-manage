@@ -151,6 +151,7 @@ public class PromotionRequest implements PayableOrder {
                         , resourceUrl(resourceService, "cardBack", "backImagePath")
                         , resourceUrl(resourceService, "businessLicense", "businessLicensePath")
                         , FieldBuilder.asName(PromotionRequest.class, "paymentStatus")
+                                .addFormat((object, type) -> conversionService.convert(object, String.class))
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "applicationDate")
                                 .addSelect(promotionRequestRoot -> promotionRequestRoot.get("requestTime"))
