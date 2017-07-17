@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.PayAssistanceService;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.request.PromotionRequestService;
 import me.jiangcai.payment.exception.SystemMaintainException;
@@ -33,8 +34,11 @@ public class WechatUpgradeController {
     private PayAssistanceService payAssistanceService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private ReadService readService;
 
     @GetMapping("/wechatUpgrade")
+    @Transactional(readOnly = true)
     public String index(@AuthenticationPrincipal Login login, Model model) {
         // 正在申请 错误
         login = loginService.get(login.getId());
@@ -46,9 +50,15 @@ public class WechatUpgradeController {
             return "redirect:/wechatUpgradeChecking";
         }
 
-        promotionRequestService.getPriceFor1();
-
         model.addAttribute("price", new Money(promotionRequestService.getPriceFor1()));
+        int level = readService.agentLevelForPrincipal(login);
+        boolean u1Enable = level > 4;
+        boolean u2Enable = level > 3;
+        boolean u3Enable = level > 2;
+
+        model.addAttribute("u1Enable", u1Enable);
+        model.addAttribute("u2Enable", u2Enable);
+        model.addAttribute("u3Enable", u3Enable);
 
         return "wechat@update.html";
     }

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="u1Enable" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="u2Enable" type="java.lang.Boolean"*/-->
+<!--/*@thymesVar id="u3Enable" type="java.lang.Boolean"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -59,9 +62,9 @@
                 </div>
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="newLevel" id="J_updateLevel" required>
-                        <option value="1">经销商</option>
-                        <option value="2">市代理</option>
-                        <option value="3">省总代</option>
+                        <option th:if="${u1Enable}" value="1">经销商</option>
+                        <option th:if="${u2Enable}" value="2">市代理</option>
+                        <option th:if="${u3Enable}" value="3">省总代</option>
                     </select>
                 </div>
             </div>
