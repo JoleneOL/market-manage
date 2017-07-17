@@ -129,6 +129,7 @@ public class PromotionRequest implements PayableOrder {
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "name")
                                 .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.nameForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
+                                .withoutOrder()
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "currentLevel")
                                 .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.agentLevelForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))

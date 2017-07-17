@@ -19,7 +19,7 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "姓名", "data": "name", "name": "name"
+                "title": "姓名", "data": "name", "name": "name", "orderable": false
             },
             {
                 "title": "目前代理级别", "data": "currentLevel", "name": "currentLevel"
