@@ -221,3 +221,9 @@ textarea {
     border-radius: 4px;
     cursor: pointer;
 }
+
+.img-feedback-big {
+    margin: 10px;
+    max-width: 900px;
+    max-height: 800px;
+}
