@@ -51,85 +51,40 @@
                                                 class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入用户名" class="form-control"
-                                                   name="name" th:value="${manager!=null?manager.loginName:null}?:null"
+                                                   name="name" value="嘻哈Boy"
                                                    required>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">部门 <span class="asterisk">*</span></label>
+                                    <div  class="form-group">
+                                        <label class="col-sm-3 control-label">级别</label>
                                         <div class="col-sm-6">
-                                            <select class="form-control" name="department" required>
-                                                <option value="办公室"
-                                                        th:selected="${(manager!=null?manager.department:null)=='办公室'}">
-                                                    办公室
-                                                </option>
-                                                <option value="技术部"
-                                                        th:selected="${(manager!=null?manager.department:null)=='技术部'}">
-                                                    技术部
-                                                </option>
-                                                <option value="运营部"
-                                                        th:selected="${(manager!=null?manager.department:null)=='运营部'}">
-                                                    运营部
-                                                </option>
-                                                <option value="市场部"
-                                                        th:selected="${(manager!=null?manager.department:null)=='市场部'}">
-                                                    市场部
-                                                </option>
-                                                <option value="财务部"
-                                                        th:selected="${(manager!=null?manager.department:null)=='财务部'}">
-                                                    财务部
-                                                </option>
-                                            </select>
+                                            <input type="text" placeholder="请输入级别" class="form-control"
+                                                  value="爱心天使"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group">
+                                        <label class="col-sm-3 control-label">升级到</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入升级到级别" class="form-control"
+                                                   value="经销商"
+                                                   readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">真实姓名</label>
+                                        <label class="col-sm-3 control-label">安装地址</label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入真实姓名" class="form-control"
-                                                   name="realName"
-                                                   th:value="${manager!=null?manager.realName:null}?:null">
-                                        </div>
-                                    </div>
-                                    <!--<div class="form-group">-->
-                                    <!--<label class="col-sm-3 control-label">微信号码</label>-->
-                                    <!--<div class="col-sm-6">-->
-                                    <!--<input type="text" placeholder="请输入微信号码" class="form-control"-->
-                                    <!--name="wechatID">-->
-                                    <!--</div>-->
-                                    <!--</div>-->
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">分配角色 <span
-                                                class="asterisk">*</span></label>
-                                        <!--/*@thymesVar id="levels" type="java.util.Collection<cn.lmjia.market.core.entity.support.ManageLevel>"*/-->
-                                        <div class="col-sm-6">
-                                            <label th:each="level:${levels}" class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role" value="1" th:value="${level.name()}"
-                                                       th:checked="${manager!=null?manager.levelSet.contains(level):false}">
-                                                <span th:text="${level.title()}">Leader</span>
-                                            </label>
-                                            <label th:remove="all" class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role" value="2">MT</label>
-                                            <label th:remove="all" class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role" value="3">治疗</label>
-                                            <label th:remove="all" class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="role" value="4">DPS</label>
+                                            <input class="form-control" id="J_cityPicker" readonly type="text"
+                                                   data-responsive="true" data-toggle="city-picker"
+                                                   data-simple="true" name="address"
+                                                   value="浙江省/杭州市/滨江区">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">立即启用</label>
-                                        <div class="col-sm-6">
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="enable" checked
-                                                       th:checked="${manager!=null?manager.enabled:false}">启用</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">备注</label>
-                                        <div class="col-sm-6">
-                                            <textarea title="备注" name="comment"
-                                                      th:text="${manager!=null?manager.comment:null}?:null"
-                                                      class="form-control"
-                                                      rows="3"></textarea>
+                                        <div class="col-sm-6 col-sm-offset-3">
+                                            <input type="text" placeholder="详细地址" class="form-control"
+                                                   name="fullAddress"
+                                                   value="阡陌路智慧e谷A座1999号">
                                         </div>
                                     </div>
                                     <div class="form-group">
