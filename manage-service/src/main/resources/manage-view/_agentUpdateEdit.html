@@ -1,10 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>修改申请信息</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
-修改信息
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_agentUpdate.html">升级合伙人申请</a></li>
+                <li><strong>修改申请信息</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    用户信息
+                </div>
+                <div class="ibox-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-7 col-lg-6">
+                                <form class="form-horizontal" id="J_userForm" method="post"
+                                      action="_agentUpdate.html">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">用户名 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入用户名" class="form-control"
+                                                   name="name" th:value="${manager!=null?manager.loginName:null}?:null"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">部门 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" name="department" required>
+                                                <option value="办公室"
+                                                        th:selected="${(manager!=null?manager.department:null)=='办公室'}">
+                                                    办公室
+                                                </option>
+                                                <option value="技术部"
+                                                        th:selected="${(manager!=null?manager.department:null)=='技术部'}">
+                                                    技术部
+                                                </option>
+                                                <option value="运营部"
+                                                        th:selected="${(manager!=null?manager.department:null)=='运营部'}">
+                                                    运营部
+                                                </option>
+                                                <option value="市场部"
+                                                        th:selected="${(manager!=null?manager.department:null)=='市场部'}">
+                                                    市场部
+                                                </option>
+                                                <option value="财务部"
+                                                        th:selected="${(manager!=null?manager.department:null)=='财务部'}">
+                                                    财务部
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">真实姓名</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入真实姓名" class="form-control"
+                                                   name="realName"
+                                                   th:value="${manager!=null?manager.realName:null}?:null">
+                                        </div>
+                                    </div>
+                                    <!--<div class="form-group">-->
+                                    <!--<label class="col-sm-3 control-label">微信号码</label>-->
+                                    <!--<div class="col-sm-6">-->
+                                    <!--<input type="text" placeholder="请输入微信号码" class="form-control"-->
+                                    <!--name="wechatID">-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">分配角色 <span
+                                                class="asterisk">*</span></label>
+                                        <!--/*@thymesVar id="levels" type="java.util.Collection<cn.lmjia.market.core.entity.support.ManageLevel>"*/-->
+                                        <div class="col-sm-6">
+                                            <label th:each="level:${levels}" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="1" th:value="${level.name()}"
+                                                       th:checked="${manager!=null?manager.levelSet.contains(level):false}">
+                                                <span th:text="${level.title()}">Leader</span>
+                                            </label>
+                                            <label th:remove="all" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="2">MT</label>
+                                            <label th:remove="all" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="3">治疗</label>
+                                            <label th:remove="all" class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="role" value="4">DPS</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">立即启用</label>
+                                        <div class="col-sm-6">
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" name="enable" checked
+                                                       th:checked="${manager!=null?manager.enabled:false}">启用</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">备注</label>
+                                        <div class="col-sm-6">
+                                            <textarea title="备注" name="comment"
+                                                      th:text="${manager!=null?manager.comment:null}?:null"
+                                                      class="form-control"
+                                                      rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button th:if="${manager==null}" type="submit"
+                                                    class="btn btn-primary btn-block btn-lg">
+                                                添&nbsp;加
+                                            </button>
+                                            <button th:if="${manager!=null}" type="submit"
+                                                    class="btn btn-primary btn-block btn-lg">
+                                                修&nbsp;改
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/icheck.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="manage-resource/js/userDetail.js?v=1707122"></script>
 </html>

@@ -1153,6 +1153,12 @@
 .view-total li.on {
   display: block;
 }
+.view-sub-label {
+  color: #c2c2c2;
+  font-size: 12px;
+  position: absolute;
+  bottom: 0;
+}
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
   .border-1px-bottom::after,
   .border-1px-top::after,

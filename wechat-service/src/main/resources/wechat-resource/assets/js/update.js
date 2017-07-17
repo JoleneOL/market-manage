@@ -8,6 +8,10 @@ $(function () {
     var input = $('input[name="businessLicensePath"]');
     var radio = $('input[name="upgradeMode"]');
     var check = $('input[name="upgradeMode"]:checked');
+    var updateLevel = $('#J_updateLevel');
+    var updateName = $('#J_updateName');
+
+    updateName.text(updateLevel.find('option:selected').text());
 
     $('#J_cityPicker').cityPicker({
         title: "请选择公司地址",
@@ -16,7 +20,7 @@ $(function () {
         }
     });
 
-    $('#J_updateLevel').change(function () {
+    updateLevel.change(function () {
         if ($(this).val() === '1') {
             license.find('.extra-badge').hide();
             updateCost.show();
@@ -54,6 +58,13 @@ $(function () {
             }
         }
 
+        updateName.text($(this).find('option:selected').text());
+
+        if ($(this).find('option:selected').text() === '省总代') {
+            $('#J_subText').hide();
+        } else {
+            $('#J_subText').show();
+        }
     });
 
     radio.change(function () {
@@ -148,14 +159,14 @@ $(function () {
     $('#J_updateForm').validate({
         ignore: '',
         rules: {
-            agentName: 'required',
+            // agentName: 'required',
             address: 'required',
             fullAddress: 'required',
             cardFrontPath: "required",
             cardBackPath: "required"
         },
         messages: {
-            agentName: '请输入公司名称',
+            // agentName: '请输入公司名称',
             address: "请选择地址",
             fullAddress: "请填写详细地址",
             cardFrontPath: "请上传图片",
