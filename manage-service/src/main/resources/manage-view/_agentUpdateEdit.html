@@ -54,15 +54,15 @@
                                                    required>
                                         </div>
                                     </div>
-                                    <div  class="form-group">
+                                    <div class="form-group">
                                         <label class="col-sm-3 control-label">级别</label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入级别" class="form-control"
-                                                  value="爱心天使"
+                                                   value="爱心天使"
                                                    readonly>
                                         </div>
                                     </div>
-                                    <div  class="form-group">
+                                    <div class="form-group">
                                         <label class="col-sm-3 control-label">升级到</label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入升级到级别" class="form-control"
@@ -71,7 +71,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">安装地址</label>
+                                        <label class="col-sm-3 control-label"><span>经销商</span>地址</label>
                                         <div class="col-sm-6">
                                             <input class="form-control" id="J_cityPicker" readonly type="text"
                                                    data-responsive="true" data-toggle="city-picker"
@@ -80,21 +80,89 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-6 col-sm-offset-3">
+                                        <label class="col-sm-3 control-label">详细地址</label>
+                                        <div class="col-sm-6">
                                             <input type="text" placeholder="详细地址" class="form-control"
                                                    name="fullAddress"
                                                    value="阡陌路智慧e谷A座1999号">
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-sm-3 control-label">身份证 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6 img-wrap">
+                                            <p class="form-control-static img-tips">个人信息面 （格式：3M以下的jpg、jpeg和png）</p>
+                                            <input type="hidden" name="cardFrontPath"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-9 col-sm-offset-3">
+                                            <div class="col-sm-6">
+                                                <div class="upload-container">
+                                                    <div class="upload-default js-uploadFront">
+                                                        <div class="js-uploadShow"></div>
+                                                    </div>
+                                                    <div id="J_uploadFront"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="upload-demo-container">
+                                                    <div class="upload-demo-front"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 img-wrap">
+                                            <p class="form-control-static img-tips">国徽面 （格式：3M以下的jpg、jpeg和png）</p>
+                                            <input type="hidden" name="cardBackPath"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-9 col-sm-offset-3">
+                                            <div class="col-sm-6">
+                                                <div class="upload-container">
+                                                    <div class="upload-default js-uploadBack">
+                                                        <div class="js-uploadShow"></div>
+                                                    </div>
+                                                    <div id="J_uploadBack"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="upload-demo-container">
+                                                    <div class="upload-demo-back"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">营业执照</label>
+                                        <div class="col-sm-6 img-wrap">
+                                            <p class="form-control-static img-tips">营业执照（格式：3M以下的jpg、jpeg和png）</p>
+                                            <input type="hidden" name="businessLicensePath"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-9 col-sm-offset-3">
+                                            <div class="col-sm-6">
+                                                <div class="upload-container">
+                                                    <div class="upload-default js-uploadLicense">
+                                                        <div class="js-uploadShow"></div>
+                                                    </div>
+                                                    <div id="J_uploadLicense"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="upload-demo-container">
+                                                    <div class="upload-demo-license"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-3 control-label">
-                                            <button th:if="${manager==null}" type="submit"
-                                                    class="btn btn-primary btn-block btn-lg">
-                                                添&nbsp;加
-                                            </button>
-                                            <button th:if="${manager!=null}" type="submit"
-                                                    class="btn btn-primary btn-block btn-lg">
-                                                修&nbsp;改
+                                            <button type="submit"
+                                                    class="btn btn-primary btn-block btn-lg">修&nbsp;改
                                             </button>
                                         </div>
                                     </div>

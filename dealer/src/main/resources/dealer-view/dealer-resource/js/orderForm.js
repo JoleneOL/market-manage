@@ -6,10 +6,7 @@ $(function () {
     if($('#recommendId').length > 0) {
         $('#recommendId').makeRecommendSelect();
     }
-    $('#J_cityPicker').on('cp:updated',function(){
-        var val = $(this).val();
-        $(this).val(val.replace(/\//g,' '));
-    });
+
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1([34578])\d{9}$/;
