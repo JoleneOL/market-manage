@@ -15,6 +15,7 @@
         <module>manage-service</module>
         <module>wechat-service</module>
         <module>logistics</module>
+        <module>logistics-haier</module>
     </modules>
 
     <properties>
