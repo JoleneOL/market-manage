@@ -43,7 +43,7 @@ $(function () {
                 radio.val(2);
             }
         }
-        if ($(this).val() === '3' && check.val() === 3) {
+        if ($(this).val() === '3') {
             license.find('.extra-badge').show();
             updateCost.hide();
             submit.text('申  请');
