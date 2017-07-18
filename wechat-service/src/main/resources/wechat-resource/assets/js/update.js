@@ -11,7 +11,6 @@ $(function () {
     var updateLevel = $('#J_updateLevel');
     var updateName = $('#J_updateName');
 
-    updateName.text(updateLevel.find('option:selected').text());
 
     $('#J_cityPicker').cityPicker({
         title: "请选择公司地址",
@@ -188,13 +187,5 @@ $(function () {
         }
     });
 
-    if (updateLevel.find('option:selected').text() === '省总代') {
-        license.find('.extra-badge').show();
-        input.rules('add', {
-            required: true,
-            messages: {
-                required: "请上传营业执照"
-            }
-        });
-    }
+    updateLevel.trigger('change');
 });
