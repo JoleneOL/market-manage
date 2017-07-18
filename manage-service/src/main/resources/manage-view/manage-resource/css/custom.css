@@ -224,6 +224,7 @@ textarea {
 .view-upload-show img {
     margin-right: 20px;
     width: 100px;
+    cursor: pointer;
 }
 .view-upload-btn {
 

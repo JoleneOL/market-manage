@@ -97,12 +97,14 @@ $(function () {
                 $(target).next('input').val(response.id);
                 $.toast('上传成功');
                 Uploader.successMsg(target);
+                uploader.reset();
             });
         },
         uploadError: function (uploader, target) {
             uploader.on('uploadError', function (file) {
                 $.toptip('上传失败，重新上传');
                 Uploader.errorMsg(target);
+                uploader.reset();
             });
 
             uploader.on('error', function (type) {
