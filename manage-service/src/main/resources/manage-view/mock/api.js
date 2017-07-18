@@ -158,3 +158,10 @@ Mock.mock(/\/login\/\d/, "delete", {
     "resultCode": 200,
     "resultMsg": "ok"
 });
+
+var uploaderImg = Mock.Random.image('228x178', '#50B347', '#FFF', 'Mock.js');
+
+Mock.mock(/\/resourceUpload\/webUploader/, {
+    "id": "filePath",
+    "url": uploaderImg
+});

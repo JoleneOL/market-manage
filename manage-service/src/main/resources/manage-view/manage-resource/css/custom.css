@@ -221,7 +221,18 @@ textarea {
     border-radius: 4px;
     cursor: pointer;
 }
+.view-upload-show img {
+    margin-right: 20px;
+    width: 100px;
+}
+.view-upload-btn {
 
+}
+.view-upload-btn .webuploader-pick {
+    width: 180px;
+    height: 114px;
+    background: url("../img/upload.jpg");
+}
 .img-feedback-big {
     margin: 10px;
     max-width: 800px;
