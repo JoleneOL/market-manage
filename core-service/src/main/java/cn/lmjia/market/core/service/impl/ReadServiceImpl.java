@@ -147,4 +147,15 @@ public class ReadServiceImpl implements ReadService {
         ;
         return entityManager.createQuery(integerCriteriaQuery).getSingleResult();
     }
+
+    //    @Override
+    @Override
+    public String[] titles() {
+        String[] titles = new String[systemService.systemLevel()];
+        for (int i = 0; i < titles.length; i++) {
+            titles[i] = getLoginTitle(i);
+        }
+        return titles;
+    }
+
 }

@@ -73,13 +73,13 @@ public interface ReadService {
     default String getLoginTitle(int i) {
         switch (i) {
             case 0:
-                return "省总代";
+                return "全球委托";
             case 1:
-                return "市总代";
+                return "超级代理";
             case 2:
-                return "区县总代";
+                return "省总代";
             case 3:
-                return "代理商";
+                return "市代理";
             case 4:
                 return "经销商";
             case Customer.LEVEL:
@@ -150,4 +150,9 @@ public interface ReadService {
     @Transactional(readOnly = true)
     int agentLevelForPrincipal(Object principal);
 
+    /**
+     * @return 所有等级名称
+     */
+    @SuppressWarnings("unused")
+    String[] titles();
 }
