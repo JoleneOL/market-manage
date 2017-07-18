@@ -16,6 +16,7 @@ import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import cn.lmjia.market.dealer.service.CommissionSettlementService;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.lib.thread.ThreadSafe;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.event.OrderPaySuccess;
@@ -47,6 +48,8 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     private LoginService loginService;
     @Autowired
     private MainOrderService mainOrderService;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @EventListener(MainOrderFinishEvent.class)
     @ThreadSafe
@@ -121,11 +124,13 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
 //            }
         }
 
-        AgentLevel addressLevel = agentService.addressLevel(order.getInstallAddress());
-        if (addressLevel != null) {
-            // 以及地域奖励，这个跟系统设定的地址等级有关
-            saveCommission(orderCommission, addressLevel, addressLevel.getLogin()
-                    , commissionRateService.addressRate(addressLevel), "地域");
+        if (systemStringService.getCustomSystemString("market.address.reward.enable", null, true, Boolean.class, true)) {
+            AgentLevel addressLevel = agentService.addressLevel(order.getInstallAddress());
+            if (addressLevel != null) {
+                // 以及地域奖励，这个跟系统设定的地址等级有关
+                saveCommission(orderCommission, addressLevel, addressLevel.getLogin()
+                        , commissionRateService.addressRate(addressLevel), "地域");
+            }
         }
     }
 
