@@ -20,6 +20,7 @@ $(function () {
         }
     });
 
+
     updateLevel.change(function () {
         if ($(this).val() === '1') {
             license.find('.extra-badge').hide();
@@ -27,7 +28,7 @@ $(function () {
             submit.text('支  付');
             input.closest('.weui-cell').removeClass('weui-cell_warn');
             input.rules('remove');
-            if(check.val() !== radio.val()) {
+            if (check.val() !== radio.val()) {
                 radio.val(1);
             }
         }
@@ -38,12 +39,11 @@ $(function () {
             submit.text('申  请');
             input.closest('.weui-cell').removeClass('weui-cell_warn');
             input.rules('remove');
-            if(check.val() === 1) {
+            if (check.val() === 1) {
                 radio.val(2);
             }
         }
-
-        if ($(this).val() === '3') {
+        if ($(this).val() === '3' && check.val() === 3) {
             license.find('.extra-badge').show();
             updateCost.hide();
             submit.text('申  请');
@@ -53,7 +53,7 @@ $(function () {
                     required: "请上传营业执照"
                 }
             });
-            if(check.val() === 1) {
+            if (check.val() === 1) {
                 radio.val(2);
             }
         }
@@ -185,4 +185,14 @@ $(function () {
             form.submit();
         }
     });
+
+    if (updateLevel.find('option:selected').text() === '省总代') {
+        license.find('.extra-badge').show();
+        input.rules('add', {
+            required: true,
+            messages: {
+                required: "请上传营业执照"
+            }
+        });
+    }
 });

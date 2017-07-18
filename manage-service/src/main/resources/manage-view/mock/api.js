@@ -120,7 +120,7 @@ Mock.mock(/\/manage\/promotionRequests/, "get", {
             'applicationLevel': '@pick(经销商,市代理,省代理)',
             'address': '@county(true)',
             'mobile': /^1([34578])\d{9}$/,
-            'cardFront': Mock.Random.image('4160x3120', '#FF6600', '前面'),
+            'cardFront': Mock.Random.image('3120x4160', '#FF6600', '前面'),
             'cardBack': Mock.Random.image('240x151', '#50B347', '后面'),
             'businessLicense|0-1': Mock.Random.image('240x151', '#894FC4', '营业'),
             'paymentStatus': '@pick(["未支付", "已支付"])',
