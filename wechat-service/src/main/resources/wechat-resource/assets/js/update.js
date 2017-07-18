@@ -11,7 +11,6 @@ $(function () {
     var updateLevel = $('#J_updateLevel');
     var updateName = $('#J_updateName');
 
-    updateName.text(updateLevel.find('option:selected').text());
 
     $('#J_cityPicker').cityPicker({
         title: "请选择公司地址",
@@ -43,7 +42,7 @@ $(function () {
                 radio.val(2);
             }
         }
-        if ($(this).val() === '3' && check.val() === 3) {
+        if ($(this).val() === '3') {
             license.find('.extra-badge').show();
             updateCost.hide();
             submit.text('申  请');
@@ -97,12 +96,14 @@ $(function () {
                 $(target).next('input').val(response.id);
                 $.toast('上传成功');
                 Uploader.successMsg(target);
+                uploader.reset();
             });
         },
         uploadError: function (uploader, target) {
             uploader.on('uploadError', function (file) {
                 $.toptip('上传失败，重新上传');
                 Uploader.errorMsg(target);
+                uploader.reset();
             });
 
             uploader.on('error', function (type) {
@@ -186,13 +187,5 @@ $(function () {
         }
     });
 
-    if (updateLevel.find('option:selected').text() === '省总代') {
-        license.find('.extra-badge').show();
-        input.rules('add', {
-            required: true,
-            messages: {
-                required: "请上传营业执照"
-            }
-        });
-    }
+    updateLevel.trigger('change');
 });

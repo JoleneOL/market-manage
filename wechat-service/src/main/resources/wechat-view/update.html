@@ -64,7 +64,7 @@
                     <select class="weui-select" name="newLevel" id="J_updateLevel" required>
                         <option th:if="${u1Enable}" value="1">经销商</option>
                         <option th:if="${u2Enable}" value="2">市代理</option>
-                        <option th:if="${u3Enable}" value="3" selected>省总代</option>
+                        <option th:if="${u3Enable}" value="3">省总代</option>
                     </select>
                 </div>
             </div>
@@ -148,7 +148,7 @@
                 </div>
             </div>
         </div>
-        <!--爱心天使会有改选项-->
+        <!--爱心天使会有改选项 begin-->
         <div class="weui-cells weui-cells_form" id="J_updateCost">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -189,7 +189,6 @@
         </div>
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_custom" id="J_submit">支&nbsp;&nbsp;付</button>
-            <!--除了爱心天使，其他都是申请-->
             <!--<button type="submit" class="weui-btn weui-btn_custom" id="J_submit">申&nbsp;&nbsp;请</button>-->
         </div>
         <label for="weuiAgree" class="weui-agree view-agress_inline">

@@ -148,6 +148,7 @@ $(function () {
                 layer.msg('上传成功');
                 uploadSuccessMsg(name);
                 $('[name=' + name + ']').val(response.id);
+                uploader.reset();
             });
         }
 
@@ -176,6 +177,7 @@ $(function () {
         uploader.on('uploadError', function (file) {
             layer.msg('上传失败，重新上传');
             message('error', $msg, '上传失败，重新上传');
+            uploader.reset();
         });
 
         uploader.on('error', function (type) {
@@ -221,7 +223,7 @@ $(function () {
     // 曲线救国验证 地址是否选择
     $.validator.addMethod("hasCity", function (value, element) {
         var val = $('#J_cityPicker').val();
-        return val.split("/").length === 3;
+        return val.split(" ").length === 3;
     }, "请选择完整的地址");
     // 正数
 
