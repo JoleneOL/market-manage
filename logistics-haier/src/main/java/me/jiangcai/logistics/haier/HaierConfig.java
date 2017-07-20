@@ -1,7 +1,9 @@
-package me.jiangcai.logstics.haier;
+package me.jiangcai.logistics.haier;
 
+import me.jiangcai.logistics.LogisticsConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * 需要配置gateway URL，会读取以下系统参数作为URL
@@ -12,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @author CJ
  */
 @Configuration
-@ComponentScan("me.jiangcai.logstics.haier.service")
+@Import(LogisticsConfig.class)
+@ComponentScan("me.jiangcai.logistics.haier.service")
 public class HaierConfig {
 }

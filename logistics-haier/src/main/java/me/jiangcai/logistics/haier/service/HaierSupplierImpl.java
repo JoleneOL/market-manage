@@ -1,4 +1,4 @@
-package me.jiangcai.logstics.haier.service;
+package me.jiangcai.logistics.haier.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -8,9 +8,9 @@ import me.jiangcai.logistics.Storage;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Distribution;
 import me.jiangcai.logistics.exception.SupplierException;
+import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.haier.http.ResponseHandler;
 import me.jiangcai.logistics.option.LogisticsOptions;
-import me.jiangcai.logstics.haier.HaierSupplier;
-import me.jiangcai.logstics.haier.http.ResponseHandler;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;

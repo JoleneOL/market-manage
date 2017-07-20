@@ -1,4 +1,4 @@
-package me.jiangcai.logstics.haier.http;
+package me.jiangcai.logistics.haier.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;

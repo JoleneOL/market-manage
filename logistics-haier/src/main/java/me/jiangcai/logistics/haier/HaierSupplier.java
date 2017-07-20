@@ -1,4 +1,4 @@
-package me.jiangcai.logstics.haier;
+package me.jiangcai.logistics.haier;
 
 import me.jiangcai.logistics.LogisticsSupplier;
 
