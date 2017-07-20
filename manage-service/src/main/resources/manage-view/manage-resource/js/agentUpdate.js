@@ -158,6 +158,7 @@ $(function () {
                 },
                 error: function () {
                     layer.msg('服务器异常');
+                    layer.close(index);
                 }
             });
         });
