@@ -104,6 +104,24 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
      * 订单状态
      */
     private OrderStatus orderStatus;
+    /**
+     * 下单时的总价
+     * 将在{@link #makeRecord()}时被记录
+     */
+    @Column(scale = 2, precision = 12)
+    private BigDecimal goodTotalPrice;
+    /**
+     * 下单时用于结算佣金的价格
+     * 将在{@link #makeRecord()}时被记录
+     */
+    @Column(scale = 2, precision = 12)
+    private BigDecimal goodCommissioningPrice;
+    /**
+     * 下单时的商品名称
+     * 将在{@link #makeRecord()}时被记录
+     */
+    @Column(length = 40)
+    private String goodName;
 
     /**
      * @param from order表
@@ -166,6 +184,10 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
         record.setProductName(good.getProduct().getName());
         record.setProductType(good.getProduct().getCode());
         record.setRecommendByMobile(recommendBy.getLoginName());
+
+        setGoodTotalPrice(good.getTotalPrice());
+        setGoodName(good.getProduct().getName());
+        setGoodCommissioningPrice(good.getProduct().getDeposit());
     }
 
     @Override
@@ -175,7 +197,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
 
     @Override
     public BigDecimal getOrderDueAmount() {
-        return good.getTotalPrice().multiply(BigDecimal.valueOf(amount));
+        return goodTotalPrice.multiply(BigDecimal.valueOf(amount));
     }
 
     public Money getOrderDueAmountMoney() {
@@ -184,12 +206,12 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
 
     @Override
     public String getOrderProductName() {
-        return good.getProduct().getName();
+        return goodName;
     }
 
     @Override
     public String getOrderBody() {
-        return amount + "个" + good.getProduct().getName();
+        return amount + "个" + goodName;
     }
 
     /**
@@ -208,7 +230,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
 
     @Override
     public BigDecimal getCommissioningAmount() {
-        return good.getProduct().getDeposit().multiply(BigDecimal.valueOf(amount));
+        return goodCommissioningPrice.multiply(BigDecimal.valueOf(amount));
     }
 
     @Override
