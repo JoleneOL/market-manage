@@ -39,119 +39,9 @@
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-title">
-                    用户信息
+                    查询用户信息
                 </div>
                 <div class="ibox-content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-7 col-lg-6">
-                                <form class="form-horizontal" id="J_userForm" method="post"
-                                      action="_agentUpdate.html">
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">用户名 <span
-                                                class="asterisk">*</span></label>
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入用户名" class="form-control"
-                                                   name="name" value="嘻哈Boy"
-                                                   required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">级别</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入级别" class="form-control"
-                                                   value="爱心天使"
-                                                   readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">升级到</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入升级到级别" class="form-control"
-                                                   value="经销商"
-                                                   readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label"><span>经销商</span>地址</label>
-                                        <div class="col-sm-6">
-                                            <input class="form-control" id="J_cityPicker" readonly type="text"
-                                                   data-responsive="true" data-toggle="city-picker"
-                                                   data-simple="true" name="address"
-                                                   value="浙江省 杭州市 滨江区">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">详细地址</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="详细地址" class="form-control"
-                                                   name="fullAddress"
-                                                   value="阡陌路智慧e谷A座1999号">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">身份证 <span
-                                                class="asterisk">*</span></label>
-                                        <div class="col-sm-6 img-wrap">
-                                            <p class="form-control-static img-tips">个人信息面 （格式：3M以下的jpg、jpeg和png）</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-9 col-sm-offset-3">
-                                            <div class="upload-container clearfix">
-                                                <div class="js-uploadShow view-upload-show pull-left">
-                                                    <img src="http://iph.href.lu/312x416?text=img1" alt="个人信息面">
-                                                </div>
-                                                <div id="J_uploadFront" class="view-upload-btn pull-left"></div>
-                                                <input type="hidden" name="cardFrontPath"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-6 col-sm-offset-3 img-wrap">
-                                            <p class="form-control-static img-tips">国徽面 （格式：3M以下的jpg、jpeg和png）</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-9 col-sm-offset-3">
-                                            <div class="upload-container clearfix">
-                                                <div class="js-uploadShow view-upload-show pull-left">
-                                                    <img src="http://iph.href.lu/416x312?text=img2" alt="国徽面">
-                                                </div>
-                                                <div id="J_uploadBack" class="view-upload-btn pull-left"></div>
-                                                <input type="hidden" name="cardBackPath"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">营业执照</label>
-                                        <div class="col-sm-6 img-wrap">
-                                            <p class="form-control-static img-tips">营业执照（格式：3M以下的jpg、jpeg和png）</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-9 col-sm-offset-3">
-                                            <div class="upload-container clearfix">
-                                                <div class="js-uploadShow view-upload-show pull-left">
-                                                    <!--没有图片就没有-->
-                                                    <!--<img src="http://iph.href.lu/416x312?text=img3" alt="营业执照">-->
-                                                </div>
-                                                <div id="J_uploadLicense" class="view-upload-btn pull-left"></div>
-                                                <input type="hidden" name="businessLicensePath"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-6 col-sm-offset-3 control-label">
-                                            <button type="submit"
-                                                    class="btn btn-primary btn-block btn-lg">修&nbsp;改
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -168,5 +58,4 @@
 <script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
 <script src="./mock/mock-min.js" th:remove="all"></script>
 <script src="./mock/api.js" th:remove="all"></script>
-<script src="manage-resource/js/updateEdit.js"></script>
 </html>
