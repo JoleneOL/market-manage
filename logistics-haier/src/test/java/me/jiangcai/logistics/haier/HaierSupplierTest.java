@@ -63,8 +63,12 @@ public class HaierSupplierTest extends LogsticsTest {
     }
 
     private Collection<Thing> randomThings() {
-        return Stream
-                .generate(this::randomThing)
+        final Stream.Builder<Thing> builder = Stream
+                .builder();
+        int x = random.nextInt(2) + 1;
+        while (x-- > 0)
+            builder.add(randomThing());
+        return builder.build()
                 .collect(Collectors.toSet());
     }
 
