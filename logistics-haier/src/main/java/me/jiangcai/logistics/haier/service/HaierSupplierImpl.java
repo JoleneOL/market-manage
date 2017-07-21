@@ -11,6 +11,8 @@ import me.jiangcai.logistics.exception.SupplierException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.haier.http.ResponseHandler;
 import me.jiangcai.logistics.option.LogisticsOptions;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -41,6 +43,7 @@ import java.util.stream.Collectors;
 @Component
 public class HaierSupplierImpl implements HaierSupplier {
 
+    private static final Log log = LogFactory.getLog(HaierSupplierImpl.class);
     private final static ObjectMapper objectMapper = new ObjectMapper();
     private final String gateway;
     private final String keyValue;
@@ -88,6 +91,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         try {
 
             String content = objectMapper.writeValueAsString(parameters);
+            log.debug("prepare content:" + content);
 
             try (CloseableHttpClient client = newClient()) {
                 HttpPost post = new HttpPost(gateway);
@@ -98,7 +102,7 @@ public class HaierSupplierImpl implements HaierSupplier {
                                         new BasicNameValuePair("notifyid", UUID.randomUUID().toString().replaceAll("-", ""))
                                         , new BasicNameValuePair("notifytime", LocalDateTime.now().format(formatter))
                                         , new BasicNameValuePair("butype", "rrs_order")
-                                        , new BasicNameValuePair("source", "JSH")
+                                        , new BasicNameValuePair("source", "LIMEIJIA")
                                         , new BasicNameValuePair("type", "Json")
                                         , new BasicNameValuePair("sign", sign(content))
                                         , new BasicNameValuePair("content", content)
