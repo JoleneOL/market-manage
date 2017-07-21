@@ -64,7 +64,7 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li>
+                        <li sec:authorize="hasAnyRole('ROOT')">
                             <a class="J_menuItem" href="_depotManage.html" th:href="@{/manageDepot}">仓库管理</a>
                         </li>
                         <li th:remove="all">
@@ -200,8 +200,8 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li th:remove="all">
-                            <a class="J_menuItem" href="_dataManage.html">数据管理</a>
+                        <li sec:authorize="hasAnyRole('ROOT')">
+                            <a class="J_menuItem" href="_dataManage.html" th:href="@{/manageSystemString/}">参数管理</a>
                         </li>
                         <li>
                             <a class="J_menuItem" href="_userManage.html" th:href="@{/manageManager}">公司用户管理</a>
