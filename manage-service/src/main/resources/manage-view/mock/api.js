@@ -166,6 +166,36 @@ Mock.mock(/\/storage\/detail/, "get", {
     ]
 });
 
+Mock.mock(/\/message\/wait/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'message': '日日顺@region()仓帅风立式净水器已无货发货',
+            'time': '@datetime("yyyy-MM-dd")',
+            'status': '@pick(["待处理", "已处理"])',
+            'stateCode': '@pick([0, 1])'
+        }
+    ]
+});
+
+Mock.mock(/\/message\/warn/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'message': '日日顺@region()仓帅风立式净水器已无货发货',
+            'time': '@datetime("yyyy-MM-dd")',
+            'status': '@pick(["待处理", "已处理"])',
+            'stateCode': '@pick([0, 1])'
+        }
+    ]
+});
+
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
