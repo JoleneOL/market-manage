@@ -2,17 +2,26 @@ package me.jiangcai.logistics.haier;
 
 import me.jiangcai.logistics.Destination;
 import me.jiangcai.logistics.LogsticsTest;
+import me.jiangcai.logistics.Product;
 import me.jiangcai.logistics.Storage;
 import me.jiangcai.logistics.Thing;
+import me.jiangcai.logistics.entity.Distribution;
 import me.jiangcai.logistics.option.LogisticsOptions;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author CJ
@@ -24,8 +33,84 @@ public class HaierSupplierTest extends LogsticsTest {
     private HaierSupplier haierSupplier;
 
     @Test
+    public void product() {
+        haierSupplier.updateProduct(randomProduct());
+    }
+
+    private Product randomProduct() {
+        return new Product() {
+            @Override
+            public String getCode() {
+                return RandomStringUtils.randomAlphabetic(6);
+            }
+
+            @Override
+            public String getBrand() {
+                return RandomStringUtils.randomAlphabetic(3) + "品牌";
+            }
+
+            @Override
+            public String getCategory() {
+                return RandomStringUtils.randomAlphabetic(3) + "类目";
+            }
+
+            @Override
+            public String getDescription() {
+                return RandomStringUtils.randomAlphabetic(10);
+            }
+
+            @Override
+            public String getSKU() {
+                return RandomStringUtils.randomAlphabetic(69);
+            }
+
+            @Override
+            public String getUnit() {
+                return RandomStringUtils.randomAlphabetic(1);
+            }
+
+            @Override
+            public BigDecimal getVolumeLength() {
+                return new BigDecimal(random.nextInt(100) + 10);
+            }
+
+            @Override
+            public BigDecimal getVolumeWidth() {
+                return new BigDecimal(random.nextInt(100) + 10);
+            }
+
+            @Override
+            public BigDecimal getVolumeHeight() {
+                return new BigDecimal(random.nextInt(100) + 10);
+            }
+
+            @Override
+            public BigDecimal getWeight() {
+                return new BigDecimal(random.nextInt(3000) + 500);
+            }
+        };
+    }
+
+    @Test
+    public void sign() throws UnsupportedEncodingException, DecoderException {
+        String content = "\uFEFF{\"sourcesn\":\"227e2ba80afa42c9b5fab7e334de8d48\",\"busflag\":\"1\",\"orderno\":\"227e2ba80afa42c9b5fab7e334de8d48\",\"city\":\"pur市\",\"county\":\"VgV区\",\"mobile\":\"17694614718\",\"orderdate\":\"2017-07-24 16:01:08\",\"bustype\":\"2\",\"storecode\":\"kV9E\",\"province\":\"YHf省\",\"name\":\"AhX人\",\"expno\":\"227e2ba80afa42c9b5fab7e334de8d48\",\"addr\":\"FTFHGg\",\"items\":[{\"number\":5,\"productcode\":\"3jjecj\",\"itemno\":1,\"prodes\":\"wMjN产品\",\"storagetype\":\"10\"},{\"number\":7,\"productcode\":\"UyYIBw\",\"itemno\":2,\"prodes\":\"wmtP产品\",\"storagetype\":\"10\"}],\"ordertype\":\"3\"}";
+        String keyValue = "RRS,123";
+
+        final String hex = DigestUtils.md5Hex(content + keyValue);
+        System.out.println(content + keyValue);
+        System.out.println(hex);
+        System.out.println(Base64.getEncoder().encodeToString(hex.getBytes()));
+        //只有生成出来的为 597221d49e3195fc1e7f2420dd678b47 才可以满足要求
+//        System.out.println(Base64.getEncoder().encodeToString("597221d49e3195fc1e7f2420dd678b47".getBytes()));
+
+        assertThat(haierSupplier.sign(content, keyValue))
+                .isEqualTo("ZTQwYWU1N2MwZDgzNzc3ZTVmOTgyNzY1N2UyY2Y5ZTU=");
+    }
+
+    @Test
     public void go() {
-        haierSupplier.makeDistributionOrder(randomStorage(), randomThings(), randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage);
+        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), randomThings(), randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage);
+        haierSupplier.cancelOrder(distribution.getId(), true, null);
     }
 
     private Destination randomDestination() {
