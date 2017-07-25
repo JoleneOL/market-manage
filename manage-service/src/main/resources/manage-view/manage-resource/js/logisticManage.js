@@ -321,7 +321,8 @@ $(function () {
         if (table === 'factory') return factory.ajax.reload();
         if (table === 'storage') return storage.ajax.reload();
     }).on('click', '.js-info', function () {
-        window.location.href = '_repairOperate.html'
+        var from = $(this).closest('.tab-pane').attr('id');
+        window.location.href = '_logisticsDetail.html?id=' + $(this).data('id') + '&from=' + from;
     });
 
     $('input[name="status"]').on('change', function () {
