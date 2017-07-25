@@ -132,6 +132,40 @@ Mock.mock(/\/manage\/promotionRequests/, "get", {
     ]
 });
 
+Mock.mock(/\/manage\/storage/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'logistics': '日日顺',
+            'storage': '@pick(["华东", "华北", "华中", "华南"])',
+            'goods': '量子立式净水机',
+            'inventory': '@integer(1000, 9999)',
+            'storageTime': '@datetime("yyyy-MM-dd")',
+            'operator': '@cname'
+        }
+    ]
+});
+
+Mock.mock(/\/storage\/detail/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'goods': '量子立式净水机',
+            'goodsId': '@id',
+            'storageTime': '@datetime("yyyy-MM-dd")',
+            'operator': '@cname'
+        }
+    ]
+});
+
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"

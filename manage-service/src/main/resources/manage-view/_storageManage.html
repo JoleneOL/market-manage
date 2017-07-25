@@ -12,6 +12,7 @@
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
     <link rel="stylesheet" href="./manage-resource/css/custom.css">
@@ -20,125 +21,122 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="gray-bg">
+<body class="gray-bg" data-url="/manage/storage" th:data-url="@{}">
 <div class="wrapper wrapper-content">
-    <div class="contentpanel">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        <div class="col-md-9">
-                            <div class="ivu-steps ivu-steps-horizontal ivu-item3">
-                                <div class="ivu-steps-item ivu-steps-status-finish">
-                                    <div class="ivu-steps-tail"><i></i></div>
-                                    <div class="ivu-steps-head">
-                                        <div class="ivu-steps-head-inner">
-                                            <!--<span>1</span>-->
-                                            <span class="fa fa-check"></span>
-                                        </div>
-                                    </div>
-                                    <div class="ivu-steps-main">
-                                        <div class="ivu-steps-title">客服电话沟通</div>
-                                    </div>
-                                </div>
-                                <div class="ivu-steps-item ivu-steps-status-process">
-                                    <div class="ivu-steps-tail"><i></i></div>
-                                    <div class="ivu-steps-head">
-                                        <div class="ivu-steps-head-inner"><span>2</span></div>
-                                    </div>
-                                    <div class="ivu-steps-main">
-                                        <div class="ivu-steps-title">户帮户上门维修</div>
-                                    </div>
-                                </div>
-                                <div class="ivu-steps-item ivu-steps-status-wait">
-                                    <div class="ivu-steps-tail"><i></i></div>
-                                    <div class="ivu-steps-head">
-                                        <div class="ivu-steps-head-inner"><span>3</span></div>
-                                    </div>
-                                    <div class="ivu-steps-main">
-                                        <div class="ivu-steps-title">维修完成</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <p class="text-right">操作员&nbsp;&nbsp;&nbsp;&nbsp;<strong>超级玛丽</strong></p>
-                        </div>
-                    </div>
+    <div class="row">
+        <div class="col-md-12 mb10">
+            <div class="form-inline">
+                <div>
+                    <a class="btn btn-primary btn-sm" href="_depotAdd.html">发&nbsp;&nbsp;货</a>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        用户报修信息
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <div class="col-sm-7">
-                                    <label class="col-sm-3 control-label">建议上门时间</label>
-                                    <div class="col-sm-6">
-                                        <div class="input-group date">
-                                            <p class="form-control text-center">2017-5-20</p>
-                                            <div class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                            </div>
-                                            <p class="form-control text-center">15:00</p>
-                                            <div class="input-group-addon">
-                                                <i class="fa fa-clock-o"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-7">
-                                    <label class="col-sm-3 control-label">报修内容</label>
-                                    <div class="col-sm-6">
-                                        <p class="form-control">饮水机漏水了</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    仓储信息
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        维修反馈信息
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <div class="col-sm-7">
-                                    <label class="col-sm-3 control-label">上门维修时间</label>
-                                    <div class="col-sm-6">
-                                        <p class="form-control-static">2017-09-09</p>
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">待处理信息</a>
+                            </li>
+                            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">警示信息</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                            <tr>
+                                                <td>日日顺华东仓帅风立式净水器已无货发货</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                                <td>
+                                                    <a href="#">调仓</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>日日顺华南仓帅风立式净水器已无货发货</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                                <td>
+                                                    <a href="#">调仓</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>日日顺华西仓帅风立式净水器已无货发货</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                                <td>
+                                                    <a href="#">调仓</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>日日顺滨江仓帅风立式净水器已无货发货</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                                <td>
+                                                    <a href="#">调仓</a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-7">
-                                    <label class="col-sm-3 control-label">维修结果</label>
-                                    <div class="col-sm-6">
-                                        <p class="form-control">更换了滤芯和出水口</p>
-                                        <div class="img-feedback-list">
-                                            <img src="http://iph.href.lu/600x400?text=img1" class="img-thumbnail">
-                                            <img src="http://iph.href.lu/600x400?text=img1" class="img-thumbnail">
-                                        </div>
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                            <tr>
+                                                <td>日日顺华东仓帅风立式净水器只剩50台</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>日日顺华北仓帅风立式净水器只剩50台</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>日日顺省仓帅风立式净水器只剩50台</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>日日顺滨江仓帅风立式净水器只剩50台</td>
+                                                <td>2017-07-03</td>
+                                                <td>
+                                                    <a href="#">发货</a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -147,92 +145,62 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        用户信息
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <tbody>
-                                <tr>
-                                    <td width="120px">用户</td>
-                                    <td>李菲菲</td>
-                                </tr>
-                                <tr>
-                                    <td>手机号</td>
-                                    <td>18958044532</td>
-                                </tr>
-                                <tr>
-                                    <td>购买时间</td>
-                                    <td>2017-09-09</td>
-                                </tr>
-                                <tr>
-                                    <td>购买套餐</td>
-                                    <td>一年时长套餐</td>
-                                </tr>
-                                <tr>
-                                    <td>收货地址</td>
-                                    <td>浙江杭州西湖大西湖国际</td>
-                                </tr>
-                                <tr>
-                                    <td>购买数量</td>
-                                    <td>20</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    库存总量
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
                     </div>
                 </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="J_echarts"></div>
+                </div>
             </div>
-            <div class="col-sm-6">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        用户信息
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-bordered">
-                                <tbody>
-                                <tr>
-                                    <td width="120px">商品型号</td>
-                                    <td>
-                                        <span>滤芯 u56  立式 </span>
-                                        <span class="label label-primary">使用中</span>
-                                        <span class="label label-warning">维修中</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>商品编码</td>
-                                    <td>42857487523234</td>
-                                </tr>
-                                <tr>
-                                    <td>入库时间</td>
-                                    <td>2017-04-09</td>
-                                </tr>
-                                <tr>
-                                    <td>出库时间</td>
-                                    <td>2017-09-09</td>
-                                </tr>
-                                <tr>
-                                    <td>维修记录</td>
-                                    <td>2017-09-09  更改滤芯</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+        </div>
+    </div>
+    <div class="row m-b-sm">
+        <div class="col-sm-10">
+            <div class="form-inline">
+                <div class="js-selectToolbar">
+                    <label>
+                        <select class="form-control input-sm js-searchRank" name="logisticsCompany">
+                            <option value=" " disabled="" selected="" class="hidden">物流公司</option>
+                            <option value="1">x</option>
+                            <option value="2">xx</option>
+                            <option value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-control input-sm js-searchRank" name="storage">
+                            <option value=" " disabled="" selected="" class="hidden">仓储库</option>
+                            <option value="1">x</option>
+                            <option value="2">xx</option>
+                            <option value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-control input-sm js-searchRank" name="goodsName">
+                            <option value=" " disabled="" selected="" class="hidden">商品名称</option>
+                            <option value="1">x</option>
+                            <option value="2">xx</option>
+                            <option value="3">xxx</option>
+                        </select>
+                    </label>
+                    <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="storageForm" class="table table-hover table-success" cellspacing="0"
+                               width="100%"></table>
                     </div>
                 </div>
             </div>
@@ -242,6 +210,23 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-<script src="manage-resource/js/repairDetail.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="//cdn.lmjia.cn/echarts/3.6.2/echarts.min.js"></script>
 <script src="manage-resource/js/content.min.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
+<!--额外工具-->
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+
+<script src="manage-resource/js/storageManage.js"></script>
 </html>
