@@ -23,7 +23,7 @@ $(function () {
                 "className": 'table-action',
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-operate" data-id="' + item.id + '">发货</a>';
-                    var b = '<a href="javascript:;" class="js-info" data-id="' + item.id + '">调仓</a>';
+                    var b = '<a href="javascript:;" class="js-transfer" data-id="' + item.id + '">调仓</a>';
                     var c = '<a href="javascript:;" class="view-link-disabled" data-id="' + item.id + '">已处理</a>';
                     if (item.stateCode === 0) return a + b;
                     return c;
@@ -67,5 +67,12 @@ $(function () {
         "drawCallback": function ( oSettings ) {
             $(oSettings.nTHead).hide();
         }
+    });
+
+
+    $(document).on('click', '.js-operate', function () {
+        window.location.href = '_delivery.html'
+    }).on('click', '.js-transfer', function () {
+        window.location.href = '_storageDetail.html'
     });
 });

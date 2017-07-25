@@ -115,12 +115,11 @@ $(function () {
     });
 
     $(document).on('click', '.js-search', function () {
-
         table.ajax.reload();
     }).on('click', '.js-operate', function () {
-        window.location.href = '_repairDetail.html'
+        window.location.href = '_delivery.html'
     }).on('click', '.js-info', function () {
-        window.location.href = '_repairOperate.html'
+        window.location.href = '_storageDetail.html'
     });
 
     function extendData() {
