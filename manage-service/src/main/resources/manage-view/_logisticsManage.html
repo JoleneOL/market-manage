@@ -1,10 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>物流管理</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body>
-
+<body class="gray-bg"
+      data-logistics-url="/url/logistics"
+      data-factory-url="/url/factory"
+      data-storage-url="/url/storage"
+>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    待收货总量
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="J_waitReceive"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    待安装总量
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="echarts" id="J_waitInstall"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-b-sm">
+        <div class="col-sm-10">
+            <div class="form-inline">
+                <div class="js-selectToolbar">
+                    <input type="search" class="form-control input-sm" placeholder="手机号"
+                           name="mobile">
+                    <label>
+                        <select class="form-control input-sm" name="logisticsCompany">
+                            <option value=" " disabled="" selected="" class="hidden">物流公司</option>
+                            <option value="1">x</option>
+                            <option value="2">xx</option>
+                            <option value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-control input-sm" name="logisticsStorage">
+                            <option value=" " disabled="" selected="" class="hidden">物流仓储</option>
+                            <option value="1">x</option>
+                            <option value="2">xx</option>
+                            <option value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-control input-sm" name="installStorage">
+                            <option value=" " disabled="" selected="" class="hidden">安装公司</option>
+                            <option value="1">x</option>
+                            <option value="2">xx</option>
+                            <option value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-control input-sm" name="goodsName">
+                            <option value=" " disabled="" selected="" class="hidden">商品名称</option>
+                            <option value="1">x</option>
+                            <option value="2">xx</option>
+                            <option value="3">xxx</option>
+                        </select>
+                    </label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" placeholder="订单时间"
+                               id="J_datePicker" name="orderDate" aria-controls="orderTable">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a></li>
+                            <li><a data-toggle="tab" href="#factory" aria-expanded="false">工厂发货</a></li>
+                            <li><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="logistics" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 m-b-sm">
+                                            <div data-toggle="buttons" class="btn-group js-radio-status">
+                                                <label class="btn btn-sm btn-white active">
+                                                    <input type="radio" name="status" value="all" checked>全部</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="0">待发货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="1">待收货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="2">已收货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="3">待安装</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="4">已安装</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="logisticsForm" class="table table-hover table-success" cellspacing="0"
+                                               width="100%"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="factory" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 m-b-sm">
+                                            <div data-toggle="buttons" class="btn-group js-radio-status">
+                                                <label class="btn btn-sm btn-white active">
+                                                    <input type="radio" name="status" value="all" checked>全部</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="0">待发货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="1">待收货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="2">已收货</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="factoryForm" class="table table-hover table-success" cellspacing="0"
+                                               width="100%"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="storage" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 m-b-sm">
+                                            <div data-toggle="buttons" class="btn-group js-radio-status">
+                                                <label class="btn btn-sm btn-white active">
+                                                    <input type="radio" name="status" value="all" checked>全部</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="0">待发货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="1">待收货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="2">已收货</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="storageForm" class="table table-hover table-success" cellspacing="0"
+                                               width="100%"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="//cdn.lmjia.cn/echarts/3.6.2/echarts.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
+<!--额外工具-->
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+
+<script src="manage-resource/js/logisticManage.js"></script>
 </html>

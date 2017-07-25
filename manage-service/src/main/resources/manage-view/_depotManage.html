@@ -26,7 +26,7 @@
 <!--可以展示-->
 <!--可以添加 新页面去POST?-->
 <!--可以禁用|启用-->
-<body data-url="mock/depotList.json"
+<body class="gray-bg" data-url="mock/depotList.json"
       th:data-url="@{/manage/depotList}">
 
 <section>
@@ -43,11 +43,13 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="depotDatagrid">
-                        <div class="table-responsive">
-                            <table id="depotTable" class="table table-hover table-success" cellspacing="0"
-                                   width="100%"></table>
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="depotDatagrid">
+                            <div class="table-responsive">
+                                <table id="depotTable" class="table table-hover table-success" cellspacing="0"
+                                       width="100%"></table>
+                            </div>
                         </div>
                     </div>
                 </div>

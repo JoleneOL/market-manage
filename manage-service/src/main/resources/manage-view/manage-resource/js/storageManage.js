@@ -1,6 +1,6 @@
 $(function () {
 
-    var myChart = echarts.init(document.getElementById('J_echarts'));
+    var myChart = echarts.init(document.getElementById('J_storage'));
 
     var option = {
         title : {
@@ -115,15 +115,11 @@ $(function () {
     });
 
     $(document).on('click', '.js-search', function () {
-        // 点击搜索方法。但如果数据为空，是否阻止
+
         table.ajax.reload();
     }).on('click', '.js-operate', function () {
-        // TODO
-        // 需要获取一些参数供详情跳转
         window.location.href = '_repairDetail.html'
     }).on('click', '.js-info', function () {
-        // TODO
-        // 需要获取一些参数供详情跳转
         window.location.href = '_repairOperate.html'
     });
 
