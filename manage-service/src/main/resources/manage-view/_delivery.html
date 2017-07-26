@@ -33,114 +33,132 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
-            <div class="ibox">
-                <div class="ibox-title">
-                    添加商品
+        <form class="form-horizontal" id="J_deliverForm" method="post"
+              action="_storageManage.html">
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        发货信息
+                    </div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-7 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货工厂</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" name="factory" required>
+                                                <!--<option value="" disabled="" selected="" class="hidden">发货工厂-->
+                                                <!--</option>-->
+                                                <option value="1">帅风</option>
+                                                <option value="5">帅雨</option>
+                                                <option value="6">帅云</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货机型</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" name="model" required>
+                                                <!--<option value="" disabled="" selected="" class="hidden">发货机型-->
+                                                <!--</option>-->
+                                                <option value="1">帅风立式净水器</option>
+                                                <option value="5">帅雨立式净水器</option>
+                                                <option value="6">帅云立式净水器</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货数量 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入数量" class="form-control"
+                                                   name="deliverQuantity" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">联系人 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入联系人" class="form-control"
+                                                   name="deliverContacts" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">联系电话 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="tel" placeholder="请输入联系电话" class="form-control"
+                                                   name="deliverMobile" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="ibox-content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-7 col-lg-6">
-                                <form class="form-horizontal" id="J_productForm" method="post"
-                                      action="_productCenter.html">
+                <div class="ibox">
+                    <div class="ibox-title">收货信息</div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-7 col-lg-6">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">产品品类 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">收货物流</label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入产品品类" class="form-control"
-                                                   name="category" required>
+                                            <select class="form-control" name="logistics" required>
+                                                <!--<option value="" disabled="" selected="" class="hidden">发货工厂-->
+                                                <!--</option>-->
+                                                <option value="1">日日顺</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">型号 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">物流仓储</label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入型号" class="form-control"
-                                                   name="type" required>
+                                            <select class="form-control" name="storage" required>
+                                                <!--<option value="" disabled="" selected="" class="hidden">发货机型-->
+                                                <!--</option>-->
+                                                <option value="1">华东</option>
+                                                <option value="5">华南</option>
+                                                <option value="6">华北</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">厂家 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">详细地址 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入厂家" class="form-control"
-                                                   name="supplier" required>
+                                            <input type="text" placeholder="请输入详细地址" class="form-control"
+                                                   name="address" value="浙江 杭州 滨江" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">厂家地址 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">联系人 <span class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入厂家地址" class="form-control"
-                                                   name="address" required>
+                                            <input type="text" placeholder="请输入联系人" class="form-control"
+                                                   name="receiveContacts" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">单价(元） <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">联系电话 <span class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="number" placeholder="请输入厂家地址" class="form-control"
-                                                   name="price" min="0" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">使用费(元） <span class="asterisk">*</span></label>
-                                        <div class="col-sm-6">
-                                            <input type="number" placeholder="请输入使用费" class="form-control"
-                                                   name="cost" min="0" required>
-                                        </div>
-                                    </div>
-                                    <!--<div class="form-group">-->
-                                    <!--<label class="col-sm-3 control-label">安装费(元）</label>-->
-                                    <!--<div class="col-sm-6">-->
-                                    <!--<input type="number" placeholder="请输入安装费" class="form-control"-->
-                                    <!--name="installFee" min="0">-->
-                                    <!--</div>-->
-                                    <!--</div>-->
-                                    <!--service-charge-->
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">服务费 (元）</label>
-                                        <div class="col-sm-6">
-                                            <input type="number" placeholder="请输入服务费" class="form-control"
-                                                   name="serviceCharge" min="0">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">可分期数</label>
-                                        <div class="col-sm-6">
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="stagesTime[]" value="3">3期</label>
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="stagesTime[]" value="6">6期</label>
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="stagesTime[]" value="9">9期</label>
-                                            <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" name="stagesTime[]" value="12">12期</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">分期产品</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入分期产品" class="form-control"
-                                                   name="stagesType" value="花呗">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">产品描述 <span class="asterisk">*</span></label>
-                                        <div class="col-sm-6">
-                                            <textarea class="form-control" rows="3">请使用之前的CKEditor，我这就偷个懒</textarea>
+                                            <input type="tel" placeholder="请输入联系电话" class="form-control"
+                                                   name="receiveMobile" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-3 control-label">
                                             <button type="submit" class="btn btn-primary btn-block btn-lg">
-                                                添&nbsp;加
+                                                确定发货
                                             </button>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 </body>

@@ -73,6 +73,6 @@ $(function () {
     $(document).on('click', '.js-operate', function () {
         window.location.href = '_delivery.html'
     }).on('click', '.js-transfer', function () {
-        window.location.href = '_storageDetail.html'
+        window.location.href = '_transfer.html'
     });
 });
