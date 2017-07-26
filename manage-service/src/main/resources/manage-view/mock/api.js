@@ -264,6 +264,20 @@ Mock.mock(/\/url\/storage/, "get", {
     ]
 });
 
+Mock.mock(/\/storage\/transfer/, "get", {
+    "draw": 1,
+    "recordsTotal": 14,
+    "recordsFiltered": 14,
+    "data|4": [
+        {
+            'id': '@id',
+            'storage': '@region',
+            'quantity': '@integer(100, 999)',
+            'distance':'@integer(100, 999)公里'
+        }
+    ]
+});
+
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"

@@ -23,7 +23,7 @@
     <![endif]-->
 </head>
 
-<body class="gray-bg">
+<body class="gray-bg" data-url="/storage/transfer">
 <div class="wrapper wrapper-content gray-bg">
     <div class="ibox">
         <div class="ibox-content">
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="row">
-        <form class="form-horizontal" id="J_deliverForm" method="post"
+        <form class="form-horizontal" id="J_transferForm" method="post"
               action="_storageManage.html">
             <div class="col-sm-12">
                 <div class="ibox">
@@ -73,14 +73,10 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">调货仓储</label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" value="选择仓储" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-6 col-sm-offset-3">
-                                            <div class="table-responsive">
-                                                <table id="storageForm" class="table table-hover table-success" cellspacing="0"
-                                                       width="100%"></table>
+                                            <div class="input-group" id="J_changeStorage">
+                                                <input type="text" class="form-control" value="选择仓储" readonly>
+                                                <input type="hidden" name="storage">
+                                                <span class="input-group-addon"><i class="fa fa-angle-right"></i></span>
                                             </div>
                                         </div>
                                     </div>
@@ -89,18 +85,20 @@
                                                 class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入数量" class="form-control"
-                                                   name="transferQuantity" required>
+                                                   name="transferQuantity" min="1" id="J_Quantity" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">联系人 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">联系人 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入联系人" class="form-control"
                                                    name="transferContacts" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">联系电话 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">联系电话 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <input type="tel" placeholder="请输入联系电话" class="form-control"
                                                    name="transferMobile" required>
@@ -112,6 +110,12 @@
                                                 确定调货
                                             </button>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5 col-lg-6 fade" id="J_storage">
+                                    <div class="table-responsive">
+                                        <table id="storageForm" class="table table-hover table-success" cellspacing="0"
+                                               width="100%"></table>
                                     </div>
                                 </div>
                             </div>
@@ -127,5 +131,12 @@
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
 <script src="manage-resource/js/transfer.js"></script>
 </html>
