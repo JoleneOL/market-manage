@@ -13,11 +13,14 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
+@WebAppConfiguration
 @ContextConfiguration(classes = HaierConfig.class)
 public class HaierSupplierTest extends LogsticsTest {
 
@@ -105,6 +109,36 @@ public class HaierSupplierTest extends LogsticsTest {
 
         assertThat(haierSupplier.sign(content, keyValue))
                 .isEqualTo("ZTQwYWU1N2MwZDgzNzc3ZTVmOTgyNzY1N2UyY2Y5ZTU=");
+    }
+
+    // 临时入库
+    @Test
+    public void tempIn() {
+        Set<Thing> goods = new HashSet<>();
+        // uXkelZ和KWkLZc
+        goods.add(newTempThing("KWkLZc"));
+        goods.add(newTempThing("uXkelZ"));
+        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.CargoToStorage);
+        System.out.println(distribution.getId());
+    }
+
+    private Thing newTempThing(String code) {
+        return new Thing() {
+            @Override
+            public String getProductCode() {
+                return code;
+            }
+
+            @Override
+            public String getProductName() {
+                return code;
+            }
+
+            @Override
+            public int getAmount() {
+                return 500;
+            }
+        };
     }
 
     @Test

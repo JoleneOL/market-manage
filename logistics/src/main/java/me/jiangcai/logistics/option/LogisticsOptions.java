@@ -12,4 +12,8 @@ public class LogisticsOptions {
      * 是否出库
      */
     public static final int CargoFromStorage = 1 << 1;
+    /**
+     * 是否入库
+     */
+    public static final int CargoToStorage = 1 << 2;
 }

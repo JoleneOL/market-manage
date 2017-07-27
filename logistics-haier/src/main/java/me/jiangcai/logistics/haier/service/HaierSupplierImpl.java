@@ -15,6 +15,7 @@ import me.jiangcai.logistics.option.LogisticsOptions;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -96,7 +97,7 @@ public class HaierSupplierImpl implements HaierSupplier {
     }
 
     @Override
-    public Distribution makeDistributionOrder(Source source, Collection<Thing> things, Destination destination, int options) {
+    public Distribution makeDistributionOrder(Source source, Collection<? extends Thing> things, Destination destination, int options) {
         Map<String, Object> parameters = new HashMap<>();
 
         String id = UUID.randomUUID().toString().replaceAll("-", "");
@@ -104,8 +105,12 @@ public class HaierSupplierImpl implements HaierSupplier {
         parameters.put("orderno", id);
         parameters.put("sourcesn", id);
         if ((options & LogisticsOptions.CargoFromStorage) == LogisticsOptions.CargoFromStorage) {
-            parameters.put("ordertype", "3");
+            parameters.put("ordertype", "2");
             parameters.put("bustype", "2");
+        }
+        if ((options & LogisticsOptions.CargoToStorage) == LogisticsOptions.CargoToStorage) {
+            parameters.put("ordertype", "1");
+            parameters.put("bustype", "1");
         }
         parameters.put("expno", id);// 快递单号：自动分配的快递单号或客户生成的快递单号
         parameters.put("orderdate", LocalDateTime.now().format(formatter));
@@ -199,6 +204,11 @@ content：如下"
 
     private CloseableHttpClient newClient() {
         return HttpClientBuilder.create()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setSocketTimeout(30000)
+                        .setConnectionRequestTimeout(30000)
+                        .setConnectTimeout(30000)
+                        .build())
                 .build();
     }
 

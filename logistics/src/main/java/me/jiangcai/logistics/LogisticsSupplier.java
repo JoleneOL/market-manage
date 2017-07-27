@@ -11,5 +11,5 @@ import java.util.Collection;
  */
 public interface LogisticsSupplier {
 
-    Distribution makeDistributionOrder(Source source, Collection<Thing> things, Destination destination, int options);
+    Distribution makeDistributionOrder(Source source, Collection<? extends Thing> things, Destination destination, int options);
 }
