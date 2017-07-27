@@ -111,7 +111,7 @@ $(function () {
     var detailForm = $('#detailForm');
 
     $(document).on('click', '.js-search', function () {
-        // 点击搜索方法。但如果数据为空，是否阻止
+
         table.ajax.reload();
     }).on('click', '.js-checkOrder', function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
@@ -149,8 +149,6 @@ $(function () {
             }
         });
     }).on('click', '.js-modifyOrder', function () {
-        // TODO
-        // 需要获取一些参数供详情跳转
         // $('#content', parent.document).attr('src', 'orderModify.html');
     });
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

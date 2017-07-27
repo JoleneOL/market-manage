@@ -57,23 +57,20 @@
                         <span class="nav-label">主页</span>
                     </a>
                 </li>
-                <li>
+                <li th:remove="all">
                     <a href="#">
                         <i class="fa fa-cubes"></i>
                         <span class="nav-label">库存管理</span>
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li sec:authorize="hasAnyRole('ROOT')">
-                            <a class="J_menuItem" href="_depotManage.html" th:href="@{/manageDepot}">仓库管理</a>
-                        </li>
-                        <li th:remove="all">
+                        <li>
                             <a class="J_menuItem" href="#">滤芯厂库存</a>
                         </li>
-                        <li th:remove="all">
+                        <li>
                             <a class="J_menuItem" href="#">饮水机厂库存</a>
                         </li>
-                        <li th:remove="all">
+                        <li>
                             <a class="J_menuItem" href="#">配件厂库存</a>
                         </li>
                     </ul>
@@ -123,10 +120,10 @@
                     </a>
                     <ul class="nav nav-second-level collapse">
                         <li>
-                            <a class="J_menuItem" href="#">代理商佣金明细</a>
+                            <a class="J_menuItem" href="_commDetail.html">代理商佣金明细</a>
                         </li>
                         <li>
-                            <a class="J_menuItem" href="#">代理商提现管理</a>
+                            <a class="J_menuItem" href="_withdraw.html">代理商提现管理</a>
                         </li>
                     </ul>
                 </li>
@@ -176,16 +173,37 @@
                     </ul>
                 </li>
                 <li th:remove="all">
-                    <a class="J_menuItem" href="_productCenter.html">
+                    <a href="#">
                         <i class="fa fa-product-hunt"></i>
                         <span class="nav-label">产品中心</span>
+                        <span class="fa arrow"></span>
                     </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a class="J_menuItem" href="_productCategory.html">类目管理</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="_productCenter.html">产品管理</a>
+                        </li>
+                    </ul>
                 </li>
-                <li th:remove="all">
-                    <a class="J_menuItem" href="_main.html">
+                <li>
+                    <a href="#">
                         <i class="fa fa-truck"></i>
-                        <span class="nav-label">物流管理</span>
+                        <span class="nav-label">供应链管理</span>
+                        <span class="fa arrow"></span>
                     </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li sec:authorize="hasAnyRole('ROOT')">
+                            <a class="J_menuItem" href="_depotManage.html" th:href="@{/manageDepot}">仓库管理</a>
+                        </li>
+                        <li th:remove="all">
+                            <a class="J_menuItem" href="_logisticsManage.html">物流管理</a>
+                        </li>
+                        <li th:remove="all">
+                            <a class="J_menuItem" href="_storageManage.html">仓储管理</a>
+                        </li>
+                    </ul>
                 </li>
                 <li th:remove="all">
                     <a class="J_menuItem" href="_main.html">

@@ -72,11 +72,9 @@ $(function () {
     });
 
     $(document).on('click', '.js-search', function () {
-        // 点击搜索方法。但如果数据为空，是否阻止
+
         table.ajax.reload();
     }).on('click', '.js-checkUser', function () {
-        // TODO
-        // 需要获取一些参数供详情跳转
         $('#content', parent.document).attr('src', 'repairDetail.html');
     });
 

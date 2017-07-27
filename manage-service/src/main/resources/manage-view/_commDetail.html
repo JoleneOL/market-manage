@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>代理商管理</title>
+    <title>佣金明细</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -23,8 +23,9 @@
 </head>
 <body data-agent-url="/agentData/list">
 <div class="wrapper wrapper-content">
+    <h1>佣金明细</h1>
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-12">
             <div class="form-inline">
                 <div class="js-selectToolbar">
                     <input type="search" class="form-control input-sm" placeholder="代理商名称"
@@ -32,11 +33,6 @@
                     <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-2 text-right">
-            <a href="../../../../../../market-manage/dealer/src/main/resources/dealer-view/addAgent.html"
-               th:href="@{/addAgent}"
-               class="btn btn-primary btn-sm js-addTopAgent J_menuItem">添加总代理</a>
         </div>
     </div>
     <div class="row">

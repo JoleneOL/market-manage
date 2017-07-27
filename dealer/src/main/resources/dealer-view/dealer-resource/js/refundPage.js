@@ -75,11 +75,9 @@ $(function () {
     });
 
     $(document).on('click', '.js-search', function () {
-        // 点击搜索方法。但如果数据为空，是否阻止
+
         table.ajax.reload();
     }).on('click', '.js-checkInfo', function () {
-        // TODO
-        // 需要获取一些参数供详情跳转
         var url = Math.random() > 0.5 ? 'refundWait.html': 'refundSuccess.html';
         $('#content', parent.document).attr('src', url);
     }).on('click', '.js-checkLogistics', function () {

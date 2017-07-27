@@ -132,6 +132,165 @@ Mock.mock(/\/manage\/promotionRequests/, "get", {
     ]
 });
 
+Mock.mock(/\/manage\/storage/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'logistics': '日日顺',
+            'storage': '@region',
+            'goods': '量子立式净水机',
+            'inventory': '@integer(1000, 9999)',
+            'storageTime': '@datetime("yyyy-MM-dd")',
+            'operator': '@cname'
+        }
+    ]
+});
+
+Mock.mock(/\/storage\/detail/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'goods': '量子立式净水机',
+            'goodsId': '@id',
+            'storageTime': '@datetime("yyyy-MM-dd")',
+            'operator': '@cname'
+        }
+    ]
+});
+
+Mock.mock(/\/message\/wait/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'message': '日日顺@region()仓帅风立式净水器已无货发货',
+            'time': '@datetime("yyyy-MM-dd")',
+            'status': '@pick(["待处理", "已处理"])',
+            'stateCode': '@pick([0, 1])'
+        }
+    ]
+});
+
+Mock.mock(/\/message\/warn/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'message': '日日顺@region()仓帅风立式净水器已无货发货',
+            'time': '@datetime("yyyy-MM-dd")',
+            'status': '@pick(["待处理", "已处理"])',
+            'stateCode': '@pick([0, 1])'
+        }
+    ]
+});
+
+Mock.mock(/\/url\/logistics/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'goods': '量子立式净水机',
+            'deliverQuantity':'@integer(1, 99)',
+            'orderTime':'@datetime("yyyy-MM-dd")',
+            'address':'@county(true)',
+            'orderUser':'@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'logistics': '日日顺',
+            'storage': '@region',
+            'installation': '海尔',
+            'deliverTime': '@datetime("yyyy-MM-dd")',
+            'status': '@pick(["待发货", "待收货", "已收货", "待安装", "已安装"])',
+            'stateCode': '@pick([0, 1, 2, 3, 4])'
+        }
+    ]
+});
+
+Mock.mock(/\/url\/factory/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'goods': '量子立式净水机',
+            'deliverQuantity':'@integer(1, 99)',
+            'orderTime':'@datetime("yyyy-MM-dd")',
+            'deliverFactory': '帅风',
+            'deliverTime': '@datetime("yyyy-MM-dd")',
+            'address':'@county(true)',
+            'contacts':'@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'status': '@pick(["待发货", "待收货", "已收货"])',
+            'stateCode': '@pick([0, 1, 2])'
+        }
+    ]
+});
+
+Mock.mock(/\/url\/storage/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'orderTime':'@datetime("yyyy-MM-dd")',
+            'goods': '量子立式净水机',
+            'transferQuantity':'@integer(100, 999)',
+            'transferStorage': '日日顺@region()仓',
+            'deliverTime': '@datetime("yyyy-MM-dd")',
+            'deliverStorage': '日日顺@region()仓',
+            'contacts':'@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'status': '@pick(["待发货", "待收货", "已收货"])',
+            'stateCode': '@pick([0, 1, 2])'
+        }
+    ]
+});
+
+Mock.mock(/\/storage\/transfer/, "get", {
+    "draw": 1,
+    "recordsTotal": 14,
+    "recordsFiltered": 14,
+    "data|4": [
+        {
+            'id': '@id',
+            'storage': '@region',
+            'quantity': '@integer(100, 999)',
+            'distance':'@integer(100, 999)公里'
+        }
+    ]
+});
+
+Mock.mock(/\/product\/cat/, "get", {
+    "draw": 1,
+    "recordsTotal": 4,
+    "recordsFiltered": 4,
+    "data|4": [
+        {
+            'id': '@id',
+            'category': '@pick(["饮水机", "净化器", "量子", "食品优化宝"])',
+            'goods': ['量子立式净水机', '量子净化器', '量子芯片', '量子食品优化宝'],
+        }
+    ]
+});
+
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
