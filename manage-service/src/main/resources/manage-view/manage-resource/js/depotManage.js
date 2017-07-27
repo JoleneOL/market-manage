@@ -43,8 +43,8 @@ $(function () {
                 className: 'table-action',
                 data: function (item) {
                     if (item.enable)
-                        return '<a href="javascript:;" class="js-disableDepot" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
-                    return '<a href="javascript:;" class="js-enableDepot" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
+                        return '<a href="javascript:;" class="js-disableDepot" data-id="' + item.id + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
+                    return '<a href="javascript:;" class="js-enableDepot" data-id="' + item.id + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
                 }
             }
         ],

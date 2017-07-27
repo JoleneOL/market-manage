@@ -5,10 +5,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": $('body').data('url'),
-            "data": function (d) {
-                return d;
-            }
+            "url": $('body').data('url')
         },
         "ordering": true,
         "lengthChange": false,
@@ -25,9 +22,9 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    if (item.enable)
-                        return '<a href="javascript:;" class="js-disableDepot" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
-                    return '<a href="javascript:;" class="js-enableDepot" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
+                    var  a = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;编辑</a>';
+                    var b = '<a href="javascript:;" class="js-del" data-id="' + item.id + '"><i class="fa fa fa-trash-o" aria-hidden="true"></i>&nbsp;删除</a>';
+                    return a + b;
                 }
             }
         ],
