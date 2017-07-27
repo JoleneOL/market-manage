@@ -46,10 +46,11 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">待处理信息</a>
-                            </li>
-                            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">警示信息</a>
-                            </li>
+                            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">待处理信息</a></li>
+                            <li><a data-toggle="tab" href="#tab-2" aria-expanded="false">警示信息</a></li>
+                            <div class="ibox-tools view-tools">
+                                <a href="_storageMessage.html">更多<i class="fa fa-chevron-right"></i></a>
+                            </div>
                         </ul>
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane active">
@@ -61,40 +62,40 @@
                                                 <td>日日顺华东仓帅风立式净水器已无货发货</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                                 <td>
-                                                    <a href="#">调仓</a>
+                                                    <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>日日顺华南仓帅风立式净水器已无货发货</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                                 <td>
-                                                    <a href="#">调仓</a>
+                                                    <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>日日顺华西仓帅风立式净水器已无货发货</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                                 <td>
-                                                    <a href="#">调仓</a>
+                                                    <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>日日顺滨江仓帅风立式净水器已无货发货</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                                 <td>
-                                                    <a href="#">调仓</a>
+                                                    <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -111,28 +112,28 @@
                                                 <td>日日顺华东仓帅风立式净水器只剩50台</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>日日顺华北仓帅风立式净水器只剩50台</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>日日顺省仓帅风立式净水器只剩50台</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>日日顺滨江仓帅风立式净水器只剩50台</td>
                                                 <td>2017-07-03</td>
                                                 <td>
-                                                    <a href="#">发货</a>
+                                                    <a href="_delivery.html">发货</a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -156,7 +157,7 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="echarts" id="J_echarts"></div>
+                    <div class="echarts" id="J_storage"></div>
                 </div>
             </div>
         </div>
@@ -166,7 +167,7 @@
             <div class="form-inline">
                 <div class="js-selectToolbar">
                     <label>
-                        <select class="form-control input-sm js-searchRank" name="logisticsCompany">
+                        <select class="form-control input-sm" name="logisticsCompany">
                             <option value=" " disabled="" selected="" class="hidden">物流公司</option>
                             <option value="1">x</option>
                             <option value="2">xx</option>
@@ -174,7 +175,7 @@
                         </select>
                     </label>
                     <label>
-                        <select class="form-control input-sm js-searchRank" name="storage">
+                        <select class="form-control input-sm" name="storage">
                             <option value=" " disabled="" selected="" class="hidden">仓储库</option>
                             <option value="1">x</option>
                             <option value="2">xx</option>
@@ -182,7 +183,7 @@
                         </select>
                     </label>
                     <label>
-                        <select class="form-control input-sm js-searchRank" name="goodsName">
+                        <select class="form-control input-sm" name="goodsName">
                             <option value=" " disabled="" selected="" class="hidden">商品名称</option>
                             <option value="1">x</option>
                             <option value="2">xx</option>
@@ -199,9 +200,9 @@
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table id="storageForm" class="table table-hover table-success" cellspacing="0"
-                               width="100%"></table>
-                    </div>
+                    <table id="storageForm" class="table table-hover table-success" cellspacing="0"
+                           width="100%"></table>
+                </div>
                 </div>
             </div>
         </div>

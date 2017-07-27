@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
 import java.math.BigDecimal;
 
 @Controller
@@ -35,7 +36,7 @@ public class WechatWithdrawController{
     /**
      * @return 我要提现页面
      */
-    @GetMapping("/wechatWithdraw")
+    @GetMapping("/wechatWithdrawPage")
     public String index(@AuthenticationPrincipal Login login, Model model) {
         return "wechat@withdraw.html";
     }
@@ -43,11 +44,11 @@ public class WechatWithdrawController{
     /**
      * @return 提现申请提交后，返回申请成功页面
      */
-    @PostMapping("/wechatWithdrawNew")
+    @PostMapping("/wechatWithdraw")
     public String withdrawNew(@OpenId String openId, HttpServletRequest request, String payee, String account, String bank, String mobile, BigDecimal withdraw,
-                              Invoice invoice,@AuthenticationPrincipal Login login, Model model)
+                              String logisticsnumber,String logisticscompany,@AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException {
-        Withdraw withdraw1=wechatWithdrawService.WithdrawNew(payee,account,bank,mobile,withdraw,invoice);
+        Withdraw withdraw1=wechatWithdrawService.withdrawNew(payee,account,bank,mobile,withdraw,logisticsnumber,logisticscompany);
         return "wechat@withdrawSuccess.html";
     }
 

@@ -8,11 +8,7 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.wechat.config.WechatConfig;
-import cn.lmjia.market.wechat.page.WechatMyPage;
-import cn.lmjia.market.wechat.page.WechatMyTeamPage;
-import cn.lmjia.market.wechat.page.WechatOrderListPage;
-import cn.lmjia.market.wechat.page.WechatRegisterPage;
-import cn.lmjia.market.wechat.page.WechatSharePage;
+import cn.lmjia.market.wechat.page.*;
 import com.gargoylesoftware.htmlunit.WebClient;
 import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.model.WeixinUserDetail;
@@ -105,6 +101,10 @@ public abstract class WechatTestBase extends DealerServiceTest {
         return initPage(WechatOrderListPage.class);
     }
 
+    protected WechatWithdrawPage getWechatWithdraw() {
+        driver.get("http://localhost/wechatWithdraw");
+        return initPage(WechatWithdrawPage.class);
+    }
     /**
      * 绑定开发者微信号到该登录
      *

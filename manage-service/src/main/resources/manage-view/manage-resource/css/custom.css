@@ -16,7 +16,17 @@
 .table-action .btn {
     color: #FFFFFF;
 }
-
+.view-link-disabled {
+    cursor: not-allowed;
+}
+.table-action .view-link-disabled,
+.table-action-hide .view-link-disabled,
+.table-operate .view-link-disabled {
+    color: #ccc;
+}
+.table-action .view-link-disabled:hover, .table-action-hide .view-link-disabled:hover, .table-operate .view-link-disabled:hover {
+    border: 1px solid transparent;
+}
 textarea {
     resize: none;
 }
@@ -238,4 +248,100 @@ textarea {
     margin: 10px;
     max-width: 800px;
     max-height: 600px;
+}
+
+.view-tools a {
+    display: block;
+    padding: 10px 20px 10px 25px;
+    color: #1ab394;
+}
+
+.label-xlg {
+    padding: 9px 30px;
+    font-size: 14px;
+}
+
+.view-operator {
+    color: #000;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.panel-package .package-title {
+    margin: 0;
+    padding: 0 0 14px 20px;
+    position: relative;
+    font-size: 18px;
+    border-bottom: 1px solid #e7e7e7;
+    font-family: "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+.panel-package .package-title .title-text {
+    margin: 0;
+    font-weight: 400;
+    font-family: "Microsoft Yahei", sans-serif;
+    font-size: 16px;
+}
+.panel-package .package-status {
+    padding: 18px 0 0 0;
+}
+.panel-package .package-status .status-box {
+    position: relative;
+    overflow: hidden;
+}
+.panel-package .package-status .status-list {
+    margin-left: 12px;
+    padding-left: 10px;
+    list-style: none;
+    font-size: 12px;
+}
+.panel-package .package-status .status-list li {
+    height: auto;
+    min-height: 30px;
+    border-left: 1px solid #d9d9d9;
+}
+.panel-package .package-status .status-list li::before {
+    content: '';
+    border: 3px solid #f3f3f3;
+    background-color: #d9d9d9;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    margin-left: -6px;
+    margin-right: 10px;
+    box-sizing: content-box;
+}
+.panel-package .package-status .status-list .latest {
+    border: none;
+}
+.panel-package .package-status .status-list .latest::before {
+    margin-left: -5px;
+    background-color: #009bb6;
+    border-color: lightblue;
+}
+.panel-package .package-status .status-list .data,
+.panel-package .package-status .status-list .week,
+.panel-package .package-status .status-list .time,
+.panel-package .package-status .status-list .text {
+    display: inline-block;
+}
+.panel-package .package-status .status-list .data {
+    width: 78px;
+    font-weight: 700;
+    margin-right: 8px;
+    font-family: Arial, sans-serif;
+}
+.panel-package .package-status .status-list .week {
+    width: 32px;
+    font-weight: 700;
+}
+.panel-package .package-status .status-list .time {
+    width: 48px;
+    margin-right: 28px;
+    margin-left: 5px;
+}
+.panel-package .package-status .status-list .text {
+    display: inline-block;
+    vertical-align: text-top;
+    line-height: 1.3em;
 }

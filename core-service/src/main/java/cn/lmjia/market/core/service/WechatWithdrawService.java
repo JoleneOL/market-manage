@@ -17,10 +17,11 @@ public interface WechatWithdrawService {
      * @param bank               开户行
      * @param mobile             收款人电话
      * @param withdraw           提现金额
-     * @param invoice            发票
+     * @param logisticsnumber    物流单号
+     * @param logisticscompany   物流公司
      * @return 新创建的提现
      */
 
     @Transactional
-    Withdraw WithdrawNew(String payee, String account, String bank, String mobile, BigDecimal withdraw, Invoice invoice);
+    Withdraw withdrawNew(String payee, String account, String bank, String mobile, BigDecimal withdraw, String logisticsnumber,String logisticscompany);
 }
