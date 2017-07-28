@@ -8,6 +8,9 @@ import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
+import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.trj.TRJEnhanceConfig;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 /**
  * @author CJ
@@ -45,13 +49,27 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     private PayAssistanceService payAssistanceService;
     @Autowired
     private PayService payService;
+    @Autowired
+    private SystemStringService systemStringService;
 
     /**
      * @return 展示下单页面
      */
-    @GetMapping("/wechatOrder")
+    @GetMapping(SystemService.wechatOrderURi)
     public String index(@AuthenticationPrincipal Login login, Model model) {
-        orderIndex(login, model);
+        model.addAttribute("trj", false);
+        orderIndex(login, model, null);
+        return "wechat@orderPlace.html";
+    }
+
+    /**
+     * @return 展示下单页面
+     */
+    @GetMapping(TRJEnhanceConfig.TRJOrderURI)
+    public String indexForTRJ(@AuthenticationPrincipal Login login, Model model) {
+        model.addAttribute("trj", true);
+        orderIndex(login, model, systemStringService.getCustomSystemString(TRJEnhanceConfig.SS_PriceKey
+                , "trj.order.price.comment", true, BigDecimal.class, BigDecimal.valueOf(3600)));
         return "wechat@orderPlace.html";
     }
 

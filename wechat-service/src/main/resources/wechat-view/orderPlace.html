@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="goodList" type="java.util.Collection<cn.lmjia.market.core.entity.MainGood>"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -111,7 +112,7 @@
                         <!--data-service-charge 服务费-->
                         <!--data-model 型号-->
                         <option value="1" data-price="2820" data-model="HZCX01"
-                                th:each="good:${@mainGoodService.forSale()}"
+                                th:each="good:${goodList}"
                                 th:value="${good.id}"
                                 th:data-price="${good.product.deposit}"
                                 th:data-service-charge="${good.product.install}"

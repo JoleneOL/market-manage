@@ -35,7 +35,7 @@ public class AgentOrderController extends AbstractMainOrderController {
 
     @GetMapping("/agentOrder")
     public String index(Model model, @AuthenticationPrincipal Login login) {
-        orderIndex(login, model);
+        orderIndex(login, model, null);
         return "orderPlace.html";
     }
 

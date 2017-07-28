@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+
 /**
  * @author CJ
  */
@@ -36,11 +38,12 @@ public abstract class AbstractMainOrderController {
     /**
      * 展示下单页面
      *
-     * @param login 当前身份
-     * @param model model
+     * @param login      当前身份
+     * @param model      model
+     * @param fixedPrice 特定金额
      */
-    protected void orderIndex(Login login, Model model) {
-        model.addAttribute("goodList", mainGoodService.forSale());
+    protected void orderIndex(Login login, Model model, BigDecimal fixedPrice) {
+        model.addAttribute("goodList", mainGoodService.forSale(fixedPrice));
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
