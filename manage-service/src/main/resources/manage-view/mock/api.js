@@ -292,6 +292,11 @@ Mock.mock(/\/product\/cat/, "get", {
     ]
 });
 
+Mock.mock(/\/products\/category/, {
+    "resultCode": 200,
+    "resultMsg": "ok"
+});
+
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
