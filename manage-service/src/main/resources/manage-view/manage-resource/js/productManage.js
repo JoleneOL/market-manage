@@ -8,7 +8,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/product/list",
+            "url": $('body').data('url'),
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
@@ -19,7 +19,10 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "产品品类", "data": "category", "name": "category"
+                "title": "产品名称", "data": "name", "name": "name"
+            },
+            {
+                "title": "类目", "data": "category", "name": "category"
             },
             {
                 "title": "型号", "data": "type", "name": "type"
