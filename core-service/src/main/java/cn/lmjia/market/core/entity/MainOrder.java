@@ -125,7 +125,6 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
 
     /**
      * 暂停结算
-     * TODO 相关逻辑尚未完成
      */
     private boolean disableSettlement;
 
