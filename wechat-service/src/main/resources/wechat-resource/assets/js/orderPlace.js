@@ -5,6 +5,10 @@ $(function () {
 
     var body = $('body');
 
+    if (window.document.location.search.indexOf('InvalidAuthorisingException') >= 0) {
+        $.toptip('按揭码或者身份证号码无效');
+    }
+
     $('#recommendId').makeRecommendSelect();
 
     $('#J_cityPicker, #J_invoiceAddress').cityPicker({

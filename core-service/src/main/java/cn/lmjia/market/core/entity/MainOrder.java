@@ -124,6 +124,12 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     private String goodName;
 
     /**
+     * 暂停结算
+     * TODO 相关逻辑尚未完成
+     */
+    private boolean disableSettlement;
+
+    /**
      * @param from order表
      * @return 到客户的登录表的关联
      */

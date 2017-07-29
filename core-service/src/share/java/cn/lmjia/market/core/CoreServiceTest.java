@@ -41,6 +41,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -54,6 +55,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author CJ
@@ -342,7 +344,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 执行下单请求
      */
     protected MockHttpServletRequestBuilder orderRequestBuilder(MockHttpServletRequestBuilder builder, OrderRequest request) {
-        return builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        final MockHttpServletRequestBuilder newBuilder = builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("name", request.getName())
                 .param("age", String.valueOf(request.getAge()))
                 .param("gender", String.valueOf(request.getGender()))
@@ -354,12 +356,47 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 .param("amount", String.valueOf(request.getAmount()))
                 .param("activityCode", request.getCode())
                 .param("recommend", String.valueOf(request.getRecommend().getId()));
+        if (StringUtils.isEmpty(request.getAuthorising()))
+            return newBuilder;
+        return newBuilder.param("authorising", request.getAuthorising())
+                .param("idNumber", request.getIdNumber());
     }
+
 
     /**
      * @return 随机的下单请求原数据
      */
     protected OrderRequest randomOrderRequest() {
+        return randomOrderRequest(null, null);
+    }
+
+    /**
+     * 使用MVC的方式添加一个按揭码
+     *
+     * @param authorising
+     * @param idNumber
+     * @throws Exception
+     */
+    protected void addAuthorising(String authorising, String idNumber) throws Exception {
+        // 无需安全
+        Login current = allRunWith;
+        try {
+            mockMvc.perform(post("/_tourongjia_event_")
+                    .param("event", "code")
+                    .param("authorising", authorising)
+                    .param("idNumber", idNumber)
+            )
+                    .andExpect(status().isOk())
+                    .andExpect(similarJsonObjectAs("classpath:/mock/trj_response.json"));
+        } finally {
+            allRunWith = current;
+        }
+    }
+
+    /**
+     * @return 随机的下单请求原数据
+     */
+    protected OrderRequest randomOrderRequest(String authorising, String idNumber) {
         Address address = randomAddress();
         MainGood good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
         String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
@@ -373,6 +410,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 address, good, code
                 , recommend, name, age, gender
                 , mobile, amount
+                , authorising, idNumber
         );
     }
 

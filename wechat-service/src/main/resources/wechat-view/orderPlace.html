@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="goodList" type="java.util.Collection<cn.lmjia.market.core.entity.MainGood>"*/-->
+<!--/*@thymesVar id="trj" type="boolean"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -239,7 +240,28 @@
                 </div>
             </div>
         </div>
-        <div class="weui-cells weui-cells_form">
+        <div th:if="${trj}" class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">按揭码</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入投融家按揭码" name="authorising">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">申请身份证</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入申请按揭的身份证号码" maxlength="18" minlength="18"
+                           name="idNumber">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+        </div>
+        <div th:if="${!trj}" class="weui-cells weui-cells_form">
             <div class="weui-cell weui-cell_switch">
                 <div class="weui-cell__bd">花呗分期</div>
                 <div class="weui-cell__ft">
@@ -493,5 +515,6 @@
 <!--生产环境请移除 End-->
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
-<script src="../wechat-resource/assets/js/orderPlace.js" th:src="@{/wechat-resource/assets/js/orderPlace.js}"></script>
+<script src="../wechat-resource/assets/js/orderPlace.js"
+        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=1)}"></script>
 </html>

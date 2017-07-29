@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.trj;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -8,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
  * @author CJ
  */
 @Configuration
+@ComponentScan(
+        {"cn.lmjia.market.core.trj.service", "cn.lmjia.market.core.trj.controller"}
+)
 public class TRJEnhanceConfig {
 
     /**
