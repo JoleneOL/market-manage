@@ -62,6 +62,8 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         request = randomOrderRequest(authorising, idNumber);
         result = submitOrderRequest(request);
 
+        Thread.sleep(1100L);
+
         // 使用 driver 打开!
         driver.get("http://localhost" + result);
         PaySuccessPage.waitingForSuccess(this, driver, 3);

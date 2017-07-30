@@ -10,6 +10,7 @@
     <loggers>
         <logger name="cn.lmjia.market" level="debug"/>
 
+        <logger name="cn.lmjia.market.core.service.impl" level="trace"/>
         <!--<logger name="org.apache.http.wire" level="debug"/>-->
         <!--<logger name="org.springframework.security.web" level="debug"/>-->
 
