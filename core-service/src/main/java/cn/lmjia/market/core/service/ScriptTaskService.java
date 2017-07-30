@@ -64,7 +64,7 @@ public interface ScriptTaskService {
     @Transactional
     ScriptTask submitTask(String name, Instant instant, String code);
 
-    @Scheduled(fixedDelay = 100)
+    @Scheduled(fixedDelay = 500)
     @Transactional
     void go();
 }

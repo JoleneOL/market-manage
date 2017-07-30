@@ -72,6 +72,9 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         result = submitOrderRequest(request);
         assertThat(result)
                 .contains("InvalidAuthorisingException");
+
+        // 持续等待……
+//        Thread.sleep(Long.MAX_VALUE);
     }
 
 

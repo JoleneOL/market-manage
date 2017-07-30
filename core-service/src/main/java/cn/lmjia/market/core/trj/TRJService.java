@@ -6,6 +6,8 @@ import me.jiangcai.payment.event.OrderPaySuccess;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+
 /**
  * 投融家相关服务，我们也认可它是一种支付方式
  *
@@ -21,6 +23,10 @@ public interface TRJService extends PaymentForm {
      */
     @Transactional
     void addAuthorisingInfo(String authorising, String idNumber);
+
+    void submitOrderInfo(String authorising, Number orderId, String name, String idNumber, String mobile
+            , String goodCode, String goodName, Number amount, String dueAmount, String address, String orderTime
+            , Number recommendCode) throws IOException;
 
     @EventListener(OrderPaySuccess.class)
     void paySuccess(OrderPaySuccess event);

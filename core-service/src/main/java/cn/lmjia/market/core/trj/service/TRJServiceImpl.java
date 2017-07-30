@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
+import cn.lmjia.market.core.service.ScriptTaskService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJService;
 import me.jiangcai.payment.PayableOrder;
@@ -29,13 +30,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -60,18 +65,22 @@ public class TRJServiceImpl implements TRJService {
     private final String urlRoot;
     private final String tenant;
     private final String key;
+    private final String autoRecallCode;
     @Autowired
     private AuthorisingInfoRepository authorisingInfoRepository;
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
     private MainOrderRepository mainOrderRepository;
+    @Autowired
+    private ScriptTaskService scriptTaskService;
 
     @Autowired
-    public TRJServiceImpl(Environment environment) {
+    public TRJServiceImpl(Environment environment) throws IOException {
         urlRoot = environment.getProperty("me.jiangcai.dating.tourongjia.url2", "http://escrowcrm1.tourongjia.com");
         tenant = environment.getProperty("me.jiangcai.dating.tourongjia.tenant", "yuntao");
         key = environment.getProperty("me.jiangcai.dating.tourongjia.key", "1234567890");
+        autoRecallCode = StreamUtils.copyToString(new ClassPathResource("/script/auto-recall.js").getInputStream(), Charset.forName("UTF-8"));
     }
 
     private static String sign(final Map<String, String> params, String secretKey) {
@@ -118,13 +127,13 @@ public class TRJServiceImpl implements TRJService {
 
     private void submitOrderInfo(MainOrder order, AuthorisingInfo info) {
         // 使用脚本运作
+        final Login guideUser = order.getOrderBy().getGuideUser();
+        Long recommendId;
+        if (guideUser != null)
+            recommendId = guideUser.getId();
+        else
+            recommendId = 0L;
         try {
-            final Login guideUser = order.getOrderBy().getGuideUser();
-            Long recommendId;
-            if (guideUser != null)
-                recommendId = guideUser.getId();
-            else
-                recommendId = 0L;
             submitOrderInfo(info.getId(), order.getId(), order.getCustomer().getName(), info.getIdNumber()
                     , order.getCustomer().getMobile(), order.getGood().getProduct().getCode()
                     , order.getGood().getProduct().getName(), order.getAmount()
@@ -134,14 +143,35 @@ public class TRJServiceImpl implements TRJService {
         } catch (Exception e) {
             // 提交任务
             log.debug("[TRJ]", e);
+            String code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderInfo(" +
+                            "\"%s\",%d,\"%s\",\"%s\"" +
+                            ",\"%s\",\"%s\"" +
+                            ",\"%s\",%d" +
+                            ",\"%s\"" +
+                            ",\"%s\",\"%s\",%d)"
+                    , info.getId(), order.getId(), order.getCustomer().getName(), info.getIdNumber()
+                    , order.getCustomer().getMobile(), order.getGood().getProduct().getCode()
+                    , order.getGood().getProduct().getName(), order.getAmount()
+                    , order.getOrderDueAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
+                    , order.getInstallAddress().toTRJString(), order.getOrderTime().format(formatter)
+                    , recommendId);
+            log.debug(code);
+
+            submitTask("提交订单信息", code);
         }
     }
 
-    private void submitOrderInfo(String authorising, Long orderId, String name, String idNumber, String mobile
-            , String goodCode, String goodName, int amount, String dueAmount, String address, String orderTime
-            , Long recommendCode) throws IOException {
+    private void submitTask(String name, String code) {
+        scriptTaskService.submitTask(name, Instant.now().plusSeconds(30), code, null
+                , autoRecallCode);
+    }
+
+    @Override
+    public void submitOrderInfo(String authorising, Number orderId, String name, String idNumber, String mobile
+            , String goodCode, String goodName, Number amount, String dueAmount, String address, String orderTime
+            , Number recommendCode) throws IOException {
         try (CloseableHttpClient client = requestClient()) {
-            client.execute(newUriRequest("/ApiServer/tenant/goods_authorisingOrderInfo.jhtml"
+            client.execute(newUriRequest("/tenant/goods_authorisingOrderInfo.jhtml"
                     , new BasicNameValuePair("authorising", authorising)
                     , new BasicNameValuePair("orderId", String.valueOf(orderId))
                     , new BasicNameValuePair("orderTenant.name", name)

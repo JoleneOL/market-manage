@@ -53,6 +53,10 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
         log.info("checking");
         assertThat(scriptTaskRepository.countByName(name))
                 .isEqualTo(0);
+
+        // 其他脚本测试
+        scriptTaskService.submitTask(randomMobile(), Instant.now(), "context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderInfo(\"duNYPooMyL\",2,\"W客户gJpvzb\",\"434202153868630178\",\"13092846848\",\"hzts02\",\"台式净水器\",8,\"25440.00\",\"GaLH省-TPoy市-YwLa区-其他地址iKoHhOQPSe\",\"2017-07-30 21:36:06\",0)");
+        Thread.sleep(1000);
     }
 
 }

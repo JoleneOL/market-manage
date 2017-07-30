@@ -55,12 +55,14 @@ public class ScriptTaskServiceImpl implements ScriptTaskService {
         return submitTask(name, instant, code, null);
     }
 
-    @Scheduled(fixedDelay = 100)
+    @Scheduled(fixedDelay = 500)
     @Override
     public void go() {
         Instant now = Instant.now();
+        // 过滤掉 执行次数超过100次的
         for (ScriptTask task : scriptTaskRepository.findAll((root, query, cb)
-                -> cb.lessThanOrEqualTo(root.get("targetInstant"), now))) {
+                -> cb.and(cb.lessThanOrEqualTo(root.get("targetInstant"), now)
+                , cb.lessThan(root.get("executedCount"), 100)))) {
             log.debug("going execute " + task.getName());
             task.setExecutedCount(task.getExecutedCount() + 1);
             ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByExtension("js");
