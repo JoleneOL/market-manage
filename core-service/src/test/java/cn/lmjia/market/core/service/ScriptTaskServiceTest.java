@@ -30,8 +30,8 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
         // 添加一个任务 并验证 失败后会运行失败代码 成功后会运行成功代码
         // 并且最终可以删除
         String name = randomMobile();
-        scriptTaskService.submitTask(name, Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
-        Thread.sleep(1000);
+        scriptTaskService.submitTask(name, Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(1)");
+        Thread.sleep(2000);
         log.info("checking");
         assertThat(testValue.get())
                 .isEqualTo(1);
@@ -40,8 +40,8 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
                 .isEqualTo(0);
 
         // 成功 则调用成功代码
-        scriptTaskService.submitTask(randomMobile(), Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
-        Thread.sleep(1000);
+        scriptTaskService.submitTask(randomMobile(), Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(2)", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
+        Thread.sleep(2000);
         log.info("checking");
         assertThat(testValue.get())
                 .isEqualTo(3);
@@ -49,7 +49,7 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
         // 失败 则调用失败代码
         name = randomMobile();
         scriptTaskService.submitTask(name, Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.hi()", null, "_repository.delete(_this)");
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         log.info("checking");
         assertThat(scriptTaskRepository.countByName(name))
                 .isEqualTo(0);

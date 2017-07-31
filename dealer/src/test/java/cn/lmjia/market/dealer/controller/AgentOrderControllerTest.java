@@ -3,6 +3,7 @@ package cn.lmjia.market.dealer.controller;
 import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.dealer.DealerServiceTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author CJ
  */
 @ContextConfiguration(classes = SecurityConfig.class)
+@Ignore // 暂时忽略该平台
 public class AgentOrderControllerTest extends DealerServiceTest {
 
     @Override

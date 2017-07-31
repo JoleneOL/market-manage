@@ -5,11 +5,13 @@ import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.dealer.page.AgentManageMainPage;
 import cn.lmjia.market.web.page.WebLoginPage;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author CJ
  */
+@Ignore
 public class WelcomeControllerTest extends WebTest {
 
     @Test

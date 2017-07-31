@@ -6,6 +6,7 @@ import cn.lmjia.market.dealer.page.AgentDetailPage;
 import cn.lmjia.market.dealer.page.AgentManageMainPage;
 import cn.lmjia.market.dealer.page.AgentManagePage;
 import cn.lmjia.market.web.page.WebLoginPage;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -13,6 +14,7 @@ import org.junit.Test;
  *
  * @author CJ
  */
+@Ignore
 public class ManagerFlow extends WebTest {
 
     @Test
