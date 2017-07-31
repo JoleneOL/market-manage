@@ -3,6 +3,7 @@ package cn.lmjia.market.core.trj.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
+import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
@@ -269,7 +270,7 @@ public class TRJServiceImpl implements TRJService {
             info = authorisingInfoRepository.getOne(info.getId());
             if (info.isUsed())
                 throw new SystemMaintainException(new InvalidAuthorisingException(info.getId(), info.getIdNumber()));
-            info.setUsed(true);
+            info.setAuthorisingStatus(AuthorisingStatus.forOrderComplete);
             info.setUsedTime(LocalDateTime.now());
             info = authorisingInfoRepository.save(info);
             TRJPayOrder payOrder = new TRJPayOrder();

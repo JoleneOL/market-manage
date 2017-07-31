@@ -30,8 +30,11 @@ public class AuthorisingInfo {
     private String idNumber;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createdTime;
-    private boolean used;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime usedTime;
+    private AuthorisingStatus authorisingStatus = AuthorisingStatus.Unused;
 
+    public boolean isUsed() {
+        return authorisingStatus != AuthorisingStatus.Unused;
+    }
 }
