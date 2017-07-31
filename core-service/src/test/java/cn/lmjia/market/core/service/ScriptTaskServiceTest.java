@@ -57,6 +57,8 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
         // 其他脚本测试
 //        scriptTaskService.submitTask(randomMobile(), Instant.now(), "context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderInfo(\"duNYPooMyL\",2,\"W客户gJpvzb\",\"434202153868630178\",\"13092846848\",\"hzts02\",\"台式净水器\",8,\"25440.00\",\"GaLH省-TPoy市-YwLa区-其他地址iKoHhOQPSe\",\"2017-07-30 21:36:06\",0)");
 //        Thread.sleep(1000);
+//        scriptTaskService.submitTask(randomMobile(),Instant.now(),"context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).deliverUpdate(2,\"pFOgceQJmz\",\"zhwMFrzDVt\",\"ABbRflmcPZ\",23,\"2017-08-01\",\"2017-08-01\",\"W客户nshbVy\",\"14400374041\",\"nLKu省-DYiy市-yRdu区-其他地址HyURdzLKzz\",\"2017-08-01 01:45:26\")");
+//        Thread.sleep(2000);
     }
 
 }

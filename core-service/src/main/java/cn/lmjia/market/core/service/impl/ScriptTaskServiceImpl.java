@@ -30,6 +30,7 @@ public class ScriptTaskServiceImpl implements ScriptTaskService {
     @Override
     public ScriptTask submitTask(String name, boolean removeOnSuccess, Instant instant, String code, String successCode
             , String failedCode) {
+        log.debug("planning to execute " + code);
         ScriptTask task = new ScriptTask();
         task.setName(name);
         task.setRemoveOnSuccess(removeOnSuccess);

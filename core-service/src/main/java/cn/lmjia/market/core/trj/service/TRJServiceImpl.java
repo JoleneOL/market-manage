@@ -42,6 +42,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TRJServiceImpl implements TRJService {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Log log = LogFactory.getLog(TRJServiceImpl.class);
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
     private final String urlRoot;
@@ -126,6 +128,32 @@ public class TRJServiceImpl implements TRJService {
         authorisingInfoRepository.save(info);
     }
 
+    @Override
+    public void deliverUpdate(long orderId, String deliverCompany, String deliverStore, int stockQuantity
+            , LocalDate shipmentTime, LocalDate deliverTime) {
+        MainOrder order = mainOrderRepository.getOne(orderId);
+        TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
+        try {
+            deliverUpdate(orderId, payOrder.getAuthorisingInfo().getId(), deliverCompany, deliverStore, stockQuantity
+                    , shipmentTime.format(dateFormatter), deliverTime.format(dateFormatter), order.getCustomer().getName()
+                    , order.getCustomer().getMobile(), order.getInstallAddress().toTRJString()
+                    , order.getOrderTime().format(formatter));
+        } catch (IOException e) {
+            log.debug("[TRJ]", e);
+            String code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).deliverUpdate(" +
+                            "%d,\"%s\",\"%s\",\"%s\",%d" +
+                            ",\"%s\",\"%s\",\"%s\"" +
+                            ",\"%s\",\"%s\"" +
+                            ",\"%s\")"
+                    , orderId, payOrder.getAuthorisingInfo().getId(), deliverCompany, deliverStore, stockQuantity
+                    , shipmentTime.format(dateFormatter), deliverTime.format(dateFormatter), order.getCustomer().getName()
+                    , order.getCustomer().getMobile(), order.getInstallAddress().toTRJString()
+                    , order.getOrderTime().format(formatter));
+
+            submitTask("提交物流信息", code);
+        }
+    }
+
     private void submitOrderInfo(MainOrder order, AuthorisingInfo info) {
         // 使用脚本运作
         final Login guideUser = order.getOrderBy().getGuideUser();
@@ -156,16 +184,33 @@ public class TRJServiceImpl implements TRJService {
                     , order.getOrderDueAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
                     , order.getInstallAddress().toTRJString(), order.getOrderTime().format(formatter)
                     , recommendId);
-            log.debug(code);
 
             submitTask("提交订单信息", code);
         }
     }
 
-    private void submitTask(String name, String code) {
-        scriptTaskService.submitTask(name, Instant.now().plusSeconds(30), code, null
-                , autoRecallCode);
+
+    @Override
+    public void deliverUpdate(Number orderId, String authorising, String deliverCompany, String deliverStore
+            , Number stockQuantity, String shipmentTime, String deliverTime, String name, String mobile, String address
+            , String orderTime) throws IOException {
+        try (CloseableHttpClient client = requestClient()) {
+            client.execute(newUriRequest("/tenant/goods_orderShipmentInfo.jhtml"
+                    , new BasicNameValuePair("authorising", authorising)
+                    , new BasicNameValuePair("orderId", String.valueOf(orderId))
+                    , new BasicNameValuePair("shipmentInfo.delieverCompany", deliverCompany)
+                    , new BasicNameValuePair("shipmentInfo.delieverStore", deliverStore)
+                    , new BasicNameValuePair("shipmentInfo.stockQuantity", String.valueOf(stockQuantity))
+                    , new BasicNameValuePair("shipmentInfo.shipmentTime", shipmentTime)
+                    , new BasicNameValuePair("shipmentInfo.delieveredTime", deliverTime)
+                    , new BasicNameValuePair("shipmentInfo.recipients", name)
+                    , new BasicNameValuePair("shipmentInfo.mobile", mobile)
+                    , new BasicNameValuePair("shipmentInfo.address", address)
+                    , new BasicNameValuePair("shipmentInfo.orderTime", orderTime)
+            ), new StrangeJsonHandler<>(Void.class));
+        }
     }
+
 
     @Override
     public void submitOrderInfo(String authorising, Number orderId, String name, String idNumber, String mobile
@@ -292,5 +337,10 @@ public class TRJServiceImpl implements TRJService {
     @Override
     public void orderMaintain() {
 
+    }
+
+    private void submitTask(String name, String code) {
+        scriptTaskService.submitTask(name, Instant.now().plusSeconds(30), code, null
+                , autoRecallCode);
     }
 }

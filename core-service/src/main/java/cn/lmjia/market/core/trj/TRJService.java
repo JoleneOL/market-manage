@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 /**
  * 投融家相关服务，我们也认可它是一种支付方式
@@ -23,6 +24,10 @@ public interface TRJService extends PaymentForm {
      */
     @Transactional
     void addAuthorisingInfo(String authorising, String idNumber);
+
+    void deliverUpdate(Number orderId, String authorising, String deliverCompany, String deliverStore
+            , Number stockQuantity, String shipmentTime, String deliverTime, String name, String mobile, String address
+            , String orderTime) throws IOException;
 
     void submitOrderInfo(String authorising, Number orderId, String name, String idNumber, String mobile
             , String goodCode, String goodName, Number amount, String dueAmount, String address, String orderTime
@@ -41,4 +46,17 @@ public interface TRJService extends PaymentForm {
      */
     @Transactional(readOnly = true)
     AuthorisingInfo checkAuthorising(String authorising, String idNumber) throws InvalidAuthorisingException;
+
+    /**
+     * 物流信息更新
+     *
+     * @param orderId        订单号
+     * @param deliverCompany 物流公司
+     * @param deliverStore   物流仓库
+     * @param stockQuantity  之后的剩余库存
+     * @param shipmentTime   发货时间
+     * @param deliverTime    送达时间
+     */
+    void deliverUpdate(long orderId, String deliverCompany, String deliverStore, int stockQuantity
+            , LocalDate shipmentTime, LocalDate deliverTime);
 }

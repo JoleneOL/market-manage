@@ -1,7 +1,12 @@
 package cn.lmjia.market.wechat.controller.order;
 
 import cn.lmjia.market.core.config.other.SecurityConfig;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.model.OrderRequest;
+import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.wechat.WechatTestBase;
@@ -14,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,10 +34,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = SecurityConfig.class)
 public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private MainGoodService mainGoodService;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private MainOrderRepository mainOrderRepository;
 
     @Test
     public void go() throws Exception {
@@ -67,6 +77,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         // 使用 driver 打开!
         driver.get("http://localhost" + result);
         PaySuccessPage.waitingForSuccess(this, driver, 3);
+        quickDoneForAuthorising(authorising);
 
         // 再试一次？ 肯定是不行的
         result = submitOrderRequest(request);
@@ -75,6 +86,40 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         // 持续等待……
 //        Thread.sleep(Long.MAX_VALUE);
+    }
+
+    /**
+     * 将这个按揭码相关的订单立刻完成掉
+     *
+     * @param authorising 按揭码
+     */
+    private void quickDoneForAuthorising(String authorising) throws Exception {
+        // 查询该支付订单
+        MainOrder order = null;
+        while (order == null) {
+            order = mainOrderRepository.findOne((root, query, cb) -> cb.and(
+                    cb.equal(root.get("payOrder").type(), TRJPayOrder.class)
+                    , cb.equal(cb.treat(root.join("payOrder"), TRJPayOrder.class).get("authorisingInfo").get("id"), authorising)
+            ));
+            Thread.sleep(100);
+        }
+
+
+        // 让root干活了
+        Login login = allRunWith();
+        try {
+            updateAllRunWith(newRandomManager(ManageLevel.root));
+            mockMvc.perform(post("/orderData/quickDone/" + order.getId())
+                    .param("deliverCompany", RandomStringUtils.randomAlphabetic(10))
+                    .param("deliverStore", RandomStringUtils.randomAlphabetic(10))
+                    .param("stockQuantity", String.valueOf(1 + random.nextInt(100)))
+                    .param("shipmentTime", LocalDate.now().format(dateFormatter))
+                    .param("deliverTime", LocalDate.now().format(dateFormatter))
+            )
+                    .andExpect(status().is2xxSuccessful());
+        } finally {
+            updateAllRunWith(login);
+        }
     }
 
 
