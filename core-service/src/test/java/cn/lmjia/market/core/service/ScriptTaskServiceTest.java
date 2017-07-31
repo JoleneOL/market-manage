@@ -30,7 +30,7 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
         // 添加一个任务 并验证 失败后会运行失败代码 成功后会运行成功代码
         // 并且最终可以删除
         String name = randomMobile();
-        scriptTaskService.submitTask(name, Instant.now().plusMillis(100), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
+        scriptTaskService.submitTask(name, Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
         Thread.sleep(1000);
         log.info("checking");
         assertThat(testValue.get())
@@ -40,7 +40,7 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
                 .isEqualTo(0);
 
         // 成功 则调用成功代码
-        scriptTaskService.submitTask(randomMobile(), Instant.now().plusMillis(100), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
+        scriptTaskService.submitTask(randomMobile(), Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
         Thread.sleep(1000);
         log.info("checking");
         assertThat(testValue.get())
@@ -48,15 +48,15 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
 
         // 失败 则调用失败代码
         name = randomMobile();
-        scriptTaskService.submitTask(name, Instant.now().plusMillis(100), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.hi()", null, "_repository.delete(_this)");
+        scriptTaskService.submitTask(name, Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.hi()", null, "_repository.delete(_this)");
         Thread.sleep(1000);
         log.info("checking");
         assertThat(scriptTaskRepository.countByName(name))
                 .isEqualTo(0);
 
         // 其他脚本测试
-        scriptTaskService.submitTask(randomMobile(), Instant.now(), "context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderInfo(\"duNYPooMyL\",2,\"W客户gJpvzb\",\"434202153868630178\",\"13092846848\",\"hzts02\",\"台式净水器\",8,\"25440.00\",\"GaLH省-TPoy市-YwLa区-其他地址iKoHhOQPSe\",\"2017-07-30 21:36:06\",0)");
-        Thread.sleep(1000);
+//        scriptTaskService.submitTask(randomMobile(), Instant.now(), "context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderInfo(\"duNYPooMyL\",2,\"W客户gJpvzb\",\"434202153868630178\",\"13092846848\",\"hzts02\",\"台式净水器\",8,\"25440.00\",\"GaLH省-TPoy市-YwLa区-其他地址iKoHhOQPSe\",\"2017-07-30 21:36:06\",0)");
+//        Thread.sleep(1000);
     }
 
 }
