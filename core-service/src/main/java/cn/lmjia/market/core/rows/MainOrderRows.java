@@ -69,8 +69,6 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                 , Fields.asBasic("amount")
                 , Fields.asBiFunction("package", ((root, criteriaBuilder)
                         -> criteriaBuilder.literal("")))
-//                , Fields.asBiFunction("method", ((root, criteriaBuilder)
-//                        -> criteriaBuilder.literal("")))
                 , FieldBuilder.asName(MainOrder.class, "method")
                         .addBiSelect(((root, criteriaBuilder) -> root.join("payOrder", JoinType.LEFT)))
                         .addFormat((data, type) -> {
@@ -84,6 +82,21 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                             if (x instanceof TRJPayOrder)
                                 return "投融家";
                             return "未知";
+                        })
+                        .build()
+                , FieldBuilder.asName(MainOrder.class, "methodCode")
+                        .addBiSelect(((root, criteriaBuilder) -> root.join("payOrder", JoinType.LEFT)))
+                        .addFormat((data, type) -> {
+                            PayOrder x = (PayOrder) data;
+                            if (x == null)
+                                return 0;
+                            if (x instanceof PaymaxPayOrder)
+                                return 1;
+                            if (x instanceof ChanpayPayOrder)
+                                return 4;
+                            if (x instanceof TRJPayOrder)
+                                return 2;
+                            return 99;
                         })
                         .build()
                 , Fields.asBiFunction("total", (MainOrder::getOrderDueAmount))
