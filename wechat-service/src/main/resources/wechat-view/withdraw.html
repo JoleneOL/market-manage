@@ -17,7 +17,7 @@
 </head>
 <body class="view-bg-color view-fs-small">
 <section class="view_body view_body-withdraw">
-    <form action="withdrawSuccess.html" method="post" th:action="@{/wechatOrder}" id="J_form">
+    <form action="withdrawVerify.html" method="post" th:action="@{/wechatOrder}" id="J_form">
         <div class="weui-cells__title">收款信息</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -105,21 +105,14 @@
                     </div>
                     <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                 </div>
-                <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell">
                     <div class="weui-cell__hd">
                         <label class="weui-label">物流公司</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <select class="weui-select" name="logisticsCompany" id="J_Logistics">
-                            <option value="1">圆通快递</option>
-                            <option value="2">申通快递</option>
-                            <option value="3">韵达快递</option>
-                            <option value="4">中通快递</option>
-                            <option value="5">顺丰快递</option>
-                            <option value="6">天天快递</option>
-                            <option value="7">EMS</option>
-                        </select>
+                        <input class="weui-input" type="text" placeholder="输入物流公司" name="logisticsCompany">
                     </div>
+                    <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                 </div>
             </div>
         </div>
