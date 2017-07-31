@@ -165,3 +165,30 @@ Mock.mock(/\/resourceUpload\/webUploader/, {
     "id": "filePath",
     "url": uploaderImg
 });
+
+Mock.mock(/\/orderData\/manageableList/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'user': '@cname',
+            'userLevel': '@pick(经销商,市代理,爱心天使)',
+            'goods': '帅风立式净水器',
+            'amount': '@integer(1, 100)',
+            'orderUser': '@cname',
+            'orderAddress': '@county(true)',
+            'orderMobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'method': '@pick(["全额", "花呗分期", "投融家"])',
+            'methodCode': '@pick([0, 1, 2])',
+            'total': '@integer(3600, 10000)',
+            'operator': '@pick(["-", "@cname"])',
+            'status': '@pick(["待处理","未发货","已发货","已收货","待付款","分期审核中","审核未通过","待审核"])',
+            'statusCode': '@pick([0,1,2,3,4,5,6,7])',
+            'quickDoneAble': '@boolean'
+        }
+    ]
+});

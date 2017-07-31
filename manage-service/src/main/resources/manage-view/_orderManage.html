@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
     <!--重置库-->
     <!--<link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">-->
     <link rel="stylesheet" href="manage-resource/css/style.min.css">
@@ -23,9 +24,12 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body data-url="../../../../../../market-manage/dealer/src/main/resources/dealer-view/mock/orderData.json"
-      th:data-url="@{/orderData/manageableList}" data-quick-url="/orderData/quickDone/" data-allow-mock-pay="true"
-      th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}" data-allow-settlement="true">
+<body data-url="/orderData/manageableList"
+      th:data-url="@{/orderData/manageableList}"
+      data-quick-url="/orderData/quickDone/"
+      data-allow-mock-pay="true"
+      th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}"
+      data-allow-settlement="true">
 
 <form id="detailForm" action="../../../../../../market-manage/dealer/src/main/resources/dealer-view/orderDetail.html"
       method="get">
@@ -58,7 +62,7 @@
                         </label>
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" placeholder="下单日期"
-                                   id="datepicker" name="orderDate" aria-controls="orderTable">
+                                   id="J_datePicker" name="orderDate">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
                         <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
@@ -119,22 +123,11 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
-<script th:src="@{/dealer-resource/js/orderManage.js}"
-        src="../../../../../../market-manage/dealer/src/main/resources/dealer-view/dealer-resource/js/orderManage.js"></script>
-<script th:src="@{/dealer-resource/js/main.js}"
-        src="../../../../../../market-manage/dealer/src/main/resources/dealer-view/dealer-resource/js/main.js"></script>
-<script>
-    $(function () {
-        $('.js-orderMaintain').click(function () {
-            $.ajax(
-                '/order/orderMaintain', {
-                    method: 'put',
-                    success: function () {
-                        $._table.ajax.reload();
-                    }
-                }
-            );
-        });
-    });
-</script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+
+<script src="./mock/mock-min.js" th:remove="all"></script>
+<script src="./mock/api.js" th:remove="all"></script>
+
+<script src="manage-resource/js/orderManage.js"></script>
 </html>
