@@ -1,8 +1,10 @@
-/**
- * Created by Neo on 2017/4/26.
- */
 $(function () {
     "use strict";
+
+    $('#J_datePicker').flatpickr({
+        maxDate: new Date(),
+        locale: 'zh'
+    });
 
     var _body = $('body');
 
@@ -28,22 +30,25 @@ $(function () {
                 "title": "订单号", "data": "orderId", "name": "orderId"
             },
             {
-                "title": "购买用户", "data": "orderUser", "name": "orderUser"
+                "title": "合伙人", "data": "user", "name": "user"
             },
             {
-                "title": "手机号", "data": "phone", "name": "phone"
+                "title": "合伙人级别", "data": "userLevel", "name": "userLevel"
             },
             {
-                "title": "商品品类", "data": "category", "name": "category"
-            },
-            {
-                "title": "商品型号", "data": "type", "name": "type"
+                "title": "购买产品", "data": "goods", "name": "goods"
             },
             {
                 "title": "数量", "data": "amount", "name": "amount"
             },
             {
-                "title": "充值套餐", "data": "package", "name": "package"
+                "title": "订单用户", "data": "orderUser", "name": "orderUser"
+            },
+            {
+                "title": "订单地址", "data": "orderAddress", "name": "orderAddress"
+            },
+            {
+                "title": "订单手机号", "data": "orderMobile", "name": "orderMobile"
             },
             {
                 "title": "支付方式", "data": "method", "name": "method"
@@ -52,39 +57,36 @@ $(function () {
                 "title": "订单总金额", "data": "total", "name": "total"
             },
             {
-                "title": "安装地址", "data": "address", "name": "address"
-            },
-            {
                 "title": "状态", "data": "status", "name": "status"
             },
             {
                 "title": "下单时间", "data": "orderTime", "name": "orderTime"
             },
             {
+                "title": "操作人", "data": "operator", "name": "operator"
+            },
+            {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
-                    var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;修改</a>';
-                    var c = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;快速完成订单</a>';
-                    var d = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;模拟支付</a>';
-                    var e = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;重新结算</a>';
-                    // if (item.statusCode === 0)
-                    //     a = a + b;
-                    // var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;快速完成订单</a>';
-                    // if (item.quickDoneAble && quickUrl)
-                    //     a = a + c;
-                    // var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;模拟支付</a>';
-                    // if (item.statusCode === 1 && allowMockPay)
-                    //     a = a + d;
-                    // var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;重新结算</a>';
-                    // if (item.statusCode !== 0 && item.statusCode !== 1 && allowSettlement)
-                    //     a = a + e;
-                    // // 模拟支付
-                    // var f = '<a href="javascript:;" class="btn btn-primary btn-xs js-dispatch" data-id="' + item.id + '">派单</a>';
-                    // if (item.statusCode === 6)
-                    //     a = a + f;
-                    // return a;
+                    var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
+                    var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;修改</a>';
+                    if (item.statusCode === 0)
+                        a = a + b;
+                    var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;快速完成订单</a>';
+                    if (item.quickDoneAble && quickUrl)
+                        a = a + c;
+                    var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;模拟支付</a>';
+                    if (item.statusCode === 1 && allowMockPay)
+                        a = a + d;
+                    var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;重新结算</a>';
+                    if (item.statusCode !== 0 && item.statusCode !== 1 && allowSettlement)
+                        a = a + e;
+                    // 模拟支付
+                    var f = '<a href="javascript:;" class="btn btn-primary btn-xs js-dispatch" data-id="' + item.id + '">派单</a>';
+                    if (item.statusCode === 6)
+                        a = a + f;
+                    return a;
                 }
             }
         ],
@@ -180,4 +182,14 @@ $(function () {
         //TODO
     }
 
+    $('.js-orderMaintain').click(function () {
+        $.ajax(
+            '/order/orderMaintain', {
+                method: 'put',
+                success: function () {
+                    $._table.ajax.reload();
+                }
+            }
+        );
+    });
 });
