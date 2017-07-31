@@ -2,7 +2,9 @@
     font-size: 12px;
 }
 
-.table-action a, .table-action-hide a, .table-operate a {
+.table-action a,
+.table-action-hide a,
+.table-operate a {
     display: inline-block;
     padding: 2px;
     margin-right: 6px;
@@ -10,11 +12,31 @@
     border: 1px solid transparent;
     border-radius: 3px;
 }
-.table-action a:hover, .table-action-hide a:hover, .table-operate a:hover {
+
+.table-action a:hover,
+.table-action-hide a:hover,
+.table-operate a:hover {
     border: 1px solid #1ab394;
 }
+
 .table-action .btn {
     color: #FFFFFF;
+}
+
+.view-link-disabled {
+    cursor: not-allowed;
+}
+
+.table-action .view-link-disabled,
+.table-action-hide .view-link-disabled,
+.table-operate .view-link-disabled {
+    color: #ccc;
+}
+
+.table-action .view-link-disabled:hover,
+.table-action-hide .view-link-disabled:hover,
+.table-operate .view-link-disabled:hover {
+    border: 1px solid transparent;
 }
 
 textarea {
@@ -42,7 +64,7 @@ textarea {
     top: 13px;
 }
 
-.ivu-steps .ivu-steps-tail > i {
+.ivu-steps .ivu-steps-tail>i {
     display: inline-block;
     width: 100%;
     height: 1px;
@@ -52,7 +74,7 @@ textarea {
     position: relative;
 }
 
-.ivu-steps .ivu-steps-tail > i:after {
+.ivu-steps .ivu-steps-tail>i:after {
     content: "";
     width: 0;
     height: 100%;
@@ -98,13 +120,17 @@ textarea {
     width: 33.33%;
 }
 
+.ivu-item4 .ivu-steps-item {
+    width: 25%;
+}
+
 .ivu-steps-item {
     display: inline-block;
     position: relative;
     vertical-align: top;
 }
 
-.ivu-steps-item.ivu-steps-status-process .ivu-steps-tail > i {
+.ivu-steps-item.ivu-steps-status-process .ivu-steps-tail>i {
     background-color: #e3e8ee;
 }
 
@@ -113,7 +139,7 @@ textarea {
     background-color: #009bb6;
 }
 
-.ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner > .ivu-steps-icon,
+.ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner>.ivu-steps-icon,
 .ivu-steps-item.ivu-steps-status-process .ivu-steps-head-inner span {
     color: #fff;
 }
@@ -123,7 +149,7 @@ textarea {
     color: #666;
 }
 
-.ivu-steps-item.ivu-steps-status-wait .ivu-steps-tail > i {
+.ivu-steps-item.ivu-steps-status-wait .ivu-steps-tail>i {
     background-color: #e3e8ee;
 }
 
@@ -131,7 +157,7 @@ textarea {
     background-color: #fff;
 }
 
-.ivu-steps-item.ivu-steps-status-wait .ivu-steps-head-inner > .ivu-steps-icon,
+.ivu-steps-item.ivu-steps-status-wait .ivu-steps-head-inner>.ivu-steps-icon,
 .ivu-steps-item.ivu-steps-status-wait .ivu-steps-head-inner span {
     color: #ccc;
 }
@@ -141,11 +167,11 @@ textarea {
     color: #999;
 }
 
-.ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail > i {
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail>i {
     background-color: #e3e8ee;
 }
 
-.ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail > i:after {
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-tail>i:after {
     width: 100%;
     background: #009bb6;
     transition: all 0.2s ease-in-out;
@@ -157,7 +183,7 @@ textarea {
     border-color: #009bb6;
 }
 
-.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner > .ivu-steps-icon,
+.ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner>.ivu-steps-icon,
 .ivu-steps-item.ivu-steps-status-finish .ivu-steps-head-inner span {
     color: #009bb6;
 }
@@ -174,6 +200,12 @@ textarea {
 .ivu-steps-horizontal .ivu-steps-item:not(:first-child) .ivu-steps-head {
     padding-left: 10px;
     margin-left: -10px;
+}
+
+.ivu-steps-time {
+    margin-left: 34px;
+    font-size: 12px;
+    color: #999;
 }
 
 .img-feedback-list img {
@@ -200,16 +232,19 @@ textarea {
 .product-textarea {
     border: 1px solid #e7eaec;
 }
+
 .product-textarea-hd {
     padding-top: 10px;
     width: 120px;
 }
+
 .product-textarea-bd {
     width: calc(100% - 120px);
     padding: 10px;
     border-left: 1px solid #e7eaec;
     box-sizing: border-box;
 }
+
 .img-small {
     display: inline-block;
     margin-right: 10px;
@@ -221,21 +256,132 @@ textarea {
     border-radius: 4px;
     cursor: pointer;
 }
+
 .view-upload-show img {
     margin-right: 20px;
     width: 100px;
     cursor: pointer;
 }
-.view-upload-btn {
 
-}
+.view-upload-btn {}
+
 .view-upload-btn .webuploader-pick {
     width: 180px;
     height: 114px;
     background: url("../img/upload.jpg");
 }
+
 .img-feedback-big {
     margin: 10px;
     max-width: 800px;
     max-height: 600px;
+}
+
+.view-tools a {
+    display: block;
+    padding: 10px 20px 10px 25px;
+    color: #1ab394;
+}
+
+.label-xlg {
+    padding: 9px 30px;
+    font-size: 14px;
+}
+
+.view-operator {
+    color: #000;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.panel-package .package-title {
+    margin: 0;
+    padding: 0 0 14px 20px;
+    position: relative;
+    font-size: 18px;
+    border-bottom: 1px solid #e7e7e7;
+    font-family: "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+.panel-package .package-title .title-text {
+    margin: 0;
+    font-weight: 400;
+    font-family: "Microsoft Yahei", sans-serif;
+    font-size: 16px;
+}
+
+.panel-package .package-status {
+    padding: 18px 0 0 0;
+}
+
+.panel-package .package-status .status-box {
+    position: relative;
+    overflow: hidden;
+}
+
+.panel-package .package-status .status-list {
+    margin-left: 12px;
+    padding-left: 10px;
+    list-style: none;
+    font-size: 12px;
+}
+
+.panel-package .package-status .status-list li {
+    height: auto;
+    min-height: 30px;
+    border-left: 1px solid #d9d9d9;
+}
+
+.panel-package .package-status .status-list li::before {
+    content: '';
+    border: 3px solid #f3f3f3;
+    background-color: #d9d9d9;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    margin-left: -6px;
+    margin-right: 10px;
+    box-sizing: content-box;
+}
+
+.panel-package .package-status .status-list .latest {
+    border: none;
+}
+
+.panel-package .package-status .status-list .latest::before {
+    margin-left: -5px;
+    background-color: #009bb6;
+    border-color: lightblue;
+}
+
+.panel-package .package-status .status-list .data,
+.panel-package .package-status .status-list .week,
+.panel-package .package-status .status-list .time,
+.panel-package .package-status .status-list .text {
+    display: inline-block;
+}
+
+.panel-package .package-status .status-list .data {
+    width: 78px;
+    font-weight: 700;
+    margin-right: 8px;
+    font-family: Arial, sans-serif;
+}
+
+.panel-package .package-status .status-list .week {
+    width: 32px;
+    font-weight: 700;
+}
+
+.panel-package .package-status .status-list .time {
+    width: 48px;
+    margin-right: 28px;
+    margin-left: 5px;
+}
+
+.panel-package .package-status .status-list .text {
+    display: inline-block;
+    vertical-align: text-top;
+    line-height: 1.3em;
 }
