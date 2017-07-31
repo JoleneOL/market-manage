@@ -1,5 +1,6 @@
 package cn.lmjia.market.wechat.service;
 
+import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.wx.model.Menu;
 import me.jiangcai.wx.model.MenuType;
@@ -8,6 +9,7 @@ import me.jiangcai.wx.protocol.Protocol;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,10 +26,16 @@ public class WechatInitService {
     private SystemService systemService;
     @Autowired
     private PublicAccount publicAccount;
+    @Autowired
+    private Environment environment;
 
     @PostConstruct
     public void init() {
         //菜单
+        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
+            log.info("单元测试时没有必要更新公众号菜单");
+            return;
+        }
         Protocol.forAccount(publicAccount).createMenu(
                 new Menu[]
                         {

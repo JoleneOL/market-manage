@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>仓库管理</title>
+    <title>标签管理</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,8 +26,7 @@
 <!--可以展示-->
 <!--可以添加 新页面去POST?-->
 <!--可以禁用|启用-->
-<body class="gray-bg" data-url="mock/depotList.json"
-      th:data-url="@{/manage/depotList}">
+<body class="gray-bg" data-url="/product/cat">
 
 <section>
     <div class="wrapper wrapper-content">
@@ -35,8 +34,8 @@
             <div class="col-md-12 mb10">
                 <div class="form-inline">
                     <div>
-                        <a class="btn btn-primary btn-sm" href="_depotAdd.html"
-                           th:href="@{/manageDepotAdd}">新增仓库</a>
+                        <a class="btn btn-primary btn-sm" href="javascript:;">添加类目</a>
+                        <a class="btn btn-default btn-sm" href="_productOperate.html">添加新商品</a>
                     </div>
                 </div>
             </div>
@@ -47,7 +46,7 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="depotDatagrid">
                             <div class="table-responsive">
-                                <table id="depotTable" class="table table-hover table-success" cellspacing="0"
+                                <table id="categoryTable" class="table table-hover table-success" cellspacing="0"
                                        width="100%"></table>
                             </div>
                         </div>
@@ -71,5 +70,9 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
-<script src="manage-resource/js/depotManage.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
+<script src="manage-resource/js/productCategory.js"></script>
 </html>

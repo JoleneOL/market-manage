@@ -278,6 +278,22 @@ Mock.mock(/\/storage\/transfer/, "get", {
     ]
 });
 
+<<<<<<< HEAD
+=======
+Mock.mock(/\/product\/cat/, "get", {
+    "draw": 1,
+    "recordsTotal": 4,
+    "recordsFiltered": 4,
+    "data|4": [
+        {
+            'id': '@id',
+            'category': '@pick(["饮水机", "净化器", "量子", "食品优化宝"])',
+            'goods': ['量子立式净水机', '量子净化器', '量子芯片', '量子食品优化宝'],
+        }
+    ]
+});
+
+>>>>>>> 98838e8638d2f13daa5da7373da0973fff7aa4a6
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
