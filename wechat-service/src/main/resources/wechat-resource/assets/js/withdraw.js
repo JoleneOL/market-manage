@@ -41,9 +41,16 @@ $(function () {
                     required : "填写物流单号"
                 }
             });
+             $('input[name="logisticsCompany"]').rules('add', {
+                required: true,
+                messages : {
+                    required : "填写物流公司"
+                }
+            });
         } else {
             $invoice.addClass('displayNone');
             $('input[name="logisticsCode"]').rules('remove');
+            $('input[name="logisticsCompany"]').rules('remove');
         }
     });
 
