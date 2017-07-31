@@ -46,9 +46,16 @@ public class WechatWithdrawController{
      */
     @PostMapping("/wechatWithdraw")
     public String withdrawNew(@OpenId String openId, HttpServletRequest request, String payee, String account, String bank, String mobile, BigDecimal withdraw,
-                              String logisticsnumber,String logisticscompany,@AuthenticationPrincipal Login login, Model model)
+                              String invoice,String logisticsnumber,String logisticscompany,@AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException {
-        Withdraw withdraw1=wechatWithdrawService.withdrawNew(payee,account,bank,mobile,withdraw,logisticsnumber,logisticscompany);
+        if(login.getCommissionBalance().compareTo(withdraw)<0){
+            return "用户可提现余额不足";
+        }
+        if("0".equals(invoice)) {
+            Withdraw withdraw1 = wechatWithdrawService.withdrawNew(payee, account, bank, mobile, withdraw, logisticsnumber, logisticscompany);
+        }else if("1".equals(invoice)) {
+            Withdraw withdraw1 = wechatWithdrawService.withdrawNew(payee, account, bank, mobile, withdraw, null,null);
+        }
         return "wechat@withdrawSuccess.html";
     }
 
