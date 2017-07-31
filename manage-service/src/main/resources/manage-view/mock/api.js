@@ -77,7 +77,8 @@ Mock.mock(/\/product\/list/, "get", {
     "data|10": [
         {
             'id|+1': 1,
-            'category': '量子' + '@pick(["橱下净水器","空气净化器","食品优化宝"])',
+            'name': '量子' + '@pick(["橱下净水器","空气净化器","食品优化宝"])',
+            'category|0-2': '@pick(["净水机","净化器","优化宝","量子"])' + ' ',
             'type': '@string(10,15)',
             'supplier': '慈溪市海燕环保科技有限公司',
             'price': 400,
@@ -293,7 +294,15 @@ Mock.mock(/\/product\/cat/, "get", {
     ]
 });
 
+<<<<<<< HEAD
 >>>>>>> 98838e8638d2f13daa5da7373da0973fff7aa4a6
+=======
+Mock.mock(/\/products\/category/, {
+    "resultCode": 200,
+    "resultMsg": "ok"
+});
+
+>>>>>>> 6578399806588f7de6bee2a13459a84733d48cc9
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"

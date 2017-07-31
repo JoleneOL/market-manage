@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn//chosen/1.7.0/chosen.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
     <link rel="stylesheet" href="./manage-resource/css/custom.css">
@@ -47,10 +48,24 @@
                                 <form class="form-horizontal" id="J_productForm" method="post"
                                       action="_productCenter.html">
                                     <div class="form-group">
+                                        <label class="col-sm-3 control-label">产品名称 <span class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入产品名称" class="form-control"
+                                                   name="goodsName" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-sm-3 control-label">产品品类 <span class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入产品品类" class="form-control"
-                                                   name="category" required>
+                                            <select data-placeholder="请选择产品品类"  id="J_selectCat" class="chosen-select form-control" multiple tabindex="4" name="category[]">
+                                                <option value="净水机">净水机</option>
+                                                <option value="净化器">净化器</option>
+                                                <option value="优化宝">优化宝</option>
+                                                <option value="量子">量子</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <a class="btn btn-default btn-xs btn-outline" id="J_addCategory" href="javascript:;">添加类目</a>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -88,13 +103,13 @@
                                                    name="cost" min="0" required>
                                         </div>
                                     </div>
-                                    <!--<div class="form-group">-->
-                                        <!--<label class="col-sm-3 control-label">安装费(元）</label>-->
-                                        <!--<div class="col-sm-6">-->
-                                            <!--<input type="number" placeholder="请输入安装费" class="form-control"-->
-                                                   <!--name="installFee" min="0">-->
-                                        <!--</div>-->
-                                    <!--</div>-->
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">安装费(元）</label>
+                                        <div class="col-sm-6">
+                                            <input type="number" placeholder="请输入安装费" class="form-control"
+                                                   name="installFee" min="0">
+                                        </div>
+                                    </div>
                                     <!--service-charge-->
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">服务费 (元）</label>
@@ -148,8 +163,14 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
 <script src="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/icheck.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="//cdn.lmjia.cn/chosen/1.7.0/chosen.jquery.min.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
 <script src="manage-resource/js/productAdd.js"></script>
 </html>

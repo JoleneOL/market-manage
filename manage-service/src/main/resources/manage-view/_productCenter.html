@@ -26,8 +26,7 @@
 <!--可以展示-->
 <!--可以添加 新页面去POST?-->
 <!--可以禁用|启用-->
-<body data-url="mock/depotList.json"
-      th:data-url="@{/manage/depotList}">
+<body data-url="/product/list">
 
 <section>
     <div class="wrapper wrapper-content">
@@ -46,6 +45,15 @@
                     <div class="js-selectToolbar">
                         <input type="search" class="form-control input-sm" placeholder="产品名称"
                                name="productName">
+                        <label>
+                            <select class="form-control input-sm" name="category">
+                                <option value=" " disabled="" selected="" class="hidden">产品类目</option>
+                                <option value="no">未分类</option>
+                                <option value="1">x</option>
+                                <option value="2">xx</option>
+                                <option value="3">xxx</option>
+                            </select>
+                        </label>
                         <input type="search" class="form-control input-sm" placeholder="型号"
                                name="type">
                         <button type="button" class="btn btn-primary btn-sm js-search">查询</button>

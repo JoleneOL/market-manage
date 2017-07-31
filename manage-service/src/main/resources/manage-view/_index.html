@@ -168,7 +168,7 @@
                             <a class="J_menuItem" href="#">套餐管理</a>
                         </li>
                         <li>
-                            <a class="J_menuItem" href="#">清楚测试数据</a>
+                            <a class="J_menuItem" href="#">清除测试数据</a>
                         </li>
                     </ul>
                 </li>
@@ -194,12 +194,6 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-<<<<<<< HEAD
-                        <li>
-                            <a class="J_menuItem" href="_logisticsManage.html">物流管理</a>
-                        </li>
-                        <li>
-=======
                         <li sec:authorize="hasAnyRole('ROOT')">
                             <a class="J_menuItem" href="_depotManage.html" th:href="@{/manageDepot}">仓库管理</a>
                         </li>
@@ -207,7 +201,6 @@
                             <a class="J_menuItem" href="_logisticsManage.html">物流管理</a>
                         </li>
                         <li th:remove="all">
->>>>>>> 98838e8638d2f13daa5da7373da0973fff7aa4a6
                             <a class="J_menuItem" href="_storageManage.html">仓储管理</a>
                         </li>
                     </ul>
