@@ -4,13 +4,18 @@ import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
+import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
+import me.jiangcai.payment.entity.PayOrder;
+import me.jiangcai.payment.paymax.entity.PaymaxPayOrder;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
@@ -64,8 +69,23 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                 , Fields.asBasic("amount")
                 , Fields.asBiFunction("package", ((root, criteriaBuilder)
                         -> criteriaBuilder.literal("")))
-                , Fields.asBiFunction("method", ((root, criteriaBuilder)
-                        -> criteriaBuilder.literal("")))
+//                , Fields.asBiFunction("method", ((root, criteriaBuilder)
+//                        -> criteriaBuilder.literal("")))
+                , FieldBuilder.asName(MainOrder.class, "method")
+                        .addBiSelect(((root, criteriaBuilder) -> root.join("payOrder", JoinType.LEFT)))
+                        .addFormat((data, type) -> {
+                            PayOrder x = (PayOrder) data;
+                            if (x == null)
+                                return "无";
+                            if (x instanceof PaymaxPayOrder)
+                                return "拉卡拉";
+                            if (x instanceof ChanpayPayOrder)
+                                return "畅捷";
+                            if (x instanceof TRJPayOrder)
+                                return "投融家";
+                            return "未知";
+                        })
+                        .build()
                 , Fields.asBiFunction("total", (MainOrder::getOrderDueAmount))
 //                , Fields.asFunction("address", root -> root.get("installAddress"))
                 , FieldBuilder.asName(MainOrder.class, "address")
