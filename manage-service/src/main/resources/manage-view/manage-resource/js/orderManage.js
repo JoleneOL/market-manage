@@ -77,8 +77,14 @@ $(function() {
             },
             {
                 "title": "状态",
-                "data": "status",
-                "name": "status"
+                "name": "status",
+                "data": function(item) {
+                    if (item.statusCode === 7) {
+                        return '<span class="text-danger">' + item.status + '</span>';
+                    } else {
+                        return item.status
+                    }
+                }
             },
             {
                 "title": "下单时间",
