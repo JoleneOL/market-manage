@@ -149,19 +149,34 @@ public class HaierSupplierTest extends LogsticsTest {
 
     private Destination randomDestination() {
         return new Destination() {
+//            @Override
+//            public String getProvince() {
+//                return RandomStringUtils.randomAlphabetic(3) + "省";
+//            }
+
+//            @Override
+//            public String getCity() {
+//                return RandomStringUtils.randomAlphabetic(3) + "市";
+//            }
+
+//            @Override
+//            public String getCountry() {
+//                return RandomStringUtils.randomAlphabetic(3) + "区";
+//            }
+
             @Override
             public String getProvince() {
-                return RandomStringUtils.randomAlphabetic(3) + "省";
+                return "北京市";
             }
 
             @Override
             public String getCity() {
-                return RandomStringUtils.randomAlphabetic(3) + "市";
+                return "北京市";
             }
 
             @Override
             public String getCountry() {
-                return RandomStringUtils.randomAlphabetic(3) + "区";
+                return "昌平区";
             }
 
             @Override
