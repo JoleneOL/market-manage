@@ -3,6 +3,8 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.withdraw.Invoice;
 import cn.lmjia.market.core.entity.withdraw.Withdraw;
+import com.huotu.verification.IllegalVerificationCodeException;
+import com.huotu.verification.VerificationType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -24,4 +26,29 @@ public interface WechatWithdrawService {
 
     @Transactional
     Withdraw withdrawNew(String payee, String account, String bank, String mobile, BigDecimal withdraw, String logisticsnumber,String logisticscompany);
+
+    /**
+     * @return 用于提现校验的验证码
+     */
+    default VerificationType withdrawVerificationType() {
+        return new VerificationType() {
+            @Override
+            public int id() {
+                return 1;
+            }
+
+            @Override
+            public String message(String code) {
+                return "提现校验短信验证码为：" + code + "；请勿泄露。";
+            }
+        };
+    }
+
+    /**
+     * @throws IllegalVerificationCodeException - 验证码无效
+     * @see com.huotu.verification.service.VerificationCodeService#verify(String, String, VerificationType)
+     */
+    @Transactional
+    void checkWithdrawCode(String mobile, String code) throws IllegalVerificationCodeException;
+
 }

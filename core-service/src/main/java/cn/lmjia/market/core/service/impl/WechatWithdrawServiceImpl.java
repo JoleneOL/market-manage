@@ -5,6 +5,8 @@ import cn.lmjia.market.core.entity.withdraw.Invoice;
 import cn.lmjia.market.core.entity.withdraw.Withdraw;
 import cn.lmjia.market.core.repository.WechatWithdrawRepository;
 import cn.lmjia.market.core.service.WechatWithdrawService;
+import com.huotu.verification.IllegalVerificationCodeException;
+import com.huotu.verification.service.VerificationCodeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,10 @@ public class WechatWithdrawServiceImpl implements WechatWithdrawService{
 
     @Autowired
     private WechatWithdrawRepository wechatWithdrawRepository;
+    @Autowired
+    private VerificationCodeService verificationCodeService;
+    @Autowired
+    private WechatWithdrawService wechatWithdrawService;
 
     @Override
     public Withdraw withdrawNew(String payee, String account, String bank, String mobile, BigDecimal withdrawMoney, String logisticsNumber,String logisticsCompany ) {
@@ -37,5 +43,10 @@ public class WechatWithdrawServiceImpl implements WechatWithdrawService{
         withdraw.setInvoice(invoice);
         withdraw.setWithdrawStatus(WithdrawStatus.checkPending);
         return wechatWithdrawRepository.save(withdraw);
+    }
+
+    @Override
+    public void checkWithdrawCode(String mobile, String code) throws IllegalVerificationCodeException {
+        verificationCodeService.verify(mobile, code,wechatWithdrawService.withdrawVerificationType());
     }
 }

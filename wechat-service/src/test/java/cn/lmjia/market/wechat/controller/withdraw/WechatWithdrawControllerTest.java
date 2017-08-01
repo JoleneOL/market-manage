@@ -43,4 +43,23 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         driver.get("http://localhost" + withdrawUri);
 
     }
+
+    @Test
+    public void withdrawVerify() throws Exception {
+        Login user = createNewUserByShare();
+        bindDeveloperWechat(user);
+        updateAllRunWith(user);
+
+        String withdrawUri = mockMvc.perform(wechatPost("/misc/sendWithdrawCode")
+                        .param("mobile", "15267286525")
+        )
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful())
+                .andReturn().getResponse().getHeader("Location");
+
+        driver.get("http://localhost" + withdrawUri);
+
+    }
+
+
 }
