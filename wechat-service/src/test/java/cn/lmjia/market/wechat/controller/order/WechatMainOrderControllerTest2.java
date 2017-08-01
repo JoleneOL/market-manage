@@ -3,6 +3,7 @@ package cn.lmjia.market.wechat.controller.order;
 import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.MainOrderRepository;
@@ -79,6 +80,10 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         // 使用 driver 打开!
         driver.get("http://localhost" + result);
         PaySuccessPage.waitingForSuccess(this, driver, 3);
+
+        // 添加一个客服好让它收到消息
+        addCustomerServiceWithDeveloperWechatId();
+
         quickDoneForAuthorising(authorising);
 
         // 再试一次？ 肯定是不行的
@@ -88,6 +93,11 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         // 持续等待……
 //        Thread.sleep(Long.MAX_VALUE);
+    }
+
+    private void addCustomerServiceWithDeveloperWechatId() {
+        Manager manager = newRandomManager(ManageLevel.customerService);
+        bindDeveloperWechat(manager);
     }
 
     /**

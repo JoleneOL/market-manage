@@ -216,11 +216,11 @@ public class TRJServiceImpl implements TRJService {
             @Override
             public Collection<? extends TemplateMessageParameter> parameterStyles() {
                 return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "{1}")
-                        , new SimpleTemplateMessageParameter("keyword1", "{2}")
+                        new SimpleTemplateMessageParameter("first", "{0}")
+                        , new SimpleTemplateMessageParameter("keyword1", "{1}")
                         , new SimpleTemplateMessageParameter("keyword2", "已安装")
-                        , new SimpleTemplateMessageParameter("keyword3", "{3,date,yyyy-MM-dd HH:mm}")
-                        , new SimpleTemplateMessageParameter("keyword4", "{4}")
+                        , new SimpleTemplateMessageParameter("keyword3", "{2,date,yyyy-MM-dd HH:mm}")
+                        , new SimpleTemplateMessageParameter("keyword4", "{3}")
                         , new SimpleTemplateMessageParameter("remark", "请尽快发送或者重新发送信审申请。")
                 );
             }
