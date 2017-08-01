@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
-
+<!--/*@thymesVar id="payOrder" type="cn.lmjia.market.core.entity.trj.TRJPayOrder"*/-->
+<!--/*@thymesVar id="mainOrder" type="cn.lmjia.market.core.entity.MainOrder"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -9,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>重新申请信审</title>
+    <title>申请信审</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,13 +27,13 @@
     <![endif]-->
 </head>
 
-<body class="gray-bg" data-url="/storage/detail" data-upload-url="/resourceUpload/webUploader">
+<body class="gray-bg" data-upload-url="/resourceUpload/webUploader">
 <div class="wrapper wrapper-content gray-bg">
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_mortgageTRG.html">投融家按揭码</a></li>
-                <li><strong>重新申请信审</strong></li>
+                <li><a href="_mortgageTRG.html" th:href="@{/mortgageTRG}">投融家按揭码</a></li>
+                <li><strong>申请信审</strong></li>
             </ol>
         </div>
     </div>
@@ -47,19 +48,19 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="timeline">
-                                    <div class="timeline-item">
+                                    <div class="timeline-item" th:if="${payOrder.authorisingInfo.message!=null}">
                                         <div class="row">
                                             <div class="col-xs-3 date">
                                                 <i class="fa fa-exclamation-triangle text-danger"></i>
-                                                <span>2107-09-17 19:45</span>
+                                                <span th:text="${{payOrder.authorisingInfo.auditingTime}}">2107-09-17 19:45</span>
                                             </div>
                                             <div class="col-xs-7 content">
                                                 <p class="m-b-xs text-danger"><strong>分期审核反馈结果</strong></p>
-                                                <p>安装信息不全</p>
+                                                <p th:text="${payOrder.authorisingInfo.message}">安装信息不全</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="timeline-item">
+                                    <div th:remove="all" class="timeline-item">
                                         <div class="row">
                                             <div class="col-xs-3 date">
                                                 <i class="fa fa-exclamation-triangle text-danger"></i>
@@ -74,37 +75,46 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <form class="form-horizontal" id="J_applyForm" method="post" action="_orderManage.html">
+                                <form class="form-horizontal" id="J_applyForm" method="post" action="_mortgageTRG.html"
+                                      th:action="@{/mortgageTRGAppeal}">
+                                    <input type="hidden" name="id" th:value="${mainOrder.id}">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">安装人员 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">安装人员 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入安装人员" class="form-control" name="installer"
+                                            <input type="text" placeholder="请输入安装人员" class="form-control"
+                                                   name="installer"
                                                    required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">安装公司 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">安装公司 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入安装公司" class="form-control"
                                                    name="installCompany" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">安装人员手机 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">安装人员手机 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <input type="tel" placeholder="请输入安装人员手机" class="form-control" name="mobile"
                                                    required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">安装时间 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">安装时间 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入安装时间" id="J_installDate" class="form-control"
+                                            <input type="text" placeholder="请输入安装时间" id="J_installDate"
+                                                   class="form-control"
                                                    name="installDate" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">上传附件 <span class="asterisk">*</span></label>
+                                        <label class="col-sm-3 control-label">上传附件 <span
+                                                class="asterisk">*</span></label>
                                         <div class="col-sm-6">
                                             <div id="J_upload"></div>
                                             <input type="hidden" name="applyFile"/>
@@ -112,7 +122,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-3 control-label">
-                                            <button type="submit" class="btn btn-primary btn-block btn-lg">重新申请信审</button>
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">申请信审</button>
                                         </div>
                                     </div>
                                 </form>

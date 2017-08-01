@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 投融家相关服务，我们也认可它是一种支付方式
@@ -26,6 +27,9 @@ public interface TRJService extends PaymentForm {
      */
     @Transactional
     void addAuthorisingInfo(String authorising, String idNumber);
+
+    void submitOrderCompleteRequest(String authorising, Number orderId, String address, String installer
+            , String installCompany, String mobile, String installTime, Number amount, String resourcePath) throws IOException;
 
     void deliverUpdate(Number orderId, String authorising, String deliverCompany, String deliverStore
             , Number stockQuantity, String shipmentTime, String deliverTime, String name, String mobile, String address
@@ -79,4 +83,18 @@ public interface TRJService extends PaymentForm {
      * @param message
      */
     void sendCheckWarningToCS(MainOrder order, String message);
+
+    /**
+     * 提起信审申请
+     *
+     * @param order          订单
+     * @param installer      安装人员
+     * @param installCompany 安装公司
+     * @param mobile         安装人员手机
+     * @param installTime    安装时间
+     * @param resourcePath   可选的附件资源；
+     */
+    @Transactional
+    void submitOrderCompleteRequest(MainOrder order, String installer, String installCompany, String mobile
+            , LocalDateTime installTime, String resourcePath);
 }

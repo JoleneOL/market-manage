@@ -32,6 +32,11 @@ public class AuthorisingInfo {
     private LocalDateTime createdTime;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime usedTime;
+    /**
+     * 最后一次审核时间
+     */
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime auditingTime;
     private AuthorisingStatus authorisingStatus = AuthorisingStatus.Unused;
     /**
      * 交互留言

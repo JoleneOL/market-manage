@@ -16,6 +16,7 @@ import cn.lmjia.market.core.service.ScriptTaskService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJService;
 import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
+import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.event.OrderPaySuccess;
@@ -35,6 +36,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -43,9 +46,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -104,6 +109,8 @@ public class TRJServiceImpl implements TRJService {
     private WechatSendSupplier wechatSendSupplier;
     @Autowired
     private NoticeService noticeService;
+    @Autowired
+    private ResourceService resourceService;
 
     @Autowired
     public TRJServiceImpl(Environment environment) throws IOException {
@@ -178,6 +185,38 @@ public class TRJServiceImpl implements TRJService {
                     , order.getOrderTime().format(formatter));
 
             submitTask("提交物流信息", code);
+        }
+    }
+
+    @Override
+    public void submitOrderCompleteRequest(MainOrder order, String installer, String installCompany, String mobile
+            , LocalDateTime installTime, String resourcePath) {
+        TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
+        try {
+            submitOrderCompleteRequest(payOrder.getAuthorisingInfo().getId(), order.getId()
+                    , order.getInstallAddress().toTRJString(), installer, installCompany, mobile
+                    , installTime.format(formatter), order.getAmount(), resourcePath);
+        } catch (IOException e) {
+            log.debug("[TRJ]", e);
+            String code;
+            if (org.springframework.util.StringUtils.isEmpty(resourcePath))
+                code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderCompleteRequest(" +
+                                "\"%s\",%d" +
+                                ",\"%s\",\"%s\",\"%s\",\"%s\"" +
+                                ",\"%s\",%d,null)"
+                        , payOrder.getAuthorisingInfo().getId(), order.getId()
+                        , order.getInstallAddress().toTRJString(), installer, installCompany, mobile
+                        , installTime.format(formatter), order.getAmount());
+            else
+                code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderCompleteRequest(" +
+                                "\"%s\",%d" +
+                                ",\"%s\",\"%s\",\"%s\",\"%s\"" +
+                                ",\"%s\",%d,\"%s\")"
+                        , payOrder.getAuthorisingInfo().getId(), order.getId()
+                        , order.getInstallAddress().toTRJString(), installer, installCompany, mobile
+                        , installTime.format(formatter), order.getAmount(), resourcePath);
+
+            submitTask("提交信审请求", code);
         }
     }
 
@@ -263,6 +302,43 @@ public class TRJServiceImpl implements TRJService {
 
             submitTask("提交订单信息", code);
         }
+    }
+
+    @Override
+    public void submitOrderCompleteRequest(String authorising, Number orderId, String address, String installer
+            , String installCompany, String mobile, String installTime, Number amount, String resourcePath) throws IOException {
+        try (CloseableHttpClient client = requestClient()) {
+            HttpEntity entity;
+            if (!org.springframework.util.StringUtils.isEmpty(resourcePath)) {
+                Resource resource = resourceService.getResource(resourcePath);
+                if (resource.exists()) {
+                    String fileName = resourcePath.substring(resourcePath.lastIndexOf("/") + 1);
+                    entity = MultipartEntityBuilder.create()
+                            .addBinaryBody("attach0", resource.getInputStream()
+                                    , ContentType.parse(new MimetypesFileTypeMap().getContentType(resourcePath))
+                                    , fileName)
+                            .build();
+                } else
+                    entity = null;
+            } else
+                entity = null;
+            client.execute(newUriRequest("/tenant/goods_orderInstallationInfo.jhtml"
+                    , entity
+                    , new BasicNameValuePair("authorising", authorising)
+                    , new BasicNameValuePair("orderId", String.valueOf(orderId))
+                    , new BasicNameValuePair("installationInfo.installAddress", address)
+                    , new BasicNameValuePair("installationInfo.installPerson", installer)
+                    , new BasicNameValuePair("installationInfo.companyName", installCompany)
+                    , new BasicNameValuePair("installationInfo.mobile", mobile)
+                    , new BasicNameValuePair("installationInfo.installTime", installTime)
+                    , new BasicNameValuePair("installationInfo.installationQuanity", String.valueOf(amount))
+            ), new StrangeJsonHandler<>(Void.class));
+        }
+        MainOrder order = mainOrderRepository.getOne(orderId.longValue());
+        TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
+        final AuthorisingInfo authorisingInfo = payOrder.getAuthorisingInfo();
+        authorisingInfo.setAuthorisingStatus(AuthorisingStatus.auditing);
+        authorisingInfoRepository.save(authorisingInfo);
     }
 
     @Override
