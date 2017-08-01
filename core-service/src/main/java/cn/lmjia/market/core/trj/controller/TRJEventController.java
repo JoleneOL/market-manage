@@ -55,6 +55,8 @@ public class TRJEventController {
         quickTradeService.makeDone(mainOrderService.getOrder(id));
         trjService.deliverUpdate(id, deliverCompany, deliverStore, stockQuantity, shipmentTime, deliverTime);
     }
+    // 其他几个管理功能
+    // 页面 展示数据 申请
 
     @PostMapping("/_tourongjia_event_")
     @ResponseBody
