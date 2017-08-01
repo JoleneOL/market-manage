@@ -17,6 +17,7 @@ import cn.lmjia.market.core.trj.TRJService;
 import me.jiangcai.lib.ee.ServletUtils;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import me.jiangcai.lib.sys.service.SystemStringService;
+import me.jiangcai.payment.entity.PayOrder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,24 +79,46 @@ public class TRJEventController {
 
     // 其他几个管理功能
     // 页面 展示数据 申请
-    @GetMapping("/orderData/trj")
+    @GetMapping("/mortgageTRG")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_MANAGER + "')")
+    public String index() {
+        return "_mortgageTRG.html";
+    }
+
+    @GetMapping("/manage/mortgage")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_MANAGER + "')")
     public RowDefinition<MainOrder> data(@AuthenticationPrincipal Login login, String orderId
+            , String mortgageCode
             , @RequestParam(value = "phone", required = false) String mobile, Long goodId
             , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate orderDate
             , OrderStatus status) {
         return new MainOrderRows(login, t -> conversionService.convert(t, String.class)) {
+
+//'id': '@id',
+//        'orderId': '@id',
+//        'mortgageCode': '@word(5)@integer(100)',
+//        'userName': '@cname',
+//        'mobile': /^1([34578])\d{9}$/,
+//                    'orderTime': '@datetime("yyyy-MM-dd")',
+//                    'status': '待订单完成',
+//                    'statusCode': 1
 
             @Override
             public Specification<MainOrder> specification() {
                 return new AndSpecification<>(
                         mainOrderService.search(orderId, mobile, goodId, orderDate, status)
                         , (root, query, cb) -> {
-                    final Path<Object> payOrder = root.get("payOrder");
-                    return cb.and(
+                    final Join<MainOrder, PayOrder> payOrder = root.join("payOrder");
+                    Predicate predicate = cb.and(
                             cb.isNotNull(payOrder),
                             cb.equal(payOrder.type(), TRJPayOrder.class)
+                    );
+                    if (StringUtils.isEmpty(mortgageCode))
+                        return predicate;
+                    return cb.and(predicate
+                            , cb.like(cb.treat(payOrder, TRJPayOrder.class)
+                                    .join("authorisingInfo").get("id"), "%" + mortgageCode + "%")
                     );
                 }
                 );
