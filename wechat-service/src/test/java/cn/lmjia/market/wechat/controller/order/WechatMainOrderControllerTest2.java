@@ -84,6 +84,9 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         // 添加一个客服好让它收到消息
         addCustomerServiceWithDeveloperWechatId();
 
+        // 管理员是否可以看到？
+
+
         quickDoneForAuthorising(authorising);
 
         // 再试一次？ 肯定是不行的

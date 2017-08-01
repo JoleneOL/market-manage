@@ -58,6 +58,12 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
     public List<FieldDefinition<MainOrder>> fields() {
         return Arrays.asList(
                 Fields.asBasic("id")
+                , Fields.asBiFunction("user", ((root, criteriaBuilder)
+                        -> ReadService.nameForLogin(MainOrder.getOrderByLogin(root)
+                        , criteriaBuilder)))
+                , Fields.asBiFunction("userLevel", ((root, criteriaBuilder)
+                        -> ReadService.agentLevelForLogin(MainOrder.getOrderByLogin(root)
+                        , criteriaBuilder)))
                 , Fields.asBiFunction("orderId", MainOrder::getSerialId)
                 , Fields.asBiFunction("orderUser", ((root, criteriaBuilder)
                         -> ReadService.nameForLogin(MainOrder.getCustomerLogin(root)
@@ -65,6 +71,7 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                 , Fields.asBiFunction("phone", (root, criteriaBuilder)
                         -> Customer.getMobile(MainOrder.getCustomer(root)))
                 , Fields.asFunction("category", root -> root.get("good").get("product").get("name"))
+                , Fields.asFunction("goods", root -> root.get("good").get("product").get("name"))
                 , Fields.asFunction("type", root -> root.get("good").get("product").get("code"))
                 , Fields.asBasic("amount")
                 , Fields.asBiFunction("package", ((root, criteriaBuilder)
