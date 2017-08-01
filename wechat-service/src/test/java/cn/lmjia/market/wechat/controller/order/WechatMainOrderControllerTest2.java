@@ -10,6 +10,7 @@ import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.core.trj.TRJService;
+import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import cn.lmjia.market.wechat.page.WechatOrderPage;
@@ -17,6 +18,7 @@ import me.jiangcai.lib.sys.service.SystemStringService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
@@ -24,15 +26,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * 针对投融家的订单测试
  *
  * @author CJ
  */
-@ContextConfiguration(classes = SecurityConfig.class)
+@ContextConfiguration(classes = {SecurityConfig.class, ManageConfig.class})
 public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -84,10 +85,10 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         // 添加一个客服好让它收到消息
         addCustomerServiceWithDeveloperWechatId();
 
-        // 管理员是否可以看到？
-
-
         quickDoneForAuthorising(authorising);
+
+        // 管理员是否可以看到？
+        checkManageMortgageTRGFor(authorising);
 
         // 再试一次？ 肯定是不行的
         result = submitOrderRequest(request);
@@ -96,6 +97,26 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         // 持续等待……
 //        Thread.sleep(Long.MAX_VALUE);
+    }
+
+    private void checkManageMortgageTRGFor(String authorising) throws Exception {
+        Login login = allRunWith();
+        try {
+            updateAllRunWith(newRandomManager(ManageLevel.root));
+
+            mockMvc.perform(get("/mortgageTRG"))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("_mortgageTRG.html"));
+            // 获取数据
+            mockMvc.perform(get("/manage/mortgage").param("mortgageCode", authorising))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+//                    .andDo(print())
+                    .andExpect(jsonPath("$.data.length()").value(1));
+
+        } finally {
+            updateAllRunWith(login);
+        }
     }
 
     private void addCustomerServiceWithDeveloperWechatId() {

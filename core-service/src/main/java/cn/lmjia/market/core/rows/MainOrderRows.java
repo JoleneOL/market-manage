@@ -33,11 +33,11 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
 
     //    private final LocalDateConverter localDateConverter = new LocalDateConverter();
 
+    protected final Function<LocalDateTime, String> orderTimeFormatter;
     /**
      * 要渲染这些记录的身份
      */
     private final Login login;
-    private final Function<LocalDateTime, String> orderTimeFormatter;
 
     public MainOrderRows(Login login, Function<LocalDateTime, String> orderTimeFormatter) {
         this.login = login;

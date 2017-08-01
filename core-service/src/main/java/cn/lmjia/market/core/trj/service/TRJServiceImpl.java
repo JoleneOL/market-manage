@@ -193,8 +193,11 @@ public class TRJServiceImpl implements TRJService {
     @Override
     public void orderSuccess(MainOrderFinishEvent event) {
         final MainOrder mainOrder = event.getMainOrder();
-        if (mainOrder.getPayOrder() instanceof TRJPayOrder)
+        if (mainOrder.getPayOrder() instanceof TRJPayOrder) {
+            TRJPayOrder payOrder = (TRJPayOrder) mainOrder.getPayOrder();
+            payOrder.getAuthorisingInfo().setAuthorisingStatus(AuthorisingStatus.forAuditing);
             sendCheckWarningToCS(mainOrder, "订单已完成，可以申请信审了。");
+        }
     }
 
     @Override

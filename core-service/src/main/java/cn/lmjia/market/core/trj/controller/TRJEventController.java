@@ -7,12 +7,16 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.field.FieldBuilder;
+import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.QuickTradeService;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.trj.TRJService;
 import me.jiangcai.lib.ee.ServletUtils;
 import me.jiangcai.lib.spring.data.AndSpecification;
@@ -45,6 +49,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,8 +82,7 @@ public class TRJEventController {
         trjService.deliverUpdate(id, deliverCompany, deliverStore, stockQuantity, shipmentTime, deliverTime);
     }
 
-    // 其他几个管理功能
-    // 页面 展示数据 申请
+    //     申请
     @GetMapping("/mortgageTRG")
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_MANAGER + "')")
     public String index() {
@@ -95,14 +99,41 @@ public class TRJEventController {
             , OrderStatus status) {
         return new MainOrderRows(login, t -> conversionService.convert(t, String.class)) {
 
-//'id': '@id',
-//        'orderId': '@id',
-//        'mortgageCode': '@word(5)@integer(100)',
-//        'userName': '@cname',
-//        'mobile': /^1([34578])\d{9}$/,
-//                    'orderTime': '@datetime("yyyy-MM-dd")',
-//                    'status': '待订单完成',
-//                    'statusCode': 1
+            @Override
+            public List<FieldDefinition<MainOrder>> fields() {
+                return Arrays.asList(
+                        Fields.asBasic("id")
+                        , FieldBuilder.asName(MainOrder.class, "orderId")
+                                .addBiSelect((MainOrder::getSerialId))
+                                .build()
+                        , FieldBuilder.asName(MainOrder.class, "mortgageCode")
+                                .addBiSelect(((root, criteriaBuilder)
+                                        -> criteriaBuilder.treat(root.join("payOrder"), TRJPayOrder.class)
+                                        .join("authorisingInfo").get("id")))
+                                .build()
+                        , Fields.asBiFunction("userName", ((root, criteriaBuilder)
+                                -> ReadService.nameForLogin(MainOrder.getOrderByLogin(root)
+                                , criteriaBuilder)))
+                        , Fields.asBiFunction("mobile", ((root, criteriaBuilder)
+                                -> ReadService.mobileForLogin(MainOrder.getOrderByLogin(root), criteriaBuilder)))
+                        , FieldBuilder.asName(MainOrder.class, "orderTime")
+                                .addFormat((data, type)
+                                        -> orderTimeFormatter.apply(((LocalDateTime) data)))
+                                .build()
+                        , FieldBuilder.asName(MainOrder.class, "status")
+                                .addBiSelect(((root, criteriaBuilder)
+                                        -> criteriaBuilder.treat(root.join("payOrder"), TRJPayOrder.class)
+                                        .join("authorisingInfo").get("authorisingStatus")))
+                                .addFormat((data, type) -> data == null ? null : data.toString())
+                                .build()
+                        , FieldBuilder.asName(MainOrder.class, "statusCode")
+                                .addBiSelect(((root, criteriaBuilder)
+                                        -> criteriaBuilder.treat(root.join("payOrder"), TRJPayOrder.class)
+                                        .join("authorisingInfo").get("authorisingStatus")))
+                                .addFormat((data, type) -> data == null ? null : ((Enum) data).ordinal())
+                                .build()
+                );
+            }
 
             @Override
             public Specification<MainOrder> specification() {
