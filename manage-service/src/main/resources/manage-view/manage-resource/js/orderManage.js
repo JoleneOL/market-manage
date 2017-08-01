@@ -210,6 +210,10 @@ $(function () {
     }).on('click', '.js-modifyOrder', function () {
         // $('#content', parent.document).attr('src', 'orderModify.html');
     }).on('click', '.js-quickDoneMore', function () {
+        if (!quickUrl) {
+            alert('不支持');
+            return;
+        }
         var self = $(this);
         layer.open({
             content: $('#J_quickDone').html(),
@@ -231,7 +235,7 @@ $(function () {
                 console.info(value);
                 if (value) {
                     $.ajax(quickUrl + self.data('id'), {
-                        method: 'put',
+                        method: 'post',
                         data: value,
                         success: function () {
                             table.ajax.reload();
