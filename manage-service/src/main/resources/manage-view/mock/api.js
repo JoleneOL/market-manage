@@ -315,3 +315,7 @@ Mock.mock(/\/orderData\/quickDone/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });
+
+Mock.mock(/\/resourceUpload\/webUploader/, {
+    "id": "filePath"
+});

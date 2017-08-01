@@ -228,6 +228,7 @@ $(function () {
             },
             yes: function (index, layero) {
                 var value = getValue(layero);
+                console.info(value);
                 if (value) {
                     $.ajax(quickUrl + self.data('id'), {
                         method: 'put',
@@ -281,11 +282,11 @@ $(function () {
     function getValue(ele) {
         var data = {};
         var inputs = ele.find('input');
-        $.each(inputs, function (i, v) {
-            if ($(v).val()) {
-                data[$(v).attr('name')] = $(v).val();
+        inputs.each(function () {
+            if ($(this).val()) {
+                data[$(this).attr('name')] = $(this).val();
             } else {
-                layer.tips('请填写该值', $(v), {
+                layer.tips('请填写该值', $(this), {
                     tipsMore: true
                 });
             }
