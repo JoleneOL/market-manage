@@ -229,7 +229,8 @@ public class HaierSupplierTest extends LogsticsTest {
         return new Storage() {
             @Override
             public String getStorageCode() {
-                return RandomStringUtils.randomAlphanumeric(4);
+//                return RandomStringUtils.randomAlphanumeric(4);
+                return "C12101";
             }
         };
     }
