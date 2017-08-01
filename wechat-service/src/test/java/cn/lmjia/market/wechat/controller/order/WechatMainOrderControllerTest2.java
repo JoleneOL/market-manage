@@ -4,11 +4,11 @@ import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
+import cn.lmjia.market.core.trj.TRJService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import cn.lmjia.market.wechat.page.WechatOrderPage;
@@ -41,6 +41,8 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     private SystemStringService systemStringService;
     @Autowired
     private MainOrderRepository mainOrderRepository;
+    @Autowired
+    private TRJService trjService;
 
     @Test
     public void go() throws Exception {
@@ -97,10 +99,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         // 查询该支付订单
         MainOrder order = null;
         while (order == null) {
-            order = mainOrderRepository.findOne((root, query, cb) -> cb.and(
-                    cb.equal(root.get("payOrder").type(), TRJPayOrder.class)
-                    , cb.equal(cb.treat(root.join("payOrder"), TRJPayOrder.class).get("authorisingInfo").get("id"), authorising)
-            ));
+            order = trjService.findOrder(authorising);
             Thread.sleep(100);
         }
 

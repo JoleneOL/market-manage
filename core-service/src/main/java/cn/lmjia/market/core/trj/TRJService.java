@@ -1,6 +1,8 @@
 package cn.lmjia.market.core.trj;
 
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.payment.PaymentForm;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import org.springframework.context.event.EventListener;
@@ -59,4 +61,14 @@ public interface TRJService extends PaymentForm {
      */
     void deliverUpdate(long orderId, String deliverCompany, String deliverStore, int stockQuantity
             , LocalDate shipmentTime, LocalDate deliverTime);
+
+    /**
+     * @param authorising 按揭码
+     * @return 寻找这个按揭码所对应的订单；可能为null
+     */
+    @Transactional(readOnly = true)
+    MainOrder findOrder(String authorising);
+
+    @EventListener(MainOrderFinishEvent.class)
+    void orderSuccess(MainOrderFinishEvent event);
 }
