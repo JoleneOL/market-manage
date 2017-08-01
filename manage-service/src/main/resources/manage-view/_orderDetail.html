@@ -420,6 +420,10 @@
         console.info('不是TRJ页面');
         $('.js-condition').hide();
     }
+    if (!(window.document.location.search.indexOf('status=4') >= 0)) {
+        console.info('TRJ正常页面');
+        $('.js-condition').eq(1).hide();
+    }
 </script>
 
 </html>

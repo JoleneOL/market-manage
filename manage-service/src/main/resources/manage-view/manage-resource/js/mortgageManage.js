@@ -28,15 +28,18 @@ $(function () {
                 "title": "下单时间", "data": "orderTime", "name": "orderTime"
             },
             {
-                "title": "状态", "data": "status", "name": "status"
+                "title": "状态",
+                "name": "status",
+                data: function (item) {
+                    if(item.statusCode === 4) return '<span class="text-danger">' + item.status + '</span>';
+                    return item.status
+                }
             },
             {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    if (item.enable)
-                        return '<a href="javascript:;" class="js-disableDepot" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
-                    return '<a href="javascript:;" class="js-enableDepot" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
+                    return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa fa-check-circle-o"></i>&nbsp;查看</a>';
                 }
             }
         ],
@@ -58,19 +61,12 @@ $(function () {
         }]
     });
 
-    $(document).on('click', '.js-disableDepot', function () {
-        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/disable", {
-            method: 'put',
-            success: function () {
-                table.ajax.reload();
-            }
-        });
-    }).on('click', '.js-enableDepot', function () {
-        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/enable", {
-            method: 'put',
-            success: function () {
-                table.ajax.reload();
-            }
-        });
+    $(document).on('click', '.js-info', function () {
+        window.location.href = '_orderDetail.html?id=' + $(this).data('id') + '&from=' + $(this).data('from') + '&status=' + $(this).data('status');
+    });
+
+    $('#J_datePicker').flatpickr({
+        maxDate: new Date(),
+        locale: 'zh'
     });
 });
