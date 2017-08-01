@@ -33,6 +33,16 @@ public class AuthorisingInfo {
     @Column(columnDefinition = "timestamp")
     private LocalDateTime usedTime;
     private AuthorisingStatus authorisingStatus = AuthorisingStatus.Unused;
+    /**
+     * 交互留言
+     */
+    @Column(length = 100)
+    private String message;
+    /**
+     * 结算时间
+     */
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime settlementTime;
 
     public boolean isUsed() {
         return authorisingStatus != AuthorisingStatus.Unused;

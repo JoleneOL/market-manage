@@ -4,6 +4,8 @@ import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
+import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -26,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.persistence.criteria.Path;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,20 +105,64 @@ public class TRJEventController {
 
     @PostMapping("/_tourongjia_event_")
     @ResponseBody
-    public Map<String, Object> event(HttpServletRequest request, String event, String authorising, String idNumber) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("boolen", true);
-        result.put("message", "OK");
-        result.put("data", null);
+    @Transactional
+    public Map<String, Object> event(HttpServletRequest request, String event, String authorising, String idNumber
+            , String message, @RequestParam(required = false) Boolean result
+            , @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time) {
+        Map<String, Object> apiResult = new HashMap<>();
+        apiResult.put("boolen", true);
+        apiResult.put("message", "OK");
+        apiResult.put("data", null);
         // 安全检查
         securityCheck(ServletUtils.clientIpAddress(request));
 
         if (event.equalsIgnoreCase("code")) {
             addCode(authorising, idNumber);
-            return result;
+            return apiResult;
         }
 
-        return null;
+        if (event.equalsIgnoreCase("v1")) {
+            v1Check(authorising, result, message);
+            return apiResult;
+        }
+
+        if (event.equalsIgnoreCase("v4")) {
+            settlement(authorising, time);
+            return apiResult;
+        }
+
+
+        throw new IllegalArgumentException();
+    }
+
+    private void settlement(String authorising, LocalDateTime time) {
+        log.debug("settlement Result:" + authorising + " time:" + time);
+        MainOrder order = trjService.findOrder(authorising);
+        TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
+        final AuthorisingInfo authorisingInfo = payOrder.getAuthorisingInfo();
+
+        if (authorisingInfo.getAuthorisingStatus() != AuthorisingStatus.forSettle)
+            throw new IllegalStateException("并未处于等待审核的状态");
+        authorisingInfo.setAuthorisingStatus(AuthorisingStatus.settle);
+        authorisingInfo.setSettlementTime(time);
+        order.setDisableSettlement(false);
+    }
+
+    private void v1Check(String authorising, boolean result, String message) {
+        log.debug("v1Check Result:" + authorising + " result:" + result + " ,message:" + message);
+        MainOrder order = trjService.findOrder(authorising);
+        TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
+        final AuthorisingInfo authorisingInfo = payOrder.getAuthorisingInfo();
+        if (authorisingInfo.getAuthorisingStatus() != AuthorisingStatus.auditing)
+            throw new IllegalStateException("并未处于等待审核的状态");
+        authorisingInfo.setMessage(message);
+        if (result)
+            authorisingInfo.setAuthorisingStatus(AuthorisingStatus.forSettle);
+        else
+            authorisingInfo.setAuthorisingStatus(AuthorisingStatus.auditingRefuse);
+
+        // TODO 发布通知
+
     }
 
     private void addCode(String authorising, String idNumber) {

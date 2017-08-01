@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
 import cn.lmjia.market.core.service.ScriptTaskService;
@@ -152,6 +153,20 @@ public class TRJServiceImpl implements TRJService {
 
             submitTask("提交物流信息", code);
         }
+    }
+
+    @Override
+    public MainOrder findOrder(String authorising) {
+        return mainOrderRepository.findOne((root, query, cb) -> cb.and(
+                cb.equal(root.get("payOrder").type(), TRJPayOrder.class)
+                , cb.equal(cb.treat(root.join("payOrder"), TRJPayOrder.class).get("authorisingInfo").get("id")
+                        , authorising)
+        ));
+    }
+
+    @Override
+    public void orderSuccess(MainOrderFinishEvent event) {
+        // TODO 发布消息
     }
 
     private void submitOrderInfo(MainOrder order, AuthorisingInfo info) {
