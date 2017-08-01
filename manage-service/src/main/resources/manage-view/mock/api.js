@@ -120,6 +120,75 @@ Mock.mock(/\/manage\/promotionRequests/, "get", {
     }]
 });
 
+Mock.mock(/\/manage\/mortgage/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'mortgageCode': '@word(5)@integer(100)',
+            'userName': '@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'status': '待订单完成',
+            'statusCode': 1
+        },
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'mortgageCode': '@word(5)@integer(100)',
+            'userName': '@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'status': '待信审',
+            'statusCode': 2
+        },
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'mortgageCode': '@word(5)@integer(100)',
+            'userName': '@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'status': '信审中',
+            'statusCode': 3
+        },
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'mortgageCode': '@word(5)@integer(100)',
+            'userName': '@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'status': '信审被拒',
+            'statusCode': 4
+        },
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'mortgageCode': '@word(5)@integer(100)',
+            'userName': '@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'status': '待结算',
+            'statusCode': 5
+        },
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'mortgageCode': '@word(5)@integer(100)',
+            'userName': '@cname',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'status': '已结算',
+            'statusCode': 6
+        }
+    ]
+});
+
+
 Mock.mock(/\/products\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
@@ -158,25 +227,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
-    "data": [{
-        'id': '@id',
-        'orderId': '@id',
-        'user': '@cname',
-        'userLevel': '@pick(经销商,市代理,爱心天使)',
-        'goods': '帅风立式净水器',
-        'amount': '@integer(1, 100)',
-        'orderUser': '@cname',
-        'orderAddress': '@county(true)',
-        'orderMobile': /^1([34578])\d{9}$/,
-        'orderTime': '@datetime("yyyy-MM-dd")',
-        'method': '全额',
-        'methodCode': 0,
-        'total': '@integer(3600, 10000)',
-        'operator': '@pick(["-", "@cname"])',
-        'status': '待付款',
-        'statusCode': 1,
-        'quickDoneAble': false
-    },
+    "data": [
         {
             'id': '@id',
             'orderId': '@id',
@@ -185,8 +236,27 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'goods': '帅风立式净水器',
             'amount': '@integer(1, 100)',
             'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'method': '全额',
+            'methodCode': 0,
+            'total': '@integer(3600, 10000)',
+            'operator': '@pick(["-", "@cname"])',
+            'status': '待付款',
+            'statusCode': 1,
+            'quickDoneAble': false
+        },
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'user': '@cname',
+            'userLevel': '@pick(经销商,市代理,爱心天使)',
+            'goods': '帅风立式净水器',
+            'amount': '@integer(1, 100)',
+            'orderUser': '@cname',
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
             'orderTime': '@datetime("yyyy-MM-dd")',
             'method': '全额',
             'methodCode': 0,
@@ -204,8 +274,8 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'goods': '帅风立式净水器',
             'amount': '@integer(1, 100)',
             'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
             'orderTime': '@datetime("yyyy-MM-dd")',
             'method': '全额',
             'methodCode': 0,
@@ -223,8 +293,8 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'goods': '帅风立式净水器',
             'amount': '@integer(1, 100)',
             'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
             'orderTime': '@datetime("yyyy-MM-dd")',
             'method': '全额',
             'methodCode': 0,
@@ -241,8 +311,8 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'goods': '帅风立式净水器',
             'amount': '@integer(1, 100)',
             'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
             'orderTime': '@datetime("yyyy-MM-dd")',
             'method': '全额',
             'methodCode': 0,
@@ -259,8 +329,8 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'goods': '帅风立式净水器',
             'amount': '@integer(1, 100)',
             'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
             'orderTime': '@datetime("yyyy-MM-dd")',
             'method': '投融家',
             'methodCode': 2,
@@ -278,8 +348,8 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'goods': '帅风立式净水器',
             'amount': '@integer(1, 100)',
             'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
             'orderTime': '@datetime("yyyy-MM-dd")',
             'method': '投融家',
             'methodCode': 2,
@@ -297,8 +367,8 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'goods': '帅风立式净水器',
             'amount': '@integer(1, 100)',
             'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
+            'address': '@county(true)',
+            'phone': /^1([34578])\d{9}$/,
             'orderTime': '@datetime("yyyy-MM-dd")',
             'method': '花呗分期',
             'methodCode': 3,

@@ -25,11 +25,12 @@ $(function () {
         "lengthChange": false,
         "searching": false,
         "colReorder": true,
-        "columns": [{
-            "title": "订单号",
-            "data": "orderId",
-            "name": "orderId"
-        },
+        "columns": [
+            {
+                "title": "订单号",
+                "data": "orderId",
+                "name": "orderId"
+            },
             {
                 "title": "合伙人",
                 "data": "user",
@@ -57,13 +58,13 @@ $(function () {
             },
             {
                 "title": "订单地址",
-                "data": "orderAddress",
-                "name": "orderAddress"
+                "data": "address",
+                "name": "address"
             },
             {
                 "title": "订单手机号",
-                "data": "orderMobile",
-                "name": "orderMobile"
+                "data": "phone",
+                "name": "phone"
             },
             {
                 "title": "支付方式",
