@@ -71,4 +71,12 @@ public interface TRJService extends PaymentForm {
 
     @EventListener(MainOrderFinishEvent.class)
     void orderSuccess(MainOrderFinishEvent event);
+
+    /**
+     * 发送消息给客服，让他们知道需要提起信审了
+     *
+     * @param order
+     * @param message
+     */
+    void sendCheckWarningToCS(MainOrder order, String message);
 }

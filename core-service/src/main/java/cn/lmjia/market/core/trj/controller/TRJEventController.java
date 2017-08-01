@@ -161,8 +161,8 @@ public class TRJEventController {
         else
             authorisingInfo.setAuthorisingStatus(AuthorisingStatus.auditingRefuse);
 
-        // TODO 发布通知
-
+        if (authorisingInfo.getAuthorisingStatus() == AuthorisingStatus.auditingRefuse)
+            trjService.sendCheckWarningToCS(order, "信审被拒:" + message);
     }
 
     private void addCode(String authorising, String idNumber) {

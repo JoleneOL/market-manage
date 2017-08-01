@@ -2,20 +2,30 @@ package cn.lmjia.market.core.trj.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
+import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.ManagerService;
+import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.ScriptTaskService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJService;
+import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.service.PaymentService;
+import me.jiangcai.user.notice.UserNoticeService;
+import me.jiangcai.user.notice.UserNoticeType;
+import me.jiangcai.user.notice.wechat.WechatSendSupplier;
+import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
+import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -36,6 +46,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -45,13 +56,18 @@ import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -78,6 +94,16 @@ public class TRJServiceImpl implements TRJService {
     private MainOrderRepository mainOrderRepository;
     @Autowired
     private ScriptTaskService scriptTaskService;
+    @Autowired
+    private ManagerService managerService;
+    @Autowired
+    private LoginService loginService;
+    @Autowired
+    private UserNoticeService userNoticeService;
+    @Autowired
+    private WechatSendSupplier wechatSendSupplier;
+    @Autowired
+    private NoticeService noticeService;
 
     @Autowired
     public TRJServiceImpl(Environment environment) throws IOException {
@@ -166,7 +192,39 @@ public class TRJServiceImpl implements TRJService {
 
     @Override
     public void orderSuccess(MainOrderFinishEvent event) {
-        // TODO 发布消息
+        final MainOrder mainOrder = event.getMainOrder();
+        if (mainOrder.getPayOrder() instanceof TRJPayOrder)
+            sendCheckWarningToCS(mainOrder, "订单已完成，可以申请信审了。");
+    }
+
+    @Override
+    public void sendCheckWarningToCS(MainOrder order, String message) {
+        userNoticeService.sendMessage(null, loginService.toWechatUser(managerService.levelAs(ManageLevel.customerService))
+                , null, new TRJCheckWarning(), message, order.getSerialId()
+                , Date.from(ZonedDateTime.of(order.getOrderTime(), ZoneId.systemDefault()).toInstant()), order.getInstallAddress().toString());
+    }
+
+    @PostConstruct
+    @Autowired
+    public void init() {
+        wechatSendSupplier.registerTemplateMessage(new TRJCheckWarning(), new AbstractTemplateMessageStyle() {
+            @Override
+            public String getTemplateId() {
+                return noticeService.useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "GXQS-UxMQDQD6cCMMNeoZ2fNHOq3Q7l6MXMD2hh_Ass";
+            }
+
+            @Override
+            public Collection<? extends TemplateMessageParameter> parameterStyles() {
+                return Arrays.asList(
+                        new SimpleTemplateMessageParameter("first", "{1}")
+                        , new SimpleTemplateMessageParameter("keyword1", "{2}")
+                        , new SimpleTemplateMessageParameter("keyword2", "已安装")
+                        , new SimpleTemplateMessageParameter("keyword3", "{3,date,yyyy-MM-dd HH:mm}")
+                        , new SimpleTemplateMessageParameter("keyword4", "{4}")
+                        , new SimpleTemplateMessageParameter("remark", "请尽快发送或者重新发送信审申请。")
+                );
+            }
+        }, null);
     }
 
     private void submitOrderInfo(MainOrder order, AuthorisingInfo info) {
@@ -204,7 +262,6 @@ public class TRJServiceImpl implements TRJService {
         }
     }
 
-
     @Override
     public void deliverUpdate(Number orderId, String authorising, String deliverCompany, String deliverStore
             , Number stockQuantity, String shipmentTime, String deliverTime, String name, String mobile, String address
@@ -225,7 +282,6 @@ public class TRJServiceImpl implements TRJService {
             ), new StrangeJsonHandler<>(Void.class));
         }
     }
-
 
     @Override
     public void submitOrderInfo(String authorising, Number orderId, String name, String idNumber, String mobile
@@ -351,11 +407,51 @@ public class TRJServiceImpl implements TRJService {
 
     @Override
     public void orderMaintain() {
-
     }
 
     private void submitTask(String name, String code) {
         scriptTaskService.submitTask(name, Instant.now().plusSeconds(30), code, null
                 , autoRecallCode);
+    }
+
+    private class TRJCheckWarning implements UserNoticeType {
+
+        @Override
+        public String id() {
+            return "TRJCheckWarning";
+        }
+
+        @Override
+        public String title() {
+            return "需要信审的客服通知";
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) {
+            return "需要信审的客服通知";
+        }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) {
+            return "需要信审的客服通知";
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[]{
+                    //message
+                    String.class
+                    //订单号
+                    , String.class
+                    , Date.class
+                    //地址
+                    , String.class
+            };
+        }
     }
 }
