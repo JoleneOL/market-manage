@@ -64,4 +64,9 @@ $(function () {
     $(document).on('click', '.js-info', function () {
         window.location.href = '_orderDetail.html?id=' + $(this).data('id') + '&from=' + $(this).data('from') + '&status=' + $(this).data('status');
     });
+
+    $('#J_datePicker').flatpickr({
+        maxDate: new Date(),
+        locale: 'zh'
+    });
 });
