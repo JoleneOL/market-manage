@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     "use strict";
 
     $('#J_datePicker').flatpickr({
@@ -17,7 +17,7 @@ $(function() {
         "serverSide": true,
         "ajax": {
             "url": _body.attr('data-url'),
-            "data": function(d) {
+            "data": function (d) {
                 return $.extend({}, d, extendData());
             }
         },
@@ -26,10 +26,10 @@ $(function() {
         "searching": false,
         "colReorder": true,
         "columns": [{
-                "title": "订单号",
-                "data": "orderId",
-                "name": "orderId"
-            },
+            "title": "订单号",
+            "data": "orderId",
+            "name": "orderId"
+        },
             {
                 "title": "合伙人",
                 "data": "user",
@@ -78,12 +78,10 @@ $(function() {
             {
                 "title": "状态",
                 "name": "status",
-                "data": function(item) {
-                    if (item.statusCode === 7) {
-                        return '<span class="text-danger">' + item.status + '</span>';
-                    } else {
-                        return item.status
-                    }
+                "data": function (item) {
+                    if (item.methodCode === 0 && item.statusCode === 7) return '<span class="text-danger">' + item.status + '</span>';
+                    if (item.methodCode === 2 && item.statusCode === 4) return '<span class="text-danger">' + item.status + '</span>';
+                    return item.status
                 }
             },
             {
@@ -99,7 +97,7 @@ $(function() {
             {
                 title: "操作",
                 className: 'table-action',
-                data: function(item) {
+                data: function (item) {
 
 
                     var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '" data-from="' + item.methodCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
@@ -146,12 +144,12 @@ $(function() {
             }
         ],
         "displayLength": 15,
-        "drawCallback": function() {
+        "drawCallback": function () {
             clearSearchValue();
         },
         "dom": "<'row'<'col-sm-12'B>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "buttons": [{
             "extend": "excel",
             "text": "导出 Excel",
@@ -170,22 +168,22 @@ $(function() {
 
     var detailForm = $('#detailForm');
 
-    $(document).on('click', '.js-search', function() {
+    $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止
         table.ajax.reload();
-    }).on('click', '.js-checkOrder', function() {
+    }).on('click', '.js-checkOrder', function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
         $('input[name=from]', detailForm).val($(this).attr('data-from'));
         detailForm.submit();
-    }).on('click', '.js-settlement', function() {
+    }).on('click', '.js-settlement', function () {
         // 重新接收端
         $.ajax('/orderData/settlement/' + $(this).attr('data-id'), {
             method: 'put',
-            success: function() {
+            success: function () {
                 alert('重新结算完成');
             }
         });
-    }).on('click', '.js-mockPay', function() {
+    }).on('click', '.js-mockPay', function () {
         // 模拟支付
         if (!allowMockPay) {
             alert('不支持');
@@ -193,11 +191,11 @@ $(function() {
         }
         $.ajax('/orderData/mockPay/' + $(this).attr('data-id'), {
             method: 'put',
-            success: function() {
+            success: function () {
                 table.ajax.reload();
             }
         });
-    }).on('click', '.js-quickDone', function() {
+    }).on('click', '.js-quickDone', function () {
 
         if (!quickUrl) {
             alert('不支持');
@@ -205,17 +203,46 @@ $(function() {
         }
         $.ajax(quickUrl + $(this).attr('data-id'), {
             method: 'put',
-            success: function() {
+            success: function () {
                 table.ajax.reload();
             }
         });
-    }).on('click', '.js-modifyOrder', function() {
+    }).on('click', '.js-modifyOrder', function () {
         // $('#content', parent.document).attr('src', 'orderModify.html');
-    }).on('click', '.js-quickDoneMore', function() {
-        console.log($(this).attr('data-id'))
+    }).on('click', '.js-quickDoneMore', function () {
+        var self = $(this);
+        layer.open({
+            content: $('#J_quickDone').html(),
+            area: ['500px', 'auto'],
+            btn: ['确认', '取消'],
+            zIndex: 9999,
+            success: function () {
+                $('#J_shipmentTime').flatpickr({
+                    maxDate: new Date(),
+                    locale: 'zh'
+                });
+                $('#J_deliverTime').flatpickr({
+                    minDate: new Date(),
+                    locale: 'zh'
+                });
+            },
+            yes: function (index, layero) {
+                var value = getValue(layero);
+                if (value) {
+                    $.ajax(quickUrl + self.data('id'), {
+                        method: 'put',
+                        data: value,
+                        success: function () {
+                            table.ajax.reload();
+                            layer.close(index);
+                        }
+                    });
+                }
+            }
+        });
     });
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         table.ajax.reload();
     });
 
@@ -225,7 +252,7 @@ $(function() {
         if (formItem.length === 0) return {};
         var data = {};
 
-        formItem.each(function() {
+        formItem.each(function () {
             var t = $(this);
             var n = t.attr('name');
             var v = t.val();
@@ -240,14 +267,29 @@ $(function() {
         //TODO
     }
 
-    $('.js-orderMaintain').click(function() {
+    $('.js-orderMaintain').click(function () {
         $.ajax(
             '/order/orderMaintain', {
                 method: 'put',
-                success: function() {
+                success: function () {
                     $._table.ajax.reload();
                 }
             }
         );
     });
+
+    function getValue(ele) {
+        var data = {};
+        var inputs = ele.find('input');
+        $.each(inputs, function (i, v) {
+            if ($(v).val()) {
+                data[$(v).attr('name')] = $(v).val();
+            } else {
+                layer.tips('请填写该值', $(v), {
+                    tipsMore: true
+                });
+            }
+        });
+        return inputs.length === Object.keys(data).length ? data : false;
+    }
 });

@@ -159,24 +159,24 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
     "recordsTotal": 23,
     "recordsFiltered": 23,
     "data": [{
-            'id': '@id',
-            'orderId': '@id',
-            'user': '@cname',
-            'userLevel': '@pick(经销商,市代理,爱心天使)',
-            'goods': '帅风立式净水器',
-            'amount': '@integer(1, 100)',
-            'orderUser': '@cname',
-            'orderAddress': '@county(true)',
-            'orderMobile': /^1([34578])\d{9}$/,
-            'orderTime': '@datetime("yyyy-MM-dd")',
-            'method': '全额',
-            'methodCode': 0,
-            'total': '@integer(3600, 10000)',
-            'operator': '@pick(["-", "@cname"])',
-            'status': '待付款',
-            'statusCode': 1,
-            'quickDoneAble': false
-        },
+        'id': '@id',
+        'orderId': '@id',
+        'user': '@cname',
+        'userLevel': '@pick(经销商,市代理,爱心天使)',
+        'goods': '帅风立式净水器',
+        'amount': '@integer(1, 100)',
+        'orderUser': '@cname',
+        'orderAddress': '@county(true)',
+        'orderMobile': /^1([34578])\d{9}$/,
+        'orderTime': '@datetime("yyyy-MM-dd")',
+        'method': '全额',
+        'methodCode': 0,
+        'total': '@integer(3600, 10000)',
+        'operator': '@pick(["-", "@cname"])',
+        'status': '待付款',
+        'statusCode': 1,
+        'quickDoneAble': false
+    },
         {
             'id': '@id',
             'orderId': '@id',
@@ -266,8 +266,27 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'methodCode': 2,
             'total': '@integer(3600, 10000)',
             'operator': '@pick(["-", "@cname"])',
-            'status': '待发货',
+            'status': '待信审',
             'statusCode': 2,
+            'quickDoneAble': true
+        },
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'user': '@cname',
+            'userLevel': '@pick(经销商,市代理,爱心天使)',
+            'goods': '帅风立式净水器',
+            'amount': '@integer(1, 100)',
+            'orderUser': '@cname',
+            'orderAddress': '@county(true)',
+            'orderMobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'method': '投融家',
+            'methodCode': 2,
+            'total': '@integer(3600, 10000)',
+            'operator': '@pick(["-", "@cname"])',
+            'status': '信审被拒',
+            'statusCode': 4,
             'quickDoneAble': true
         },
         {
@@ -290,4 +309,9 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'quickDoneAble': '@boolean'
         }
     ]
+});
+
+Mock.mock(/\/orderData\/quickDone/, {
+    "resultCode": 200,
+    "resultMsg": "ok"
 });

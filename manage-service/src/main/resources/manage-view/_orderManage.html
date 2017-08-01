@@ -27,7 +27,13 @@
     <![endif]-->
 </head>
 
-<body data-url="/orderData/manageableList" th:data-url="@{/orderData/manageableList}" data-quick-url="/orderData/quickDone/" data-allow-mock-pay="true" th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}" data-allow-settlement="true">
+<body data-url="/orderData/manageableList"
+      th:data-url="@{/orderData/manageableList}"
+      data-quick-url="/orderData/quickDone/"
+      data-allow-mock-pay="true"
+      th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}"
+      data-allow-settlement="true"
+>
 
     <form id="detailForm" action="_orderDetail.html" method="get">
         <input type="hidden" name="id" value="" />
@@ -112,8 +118,44 @@
         </div>
     </section>
 </body>
+<template id="J_quickDone">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">物流公司 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入物流公司" class="form-control" name="deliverCompany" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">物流仓库 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入物流仓库" class="form-control" name="deliverStore" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">库存余量 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="number" min="1" placeholder="请输入库存余量" class="form-control" name="stockQuantity" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">发货时间 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" id="J_shipmentTime" placeholder="请选择发货时间" class="form-control" name="shipmentTime" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">送达时间 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" id="J_deliverTime" placeholder="请选择送达时间" class="form-control" name="deliverTime" required>
+            </div>
+        </div>
+    </form>
+</template>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+
 <script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
