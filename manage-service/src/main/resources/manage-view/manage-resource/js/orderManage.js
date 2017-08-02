@@ -90,11 +90,11 @@ $(function () {
                 "data": "orderTime",
                 "name": "orderTime"
             },
-            {
-                "title": "操作人",
-                "data": "operator",
-                "name": "operator"
-            },
+            // {
+            //     "title": "操作人",
+            //     "data": "operator",
+            //     "name": "operator"
+            // },
             {
                 title: "操作",
                 className: 'table-action',

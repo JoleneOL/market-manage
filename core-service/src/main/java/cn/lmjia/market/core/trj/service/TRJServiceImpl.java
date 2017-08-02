@@ -148,9 +148,15 @@ public class TRJServiceImpl implements TRJService {
 
         }
 
+        log.trace("排序并且串联后：" + sb.toString());
+
         sb.append(secretKey);
 
-        return DigestUtils.md5Hex(sb.toString());
+        log.trace("加入Key：" + sb.toString());
+
+        final String hex = DigestUtils.md5Hex(sb.toString());
+        log.trace("MD5 & Hex:" + hex);
+        return hex;
     }
 
     @Override
@@ -172,7 +178,7 @@ public class TRJServiceImpl implements TRJService {
                     , shipmentTime.format(dateFormatter), deliverTime.format(dateFormatter), order.getCustomer().getName()
                     , order.getCustomer().getMobile(), order.getInstallAddress().toTRJString()
                     , order.getOrderTime().format(formatter));
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.debug("[TRJ]", e);
             String code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).deliverUpdate(" +
                             "%d,\"%s\",\"%s\",\"%s\",%d" +
@@ -196,7 +202,7 @@ public class TRJServiceImpl implements TRJService {
             submitOrderCompleteRequest(payOrder.getAuthorisingInfo().getId(), order.getId()
                     , order.getInstallAddress().toTRJString(), installer, installCompany, mobile
                     , installTime.format(formatter), order.getAmount(), resourcePath);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.debug("[TRJ]", e);
             String code;
             if (org.springframework.util.StringUtils.isEmpty(resourcePath))
@@ -391,7 +397,6 @@ public class TRJServiceImpl implements TRJService {
     private HttpUriRequest newUriRequest(String uri, HttpEntity entity, NameValuePair... pairs) {
         List<NameValuePair> list = new ArrayList<>();
         list.addAll(Arrays.asList(pairs));
-        list.add(new BasicNameValuePair("tenant", tenant));
         list.add(new BasicNameValuePair("sign", sign(list)));
         // 串接
         StringBuilder urlBuilder = new StringBuilder();
@@ -415,7 +420,9 @@ public class TRJServiceImpl implements TRJService {
         return post;
     }
 
-    private String sign(List<NameValuePair> list) {
+    @Override
+    public String sign(List<NameValuePair> list) {
+        list.add(new BasicNameValuePair("tenant", tenant));
         HashMap<String, String> data = new HashMap<>();
         list.forEach(nameValuePair -> data.put(nameValuePair.getName(), nameValuePair.getValue()));
         return sign(data, key);

@@ -43,6 +43,9 @@ class StrangeJsonHandler<T> extends AbstractResponseHandler<T> {
         if ((flag.isNumber() && flag.intValue() == 0)
                 || (flag.isTextual() && flag.textValue().equals("0")))
             throw new IllegalStateException(root.get("message").asText());
+        if ((flag.isBoolean() && !flag.booleanValue())
+                || (flag.isTextual() && flag.textValue().equalsIgnoreCase("false")))
+            throw new IllegalStateException(root.get("message").asText());
 
         if (type == null || type == Void.class)
             return null;

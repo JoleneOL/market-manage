@@ -1,9 +1,12 @@
 package cn.lmjia.market.manage.controller.trj;
 
+import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -19,6 +22,7 @@ import me.jiangcai.lib.spring.data.AndSpecification;
 import me.jiangcai.payment.entity.PayOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -32,6 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.criteria.Join;
@@ -56,7 +61,10 @@ public class TRJManageController {
     private ConversionService conversionService;
     @Autowired
     private TRJService trjService;
-
+    @Autowired
+    private AuthorisingInfoRepository authorisingInfoRepository;
+    @Autowired
+    private Environment environment;
 
     @PostMapping("/orderData/quickDone/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -80,7 +88,16 @@ public class TRJManageController {
         // 资源应该是保存在某个目录下的
         trjService.submitOrderCompleteRequest(mainOrderService.getOrder(id), installer, installCompany, mobile
                 , installDate.atStartOfDay(), applyFile);
-        return "redirect:/mortgageTRGAppeal";
+        return "redirect:/mortgageTRG";
+    }
+
+    @GetMapping("/_TRJ_snickerData")
+    @PreAuthorize("hasAnyRole('ROOT')")
+    @ResponseBody
+    public Object snickerData() {
+        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest) || environment.acceptsProfiles("staging"))
+            return null;
+        return authorisingInfoRepository.findAll((root, query, cb) -> cb.equal(root.get("authorisingStatus"), AuthorisingStatus.Unused));
     }
 
     @GetMapping("/mortgageTRGAppeal")

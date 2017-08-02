@@ -5,12 +5,14 @@ import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.payment.PaymentForm;
 import me.jiangcai.payment.event.OrderPaySuccess;
+import org.apache.http.NameValuePair;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 投融家相关服务，我们也认可它是一种支付方式
@@ -38,6 +40,8 @@ public interface TRJService extends PaymentForm {
     void submitOrderInfo(String authorising, Number orderId, String name, String idNumber, String mobile
             , String goodCode, String goodName, Number amount, String dueAmount, String address, String orderTime
             , Number recommendCode) throws IOException;
+
+    String sign(List<NameValuePair> list);
 
     @EventListener(OrderPaySuccess.class)
     void paySuccess(OrderPaySuccess event);
