@@ -96,8 +96,8 @@ public class TRJManageController {
     @ResponseBody
     public Object snickerData() {
         if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest) || environment.acceptsProfiles("staging"))
-            return null;
-        return authorisingInfoRepository.findAll((root, query, cb) -> cb.equal(root.get("authorisingStatus"), AuthorisingStatus.Unused));
+            return authorisingInfoRepository.findAll((root, query, cb) -> cb.equal(root.get("authorisingStatus"), AuthorisingStatus.Unused));
+        return null;
     }
 
     @GetMapping("/mortgageTRGAppeal")

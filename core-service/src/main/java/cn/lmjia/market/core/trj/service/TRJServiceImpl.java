@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
@@ -422,14 +423,10 @@ public class TRJServiceImpl implements TRJService {
 //            log.debug("[TRJ]" + urlBuilder.toString());
 
         if (toEntity == null) {
-            toEntity = nameValuePairs -> {
-                final MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
-                        .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
-                        .setCharset(Charset.forName("UTF-8"));
-                nameValuePairs.forEach(nameValuePair -> multipartEntityBuilder.addTextBody(nameValuePair.getName()
-                        , nameValuePair.getValue(), ContentType.create("text/plain", "UTF-8")));
-                return multipartEntityBuilder.build();
-            };
+            toEntity = nameValuePairs -> EntityBuilder.create()
+                    .setContentType(ContentType.APPLICATION_FORM_URLENCODED.withCharset("UTF-8"))
+                    .setParameters(nameValuePairs)
+                    .build();
         }
 
         HttpPost post = new HttpPost(urlBuilder.toString());
