@@ -143,7 +143,11 @@ public class HaierSupplierTest extends LogsticsTest {
 
     @Test
     public void go() {
-        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), randomThings(), randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage);
+        Set<Thing> goods = new HashSet<>();
+        // uXkelZ和KWkLZc
+        goods.add(newTempThing("KWkLZc"));
+        goods.add(newTempThing("uXkelZ"));
+        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage);
         haierSupplier.cancelOrder(distribution.getId(), true, null);
     }
 
