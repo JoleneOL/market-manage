@@ -54,9 +54,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -77,6 +75,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * @author CJ
@@ -114,7 +113,7 @@ public class TRJServiceImpl implements TRJService {
 
     @Autowired
     public TRJServiceImpl(Environment environment) throws IOException {
-        urlRoot = environment.getProperty("me.jiangcai.dating.tourongjia.url2", "http://escrowcrm1.tourongjia.com");
+        urlRoot = environment.getProperty("me.jiangcai.dating.tourongjia.url2", "http://crmtest2.tourongjia.com");
         tenant = environment.getProperty("me.jiangcai.dating.tourongjia.tenant", "yuntao");
         key = environment.getProperty("me.jiangcai.dating.tourongjia.key", "1234567890");
         autoRecallCode = StreamUtils.copyToString(new ClassPathResource("/script/auto-recall.js").getInputStream(), Charset.forName("UTF-8"));
@@ -314,16 +313,22 @@ public class TRJServiceImpl implements TRJService {
     public void submitOrderCompleteRequest(String authorising, Number orderId, String address, String installer
             , String installCompany, String mobile, String installTime, Number amount, String resourcePath) throws IOException {
         try (CloseableHttpClient client = requestClient()) {
-            HttpEntity entity;
+            Function<List<NameValuePair>, HttpEntity> entity;
             if (!org.springframework.util.StringUtils.isEmpty(resourcePath)) {
                 Resource resource = resourceService.getResource(resourcePath);
                 if (resource.exists()) {
-                    String fileName = resourcePath.substring(resourcePath.lastIndexOf("/") + 1);
-                    entity = MultipartEntityBuilder.create()
-                            .addBinaryBody("attach0", resource.getInputStream()
-                                    , ContentType.parse(new MimetypesFileTypeMap().getContentType(resourcePath))
-                                    , fileName)
-                            .build();
+                    final String fileName = resourcePath.substring(resourcePath.lastIndexOf("/") + 1);
+                    final byte[] data = StreamUtils.copyToByteArray(resource.getInputStream());
+                    entity = nameValuePairs -> {
+                        final MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
+                                .addBinaryBody("attach0", data
+                                        , ContentType.parse(new MimetypesFileTypeMap().getContentType(resourcePath))
+                                        , fileName);
+                        nameValuePairs.forEach(nameValuePair
+                                -> entityBuilder.addTextBody(nameValuePair.getName(), nameValuePair.getValue()
+                                , ContentType.create("text/plain", Charset.forName("UTF-8"))));
+                        return entityBuilder.build();
+                    };
                 } else
                     entity = null;
             } else
@@ -394,29 +399,41 @@ public class TRJServiceImpl implements TRJService {
         return newUriRequest(uri, null, pairs);
     }
 
-    private HttpUriRequest newUriRequest(String uri, HttpEntity entity, NameValuePair... pairs) {
+    private HttpUriRequest newUriRequest(String uri, Function<List<NameValuePair>, HttpEntity> toEntity, NameValuePair... pairs) {
         List<NameValuePair> list = new ArrayList<>();
         list.addAll(Arrays.asList(pairs));
         list.add(new BasicNameValuePair("sign", sign(list)));
         // 串接
+        @SuppressWarnings("StringBufferReplaceableByString")
         StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(urlRoot).append(uri).append("?");
-        list.forEach(nameValuePair -> {
-            try {
-                urlBuilder.append(nameValuePair.getName()).append("=").append(URLEncoder.encode(nameValuePair.getValue(), "UTF-8"))
-                        .append("&");
-            } catch (UnsupportedEncodingException e) {
-                throw new InternalError(e);
-            }
-        });
+        urlBuilder.append(urlRoot).append(uri);
+//                .append("?");
+//        list.forEach(nameValuePair -> {
+//            try {
+//                urlBuilder.append(nameValuePair.getName()).append("=").append(URLEncoder.encode(nameValuePair.getValue(), "UTF-8"))
+//                        .append("&");
+//            } catch (UnsupportedEncodingException e) {
+//                throw new InternalError(e);
+//            }
+//        });
+//
+//        urlBuilder.setLength(urlBuilder.length() - 1);
+//        if (log.isDebugEnabled())
+//            log.debug("[TRJ]" + urlBuilder.toString());
 
-        urlBuilder.setLength(urlBuilder.length() - 1);
-        if (log.isDebugEnabled())
-            log.debug("[TRJ]" + urlBuilder.toString());
+        if (toEntity == null) {
+            toEntity = nameValuePairs -> {
+                final MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create()
+                        .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                        .setCharset(Charset.forName("UTF-8"));
+                nameValuePairs.forEach(nameValuePair -> multipartEntityBuilder.addTextBody(nameValuePair.getName()
+                        , nameValuePair.getValue(), ContentType.create("text/plain", "UTF-8")));
+                return multipartEntityBuilder.build();
+            };
+        }
+
         HttpPost post = new HttpPost(urlBuilder.toString());
-        if (entity == null)
-            return post;
-        post.setEntity(entity);
+        post.setEntity(toEntity.apply(list));
         return post;
     }
 

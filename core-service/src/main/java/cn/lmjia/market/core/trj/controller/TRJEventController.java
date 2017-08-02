@@ -48,7 +48,7 @@ public class TRJEventController {
             , String message, @RequestParam(required = false) Boolean result
             , @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime time) {
         Map<String, Object> apiResult = new HashMap<>();
-        apiResult.put("boolen", true);
+        apiResult.put("success", true);
         apiResult.put("message", "OK");
         apiResult.put("data", null);
         // 安全检查
