@@ -145,7 +145,7 @@
                 </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="number" placeholder="请输入数量" min="1" name="amount"
-                           id="J_goodsAmount" th:value="${@environment.acceptsProfiles('staging')?'1':''}">
+                           id="J_goodsAmount" th:value="${@environment.acceptsProfiles('staging')?'1':''}" th:readonly="${trj}">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -261,26 +261,16 @@
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
         </div>
-        <div th:if="${!trj}" class="weui-cells weui-cells_form">
-            <div class="weui-cell weui-cell_switch">
-                <div class="weui-cell__bd">花呗分期</div>
-                <div class="weui-cell__ft">
-                    <input class="weui-switch view-switch" name="installmentHuabai" id="J_installment" type="checkbox"
-                           value="1">
-                </div>
-            </div>
-            <div class="weui-cell weui-cell_vcode displayNone" id="J_checkCode">
+        <div th:if="${!trj}" class="weui-cells weui-cells_checkbox">
+            <label class="weui-cell weui-check__label" for="J_installment">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">按揭码</label>
+                    <input type="checkbox" class="weui-check" name="installmentHuabai" id="J_installment" value="1">
+                    <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
-                    <input type="hidden" name="isValid" title="判断是否检查通过">
-                    <input class="weui-input" type="text" name="mortgageCode" placeholder="请输入按揭码" id="J_mortgageCode">
+                    <p>花呗分期</p>
                 </div>
-                <div class="weui-cell__ft">
-                    <button type="button" class="weui-vcode-btn" id="J_checkBtn">校验</button>
-                </div>
-            </div>
+            </label>
         </div>
         <div class="weui-cells__tips text-right displayNone" id="J_installmentInfo">
             分期金额￥<span class="js-total">**</span>.00&nbsp;&nbsp;分24期&nbsp;￥<span class="js-installment">**</span>/期
@@ -321,19 +311,9 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>量子防辐射芯片</td>
+                            <td>量子手机防辐射芯片</td>
                             <td>LZXP01</td>
-                            <td>100 元/个</td>
-                        </tr>
-                        <tr>
-                            <td>厨下净水机</td>
-                            <td>HZCX01</td>
-                            <td>2820 元/台</td>
-                        </tr>
-                        <tr>
-                            <td>立式净水机</td>
-                            <td>HZLS01</td>
-                            <td>2820 元/台</td>
+                            <td>3000 元/盒（30个）</td>
                         </tr>
                         <tr>
                             <td>量子水宝</td>
@@ -341,14 +321,14 @@
                             <td>3000 元/条</td>
                         </tr>
                         <tr>
-                            <td>量子厨下净水机</td>
-                            <td>LZCX01</td>
-                            <td>3980 元/台</td>
+                            <td>立式净水机</td>
+                            <td>SCRO-200LKB</td>
+                            <td>3000 元/台</td>
                         </tr>
                         <tr>
-                            <td>量子立式净水机</td>
-                            <td>LZLS01</td>
-                            <td>3980 元/台</td>
+                            <td>量子厨下净水机</td>
+                            <td>LZCX01</td>
+                            <td>5000 元/台</td>
                         </tr>
                         <tr>
                             <td>量子空气净化器</td>
@@ -362,7 +342,6 @@
                         </tr>
                         </tbody>
                     </table>
-                    <em>注：量子净水机用户需另付服务费980元/台。</em>
                 </section>
                 <section>
                     <p><strong>第二条</strong>&nbsp;&nbsp;&nbsp;&nbsp;使用条件</p>
