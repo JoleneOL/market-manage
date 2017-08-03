@@ -32,6 +32,8 @@ public class MainGood {
     private boolean enable;
     @ManyToOne
     private MainProduct product;
+    @ManyToOne
+    private Channel channel;
 
     public static Expression<BigDecimal> getTotalPrice(Path<MainGood> path, CriteriaBuilder criteriaBuilder) {
         final Path<Object> product = path.get("product");

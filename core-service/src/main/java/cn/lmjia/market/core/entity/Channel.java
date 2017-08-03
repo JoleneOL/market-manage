@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import java.math.BigDecimal;
 import java.util.Set;
 
 /**
@@ -19,7 +22,8 @@ import java.util.Set;
 @Entity
 @Setter
 @Getter
-public class Activity {
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
+public class Channel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +34,13 @@ public class Activity {
      * 是否为额外；参与了额外渠道的产品在主商城流程中不可用。
      */
     private boolean extra;
-    @OneToMany
+    /**
+     * 设备款折扣率
+     */
+    @Column(scale = 9, precision = 10)
+    private BigDecimal depositRate;
+
+    @OneToMany(mappedBy = "channel")
     private Set<MainGood> mainGoodSet;
 
 }
