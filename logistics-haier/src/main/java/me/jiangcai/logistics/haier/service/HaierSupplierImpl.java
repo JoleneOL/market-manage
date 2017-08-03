@@ -1,6 +1,5 @@
 package me.jiangcai.logistics.haier.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import me.jiangcai.logistics.Destination;
 import me.jiangcai.logistics.Product;
@@ -11,6 +10,8 @@ import me.jiangcai.logistics.entity.Distribution;
 import me.jiangcai.logistics.exception.SupplierException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.haier.http.ResponseHandler;
+import me.jiangcai.logistics.haier.model.OrderStatusSync;
+import me.jiangcai.logistics.haier.model.OutInStore;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
@@ -23,6 +24,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -54,10 +56,13 @@ import java.util.stream.Collectors;
 public class HaierSupplierImpl implements HaierSupplier {
 
     private static final Log log = LogFactory.getLog(HaierSupplierImpl.class);
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+
     private final String gateway;
     private final String keyValue;
     private final Key key;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
 
     @Autowired
     public HaierSupplierImpl(Environment environment) throws UnsupportedEncodingException {
@@ -66,7 +71,6 @@ public class HaierSupplierImpl implements HaierSupplier {
         this.key = new SecretKeySpec(environment.getProperty("haier.key", "KeLy8g7qjmnbgWP1").getBytes("UTF-8"), "AES");
         // Haier,123
     }
-
 
     @Override
     public void cancelOrder(String id, boolean focus, String reason) {
@@ -160,7 +164,7 @@ public class HaierSupplierImpl implements HaierSupplier {
                                         , new BasicNameValuePair("source", "LIMEIJIA")
                                         , new BasicNameValuePair("type", "Json")
                                         , new BasicNameValuePair("sign", sign(content, keyValue))
-                                        , new BasicNameValuePair("content", cipher(content))
+                                        , new BasicNameValuePair("content", cipherEncrypt(content))
                                 )
                                 .build()
                 );
@@ -174,8 +178,9 @@ public class HaierSupplierImpl implements HaierSupplier {
         }
     }
 
-    @SneakyThrows({NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidKeyException.class, UnsupportedEncodingException.class, BadPaddingException.class, IllegalBlockSizeException.class})
-    private String cipher(String content) {
+    @SneakyThrows({NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidKeyException.class
+            , UnsupportedEncodingException.class, BadPaddingException.class, IllegalBlockSizeException.class})
+    private String cipherEncrypt(String content) {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, key);
         final String encodeToString = Base64.getEncoder().encodeToString(cipher.doFinal(content.getBytes("UTF-8")));
@@ -183,23 +188,76 @@ public class HaierSupplierImpl implements HaierSupplier {
         return encodeToString;
     }
 
+    @SneakyThrows({NoSuchAlgorithmException.class, NoSuchPaddingException.class, InvalidKeyException.class
+            , UnsupportedEncodingException.class, BadPaddingException.class, IllegalBlockSizeException.class})
+    private String cipherDecrypt(String content) {
+        byte[] data = Base64.getDecoder().decode(content);
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        data = cipher.doFinal(data);
+        String string = new String(data, "UTF-8");
+        log.debug("明文：" + string);
+        return string;
+    }
+
     //NoSuchAlgorithmException.class,
     // UnsupportedEncodingException.class
     @Override
     @SneakyThrows({})
     public String sign(String content, String keyValue) {
-        /*
-        "签名 base64(MD5(content+keyValue))
-ketValue：Haier,123
-content：如下"
-         */
-
-//        byte[] digest = MessageDigest.getInstance("MD5").digest((content + keyValue).getBytes("UTF-8"));
-//        String digestString = DigestUtils.md5DigestAsHex((content +"+"+ keyValue).getBytes("UTF-8"));
-//        System.out.println(digestString);
-//        System.out.println(DigestUtils.md5DigestAsHex((content + keyValue).getBytes("UTF-8")));
         final String hex = DigestUtils.md5Hex(content + keyValue);
-        return Base64.getEncoder().encodeToString(hex.getBytes("UTF-8"));
+        final String sign = Base64.getEncoder().encodeToString(hex.getBytes("UTF-8"));
+        log.debug("sign:" + sign);
+        return sign;
+    }
+
+    @Override
+    public Object event(String businessType, String source, String contentType, String sign, String content) throws IOException {
+        // <Return/>
+        log.debug("businessType:" + businessType);
+        content = cipherDecrypt(content);
+        if (!sign.equals(sign(content, keyValue)))
+            throw new IllegalArgumentException("Bad Sign.");
+        if (!source.equals("LIMEIJIA"))
+            throw new IllegalArgumentException("Bad Source:" + source);
+
+        if ("rrs_outinstore".equalsIgnoreCase(businessType)) {
+            outInStoreEvent(contentType, content);
+        } else if ("rrs_statusback".equalsIgnoreCase(businessType)) {
+            statusBack(contentType, content);
+        } else
+            throw new IllegalArgumentException("not support businessType:" + businessType);
+
+
+//        return "中文" + content;
+        return null;
+    }
+
+    private <T> T toModel(Class<T> javaType, String contentType, String content) throws IOException {
+        T requestData;
+        if (contentType.equalsIgnoreCase("xml")) {
+            //noinspection unchecked
+            requestData = xmlMapper.readValue(content, javaType);
+        } else if (contentType.equalsIgnoreCase("json")) {
+            //noinspection unchecked
+            requestData = objectMapper.readValue(content, javaType);
+        } else
+            throw new IllegalArgumentException("bad type:" + contentType);
+
+//        System.out.println(requestData);
+        log.trace(requestData);
+        return requestData;
+    }
+
+    private void outInStoreEvent(String contentType, String content) throws IOException {
+        OutInStore outInStore = toModel(OutInStore.class, contentType, content);
+        // 处理该事件！
+        applicationEventPublisher.publishEvent(outInStore);
+    }
+
+    private void statusBack(String contentType, String content) throws IOException {
+        OrderStatusSync sync = toModel(OrderStatusSync.class, contentType, content);
+        applicationEventPublisher.publishEvent(sync);
     }
 
     private CloseableHttpClient newClient() {

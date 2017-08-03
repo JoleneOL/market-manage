@@ -9,6 +9,8 @@
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
         <logger name="me.jiangcai.logistics" level="debug"/>
+        <logger name="me.jiangcai.logistics.haier.controller" level="trace"/>
+        <logger name="me.jiangcai.logistics.haier.service" level="trace"/>
 
         <logger name="org.apache.http.wire" level="debug"/>
         <logger name="org.springframework.security.web" level="debug"/>
