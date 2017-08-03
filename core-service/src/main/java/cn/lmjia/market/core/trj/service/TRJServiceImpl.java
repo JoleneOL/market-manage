@@ -2,8 +2,6 @@ package cn.lmjia.market.core.trj.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.channel.Channel;
-import cn.lmjia.market.core.entity.channel.InstallmentChannel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
@@ -260,19 +258,7 @@ public class TRJServiceImpl implements TRJService {
     }
 
     @PostConstruct
-    @Autowired
     public void init() {
-        Channel channel = channelService.findByName(ChannelName);
-        if (channel == null) {
-            // 新增投融家渠道
-            final InstallmentChannel installmentChannel = new InstallmentChannel();
-            installmentChannel.setPoundageRate(new BigDecimal("0.2"));
-            installmentChannel.setName(ChannelName);
-            installmentChannel.setExtra(true);
-            installmentChannel.setLockedAmountPerOrder(1);
-
-            channel = channelService.saveChannel(installmentChannel);
-        }
         wechatSendSupplier.registerTemplateMessage(new TRJCheckWarning(), new AbstractTemplateMessageStyle() {
             @Override
             public String getTemplateId() {
@@ -488,6 +474,8 @@ public class TRJServiceImpl implements TRJService {
 
     @Override
     public AuthorisingInfo checkAuthorising(String authorising, String idNumber) throws InvalidAuthorisingException {
+        if (org.springframework.util.StringUtils.isEmpty(authorising))
+            throw new InvalidAuthorisingException(authorising, idNumber);
         AuthorisingInfo info = authorisingInfoRepository.findOne(authorising);
         if (info == null)
             throw new InvalidAuthorisingException(authorising, idNumber);

@@ -2,11 +2,14 @@ package cn.lmjia.market.wechat.controller.order;
 
 import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.MainOrderRepository;
+import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
@@ -51,12 +54,17 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     private TRJService trjService;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private ChannelService channelService;
 
     @Test
     public void go() throws Exception {
         //选择一个商品的价格 认定它为投融家价格
-        BigDecimal price = mainGoodService.forSale().stream().max(new RandomComparator()).orElse(null).getTotalPrice();
-        systemStringService.updateSystemString(TRJEnhanceConfig.SS_PriceKey, price);
+        Channel trj = channelService.findByName(TRJService.ChannelName);
+
+        final MainGood good = mainGoodService.forSale(trj).get(0);
+
+        BigDecimal price = good.getTotalPrice();
 
         final Login login = randomLogin(false);
         updateAllRunWith(login);
@@ -69,9 +77,15 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         orderPage.allPriced(price);
 
-        // 特定按揭码和身份证给他们
-        OrderRequest request = randomOrderRequest(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomNumeric(18));
+        // 不提交也不行
+        OrderRequest request = randomOrderRequest(trj.getId(), good, null, null);
         String result = submitOrderRequest(request);
+        // 应该是一个错误地址
+        assertThat(result)
+                .contains("InvalidAuthorisingException");
+        // 特定按揭码和身份证给他们
+        request = randomOrderRequest(trj.getId(), good, RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomNumeric(18));
+        result = submitOrderRequest(request);
         // 应该是一个错误地址
         assertThat(result)
                 .contains("InvalidAuthorisingException");
@@ -80,7 +94,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         final String idNumber = RandomStringUtils.randomNumeric(18);
         addAuthorising(authorising, idNumber);
         // 使用刚新增的按揭码
-        request = randomOrderRequest(authorising, idNumber);
+        request = randomOrderRequest(trj.getId(), good, authorising, idNumber);
         result = submitOrderRequest(request);
 
         Thread.sleep(1100L);

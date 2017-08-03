@@ -79,6 +79,13 @@ public class MainGood {
     }
 
     /**
+     * @return 渠道所带来的溢价或者优惠
+     */
+    public BigDecimal getChannelChangeAsAdd() {
+        return getTotalPrice().subtract(product.getDeposit()).subtract(product.getInstall());
+    }
+
+    /**
      * @return 总价
      */
     public BigDecimal getTotalPrice() {

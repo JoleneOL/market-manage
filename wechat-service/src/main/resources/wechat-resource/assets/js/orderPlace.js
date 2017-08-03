@@ -29,11 +29,15 @@ $(function () {
 
 
     function countTotal() {
+        var orderTotal = $('#J_orderTotal');
         var price = +$('#J_userCost').find('span').eq(0).text();
         var cost = +$('#J_serviceCharge').find('span').eq(0).text();
+        var channel = +orderTotal.attr('data-price-channel');
         var amout = +$('#J_goodsAmount').val();
-        var total = (price + cost) * amout;
-        $('#J_orderTotal').find('strong').text(total);
+        var total = (price + channel + cost) * amout;
+
+
+        orderTotal.find('strong').text(total);
         // installmentFunc(total);
         $('input[name="orderTotal"]').val(total);
     }
@@ -45,6 +49,9 @@ $(function () {
         // var cost = $type.attr('data-day-cost');
 
         var price = $type.attr('data-price');
+        // 渠道溢价或者优惠，就保存在总价那个dom中 如果以后有显示该费用的需求，再放到别的地方去
+        var channel = $type.attr('data-price-channel');
+        $('#J_orderTotal').attr('data-price-channel', channel);
         var model = $type.attr('data-model');
         var serviceCharge = $type.attr('data-service-charge');
 
@@ -69,7 +76,7 @@ $(function () {
     var isValid = $('input[name="isValid"]');
     var installment = $('#J_installment');
     var submitBtn = $('#J_submitBtn');
-    var info =  $('#J_installmentInfo');
+    var info = $('#J_installmentInfo');
     installment.change(function () {
         if ($(this).is(':checked')) {
             $('#J_checkCode').removeClass('displayNone');

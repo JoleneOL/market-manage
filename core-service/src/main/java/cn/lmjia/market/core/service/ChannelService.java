@@ -43,4 +43,7 @@ public interface ChannelService {
      */
     @Transactional
     MainGood cloneGoodToChannel(MainGood good, Channel channel);
+
+    @Transactional(readOnly = true)
+    Channel get(long id);
 }

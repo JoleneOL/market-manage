@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.controller.main.order;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.Address;
@@ -47,9 +48,14 @@ public abstract class AbstractMainOrderController {
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
-            , Address address, String mobile, long goodId, int amount, String mortgageIdentifier) {
+            , Address address, String mobile, long goodId, int amount, String mortgageIdentifier, Long channelId) {
+        final MainGood good = mainGoodRepository.getOne(goodId);
+        if (channelId != null) {
+            if (good.getChannel() == null || !good.getChannel().getId().equals(channelId))
+                throw new IllegalArgumentException("特定的频道只能购买特定的商品");
+        }
         return mainOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age
                 , gender, address
-                , mainGoodRepository.getOne(goodId), amount, mortgageIdentifier);
+                , good, amount, mortgageIdentifier);
     }
 }

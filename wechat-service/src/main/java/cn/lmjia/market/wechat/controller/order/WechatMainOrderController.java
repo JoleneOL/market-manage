@@ -30,9 +30,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -105,14 +105,23 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     // &fullAddress=%E6%B1%9F%E7%95%94%E6%99%95%E5%95%A6&mobile=18606509616&goodId=2&leasedType=hzts02&amount=0&activityCode=xzs&recommend=2
     @PostMapping("/wechatOrder")
     @Transactional
-    public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender, Address address, String mobile, long goodId, int amount
-            , String activityCode, @AuthenticationPrincipal Login login, Model model, String authorising, String idNumber)
+    public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender
+            , Address address, String mobile, long goodId, int amount
+            , String activityCode, @AuthenticationPrincipal Login login, Model model
+            , @RequestParam(required = false) Long channelId
+            , String authorising, String idNumber)
             throws SystemMaintainException, InvalidAuthorisingException {
         int age = 20;
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile, goodId, amount
-                , activityCode);
-        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))
-            return payAssistanceService.payOrder(openId, request, order, authorising, idNumber);
+                , activityCode, channelId);
+        if (channelId != null) {
+            Channel channel = channelService.get(channelId);
+            //        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))
+            if (channel.getName().equals(TRJService.ChannelName)) {
+                return payAssistanceService.payOrder(openId, request, order, authorising, idNumber);
+            }
+        }
+
         return payAssistanceService.payOrder(openId, request, order);
     }
 

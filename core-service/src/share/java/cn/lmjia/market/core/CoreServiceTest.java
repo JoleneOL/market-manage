@@ -344,7 +344,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 执行下单请求
      */
     protected MockHttpServletRequestBuilder orderRequestBuilder(MockHttpServletRequestBuilder builder, OrderRequest request) {
-        final MockHttpServletRequestBuilder newBuilder = builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MockHttpServletRequestBuilder newBuilder = builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("name", request.getName())
                 .param("age", String.valueOf(request.getAge()))
                 .param("gender", String.valueOf(request.getGender()))
@@ -356,6 +356,9 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 .param("amount", String.valueOf(request.getAmount()))
                 .param("activityCode", request.getCode())
                 .param("recommend", String.valueOf(request.getRecommend().getId()));
+        if (request.getChannelId() != null)
+            newBuilder = newBuilder.param("channelId", String.valueOf(request.getChannelId()));
+
         if (StringUtils.isEmpty(request.getAuthorising()))
             return newBuilder;
         return newBuilder.param("authorising", request.getAuthorising())
@@ -367,7 +370,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 随机的下单请求原数据
      */
     protected OrderRequest randomOrderRequest() {
-        return randomOrderRequest(null, null);
+        return randomOrderRequest(null, null, null, null);
     }
 
     /**
@@ -396,9 +399,10 @@ public abstract class CoreServiceTest extends SpringWebTest {
     /**
      * @return 随机的下单请求原数据
      */
-    protected OrderRequest randomOrderRequest(String authorising, String idNumber) {
+    protected OrderRequest randomOrderRequest(Long channelId, MainGood good, String authorising, String idNumber) {
         Address address = randomAddress();
-        MainGood good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        if (good == null)
+            good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
         String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
         Login recommend = randomLogin(true);
         final String name = "W客户" + RandomStringUtils.randomAlphabetic(6);
@@ -410,7 +414,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 address, good, code
                 , recommend, name, age, gender
                 , mobile, amount
-                , authorising, idNumber
+                , authorising, idNumber, channelId
         );
     }
 

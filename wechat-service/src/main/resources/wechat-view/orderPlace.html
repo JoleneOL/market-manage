@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="goodList" type="java.util.Collection<cn.lmjia.market.core.entity.MainGood>"*/-->
 <!--/*@thymesVar id="trj" type="boolean"*/-->
+<!--/*@thymesVar id="channel" type="cn.lmjia.market.core.entity.channel.Channel"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -116,21 +117,34 @@
                                 th:each="good:${goodList}"
                                 th:value="${good.id}"
                                 th:data-price="${good.product.deposit}"
+                                th:data-price-channel="${good.channelChangeAsAdd}"
                                 th:data-service-charge="${good.product.install}"
                                 th:data-model="${good.product.code}"
                                 th:text="${good.product.name}">厨下净水机
                         </option>
-                        <option th:remove="all" value="2" data-price="2820" data-model="HZLS01">立式净水器</option>
-                        <option th:remove="all" value="4" data-price="3000" data-service-charge="980"
+                        <option th:remove="all" value="2" data-price="2820" data-price-channel="0" data-model="HZLS01">
+                            立式净水器
+                        </option>
+                        <option th:remove="all" value="4" data-price="3000" data-price-channel="0"
+                                data-service-charge="980"
                                 data-model="LZCX01">量子厨下净水机
                         </option>
-                        <option th:remove="all" value="5" data-price="3000" data-service-charge="980"
+                        <option th:remove="all" value="5" data-price="3000" data-price-channel="0"
+                                data-service-charge="980"
                                 data-model="LZLS01">量子立式净水机
                         </option>
-                        <option th:remove="all" value="7" data-price="5000" data-model="ESL-HM01">量子空气净化器</option>
-                        <option th:remove="all" value="8" data-price="9800" data-model="SP70">量子食品优化宝</option>
-                        <option th:remove="all" value="9" data-price="100" data-model="LZXP01">量子防辐射芯片（片）</option>
-                        <option th:remove="all" value="10" data-price="3000" data-model="LZSB01">量子水宝</option>
+                        <option th:remove="all" value="7" data-price="5000" data-price-channel="100"
+                                data-model="ESL-HM01">量子空气净化器
+                        </option>
+                        <option th:remove="all" value="8" data-price="9800" data-price-channel="-100" data-model="SP70">
+                            量子食品优化宝
+                        </option>
+                        <option th:remove="all" value="9" data-price="100" data-price-channel="0" data-model="LZXP01">
+                            量子防辐射芯片（片）
+                        </option>
+                        <option th:remove="all" value="10" data-price="3000" data-price-channel="0" data-model="LZSB01">
+                            量子水宝
+                        </option>
                     </select>
                 </div>
             </div>
@@ -244,6 +258,9 @@
                 </div>
             </div>
         </div>
+        <th:block th:if="${channel!=null}">
+            <input type="hidden" name="channelId" th:value="${channel.id}"/>
+        </th:block>
         <div th:if="${trj}" class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -499,7 +516,7 @@
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="../wechat-resource/assets/js/orderPlace.js"
-        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=1)}"></script>
+        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=2)}"></script>
 <script th:if="${trj}">
     $(function () {
         var input = $('#J_goodsAmount');

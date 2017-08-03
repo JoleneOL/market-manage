@@ -52,4 +52,9 @@ public class ChannelServiceImpl implements ChannelService {
         newGood.setChannel(channel);
         return setupChannel(newGood, channel);
     }
+
+    @Override
+    public Channel get(long id) {
+        return channelRepository.getOne(id);
+    }
 }
