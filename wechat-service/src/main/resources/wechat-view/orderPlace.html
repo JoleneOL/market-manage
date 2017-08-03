@@ -121,8 +121,12 @@
                                 th:text="${good.product.name}">厨下净水机
                         </option>
                         <option th:remove="all" value="2" data-price="2820" data-model="HZLS01">立式净水器</option>
-                        <option th:remove="all" value="4" data-price="3000" data-service-charge="980" data-model="LZCX01">量子厨下净水机</option>
-                        <option th:remove="all" value="5" data-price="3000" data-service-charge="980" data-model="LZLS01">量子立式净水机</option>
+                        <option th:remove="all" value="4" data-price="3000" data-service-charge="980"
+                                data-model="LZCX01">量子厨下净水机
+                        </option>
+                        <option th:remove="all" value="5" data-price="3000" data-service-charge="980"
+                                data-model="LZLS01">量子立式净水机
+                        </option>
                         <option th:remove="all" value="7" data-price="5000" data-model="ESL-HM01">量子空气净化器</option>
                         <option th:remove="all" value="8" data-price="9800" data-model="SP70">量子食品优化宝</option>
                         <option th:remove="all" value="9" data-price="100" data-model="LZXP01">量子防辐射芯片（片）</option>
@@ -145,7 +149,7 @@
                 </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="number" placeholder="请输入数量" min="1" name="amount"
-                           id="J_goodsAmount" th:value="${@environment.acceptsProfiles('staging')?'1':''}" th:readonly="${trj}">
+                           id="J_goodsAmount" th:value="${@environment.acceptsProfiles('staging')?'1':''}">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -206,15 +210,15 @@
                 <input type="hidden" title="联系电话" name="invoiceMobile" disabled>
             </div>
             <!--<div class="weui-cell js-install">-->
-                <!--<div class="weui-cell__hd">-->
-                    <!--<label class="weui-label">初装费用</label>-->
-                <!--</div>-->
-                <!--<div class="weui-cell__bd">-->
-                    <!--<p class="weui-input" id="J_installationCost">-->
-                        <!--<span>180</span>-->
-                        <!--<span class="unit-txt">元 / 台</span>-->
-                    <!--</p>-->
-                <!--</div>-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">初装费用</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<p class="weui-input" id="J_installationCost">-->
+            <!--<span>180</span>-->
+            <!--<span class="unit-txt">元 / 台</span>-->
+            <!--</p>-->
+            <!--</div>-->
             <!--</div>-->
             <div class="weui-cell displayNone js-service">
                 <div class="weui-cell__hd">
@@ -496,4 +500,11 @@
         th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="../wechat-resource/assets/js/orderPlace.js"
         th:src="@{/wechat-resource/assets/js/orderPlace.js(v=1)}"></script>
+<script th:if="${trj}">
+    $(function () {
+        var input = $('#J_goodsAmount');
+        input.prop('readonly', true);
+        input.val(1);
+    })
+</script>
 </html>
