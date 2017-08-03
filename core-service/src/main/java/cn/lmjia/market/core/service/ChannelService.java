@@ -28,12 +28,11 @@ public interface ChannelService {
 
     /**
      * 设置这个商品为该渠道所有
-     *
-     * @param good    商品
+     *  @param good    商品
      * @param channel 渠道
      */
     @Transactional
-    void setupChannel(MainGood good, Channel channel);
+    MainGood setupChannel(MainGood good, Channel channel);
 
     /**
      * 复制这个商品，并且让新商品为该渠道所有

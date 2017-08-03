@@ -8,6 +8,8 @@ import cn.lmjia.market.core.service.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+
 /**
  * @author CJ
  */
@@ -30,17 +32,24 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public void setupChannel(MainGood good, Channel channel) {
+    public MainGood setupChannel(MainGood good, Channel channel) {
         good.setChannel(channel);
-        mainGoodRepository.save(good);
+        if (channel.getMainGoodSet() == null) {
+            channel.setMainGoodSet(new HashSet<>());
+        }
+
+        final MainGood save = mainGoodRepository.save(good);
+        channel.getMainGoodSet().add(save);
+        channelRepository.save(channel);
+        return save;
     }
 
     @Override
     public MainGood cloneGoodToChannel(MainGood good, Channel channel) {
         MainGood newGood = new MainGood();
-        newGood.setChannel(channel);
         newGood.setEnable(good.isEnable());
         newGood.setProduct(good.getProduct());
-        return mainGoodRepository.save(newGood);
+        newGood.setChannel(channel);
+        return setupChannel(newGood, channel);
     }
 }
