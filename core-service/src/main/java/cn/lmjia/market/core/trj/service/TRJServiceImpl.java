@@ -322,7 +322,7 @@ public class TRJServiceImpl implements TRJService {
                     final byte[] data = StreamUtils.copyToByteArray(resource.getInputStream());
                     entity = nameValuePairs -> {
                         final MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create()
-                                .addBinaryBody("attach0", data
+                                .addBinaryBody("attach", data
                                         , ContentType.parse(new MimetypesFileTypeMap().getContentType(resourcePath))
                                         , fileName);
                         nameValuePairs.forEach(nameValuePair
