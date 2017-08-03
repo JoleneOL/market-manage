@@ -20,6 +20,8 @@ public interface MainGoodService {
     List<MainGood> forSale(BigDecimal fixedPrice);
 
     /**
+     * 默认渠道
+     *
      * @return 在售商品列表
      */
     @Transactional(readOnly = true)

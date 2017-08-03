@@ -2,6 +2,8 @@ package cn.lmjia.market.core.trj.service;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.channel.InstallmentChannel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
@@ -9,6 +11,7 @@ import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
+import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ManagerService;
 import cn.lmjia.market.core.service.NoticeService;
@@ -111,6 +114,8 @@ public class TRJServiceImpl implements TRJService {
     private NoticeService noticeService;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private ChannelService channelService;
 
     @Autowired
     public TRJServiceImpl(Environment environment) throws IOException {
@@ -255,6 +260,17 @@ public class TRJServiceImpl implements TRJService {
     @PostConstruct
     @Autowired
     public void init() {
+        Channel channel = channelService.findByName("投融家分期");
+        if (channel == null) {
+            // 新增投融家渠道
+            final InstallmentChannel installmentChannel = new InstallmentChannel();
+            installmentChannel.setPoundageRate(new BigDecimal("0.2"));
+            installmentChannel.setName("投融家分期");
+            installmentChannel.setExtra(true);
+            installmentChannel.setLockedAmountPerOrder(1);
+
+            channel = channelService.saveChannel(installmentChannel);
+        }
         wechatSendSupplier.registerTemplateMessage(new TRJCheckWarning(), new AbstractTemplateMessageStyle() {
             @Override
             public String getTemplateId() {

@@ -62,22 +62,17 @@ public class MainGood {
                 , channel.get("depositRate"))
                 , product.get("install")
         );
-        final Expression<Number> totalSum = criteriaBuilder.selectCase(channel.isNull())
-                .when(true, simpleSum)
-                .otherwise(otherChannelSum);
         return criteriaBuilder.toBigDecimal(
-                criteriaBuilder.selectCase(channel.isNull())
+                criteriaBuilder.<Boolean, Number>selectCase(channel.isNull())
                         .when(true
                                 , simpleSum)
                         .otherwise(
-                                criteriaBuilder.selectCase(channel.type())
+                                criteriaBuilder.<Class<? extends Channel>, Number>selectCase(channel.type())
                                         .when(InstallmentChannel.class,
-                                                // 这个情况下 价格等于 deposit*dRate*(1+poundageRate)+ install
                                                 installmentChannelSum
                                         )
                                         .otherwise(
                                                 otherChannelSum
-                                                // deposit*dRate+ install
                                         )
                         )
         );
