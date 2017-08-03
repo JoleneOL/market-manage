@@ -148,9 +148,9 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
         return from.join("customer");
     }
 
-    public static Expression<BigDecimal> getOrderDueAmount(Path<MainOrder> path, CriteriaBuilder criteriaBuilder) {
+    public static Expression<BigDecimal> getOrderDueAmount(From<?, MainOrder> path, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.toBigDecimal(criteriaBuilder.prod(
-                MainGood.getTotalPrice(path.get("good"), criteriaBuilder)
+                MainGood.getTotalPrice(path.join("good"), criteriaBuilder)
                 , path.get("amount")));
     }
 
