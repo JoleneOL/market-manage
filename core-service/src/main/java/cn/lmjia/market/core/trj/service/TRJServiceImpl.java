@@ -260,12 +260,12 @@ public class TRJServiceImpl implements TRJService {
     @PostConstruct
     @Autowired
     public void init() {
-        Channel channel = channelService.findByName("投融家分期");
+        Channel channel = channelService.findByName(ChannelName);
         if (channel == null) {
             // 新增投融家渠道
             final InstallmentChannel installmentChannel = new InstallmentChannel();
             installmentChannel.setPoundageRate(new BigDecimal("0.2"));
-            installmentChannel.setName("投融家分期");
+            installmentChannel.setName(ChannelName);
             installmentChannel.setExtra(true);
             installmentChannel.setLockedAmountPerOrder(1);
 

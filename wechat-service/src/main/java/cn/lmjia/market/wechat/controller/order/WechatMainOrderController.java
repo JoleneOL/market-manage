@@ -4,14 +4,17 @@ import cn.lmjia.market.core.controller.main.order.AbstractMainOrderController;
 import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
+import cn.lmjia.market.core.trj.TRJService;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
@@ -33,7 +36,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 
 /**
  * @author CJ
@@ -54,6 +56,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     private PayService payService;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private ChannelService channelService;
 
     /**
      * @return 展示下单页面
@@ -71,8 +75,10 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     @GetMapping(TRJEnhanceConfig.TRJOrderURI)
     public String indexForTRJ(@AuthenticationPrincipal Login login, Model model) {
         model.addAttribute("trj", true);
-        orderIndex(login, model, systemStringService.getCustomSystemString(TRJEnhanceConfig.SS_PriceKey
-                , "trj.order.price.comment", true, BigDecimal.class, BigDecimal.valueOf(3600)));
+        final Channel channel = channelService.findByName(TRJService.ChannelName);
+        if (channel == null)
+            throw new IllegalStateException("必要的分期没有被设置。");
+        orderIndex(login, model, channel);
         return "wechat@orderPlace.html";
     }
 

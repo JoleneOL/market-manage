@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,8 +20,8 @@ public class MainGoodServiceImpl implements MainGoodService {
     private MainGoodRepository mainGoodRepository;
 
     @Override
-    public List<MainGood> forSale(BigDecimal fixedPrice) {
-        if (fixedPrice == null)
+    public List<MainGood> forSale(Channel channel) {
+        if (channel == null)
             return mainGoodRepository.findAll((root, query, cb) -> {
                 Join<MainGood, Channel> channelJoin = root.join("channel", JoinType.LEFT);
                 return cb.and(
@@ -35,7 +34,7 @@ public class MainGoodServiceImpl implements MainGoodService {
             });
         return mainGoodRepository.findAll((root, query, cb) -> cb.and(
                 cb.isTrue(root.get("enable"))
-                , cb.equal(MainGood.getTotalPrice(root, cb), fixedPrice)
+                , cb.equal(root.get("channel"), channel)
         ));
     }
 

@@ -37,6 +37,9 @@ public class MainGoodServiceTest extends CoreServiceTest {
         assertThat(mainGoodService.forSale().size())
                 .isEqualTo(originGoodList.size() - 1);
 
+        assertThat(mainGoodService.forSale(extraChannel).size())
+                .isEqualTo(1);
+
     }
 
 }

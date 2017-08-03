@@ -22,6 +22,11 @@ import java.util.List;
 public interface TRJService extends PaymentForm {
 
     /**
+     * 分期名称
+     */
+    String ChannelName = "投融家分期";
+
+    /**
      * 添加一个有效按揭码
      *
      * @param authorising

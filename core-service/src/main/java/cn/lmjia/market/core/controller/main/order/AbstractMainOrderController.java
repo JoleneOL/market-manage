@@ -2,6 +2,7 @@ package cn.lmjia.market.core.controller.main.order;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -11,8 +12,6 @@ import me.jiangcai.wx.model.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
 
 /**
  * @author CJ
@@ -38,12 +37,13 @@ public abstract class AbstractMainOrderController {
     /**
      * 展示下单页面
      *
-     * @param login      当前身份
-     * @param model      model
-     * @param fixedPrice 特定金额
+     * @param login   当前身份
+     * @param model   model
+     * @param channel 特定渠道
      */
-    protected void orderIndex(Login login, Model model, BigDecimal fixedPrice) {
-        model.addAttribute("goodList", mainGoodService.forSale(fixedPrice));
+    protected void orderIndex(Login login, Model model, Channel channel) {
+        model.addAttribute("goodList", mainGoodService.forSale(channel));
+        model.addAttribute("channel", channel);
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
