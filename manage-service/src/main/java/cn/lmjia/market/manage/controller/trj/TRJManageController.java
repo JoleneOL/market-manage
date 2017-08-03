@@ -86,6 +86,8 @@ public class TRJManageController {
     public String update(long id, String installer, String installCompany, String mobile
             , @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate installDate, String applyFile) {
         // 资源应该是保存在某个目录下的
+        if (applyFile != null)
+            applyFile = applyFile.replaceAll(",", "");
         trjService.submitOrderCompleteRequest(mainOrderService.getOrder(id), installer, installCompany, mobile
                 , installDate.atStartOfDay(), applyFile);
         return "redirect:/mortgageTRG";

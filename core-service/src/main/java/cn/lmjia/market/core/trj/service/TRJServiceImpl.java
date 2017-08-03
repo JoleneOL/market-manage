@@ -161,6 +161,8 @@ public class TRJServiceImpl implements TRJService {
 
     @Override
     public void addAuthorisingInfo(String authorising, String idNumber) {
+        if (authorisingInfoRepository.findOne(authorising) != null)
+            throw new IllegalArgumentException(authorising + "existing");
         AuthorisingInfo info = new AuthorisingInfo();
         info.setId(authorising);
         info.setIdNumber(idNumber);
