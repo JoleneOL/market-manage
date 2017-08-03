@@ -59,8 +59,8 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
 //        Thread.sleep(1000);
 //        scriptTaskService.submitTask(randomMobile(),Instant.now(),"context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).deliverUpdate(2,\"pFOgceQJmz\",\"zhwMFrzDVt\",\"ABbRflmcPZ\",23,\"2017-08-01\",\"2017-08-01\",\"W客户nshbVy\",\"14400374041\",\"nLKu省-DYiy市-yRdu区-其他地址HyURdzLKzz\",\"2017-08-01 01:45:26\")");
 //        Thread.sleep(2000);
-        scriptTaskService.submitTask(randomMobile(), Instant.now(), "context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).deliverUpdate(3,\"TRJ150157118477021574\",\"我家\",\"你家\",100,\"2017-08-03\",\"2017-08-04\",\"测试用户9LDK2\",\"13588049855\",\"浙江省-杭州市-滨江区-地址V59R0\",\"2017-08-03 00:43:07\")");
-        Thread.sleep(2000);
+//        scriptTaskService.submitTask(randomMobile(), Instant.now(), "context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).deliverUpdate(3,\"TRJ150157118477021574\",\"我家\",\"你家\",100,\"2017-08-03\",\"2017-08-04\",\"测试用户9LDK2\",\"13588049855\",\"浙江省-杭州市-滨江区-地址V59R0\",\"2017-08-03 00:43:07\")");
+//        Thread.sleep(2000);
     }
 
 }
