@@ -21,7 +21,7 @@ public class AuthorisingInfo {
      * 即按揭码
      */
     @Id
-    @Column(length = 20)
+    @Column(length = 30)
     private String id;
     /**
      * 身份证
@@ -32,6 +32,11 @@ public class AuthorisingInfo {
     private LocalDateTime createdTime;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime usedTime;
+    /**
+     * 最后一次审核时间
+     */
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime auditingTime;
     private AuthorisingStatus authorisingStatus = AuthorisingStatus.Unused;
     /**
      * 交互留言

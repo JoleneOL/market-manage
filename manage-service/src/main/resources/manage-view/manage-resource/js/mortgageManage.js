@@ -1,11 +1,14 @@
 $(function () {
     "use strict";
 
+    var _body = $('body');
+    var appealUrl = _body.attr('data-appeal-url');
+
     var table = $('#mortgageTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": $('body').attr('data-url')
+            "url": _body.attr('data-url')
         },
         "ordering": true,
         "lengthChange": false,
@@ -39,7 +42,11 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa fa-check-circle-o"></i>&nbsp;查看</a>';
+                    if(item.statusCode === 4)
+                        return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa fa-check-circle-o"></i>&nbsp;重新申请信审</a>';
+                    if (item.statusCode === 2)
+                        return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa fa-check-circle-o"></i>&nbsp;申请信审</a>';
+                    return '';
                 }
             }
         ],
@@ -62,7 +69,8 @@ $(function () {
     });
 
     $(document).on('click', '.js-info', function () {
-        window.location.href = '_orderDetail.html?id=' + $(this).data('id') + '&from=' + $(this).data('from') + '&status=' + $(this).data('status');
+        // window.location.href = '_orderDetail.html?id=' + $(this).data('id') + '&from=' + $(this).data('from') + '&status=' + $(this).data('status');
+        window.location.href = appealUrl + '?id=' + $(this).data('id');
     });
 
     $('#J_datePicker').flatpickr({

@@ -24,8 +24,8 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body data-url="/manage/mortgage"
-      th:data-url="@{/manage/mortgage}">
+<body data-url="/manage/mortgage" th:data-url="@{/manage/mortgage}" data-appeal-url="_appeal.html"
+      th:data-appeal-url="@{/mortgageTRGAppeal}">
 
 <section>
     <div class="wrapper wrapper-content">
@@ -34,7 +34,7 @@
                 <div class="form-inline">
                     <div class="js-selectToolbar">
                         <input type="search" class="form-control input-sm" placeholder="按揭码" name="mortgageCode" >
-                        <input type="search" class="form-control input-sm" placeholder="手机号" name="IDCard">
+                        <input type="search" class="form-control input-sm" placeholder="手机号" name="phone">
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" placeholder="下单日期" id="J_datePicker" name="orderDate">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>

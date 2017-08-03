@@ -50,7 +50,8 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private PromotionRequestService promotionRequestService;
 
-    private boolean useLocal() {
+    @Override
+    public boolean useLocal() {
         return environment.acceptsProfiles("staging") || environment.acceptsProfiles(CoreConfig.ProfileUnitTest);
     }
 

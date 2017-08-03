@@ -42,8 +42,8 @@ public class WechatInitService {
                         {
                                 createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
                                 , createMenu("下单"
-                                , createMenu("普通", systemService.toUrl(SystemService.wechatOrderURi))
-                                , createMenu("投融家", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
+                                , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
+                                , createMenu("分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
                                 , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
                         }
         );

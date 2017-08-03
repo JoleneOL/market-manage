@@ -136,6 +136,14 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
         return getCustomer(from).join("login");
     }
 
+    /**
+     * @param from order表
+     * @return 到下单者的登录表的关联
+     */
+    public static Join<MainOrder, Login> getOrderByLogin(From<?, MainOrder> from) {
+        return from.join("orderBy");
+    }
+
     public static Join<MainOrder, Customer> getCustomer(From<?, MainOrder> from) {
         return from.join("customer");
     }

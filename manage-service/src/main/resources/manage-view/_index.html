@@ -64,7 +64,7 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li>
+                        <li sec:authorize="hasAnyRole('ROOT')">
                             <a class="J_menuItem" href="_depotManage.html" th:href="@{/manageDepot}">仓库管理</a>
                         </li>
                         <li th:remove="all">
@@ -108,7 +108,7 @@
                             <a class="J_menuItem" href="_orderManage.html" th:href="@{/orderManage}">代理商下单管理</a>
                         </li>
                         <li>
-                            <a class="J_menuItem" href="_mortgageTRG.html">投融家按揭码</a>
+                            <a class="J_menuItem" href="_mortgageTRG.html" th:href="@{/mortgageTRG}">投融家按揭码</a>
                         </li>
                         <li th:remove="all">
                             <a class="J_menuItem" href="_refundPage.html">退款</a>
@@ -203,8 +203,8 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li th:remove="all">
-                            <a class="J_menuItem" href="_dataManage.html">数据管理</a>
+                        <li sec:authorize="hasAnyRole('ROOT')">
+                            <a class="J_menuItem" href="_dataManage.html" th:href="@{/manageSystemString/}">参数管理</a>
                         </li>
                         <li>
                             <a class="J_menuItem" href="_userManage.html" th:href="@{/manageManager}">公司用户管理</a>
