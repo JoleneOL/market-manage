@@ -37,7 +37,7 @@ public class Channel {
     /**
      * 是否为额外；参与了额外渠道的产品在主商城流程中不可用。
      */
-    private boolean extra;
+    private boolean extra = true;
     /**
      * 设备款折扣率,默认1
      */

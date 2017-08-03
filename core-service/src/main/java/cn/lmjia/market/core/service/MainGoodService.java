@@ -28,4 +28,7 @@ public interface MainGoodService {
      */
     @Transactional(readOnly = true)
     List<MainGood> forSale();
+
+    @Transactional(readOnly = true)
+    void priceCheck();
 }

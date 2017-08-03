@@ -24,7 +24,7 @@ public interface ChannelService {
      * @return 新的分期
      */
     @Transactional
-    Channel saveChannel(Channel channel);
+    <T extends Channel> T saveChannel(T channel);
 
     /**
      * 设置这个商品为该渠道所有

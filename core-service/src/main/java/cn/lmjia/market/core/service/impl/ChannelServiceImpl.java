@@ -27,7 +27,7 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public Channel saveChannel(Channel channel) {
+    public <T extends Channel> T saveChannel(T channel) {
         return channelRepository.save(channel);
     }
 

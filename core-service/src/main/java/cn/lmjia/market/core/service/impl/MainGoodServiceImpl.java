@@ -7,8 +7,13 @@ import cn.lmjia.market.core.service.MainGoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -18,6 +23,9 @@ import java.util.List;
 public class MainGoodServiceImpl implements MainGoodService {
     @Autowired
     private MainGoodRepository mainGoodRepository;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public List<MainGood> forSale(Channel channel) {
@@ -41,5 +49,19 @@ public class MainGoodServiceImpl implements MainGoodService {
     @Override
     public List<MainGood> forSale() {
         return forSale(null);
+    }
+
+    @Override
+    public void priceCheck() {
+        mainGoodRepository.findAll().forEach(good -> {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<BigDecimal> priceQuery = cb.createQuery(BigDecimal.class);
+            Root<MainGood> root = priceQuery.from(MainGood.class);
+
+            BigDecimal value = entityManager.createQuery(priceQuery.select(MainGood.getTotalPrice(root, cb))
+                    .where(cb.equal(root, good)))
+                    .getSingleResult();
+            assert value.equals(good.getTotalPrice());
+        });
     }
 }
