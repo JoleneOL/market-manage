@@ -51,4 +51,11 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private Set<MainGood> mainGoodSet;
 
+    /**
+     * 这个字段是因为EclipseLink的一个BUG
+     * 0 为 Channel
+     * 1 为 {@link InstallmentChannel}
+     */
+    private int type;
+
 }

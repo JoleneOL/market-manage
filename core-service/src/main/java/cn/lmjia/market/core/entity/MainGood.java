@@ -67,8 +67,8 @@ public class MainGood {
                         .when(true
                                 , simpleSum)
                         .otherwise(
-                                criteriaBuilder.<Class<? extends Channel>, Number>selectCase(channel.type())
-                                        .when(InstallmentChannel.class,
+                                criteriaBuilder.<Integer, Number>selectCase(channel.get("type").as(Integer.class))
+                                        .when(1,
                                                 installmentChannelSum
                                         )
                                         .otherwise(

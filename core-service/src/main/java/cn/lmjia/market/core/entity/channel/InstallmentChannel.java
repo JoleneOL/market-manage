@@ -16,10 +16,15 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 public class InstallmentChannel extends Channel {
+
     /**
      * 相比较货款所产生的手续费，支持0
      */
     @Column(scale = 9, precision = 10)
     private BigDecimal poundageRate = BigDecimal.ZERO;
+
+    public InstallmentChannel() {
+        setType(1);
+    }
 
 }
