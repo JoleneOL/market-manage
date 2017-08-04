@@ -5,6 +5,9 @@
 $(function () {
     "use strict";
 
+    // 获取地址
+    $('#addressHint').text(location.href.substring(0, location.href.lastIndexOf('/')));
+
     function getValue(ele) {
         var data = {};
         var inputs = ele.find('input');
@@ -28,6 +31,7 @@ $(function () {
         "lengthChange": false,
         "searching": false,
         "colReorder": true,
+        "paging": false,
         "columns": [
             {
                 "title": "编码",
@@ -43,8 +47,7 @@ $(function () {
                 "title": "名称",
                 "data": "name",
                 "name": "name"
-            }],
-        "displayLength": 5
+            }]
     });
 
     $("#J_AddProduct_Button").click(function () {
