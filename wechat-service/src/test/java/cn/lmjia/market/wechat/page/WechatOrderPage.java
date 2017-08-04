@@ -38,7 +38,8 @@ public class WechatOrderPage extends AbstractWechatPage {
      */
     public void allPriced(BigDecimal price) {
         price = price.setScale(0, BigDecimal.ROUND_HALF_UP);
-        inputText(webDriver.findElement(By.id("J_form")), "amount", "1");
+        if (!"1".equals(webDriver.findElement(By.id("J_goodsAmount")).getAttribute("value")))
+            inputText(webDriver.findElement(By.id("J_form")), "amount", "1");
         WebElement select = webDriver.findElement(By.id("J_goodsType"));
 
         List<WebElement> options = select.findElements(By.tagName("option"));
