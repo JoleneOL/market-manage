@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日日顺流程演示页</title>
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+</head>
+<body>
+<h5>
+    注意事项
+</h5>
+<div>
+    <ul>
+        <li>刷新可更新数据</li>
+        <li>需将「主动接口调用地址」设置为 <b><span id="addressHint"></span>/_haier_callback</b> 本流程测试才可以继续。</li>
+    </ul>
+</div>
+<h6>同步物料</h6>
+<div class="tab-content">
+    <div class="tab-pane active" id="orderDatagrid">
+        <div class="table-responsive">
+            <table id="ProductTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+        </div>
+    </div>
+</div>
+<button id="J_AddProduct_Button">添加物料</button>
+<template id="J_AddProduct">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">编码 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入编码" class="form-control" name="code" required minlength="3">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">海尔编码 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入编码" class="form-control" name="hrCode" required minlength="3">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">名称 <span class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入编码" class="form-control" name="name" required minlength="2">
+            </div>
+        </div>
+        <!--<div class="form-group">-->
+        <!--<label class="col-sm-3 control-label">发货时间 <span class="asterisk">*</span></label>-->
+        <!--<div class="col-sm-6">-->
+        <!--<input type="text" id="J_shipmentTime" placeholder="请选择发货时间" class="form-control" name="shipmentTime" required>-->
+        <!--</div>-->
+        <!--</div>-->
+    </form>
+</template>
+
+
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+
+<script src="mock/mock-min.js"></script>
+<script src="mock/api.js"></script>
+
+<script src="js/main.js"></script>
+</body>
+</html>
