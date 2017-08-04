@@ -1,12 +1,13 @@
 package cn.lmjia.market.manage.controller;
 
-import cn.lmjia.market.core.entity.Depot;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.DepotRepository;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.DepotRows;
+import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -57,13 +58,22 @@ public class ManageDepotController {
     }
 
     @PostMapping("/manage/depotList")
-    public String add(String name, Address address, String haierCode) {
-        Depot depot = new Depot();
+    public String add(String name, Address address, String haierCode, String type, String chargePeopleName
+            , String chargePeopleMobile) {
+        Depot depot;
+        if ("HaierDepot".equalsIgnoreCase(type)) {
+            HaierDepot haierDepot = new HaierDepot();
+            haierDepot.setHaierCode(haierCode);
+            depot = haierDepot;
+        } else {
+            depot = new Depot();
+        }
         depot.setEnable(true);
         depot.setCreateTime(LocalDateTime.now());
         depot.setName(name);
         depot.setAddress(address);
-        depot.setHaierCode(haierCode);
+        depot.setChargePeopleName(chargePeopleName);
+        depot.setChargePeopleMobile(chargePeopleMobile);
         depotRepository.save(depot);
         return "redirect:/manageDepot";
     }

@@ -1,11 +1,11 @@
 package cn.lmjia.market.manage.controller;
 
-import cn.lmjia.market.core.entity.Depot;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.repository.DepotRepository;
 import cn.lmjia.market.manage.ManageServiceTest;
+import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.entity.Depot;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,7 @@ public class ManageDepotControllerTest extends ManageServiceTest {
                 get("/manage/depotList")
         )
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(similarJQueryDataTable("classpath:/manage-view/mock/depotList.json"));
     }
@@ -56,6 +57,21 @@ public class ManageDepotControllerTest extends ManageServiceTest {
                         .param("name", RandomStringUtils.randomAlphabetic(99))
                         .param("address", address.getStandardWithoutOther())
                         .param("fullAddress", address.getOtherAddress())
+                        .param("chargePeopleName", randomMobile())
+                        .param("chargePeopleMobile", randomMobile())
+//                        .param("haierCode", RandomStringUtils.randomAlphabetic(31))
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("location", "/manageDepot"));
+
+        mockMvc.perform(
+                post("/manage/depotList")
+                        .param("type", "HaierDepot")
+                        .param("name", RandomStringUtils.randomAlphabetic(99))
+                        .param("address", address.getStandardWithoutOther())
+                        .param("fullAddress", address.getOtherAddress())
+                        .param("chargePeopleName", randomMobile())
+                        .param("chargePeopleMobile", randomMobile())
                         .param("haierCode", RandomStringUtils.randomAlphabetic(31))
         )
                 .andExpect(status().is3xxRedirection())

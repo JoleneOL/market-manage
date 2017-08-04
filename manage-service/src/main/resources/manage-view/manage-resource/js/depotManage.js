@@ -24,7 +24,16 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
+                "title": "类型", "data": "type", "name": "type"
+            },
+            {
                 "title": "名称", "data": "name", "name": "name"
+            },
+            {
+                "title": "负责人", "data": "chargePeopleName", "name": "chargePeopleName"
+            },
+            {
+                "title": "电话", "data": "chargePeopleMobile", "name": "chargePeopleMobile"
             },
             {
                 "title": "地址", "data": "address", "name": "address"
@@ -33,7 +42,7 @@ $(function () {
                 "title": "创建时间", "data": "createTime", "name": "createTime"
             },
             {
-                "title": "日日顺编号", "data": "haierCode", "name": "haierCode"
+                "title": "供应商信息", "data": "supplierInfo", "name": "supplierInfo"
             },
             {
                 "title": "启用", "data": "enable", "name": "enable"

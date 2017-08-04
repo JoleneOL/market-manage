@@ -2,10 +2,10 @@ package me.jiangcai.logistics.haier;
 
 import me.jiangcai.logistics.Destination;
 import me.jiangcai.logistics.LogsticsTest;
-import me.jiangcai.logistics.Product;
 import me.jiangcai.logistics.Storage;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Distribution;
+import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -42,57 +42,19 @@ public class HaierSupplierTest extends LogsticsTest {
     }
 
     private Product randomProduct() {
-        return new Product() {
-            @Override
-            public String getCode() {
-                return RandomStringUtils.randomAlphabetic(6);
-            }
-
-            @Override
-            public String getBrand() {
-                return RandomStringUtils.randomAlphabetic(3) + "品牌";
-            }
-
-            @Override
-            public String getCategory() {
-                return RandomStringUtils.randomAlphabetic(3) + "类目";
-            }
-
-            @Override
-            public String getDescription() {
-                return RandomStringUtils.randomAlphabetic(10);
-            }
-
-            @Override
-            public String getSKU() {
-                return RandomStringUtils.randomAlphabetic(69);
-            }
-
-            @Override
-            public String getUnit() {
-                return RandomStringUtils.randomAlphabetic(1);
-            }
-
-            @Override
-            public BigDecimal getVolumeLength() {
-                return new BigDecimal(random.nextInt(100) + 10);
-            }
-
-            @Override
-            public BigDecimal getVolumeWidth() {
-                return new BigDecimal(random.nextInt(100) + 10);
-            }
-
-            @Override
-            public BigDecimal getVolumeHeight() {
-                return new BigDecimal(random.nextInt(100) + 10);
-            }
-
-            @Override
-            public BigDecimal getWeight() {
-                return new BigDecimal(random.nextInt(3000) + 500);
-            }
-        };
+        Product product = new Product();
+        product.setCode(RandomStringUtils.randomAlphabetic(6));
+        product.setName(RandomStringUtils.randomAlphabetic(3) + "名称");
+        product.setBrand(RandomStringUtils.randomAlphabetic(3) + "品牌");
+        product.setMainCategory(RandomStringUtils.randomAlphabetic(3) + "类目");
+        product.setDescription(RandomStringUtils.randomAlphabetic(10));
+        product.setSKU(RandomStringUtils.randomAlphabetic(69));
+        product.setUnit(RandomStringUtils.randomAlphabetic(1));
+        product.setVolumeHeight(new BigDecimal(random.nextInt(100) + 10));
+        product.setVolumeLength(new BigDecimal(random.nextInt(100) + 10));
+        product.setVolumeWidth(new BigDecimal(random.nextInt(100) + 10));
+        product.setWeight(new BigDecimal(random.nextInt(3000) + 500));
+        return product;
     }
 
     @Test

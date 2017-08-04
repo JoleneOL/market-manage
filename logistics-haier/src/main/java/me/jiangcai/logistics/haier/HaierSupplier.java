@@ -3,7 +3,7 @@ package me.jiangcai.logistics.haier;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import me.jiangcai.logistics.LogisticsSupplier;
-import me.jiangcai.logistics.Product;
+import me.jiangcai.logistics.entity.Product;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;

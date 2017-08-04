@@ -2,11 +2,11 @@ package me.jiangcai.logistics.haier.service;
 
 import lombok.SneakyThrows;
 import me.jiangcai.logistics.Destination;
-import me.jiangcai.logistics.Product;
 import me.jiangcai.logistics.Source;
 import me.jiangcai.logistics.Storage;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Distribution;
+import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.exception.SupplierException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.haier.http.ResponseHandler;
@@ -87,7 +87,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("productcode", product.getCode());
         parameters.put("brand", product.getBrand());
-        parameters.put("category", product.getCategory());
+        parameters.put("category", product.getMainCategory());
         parameters.put("prodes", product.getDescription());
         parameters.put("skubarcode", product.getSKU());
         parameters.put("unit", product.getUnit());

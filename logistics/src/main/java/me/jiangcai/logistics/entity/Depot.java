@@ -1,14 +1,16 @@
-package cn.lmjia.market.core.entity;
+package me.jiangcai.logistics.entity;
 
-import cn.lmjia.market.core.entity.support.Address;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.jpa.entity.support.Address;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import java.time.LocalDateTime;
 
 /**
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Depot {
 
     @Id
@@ -32,12 +35,23 @@ public class Depot {
 
     @Column(length = 100)
     private String name;
-    /**
-     * 海尔（日日顺）仓库编码：按日日顺C码
-     */
-    @Column(length = 32)
-    private String haierCode;
 
     private Address address;
+    /**
+     * 负责人姓名
+     */
+    @Column(length = 20)
+    private String chargePeopleName;
+    /**
+     * 负责人电话
+     */
+    @Column(length = 20)
+    private String chargePeopleMobile;
+
+    /**
+     * 因为JPA实现的BUG
+     * 默认0
+     */
+    private byte _type;
 
 }

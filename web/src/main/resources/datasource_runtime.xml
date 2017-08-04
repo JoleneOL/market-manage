@@ -15,7 +15,10 @@
         </property>
         <property name="packagesToScan">
             <array>
+                <value>me.jiangcai.jpa.entity</value>
                 <value>me.jiangcai.user.notice.differentiation.entity</value>
+                <value>me.jiangcai.logistics.entity</value>
+                <value>me.jiangcai.logistics.haier.entity</value>
                 <value>cn.lmjia.market.dealer.entity</value>
                 <value>cn.lmjia.market.wechat.entity</value>
                 <value>com.huotu.verification.entity</value>

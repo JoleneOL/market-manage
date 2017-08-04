@@ -2,7 +2,7 @@ package cn.lmjia.market.core.service.request;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
-import cn.lmjia.market.core.entity.support.Address;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.user.notice.UserNoticeType;
 import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import org.springframework.transaction.annotation.Transactional;

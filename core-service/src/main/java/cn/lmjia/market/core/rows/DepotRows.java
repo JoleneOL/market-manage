@@ -1,13 +1,16 @@
 package cn.lmjia.market.core.rows;
 
-import cn.lmjia.market.core.entity.Depot;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -44,9 +47,34 @@ public abstract class DepotRows implements RowDefinition<Depot> {
     public List<FieldDefinition<Depot>> fields() {
         return Arrays.asList(
                 Fields.asBasic("id")
-                , Fields.asFunction("address", root -> root.get("address").get("otherAddress"))
+                , FieldBuilder.asName(Depot.class, "type")
+                        .addSelect(Path::type)
+                        .addFormat((data, type) -> {
+                            Class clazz = (Class) data;
+                            if (clazz == HaierDepot.class)
+                                return "日日顺";
+                            return "普通";
+                        })
+                        .build()
+                , FieldBuilder.asName(Depot.class, "address")
+                        .addSelect(root -> root.get("address"))
+                        .addFormat((object, type) -> object.toString())
+                        .build()
                 , Fields.asBasic("name")
-                , Fields.asBasic("haierCode")
+                , Fields.asBasic("chargePeopleName")
+                , Fields.asBasic("chargePeopleMobile")
+                , FieldBuilder.asName(Depot.class, "supplierInfo")
+                        .addBiSelect(((depotRoot, criteriaBuilder) -> {
+                            Expression<String> other = criteriaBuilder.literal("无");
+                            Expression<String> haier = criteriaBuilder.concat("编码："
+//                                    , criteriaBuilder.literal("1")
+                                    , criteriaBuilder.treat(depotRoot, HaierDepot.class).get("haierCode")
+                            );
+                            return criteriaBuilder.selectCase(depotRoot.get("_type").as(Number.class))
+                                    .when(1, haier)
+                                    .otherwise(other);
+                        }))
+                        .build()
                 , FieldBuilder.asName(Depot.class, "createTime")
                         .addFormat((data, type)
                                 -> orderTimeFormatter.apply(((LocalDateTime) data)))

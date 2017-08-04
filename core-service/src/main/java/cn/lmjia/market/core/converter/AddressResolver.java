@@ -1,6 +1,6 @@
 package cn.lmjia.market.core.converter;
 
-import cn.lmjia.market.core.entity.support.Address;
+import me.jiangcai.jpa.entity.support.Address;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;

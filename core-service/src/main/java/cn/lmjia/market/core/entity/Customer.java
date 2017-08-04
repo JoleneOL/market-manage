@@ -1,9 +1,9 @@
 package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.entity.deal.AgentLevel;
-import cn.lmjia.market.core.entity.support.Address;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.wx.model.Gender;
 
 import javax.persistence.CascadeType;

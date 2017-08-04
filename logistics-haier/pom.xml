@@ -14,6 +14,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>${javaee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>cn.lmjia.market-manage</groupId>
             <artifactId>logistics</artifactId>
             <version>${project.version}</version>
@@ -73,9 +79,9 @@
                         <configuration>
                             <tasks>
                                 <echo>copy demo files</echo>
-                                <copy todir="target/demo-sources">
-                                    <fileset dir="../logistics/src/share/java"/>
-                                </copy>
+                                <!--<copy todir="target/demo-sources">-->
+                                <!--<fileset dir="../logistics/src/share/java"/>-->
+                                <!--</copy>-->
                             </tasks>
                         </configuration>
                     </execution>
