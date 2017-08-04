@@ -216,7 +216,7 @@ Mock.mock(/\/login\/\d/, "delete", {
     "resultMsg": "ok"
 });
 
-var uploaderImg = Mock.Random.image('228x178', '#50B347', '#FFF', 'Mock.js');
+var uploaderImg = Mock.Random.image('600x278', '#50B347', '#FFF', 'Mock.js');
 
 Mock.mock(/\/resourceUpload\/webUploader/, {
     "id": "filePath",
@@ -384,8 +384,4 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
 Mock.mock(/\/orderData\/quickDone/, {
     "resultCode": 200,
     "resultMsg": "ok"
-});
-
-Mock.mock(/\/resourceUpload\/webUploader/, {
-    "id": "filePath"
 });
