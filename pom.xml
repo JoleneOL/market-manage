@@ -16,7 +16,7 @@
         <module>wechat-service</module>
         <module>logistics</module>
         <module>logistics-haier</module>
-        <module>logistic-shaier-demo</module>
+        <module>logistics-haier-demo</module>
     </modules>
 
     <properties>
