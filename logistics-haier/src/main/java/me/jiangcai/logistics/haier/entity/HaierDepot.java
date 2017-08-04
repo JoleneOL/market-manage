@@ -19,8 +19,4 @@ public class HaierDepot extends Depot {
      */
     @Column(length = 32)
     private String haierCode;
-
-    public HaierDepot() {
-        set_type((byte) 1);
-    }
 }

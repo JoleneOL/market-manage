@@ -48,10 +48,7 @@ public class Depot {
     @Column(length = 20)
     private String chargePeopleMobile;
 
-    /**
-     * 因为JPA实现的BUG
-     * 默认0
-     */
-    private byte _type;
+    @Column(name = "DTYPE", insertable = false, updatable = false)
+    private String classType;
 
 }

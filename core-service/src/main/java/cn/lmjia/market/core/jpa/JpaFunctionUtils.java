@@ -21,6 +21,8 @@ import java.util.Locale;
  */
 public class JpaFunctionUtils {
 
+    public static final String DefaultDiscriminatorColumnName = "DTYPE";
+
     private static final DateTimeFormatter databaseFriendLyDateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d"
             , Locale.CHINA);
 

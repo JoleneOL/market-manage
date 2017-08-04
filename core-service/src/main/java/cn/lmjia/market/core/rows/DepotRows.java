@@ -70,8 +70,8 @@ public abstract class DepotRows implements RowDefinition<Depot> {
 //                                    , criteriaBuilder.literal("1")
                                     , criteriaBuilder.treat(depotRoot, HaierDepot.class).get("haierCode")
                             );
-                            return criteriaBuilder.selectCase(depotRoot.get("_type").as(Number.class))
-                                    .when(1, haier)
+                            return criteriaBuilder.selectCase(depotRoot.get("classType").as(String.class))
+                                    .when("HaierDepot", haier)
                                     .otherwise(other);
                         }))
                         .build()
