@@ -1,11 +1,11 @@
 package me.jiangcai.logistics;
 
 /**
- * 目的地
+ * 物流目的地
  *
  * @author CJ
  */
-public interface Destination {
+public interface LogisticsDestination {
     /**
      * @return 收货人所在省
      */

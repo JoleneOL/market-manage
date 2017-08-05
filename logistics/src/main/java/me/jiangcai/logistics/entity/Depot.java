@@ -3,6 +3,8 @@ package me.jiangcai.logistics.entity;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.LogisticsSource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Depot {
+public class Depot implements LogisticsDestination, LogisticsSource {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,7 +50,37 @@ public class Depot {
     @Column(length = 20)
     private String chargePeopleMobile;
 
+    @SuppressWarnings({"JpaDataSourceORMInspection", "SpellCheckingInspection"})
     @Column(name = "DTYPE", insertable = false, updatable = false)
     private String classType;
 
+    @Override
+    public String getProvince() {
+        return address.getProvince();
+    }
+
+    @Override
+    public String getCity() {
+        return address.getPrefecture();
+    }
+
+    @Override
+    public String getCountry() {
+        return address.getCounty();
+    }
+
+    @Override
+    public String getDetailAddress() {
+        return address.getOtherAddress();
+    }
+
+    @Override
+    public String getConsigneeName() {
+        return chargePeopleName;
+    }
+
+    @Override
+    public String getConsigneeMobile() {
+        return chargePeopleMobile;
+    }
 }

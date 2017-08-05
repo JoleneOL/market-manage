@@ -1,12 +1,12 @@
 package me.jiangcai.logistics.haier.service;
 
 import lombok.SneakyThrows;
-import me.jiangcai.logistics.Destination;
-import me.jiangcai.logistics.Source;
-import me.jiangcai.logistics.Storage;
+import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.LogisticsSource;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Distribution;
 import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.exception.SupplierException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.haier.http.ResponseHandler;
@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -101,7 +102,8 @@ public class HaierSupplierImpl implements HaierSupplier {
     }
 
     @Override
-    public Distribution makeDistributionOrder(Source source, Collection<? extends Thing> things, Destination destination, int options) {
+    public StockShiftUnit makeDistributionOrder(LogisticsSource source, Collection<? extends Thing> things
+            , LogisticsDestination destination, int options, Consumer<StockShiftUnit> consumer) {
         Map<String, Object> parameters = new HashMap<>();
 
         String id = UUID.randomUUID().toString().replaceAll("-", "");

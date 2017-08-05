@@ -1,6 +1,9 @@
 package me.jiangcai.logistics;
 
-import me.jiangcai.logistics.entity.Distribution;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -20,8 +23,9 @@ public interface LogisticsService {
      * @param destination 目的地
      * @return 配送
      */
-    Distribution makeDistribution(LogisticsSupplier supplier, Collection<Thing> things, Source source
-            , Destination destination);
+    @Transactional
+    StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
+            , LogisticsDestination destination);
 
     /**
      * 开启配送，和安装一体；并非所有物流都支持
@@ -33,7 +37,16 @@ public interface LogisticsService {
      * @return 配送
      * @see me.jiangcai.logistics.option.LogisticsOptions#Installation
      */
-    Distribution makeDistributionWithInstallation(LogisticsSupplier supplier, Collection<Thing> things, Source source
-            , Destination destination);
+    @Transactional
+    StockShiftUnit makeShiftWithInstallation(LogisticsSupplier supplier, Collection<Thing> things
+            , LogisticsSource source
+            , LogisticsDestination destination);
 
+    /**
+     * @param depot   仓库
+     * @param product 货品
+     * @return 可用库存
+     */
+    @Transactional(readOnly = true)
+    int usableStock(Depot depot, Product product);
 }

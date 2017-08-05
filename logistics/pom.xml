@@ -16,7 +16,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>4.3.8.RELEASE</version>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
@@ -29,6 +34,23 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>me.jiangcai.lib</groupId>
+            <artifactId>spring</artifactId>
+            <version>${jiangcai.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.jiangcai.lib</groupId>
+            <artifactId>test</artifactId>
+            <version>${jiangcai.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>1.9.4.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -38,6 +60,10 @@
             </testResource>
             <testResource>
                 <directory>src/share/resources</directory>
+            </testResource>
+            <!--基于偷懒的理由 直接将core的资源拿来用了，该项目独立之后 则需要重新规划了-->
+            <testResource>
+                <directory>../core-service/src/share/resources</directory>
             </testResource>
         </testResources>
         <plugins>

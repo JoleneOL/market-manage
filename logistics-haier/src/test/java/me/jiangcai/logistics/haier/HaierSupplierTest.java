@@ -1,8 +1,7 @@
 package me.jiangcai.logistics.haier;
 
-import me.jiangcai.logistics.Destination;
+import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogsticsTest;
-import me.jiangcai.logistics.Storage;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Distribution;
 import me.jiangcai.logistics.entity.Product;
@@ -80,8 +79,10 @@ public class HaierSupplierTest extends LogsticsTest {
         // uXkelZ和KWkLZc
         goods.add(newTempThing("KWkLZc"));
         goods.add(newTempThing("uXkelZ"));
-        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.CargoToStorage);
+        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.CargoToStorage, null);
         System.out.println(distribution.getId());
+        // 在日日顺实现中 如果是入库的话，实现是 目的，来源
+        // 这个是存在极大问题的！
     }
 
     private Thing newTempThing(String code) {
@@ -109,12 +110,12 @@ public class HaierSupplierTest extends LogsticsTest {
         // uXkelZ和KWkLZc
         goods.add(newTempThing("KWkLZc"));
         goods.add(newTempThing("uXkelZ"));
-        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage);
+        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage, null);
         haierSupplier.cancelOrder(distribution.getId(), true, null);
     }
 
-    private Destination randomDestination() {
-        return new Destination() {
+    private LogisticsDestination randomDestination() {
+        return new LogisticsDestination() {
 //            @Override
 //            public String getProvince() {
 //                return RandomStringUtils.randomAlphabetic(3) + "省";

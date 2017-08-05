@@ -1,18 +1,35 @@
 package me.jiangcai.logistics.service;
 
-import me.jiangcai.logistics.Destination;
+import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogisticsService;
+import me.jiangcai.logistics.LogisticsSource;
 import me.jiangcai.logistics.LogisticsSupplier;
-import me.jiangcai.logistics.Source;
-import me.jiangcai.logistics.Storage;
 import me.jiangcai.logistics.Thing;
-import me.jiangcai.logistics.entity.Distribution;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.StockSettlement;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.option.LogisticsOptions;
+import me.jiangcai.logistics.repository.StockSettlementRepository;
+import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.MapJoin;
+import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -22,28 +39,108 @@ public class LogisticsServiceImpl implements LogisticsService {
 
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private StockShiftUnitRepository stockShiftUnitRepository;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
+    @Autowired
+    private StockSettlementRepository stockSettlementRepository;
 
     @Override
-    public Distribution makeDistribution(LogisticsSupplier supplier, Collection<Thing> things, Source source
-            , Destination destination) {
-        return makeDistribution(supplier, things, source, destination, false);
+    public StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
+            , LogisticsDestination destination) {
+        return makeShift(supplier, things, source, destination, false);
     }
 
-    private Distribution makeDistribution(LogisticsSupplier supplier, Collection<Thing> things, Source source
-            , Destination destination, boolean installation) {
+    private StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
+            , LogisticsDestination destination, boolean installation) {
         // 不同的供应商可能对于地址有不同的要求
         if (supplier == null) {
             supplier = applicationContext.getBean(LogisticsSupplier.class);
         }
         // 如果Source是个仓库 则表示出库
-        int options = (source instanceof Storage) ? LogisticsOptions.CargoFromStorage : 0;
+        int options = (source instanceof Depot) ? LogisticsOptions.CargoFromStorage : 0;
         if (installation)
             options = options | LogisticsOptions.Installation;
-        return supplier.makeDistributionOrder(source, things, destination, options);
+        Consumer<StockShiftUnit> consumer = stockShiftUnit -> {
+            stockShiftUnit.setCreateTime(LocalDateTime.now());
+            stockShiftUnit.setCurrentStatus(ShiftStatus.init);
+            if (source instanceof Depot)
+                stockShiftUnit.setOrigin((Depot) source);
+            if (destination instanceof Depot) {
+                stockShiftUnit.setDestination((Depot) destination);
+            }
+
+            stockShiftUnit.setAmounts(things.stream()
+                    .collect(Collectors.toMap(Thing::getProduct, Thing::getAmount)));
+        };
+        return stockShiftUnitRepository.save(supplier.makeDistributionOrder(source, things, destination, options, consumer));
     }
 
     @Override
-    public Distribution makeDistributionWithInstallation(LogisticsSupplier supplier, Collection<Thing> things, Source source, Destination destination) {
-        return makeDistribution(supplier, things, source, destination, true);
+    public StockShiftUnit makeShiftWithInstallation(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source, LogisticsDestination destination) {
+        return makeShift(supplier, things, source, destination, true);
+    }
+
+    @Override
+    public int usableStock(Depot depot, Product product) {
+        // 获取 该库存的最新结算量
+        StockSettlement settlement = lastStockSettlement(depot, product);
+        // 获取 其后的和未结算的进出库订单合计
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Number> cq = criteriaBuilder.createQuery(Number.class);
+        Root<StockShiftUnit> root = cq.from(StockShiftUnit.class);
+        MapJoin<StockShiftUnit, Product, Integer> amountJoin = root.joinMap("amounts");
+        amountJoin = amountJoin.on(criteriaBuilder.equal(amountJoin.key(), product));
+
+        Join<StockShiftUnit, Depot> inDepot = root.join("destination", JoinType.LEFT);
+        Join<StockShiftUnit, Depot> outDepot = root.join("origin", JoinType.LEFT);
+        Expression<LocalDateTime> time = root.get("lockedTime");
+        //进入-出去
+        //
+        Expression<Number> flag = criteriaBuilder.<Boolean, Number>selectCase(criteriaBuilder.equal(inDepot, depot))
+                .when(true, 1)
+                .otherwise(-1);
+
+        Expression<Number> incoming = criteriaBuilder.sum(criteriaBuilder.prod(flag, amountJoin.value()));
+        return
+                settlement.getStock() +
+                        entityManager.createQuery(
+                                cq.select(incoming)
+                                        .where(
+                                                criteriaBuilder.and(
+                                                        // 库存相关的
+                                                        criteriaBuilder.or(
+                                                                criteriaBuilder.equal(inDepot, depot)
+                                                                , criteriaBuilder.equal(outDepot, depot)
+                                                        )
+                                                        // 结算时间合适的
+                                                        , criteriaBuilder.or(
+                                                                time.isNull()
+                                                                , criteriaBuilder.greaterThan(time, settlement.getTime())
+                                                        )
+                                                )
+                                        )
+                        )
+                                .getResultList().stream()
+                                .mapToInt(Number::intValue).sum();
+    }
+
+    /**
+     * @param depot   库存
+     * @param product 货品
+     * @return 最新的结算信息;如果不存在会返回一个世纪前的一个结算点，结算量是0
+     */
+    private StockSettlement lastStockSettlement(Depot depot, Product product) {
+        StockSettlement settlement = stockSettlementRepository.findTop1ByDepotAndProductOrderByTimeDesc(depot, product);
+        if (settlement == null) {
+            settlement = new StockSettlement();
+            settlement.setDepot(depot);
+            settlement.setProduct(product);
+            settlement.setStock(0);
+            settlement.setTime(LocalDateTime.now().minus(1, ChronoUnit.MILLENNIA));
+        }
+        return settlement;
     }
 }
