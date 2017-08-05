@@ -79,9 +79,9 @@
                         <configuration>
                             <tasks>
                                 <echo>copy demo files</echo>
-                                <!--<copy todir="target/demo-sources">-->
-                                <!--<fileset dir="../logistics/src/share/java"/>-->
-                                <!--</copy>-->
+                                <copy todir="target/demo-sources">
+                                    <fileset dir="../logistics/src/share/java"/>
+                                </copy>
                             </tasks>
                         </configuration>
                     </execution>

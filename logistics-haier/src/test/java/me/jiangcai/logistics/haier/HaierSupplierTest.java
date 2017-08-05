@@ -1,10 +1,9 @@
 package me.jiangcai.logistics.haier;
 
 import me.jiangcai.logistics.LogisticsDestination;
-import me.jiangcai.logistics.LogsticsTest;
+import me.jiangcai.logistics.LogisticsTestBase;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Distribution;
-import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -15,7 +14,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,30 +28,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = HaierConfig.class)
-public class HaierSupplierTest extends LogsticsTest {
+public class HaierSupplierTest extends LogisticsTestBase {
 
     @Autowired
     private HaierSupplier haierSupplier;
 
     @Test
     public void product() {
-        haierSupplier.updateProduct(randomProduct());
-    }
-
-    private Product randomProduct() {
-        Product product = new Product();
-        product.setCode(RandomStringUtils.randomAlphabetic(6));
-        product.setName(RandomStringUtils.randomAlphabetic(3) + "名称");
-        product.setBrand(RandomStringUtils.randomAlphabetic(3) + "品牌");
-        product.setMainCategory(RandomStringUtils.randomAlphabetic(3) + "类目");
-        product.setDescription(RandomStringUtils.randomAlphabetic(10));
-        product.setSKU(RandomStringUtils.randomAlphabetic(69));
-        product.setUnit(RandomStringUtils.randomAlphabetic(1));
-        product.setVolumeHeight(new BigDecimal(random.nextInt(100) + 10));
-        product.setVolumeLength(new BigDecimal(random.nextInt(100) + 10));
-        product.setVolumeWidth(new BigDecimal(random.nextInt(100) + 10));
-        product.setWeight(new BigDecimal(random.nextInt(3000) + 500));
-        return product;
+        haierSupplier.updateProduct(randomProductData());
     }
 
     @Test
@@ -79,7 +61,7 @@ public class HaierSupplierTest extends LogsticsTest {
         // uXkelZ和KWkLZc
         goods.add(newTempThing("KWkLZc"));
         goods.add(newTempThing("uXkelZ"));
-        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.CargoToStorage, null);
+        Distribution distribution = haierSupplier.makeShift(randomStorage(), goods, randomDestination(), LogisticsOptions.CargoToStorage, null);
         System.out.println(distribution.getId());
         // 在日日顺实现中 如果是入库的话，实现是 目的，来源
         // 这个是存在极大问题的！
@@ -110,7 +92,7 @@ public class HaierSupplierTest extends LogsticsTest {
         // uXkelZ和KWkLZc
         goods.add(newTempThing("KWkLZc"));
         goods.add(newTempThing("uXkelZ"));
-        Distribution distribution = haierSupplier.makeDistributionOrder(randomStorage(), goods, randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage, null);
+        Distribution distribution = haierSupplier.makeShift(randomStorage(), goods, randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage, null);
         haierSupplier.cancelOrder(distribution.getId(), true, null);
     }
 

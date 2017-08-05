@@ -28,7 +28,7 @@ public class DemoSupplierImpl implements DemoSupplier {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public StockShiftUnit makeDistributionOrder(LogisticsSource source, Collection<? extends Thing> things
+    public StockShiftUnit makeShift(LogisticsSource source, Collection<? extends Thing> things
             , LogisticsDestination destination, int options, Consumer<StockShiftUnit> consumer) {
         StockShiftUnit unit = new StockShiftUnit();
         consumer.accept(unit);

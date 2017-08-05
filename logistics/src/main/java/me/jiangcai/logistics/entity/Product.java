@@ -10,6 +10,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 货品
@@ -80,6 +81,19 @@ public class Product {
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal weight;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(code, product.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
+    }
 
     /**
      * @return 体积，单位mm'3

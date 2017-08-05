@@ -9,6 +9,8 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.exception.SupplierException;
 import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
+import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.logistics.haier.http.ResponseHandler;
 import me.jiangcai.logistics.haier.model.OrderStatusSync;
 import me.jiangcai.logistics.haier.model.OutInStore;
@@ -102,34 +104,56 @@ public class HaierSupplierImpl implements HaierSupplier {
     }
 
     @Override
-    public StockShiftUnit makeDistributionOrder(LogisticsSource source, Collection<? extends Thing> things
+    public StockShiftUnit makeShift(LogisticsSource source, Collection<? extends Thing> things
             , LogisticsDestination destination, int options, Consumer<StockShiftUnit> consumer) {
         Map<String, Object> parameters = new HashMap<>();
 
         String id = UUID.randomUUID().toString().replaceAll("-", "");
 
-        parameters.put("orderno", id);
-        parameters.put("sourcesn", id);
-        if ((options & LogisticsOptions.CargoFromStorage) == LogisticsOptions.CargoFromStorage) {
+        // 判定要生成哪种类型的订单
+        // 记住错误版本入库也是拿source的id!!!!!
+        if ((source instanceof HaierDepot) && !(destination instanceof HaierDepot)) {
+            // 销售出库
             parameters.put("ordertype", "2");
             parameters.put("bustype", "2");
-        }
-        if ((options & LogisticsOptions.CargoToStorage) == LogisticsOptions.CargoToStorage) {
+            parameters.put("storecode", ((HaierDepot) source).getHaierCode());
+
+            parameters.put("province", destination.getProvince());
+            parameters.put("city", destination.getCity());
+            parameters.put("county", destination.getCountry());
+            parameters.put("addr", destination.getDetailAddress());
+            parameters.put("name", destination.getConsigneeName());
+            parameters.put("mobile", destination.getConsigneeMobile());
+
+        } else if (!(source instanceof HaierDepot) && (destination instanceof HaierDepot)) {
+            // 入库
             parameters.put("ordertype", "1");
             parameters.put("bustype", "1");
+            parameters.put("storecode", ((HaierDepot) destination).getHaierCode());
+
+            parameters.put("province", source.getProvince());
+            parameters.put("city", source.getCity());
+            parameters.put("county", source.getCountry());
+            parameters.put("addr", source.getDetailAddress());
+            parameters.put("name", source.getConsigneeName());
+            parameters.put("mobile", source.getConsigneeMobile());
+
+        } else if (source instanceof HaierDepot) {
+            // 转移
+            throw new IllegalArgumentException("还不支持转移");
+        } else {
+            // 意欲何为？
+            throw new IllegalArgumentException("来源和目的不清晰");
         }
+
+        parameters.put("orderno", id);
+        parameters.put("sourcesn", id);
         parameters.put("expno", id);// 快递单号：自动分配的快递单号或客户生成的快递单号
         parameters.put("orderdate", LocalDateTime.now().format(formatter));
-        parameters.put("storecode", ((Storage) source).getStorageCode());
-
-        parameters.put("province", destination.getProvince());
-        parameters.put("city", destination.getCity());
-        parameters.put("county", destination.getCountry());
-        parameters.put("addr", destination.getDetailAddress());
-        parameters.put("name", destination.getConsigneeName());
-        parameters.put("mobile", destination.getConsigneeMobile());
-
         parameters.put("busflag", (options & LogisticsOptions.Installation) == LogisticsOptions.Installation ? "1" : "2");
+
+        HaierOrder order = new HaierOrder();
+        order.setOrderNumber(id);
 
         List<Map<String, Object>> items = things.stream()
                 .map(this::toItemData)
@@ -141,6 +165,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         parameters.put("items", items);
         //参数准备完成
         sendRequest(parameters, "rrs_order");
+
 
         Distribution distribution = new Distribution();
         distribution.setId(id);

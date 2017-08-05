@@ -2,6 +2,8 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.logistics.entity.support.ProductBatch;
+import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
 
@@ -39,7 +41,7 @@ public class StockShiftUnit {
      * 转移的货品以及数量
      */
     @ElementCollection
-    private Map<Product, Integer> amounts;
+    private Map<Product, ProductBatch> amounts;
 
     /**
      * 可选的来源仓库；
@@ -81,13 +83,18 @@ public class StockShiftUnit {
     private LocalDateTime lockedTime;
 
     public void addAmount(Product product, int amount) {
+        addAmount(product, ProductStatus.normal, amount);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public void addAmount(Product product, ProductStatus status, int amount) {
         if (amounts == null) {
             amounts = new HashMap<>();
         }
         if (amounts.containsKey(product)) {
-            amounts.put(product, amounts.get(product) + amount);
+            throw new IllegalStateException("一次转移只能处理货品的一种状态");
         } else
-            amounts.put(product, amount);
+            amounts.put(product, new ProductBatch(status, amount));
     }
 
     public void addStatus(LocalDateTime time, String message, ShiftStatus status) {

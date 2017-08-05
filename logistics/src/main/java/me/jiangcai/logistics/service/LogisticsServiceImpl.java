@@ -9,6 +9,7 @@ import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockSettlement;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
 import me.jiangcai.logistics.event.ShiftEvent;
@@ -77,9 +78,10 @@ public class LogisticsServiceImpl implements LogisticsService {
             }
 
             stockShiftUnit.setAmounts(things.stream()
-                    .collect(Collectors.toMap(Thing::getProduct, Thing::getAmount)));
+                    .collect(Collectors.toMap(Thing::getProduct
+                            , thing -> new ProductBatch(thing.getProductStatus(), thing.getAmount()))));
         };
-        return stockShiftUnitRepository.save(supplier.makeDistributionOrder(source, things, destination, options, consumer));
+        return stockShiftUnitRepository.save(supplier.makeShift(source, things, destination, options, consumer));
     }
 
     @Override
@@ -95,7 +97,7 @@ public class LogisticsServiceImpl implements LogisticsService {
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Number> cq = cb.createQuery(Number.class);
         Root<StockShiftUnit> root = cq.from(StockShiftUnit.class);
-        MapJoin<StockShiftUnit, Product, Integer> amountJoin = root.joinMap("amounts");
+        MapJoin<StockShiftUnit, Product, ProductBatch> amountJoin = root.joinMap("amounts");
         amountJoin = amountJoin.on(cb.equal(amountJoin.key(), product));
 
         Join<StockShiftUnit, Depot> inDepot = root.join("destination", JoinType.LEFT);
@@ -108,7 +110,7 @@ public class LogisticsServiceImpl implements LogisticsService {
                 .when(true, 1)
                 .otherwise(-1);
 
-        Expression<Number> incoming = cb.sum(cb.prod(flag, amountJoin.value()));
+        Expression<Number> incoming = cb.sum(cb.prod(flag, amountJoin.value().get("amount")));
         return
                 settlement.getStock() +
                         entityManager.createQuery(

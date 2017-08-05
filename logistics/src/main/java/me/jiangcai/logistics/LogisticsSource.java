@@ -6,5 +6,5 @@ package me.jiangcai.logistics;
  *
  * @author CJ
  */
-public interface LogisticsSource {
+public interface LogisticsSource extends Deliverable {
 }

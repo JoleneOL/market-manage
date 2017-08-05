@@ -5,6 +5,7 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.test.SpringWebTest;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.logistics.repository.ProductRepository;
 import org.apache.commons.lang.RandomStringUtils;
@@ -29,6 +30,50 @@ public abstract class LogisticsTestBase extends SpringWebTest {
 
     protected LogisticsSource randomSource() {
         return new LogisticsSource() {
+            //            @Override
+//            public String getProvince() {
+//                return RandomStringUtils.randomAlphabetic(3) + "省";
+//            }
+
+//            @Override
+//            public String getCity() {
+//                return RandomStringUtils.randomAlphabetic(3) + "市";
+//            }
+
+//            @Override
+//            public String getCountry() {
+//                return RandomStringUtils.randomAlphabetic(3) + "区";
+//            }
+
+            @Override
+            public String getProvince() {
+                return "北京市";
+            }
+
+            @Override
+            public String getCity() {
+                return "北京市";
+            }
+
+            @Override
+            public String getCountry() {
+                return "昌平区";
+            }
+
+            @Override
+            public String getDetailAddress() {
+                return RandomStringUtils.randomAlphabetic(6);
+            }
+
+            @Override
+            public String getConsigneeName() {
+                return RandomStringUtils.randomAlphabetic(3) + "人";
+            }
+
+            @Override
+            public String getConsigneeMobile() {
+                return randomMobile();
+            }
         };
     }
 
@@ -140,8 +185,8 @@ public abstract class LogisticsTestBase extends SpringWebTest {
         return new SimpleThing(RandomStringUtils.randomAlphanumeric(6)
                 , RandomStringUtils.randomAlphabetic(4) + "产品"
                 , randomProduct()
-                , random.nextInt(10) + 1
-        );
+                , random.nextInt(10) + 1,
+                ProductStatus.normal);
     }
 
     @Getter
@@ -150,12 +195,14 @@ public abstract class LogisticsTestBase extends SpringWebTest {
         private final String productName;
         private final Product product;
         private final int amount;
+        private final ProductStatus productStatus;
 
-        public SimpleThing(String productCode, String productName, Product product, int amount) {
+        public SimpleThing(String productCode, String productName, Product product, int amount, ProductStatus productStatus) {
             this.productCode = productCode;
             this.productName = productName;
             this.product = product;
             this.amount = amount;
+            this.productStatus = productStatus;
         }
     }
 }
