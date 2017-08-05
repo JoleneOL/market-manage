@@ -22,6 +22,7 @@ import java.util.Set;
  *
  * @author CJ
  */
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Setter
 @Getter
@@ -51,6 +52,7 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private Set<MainGood> mainGoodSet;
 
+    @SuppressWarnings({"JpaDataSourceORMInspection", "SpellCheckingInspection"})
     @Column(name = "DTYPE", insertable = false, updatable = false)
     private String classType;
 
