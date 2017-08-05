@@ -4,6 +4,7 @@ import me.jiangcai.logistics.LogisticsConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
@@ -23,5 +24,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan({
         "me.jiangcai.logistics.haier.service", "me.jiangcai.logistics.haier.controller"
 })
+@EnableJpaRepositories("me.jiangcai.logistics.haier.repository")
 public class HaierConfig {
 }

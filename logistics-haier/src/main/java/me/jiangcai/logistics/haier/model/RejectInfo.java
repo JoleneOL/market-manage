@@ -15,7 +15,8 @@ import java.util.List;
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OutInStore {
+public class RejectInfo {
+
     @JsonProperty("orderno")
     private String orderNo;
     @JsonProperty("expno")
@@ -32,12 +33,7 @@ public class OutInStore {
     @JsonProperty("iscomplete")
     @JsonDeserialize(using = BooleanDeserializer.class)
     private boolean complete;
-    //      <attributes>
-//    <certification>4974752222</certification>
-//  </attributes>
-    @JsonProperty("InOutItems")
+    @JsonProperty("RejectItems")
     private List<InOutItem> items;
     private String remark;
-
-
 }

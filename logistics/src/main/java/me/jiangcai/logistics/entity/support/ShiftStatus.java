@@ -13,7 +13,7 @@ public enum ShiftStatus {
      */
     accept,
     /**
-     * 被拒绝，无需扣除可用量
+     * 被拒绝，无需扣除可用量；核心意义是没开始就结束了
      * 并非被拒收！而是这个移动没有获得许可！
      */
     reject,
@@ -22,6 +22,7 @@ public enum ShiftStatus {
      */
     movement,
     /**
+     * 核心意义是开始运送了，但因为各种原因失败了
      * 最终没有成功，应该需要后续ShiftUnit继续支持，应该被扣除可用量
      * 可结算
      */

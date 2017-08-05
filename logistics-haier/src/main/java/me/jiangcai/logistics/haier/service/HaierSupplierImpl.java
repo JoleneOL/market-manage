@@ -13,6 +13,7 @@ import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.logistics.haier.http.ResponseHandler;
 import me.jiangcai.logistics.haier.model.OrderStatusSync;
 import me.jiangcai.logistics.haier.model.OutInStore;
+import me.jiangcai.logistics.haier.model.RejectInfo;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
@@ -207,7 +208,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, key);
         final String encodeToString = Base64.getEncoder().encodeToString(cipher.doFinal(content.getBytes("UTF-8")));
-        log.debug("密文：" + encodeToString);
+        log.trace("密文：" + encodeToString);
         return encodeToString;
     }
 
@@ -219,7 +220,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         cipher.init(Cipher.DECRYPT_MODE, key);
         data = cipher.doFinal(data);
         String string = new String(data, "UTF-8");
-        log.debug("明文：" + string);
+        log.trace("明文：" + string);
         return string;
     }
 
@@ -230,14 +231,14 @@ public class HaierSupplierImpl implements HaierSupplier {
     public String sign(String content, String keyValue) {
         final String hex = DigestUtils.md5Hex(content + keyValue);
         final String sign = Base64.getEncoder().encodeToString(hex.getBytes("UTF-8"));
-        log.debug("sign:" + sign);
+        log.trace("sign:" + sign);
         return sign;
     }
 
     @Override
     public Object event(String businessType, String source, String contentType, String sign, String content) throws IOException {
         // <Return/>
-        log.debug("businessType:" + businessType);
+        log.debug("[HR]businessType:" + businessType);
         content = cipherDecrypt(content);
         if (!sign.equals(sign(content, keyValue)))
             throw new IllegalArgumentException("Bad Sign.");
@@ -248,6 +249,8 @@ public class HaierSupplierImpl implements HaierSupplier {
             outInStoreEvent(contentType, content);
         } else if ("rrs_statusback".equalsIgnoreCase(businessType)) {
             statusBack(contentType, content);
+        } else if ("rrs_reject".equalsIgnoreCase(businessType)) {
+            statusReject(contentType, content);
         } else
             throw new IllegalArgumentException("not support businessType:" + businessType);
 
@@ -268,8 +271,14 @@ public class HaierSupplierImpl implements HaierSupplier {
             throw new IllegalArgumentException("bad type:" + contentType);
 
 //        System.out.println(requestData);
-        log.trace(requestData);
+        log.debug("[HR]businessData:" + requestData);
         return requestData;
+    }
+
+    private void statusReject(String contentType, String content) throws IOException {
+        RejectInfo info = toModel(RejectInfo.class, contentType, content);
+        // 处理该事件！
+        applicationEventPublisher.publishEvent(info);
     }
 
     private void outInStoreEvent(String contentType, String content) throws IOException {
