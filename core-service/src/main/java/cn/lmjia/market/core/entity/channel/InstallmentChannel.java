@@ -23,8 +23,4 @@ public class InstallmentChannel extends Channel {
     @Column(scale = 9, precision = 10)
     private BigDecimal poundageRate = BigDecimal.ZERO;
 
-    public InstallmentChannel() {
-        setType(1);
-    }
-
 }
