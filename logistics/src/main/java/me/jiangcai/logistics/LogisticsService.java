@@ -3,6 +3,8 @@ package me.jiangcai.logistics;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.event.ShiftEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -60,4 +62,8 @@ public interface LogisticsService {
      */
     @Transactional
     void addStock(Depot depot, Product product, int amount, String message);
+
+    @EventListener(ShiftEvent.class)
+    @Transactional
+    void shiftEventUp(ShiftEvent event);
 }

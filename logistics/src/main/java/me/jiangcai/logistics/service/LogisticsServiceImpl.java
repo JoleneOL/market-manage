@@ -11,6 +11,7 @@ import me.jiangcai.logistics.entity.StockSettlement;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
+import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import me.jiangcai.logistics.repository.StockSettlementRepository;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
@@ -151,6 +152,11 @@ public class LogisticsServiceImpl implements LogisticsService {
         unit.setMessage(message);
         unit.addAmount(product, amount);
         stockShiftUnitRepository.save(unit);
+    }
+
+    @Override
+    public void shiftEventUp(ShiftEvent event) {
+        event.getUnit().addStatus(event.getTime(), event.getMessage(), event.getStatus());
     }
 
     /**

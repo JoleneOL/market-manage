@@ -89,4 +89,16 @@ public class StockShiftUnit {
         } else
             amounts.put(product, amount);
     }
+
+    public void addStatus(LocalDateTime time, String message, ShiftStatus status) {
+        setCurrentStatus(status);
+        setLastStatusTime(time);
+        if (events == null)
+            events = new HashMap<>();
+        StockShiftUnitEvent event = new StockShiftUnitEvent();
+        event.setMessage(message);
+        event.setTime(time);
+        event.setToStatus(status);
+        events.put(time, event);
+    }
 }
