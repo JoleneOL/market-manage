@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -34,18 +35,12 @@ public class StockShiftUnit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 转移的货品以及数量
+     */
     @ElementCollection
     private Map<Product, Integer> amounts;
 
-    /**
-     * 转移的货品
-     */
-    @ManyToOne
-    private Product product;
-    /**
-     * 转移的数量；必须正数
-     */
-    private int amount;
     /**
      * 可选的来源仓库；
      */
@@ -84,4 +79,14 @@ public class StockShiftUnit {
      */
     @Column(columnDefinition = "datetime")
     private LocalDateTime lockedTime;
+
+    public void addAmount(Product product, int amount) {
+        if (amounts == null) {
+            amounts = new HashMap<>();
+        }
+        if (amounts.containsKey(product)) {
+            amounts.put(product, amounts.get(product) + amount);
+        } else
+            amounts.put(product, amount);
+    }
 }

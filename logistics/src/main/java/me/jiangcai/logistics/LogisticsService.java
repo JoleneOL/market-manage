@@ -49,4 +49,15 @@ public interface LogisticsService {
      */
     @Transactional(readOnly = true)
     int usableStock(Depot depot, Product product);
+
+    /**
+     * 直接添加库存
+     *
+     * @param depot   仓库
+     * @param product 货品
+     * @param amount  数量
+     * @param message 可选留言
+     */
+    @Transactional
+    void addStock(Depot depot, Product product, int amount, String message);
 }

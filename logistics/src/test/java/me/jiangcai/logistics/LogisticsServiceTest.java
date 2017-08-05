@@ -39,6 +39,10 @@ public class LogisticsServiceTest extends LogisticsTestBase {
         assertThat(logisticsService.usableStock(depot, thing.getProduct()))
                 .isEqualTo(stock - thing.getAmount());
         // TODO 要组织事件了
+
+        logisticsService.addStock(depot, thing.getProduct(), thing.getAmount(), null);
+        assertThat(logisticsService.usableStock(depot, thing.getProduct()))
+                .isEqualTo(stock);
     }
 
 }

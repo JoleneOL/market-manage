@@ -10,6 +10,7 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockSettlement;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.entity.support.ShiftType;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import me.jiangcai.logistics.repository.StockSettlementRepository;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
@@ -137,6 +138,19 @@ public class LogisticsServiceImpl implements LogisticsService {
                                 .getResultList().stream()
                                 .filter(Objects::nonNull)
                                 .mapToInt(Number::intValue).sum();
+    }
+
+    @Override
+    public void addStock(Depot depot, Product product, int amount, String message) {
+        StockShiftUnit unit = new StockShiftUnit();
+        unit.setDestination(depot);
+        unit.setCreateTime(LocalDateTime.now());
+        unit.setLastStatusTime(unit.getCreateTime());
+        unit.setCurrentStatus(ShiftStatus.success);
+        unit.setShiftType(ShiftType.root);
+        unit.setMessage(message);
+        unit.addAmount(product, amount);
+        stockShiftUnitRepository.save(unit);
     }
 
     /**
