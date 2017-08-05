@@ -14,6 +14,7 @@ public enum ShiftStatus {
     accept,
     /**
      * 被拒绝，无需扣除可用量
+     * 并非被拒收！而是这个移动没有获得许可！
      */
     reject,
     /**

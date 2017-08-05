@@ -27,6 +27,11 @@ public abstract class LogisticsTestBase extends SpringWebTest {
     @Autowired
     private DepotRepository depotRepository;
 
+    protected LogisticsSource randomSource() {
+        return new LogisticsSource() {
+        };
+    }
+
     protected LogisticsDestination randomDestination() {
         return new LogisticsDestination() {
 //            @Override

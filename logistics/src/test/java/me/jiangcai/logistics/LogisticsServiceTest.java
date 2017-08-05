@@ -32,6 +32,13 @@ public class LogisticsServiceTest extends LogisticsTestBase {
         // 此时
         assertThat(logisticsService.usableStock(depot, thing.getProduct()))
                 .isEqualTo(stock - thing.getAmount());
+
+        // 再来比入库
+        logisticsService.makeShift(null, Collections.singleton(thing), randomSource(), depot);
+
+        assertThat(logisticsService.usableStock(depot, thing.getProduct()))
+                .isEqualTo(stock - thing.getAmount());
+        // TODO 要组织事件了
     }
 
 }
