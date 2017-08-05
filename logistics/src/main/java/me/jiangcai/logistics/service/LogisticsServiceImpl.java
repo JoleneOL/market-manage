@@ -13,7 +13,6 @@ import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
 import me.jiangcai.logistics.event.ShiftEvent;
-import me.jiangcai.logistics.option.LogisticsOptions;
 import me.jiangcai.logistics.repository.StockSettlementRepository;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,19 +53,15 @@ public class LogisticsServiceImpl implements LogisticsService {
     @Override
     public StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
             , LogisticsDestination destination) {
-        return makeShift(supplier, things, source, destination, false);
+        return makeShift(supplier, things, source, destination, 0);
     }
 
-    private StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
-            , LogisticsDestination destination, boolean installation) {
-        // 不同的供应商可能对于地址有不同的要求
+    @Override
+    public StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
+            , LogisticsDestination destination, int options) {
         if (supplier == null) {
             supplier = applicationContext.getBean(LogisticsSupplier.class);
         }
-        // 如果Source是个仓库 则表示出库
-        int options = (source instanceof Depot) ? LogisticsOptions.CargoFromStorage : 0;
-        if (installation)
-            options = options | LogisticsOptions.Installation;
         Consumer<StockShiftUnit> consumer = stockShiftUnit -> {
             stockShiftUnit.setCreateTime(LocalDateTime.now());
             stockShiftUnit.setCurrentStatus(ShiftStatus.init);
@@ -81,12 +76,7 @@ public class LogisticsServiceImpl implements LogisticsService {
                     .collect(Collectors.toMap(Thing::getProduct
                             , thing -> new ProductBatch(thing.getProductStatus(), thing.getAmount()))));
         };
-        return stockShiftUnitRepository.save(supplier.makeShift(source, things, destination, options, consumer));
-    }
-
-    @Override
-    public StockShiftUnit makeShiftWithInstallation(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source, LogisticsDestination destination) {
-        return makeShift(supplier, things, source, destination, true);
+        return stockShiftUnitRepository.save(supplier.makeShift(source, destination, consumer, options));
     }
 
     @Override

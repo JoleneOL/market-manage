@@ -1,6 +1,6 @@
 package me.jiangcai.logistics.haier.controller;
 
-import me.jiangcai.logistics.LogsticsTest;
+import me.jiangcai.logistics.LogisticsTestBase;
 import me.jiangcai.logistics.haier.HaierConfig;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
@@ -11,7 +11,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = HaierConfig.class)
-public class HaierControllerTest extends LogsticsTest {
+public class HaierControllerTest extends LogisticsTestBase {
 
     @Test
     public void go() throws Exception {

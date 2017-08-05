@@ -3,10 +3,9 @@ package me.jiangcai.logistics.haier.service;
 import lombok.SneakyThrows;
 import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogisticsSource;
-import me.jiangcai.logistics.Thing;
-import me.jiangcai.logistics.entity.Distribution;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.exception.SupplierException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
@@ -44,7 +43,6 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,8 +102,8 @@ public class HaierSupplierImpl implements HaierSupplier {
     }
 
     @Override
-    public StockShiftUnit makeShift(LogisticsSource source, Collection<? extends Thing> things
-            , LogisticsDestination destination, int options, Consumer<StockShiftUnit> consumer) {
+    public StockShiftUnit makeShift(LogisticsSource source,
+                                    LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options) {
         Map<String, Object> parameters = new HashMap<>();
 
         String id = UUID.randomUUID().toString().replaceAll("-", "");
@@ -154,10 +152,12 @@ public class HaierSupplierImpl implements HaierSupplier {
 
         HaierOrder order = new HaierOrder();
         order.setOrderNumber(id);
+        forUnit.accept(order);
 
-        List<Map<String, Object>> items = things.stream()
+        List<Map<String, Object>> items = order.getAmounts().entrySet().stream()
                 .map(this::toItemData)
                 .collect(Collectors.toList());
+
         for (int i = 0; i < items.size(); i++) {
             items.get(i).put("itemno", i + 1);
         }
@@ -166,11 +166,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         //参数准备完成
         sendRequest(parameters, "rrs_order");
 
-
-        Distribution distribution = new Distribution();
-        distribution.setId(id);
-        return distribution;
-
+        return order;
     }
 
     private void sendRequest(Map<String, Object> parameters, String type) {
@@ -297,12 +293,21 @@ public class HaierSupplierImpl implements HaierSupplier {
                 .build();
     }
 
-    private Map<String, Object> toItemData(Thing thing) {
+    private Map<String, Object> toItemData(Map.Entry<Product, ProductBatch> entry) {
         Map<String, Object> data = new HashMap<>();
-        data.put("storagetype", "10");
-        data.put("productcode", thing.getProductCode());
-        data.put("prodes", thing.getProductName());
-        data.put("number", thing.getAmount());
+        final Product product = entry.getKey();
+        data.put("productcode", product.getCode());
+        data.put("prodes", product.getName());
+        final ProductBatch batch = entry.getValue();
+        switch (batch.getProductStatus()) {
+            case normal:
+                data.put("storagetype", "10");
+                break;
+            default:
+                throw new IllegalArgumentException("unsupport for " + batch.getProductStatus());
+        }
+        data.put("number", batch.getAmount());
         return data;
     }
+
 }

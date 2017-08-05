@@ -126,9 +126,26 @@ public abstract class LogisticsTestBase extends SpringWebTest {
         };
     }
 
-    protected Depot randomDepotData() {
+    /**
+     * 支持覆盖以获得更多实现
+     *
+     * @return new Depot()
+     */
+    protected Depot newDepot() {
+        return new Depot();
+    }
+
+    /**
+     * 支持覆盖以获得更多实现
+     *
+     * @param depot 刚整出来的depot
+     */
+    protected void postNewDepot(Depot depot) {
+    }
+
+    protected final Depot randomDepotData() {
         LogisticsDestination destination = randomDestination();
-        Depot depot = new Depot();
+        Depot depot = newDepot();
         depot.setName(RandomStringUtils.randomAlphabetic(6) + "名称");
         depot.setCreateTime(LocalDateTime.now());
         depot.setEnable(true);
@@ -139,6 +156,7 @@ public abstract class LogisticsTestBase extends SpringWebTest {
         address.setPrefecture(destination.getCity());
         address.setCounty(destination.getCountry());
         address.setOtherAddress(destination.getDetailAddress());
+        postNewDepot(depot);
         return depot;
     }
 
@@ -151,12 +169,28 @@ public abstract class LogisticsTestBase extends SpringWebTest {
                 .max(new RandomComparator()).orElseGet(this::randomNewDepot);
     }
 
+    /**
+     * 支持覆盖以获得更多实现
+     *
+     * @return new Product()
+     */
+    protected Product newProduct() {
+        return new Product();
+    }
+
+    /**
+     * 支持覆盖以获得更多实现
+     *
+     * @param product 刚整出来的product
+     */
+    protected void postNewProduct(Product product) {
+    }
 
     /**
      * @return 随机的货品数据
      */
-    protected Product randomProductData() {
-        Product product = new Product();
+    protected final Product randomProductData() {
+        Product product = newProduct();
         product.setCode(RandomStringUtils.randomAlphabetic(6));
         product.setName(RandomStringUtils.randomAlphabetic(3) + "名称");
         product.setBrand(RandomStringUtils.randomAlphabetic(3) + "品牌");
@@ -168,6 +202,7 @@ public abstract class LogisticsTestBase extends SpringWebTest {
         product.setVolumeLength(new BigDecimal(random.nextInt(100) + 10));
         product.setVolumeWidth(new BigDecimal(random.nextInt(100) + 10));
         product.setWeight(new BigDecimal(random.nextInt(3000) + 500));
+        postNewProduct(product);
         return product;
     }
 
@@ -182,24 +217,18 @@ public abstract class LogisticsTestBase extends SpringWebTest {
     }
 
     protected Thing randomThing() {
-        return new SimpleThing(RandomStringUtils.randomAlphanumeric(6)
-                , RandomStringUtils.randomAlphabetic(4) + "产品"
-                , randomProduct()
+        return new SimpleThing(randomProduct()
                 , random.nextInt(10) + 1,
                 ProductStatus.normal);
     }
 
     @Getter
     private class SimpleThing implements Thing {
-        private final String productCode;
-        private final String productName;
         private final Product product;
         private final int amount;
         private final ProductStatus productStatus;
 
-        public SimpleThing(String productCode, String productName, Product product, int amount, ProductStatus productStatus) {
-            this.productCode = productCode;
-            this.productName = productName;
+        SimpleThing(Product product, int amount, ProductStatus productStatus) {
             this.product = product;
             this.amount = amount;
             this.productStatus = productStatus;

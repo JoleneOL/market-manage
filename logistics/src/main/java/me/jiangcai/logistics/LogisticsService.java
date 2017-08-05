@@ -4,6 +4,7 @@ import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.option.LogisticsOptions;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,19 +31,18 @@ public interface LogisticsService {
             , LogisticsDestination destination);
 
     /**
-     * 开启配送，和安装一体；并非所有物流都支持
+     * 开启配送
      *
      * @param supplier    物流供应商
      * @param things      需配送的货品
      * @param source      来源地址，可能是供应商，仓库
      * @param destination 目的地
+     * @param options     选项;{@link LogisticsOptions}
      * @return 配送
-     * @see me.jiangcai.logistics.option.LogisticsOptions#Installation
      */
     @Transactional
-    StockShiftUnit makeShiftWithInstallation(LogisticsSupplier supplier, Collection<Thing> things
-            , LogisticsSource source
-            , LogisticsDestination destination);
+    StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
+            , LogisticsDestination destination, int options);
 
     /**
      * @param depot   仓库

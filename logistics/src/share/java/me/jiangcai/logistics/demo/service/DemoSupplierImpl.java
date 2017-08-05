@@ -2,7 +2,6 @@ package me.jiangcai.logistics.demo.service;
 
 import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogisticsSource;
-import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.demo.DemoSupplier;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
@@ -13,7 +12,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -28,10 +26,10 @@ public class DemoSupplierImpl implements DemoSupplier {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public StockShiftUnit makeShift(LogisticsSource source, Collection<? extends Thing> things
-            , LogisticsDestination destination, int options, Consumer<StockShiftUnit> consumer) {
+    public StockShiftUnit makeShift(LogisticsSource source,
+                                    LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options) {
         StockShiftUnit unit = new StockShiftUnit();
-        consumer.accept(unit);
+        forUnit.accept(unit);
         return unit;
     }
 

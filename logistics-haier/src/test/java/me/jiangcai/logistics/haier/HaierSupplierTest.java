@@ -1,13 +1,12 @@
 package me.jiangcai.logistics.haier;
 
-import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsTestBase;
-import me.jiangcai.logistics.Thing;
-import me.jiangcai.logistics.entity.Distribution;
-import me.jiangcai.logistics.option.LogisticsOptions;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,11 +14,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,6 +27,8 @@ public class HaierSupplierTest extends LogisticsTestBase {
 
     @Autowired
     private HaierSupplier haierSupplier;
+    @Autowired
+    private LogisticsService logisticsService;
 
     @Test
     public void product() {
@@ -57,131 +54,46 @@ public class HaierSupplierTest extends LogisticsTestBase {
     // 临时入库
     @Test
     public void tempIn() {
-        Set<Thing> goods = new HashSet<>();
-        // uXkelZ和KWkLZc
-        goods.add(newTempThing("KWkLZc"));
-        goods.add(newTempThing("uXkelZ"));
-        Distribution distribution = haierSupplier.makeShift(randomStorage(), goods, randomDestination(), LogisticsOptions.CargoToStorage, null);
-        System.out.println(distribution.getId());
+        logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomSource(), randomDepot());
+//        Set<Thing> goods = new HashSet<>();
+//        // uXkelZ和KWkLZc
+//        goods.add(newTempThing("KWkLZc"));
+//        goods.add(newTempThing("uXkelZ"));
+//        Distribution distribution = haierSupplier.makeShift(randomStorage(), randomDestination(), null, LogisticsOptions.CargoToStorage);
+//        System.out.println(distribution.getId());
         // 在日日顺实现中 如果是入库的话，实现是 目的，来源
         // 这个是存在极大问题的！
     }
 
-    private Thing newTempThing(String code) {
-        return new Thing() {
-            @Override
-            public String getProductCode() {
-                return code;
-            }
-
-            @Override
-            public String getProductName() {
-                return code;
-            }
-
-            @Override
-            public int getAmount() {
-                return 500;
-            }
-        };
-    }
 
     @Test
     public void go() {
-        Set<Thing> goods = new HashSet<>();
-        // uXkelZ和KWkLZc
-        goods.add(newTempThing("KWkLZc"));
-        goods.add(newTempThing("uXkelZ"));
-        Distribution distribution = haierSupplier.makeShift(randomStorage(), goods, randomDestination(), LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage, null);
-        haierSupplier.cancelOrder(distribution.getId(), true, null);
+        logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomDepot(), randomDestination());
+//        Set<Thing> goods = new HashSet<>();
+//        // uXkelZ和KWkLZc
+//        goods.add(newTempThing("KWkLZc"));
+//        goods.add(newTempThing("uXkelZ"));
+//        Distribution distribution = haierSupplier.makeShift(randomStorage(), randomDestination(), null, LogisticsOptions.Installation | LogisticsOptions.CargoFromStorage);
+//        haierSupplier.cancelOrder(distribution.getId(), true, null);
     }
 
-    private LogisticsDestination randomDestination() {
-        return new LogisticsDestination() {
-//            @Override
-//            public String getProvince() {
-//                return RandomStringUtils.randomAlphabetic(3) + "省";
-//            }
-
-//            @Override
-//            public String getCity() {
-//                return RandomStringUtils.randomAlphabetic(3) + "市";
-//            }
-
-//            @Override
-//            public String getCountry() {
-//                return RandomStringUtils.randomAlphabetic(3) + "区";
-//            }
-
-            @Override
-            public String getProvince() {
-                return "北京市";
-            }
-
-            @Override
-            public String getCity() {
-                return "北京市";
-            }
-
-            @Override
-            public String getCountry() {
-                return "昌平区";
-            }
-
-            @Override
-            public String getDetailAddress() {
-                return RandomStringUtils.randomAlphabetic(6);
-            }
-
-            @Override
-            public String getConsigneeName() {
-                return RandomStringUtils.randomAlphabetic(3) + "人";
-            }
-
-            @Override
-            public String getConsigneeMobile() {
-                return randomMobile();
-            }
-        };
+    @Override
+    protected void postNewProduct(Product product) {
+        super.postNewProduct(product);
+        // KWkLZc uXkelZ
+        product.setCode("KWkLZc");
     }
 
-    private Collection<Thing> randomThings() {
-        final Stream.Builder<Thing> builder = Stream
-                .builder();
-        int x = random.nextInt(2) + 1;
-        while (x-- > 0)
-            builder.add(randomThing());
-        return builder.build()
-                .collect(Collectors.toSet());
+    @Override
+    protected Depot newDepot() {
+        return new HaierDepot();
     }
 
-    private Thing randomThing() {
-        return new Thing() {
-            @Override
-            public String getProductCode() {
-                return RandomStringUtils.randomAlphanumeric(6);
-            }
-
-            @Override
-            public String getProductName() {
-                return RandomStringUtils.randomAlphabetic(4) + "产品";
-            }
-
-            @Override
-            public int getAmount() {
-                return random.nextInt(10) + 1;
-            }
-        };
-    }
-
-    private Storage randomStorage() {
-        return new Storage() {
-            @Override
-            public String getStorageCode() {
-//                return RandomStringUtils.randomAlphanumeric(4);
-                return "C12101";
-            }
-        };
+    @Override
+    protected void postNewDepot(Depot depot) {
+        super.postNewDepot(depot);
+        HaierDepot haierDepot = (HaierDepot) depot;
+        haierDepot.setHaierCode("C12101");
     }
 
 }

@@ -66,6 +66,10 @@
             <testResource>
                 <directory>../logistics/src/share/resources</directory>
             </testResource>
+            <!--基于偷懒的理由 直接将core的资源拿来用了，该项目独立之后 则需要重新规划了-->
+            <testResource>
+                <directory>../core-service/src/share/resources</directory>
+            </testResource>
         </testResources>
         <plugins>
             <plugin>

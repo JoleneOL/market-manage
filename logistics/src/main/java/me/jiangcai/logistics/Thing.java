@@ -9,15 +9,6 @@ import me.jiangcai.logistics.entity.support.ProductStatus;
  * @author CJ
  */
 public interface Thing {
-    /**
-     * @return 编号
-     */
-    String getProductCode();
-
-    /**
-     * @return 物品名字
-     */
-    String getProductName();
 
     Product getProduct();
 
