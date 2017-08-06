@@ -191,6 +191,7 @@ public abstract class LogisticsTestBase extends SpringWebTest {
      */
     protected final Product randomProductData() {
         Product product = newProduct();
+        product.setEnable(true);
         product.setCode(RandomStringUtils.randomAlphabetic(6));
         product.setName(RandomStringUtils.randomAlphabetic(3) + "名称");
         product.setBrand(RandomStringUtils.randomAlphabetic(3) + "品牌");

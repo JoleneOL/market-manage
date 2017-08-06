@@ -76,15 +76,47 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<StockInfo> usableStock() {
-
-        // 将来可能还会带去对 仓库和货品的规格要求
-        return usableStockInfo((productPath, criteriaBuilder) -> criteriaBuilder.conjunction()
-                , (depotJoin, criteriaBuilder) -> criteriaBuilder.conjunction());
+    public List<StockInfo> enabledUsableStock() {
+        return enabledUsableStockInfo(null, null);
     }
 
-    private List<StockInfo> usableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
+    @Override
+    public List<StockInfo> enabledUsableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
             , BiFunction<Join<?, Depot>, CriteriaBuilder, Predicate> depotSpec) {
+        final BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpecFinal;
+        if (productSpec == null)
+            productSpecFinal = (productPath, criteriaBuilder) -> criteriaBuilder.isTrue(productPath.get("enable"));
+        else {
+            productSpecFinal = (productPath, criteriaBuilder) -> criteriaBuilder.and(
+                    productSpec.apply(productPath, criteriaBuilder)
+                    , criteriaBuilder.isTrue(productPath.get("enable"))
+            );
+        }
+        final BiFunction<Join<?, Depot>, CriteriaBuilder, Predicate> depotSpecFinal;
+        if (depotSpec == null)
+            depotSpecFinal = (depotJoin, criteriaBuilder) -> criteriaBuilder.isTrue(depotJoin.get("enable"));
+        else {
+            depotSpecFinal = (depotJoin, criteriaBuilder) -> criteriaBuilder.and(
+                    depotSpec.apply(depotJoin, criteriaBuilder)
+                    , criteriaBuilder.isTrue(depotJoin.get("enable"))
+            );
+        }
+        return usableStockInfo(productSpecFinal, depotSpecFinal);
+    }
+
+    @Override
+    public List<StockInfo> usableStock() {
+        // 将来可能还会带去对 仓库和货品的规格要求
+        return usableStockInfo(null, null);
+    }
+
+    @Override
+    public List<StockInfo> usableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
+            , BiFunction<Join<?, Depot>, CriteriaBuilder, Predicate> depotSpec) {
+        if (productSpec == null)
+            productSpec = (productPath, criteriaBuilder) -> criteriaBuilder.conjunction();
+        if (depotSpec == null)
+            depotSpec = (depotJoin, criteriaBuilder) -> criteriaBuilder.conjunction();
         // 获取 该库存的最新结算量
         // 这里存在一个尴尬的情况
         // 如果存在结算库存 是否不符合规格也要返回 ？

@@ -31,7 +31,7 @@ public class Depot implements LogisticsDestination, LogisticsSource {
     /**
      * 上架状态
      */
-    private boolean enable;
+    private boolean enable = true;
 
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime;
