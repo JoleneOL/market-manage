@@ -14,24 +14,15 @@ $(function () {
         legend: {
             orient: 'vertical',
             left: 'left',
-            data: ['厨下净水机', '立式净水器', '量子厨下净水机', '量子立式净水机', '量子空气净化器', '量子食品优化宝', '量子防辐射芯片', '量子水宝']
+            data: $.allProduct
         },
         series: [
             {
-                name: '访问来源',
+                name: '可用库存',
                 type: 'pie',
                 radius: '55%',
                 center: ['50%', '60%'],
-                data: [
-                    {value: 300, name: '厨下净水机'},
-                    {value: 310, name: '立式净水器'},
-                    {value: 234, name: '量子厨下净水机'},
-                    {value: 335, name: '量子立式净水机'},
-                    {value: 535, name: '量子空气净化器'},
-                    {value: 135, name: '量子食品优化宝'},
-                    {value: 335, name: '量子防辐射芯片'},
-                    {value: 1548, name: '量子水宝'}
-                ],
+                data: $.allProductAmount,
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,

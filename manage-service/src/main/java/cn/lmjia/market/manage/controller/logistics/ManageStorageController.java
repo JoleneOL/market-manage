@@ -21,6 +21,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -33,9 +34,6 @@ import java.util.stream.Collectors;
 @PreAuthorize("hasAnyRole('ROOT')")
 public class ManageStorageController {
 
-    // 库存 为0 的信息
-    // 库存 小于警戒线的信息
-    // 每一种货品的 所有库存信息
     @Autowired
     private StockService stockService;
     @Autowired
@@ -92,7 +90,20 @@ public class ManageStorageController {
                 .sorted(Comparator.comparingInt(StockInfo::getAmount))
                 .limit(4)
                 .collect(Collectors.toList()));
-
+        // 按照货品 取出所有库存
+        Set<Product> products = set.forAll().stream()
+                .map(StockInfo::getProduct).collect(Collectors.toSet());
+        Set<Map<String, Object>> amounts = new HashSet<>();
+        products.forEach(product -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("name", product.getName());
+            data.put("value", set.forProduct(product).stream()
+                    .mapToInt(StockInfo::getAmount)
+                    .sum());
+            amounts.add(data);
+        });
+        model.addAttribute("allProduct", products.stream().map(Product::getName).collect(Collectors.toSet()));
+        model.addAttribute("allProductAmount", amounts);
 
         return "_storageManage.html";
     }

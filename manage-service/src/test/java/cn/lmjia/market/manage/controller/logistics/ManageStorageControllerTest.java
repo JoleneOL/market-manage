@@ -27,12 +27,13 @@ public class ManageStorageControllerTest extends ManageServiceTest {
         driver.get("http://localhost/manageStorage");
         ManageStoragePage manageStoragePage = initPage(ManageStoragePage.class);
 
+        manageStoragePage.printThisPage();
         manageStoragePage.clickDelivery();
         driver.navigate().back();
 
         manageStoragePage = initPage(ManageStoragePage.class);
         mockMvc.perform(get("/manage/storage"))
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
