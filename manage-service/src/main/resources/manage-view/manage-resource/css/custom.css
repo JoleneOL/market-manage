@@ -345,3 +345,27 @@ textarea {
     vertical-align: text-top;
     line-height: 1.3em;
 }
+.upload-items {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+.img-bg-file {
+    width: 110px;
+    height: 110px;
+    background: url("../img/file.png");
+}
+.upload-msg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 70px;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.msg-success {
+    color: #1ab394;
+}
+.msg-failure {
+    color: #ec4758;
+}
