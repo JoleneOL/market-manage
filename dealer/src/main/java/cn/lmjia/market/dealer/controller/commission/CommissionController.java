@@ -11,8 +11,6 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
-import cn.lmjia.market.dealer.service.CommissionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,9 +39,6 @@ import java.util.function.Function;
  */
 @Controller
 public class CommissionController {
-
-    @Autowired
-    private CommissionService commissionService;
 
     /**
      * @param login 身份
@@ -238,12 +233,12 @@ public class CommissionController {
             @Override
             public Specification<Commission> specification() {
                 if ("pending".equals(type))
-                    return commissionService.listAllSpecification(login, (root, query, cb)
+                    return Commission.listAllSpecification(login, (root, query, cb)
                             -> Commission.Reality(root, cb).not());
 
                 if ("all".equals(type))
-                    return commissionService.listRealitySpecification(login, null);
-                return commissionService.listRealitySpecification(login, (root, query, cb) -> {
+                    return Commission.listRealitySpecification(login, null);
+                return Commission.listRealitySpecification(login, (root, query, cb) -> {
                     if ("today".equals(type))
                         return JpaFunctionUtils.DateEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now());

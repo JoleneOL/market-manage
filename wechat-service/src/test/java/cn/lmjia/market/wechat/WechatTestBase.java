@@ -4,6 +4,7 @@ package cn.lmjia.market.wechat;
 import cn.lmjia.market.core.config.MVCConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.DealerServiceTest;
@@ -31,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequ
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 /**
@@ -168,5 +170,24 @@ public abstract class WechatTestBase extends DealerServiceTest {
             originDriver.close();
         }
         return newUser;
+    }
+
+
+    /**
+     * 订单申请
+     *
+     * @param request 订单申请内容
+     * @return 完成之后的跳转URL
+     * @throws Exception
+     */
+    protected String submitOrderRequest(OrderRequest request) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder =
+                orderRequestBuilder(wechatPost("/wechatOrder"), request);
+
+        return mockMvc.perform(
+                requestBuilder
+        )
+                .andExpect(status().is3xxRedirection())
+                .andReturn().getResponse().getHeader("Location");
     }
 }

@@ -82,7 +82,7 @@ public class MainOrderServiceImpl implements MainOrderService {
 
         queryDailySerialId(now, order);
         order.setOrderStatus(OrderStatus.forPay);
-        return mainOrderRepository.save(order);
+        return mainOrderRepository.saveAndFlush(order);
     }
 
     private synchronized void queryDailySerialId(LocalDate now, MainOrder order) {

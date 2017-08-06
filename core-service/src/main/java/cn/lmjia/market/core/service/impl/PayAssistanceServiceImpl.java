@@ -1,9 +1,13 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
+import cn.lmjia.market.core.trj.InvalidAuthorisingException;
+import cn.lmjia.market.core.trj.TRJService;
 import me.jiangcai.payment.PayableOrder;
+import me.jiangcai.payment.PaymentConfig;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.paymax.PaymaxChannel;
@@ -42,6 +46,8 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
     private PaymaxPaymentForm paymaxPaymentForm;
     @Autowired
     private Environment environment;
+    @Autowired
+    private TRJService trjService;
 
     @PreDestroy
     public void close() {
@@ -72,5 +78,15 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
         }
         parameters.put("openId", openId);
         return paymentService.startPay(request, order, paymaxPaymentForm, parameters);
+    }
+
+    @Override
+    public ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, String authorising
+            , String idNumber) throws SystemMaintainException, InvalidAuthorisingException {
+        AuthorisingInfo info = trjService.checkAuthorising(authorising, idNumber);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("info", info);
+        parameters.put(PaymentConfig.SKIP_TEST_PARAMETER_NAME, true);
+        return paymentService.startPay(request, order, trjService, parameters);
     }
 }

@@ -2,6 +2,7 @@ package cn.lmjia.market.wechat.service;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import me.jiangcai.wx.model.Menu;
 import me.jiangcai.wx.model.MenuType;
 import me.jiangcai.wx.model.PublicAccount;
@@ -40,11 +41,21 @@ public class WechatInitService {
                 new Menu[]
                         {
                                 createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
-                                , createMenu("下单", systemService.toUrl(SystemService.wechatOrderURi))
+                                , createMenu("下单"
+                                , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
+                                , createMenu("分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
                                 , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
                         }
         );
         log.info("updated the menus");
+    }
+
+    private Menu createMenu(String name, Menu... menus) {
+        Menu menu = new Menu();
+        menu.setType(MenuType.parent);
+        menu.setName(name);
+        menu.setSubs(menus);
+        return menu;
     }
 
     private Menu createMenu(String name, String url) {

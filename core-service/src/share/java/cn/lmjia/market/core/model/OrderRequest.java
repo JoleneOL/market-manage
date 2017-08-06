@@ -19,4 +19,7 @@ public class OrderRequest {
     private final int gender;
     private final String mobile;
     private final int amount;
+    private final String authorising;
+    private final String idNumber;
+    private final Long channelId;
 }

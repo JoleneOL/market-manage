@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Getter
 public class MainProduct extends Product {
     /**
-     * 每台保证金
+     * 设备款
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal deposit;
@@ -28,7 +28,7 @@ public class MainProduct extends Product {
     @Column(scale = 2, precision = 12)
     private BigDecimal serviceCharge;
     /**
-     * 每台安装费用，没有就0
+     * 服务费
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal install;

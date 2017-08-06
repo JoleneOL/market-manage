@@ -28,6 +28,11 @@
             <version>${jiangcai.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>${eclipselink.version}</version>
+        </dependency>
+        <dependency>
             <groupId>me.jiangcai.wx</groupId>
             <artifactId>weixin-web</artifactId>
             <version>${wx.version}</version>
