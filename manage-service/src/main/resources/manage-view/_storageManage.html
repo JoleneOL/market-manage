@@ -21,13 +21,14 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="gray-bg" data-url="/manage/storage" th:data-url="@{}">
+<body class="gray-bg" data-url="/manage/storage">
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-md-12 mb10">
             <div class="form-inline">
                 <div>
-                    <a class="btn btn-primary btn-sm" href="_delivery.html">发&nbsp;&nbsp;货</a>
+                    <a id="J_DeliveryLink" class="btn btn-primary btn-sm" href="_delivery.html"
+                       th:href="@{/manageStorageDelivery}">发&nbsp;&nbsp;货</a>
                 </div>
             </div>
         </div>
