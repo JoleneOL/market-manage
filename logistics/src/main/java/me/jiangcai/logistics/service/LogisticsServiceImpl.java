@@ -9,6 +9,7 @@ import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.entity.support.ShiftType;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -43,6 +44,7 @@ public class LogisticsServiceImpl implements LogisticsService {
             supplier = applicationContext.getBean(LogisticsSupplier.class);
         }
         Consumer<StockShiftUnit> consumer = stockShiftUnit -> {
+            stockShiftUnit.setShiftType(ShiftType.logistics);
             stockShiftUnit.setCreateTime(LocalDateTime.now());
             stockShiftUnit.setCurrentStatus(ShiftStatus.init);
             stockShiftUnit.setLastStatusTime(stockShiftUnit.getCreateTime());

@@ -65,15 +65,13 @@ public class LogisticsServiceTest extends LogisticsTestBase {
                 .isEqualTo(stock + thing.getAmount());
 
         assertThat(stockService.usableStock()
-                .stream()
-                .filter(stockInfo -> stockInfo.getProduct().equals(thing.getProduct()) && stockInfo.getDepot().equals(depot))
-                .findFirst().orElse(null).getAmount())
+                .forOne(thing.getProduct(), depot))
                 .isEqualTo(stock + thing.getAmount());
 // 特定条件 并且是 enable
         assertThat(stockService.enabledUsableStockInfo(
                 (productPath, criteriaBuilder) -> criteriaBuilder.equal(productPath, thing.getProduct())
                 , (depotJoin, criteriaBuilder) -> criteriaBuilder.equal(depotJoin, depot))
-                .get(0).getAmount())
+                .forOne(thing.getProduct(), depot))
                 .isEqualTo(stock + thing.getAmount());
     }
 

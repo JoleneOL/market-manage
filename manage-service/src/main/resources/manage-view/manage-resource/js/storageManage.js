@@ -56,31 +56,22 @@ $(function () {
                 return $.extend({}, d, extendData());
             }
         },
-        "ordering": true,
+        "ordering": false,
         "lengthChange": false,
         "searching": false,
         "colReorder": true,
         "columns": [
             {
-                "title": "订单号", "data": "orderId", "name": "orderId"
+                "title": "仓库类型", "data": "storageType", "name": "storageType"
             },
             {
-                "title": "物流公司", "data": "logistics", "name": "logistics"
+                "title": "仓库", "data": "storage", "name": "storage"
             },
             {
-                "title": "仓储仓", "data": "storage", "name": "storage"
+                "title": "货品", "data": "product", "name": "product"
             },
             {
-                "title": "商品名称", "data": "goods", "name": "goods"
-            },
-            {
-                "title": "库存量(台）", "data": "inventory", "name": "inventory"
-            },
-            {
-                "title": "最新入库时间", "data": "storageTime", "name": "storageTime"
-            },
-            {
-                "title": "操作员", "data": "operator", "name": "operator"
+                "title": "库存量", "data": "inventory", "name": "inventory"
             },
             {
                 "title": "操作",
@@ -88,12 +79,13 @@ $(function () {
                 "orderable": false,
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-operate" data-id="' + item.id + '"><i class="fa fa-truck"></i>&nbsp;发货</a>';
-                    var b = '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
-                    return a + b;
+                    // var b = '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
+                    // return a + b;
+                    return a;
                 }
             }
         ],
-        "displayLength": 15,
+        // "displayLength": 15,
         "drawCallback": function () {
             clearSearchValue();
         },

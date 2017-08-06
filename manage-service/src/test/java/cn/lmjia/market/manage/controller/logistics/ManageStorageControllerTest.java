@@ -12,12 +12,14 @@ import org.junit.Test;
 public class ManageStorageControllerTest extends ManageServiceTest {
 
     @Before
-    public void init() {
+    public void init() throws Exception {
         updateAllRunWith(newRandomManager(ManageLevel.root));
+        addNewHaierDepot();
     }
 
     @Test
-    public void go() {
+    public void go() throws Exception {
+
         driver.get("http://localhost/manageStorage");
         ManageStoragePage manageStoragePage = initPage(ManageStoragePage.class);
 

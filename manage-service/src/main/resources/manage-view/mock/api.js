@@ -152,13 +152,12 @@ Mock.mock(/\/manage\/storage/, "get", {
     "data|10": [
         {
             'id': '@id',
-            'orderId': '@id',
-            'logistics': '日日顺',
+            'storageType': '日日顺',
             'storage': '@region',
-            'goods': '量子立式净水机',
-            'inventory': '@integer(1000, 9999)',
-            'storageTime': '@datetime("yyyy-MM-dd")',
-            'operator': '@cname'
+            'depotId': '@id',
+            'product': '量子立式净水机',
+            'productCode': '@name',
+            'inventory': '@integer(1000, 9999)'
         }
     ]
 });
@@ -218,10 +217,10 @@ Mock.mock(/\/url\/logistics/, "get", {
             'id': '@id',
             'orderId': '@id',
             'goods': '量子立式净水机',
-            'deliverQuantity':'@integer(1, 99)',
-            'orderTime':'@datetime("yyyy-MM-dd")',
-            'address':'@county(true)',
-            'orderUser':'@cname',
+            'deliverQuantity': '@integer(1, 99)',
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'address': '@county(true)',
+            'orderUser': '@cname',
             'mobile': /^1([34578])\d{9}$/,
             'logistics': '日日顺',
             'storage': '@region',
@@ -242,12 +241,12 @@ Mock.mock(/\/url\/factory/, "get", {
             'id': '@id',
             'orderId': '@id',
             'goods': '量子立式净水机',
-            'deliverQuantity':'@integer(1, 99)',
-            'orderTime':'@datetime("yyyy-MM-dd")',
+            'deliverQuantity': '@integer(1, 99)',
+            'orderTime': '@datetime("yyyy-MM-dd")',
             'deliverFactory': '帅风',
             'deliverTime': '@datetime("yyyy-MM-dd")',
-            'address':'@county(true)',
-            'contacts':'@cname',
+            'address': '@county(true)',
+            'contacts': '@cname',
             'mobile': /^1([34578])\d{9}$/,
             'status': '@pick(["待发货", "待收货", "已收货"])',
             'stateCode': '@pick([0, 1, 2])'
@@ -263,13 +262,13 @@ Mock.mock(/\/url\/storage/, "get", {
         {
             'id': '@id',
             'orderId': '@id',
-            'orderTime':'@datetime("yyyy-MM-dd")',
+            'orderTime': '@datetime("yyyy-MM-dd")',
             'goods': '量子立式净水机',
-            'transferQuantity':'@integer(100, 999)',
+            'transferQuantity': '@integer(100, 999)',
             'transferStorage': '日日顺@region()仓',
             'deliverTime': '@datetime("yyyy-MM-dd")',
             'deliverStorage': '日日顺@region()仓',
-            'contacts':'@cname',
+            'contacts': '@cname',
             'mobile': /^1([34578])\d{9}$/,
             'status': '@pick(["待发货", "待收货", "已收货"])',
             'stateCode': '@pick([0, 1, 2])'
@@ -286,7 +285,7 @@ Mock.mock(/\/storage\/transfer/, "get", {
             'id': '@id',
             'storage': '@region',
             'quantity': '@integer(100, 999)',
-            'distance':'@integer(100, 999)公里'
+            'distance': '@integer(100, 999)公里'
         }
     ]
 });

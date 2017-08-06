@@ -1,6 +1,7 @@
 package me.jiangcai.logistics.service;
 
 import me.jiangcai.lib.jdbc.JdbcService;
+import me.jiangcai.logistics.StockInfoSet;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
@@ -42,10 +43,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
@@ -66,23 +65,14 @@ public class StockServiceImpl implements StockService {
     @Autowired
     private JdbcService jdbcService;
 
-    private static void addAmount(List<StockInfo> list, Product product, Depot depot, int change) {
-        StockInfo info = list.stream().filter(stockInfo -> stockInfo.getProduct().equals(product) && stockInfo.getDepot().equals(depot)).findAny().orElse(null);
-        if (info == null) {
-            info = new StockInfo(depot, product, change);
-            list.add(info);
-        } else
-            info.setAmount(info.getAmount() + change);
-    }
-
     @Override
-    public List<StockInfo> enabledUsableStock() {
+    public StockInfoSet enabledUsableStock() {
         return enabledUsableStockInfo(null, null);
     }
 
     @Override
-    public List<StockInfo> enabledUsableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
-            , BiFunction<Join<?, Depot>, CriteriaBuilder, Predicate> depotSpec) {
+    public StockInfoSet enabledUsableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
+            , BiFunction<Path<Depot>, CriteriaBuilder, Predicate> depotSpec) {
         final BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpecFinal;
         if (productSpec == null)
             productSpecFinal = (productPath, criteriaBuilder) -> criteriaBuilder.isTrue(productPath.get("enable"));
@@ -92,7 +82,7 @@ public class StockServiceImpl implements StockService {
                     , criteriaBuilder.isTrue(productPath.get("enable"))
             );
         }
-        final BiFunction<Join<?, Depot>, CriteriaBuilder, Predicate> depotSpecFinal;
+        final BiFunction<Path<Depot>, CriteriaBuilder, Predicate> depotSpecFinal;
         if (depotSpec == null)
             depotSpecFinal = (depotJoin, criteriaBuilder) -> criteriaBuilder.isTrue(depotJoin.get("enable"));
         else {
@@ -105,14 +95,14 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<StockInfo> usableStock() {
+    public StockInfoSet usableStock() {
         // 将来可能还会带去对 仓库和货品的规格要求
         return usableStockInfo(null, null);
     }
 
     @Override
-    public List<StockInfo> usableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
-            , BiFunction<Join<?, Depot>, CriteriaBuilder, Predicate> depotSpec) {
+    public StockInfoSet usableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
+            , BiFunction<Path<Depot>, CriteriaBuilder, Predicate> depotSpec) {
         if (productSpec == null)
             productSpec = (productPath, criteriaBuilder) -> criteriaBuilder.conjunction();
         if (depotSpec == null)
@@ -137,8 +127,8 @@ public class StockServiceImpl implements StockService {
         Join<?, Depot> destinationDepotJoin = root.join("destination", JoinType.LEFT);
         Join<?, Depot> originDepotJoin = root.join("origin", JoinType.LEFT);
 
-        ArrayList<StockInfo> resultList = new ArrayList<>();
-        resultList.addAll(settlement.getUsableStock());
+        StockInfoSet resultList = new StockInfoSet();
+        resultList.initAll(settlement.getUsableStock());
 
         entityManager.createQuery(
                 cq.multiselect(productJoin, destinationDepotJoin, originDepotJoin, root.get("amount"))
@@ -162,13 +152,23 @@ public class StockServiceImpl implements StockService {
 
                     Depot d1 = tuple.get(1, Depot.class);
                     if (d1 != null)
-                        addAmount(resultList, product, d1, amount);
+                        resultList.add(d1, product, amount);
                     Depot d2 = tuple.get(2, Depot.class);
                     if (d2 != null)
-                        addAmount(resultList, product, d2, -amount);
+                        resultList.add(d2, product, -amount);
                 }
         );
 
+        CriteriaQuery<Product> pcq = cb.createQuery(Product.class);
+        Root<Product> productRoot = pcq.from(Product.class);
+
+        CriteriaQuery<Depot> dcq = cb.createQuery(Depot.class);
+        Root<Depot> depotRoot = dcq.from(Depot.class);
+
+        resultList.initAll(
+                entityManager.createQuery(dcq.where(depotSpec.apply(depotRoot, cb))).getResultList()
+                , entityManager.createQuery(pcq.where(productSpec.apply(productRoot, cb))).getResultList()
+        );
 
         return resultList;
     }
@@ -251,7 +251,7 @@ public class StockServiceImpl implements StockService {
      * @return 最新的结算信息;如果不存在会返回一个世纪前的一个结算点，结算量是0
      */
     private StockSettlement lastStockSettlement(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
-            , BiFunction<Join<?, Depot>, CriteriaBuilder, Predicate> depotSpec) {
+            , BiFunction<Path<Depot>, CriteriaBuilder, Predicate> depotSpec) {
         final LocalDateTime time = lastStockSettlementTime();
         if (time == null) {
             StockSettlement stockSettlement = new StockSettlement();
