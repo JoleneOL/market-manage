@@ -17,6 +17,7 @@ import cn.lmjia.market.core.service.ScriptTaskService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJService;
 import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
@@ -123,6 +124,10 @@ public class TRJServiceImpl implements TRJService {
         autoRecallCode = StreamUtils.copyToString(new ClassPathResource("/script/auto-recall.js").getInputStream(), Charset.forName("UTF-8"));
     }
 
+    private static String toTRJString(Address address) {
+        return address.getProvince() + "-" + address.getPrefecture() + "-" + address.getCounty() + "-" + address.getOtherAddress();
+    }
+
     private static String sign(final Map<String, String> params, String secretKey) {
 
         if (StringUtils.isBlank(secretKey)) {
@@ -181,7 +186,7 @@ public class TRJServiceImpl implements TRJService {
         try {
             deliverUpdate(orderId, payOrder.getAuthorisingInfo().getId(), deliverCompany, deliverStore, stockQuantity
                     , shipmentTime.format(dateFormatter), deliverTime.format(dateFormatter), order.getCustomer().getName()
-                    , order.getCustomer().getMobile(), order.getInstallAddress().toTRJString()
+                    , order.getCustomer().getMobile(), toTRJString(order.getInstallAddress())
                     , order.getOrderTime().format(formatter));
         } catch (Exception e) {
             log.debug("[TRJ]", e);
@@ -192,7 +197,7 @@ public class TRJServiceImpl implements TRJService {
                             ",\"%s\")"
                     , orderId, payOrder.getAuthorisingInfo().getId(), deliverCompany, deliverStore, stockQuantity
                     , shipmentTime.format(dateFormatter), deliverTime.format(dateFormatter), order.getCustomer().getName()
-                    , order.getCustomer().getMobile(), order.getInstallAddress().toTRJString()
+                    , order.getCustomer().getMobile(), toTRJString(order.getInstallAddress())
                     , order.getOrderTime().format(formatter));
 
             submitTask("提交物流信息", code);
@@ -205,7 +210,7 @@ public class TRJServiceImpl implements TRJService {
         TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
         try {
             submitOrderCompleteRequest(payOrder.getAuthorisingInfo().getId(), order.getId()
-                    , order.getInstallAddress().toTRJString(), installer, installCompany, mobile
+                    , toTRJString(order.getInstallAddress()), installer, installCompany, mobile
                     , installTime.format(formatter), order.getAmount(), resourcePath);
         } catch (Exception e) {
             log.debug("[TRJ]", e);
@@ -216,7 +221,7 @@ public class TRJServiceImpl implements TRJService {
                                 ",\"%s\",\"%s\",\"%s\",\"%s\"" +
                                 ",\"%s\",%d,null)"
                         , payOrder.getAuthorisingInfo().getId(), order.getId()
-                        , order.getInstallAddress().toTRJString(), installer, installCompany, mobile
+                        , toTRJString(order.getInstallAddress()), installer, installCompany, mobile
                         , installTime.format(formatter), order.getAmount());
             else
                 code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderCompleteRequest(" +
@@ -224,7 +229,7 @@ public class TRJServiceImpl implements TRJService {
                                 ",\"%s\",\"%s\",\"%s\",\"%s\"" +
                                 ",\"%s\",%d,\"%s\")"
                         , payOrder.getAuthorisingInfo().getId(), order.getId()
-                        , order.getInstallAddress().toTRJString(), installer, installCompany, mobile
+                        , toTRJString(order.getInstallAddress()), installer, installCompany, mobile
                         , installTime.format(formatter), order.getAmount(), resourcePath);
 
             submitTask("提交信审请求", code);
@@ -292,7 +297,7 @@ public class TRJServiceImpl implements TRJService {
                     , order.getCustomer().getMobile(), order.getGood().getProduct().getCode()
                     , order.getGood().getProduct().getName(), order.getAmount()
                     , order.getOrderDueAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
-                    , order.getInstallAddress().toTRJString(), order.getOrderTime().format(formatter)
+                    , toTRJString(order.getInstallAddress()), order.getOrderTime().format(formatter)
                     , recommendId);
         } catch (Exception e) {
             // 提交任务
@@ -307,7 +312,7 @@ public class TRJServiceImpl implements TRJService {
                     , order.getCustomer().getMobile(), order.getGood().getProduct().getCode()
                     , order.getGood().getProduct().getName(), order.getAmount()
                     , order.getOrderDueAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
-                    , order.getInstallAddress().toTRJString(), order.getOrderTime().format(formatter)
+                    , toTRJString(order.getInstallAddress()), order.getOrderTime().format(formatter)
                     , recommendId);
 
             submitTask("提交订单信息", code);
