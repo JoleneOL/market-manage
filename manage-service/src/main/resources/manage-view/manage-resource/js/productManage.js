@@ -19,7 +19,7 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "产品名称", "data": "name", "name": "name"
+                "title": "货品名称", "data": "name", "name": "name"
             },
             {
                 "title": "类目", "data": "category", "name": "category"
@@ -84,10 +84,10 @@ $(function () {
         window.location.href = '_productDetail.html?id=' + $(this).data('id');
     }).on('click', '.js-delete', function () {
         var id = $(this).data('id');
-        layer.confirm('确定删除该产品？', {
+        layer.confirm('确定删除货品？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/goods/' + id, {
+            $.ajax('/products/' + id, {
                 method: 'delete',
                 success: function () {
                     table.ajax.reload();
@@ -100,10 +100,10 @@ $(function () {
         });
     }).on('click', '.js-offSale', function () {
         var id = $(this).data('id');
-        layer.confirm('确定下架该产品？', {
+        layer.confirm('确定下架该货品？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/goods/' + id + '/off', {
+            $.ajax('/products/' + id + '/off', {
                 method: 'put',
                 success: function () {
                     table.ajax.reload();
@@ -116,10 +116,10 @@ $(function () {
         });
     }).on('click', '.js-onSale', function () {
         var id = $(this).data('id');
-        layer.confirm('确定上架该产品？', {
+        layer.confirm('确定上架该货品？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/goods/' + id + '/on', {
+            $.ajax('/products/' + id + '/on', {
                 method: 'put',
                 success: function () {
                     table.ajax.reload();

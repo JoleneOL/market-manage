@@ -296,17 +296,17 @@ Mock.mock(/\/products\/category/, {
     "resultMsg": "ok"
 });
 
-Mock.mock(/\/goods\/\d\/off/, {
+Mock.mock(/\/products\/\d\/off/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });
 
-Mock.mock(/\/goods\/\d\/on/, {
+Mock.mock(/\/products\/\d\/on/, {
 
     "resultCode": 200,
     "resultMsg": "ok"
 });
-Mock.mock(/\/goods\/\d/, 'delete', {
+Mock.mock(/\/products\/\d/, 'delete', {
     "resultCode": 200,
     "resultMsg": "ok"
 });

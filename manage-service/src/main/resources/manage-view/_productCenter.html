@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>产品中心</title>
+    <title>货品管理</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -32,7 +32,7 @@
             <div class="col-md-12">
                 <div class="form-inline">
                     <div>
-                        <a class="btn btn-primary btn-sm" href="_productOperate.html">新增产品</a>
+                        <a class="btn btn-primary btn-sm" href="_productOperate.html">新增货品</a>
                     </div>
                 </div>
             </div>
@@ -41,11 +41,11 @@
             <div class="col-sm-10">
                 <div class="form-inline">
                     <div class="js-selectToolbar">
-                        <input type="search" class="form-control input-sm" placeholder="产品名称"
+                        <input type="search" class="form-control input-sm" placeholder="货品名称"
                                name="productName">
                         <label>
                             <select class="form-control input-sm" name="category">
-                                <option value=" " disabled="" selected="" class="hidden">产品类目</option>
+                                <option value=" " disabled="" selected="" class="hidden">货品类目</option>
                                 <option value="no">未分类</option>
                                 <option value="1">x</option>
                                 <option value="2">xx</option>
@@ -93,5 +93,5 @@
 <script src="mock/mock-min.js" th:remove="all"></script>
 <script src="mock/api.js" th:remove="all"></script>
 <!--生产环境请移除 End-->
-<script src="manage-resource/js/goodsManage.js"></script>
+<script src="manage-resource/js/productManage.js"></script>
 </html>
