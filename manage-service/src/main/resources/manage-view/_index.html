@@ -203,6 +203,9 @@
                         <li sec:authorize="hasAnyRole('ROOT')">
                             <a class="J_menuItem" href="_depotManage.html" th:href="@{/manageDepot}">仓库管理</a>
                         </li>
+                        <li sec:authorize="hasAnyRole('ROOT')">
+                            <a class="J_menuItem" href="_factoryManage.html" th:href="@{/manageFactory}">工厂管理</a>
+                        </li>
                         <li th:remove="all">
                             <a class="J_menuItem" href="_logisticsManage.html">物流管理</a>
                         </li>
