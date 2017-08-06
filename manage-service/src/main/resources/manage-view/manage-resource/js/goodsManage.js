@@ -1,10 +1,5 @@
-/**
- * Created by Neo on 2017/7/4.
- */
 $(function () {
-    "use strict";
-
-    var table = $('#productTable').DataTable({
+    var table = $('#goodsTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -19,31 +14,22 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "货品名称", "data": "productName", "name": "productName"
+                "title": "商品名称", "data": "goodsName", "name": "goodsName"
             },
             {
-                "title": "类目", "data": "category", "name": "category"
-            },
-            {
-                "title": "型号", "data": "type", "name": "type"
-            },
-            {
-                "title": "厂家", "data": "supplier", "name": "supplier"
-            },
-            {
-                "title": "单价（元）", "data": "price", "name": "price"
-            },
-            {
-                "title": "使用费（元）", "data": "cost", "name": "cost"
-            },
-            {
-                "title": "安装费（元）", "data": "installFee", "name": "installFee"
+                "title": "关联货品", "data": "productName", "name": "productName"
             },
             {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>';
+                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;修改</a>';
+                    if(item.onSale) {
+                        a += '<a href="javascript:;" class="js-offSale" data-id="' + item.id + '"><i class="fa fa-arrow-circle-down"></i>&nbsp;下架</a>';
+                    } else {
+                        a += '<a href="javascript:;" class="js-onSale" data-id="' + item.id + '"><i class="fa fa-arrow-circle-up"></i>&nbsp;上架</a>';
+                    }
+
                     var b = '<a href="javascript:;" class="js-delete" data-id="' + item.id + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
                     return a + b;
                 }
@@ -75,14 +61,46 @@ $(function () {
 
         table.ajax.reload();
     }).on('click', '.js-checkInfo', function () {
-        window.location.href = '_productDetail.html?id=' + $(this).data('id');
+        window.location.href = '_goodsOperate.html?id=' + $(this).data('id');
     }).on('click', '.js-delete', function () {
         var id = $(this).data('id');
-        layer.confirm('确定删除货品？', {
+        layer.confirm('确定删除商品？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/products/' + id, {
+            $.ajax('/goods/' + id, {
                 method: 'delete',
+                success: function () {
+                    table.ajax.reload();
+                    layer.close(index);
+                },
+                error: function () {
+                    layer.msg('服务器异常');
+                }
+            });
+        });
+    }).on('click', '.js-offSale', function () {
+        var id = $(this).data('id');
+        layer.confirm('确定下架该商品？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            $.ajax('/goods/' + id + '/off', {
+                method: 'put',
+                success: function () {
+                    table.ajax.reload();
+                    layer.close(index);
+                },
+                error: function () {
+                    layer.msg('服务器异常');
+                }
+            });
+        });
+    }).on('click', '.js-onSale', function () {
+        var id = $(this).data('id');
+        layer.confirm('确定上架该商品？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            $.ajax('/goods/' + id + '/on', {
+                method: 'put',
                 success: function () {
                     table.ajax.reload();
                     layer.close(index);
@@ -112,5 +130,4 @@ $(function () {
     function clearSearchValue() {
         //TODO
     }
-
 });

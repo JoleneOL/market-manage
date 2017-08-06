@@ -31,13 +31,13 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_productCenter.html">货品管理</a></li>
+                <li><a href="_productManage.html">货品管理</a></li>
                 <li><strong>新增货品</strong></li>
             </ol>
         </div>
     </div>
     <form id="J_productForm" method="post"
-          action="_productCenter.html">
+          action="_productManage.html">
         <div class="row">
             <div class="col-sm-12">
                 <div class="ibox">
@@ -54,7 +54,7 @@
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入货品名称" class="form-control"
-                                                       name="goodsName" required>
+                                                       name="productName" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -62,7 +62,7 @@
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入货品品牌" class="form-control"
-                                                       name="goodsBrand" required>
+                                                       name="productBrand" required>
                                             </div>
                                         </div>
                                         <!--<div class="form-group">-->
@@ -128,7 +128,7 @@
                                             <label class="col-sm-3 control-label">设备款（元） <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="number" placeholder="请输入货品单价" class="form-control"
-                                                       name="goodsPrice" min="0" required>
+                                                       name="productPrice" min="0" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -185,13 +185,13 @@
                                             <label class="col-sm-3 control-label">货品颜色</label>
                                             <div class="col-sm-6">
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="white" checked>白色</label>
+                                                    <input type="checkbox" name="productColor[]" value="white" checked>白色</label>
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="black">黑色</label>
+                                                    <input type="checkbox" name="productColor[]" value="black">黑色</label>
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="golden">金色</label>
+                                                    <input type="checkbox" name="productColor[]" value="golden">金色</label>
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="gray">灰色</label>
+                                                    <input type="checkbox" name="productColor[]" value="gray">灰色</label>
                                             </div>
                                         </div>
                                     </div>
@@ -216,14 +216,14 @@
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-9">
                                                 <textarea class="form-control" rows="3" placeholder="请输入货品简介"
-                                                          name="goodsSummary"></textarea>
+                                                          name="productSummary"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">货品详情 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" rows="3" name="goodsDetail">请使用之前的CKEditor，我这就偷个懒</textarea>
+                                                <textarea class="form-control" rows="3" name="productDetail">请使用之前的CKEditor，我这就偷个懒</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">

@@ -345,6 +345,13 @@ textarea {
     vertical-align: text-top;
     line-height: 1.3em;
 }
+
+#J_upload .webuploader-pick {
+    width: 81px;
+    height: 81px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAAAAACP5BXqAAAB5UlEQVR4Ae3ZBRLeLBRGYfa/tF/qjdbdXQLc+54qI9QyA/U8o5/kxD3wEBPtXAk5Ijz599Y0TufOzo2mZbi8Tpf/I3ATA4lmDtINwuvz8TWANxIRLM4EFhycdhnQRYJmdxRFI5Gk90U7nxwcNco4QhcIzCaUUKMNQDYTGMFpJzLgP6Z4FI/iKxCoYzGC9Z3GDXLXYnwKGe9YvH0LHFe/4nLJOxeH1TBEv+J4wUjQsbjMODqKR/FHFyUAVc4OgKB8Ri7A9xTBc4pULl4CDAp/a980mgMgr4yjom1S+QyAS3uK4nPWBQEUAuT7lqPnbK7auuBki+XzlszFnqLkLqA2DZagJvt2MbtAlrxydfUNQfms+GoTtu1a1/7q/pWlNp+4PS/np2Ephun6C9D+4lwpxfKxFPfPNZUy10WZ6/1rRpWyZsrnsmb2bz1WKVtP+bx/6+m/hfffC/sfKUDiM8rRrChHsz/jGH4Uj+JwwcnkjsWzs+GY+hXPLxnwjsWrVx0B/YrPH0LuWuQlpF/8vpDXYMiOpwpH8fcqbhMAXZ5oOkwErgA4nawEm2wzy3grtpiwgcAFnA5EErC+LxqkrEZGAvJA8CknevE4EbiYO70FcDzaNYKfujkt8zAtjcZ1vDCOV/4n0NsbK6k6Sz3MxXIAAAAASUVORK5CYII=");
+}
+
 .upload-items {
     position: relative;
     display: inline-block;

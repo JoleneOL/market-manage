@@ -70,6 +70,24 @@ Mock.mock(/\/afterSale\/list/, "get", {
     ]
 });
 
+Mock.mock(/\/products\/list/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id|+1': 1,
+            'productName': '量子' + '@pick(["橱下净水器","空气净化器","食品优化宝"])',
+            'category|0-2': '@pick(["净水机","净化器","优化宝","量子"])' + ' ',
+            'type': '@string(10,15)',
+            'supplier': '慈溪市海燕环保科技有限公司',
+            'price': 400,
+            'cost': 3000,
+            'installFee': 180
+        }
+    ]
+});
+
 Mock.mock(/\/goods\/list/, "get", {
     "draw": 1,
     "recordsTotal": 23,
@@ -77,13 +95,8 @@ Mock.mock(/\/goods\/list/, "get", {
     "data|10": [
         {
             'id|+1': 1,
-            'name': '量子' + '@pick(["橱下净水器","空气净化器","食品优化宝"])',
-            'category|0-2': '@pick(["净水机","净化器","优化宝","量子"])' + ' ',
-            'type': '@string(10,15)',
-            'supplier': '慈溪市海燕环保科技有限公司',
-            'price': 400,
-            'cost': 3000,
-            'installFee': 180,
+            'goodsName': '量子' + '@pick(["橱下净水器","空气净化器","食品优化宝"])',
+            'productName': '@pick(["净水机","净化器","优化宝","量子"])',
             'onSale': '@boolean'
         }
     ]
@@ -296,12 +309,12 @@ Mock.mock(/\/products\/category/, {
     "resultMsg": "ok"
 });
 
-Mock.mock(/\/products\/\d\/off/, {
+Mock.mock(/\/goods\/\d\/off/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });
 
-Mock.mock(/\/products\/\d\/on/, {
+Mock.mock(/\/goods\/\d\/on/, {
 
     "resultCode": 200,
     "resultMsg": "ok"
@@ -311,6 +324,10 @@ Mock.mock(/\/products\/\d/, 'delete', {
     "resultMsg": "ok"
 });
 
+Mock.mock(/\/goods\/\d/, 'delete', {
+    "resultCode": 200,
+    "resultMsg": "ok"
+});
 Mock.mock(/\/login\/\d\/disable/, "put", {
     "resultCode": 200,
     "resultMsg": "ok"
