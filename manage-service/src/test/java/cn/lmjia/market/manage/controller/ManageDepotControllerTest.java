@@ -2,10 +2,10 @@ package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.repository.DepotRepository;
 import cn.lmjia.market.manage.ManageServiceTest;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.repository.DepotRepository;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

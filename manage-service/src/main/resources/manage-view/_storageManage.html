@@ -181,19 +181,24 @@
             <div class="form-inline">
                 <div class="js-selectToolbar">
                     <label>
-                        <select class="form-control input-sm" name="storage">
+                        <select class="form-control input-sm" name="depotId">
                             <option value=" " disabled="" selected="" class="hidden">仓库</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                            <option th:each="depot:${@readService.allEnabledDepot()}" value="1" th:value="${depot.id}"
+                                    th:text="${depot.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
                     <label>
-                        <select class="form-control input-sm" name="goodsName">
+                        <select class="form-control input-sm" name="productCode">
                             <option value=" " disabled="" selected="" class="hidden">货品</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                            <option th:each="product:${@readService.allEnabledMainProduct()}" value="1"
+                                    th:value="${product.code}"
+                                    th:text="${product.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
                     <button type="button" class="btn btn-primary btn-sm js-search">查询</button>

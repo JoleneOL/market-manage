@@ -5,6 +5,10 @@ import cn.lmjia.market.manage.ManageServiceTest;
 import cn.lmjia.market.manage.page.ManageStoragePage;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.MediaType;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author CJ
@@ -27,6 +31,10 @@ public class ManageStorageControllerTest extends ManageServiceTest {
         driver.navigate().back();
 
         manageStoragePage = initPage(ManageStoragePage.class);
+        mockMvc.perform(get("/manage/storage"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
     }
 

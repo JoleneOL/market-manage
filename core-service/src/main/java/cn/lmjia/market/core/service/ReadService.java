@@ -4,8 +4,10 @@ import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.entity.Depot;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -14,6 +16,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 获取信息服务
@@ -149,6 +152,19 @@ public interface ReadService {
      */
     @Transactional(readOnly = true)
     int agentLevelForPrincipal(Object principal);
+
+    /**
+     * @return 可用仓库
+     */
+    @Transactional(readOnly = true)
+    List<Depot> allEnabledDepot();
+
+    /**
+     * @return 可用主要货品
+     */
+    @Transactional(readOnly = true)
+    List<MainProduct> allEnabledMainProduct();
+
 
     /**
      * @return 所有等级名称

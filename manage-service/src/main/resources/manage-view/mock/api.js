@@ -210,7 +210,6 @@ Mock.mock(/\/manage\/storage/, "get", {
     "recordsFiltered": 23,
     "data|10": [
         {
-            'id': '@id',
             'storageType': '日日顺',
             'storage': '@region',
             'depotId': '@id',

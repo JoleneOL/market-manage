@@ -3,34 +3,34 @@ $(function () {
     var myChart = echarts.init(document.getElementById('J_storage'));
 
     var option = {
-        title : {
+        title: {
             text: '总体仓库库存',
-            x:'center'
+            x: 'center'
         },
-        tooltip : {
+        tooltip: {
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
             orient: 'vertical',
             left: 'left',
-            data: ['厨下净水机','立式净水器','量子厨下净水机','量子立式净水机','量子空气净化器','量子食品优化宝','量子防辐射芯片','量子水宝']
+            data: ['厨下净水机', '立式净水器', '量子厨下净水机', '量子立式净水机', '量子空气净化器', '量子食品优化宝', '量子防辐射芯片', '量子水宝']
         },
-        series : [
+        series: [
             {
                 name: '访问来源',
                 type: 'pie',
-                radius : '55%',
+                radius: '55%',
                 center: ['50%', '60%'],
-                data:[
-                    {value:300, name:'厨下净水机'},
-                    {value:310, name:'立式净水器'},
-                    {value:234, name:'量子厨下净水机'},
-                    {value:335, name:'量子立式净水机'},
-                    {value:535, name:'量子空气净化器'},
-                    {value:135, name:'量子食品优化宝'},
-                    {value:335, name:'量子防辐射芯片'},
-                    {value:1548, name:'量子水宝'}
+                data: [
+                    {value: 300, name: '厨下净水机'},
+                    {value: 310, name: '立式净水器'},
+                    {value: 234, name: '量子厨下净水机'},
+                    {value: 335, name: '量子立式净水机'},
+                    {value: 535, name: '量子空气净化器'},
+                    {value: 135, name: '量子食品优化宝'},
+                    {value: 335, name: '量子防辐射芯片'},
+                    {value: 1548, name: '量子水宝'}
                 ],
                 itemStyle: {
                     emphasis: {
@@ -56,6 +56,7 @@ $(function () {
                 return $.extend({}, d, extendData());
             }
         },
+        "paging": false,
         "ordering": false,
         "lengthChange": false,
         "searching": false,
@@ -78,7 +79,8 @@ $(function () {
                 "className": 'table-action',
                 "orderable": false,
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-operate" data-id="' + item.id + '"><i class="fa fa-truck"></i>&nbsp;发货</a>';
+                    var a = '<a href="javascript:;" class="js-operate" data-depotId="' + item.depotId
+                        + '" data-productCode="' + item.productCode + '"><i class="fa fa-truck"></i>&nbsp;发货</a>';
                     // var b = '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
                     // return a + b;
                     return a;
@@ -109,7 +111,9 @@ $(function () {
     $(document).on('click', '.js-search', function () {
         table.ajax.reload();
     }).on('click', '.js-operate', function () {
-        window.location.href = '_delivery.html'
+        var _this = $(this);
+        window.location.href = $('#J_DeliveryLink').attr('href') + '?depotId=' + _this.attr('data-depotId')
+            + "&productCode=" + encodeURIComponent(_this.attr('data-productCode'));
     }).on('click', '.js-info', function () {
         window.location.href = '_storageDetail.html'
     });
