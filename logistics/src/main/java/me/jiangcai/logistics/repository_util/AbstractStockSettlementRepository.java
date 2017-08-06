@@ -1,7 +1,5 @@
 package me.jiangcai.logistics.repository_util;
 
-import me.jiangcai.logistics.entity.Depot;
-import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockSettlement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface AbstractStockSettlementRepository<T extends StockSettlement> extends JpaRepository<T, Long>
         , JpaSpecificationExecutor<T> {
-    T findTop1ByDepotAndProductOrderByTimeDesc(Depot depot, Product product);
+    T findTop1ByOrderByTimeDesc();
 }

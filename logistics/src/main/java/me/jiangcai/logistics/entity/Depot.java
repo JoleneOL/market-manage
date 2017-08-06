@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * @author CJ
@@ -53,6 +54,19 @@ public class Depot implements LogisticsDestination, LogisticsSource {
     @SuppressWarnings({"JpaDataSourceORMInspection", "SpellCheckingInspection"})
     @Column(name = "DTYPE", insertable = false, updatable = false)
     private String classType;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Depot)) return false;
+        Depot depot = (Depot) o;
+        return Objects.equals(id, depot.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Override
     public String getProvince() {

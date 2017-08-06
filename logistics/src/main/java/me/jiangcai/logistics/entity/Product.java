@@ -22,6 +22,11 @@ import java.util.Objects;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Product {
+
+    /**
+     * 可用状态
+     */
+    private boolean enable = true;
     /**
      * 货物编码|产品编码
      */
