@@ -43,8 +43,14 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;详情</a>';
-                    var b = '<a href="javascript:;" class="js-delete" data-id="' + item.id + '"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;删除</a>';
+                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>';
+                    if(item.onSale) {
+                        a += '<a href="javascript:;" class="js-offSale" data-id="' + item.id + '"><i class="fa fa-arrow-circle-down"></i>&nbsp;下架</a>';
+                    } else {
+                        a += '<a href="javascript:;" class="js-onSale" data-id="' + item.id + '"><i class="fa fa-arrow-circle-up"></i>&nbsp;上架</a>';
+                    }
+
+                    var b = '<a href="javascript:;" class="js-delete" data-id="' + item.id + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
                     return a + b;
                 }
             }
@@ -79,10 +85,42 @@ $(function () {
     }).on('click', '.js-delete', function () {
         var id = $(this).data('id');
         layer.confirm('确定删除该产品？', {
-            btn: ['确定', '取消'] //按钮
+            btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/products/' + id, {
+            $.ajax('/goods/' + id, {
                 method: 'delete',
+                success: function () {
+                    table.ajax.reload();
+                    layer.close(index);
+                },
+                error: function () {
+                    layer.msg('服务器异常');
+                }
+            });
+        });
+    }).on('click', '.js-offSale', function () {
+        var id = $(this).data('id');
+        layer.confirm('确定下架该产品？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            $.ajax('/goods/' + id + '/off', {
+                method: 'put',
+                success: function () {
+                    table.ajax.reload();
+                    layer.close(index);
+                },
+                error: function () {
+                    layer.msg('服务器异常');
+                }
+            });
+        });
+    }).on('click', '.js-onSale', function () {
+        var id = $(this).data('id');
+        layer.confirm('确定上架该产品？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            $.ajax('/goods/' + id + '/on', {
+                method: 'put',
                 success: function () {
                     table.ajax.reload();
                     layer.close(index);
