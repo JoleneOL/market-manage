@@ -8,13 +8,14 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>新增商品</title>
+    <title>新增货品</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn//chosen/1.7.0/chosen.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
     <link rel="stylesheet" href="./manage-resource/css/custom.css">
@@ -30,13 +31,13 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_goodsCenter.html">货品管理</a></li>
+                <li><a href="_productManage.html">货品管理</a></li>
                 <li><strong>新增货品</strong></li>
             </ol>
         </div>
     </div>
     <form id="J_productForm" method="post"
-          action="_goodsCenter.html">
+          action="_productManage.html">
         <div class="row">
             <div class="col-sm-12">
                 <div class="ibox">
@@ -49,39 +50,39 @@
                                 <div class="col-sm-8">
                                     <div class="form-horizontal">
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">产品名称 <span
+                                            <label class="col-sm-3 control-label">货品名称 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入产品名称" class="form-control"
-                                                       name="goodsName" required>
+                                                <input type="text" placeholder="请输入货品名称" class="form-control"
+                                                       name="productName" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">产品品牌 <span
+                                            <label class="col-sm-3 control-label">品牌 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入产品品牌" class="form-control"
-                                                       name="goodsBrand" required>
+                                                <input type="text" placeholder="请输入货品品牌" class="form-control"
+                                                       name="productBrand" required>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">产品品类 <span
-                                                    class="asterisk">*</span></label>
-                                            <div class="col-sm-6">
-                                                <select data-placeholder="请选择产品品类" id="J_selectCat"
-                                                        class="chosen-select form-control" multiple tabindex="4"
-                                                        name="category[]">
-                                                    <option value="净水机">净水机</option>
-                                                    <option value="净化器">净化器</option>
-                                                    <option value="优化宝">优化宝</option>
-                                                    <option value="量子">量子</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <a class="btn btn-default btn-xs btn-outline" id="J_addCategory"
-                                                   href="javascript:;">添加类目</a>
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">货品品类 <span-->
+                                        <!--class="asterisk">*</span></label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<select data-placeholder="请选择货品品类" id="J_selectCat"-->
+                                        <!--class="chosen-select form-control" multiple tabindex="4"-->
+                                        <!--name="category[]">-->
+                                        <!--<option value="净水机">净水机</option>-->
+                                        <!--<option value="净化器">净化器</option>-->
+                                        <!--<option value="优化宝">优化宝</option>-->
+                                        <!--<option value="量子">量子</option>-->
+                                        <!--</select>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-sm-3">-->
+                                        <!--<a class="btn btn-default btn-xs btn-outline" id="J_addCategory"-->
+                                        <!--href="javascript:;">添加类目</a>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">型号 <span
                                                     class="asterisk">*</span></label>
@@ -116,7 +117,7 @@
             <div class="col-sm-12">
                 <div class="ibox">
                     <div class="ibox-title">
-                        产品规格
+                        货品规格
                     </div>
                     <div class="ibox-content">
                         <div class="container-fluid">
@@ -124,10 +125,10 @@
                                 <div class="col-sm-8">
                                     <div class="form-horizontal">
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">单价(元） <span class="asterisk">*</span></label>
+                                            <label class="col-sm-3 control-label">设备款（元） <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="number" placeholder="请输入货品单价" class="form-control"
-                                                       name="price" min="0" required>
+                                                       name="productPrice" min="0" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -161,19 +162,19 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">服务费 (元）</label>
+                                            <label class="col-sm-3 control-label">服务费（元）</label>
                                             <div class="col-sm-6">
                                                 <input type="number" placeholder="请输入服务费" class="form-control"
                                                        name="serviceCharge" min="0">
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">安装费（元）</label>
-                                            <div class="col-sm-6">
-                                                <input type="number" placeholder="请输入安装费" class="form-control"
-                                                       name="installFee" min="0">
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">安装费（元）</label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<input type="number" placeholder="请输入安装费" class="form-control"-->
+                                        <!--name="installFee" min="0">-->
+                                        <!--</div>-->
+                                        <!--</div>-->
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">货品图片</label>
                                             <div class="col-sm-6">
@@ -184,13 +185,13 @@
                                             <label class="col-sm-3 control-label">货品颜色</label>
                                             <div class="col-sm-6">
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="white" checked>白色</label>
+                                                    <input type="checkbox" name="productColor[]" value="white" checked>白色</label>
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="black">黑色</label>
+                                                    <input type="checkbox" name="productColor[]" value="black">黑色</label>
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="golden">金色</label>
+                                                    <input type="checkbox" name="productColor[]" value="golden">金色</label>
                                                 <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="goodsColor[]" value="gray">灰色</label>
+                                                    <input type="checkbox" name="productColor[]" value="gray">灰色</label>
                                             </div>
                                         </div>
                                     </div>
@@ -214,14 +215,15 @@
                                             <label class="col-sm-3 control-label">货品简介 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" rows="3" placeholder="请输入货品简介" name="goodsSummary"></textarea>
+                                                <textarea class="form-control" rows="3" placeholder="请输入货品简介"
+                                                          name="productSummary"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">货品详情 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" rows="3" name="goodsDetail">请使用之前的CKEditor，我这就偷个懒</textarea>
+                                                <textarea class="form-control" rows="3" name="productDetail">请使用之前的CKEditor，我这就偷个懒</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -250,6 +252,7 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="//cdn.lmjia.cn/chosen/1.7.0/chosen.jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
 <script src="manage-resource/js/content.min.js"></script>
 
 <script src="mock/mock-min.js" th:remove="all"></script>
