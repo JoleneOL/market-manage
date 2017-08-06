@@ -70,7 +70,7 @@ Mock.mock(/\/afterSale\/list/, "get", {
     ]
 });
 
-Mock.mock(/\/product\/list/, "get", {
+Mock.mock(/\/goods\/list/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
@@ -84,8 +84,7 @@ Mock.mock(/\/product\/list/, "get", {
             'price': 400,
             'cost': 3000,
             'installFee': 180,
-            'stagesTime': '@pick([3,6,9,12])',
-            'stagesType': '花呗'
+            'onSale': '@boolean'
         }
     ]
 });

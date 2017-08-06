@@ -40,12 +40,6 @@ $(function () {
                 "title": "安装费（元）", "data": "installFee", "name": "installFee"
             },
             {
-                "title": "分期数", "data": "stagesTime", "name": "stagesTime"
-            },
-            {
-                "title": "分期产品", "data": "stagesType", "name": "stagesType"
-            },
-            {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
