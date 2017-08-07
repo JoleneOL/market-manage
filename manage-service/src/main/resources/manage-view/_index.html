@@ -275,7 +275,7 @@
             </button>
             <nav class="page-tabs J_menuTabs">
                 <div class="page-tabs-content">
-                    <a href="javascript:;" class="active J_menuTab" data-id="_main.html">首页</a>
+                    <a href="javascript:;" class="active J_menuTab" data-toggle="tooltip" data-placement="bottom" title="双击Tab可刷新页面" data-id="_main.html">首页</a>
                 </div>
             </nav>
             <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
@@ -307,7 +307,7 @@
     </div>
     <!--右侧部分结束-->
 </div>
-<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
 <script src="//cdn.lmjia.cn/hplus/plugins/metisMenu/2.7.0/metisMenu.min.js"></script>
@@ -315,5 +315,8 @@
 <script src="//cdn.lmjia.cn/hplus/plugins/slimscroll/1.3.8/jquery.slimscroll.min.js"></script>
 <script src="manage-resource/js/hplus.min.js"></script>
 <script src="manage-resource/js/contabs.min.js"></script>
+<script>
+    $('[data-toggle="tooltip"]').tooltip()
+</script>
 </body>
 </html>
