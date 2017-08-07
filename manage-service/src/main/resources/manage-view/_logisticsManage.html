@@ -30,38 +30,38 @@
 >
 <div class="wrapper wrapper-content">
     <!--暂时先隐藏-->
-    <div class="row" th:if="${false}">
-        <div class="col-sm-6">
-            <div class="ibox">
-                <div class="ibox-title">
-                    待收货总量
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="echarts" id="J_waitReceive"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="ibox">
-                <div class="ibox-title">
-                    待安装总量
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="echarts" id="J_waitInstall"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--<div class="row">-->
+    <!--<div class="col-sm-6">-->
+    <!--<div class="ibox">-->
+    <!--<div class="ibox-title">-->
+    <!--待收货总量-->
+    <!--<div class="ibox-tools">-->
+    <!--<a class="collapse-link">-->
+    <!--<i class="fa fa-chevron-up"></i>-->
+    <!--</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ibox-content">-->
+    <!--<div class="echarts" id="J_waitReceive"></div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-sm-6">-->
+    <!--<div class="ibox">-->
+    <!--<div class="ibox-title">-->
+    <!--待安装总量-->
+    <!--<div class="ibox-tools">-->
+    <!--<a class="collapse-link">-->
+    <!--<i class="fa fa-chevron-up"></i>-->
+    <!--</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ibox-content">-->
+    <!--<div class="echarts" id="J_waitInstall"></div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
     <div class="row m-b-sm">
         <div class="col-sm-10">
             <div class="form-inline">
@@ -120,41 +120,41 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            <li th:if="${false}"><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a>
-                            </li>
+                            <!--<li><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a>-->
+                            <!--</li>-->
                             <li class="active"><a data-toggle="tab" href="#factory" aria-expanded="false">工厂发货</a></li>
-                            <li th:if="${false}"><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a>
-                            </li>
+                            <!--<li><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a>-->
+                            <!--</li>-->
                         </ul>
                         <div class="tab-content">
-                            <div th:if="${false}" id="logistics" class="tab-pane active">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-sm-12 m-b-sm">
-                                            <div data-toggle="buttons" class="btn-group js-radio-status">
-                                                <label class="btn btn-sm btn-white active">
-                                                    <input type="radio" name="status" value="all" checked>全部</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="0">待发货</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="1">待收货</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="2">已收货</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="3">待安装</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="4">已安装</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table id="logisticsForm" class="table table-hover table-success"
-                                               cellspacing="0"
-                                               width="100%"></table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="factory" class="tab-pane">
+                            <!--<div id="logistics" class="tab-pane">-->
+                            <!--<div class="panel-body">-->
+                            <!--<div class="row">-->
+                            <!--<div class="col-sm-12 m-b-sm">-->
+                            <!--<div data-toggle="buttons" class="btn-group js-radio-status">-->
+                            <!--<label class="btn btn-sm btn-white active">-->
+                            <!--<input type="radio" name="status" value="all" checked>全部</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="0">待发货</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="1">待收货</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="2">已收货</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="3">待安装</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="4">已安装</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="table-responsive">-->
+                            <!--<table id="logisticsForm" class="table table-hover table-success"-->
+                            <!--cellspacing="0"-->
+                            <!--width="100%"></table>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div id="factory" class="tab-pane active">
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-sm-12 m-b-sm">
@@ -176,28 +176,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="storage" class="tab-pane" th:if="${false}">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-sm-12 m-b-sm">
-                                            <div data-toggle="buttons" class="btn-group js-radio-status">
-                                                <label class="btn btn-sm btn-white active">
-                                                    <input type="radio" name="status" value="all" checked>全部</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="0">待发货</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="1">待收货</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="2">已收货</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table id="storageForm" class="table table-hover table-success" cellspacing="0"
-                                               width="100%"></table>
-                                    </div>
-                                </div>
-                            </div>
+                            <!--<div id="storage" class="tab-pane">-->
+                            <!--<div class="panel-body">-->
+                            <!--<div class="row">-->
+                            <!--<div class="col-sm-12 m-b-sm">-->
+                            <!--<div data-toggle="buttons" class="btn-group js-radio-status">-->
+                            <!--<label class="btn btn-sm btn-white active">-->
+                            <!--<input type="radio" name="status" value="all" checked>全部</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="0">待发货</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="1">待收货</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="2">已收货</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="table-responsive">-->
+                            <!--<table id="storageForm" class="table table-hover table-success" cellspacing="0"-->
+                            <!--width="100%"></table>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
                         </div>
                     </div>
                 </div>

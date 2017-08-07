@@ -14,6 +14,7 @@ import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -45,7 +46,7 @@ public class ManageLogisticsController {
     @Autowired
     private StockShiftUnitRepository stockShiftUnitRepository;
     @Autowired
-    private ConversionService conversionService;
+    private ApplicationContext applicationContext;
 
     @GetMapping("/manageLogistics")
     public String index() {
@@ -80,7 +81,7 @@ public class ManageLogisticsController {
                         Fields.asBasic("id")
                         , FieldBuilder.asName(StockShiftUnit.class, "orderTime")
                                 .addSelect(stockShiftUnitRoot -> stockShiftUnitRoot.get("createTime"))
-                                .addFormat((data, type) -> conversionService.convert(data, String.class))
+                                .addFormat((data, type) -> applicationContext.getBean(ConversionService.class).convert(data, String.class))
                                 .build()
                         , FieldBuilder.asName(StockShiftUnit.class, "supplierId")
                                 .addBiSelect((stockShiftUnitRoot, criteriaBuilder) -> {
