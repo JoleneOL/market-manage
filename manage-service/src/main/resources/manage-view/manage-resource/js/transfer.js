@@ -138,6 +138,46 @@ $(function () {
         }
     });
 
+    function forChanges(select, list, name) {
+        var target = select.val();
+        if (target) {
+            var targetValue = list[target];
+            if (targetValue) {
+                $('[name=' + name + 'Address]').val(targetValue.address);
+                $('[name=' + name + 'Name]').val(targetValue.name);
+                $('[name=' + name + 'Mobile]').val(targetValue.mobile);
+            }
+        }
+    }
+
+    /*
+     其他属性将根据选择内容改变
+     可以给予默认选择
+     */
+    function factorySelectChanged(factory) {
+        forChanges(factory, $.factoryCS, 'factory');
+    }
+
+    function depotSelectChanged(depot) {
+        forChanges(depot, $.depotCS, 'depot');
+    }
+
+    var factorySelect = $('#J_deliver_factory');
+    var depotSelect = $('#J_deliver_depot');
+    depotSelect.change(function () {
+        depotSelectChanged(depotSelect);
+    });
+    factorySelect.change(function () {
+        factorySelectChanged(factorySelect);
+    });
+    depotSelect.blur(function () {
+        depotSelectChanged(depotSelect);
+    });
+    factorySelect.blur(function () {
+        factorySelectChanged(factorySelect);
+    });
+    factorySelectChanged(factorySelect);
+    depotSelectChanged(depotSelect);
     $('#J_deliverForm').validate({
         rules: {
             deliverQuantity: {
