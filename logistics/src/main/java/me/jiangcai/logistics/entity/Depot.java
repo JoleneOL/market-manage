@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -32,13 +34,10 @@ public class Depot implements LogisticsDestination, LogisticsSource {
      * 上架状态
      */
     private boolean enable = true;
-
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime;
-
     @Column(length = 100)
     private String name;
-
     private Address address;
     /**
      * 负责人姓名
@@ -50,10 +49,17 @@ public class Depot implements LogisticsDestination, LogisticsSource {
      */
     @Column(length = 20)
     private String chargePeopleMobile;
-
     @SuppressWarnings({"JpaDataSourceORMInspection", "SpellCheckingInspection"})
     @Column(name = "DTYPE", insertable = false, updatable = false)
     private String classType;
+
+    public static Path<String> mobile(From<?, ? extends Depot> depotFrom) {
+        return depotFrom.get("chargePeopleMobile");
+    }
+
+    public static Path<String> name(From<?, ? extends Depot> depotFrom) {
+        return depotFrom.get("chargePeopleName");
+    }
 
     @Override
     public boolean equals(Object o) {

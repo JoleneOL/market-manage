@@ -160,8 +160,7 @@ public class ManageStorageController {
             }
         }), factoryInfo, depotInfo);
 
-        // TODO 应该转去物流而非仓储……
-        return "redirect:/manageStorage";
+        return "redirect:/manageLogistics";
     }
 
     @GetMapping("/manageStorageDelivery")

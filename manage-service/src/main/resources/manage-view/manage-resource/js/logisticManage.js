@@ -182,22 +182,20 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "订单号", "data": "orderId", "name": "orderId"
+                "title": "物流编号", "data": "supplierId", "name": "supplierId"
             },
-            {
-                "title": "商品名称", "data": "goods", "name": "goods"
-            },
-            {
-                "title": "发货数量", "data": "deliverQuantity", "name": "deliverQuantity"
-            },
+            // {
+            //     "title": "总发货量", "data": "deliverQuantity", "name": "deliverQuantity"
+            // },
             {
                 "title": "订单时间", "data": "orderTime", "name": "orderTime"
             },
+            // {
+            //     "title": "发货工厂", "data": "deliverFactory", "name": "deliverFactory"
+            // },
+
             {
-                "title": "发货工厂", "data": "deliverFactory", "name": "deliverFactory"
-            },
-            {
-                "title": "发货时间", "data": "deliverTime", "name": "deliverTime"
+                "title": "收货仓库", "data": "depotName", "name": "depotName"
             },
             {
                 "title": "收货地址", "data": "address", "name": "address"

@@ -19,6 +19,10 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,28 +37,25 @@ import java.util.Map;
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
 public class StockShiftUnit {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     /**
      * 转移的货品以及数量
      */
     @ElementCollection
     private Map<Product, ProductBatch> amounts;
-
     /**
      * 可选的来源仓库；
      */
     @ManyToOne
     private Depot origin;
-
     /**
      * 可选的目的仓库；
      */
     @ManyToOne
     private Depot destination;
-
     /**
      * 建立本次改变的时间
      */
@@ -69,7 +70,6 @@ public class StockShiftUnit {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @MapKey(name = "time")
     private Map<LocalDateTime, StockShiftUnitEvent> events;
-
     private ShiftType shiftType;
     /**
      * 额外消息
@@ -81,6 +81,21 @@ public class StockShiftUnit {
      */
     @Column(columnDefinition = "datetime")
     private LocalDateTime lockedTime;
+    @SuppressWarnings({"JpaDataSourceORMInspection", "SpellCheckingInspection"})
+    @Column(name = "DTYPE", insertable = false, updatable = false)
+    private String classType;
+
+    public static <T extends StockShiftUnit> Join<T, Depot> destinationJoin(From<?, T> from) {
+        return from.join("destination", JoinType.LEFT);
+    }
+
+    public static <T extends StockShiftUnit> Join<T, Depot> originJoin(From<?, T> from) {
+        return from.join("origin", JoinType.LEFT);
+    }
+
+    public static Path<LocalDateTime> createDate(From<?, ? extends StockShiftUnit> from) {
+        return from.get("createTime");
+    }
 
     public void addAmount(Product product, int amount) {
         addAmount(product, ProductStatus.normal, amount);

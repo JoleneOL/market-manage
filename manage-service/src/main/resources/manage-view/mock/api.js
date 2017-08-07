@@ -295,19 +295,17 @@ Mock.mock(/\/url\/logistics/, "get", {
     ]
 });
 
-Mock.mock(/\/url\/factory/, "get", {
+Mock.mock(/\/manage\/factoryOut/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
     "data|10": [
         {
             'id': '@id',
-            'orderId': '@id',
-            'goods': '量子立式净水机',
-            'deliverQuantity': '@integer(1, 99)',
+            'supplierId': '@id',
+            // 'deliverQuantity': '@integer(1, 99)',
             'orderTime': '@datetime("yyyy-MM-dd")',
-            'deliverFactory': '帅风',
-            'deliverTime': '@datetime("yyyy-MM-dd")',
+            'depotName': '@name',
             'address': '@county(true)',
             'contacts': '@cname',
             'mobile': /^1([34578])\d{9}$/,

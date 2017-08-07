@@ -40,6 +40,11 @@ public class ManageStorageControllerTest extends ManageServiceTest {
         // 随机批货
         final int amount = random.nextInt(30) + 1;
         deliveryPage.submitAsAmount(amount);
+
+
+        mockMvc.perform(get("/manage/factoryOut"))
+                .andDo(print());
+
         // todo 还需要加入即将入库的信息
 //        deliveryPage.clickBreadcrumb();
 

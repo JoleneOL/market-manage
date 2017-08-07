@@ -24,7 +24,7 @@
 </head>
 <body class="gray-bg"
       data-logistics-url="/url/logistics"
-      data-factory-url="/url/factory"
+      data-factory-url="/manage/factoryOut"
       data-storage-url="/url/storage"
 >
 <div class="wrapper wrapper-content">
@@ -81,8 +81,8 @@
                             <option th:each="depot:${@readService.allEnabledDepot()}" th:value="${depot.id}"
                                     th:text="${depot.name}" value="1">x
                             </option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
                     <!--<label>-->
@@ -94,11 +94,13 @@
                     <!--</select>-->
                     <!--</label>-->
                     <label>
-                        <select class="form-control input-sm" name="goodsName">
-                            <option value=" " disabled="" selected="" class="hidden">商品名称</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                        <select class="form-control input-sm" name="productCode">
+                            <option value=" " disabled="" selected="" class="hidden">货品名称</option>
+                            <option th:each="product:${@readService.allEnabledProduct()}" th:value="${product.code}"
+                                    th:text="${product.name}" value="1">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
                     <div class="input-group input-group-sm">
@@ -119,7 +121,8 @@
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a></li>
                             <li><a data-toggle="tab" href="#factory" aria-expanded="false">工厂发货</a></li>
-                            <li><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a></li>
+                            <li th:if="${false}"><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <div id="logistics" class="tab-pane active">
@@ -171,7 +174,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="storage" class="tab-pane">
+                            <div id="storage" class="tab-pane" th:if="${false}">
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-sm-12 m-b-sm">
