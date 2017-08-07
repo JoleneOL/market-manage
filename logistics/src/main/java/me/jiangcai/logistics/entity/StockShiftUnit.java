@@ -19,6 +19,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -69,6 +70,7 @@ public class StockShiftUnit {
     private LocalDateTime lastStatusTime;
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @MapKey(name = "time")
+    @OrderBy("time asc")
     private Map<LocalDateTime, StockShiftUnitEvent> events;
     private ShiftType shiftType;
     /**

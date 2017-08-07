@@ -12,10 +12,13 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.haier.entity.HaierOrder;
+import me.jiangcai.logistics.repository.StockShiftUnitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,9 +41,18 @@ import java.util.List;
 @PreAuthorize("hasRole('ROOT')")
 public class ManageLogisticsController {
 
+    @Autowired
+    private StockShiftUnitRepository stockShiftUnitRepository;
+
     @GetMapping("/manageLogistics")
     public String index() {
         return "_logisticsManage.html";
+    }
+
+    @GetMapping("/manageShiftDetail")
+    public String detail(Model model, long id) {
+        model.addAttribute("currentData", stockShiftUnitRepository.getOne(id));
+        return "_logisticsDetail.html";
     }
 
     @GetMapping("/manage/factoryOut")

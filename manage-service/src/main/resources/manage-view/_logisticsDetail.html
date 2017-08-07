@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="currentData" type="me.jiangcai.logistics.entity.StockShiftUnit"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -29,12 +30,12 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_logisticsManage.html">物流管理</a></li>
+                <li><a href="_logisticsManage.html" th:href="@{/manageLogistics}">物流管理</a></li>
                 <li><strong>物流详情</strong></li>
             </ol>
         </div>
     </div>
-    <div class="row">
+    <div class="row" th:if="${false}">
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-title">
@@ -64,96 +65,97 @@
                 <div class="ibox-content">
                     <div class="panel-package">
                         <div class="package-title">
-                            <h3 class="title-text">您的包裹已被签收</h3>
+                            <h3 class="title-text" th:text="${currentData.currentStatus}">您的包裹已被签收</h3>
                         </div>
                         <div class="package-status">
                             <div class="status-box">
                                 <ul class="list-unstyled status-list">
-                                    <li>
-                                        <span class="date">2017-04-12</span>
-                                        <span class="week">周三</span>
-                                        <span class="time">13:26:46</span>
-                                        <span class="text">您的订单开始处理</span>
+                                    <li th:each="event:${currentData.events.values()}"
+                                        th:classappend="${eventStat.last?'latest':'latest'}">
+                                        <span class="date" th:text="${{event.time.toLocalDate()}}">2017-04-12</span>
+                                        <span class="week" th:text="${{event.time.getDayOfWeek()}}">周三</span>
+                                        <span class="time" th:text="${{event.time.toLocalTime()}}">13:26:46</span>
+                                        <span class="text" th:text="${event.message}">您的订单开始处理</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-12</span>
                                         <span class="week invisible">周三</span>
                                         <span class="time">13:34:03</span>
                                         <span class="text">您的订单待配货</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-12</span>
                                         <span class="week invisible">周三</span>
                                         <span class="time">13:37:00</span>
                                         <span class="text">卖家发货</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date">2017-04-13</span>
                                         <span class="week">周四</span>
                                         <span class="time">13:51:46</span>
                                         <span class="text">在山东烟台芝罘区三站公司进行揽件扫描</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-13</span>
                                         <span class="week invisible">周四</span>
                                         <span class="time">17:58:01</span>
                                         <span class="text">在山东烟台芝罘区三站公司进行下级地点扫描，即将发往：山东烟台分拨中心</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date">2017-04-14</span>
                                         <span class="week">周五</span>
                                         <span class="time">17:01:30</span>
                                         <span class="text">在分拨中心山东烟台分拨中心进行称重扫描</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-14</span>
                                         <span class="week invisible">周五</span>
                                         <span class="time">20:43:47</span>
                                         <span class="text">在山东烟台分拨中心进行中转集包扫描，将发往：浙江萧山分拨中心</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-14</span>
                                         <span class="week invisible">周五</span>
                                         <span class="time">21:13:55</span>
                                         <span class="text">在山东烟台分拨中心进行装车扫描，即将发往：浙江杭州分拨中心</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date">2017-04-15</span>
                                         <span class="week">周六</span>
                                         <span class="time">20:23:22</span>
                                         <span class="text">在分拨中心浙江杭州分拨中心进行卸车扫描</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-15</span>
                                         <span class="week invisible">周六</span>
                                         <span class="time">20:33:45</span>
                                         <span class="text">从浙江杭州分拨中心发出，本次转运目的地：浙江杭州滨江区公司</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-15</span>
                                         <span class="week invisible">周六</span>
                                         <span class="time">20:34:12</span>
                                         <span class="text">到达目的地网点浙江杭州滨江区公司，快件将很快进行派送</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date">2017-04-16</span>
                                         <span class="week">周日</span>
                                         <span class="time">08:40:23</span>
                                         <span class="text">在浙江杭州滨江区公司进行派件扫描；派送业务员：韩建军；联系电话：15088757006</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-16</span>
                                         <span class="week invisible">周日</span>
                                         <span class="time">10:48:07</span>
                                         <span class="text">在浙江杭州滨江区公司进行签收扫描，快件已被 E邮站快递柜 签收</span>
                                     </li>
-                                    <li>
+                                    <li th:remove="all">
                                         <span class="date invisible">2017-04-16</span>
                                         <span class="week invisible">周日</span>
                                         <span class="time">10:46:48</span>
                                         <span class="text">您的快件已被智慧E谷E邮站【自提柜】代收，请及时取件。有问题请联系派件员15088757006</span>
                                     </li>
-                                    <li class="latest">
+                                    <li class="latest" th:remove="all">
                                         <span class="date">2017-04-17</span>
                                         <span class="week">周一</span>
                                         <span class="time">09:25:07</span>
@@ -167,7 +169,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" th:if="${false}">
         <div class="col-sm-4">
             <div class="ibox">
                 <div class="ibox-title">

@@ -1,4 +1,5 @@
 $(function () {
+    var detailUrl = $('body').attr('data-detail-url');
     var receive = echarts.init(document.getElementById('J_waitReceive'));
     var install = echarts.init(document.getElementById('J_waitInstall'));
 
@@ -320,7 +321,9 @@ $(function () {
         if (table === 'storage') return storage.ajax.reload();
     }).on('click', '.js-info', function () {
         var from = $(this).closest('.tab-pane').attr('id');
-        window.location.href = '_logisticsDetail.html?id=' + $(this).data('id') + '&from=' + from;
+        var table = $('.tab-pane.active').attr('id');
+        if (table === 'factory')
+            window.location.href = detailUrl + '?id=' + $(this).data('id');
     });
 
     $('input[name="status"]').on('change', function () {
