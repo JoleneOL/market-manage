@@ -19,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,24 +51,24 @@ public class ManageProductController {
     private HaierSupplier haierSupplier;
 
     // 禁用和恢复
-    @DeleteMapping("/products/${code}")
+    @DeleteMapping("/products")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void disable(@PathVariable("code") String code) {
+    public void disable(String code) {
         mainProductRepository.getOne(code).setEnable(false);
     }
 
-    @PutMapping("/products/${code}")
+    @PutMapping("/products")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void enable(@PathVariable("code") String code) {
+    public void enable(String code) {
         mainProductRepository.getOne(code).setEnable(true);
     }
 
     // 推送
-    @PutMapping("/products/${code}/haier")
+    @PutMapping("/productsHaier")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void pushHaier(@PathVariable("code") String code) {
+    public void pushHaier(String code) {
         MainProduct product = mainProductRepository.getOne(code);
         // 信息校验下先
         if (StringUtils.isEmpty(product.getBrand()))
@@ -132,7 +131,7 @@ public class ManageProductController {
         }
 
         product.setName(productName);
-        product.setBrand(productBrand);
+        product.setBrand(StringUtils.isEmpty(productBrand) ? null : productBrand);
         product.setMainCategory(StringUtils.isEmpty(mainCategory) ? null : mainCategory);
         product.setSKU(StringUtils.isEmpty(SKU) ? null : SKU);
         product.setDeposit(productPrice);

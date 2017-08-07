@@ -87,7 +87,7 @@ $(function () {
         layer.confirm('确定要将货品作为物料推送至日日顺？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/products/' + encodeURIComponent(id) + "/haier", {
+            $.ajax('/productsHaier?code=' + encodeURIComponent(id), {
                 method: 'put',
                 success: function () {
                     table.ajax.reload();
@@ -101,7 +101,7 @@ $(function () {
         });
     }).on('click', '.js-active', function () {
         var id = $(this).data('id');
-        $.ajax('/products/' + encodeURIComponent(id), {
+        $.ajax('/products?code=' + encodeURIComponent(id), {
             method: 'put',
             success: function () {
                 table.ajax.reload();
@@ -115,7 +115,7 @@ $(function () {
         layer.confirm('确定禁用货品？', {
             btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/products/' + encodeURIComponent(id), {
+            $.ajax('/products?code=' + encodeURIComponent(id), {
                 method: 'delete',
                 success: function () {
                     table.ajax.reload();

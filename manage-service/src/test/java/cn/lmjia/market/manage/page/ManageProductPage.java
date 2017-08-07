@@ -53,16 +53,21 @@ public class ManageProductPage extends AbstractContentPage {
         final WebElement element = firstVisibleElement(By.className("js-delete"));
         String id = element.getAttribute("data-id");
         element.click();
-        // 等待完成……
+        // 确认
+        clickLayerButton(0);
+        waitForTable();
         return id;
     }
 
-    public void clickEnable(String code) {
+    public void clickEnable(String code) throws InterruptedException {
         webDriver.findElements(By.className("js-active")).stream()
                 .filter(element -> element.getAttribute("data-id").equals(code))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("找不到id为" + code + "的激活按钮"))
                 .click();
+        Thread.sleep(500L);
+        waitForTable();
+        Thread.sleep(500L);
         // 等待完成……
     }
 }

@@ -106,7 +106,7 @@ public abstract class ProductOperatePage extends AbstractContentPage {
             field.sendKeys(text);
         } else {
             // 应该是readonly
-            if (field.isEnabled()) {
+            if (field.isEnabled() && field.getAttribute("readonly") == null) {
                 field.clear();
                 field.sendKeys(text);
             }
