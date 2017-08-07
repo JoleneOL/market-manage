@@ -28,7 +28,8 @@
       data-storage-url="/url/storage"
 >
 <div class="wrapper wrapper-content">
-    <div class="row">
+    <!--暂时先隐藏-->
+    <div class="row" th:if="${false}">
         <div class="col-sm-6">
             <div class="ibox">
                 <div class="ibox-title">
@@ -66,30 +67,32 @@
                 <div class="js-selectToolbar">
                     <input type="search" class="form-control input-sm" placeholder="手机号"
                            name="mobile">
+                    <!--<label>-->
+                    <!--<select class="form-control input-sm" name="logisticsCompany">-->
+                    <!--<option value=" " disabled="" selected="" class="hidden">物流公司</option>-->
+                    <!--<option value="1">x</option>-->
+                    <!--<option value="2">xx</option>-->
+                    <!--<option value="3">xxx</option>-->
+                    <!--</select>-->
+                    <!--</label>-->
                     <label>
-                        <select class="form-control input-sm" name="logisticsCompany">
-                            <option value=" " disabled="" selected="" class="hidden">物流公司</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
-                        </select>
-                    </label>
-                    <label>
-                        <select class="form-control input-sm" name="logisticsStorage">
+                        <select class="form-control input-sm" name="depotId">
                             <option value=" " disabled="" selected="" class="hidden">物流仓储</option>
-                            <option value="1">x</option>
+                            <option th:each="depot:${@readService.allEnabledDepot()}" th:value="${depot.id}"
+                                    th:text="${depot.name}" value="1">x
+                            </option>
                             <option value="2">xx</option>
                             <option value="3">xxx</option>
                         </select>
                     </label>
-                    <label>
-                        <select class="form-control input-sm" name="installStorage">
-                            <option value=" " disabled="" selected="" class="hidden">安装公司</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
-                        </select>
-                    </label>
+                    <!--<label>-->
+                    <!--<select class="form-control input-sm" name="installStorage">-->
+                    <!--<option value=" " disabled="" selected="" class="hidden">安装公司</option>-->
+                    <!--<option value="1">x</option>-->
+                    <!--<option value="2">xx</option>-->
+                    <!--<option value="3">xxx</option>-->
+                    <!--</select>-->
+                    <!--</label>-->
                     <label>
                         <select class="form-control input-sm" name="goodsName">
                             <option value=" " disabled="" selected="" class="hidden">商品名称</option>
@@ -140,7 +143,8 @@
                                         </div>
                                     </div>
                                     <div class="table-responsive">
-                                        <table id="logisticsForm" class="table table-hover table-success" cellspacing="0"
+                                        <table id="logisticsForm" class="table table-hover table-success"
+                                               cellspacing="0"
                                                width="100%"></table>
                                     </div>
                                 </div>
