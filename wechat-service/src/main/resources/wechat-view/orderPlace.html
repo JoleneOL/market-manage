@@ -122,7 +122,7 @@
                                 th:data-model="${good.product.code}"
                                 th:text="${good.product.name}">厨下净水机
                         </option>
-                        <option th:remove="all" value="2" data-price="2820" data-price-channel="0" data-model="HZLS01">
+                        <option th:remove="all" value="2" data-price="3000" data-price-channel="0" data-model="HZLS01">
                             立式净水器
                         </option>
                         <option th:remove="all" value="4" data-price="3000" data-price-channel="0"
@@ -261,27 +261,27 @@
         <th:block th:if="${channel!=null}">
             <input type="hidden" name="channelId" th:value="${channel.id}"/>
         </th:block>
-        <div th:if="${trj}" class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">按揭码</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入投融家按揭码" name="authorising">
-                </div>
-                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">申请身份证</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入申请按揭的身份证号码" maxlength="18" minlength="18"
-                           name="idNumber">
-                </div>
-                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
-            </div>
-        </div>
+        <!--<div th:if="${trj}" class="weui-cells weui-cells_form">-->
+            <!--<div class="weui-cell">-->
+                <!--<div class="weui-cell__hd">-->
+                    <!--<label class="weui-label">按揭码</label>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<input class="weui-input" type="text" placeholder="请输入投融家按揭码" name="authorising">-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>-->
+            <!--</div>-->
+            <!--<div class="weui-cell">-->
+                <!--<div class="weui-cell__hd">-->
+                    <!--<label class="weui-label">申请身份证</label>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<input class="weui-input" type="text" placeholder="请输入申请按揭的身份证号码" maxlength="18" minlength="18"-->
+                           <!--name="idNumber">-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>-->
+            <!--</div>-->
+        <!--</div>-->
         <div th:if="${!trj}" class="weui-cells weui-cells_checkbox">
             <label class="weui-cell weui-check__label" for="J_installment">
                 <div class="weui-cell__hd">
