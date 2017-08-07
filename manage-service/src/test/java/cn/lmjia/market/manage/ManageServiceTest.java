@@ -28,11 +28,25 @@ public abstract class ManageServiceTest extends DealerServiceTest {
                         .param("name", RandomStringUtils.randomAlphabetic(10) + "海尔仓库")
                         .param("address", address.getStandardWithoutOther())
                         .param("fullAddress", address.getOtherAddress())
-                        .param("chargePeopleName", randomMobile())
+                        .param("chargePeopleName", RandomStringUtils.randomAlphabetic(3) + "人")
                         .param("chargePeopleMobile", randomMobile())
                         .param("haierCode", RandomStringUtils.randomAlphabetic(31))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("location", "/manageDepot"));
+    }
+
+    protected void addNewFactory() throws Exception {
+        Address address = randomAddress();
+        mockMvc.perform(
+                post("/manage/factoryList")
+                        .param("name", RandomStringUtils.randomAlphabetic(20) + "工厂")
+                        .param("address", address.getStandardWithoutOther())
+                        .param("fullAddress", address.getOtherAddress())
+                        .param("chargePeopleName", RandomStringUtils.randomAlphabetic(3) + "人")
+                        .param("chargePeopleMobile", randomMobile())
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("location", "/manageFactory"));
     }
 }

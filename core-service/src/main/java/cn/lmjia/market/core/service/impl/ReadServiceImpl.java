@@ -15,7 +15,9 @@ import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.seext.NumberUtils;
 import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.repository.DepotRepository;
+import me.jiangcai.logistics.repository.ProductRepository;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,8 @@ public class ReadServiceImpl implements ReadService {
     private MainProductRepository mainProductRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public String mobileFor(Object principal) {
@@ -167,6 +171,11 @@ public class ReadServiceImpl implements ReadService {
     @Override
     public List<MainProduct> allEnabledMainProduct() {
         return mainProductRepository.findByEnableTrue();
+    }
+
+    @Override
+    public List<Product> allEnabledProduct() {
+        return productRepository.findByEnableTrue();
     }
 
     //    @Override
