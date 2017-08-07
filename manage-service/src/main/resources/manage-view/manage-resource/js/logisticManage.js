@@ -1,7 +1,7 @@
 $(function () {
     var detailUrl = $('body').attr('data-detail-url');
-    var receive = echarts.init(document.getElementById('J_waitReceive'));
-    var install = echarts.init(document.getElementById('J_waitInstall'));
+    // var receive = echarts.init(document.getElementById('J_waitReceive'));
+    // var install = echarts.init(document.getElementById('J_waitInstall'));
 
     var optionReceive = {
         tooltip: {
@@ -77,8 +77,8 @@ $(function () {
         ]
     };
 
-    receive.setOption(optionReceive);
-    install.setOption(optionInstall);
+    // receive.setOption(optionReceive);
+    // install.setOption(optionInstall);
 
 
     $('#J_datePicker').flatpickr({
