@@ -10,6 +10,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -27,6 +28,8 @@ public class Product {
      * 可用状态
      */
     private boolean enable = true;
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime createTime = LocalDateTime.now();
     /**
      * 货物编码|产品编码
      */

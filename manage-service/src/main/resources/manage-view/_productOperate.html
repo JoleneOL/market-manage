@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainProduct"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -8,7 +9,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>新增货品</title>
+    <title th:if="${currentData==null}">新增货品</title>
+    <title th:if="${currentData!=null}">编辑货品</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -31,13 +33,15 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_productManage.html">货品管理</a></li>
-                <li><strong>新增货品</strong></li>
+                <li><a href="_productManage.html" th:href="@{/manageProduct}">货品管理</a></li>
+                <li><strong th:if="${currentData==null}">新增货品</strong><strong th:if="${currentData!=null}">编辑货品</strong>
+                </li>
             </ol>
         </div>
     </div>
     <form id="J_productForm" method="post"
-          action="_productManage.html">
+          action="_productManage.html" th:action="@{/manageProductSubmit}">
+        <input type="hidden" name="createNew" th:value="${currentData==null}"/>
         <div class="row">
             <div class="col-sm-12">
                 <div class="ibox">
@@ -54,15 +58,27 @@
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入货品名称" class="form-control"
-                                                       name="productName" required>
+                                                       name="productName"
+                                                       th:value="${currentData!=null?currentData.name:''}"
+                                                       th:readonly="${currentData!=null}" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">品牌 <span
-                                                    class="asterisk">*</span></label>
+                                            <label class="col-sm-3 control-label">品牌 </label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入货品品牌" class="form-control"
-                                                       name="productBrand" required>
+                                                       name="productBrand"
+                                                       th:value="${currentData!=null?currentData.brand:''}"
+                                                       th:readonly="${currentData!=null && currentData.brand!=null}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">类目 </label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入货品类目" class="form-control"
+                                                       name="mainCategory"
+                                                       th:value="${currentData!=null?currentData.mainCategory:''}"
+                                                       th:readonly="${currentData!=null && currentData.mainCategory!=null}">
                                             </div>
                                         </div>
                                         <!--<div class="form-group">-->
@@ -88,25 +104,26 @@
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入型号" class="form-control"
-                                                       name="type" required>
+                                                       name="type" th:value="${currentData!=null?currentData.code:''}"
+                                                       th:readonly="${currentData!=null}" required>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">厂家 <span
-                                                    class="asterisk">*</span></label>
-                                            <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入厂家" class="form-control"
-                                                       name="supplier" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">厂家地址 <span
-                                                    class="asterisk">*</span></label>
-                                            <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入厂家地址" class="form-control"
-                                                       name="address" required>
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">厂家 <span-->
+                                        <!--class="asterisk">*</span></label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<input type="text" placeholder="请输入厂家" class="form-control"-->
+                                        <!--name="supplier" required>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">厂家地址 <span-->
+                                        <!--class="asterisk">*</span></label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<input type="text" placeholder="请输入厂家地址" class="form-control"-->
+                                        <!--name="address" required>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
                                     </div>
                                 </div>
                             </div>
@@ -125,47 +142,67 @@
                                 <div class="col-sm-8">
                                     <div class="form-horizontal">
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">SKU </label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入SKU" class="form-control"
+                                                       name="SKU" th:value="${currentData!=null?currentData.SKU:''}"
+                                                       th:readonly="${currentData!=null && currentData.SKU!=null}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-sm-3 control-label">设备款（元） <span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="number" placeholder="请输入货品单价" class="form-control"
-                                                       name="productPrice" min="0" required>
+                                                       name="productPrice" min="0"
+                                                       th:value="${currentData!=null?currentData.deposit:''}"
+                                                       th:readonly="${currentData!=null}" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">计量单位 <span
-                                                    class="asterisk">*</span></label>
+                                            <label class="col-sm-3 control-label">计量单位 </label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入单位" class="form-control"
-                                                       name="unit" required>
+                                                       name="unit" th:value="${currentData!=null?currentData.unit:''}"
+                                                       th:readonly="${currentData!=null && currentData.unit!=null}">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">尺寸（MM）<span class="asterisk">*</span></label>
+                                            <label class="col-sm-3 control-label">尺寸（MM）</label>
                                             <div class="col-sm-3">
                                                 <input type="number" placeholder="请输入长" class="form-control"
-                                                       name="length" required>
+                                                       name="length"
+                                                       th:value="${currentData!=null?currentData.volumeLength:''}"
+                                                       th:readonly="${currentData!=null && currentData.volumeLength!=null}">
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="number" placeholder="请输入宽" class="form-control"
-                                                       name="width" required>
+                                                       name="width"
+                                                       th:value="${currentData!=null?currentData.volumeWidth:''}"
+                                                       th:readonly="${currentData!=null && currentData.volumeWidth!=null}">
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="number" placeholder="请输入高" class="form-control"
-                                                       name="height" required>
+                                                       name="height"
+                                                       th:value="${currentData!=null?currentData.volumeHeight:''}"
+                                                       th:readonly="${currentData!=null && currentData.volumeHeight!=null}">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">重量（KG）<span class="asterisk">*</span></label>
+                                            <label class="col-sm-3 control-label">重量（G）</label>
                                             <div class="col-sm-6">
                                                 <input type="number" placeholder="请输入重量" class="form-control"
-                                                       name="weight" min="0" required>
+                                                       name="weight" min="0"
+                                                       th:value="${currentData!=null?currentData.weight:''}"
+                                                       th:readonly="${currentData!=null && currentData.weight!=null}">
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">服务费（元）</label>
+                                            <label class="col-sm-3 control-label">服务费（元）<span class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <input type="number" placeholder="请输入服务费" class="form-control"
-                                                       name="serviceCharge" min="0">
+                                                       name="serviceCharge"
+                                                       th:value="${currentData!=null?currentData.install:''}"
+                                                       th:readonly="${currentData!=null}" min="0" required>
                                             </div>
                                         </div>
                                         <!--<div class="form-group">-->
@@ -175,25 +212,27 @@
                                         <!--name="installFee" min="0">-->
                                         <!--</div>-->
                                         <!--</div>-->
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">货品图片</label>
-                                            <div class="col-sm-6">
-                                                <p class="form-control-static">支持上传多图，并且可以设置主图</p>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">货品颜色</label>
-                                            <div class="col-sm-6">
-                                                <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="productColor[]" value="white" checked>白色</label>
-                                                <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="productColor[]" value="black">黑色</label>
-                                                <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="productColor[]" value="golden">金色</label>
-                                                <label class="checkbox-inline i-checks">
-                                                    <input type="checkbox" name="productColor[]" value="gray">灰色</label>
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">货品图片</label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<p class="form-control-static">支持上传多图，并且可以设置主图</p>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">货品颜色</label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<label class="checkbox-inline i-checks">-->
+                                        <!--<input type="checkbox" name="productColor[]" value="white" checked>白色</label>-->
+                                        <!--<label class="checkbox-inline i-checks">-->
+                                        <!--<input type="checkbox" name="productColor[]"-->
+                                        <!--value="black">黑色</label>-->
+                                        <!--<label class="checkbox-inline i-checks">-->
+                                        <!--<input type="checkbox" name="productColor[]"-->
+                                        <!--value="golden">金色</label>-->
+                                        <!--<label class="checkbox-inline i-checks">-->
+                                        <!--<input type="checkbox" name="productColor[]" value="gray">灰色</label>-->
+                                        <!--</div>-->
+                                        <!--</div>-->
                                     </div>
                                 </div>
                             </div>
@@ -212,18 +251,20 @@
                                 <div class="col-sm-8">
                                     <div class="form-horizontal">
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">货品简介 <span
-                                                    class="asterisk">*</span></label>
+                                            <label class="col-sm-3 control-label">货品简介 </label>
                                             <div class="col-sm-9">
                                                 <textarea class="form-control" rows="3" placeholder="请输入货品简介"
-                                                          name="productSummary"></textarea>
+                                                          name="productSummary"
+                                                          th:text="${currentData!=null?currentData.description:''}"
+                                                          th:readonly="${currentData!=null && currentData.description!=null}"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">货品详情 <span
-                                                    class="asterisk">*</span></label>
+                                            <label class="col-sm-3 control-label">货品详情 </label>
                                             <div class="col-sm-9">
-                                                <textarea class="form-control" rows="3" name="productDetail">请使用之前的CKEditor，我这就偷个懒</textarea>
+                                                <textarea class="form-control editor" rows="3" name="productDetail"
+                                                          title="详情"
+                                                          th:utext="${currentData!=null?currentData.richDescription:''}"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -258,5 +299,6 @@
 <script src="mock/mock-min.js" th:remove="all"></script>
 <script src="mock/api.js" th:remove="all"></script>
 
+<script src="//editor.kuanyes.com/ckeditor.js"></script>
 <script src="manage-resource/js/productAdd.js"></script>
 </html>

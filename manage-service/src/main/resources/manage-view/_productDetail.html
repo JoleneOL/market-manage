@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainProduct"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -8,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>商品详情</title>
+    <title>货品详情</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -25,7 +26,7 @@
         <div class="ibox">
             <div class="ibox-content">
                 <ol class="breadcrumb">
-                    <li><a href="_productManage.html">货品管理</a></li>
+                    <li><a href="_productManage.html" th:href="@{/manageProduct}">货品管理</a></li>
                     <li><strong>货品详情</strong></li>
                 </ol>
             </div>
@@ -36,63 +37,60 @@
                     <div class="ibox-title">
                         货品信息
                         <div class="ibox-tools">
-                            <a class="btn btn-primary btn-sm" href="_productOperate.html">
+                            <a class="btn btn-primary btn-sm" href="_productOperate.html"
+                               th:href="@{/manageProductEdit(code=${currentData.code})}">
                                 <i class="fa fa fa-pencil-square-o"></i>&nbsp;修改
                             </a>
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="table-responsive">
+                        <div class="table-responsive" th:object="${currentData}">
                             <table class="table table-hover table-bordered">
                                 <tbody>
                                 <tr>
-                                    <td width="120px">货品品类</td>
-                                    <td>尼维柯立式净水机</td>
+                                    <td width="120px">货品</td>
+                                    <td th:text="*{name}">尼维柯立式净水机</td>
+                                </tr>
+                                <tr>
+                                    <td>品类</td>
+                                    <td th:text="*{mainCategory}">净水机</td>
                                 </tr>
                                 <tr>
                                     <td>型号</td>
-                                    <td>CRP-2000LK-L</td>
+                                    <td th:text="*{mainCategory}">CRP-2000LK-L</td>
                                 </tr>
                                 <tr>
-                                    <td>厂家</td>
-                                    <td>慈溪市海燕环保科技有限公司</td>
+                                    <td>设备款（元）</td>
+                                    <td th:text="*{{depositMoney}}">400.00</td>
                                 </tr>
                                 <tr>
-                                    <td>单价（元）</td>
-                                    <td>400.00</td>
-                                </tr>
-                                <tr>
-                                    <td>使用费（元）</td>
-                                    <td>3000</td>
-                                </tr>
-                                <tr>
-                                    <td>安装费（元）</td>
-                                    <td>180</td>
+                                    <td>服务费（元）</td>
+                                    <td th:text="*{{install}}">3000</td>
                                 </tr>
                                 <tr>
                                     <td>添加时间</td>
-                                    <td>2017-09-09</td>
+                                    <td th:text="*{{createTime}}">2017-09-09</td>
                                 </tr>
                                 </tbody>
                             </table>
-                            <table class="table table-hover table-bordered">
-                                <tbody>
-                                <tr>
-                                    <td width="120px">分期期数</td>
-                                    <td>3期、6期、12期</td>
-                                </tr>
-                                <tr>
-                                    <td>分期货品</td>
-                                    <td>花呗</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <!--<table class="table table-hover table-bordered">-->
+                            <!--<tbody>-->
+                            <!--<tr>-->
+                            <!--<td width="120px">分期期数</td>-->
+                            <!--<td>3期、6期、12期</td>-->
+                            <!--</tr>-->
+                            <!--<tr>-->
+                            <!--<td>分期货品</td>-->
+                            <!--<td>花呗</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
+                            <!--</table>-->
                             <div class="clearfix product-textarea">
                                 <div class="pull-left text-center product-textarea-hd">
                                     货品详情
                                 </div>
                                 <div class="pull-left product-textarea-bd">
-                                    <div>
+                                    <p th:utext="*{richDescription}">
                                         <p>肤白貌美！肤白貌美!肤白貌美!</p>
                                         <p>肤白貌美！</p>
                                         <p>肤白貌美！</p>
@@ -105,7 +103,7 @@
                                         <p>肤白貌美！</p>
                                         <p>肤白貌美！</p>
                                         <p>肤白貌美！</p>
-                                    </div>
+                                    </p>
                                 </div>
                             </div>
                         </div>

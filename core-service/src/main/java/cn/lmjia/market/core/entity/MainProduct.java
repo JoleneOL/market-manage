@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity;
 
+import cn.lmjia.market.core.define.Money;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.logistics.entity.Product;
@@ -32,4 +33,12 @@ public class MainProduct extends Product {
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal install;
+
+    public Money getDepositMoney() {
+        return new Money(deposit);
+    }
+
+    public Money getInstallMoney() {
+        return new Money(install);
+    }
 }

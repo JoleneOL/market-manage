@@ -24,7 +24,7 @@
     <![endif]-->
 </head>
 
-<body data-url="/products/list">
+<body data-url="/products/list" th:attr="data-detail-url=@{/manageProductDetail}" data-detail-url="_productDetail.html">
 
 <section>
     <div class="wrapper wrapper-content">
@@ -32,7 +32,7 @@
             <div class="col-md-12">
                 <div class="form-inline">
                     <div>
-                        <a class="btn btn-primary btn-sm" href="_productOperate.html">新增货品</a>
+                        <a class="btn btn-primary btn-sm" href="_productOperate.html" th:href="@{/manageProductAdd}">新增货品</a>
                     </div>
                 </div>
             </div>
