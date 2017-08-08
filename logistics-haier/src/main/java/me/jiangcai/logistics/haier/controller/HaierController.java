@@ -54,7 +54,9 @@ public class HaierController {
 
         Map<String, Object> result = new HashMap<>();
         try {
-            result.put("response", haierSupplier.event(businessType, source, contentType, sign, content));
+            final Object event = haierSupplier.event(businessType, source, contentType, sign, content);
+            if (event != null)
+                result.put("response", event);
             result.put("flag", "T");
             result.put("msg", "Ok");
         } catch (Exception ex) {
