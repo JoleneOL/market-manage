@@ -48,6 +48,7 @@ public interface StockService {
     StockInfoSet enabledUsableStock();
 
     /**
+     * 如果给定了条件，则不再检查是否是上架状态的
      * @param productSpec 可选的产品规格
      * @param depotSpec   可选的仓库规格
      * @return 特定条件的上架库存信息

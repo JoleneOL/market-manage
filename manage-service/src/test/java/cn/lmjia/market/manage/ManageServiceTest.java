@@ -4,8 +4,19 @@ import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.manage.config.ManageConfig;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.LogisticsSource;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.haier.HaierSupplier;
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.io.IOException;
+import java.util.function.Consumer;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,8 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ContextConfiguration(classes = {ManageConfig.class, SecurityConfig.class})
+@ContextConfiguration(classes = {ManageConfig.class, SecurityConfig.class, ManageServiceTest.Config.class})
 public abstract class ManageServiceTest extends DealerServiceTest {
+
     /**
      * 增加一个日日顺仓库
      *
@@ -48,5 +60,42 @@ public abstract class ManageServiceTest extends DealerServiceTest {
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("location", "/manageFactory"));
+    }
+
+    @Configuration
+    public static class Config {
+        @Bean
+        @Primary
+        public HaierSupplier haierSupplier() {
+            return new HaierSupplier() {
+                @Override
+                public void cancelOrder(String id, boolean focus, String reason) {
+
+                }
+
+                @Override
+                public void updateProduct(Product product) {
+
+                }
+
+                @Override
+                public String sign(String content, String keyValue) {
+                    return null;
+                }
+
+                @Override
+                public Object event(String businessType, String source, String contentType, String sign, String content) throws IOException {
+                    return null;
+                }
+
+                @Override
+                public StockShiftUnit makeShift(LogisticsSource source, LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options) {
+                    StockShiftUnit unit = new StockShiftUnit();
+                    forUnit.accept(unit);
+                    //
+                    return unit;
+                }
+            };
+        }
     }
 }

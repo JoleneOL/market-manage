@@ -77,19 +77,13 @@ public class StockServiceImpl implements StockService {
         if (productSpec == null)
             productSpecFinal = (productPath, criteriaBuilder) -> criteriaBuilder.isTrue(productPath.get("enable"));
         else {
-            productSpecFinal = (productPath, criteriaBuilder) -> criteriaBuilder.and(
-                    productSpec.apply(productPath, criteriaBuilder)
-                    , criteriaBuilder.isTrue(productPath.get("enable"))
-            );
+            productSpecFinal = productSpec;
         }
         final BiFunction<Path<Depot>, CriteriaBuilder, Predicate> depotSpecFinal;
         if (depotSpec == null)
             depotSpecFinal = (depotJoin, criteriaBuilder) -> criteriaBuilder.isTrue(depotJoin.get("enable"));
         else {
-            depotSpecFinal = (depotJoin, criteriaBuilder) -> criteriaBuilder.and(
-                    depotSpec.apply(depotJoin, criteriaBuilder)
-                    , criteriaBuilder.isTrue(depotJoin.get("enable"))
-            );
+            depotSpecFinal = depotSpec;
         }
         return usableStockInfo(productSpecFinal, depotSpecFinal);
     }

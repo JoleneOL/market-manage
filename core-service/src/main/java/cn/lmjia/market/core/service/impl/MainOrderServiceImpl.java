@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainOrderRepository;
@@ -11,6 +12,19 @@ import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.LogisticsService;
+import me.jiangcai.logistics.StockService;
+import me.jiangcai.logistics.Thing;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ProductStatus;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.entity.support.StockInfo;
+import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.option.LogisticsOptions;
+import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +36,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -31,8 +46,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -56,6 +73,14 @@ public class MainOrderServiceImpl implements MainOrderService {
      * 保存每日序列号的
      */
     private Map<LocalDate, AtomicInteger> dailySerials = Collections.synchronizedMap(new HashMap<>());
+    @Autowired
+    private StockService stockService;
+    @Autowired
+    private HaierSupplier haierSupplier;
+    @Autowired
+    private LogisticsService logisticsService;
+    @Autowired
+    private DepotRepository depotRepository;
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -212,5 +237,79 @@ public class MainOrderServiceImpl implements MainOrderService {
         Root<MainOrder> root = criteriaUpdate.from(MainOrder.class);
         criteriaUpdate = criteriaUpdate.set(root.get("orderTime"), time);
         entityManager.createQuery(criteriaUpdate).executeUpdate();
+    }
+
+    @Override
+    public Set<StockInfo> depotsForOrder(long orderId) {
+        MainOrder order = getOrder(orderId);
+        final MainProduct product = order.getGood().getProduct();
+        return stockService.enabledUsableStockInfo(((productPath, criteriaBuilder)
+                -> criteriaBuilder.equal(productPath, product)), null)
+                .forProduct(product);
+    }
+
+    @Override
+    public StockShiftUnit makeLogistics(long orderId, long depotId) {
+        MainOrder order = getOrder(orderId);
+        Depot depot = depotRepository.getOne(depotId);
+
+        StockShiftUnit unit = logisticsService.makeShift(haierSupplier, Collections.singleton(new Thing() {
+            @Override
+            public Product getProduct() {
+                return order.getGood().getProduct();
+            }
+
+            @Override
+            public ProductStatus getProductStatus() {
+                return ProductStatus.normal;
+            }
+
+            @Override
+            public int getAmount() {
+                return order.getAmount();
+            }
+        }), depot, order, LogisticsOptions.Installation);
+
+        if (order.getLogisticsSet() == null)
+            order.setLogisticsSet(new HashSet<>());
+
+        order.getLogisticsSet().add(unit);
+        order.setOrderStatus(OrderStatus.forDeliverConfirm);
+        return unit;
+    }
+
+    @Override
+    public void forShiftEvent(ShiftEvent event) {
+        // 基于物流的变化，需要对订单进行状态更新
+        // 只关注 拒绝事件
+        final ShiftStatus toStatus = event.getStatus();
+        if (toStatus != ShiftStatus.reject
+                && toStatus != ShiftStatus.success)
+            return;
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        final StockShiftUnit unit = event.getUnit();
+        try {
+            MainOrder order = entityManager.createQuery(cq
+                    .where(cb.isMember(unit, root.get("logisticsSet")))
+            )
+                    .getSingleResult();
+            final OrderStatus currentOrderStatus = order.getOrderStatus();
+            switch (toStatus) {
+                case reject:
+                    if (currentOrderStatus == OrderStatus.forDeliverConfirm)
+                        order.setOrderStatus(OrderStatus.forDeliver);
+                    break;
+                case success:
+                    if (currentOrderStatus == OrderStatus.forDeliverConfirm)
+                        order.setOrderStatus(OrderStatus.forInstall);
+            }
+
+        } catch (NoResultException ignored) {
+            log.debug("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
+        }
+
+
     }
 }

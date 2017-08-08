@@ -240,6 +240,7 @@ $(function () {
                             if (value) {
                                 $.ajax('/orderData/logistics/' + orderId, {
                                     method: 'put',
+                                    contentType: 'text/plain',
                                     data: value,
                                     success: function () {
                                         table.ajax.reload();
