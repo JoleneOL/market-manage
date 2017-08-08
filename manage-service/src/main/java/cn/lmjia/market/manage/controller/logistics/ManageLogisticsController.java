@@ -64,6 +64,7 @@ public class ManageLogisticsController {
     public RowDefinition<StockShiftUnit> factoryOut(String mobile, Long depotId, String productCode
             , @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-M-d") LocalDate orderDate) {
         // 入库订单 应该按照时间排序吧
+        // status
         return new RowDefinition<StockShiftUnit>() {
             @Override
             public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<StockShiftUnit> root) {

@@ -152,6 +152,29 @@
         </div>
     </form>
 </template>
+<template id="J_makeLogistics">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="J_makeLogistics_depotId">物流仓库 <span
+                    class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <select id="J_makeLogistics_depotId" name="depotId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="J_makeLogistics_quantity">可用库存</label>
+            <div class="col-sm-6">
+                <input type="number" id="J_makeLogistics_quantity" class="form-control" name="quantity" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="J_makeLogistics_distance" class="col-sm-3 control-label">距离 </label>
+            <div class="col-sm-6">
+                <input type="text" id="J_makeLogistics_distance" class="form-control" name="distance" readonly>公里
+            </div>
+        </div>
+    </form>
+</template>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>

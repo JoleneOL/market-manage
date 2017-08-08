@@ -579,3 +579,13 @@ Mock.mock(/\/orderData\/quickDone/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });
+Mock.mock(/\/orderData\/logistics\/\d/, 'get', {
+    'depots|5': [
+        {
+            'id': '@id',
+            'name': '@region',
+            'quantity': '@integer(100, 999)',
+            'distance': '@integer(100, 999)'
+        }
+    ]
+});
