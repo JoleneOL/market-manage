@@ -26,6 +26,45 @@
 <body class="gray-bg" data-url="/manage/storage">
 <div class="wrapper wrapper-content">
     <div class="row">
+        <form action="_storageManage.html" th:action="@{/manage/addStockAsRoot}" method="post">
+            <div class="col-md-12 mb10">
+                <div class="form-inline">
+                    <span>手工添加库存</span>
+                    <label>
+                        <select class="form-control input-sm" name="depotId" required>
+                            <option value=" " disabled="" selected="" class="hidden">仓库</option>
+                            <option th:each="depot:${@readService.allEnabledDepot()}" value="1" th:value="${depot.id}"
+                                    th:text="${depot.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-control input-sm" name="productCode" required>
+                            <option value=" " disabled="" selected="" class="hidden">货品</option>
+                            <option th:each="product:${@readService.allEnabledMainProduct()}" value="1"
+                                    th:value="${product.code}"
+                                    th:text="${product.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        数量
+                        <input name="amount" size="3" type="number" min="1" value="1" required/>
+                    </label>
+                    <label>
+                        备注
+                        <input name="message" type="text"/>
+                    </label>
+                    <button type="button" class="btn btn-primary btn-sm js-addAsRoot">添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
         <div class="col-md-12 mb10">
             <div class="form-inline">
                 <div>
@@ -239,6 +278,8 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
 
 <script th:inline="javascript">
     $.allProduct = /*[[${allProduct}]]*/ ['厨下净水机', '立式净水器', '量子厨下净水机', '量子立式净水机', '量子空气净化器', '量子食品优化宝', '量子防辐射芯片', '量子水宝'];

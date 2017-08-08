@@ -64,6 +64,13 @@ public class ManageStorageController {
     @Autowired
     private HaierSupplier haierSupplier;
 
+    @PostMapping("/manage/addStockAsRoot")
+    @Transactional
+    public String addStockAsRoot(long depotId, String productCode, int amount, String message) {
+        stockService.addStock(depotRepository.getOne(depotId), productRepository.getOne(productCode), amount, message);
+        return "redirect:/manageStorage";
+    }
+
     // 所有库存信息
     @GetMapping("/manage/storage")
     @ResponseBody

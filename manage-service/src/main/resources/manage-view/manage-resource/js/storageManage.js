@@ -99,6 +99,19 @@ $(function () {
         }]
     });
 
+    $('.js-addAsRoot').click(function () {
+        var self = $(this);
+        layer.open({
+            content: '警告！请谨慎操作！这个库存更新将不会被任何审核管制！',
+            // area: ['500px', 'auto'],
+            btn: ['确认', '取消'],
+            zIndex: 9999,
+            yes: function (index) {
+                self.closest('form').submit();
+            }
+        });
+    });
+
     $(document).on('click', '.js-search', function () {
         table.ajax.reload();
     }).on('click', '.js-operate', function () {
