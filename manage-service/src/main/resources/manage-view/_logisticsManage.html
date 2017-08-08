@@ -23,7 +23,7 @@
     <![endif]-->
 </head>
 <body class="gray-bg"
-      data-logistics-url="/url/logistics"
+      data-logistics-url="/manage/orderData/logistics"
       data-factory-url="/manage/factoryOut"
       data-detail-url="_logisticsDetail.html" th:data-detail-url="@{/manageShiftDetail}"
       data-storage-url="/url/storage"
@@ -120,40 +120,40 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            <!--<li><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a>-->
-                            <!--</li>-->
+                            <li><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a>
+                            </li>
                             <li class="active"><a data-toggle="tab" href="#factory" aria-expanded="false">工厂发货</a></li>
                             <!--<li><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a>-->
                             <!--</li>-->
                         </ul>
                         <div class="tab-content">
-                            <!--<div id="logistics" class="tab-pane">-->
-                            <!--<div class="panel-body">-->
-                            <!--<div class="row">-->
-                            <!--<div class="col-sm-12 m-b-sm">-->
-                            <!--<div data-toggle="buttons" class="btn-group js-radio-status">-->
-                            <!--<label class="btn btn-sm btn-white active">-->
-                            <!--<input type="radio" name="status" value="all" checked>全部</label>-->
-                            <!--<label class="btn btn-sm btn-white">-->
-                            <!--<input type="radio" name="status" value="0">待发货</label>-->
-                            <!--<label class="btn btn-sm btn-white">-->
-                            <!--<input type="radio" name="status" value="1">待收货</label>-->
-                            <!--<label class="btn btn-sm btn-white">-->
-                            <!--<input type="radio" name="status" value="2">已收货</label>-->
-                            <!--<label class="btn btn-sm btn-white">-->
-                            <!--<input type="radio" name="status" value="3">待安装</label>-->
-                            <!--<label class="btn btn-sm btn-white">-->
-                            <!--<input type="radio" name="status" value="4">已安装</label>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="table-responsive">-->
-                            <!--<table id="logisticsForm" class="table table-hover table-success"-->
-                            <!--cellspacing="0"-->
-                            <!--width="100%"></table>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
+                            <div id="logistics" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-sm-12 m-b-sm">
+                                            <div data-toggle="buttons" class="btn-group js-radio-status">
+                                                <label class="btn btn-sm btn-white active">
+                                                    <input type="radio" name="status" value="all" checked>全部</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="0">待发货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="1">待收货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="2">已收货</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="3">待安装</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" name="status" value="4">已安装</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="logisticsForm" class="table table-hover table-success"
+                                               cellspacing="0"
+                                               width="100%"></table>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="factory" class="tab-pane active">
                                 <div class="panel-body">
                                     <div class="row">

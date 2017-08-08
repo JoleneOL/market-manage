@@ -138,7 +138,7 @@ public class TRJManageController {
                                 -> ReadService.mobileForLogin(MainOrder.getOrderByLogin(root), criteriaBuilder)))
                         , FieldBuilder.asName(MainOrder.class, "orderTime")
                                 .addFormat((data, type)
-                                        -> orderTimeFormatter.apply(((LocalDateTime) data)))
+                                        -> localDateTimeFormatter.apply(((LocalDateTime) data)))
                                 .build()
                         , FieldBuilder.asName(MainOrder.class, "status")
                                 .addBiSelect(((root, criteriaBuilder)

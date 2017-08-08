@@ -106,10 +106,13 @@ $(function () {
                 "title": "订单号", "data": "orderId", "name": "orderId"
             },
             {
+                "title": "物流编号", "data": "supplierId", "name": "supplierId"
+            },
+            {
                 "title": "商品名称", "data": "goods", "name": "goods"
             },
             {
-                "title": "发货数量", "data": "deliverQuantity", "name": "deliverQuantity"
+                "title": "发货数量", "data": "amount", "name": "amount"
             },
             {
                 "title": "订单时间", "data": "orderTime", "name": "orderTime"
@@ -123,20 +126,20 @@ $(function () {
             {
                 "title": "手机号", "data": "mobile", "name": "mobile"
             },
-            {
-                "title": "物流公司", "data": "logistics", "name": "logistics"
-            },
+            // {
+            //     "title": "物流公司", "data": "logistics", "name": "logistics"
+            // },
             {
                 "title": "物流仓储", "data": "storage", "name": "storage"
             },
-            {
-                "title": "安装公司", "data": "installation", "name": "installation"
-            },
+            // {
+            //     "title": "安装公司", "data": "installation", "name": "installation"
+            // },
             {
                 "title": "发货时间", "data": "deliverTime", "name": "deliverTime"
             },
             {
-                "title": "状态", "data": "status", "name": "status"
+                "title": "物流状态", "data": "status", "name": "status"
             },
             {
                 "title": "操作",

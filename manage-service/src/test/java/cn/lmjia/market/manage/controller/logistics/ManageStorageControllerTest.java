@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
+//@ActiveProfiles("mysql")
 public class ManageStorageControllerTest extends ManageServiceTest {
 
     @Before

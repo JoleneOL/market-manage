@@ -11,8 +11,8 @@ AS
       ON ((originDepot.ID = shift.ORIGIN_ID) AND (shift.CURRENTSTATUS <> 2))
     , StockShiftUnit_AMOUNTS amounts
   WHERE (((
-            ((shift.LOCKEDTIME IS NULL) OR (shift.LOCKEDTIME > (SELECT MAX(`TIME`)
-                                                                FROM stocksettlement)))) AND
-          (shift.DTYPE = 'StockShiftUnit')) AND ((amounts.StockShiftUnit_ID = shift.ID))
+    ((shift.LOCKEDTIME IS NULL) OR (shift.LOCKEDTIME > (SELECT MAX(`TIME`)
+                                                        FROM stocksettlement))))) AND
+         ((amounts.StockShiftUnit_ID = shift.ID))
   )
   GROUP BY amounts.amounts_KEY, destDepot.ID, originDepot.ID;

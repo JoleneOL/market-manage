@@ -75,4 +75,11 @@ public interface StockService {
     @EventListener(ShiftEvent.class)
     @Transactional
     void shiftEventUp(ShiftEvent event);
+
+    /**
+     * @param product 货品
+     * @return 特定货品可用库存总量
+     */
+    @Transactional(readOnly = true)
+    int usableStockTotal(Product product);
 }

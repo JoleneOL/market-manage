@@ -23,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
@@ -33,8 +34,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * 订单
@@ -136,7 +137,10 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      * 物流信息
      */
     @OneToMany
-    private Set<StockShiftUnit> logisticsSet;
+    @OrderBy("createTime desc")
+    private List<StockShiftUnit> logisticsSet;
+    @ManyToOne
+    private StockShiftUnit currentLogistics;
 
     /**
      * @param from order表

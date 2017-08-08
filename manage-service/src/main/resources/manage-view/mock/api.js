@@ -271,23 +271,23 @@ Mock.mock(/\/message\/warn/, "get", {
     ]
 });
 
-Mock.mock(/\/url\/logistics/, "get", {
+Mock.mock(/\/manage\/orderData\/logistics/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
     "data|10": [
         {
             'id': '@id',
+            'unitId': '@id',
+            'supplierId': '@id',
             'orderId': '@id',
             'goods': '量子立式净水机',
-            'deliverQuantity': '@integer(1, 99)',
+            'amount': '@integer(1, 99)',
             'orderTime': '@datetime("yyyy-MM-dd")',
             'address': '@county(true)',
             'orderUser': '@cname',
             'mobile': /^1([34578])\d{9}$/,
-            'logistics': '日日顺',
             'storage': '@region',
-            'installation': '海尔',
             'deliverTime': '@datetime("yyyy-MM-dd")',
             'status': '@pick(["待发货", "待收货", "已收货", "待安装", "已安装"])',
             'stateCode': '@pick([0, 1, 2, 3, 4])'

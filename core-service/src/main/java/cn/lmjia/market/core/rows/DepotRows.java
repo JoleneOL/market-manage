@@ -1,7 +1,6 @@
 package cn.lmjia.market.core.rows;
 
 import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import me.jiangcai.logistics.entity.Depot;
@@ -20,14 +19,10 @@ import java.util.function.Function;
 /**
  * @author CJ
  */
-public abstract class DepotRows implements RowDefinition<Depot> {
-
-    //    private final LocalDateConverter localDateConverter = new LocalDateConverter();
-
-    private final Function<LocalDateTime, String> orderTimeFormatter;
+public abstract class DepotRows extends AbstractRows<Depot> {
 
     public DepotRows(Function<LocalDateTime, String> orderTimeFormatter) {
-        this.orderTimeFormatter = orderTimeFormatter;
+        super(orderTimeFormatter);
     }
 
     @Override
@@ -77,7 +72,7 @@ public abstract class DepotRows implements RowDefinition<Depot> {
                         .build()
                 , FieldBuilder.asName(Depot.class, "createTime")
                         .addFormat((data, type)
-                                -> orderTimeFormatter.apply(((LocalDateTime) data)))
+                                -> localDateTimeFormatter.apply(((LocalDateTime) data)))
                         .build()
                 , Fields.asBasic("enable")
         );

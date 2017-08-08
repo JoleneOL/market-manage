@@ -44,9 +44,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -271,9 +271,10 @@ public class MainOrderServiceImpl implements MainOrderService {
         }), depot, order, LogisticsOptions.Installation);
 
         if (order.getLogisticsSet() == null)
-            order.setLogisticsSet(new HashSet<>());
+            order.setLogisticsSet(new ArrayList<>());
 
         order.getLogisticsSet().add(unit);
+        order.setCurrentLogistics(unit);
         order.setOrderStatus(OrderStatus.forDeliverConfirm);
         return unit;
     }

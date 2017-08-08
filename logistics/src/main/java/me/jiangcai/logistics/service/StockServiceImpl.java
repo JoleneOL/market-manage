@@ -241,6 +241,15 @@ public class StockServiceImpl implements StockService {
         event.getUnit().addStatus(event.getTime(), event.getMessage(), event.getStatus());
     }
 
+    @Override
+    public int usableStockTotal(Product product) {
+        return enabledUsableStockInfo(((productPath, criteriaBuilder)
+                -> criteriaBuilder.equal(productPath, product)), null)
+                .forProduct(product)
+                .stream().mapToInt(StockInfo::getAmount)
+                .sum();
+    }
+
     /**
      * @return 最新的结算信息;如果不存在会返回一个世纪前的一个结算点，结算量是0
      */

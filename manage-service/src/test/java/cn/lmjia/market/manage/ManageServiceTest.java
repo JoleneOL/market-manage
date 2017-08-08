@@ -9,6 +9,7 @@ import me.jiangcai.logistics.LogisticsSource;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.haier.entity.HaierOrder;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -90,7 +91,7 @@ public abstract class ManageServiceTest extends DealerServiceTest {
 
                 @Override
                 public StockShiftUnit makeShift(LogisticsSource source, LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options) {
-                    StockShiftUnit unit = new StockShiftUnit();
+                    StockShiftUnit unit = new HaierOrder();
                     forUnit.accept(unit);
                     //
                     return unit;
