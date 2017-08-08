@@ -173,12 +173,11 @@ $(function () {
 
     //物流相关
     var makeLogisticsRegion = $('#J_makeLogistics');
-    var makeLogisticsRegionForm = $('form', makeLogisticsRegion);
-    var makeLogisticsRegionDepotId = $('[name=depotId]', makeLogisticsRegionForm);
+    var makeLogisticsRegionDepotId;
 
-    function depotSelectChange() {
-        var quantity = $('[name=quantity]', makeLogisticsRegionForm);
-        var distance = $('[name=distance]', makeLogisticsRegionForm);
+    function depotSelectChange(parent) {
+        var quantity = $('[name=quantity]', parent);
+        var distance = $('[name=distance]', parent);
         var current = +makeLogisticsRegionDepotId.val();
         // 从 $.depots 里寻找匹配的
         $.each($.depots, function (_, data) {
@@ -190,14 +189,10 @@ $(function () {
     }
 
 
-    $('[name=depotId]', makeLogisticsRegionForm).change(depotSelectChange);
-    $('[name=depotId]', makeLogisticsRegionForm).blur(depotSelectChange);
-
     function depotsUpdate(depots) {
         $.depots = depots;
         makeLogisticsRegionDepotId.empty();
         $.each($.depots, function (_, data) {
-            console.log('<option value="' + data.id + '">' + data.name + '</option>');
             makeLogisticsRegionDepotId.append('<option value="' + data.id + '">' + data.name + '</option>');
         });
         depotSelectChange();
@@ -221,17 +216,25 @@ $(function () {
             method: 'get',
             success: function (response) {
                 // 获取可用仓库
-                console.log(response);
                 var depots = response.depots;
                 if (depots.length === 0)
                     layer.msg('没有该货品可用的库存，请尽快补充库存。');
                 else {
-                    depotsUpdate(depots);
                     layer.open({
                         content: makeLogisticsRegion.html(),
                         area: ['500px', 'auto'],
                         btn: ['确认', '取消'],
                         zIndex: 9999,
+                        success: function (layerd) {
+                            makeLogisticsRegionDepotId = $('[name=depotId]', layerd);
+                            $('[name=depotId]', layerd).change(function () {
+                                depotSelectChange(layerd);
+                            });
+                            $('[name=depotId]', layerd).blur(function () {
+                                depotSelectChange(layerd);
+                            });
+                            depotsUpdate(depots);
+                        },
                         yes: function (index) {
                             var value = makeLogisticsRegionDepotId.val();
                             if (value) {
