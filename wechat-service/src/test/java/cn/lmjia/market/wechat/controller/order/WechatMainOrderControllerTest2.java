@@ -19,10 +19,17 @@ import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import cn.lmjia.market.wechat.page.WechatOrderPage;
 import me.jiangcai.lib.sys.service.SystemStringService;
+import me.jiangcai.logistics.LogisticsService;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
 import org.apache.commons.lang.RandomStringUtils;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -56,9 +63,20 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     private ReadService readService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private LogisticsService logisticsService;
 
     @Test
-    public void go() throws Exception {
+    public void go1() throws Exception {
+        go(true);
+    }
+
+    @Test
+    public void go2() throws Exception {
+        go(false);
+    }
+
+    private void go(boolean normal) throws Exception {
         //选择一个商品的价格 认定它为投融家价格
         Channel trj = channelService.findByName(TRJService.ChannelName);
 
@@ -106,23 +124,36 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
         // 添加一个客服好让它收到消息
         addCustomerServiceWithDeveloperWechatId();
 
-        quickDoneForAuthorising(authorising);
+        BigDecimal originBalance = readService.currentBalance(login).getAmount();
 
-        assertThat(readService.currentBalance(login).getAmount())
-                .isCloseTo(BigDecimal.ZERO, Offset.offset(BigDecimal.ONE));
+        if (normal) {
+            // 使用正常的物流
+            StockShiftUnit unit = logisticsForMainOrderFromAnyDepot(currentMainOrder(login), () -> {
+                HaierDepot depot = new HaierDepot();
+                depot.setHaierCode("XXXXX1");
+                return depot;
+            }, HaierSupplier.class);
+
+            logisticsService.mockToStatus(unit.getId(), ShiftStatus.success);
+            logisticsService.mockInstallationEvent(unit.getId());
+        } else {
+            quickDoneForAuthorising(authorising);
+        }
+
 
         // 管理员是否可以看到？
         checkManageMortgageTRGFor(authorising);
-        // 让管理员发起完成申请
-        makeRequest(authorising);
+        // 让管理员发起完成申请 正常支付无需发起申请的吧？
+        if (!normal)
+            makeRequest(authorising);
         // 测试信审通过
         makeAuthorisingCheck(authorising, true);
         assertThat(readService.currentBalance(login).getAmount())
-                .isCloseTo(BigDecimal.ZERO, Offset.offset(BigDecimal.ONE));
+                .isCloseTo(originBalance, Offset.offset(new BigDecimal("0.000000001")));
         // 测试结算通过
         makeAuthorisingSettlement(authorising);
         assertThat(readService.currentBalance(login).getAmount())
-                .isGreaterThan(BigDecimal.ZERO);
+                .isGreaterThan(originBalance);
 
         // 再试一次？ 肯定是不行的
         result = submitOrderRequest(request);
@@ -131,6 +162,17 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         // 持续等待……
 //        Thread.sleep(Long.MAX_VALUE);
+    }
+
+    /**
+     * @param login
+     * @return 这个人刚下的单
+     */
+    private MainOrder currentMainOrder(Login login) {
+        return mainOrderRepository.findAll((root, query, cb)
+                        -> cb.equal(root.get("orderBy"), login)
+                , new PageRequest(0, 1, new Sort(Sort.Direction.DESC, "orderTime")))
+                .getContent().get(0);
     }
 
     private void makeAuthorisingSettlement(String authorising) throws Exception {
@@ -252,6 +294,5 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
             updateAllRunWith(login);
         }
     }
-
 
 }

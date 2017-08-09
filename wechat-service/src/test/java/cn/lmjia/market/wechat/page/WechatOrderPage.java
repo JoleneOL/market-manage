@@ -38,8 +38,17 @@ public class WechatOrderPage extends AbstractWechatPage {
      */
     public void allPriced(BigDecimal price) {
         price = price.setScale(0, BigDecimal.ROUND_HALF_UP);
-        if (!"1".equals(webDriver.findElement(By.id("J_goodsAmount")).getAttribute("value")))
-            inputText(webDriver.findElement(By.id("J_form")), "amount", "1");
+//        final By goodsAmount = By.id("J_goodsAmount");
+//        final WebElement amount = webDriver.findElement(goodsAmount);
+//        if (amount.getAttribute("readonly")!=null) {
+//            // 如果只读，那么请等待它有值
+//            WebDriverUtil.waitFor(webDriver, driver
+//                            -> !StringUtils.isEmpty(driver.findElement(goodsAmount).getAttribute("value"))
+//                    , 2);
+//        }
+//        System.out.println(amount.getAttribute("value"));
+//        if (!"1".equals(amount.getAttribute("value")))
+//            inputText(webDriver.findElement(By.id("J_form")), "amount", "1");
         WebElement select = webDriver.findElement(By.id("J_goodsType"));
 
         List<WebElement> options = select.findElements(By.tagName("option"));
