@@ -29,7 +29,7 @@
         <form action="_storageManage.html" th:action="@{/manage/addStockAsRoot}" method="post">
             <div class="col-md-12 mb10">
                 <div class="form-inline">
-                    <span>手工添加库存</span>
+                    <label>手工添加库存</label>
                     <label>
                         <select class="form-control input-sm" name="depotId" required>
                             <option value=" " disabled="" selected="" class="hidden">仓库</option>
@@ -53,11 +53,11 @@
                     </label>
                     <label>
                         数量
-                        <input name="amount" size="3" type="number" min="1" value="1" required/>
+                        <input name="amount" size="3" type="number" min="1" value="1" class="form-control input-sm" placeholder="数量" required/>
                     </label>
                     <label>
                         备注
-                        <input name="message" type="text"/>
+                        <input name="message" type="text" class="form-control input-sm" placeholder="备注"/>
                     </label>
                     <button type="button" class="btn btn-primary btn-sm js-addAsRoot">添加</button>
                 </div>

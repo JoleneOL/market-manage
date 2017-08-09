@@ -367,10 +367,12 @@ textarea {
     font-weight: 700;
     margin-right: 8px;
     font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 .panel-package .package-status .status-list .week {
     width: 32px;
+    overflow: hidden;
     font-weight: 700;
 }
 
@@ -378,6 +380,7 @@ textarea {
     width: 48px;
     margin-right: 28px;
     margin-left: 5px;
+    overflow: hidden;
 }
 
 .panel-package .package-status .status-list .text {
