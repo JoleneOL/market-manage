@@ -85,13 +85,13 @@ public interface TRJService extends PaymentForm {
     @EventListener(MainOrderFinishEvent.class)
     void orderSuccess(MainOrderFinishEvent event);
 
-    /**
-     * 发送消息给客服，让他们知道需要提起信审了
-     *
-     * @param order
-     * @param message
-     */
-    void sendCheckWarningToCS(MainOrder order, String message);
+//    /**
+//     * 发送消息给客服，让他们知道需要提起信审了
+//     *
+//     * @param order
+//     * @param message
+//     */
+//    void sendCheckWarningToCS(MainOrder order, String message);
 
     /**
      * 提起信审申请
@@ -106,4 +106,23 @@ public interface TRJService extends PaymentForm {
     @Transactional
     void submitOrderCompleteRequest(MainOrder order, String installer, String installCompany, String mobile
             , LocalDateTime installTime, String resourcePath);
+
+    /**
+     * 执行信审结果
+     *
+     * @param authorising 按揭码
+     * @param result      是否通过
+     * @param message     备注
+     */
+    @Transactional
+    void auditingResult(String authorising, boolean result, String message);
+
+    /**
+     * 结算
+     *
+     * @param authorising 按揭码
+     * @param time        结算时间
+     */
+    @Transactional
+    void settlementResult(String authorising, LocalDateTime time);
 }
