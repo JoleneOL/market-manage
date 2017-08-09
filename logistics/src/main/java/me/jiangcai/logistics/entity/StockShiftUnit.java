@@ -24,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -152,5 +153,13 @@ public class StockShiftUnit {
         event.setToStatus(status);
         event.setSource(source);
         events.put(time, event);
+    }
+
+    /**
+     * @return 负责提供物流服务的公司
+     */
+    @Transient
+    public String getSupplierOrganizationName() {
+        return null;
     }
 }

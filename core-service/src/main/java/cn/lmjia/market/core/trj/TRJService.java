@@ -2,6 +2,7 @@ package cn.lmjia.market.core.trj;
 
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
+import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.payment.PaymentForm;
 import me.jiangcai.payment.event.OrderPaySuccess;
@@ -49,6 +50,7 @@ public interface TRJService extends PaymentForm {
     String sign(List<NameValuePair> list);
 
     @EventListener(OrderPaySuccess.class)
+    @Transactional
     void paySuccess(OrderPaySuccess event);
 
     /**
@@ -83,7 +85,12 @@ public interface TRJService extends PaymentForm {
     MainOrder findOrder(String authorising);
 
     @EventListener(MainOrderFinishEvent.class)
+    @Transactional
     void orderSuccess(MainOrderFinishEvent event);
+
+    @EventListener(MainOrderDeliveredEvent.class)
+    @Transactional
+    void forMainOrderDeliveredEvent(MainOrderDeliveredEvent event);
 
 //    /**
 //     * 发送消息给客服，让他们知道需要提起信审了

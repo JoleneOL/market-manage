@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
@@ -19,6 +20,11 @@ import cn.lmjia.market.core.trj.TRJService;
 import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.sys.service.SystemStringService;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.event.InstallationEvent;
+import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.event.OrderPaySuccess;
@@ -30,7 +36,6 @@ import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -52,6 +57,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
@@ -115,6 +121,8 @@ public class TRJServiceImpl implements TRJService {
     private ResourceService resourceService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @Autowired
     public TRJServiceImpl(Environment environment) throws IOException {
@@ -130,7 +138,7 @@ public class TRJServiceImpl implements TRJService {
 
     private static String sign(final Map<String, String> params, String secretKey) {
 
-        if (StringUtils.isBlank(secretKey)) {
+        if (StringUtils.isEmpty(secretKey)) {
             throw new IllegalArgumentException("secretKey not bank.");
         }
 
@@ -283,12 +291,46 @@ public class TRJServiceImpl implements TRJService {
     }
 
     @Override
+    public void forMainOrderDeliveredEvent(MainOrderDeliveredEvent event) {
+        final MainOrder mainOrder = event.getMainOrder();
+        if (mainOrder.getPayOrder() instanceof TRJPayOrder) {
+            final ShiftEvent source = event.getSource();
+            if (source != null) {
+                final StockShiftUnit unit = source.getUnit();
+                // 不想跟它说具体库存……
+                //
+                deliverUpdate(mainOrder.getId(), unit.getSupplierOrganizationName(), unit.getOrigin().getName()
+                        , 100, unit.getCreateTime().toLocalDate()
+                        , source.getTime() == null ? LocalDate.now() : source.getTime().toLocalDate());
+            }
+        }
+    }
+
+    @Override
     public void orderSuccess(MainOrderFinishEvent event) {
         final MainOrder mainOrder = event.getMainOrder();
         if (mainOrder.getPayOrder() instanceof TRJPayOrder) {
             TRJPayOrder payOrder = (TRJPayOrder) mainOrder.getPayOrder();
             payOrder.getAuthorisingInfo().setAuthorisingStatus(AuthorisingStatus.forAuditing);
-            sendCheckWarningToCS(mainOrder, "订单已完成，可以申请信审了。");
+            // 如果有安装事件 则自动完成
+            final InstallationEvent source = event.getSource();
+            if (source != null) {
+                if (!org.springframework.util.StringUtils.isEmpty(source.getInstaller())
+                        && !org.springframework.util.StringUtils.isEmpty(source.getInstallCompany())
+                        && !org.springframework.util.StringUtils.isEmpty(source.getMobile())) {
+                    submitOrderCompleteRequest(mainOrder, source.getInstaller(), source.getInstallCompany(), source.getMobile(), source.getInstallTime(), null);
+                } else if (source.getUnit() instanceof HaierOrder) {
+                    submitOrderCompleteRequest(mainOrder
+                            , systemStringService.getCustomSystemString("haier.default.installer", null, true, String.class, "匿名")
+                            , systemStringService.getCustomSystemString("haier.default.installerCompany", null, true, String.class, "青岛日日顺家居服务有限公司")
+                            , systemStringService.getCustomSystemString("haier.default.installerMobile", null, true, String.class, "4008009999")
+                            , source.getInstallTime()
+                            , null
+                    );
+                } else
+                    sendCheckWarningToCS(mainOrder, "订单已完成，可以申请信审了。");
+            } else
+                sendCheckWarningToCS(mainOrder, "订单已完成，可以申请信审了。");
         }
     }
 

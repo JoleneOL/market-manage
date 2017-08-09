@@ -21,5 +21,8 @@ public class InstallationEvent {
     private final String installer;
     private final String installCompany;
     private final String mobile;
+    /**
+     * 不可为null
+     */
     private final LocalDateTime installTime;
 }

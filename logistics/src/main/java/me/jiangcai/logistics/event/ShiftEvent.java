@@ -22,6 +22,9 @@ public class ShiftEvent {
      * 进入的状态
      */
     private final ShiftStatus status;
+    /**
+     * 可能为null
+     */
     private final LocalDateTime time;
     /**
      * 人类可识别的信息
