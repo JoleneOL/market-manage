@@ -33,6 +33,8 @@ public class ManageStorageControllerTest extends ManageServiceTest {
 
     @Test
     public void go() throws Exception {
+        driver.get("http://localhost/manage");
+//        System.out.println(driver.getPageSource());
 
         driver.get("http://localhost/manageStorage");
         ManageStoragePage manageStoragePage = initPage(ManageStoragePage.class);
