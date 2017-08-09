@@ -1,6 +1,5 @@
 package me.jiangcai.logistics.haier.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
@@ -14,7 +13,6 @@ import java.util.List;
  * @author CJ
  */
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class OutInStore {
     @JsonProperty("orderno")
     private String orderNo;
@@ -38,6 +36,13 @@ public class OutInStore {
     @JsonProperty("InOutItems")
     private List<InOutItem> items;
     private String remark;
+    /**
+     * 可选
+     */
+    private String attributes;
+    private String remark1;
+    private String remark2;
+    private String remark3;
 
 
 }

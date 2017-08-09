@@ -20,6 +20,7 @@ public class OrderStatusSync {
     private String storeCode;
     @JsonProperty("expno")
     private String expNo;
+    // 操作员 还是蛮有意思的
     private String operator;
     @JsonProperty("operdate")
     @JsonDeserialize(converter = LocalDateTimeConverter.class)
@@ -52,4 +53,9 @@ public class OrderStatusSync {
      * 状态说明
      */
     private String content;
+    private String remark;
+    /**
+     * 可选
+     */
+    private String attributes;
 }
