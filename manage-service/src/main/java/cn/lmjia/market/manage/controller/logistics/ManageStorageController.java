@@ -167,7 +167,7 @@ public class ManageStorageController {
             }
         }), factoryInfo, depotInfo);
 
-        return "redirect:/manageLogistics";
+        return "redirect:/manageLogistics#factory";
     }
 
     @GetMapping("/manageStorageDelivery")
