@@ -144,6 +144,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
                     .param("time", LocalDateTime.now().format(dateTimeFormatter))
             )
                     .andExpect(status().isOk())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                     .andExpect(similarJsonObjectAs("classpath:/mock/trj_response.json"));
         } finally {
             updateAllRunWith(current);
@@ -162,6 +163,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
                     .param("result", String.valueOf(result))
             )
                     .andExpect(status().isOk())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                     .andExpect(similarJsonObjectAs("classpath:/mock/trj_response.json"));
         } finally {
             updateAllRunWith(current);

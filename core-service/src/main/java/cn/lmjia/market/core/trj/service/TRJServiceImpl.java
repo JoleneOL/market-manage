@@ -232,6 +232,43 @@ public class TRJServiceImpl implements TRJService {
     }
 
     @Override
+    public void auditingResult(String authorising, boolean result, String message) {
+        MainOrder order = findOrder(authorising);
+        TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
+        final AuthorisingInfo authorisingInfo = payOrder.getAuthorisingInfo();
+        if (authorisingInfo.getAuthorisingStatus() == AuthorisingStatus.Unused
+                || authorisingInfo.getAuthorisingStatus() == AuthorisingStatus.forOrderComplete
+                || authorisingInfo.getAuthorisingStatus() == AuthorisingStatus.forSettle
+                || authorisingInfo.getAuthorisingStatus() == AuthorisingStatus.settle
+                )
+            throw new IllegalStateException("并未处于等待审核的状态:" + authorisingInfo.getAuthorisingStatus());
+        authorisingInfo.setMessage(message);
+
+        if (result)
+            authorisingInfo.setAuthorisingStatus(AuthorisingStatus.forSettle);
+        else {
+            authorisingInfo.setAuditingTime(LocalDateTime.now());
+            authorisingInfo.setAuthorisingStatus(AuthorisingStatus.auditingRefuse);
+        }
+
+        if (authorisingInfo.getAuthorisingStatus() == AuthorisingStatus.auditingRefuse)
+            sendCheckWarningToCS(order, "信审被拒:" + message);
+    }
+
+    @Override
+    public void settlementResult(String authorising, LocalDateTime time) {
+        MainOrder order = findOrder(authorising);
+        TRJPayOrder payOrder = (TRJPayOrder) order.getPayOrder();
+        final AuthorisingInfo authorisingInfo = payOrder.getAuthorisingInfo();
+
+        if (authorisingInfo.getAuthorisingStatus() != AuthorisingStatus.forSettle)
+            throw new IllegalStateException("并未处于等待审核的状态");
+        authorisingInfo.setAuthorisingStatus(AuthorisingStatus.settle);
+        authorisingInfo.setSettlementTime(time);
+        order.setDisableSettlement(false);
+    }
+
+    @Override
     public MainOrder findOrder(String authorising) {
         return mainOrderRepository.findOne((root, query, cb) -> cb.and(
                 cb.equal(root.get("payOrder").type(), TRJPayOrder.class)
@@ -250,11 +287,14 @@ public class TRJServiceImpl implements TRJService {
         }
     }
 
-    @Override
-    public void sendCheckWarningToCS(MainOrder order, String message) {
-        userNoticeService.sendMessage(null, loginService.toWechatUser(managerService.levelAs(ManageLevel.customerService))
-                , null, new TRJCheckWarning(), message, order.getSerialId()
-                , Date.from(ZonedDateTime.of(order.getOrderTime(), ZoneId.systemDefault()).toInstant()), order.getInstallAddress().toString());
+    private void sendCheckWarningToCS(MainOrder order, String message) {
+        try {
+            userNoticeService.sendMessage(null, loginService.toWechatUser(managerService.levelAs(ManageLevel.customerService))
+                    , null, new TRJCheckWarning(), message, order.getSerialId()
+                    , Date.from(ZonedDateTime.of(order.getOrderTime(), ZoneId.systemDefault()).toInstant()), order.getInstallAddress().toString());
+        } catch (Throwable ex) {
+            log.trace("", ex);
+        }
     }
 
     @PostConstruct
