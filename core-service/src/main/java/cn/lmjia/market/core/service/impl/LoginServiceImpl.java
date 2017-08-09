@@ -179,6 +179,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public AgentLevel lowestAgentLevel(Login who) {
+        if (who == null)
+            return null;
         List<AgentLevel> allAgent = agentLevelRepository.findByLogin(who);
 
         if (allAgent.isEmpty()) {

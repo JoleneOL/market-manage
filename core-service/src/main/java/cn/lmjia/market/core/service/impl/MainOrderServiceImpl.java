@@ -15,6 +15,7 @@ import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsService;
+import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
@@ -32,6 +33,7 @@ import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -88,6 +90,8 @@ public class MainOrderServiceImpl implements MainOrderService {
     private DepotRepository depotRepository;
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -175,6 +179,9 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public Login getEnjoyability(Login orderBy) {
         while (!loginService.isRegularLogin(orderBy)) {
+            // 最终都没有找到收益人 则给 管理员。。
+            if (orderBy == null)
+                return loginService.byLoginName("root");
             orderBy = orderBy.getGuideUser();
         }
         return orderBy;
@@ -256,11 +263,17 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
-    public StockShiftUnit makeLogistics(long orderId, long depotId) {
+    public StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId) {
         MainOrder order = getOrder(orderId);
         Depot depot = depotRepository.getOne(depotId);
 
-        StockShiftUnit unit = logisticsService.makeShift(haierSupplier, Collections.singleton(new Thing() {
+        LogisticsSupplier supplier;
+        if (supplierType == HaierSupplier.class)
+            supplier = haierSupplier;
+        else
+            supplier = applicationContext.getBean(supplierType);
+
+        StockShiftUnit unit = logisticsService.makeShift(supplier, Collections.singleton(new Thing() {
             @Override
             public Product getProduct() {
                 return order.getGood().getProduct();

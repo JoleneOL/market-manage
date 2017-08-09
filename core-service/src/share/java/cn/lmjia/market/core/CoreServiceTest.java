@@ -15,6 +15,7 @@ import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.QuickTradeService;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.test.QuickPayBean;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,6 +24,10 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
+import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
@@ -48,10 +53,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,6 +94,10 @@ public abstract class CoreServiceTest extends SpringWebTest {
     @Autowired
     private QuickTradeService quickTradeService;
     private Login allRunWith;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ReadService readService;
 
     //<editor-fold desc="自动登录相关">
 
@@ -273,6 +284,13 @@ public abstract class CoreServiceTest extends SpringWebTest {
     }
 
     /**
+     * @return 新增一个普通身份
+     */
+    protected Login newRandomLogin() {
+        return loginService.newLogin(Login.class, randomMobile(), randomLogin(false), randomMobile());
+    }
+
+    /**
      * @param manager 管理员可以么？
      * @return 随便一个已存在的身份
      */
@@ -299,7 +317,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
                             .contains(login);
                 })
                 .max(new RandomComparator())
-                .orElseThrow(() -> new IllegalStateException("一个都没有？"));
+                .orElseGet(() -> loginService.newLogin(Login.class, randomMobile(), null, randomMobile()));
     }
 
     /**
@@ -434,5 +452,43 @@ public abstract class CoreServiceTest extends SpringWebTest {
      */
     protected void makeOrderDone(MainOrder order) {
         quickTradeService.makeDone(order);
+    }
+
+    /**
+     * 让物流系统随便找一个仓库或者新建一个仓库给订单配货
+     *
+     * @param order         order
+     * @param depotSupplier 新仓库构造器 可选
+     * @param supplierType  物流供应商 可选
+     * @return 物流订单
+     */
+    protected StockShiftUnit logisticsForMainOrderFromAnyDepot(MainOrder order, Supplier<Depot> depotSupplier
+            , Class<? extends LogisticsSupplier> supplierType) {
+        // 先找仓库呗
+        Depot depot = findOrCreateEnableDepot(depotSupplier);
+
+        // MarketBuildInLogisticsSupplier
+        return mainOrderService.makeLogistics(supplierType == null ? MarketBuildInLogisticsSupplier.class : supplierType
+                , order.getId(), depot.getId());
+    }
+
+    /**
+     * @param depotSupplier 如果需要新仓库的话 新仓库的构造器
+     * @return 找一个可用或者新建一个可用的仓库 同时也是符合新仓库需要的
+     */
+    private Depot findOrCreateEnableDepot(Supplier<Depot> depotSupplier) {
+        return readService.allEnabledDepot().stream()
+                .filter(depot -> depotSupplier == null || depot.getClass().equals(depotSupplier.get().getClass()))
+                .max(new RandomComparator())
+                .orElseGet(() -> {
+                    Depot depot = depotSupplier == null ? new Depot() : depotSupplier.get();
+                    depot.setAddress(randomAddress());
+                    depot.setChargePeopleMobile(randomMobile());
+                    depot.setChargePeopleName(RandomStringUtils.randomAlphabetic(5) + "名字");
+                    depot.setEnable(true);
+                    depot.setCreateTime(LocalDateTime.now());
+                    depot.setName(RandomStringUtils.randomAlphabetic(5) + "仓库名字");
+                    return depotRepository.saveAndFlush(depot);
+                });
     }
 }

@@ -10,6 +10,7 @@ import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
+import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class LogisticsServiceImpl implements LogisticsService {
     public void mockToStatus(long unitId, ShiftStatus status) {
         StockShiftUnit unit = stockShiftUnitRepository.getOne(unitId);
         applicationEventPublisher.publishEvent(new ShiftEvent(unit, status, LocalDateTime.now(), null, null));
+    }
+
+    @Override
+    public void mockInstallationEvent(long unitId) {
+        StockShiftUnit unit = stockShiftUnitRepository.getOne(unitId);
+        applicationEventPublisher.publishEvent(new InstallationEvent(unit, null, null, null, LocalDateTime.now()));
     }
 
     @Override

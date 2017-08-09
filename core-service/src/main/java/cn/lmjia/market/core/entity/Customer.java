@@ -68,9 +68,11 @@ public class Customer {
      */
     public void setupAgentLevel(AgentLevel agentLevel) {
         setAgentLevel(agentLevel);
-        if (agentLevel.getCustomers() == null)
-            agentLevel.setCustomers(new ArrayList<>());
-        agentLevel.getCustomers().add(this);
+        if (agentLevel != null) {
+            if (agentLevel.getCustomers() == null)
+                agentLevel.setCustomers(new ArrayList<>());
+            agentLevel.getCustomers().add(this);
+        }
     }
 
     @Override

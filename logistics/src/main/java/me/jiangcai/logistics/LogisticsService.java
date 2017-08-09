@@ -49,4 +49,11 @@ public interface LogisticsService {
     StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
             , LogisticsDestination destination, int options);
 
+    /**
+     * 模拟生成一个安装时间
+     *
+     * @param unitId 物流id
+     */
+    @Transactional
+    void mockInstallationEvent(long unitId);
 }

@@ -14,6 +14,7 @@ import cn.lmjia.market.core.rows.StockShiftUnitRows;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.haier.HaierSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -130,7 +131,7 @@ public class ManageOrderController {
     @PutMapping("/orderData/logistics/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void makeLogistics(@PathVariable("orderId") long orderId, @RequestBody String depotId) {
-        mainOrderService.makeLogistics(orderId, NumberUtils.parseNumber(depotId, Long.class));
+        mainOrderService.makeLogistics(HaierSupplier.class, orderId, NumberUtils.parseNumber(depotId, Long.class));
     }
 
 }
