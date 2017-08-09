@@ -6,6 +6,8 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
@@ -30,6 +32,7 @@ import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.NumberUtils;
@@ -83,6 +86,8 @@ public class MainOrderServiceImpl implements MainOrderService {
     private LogisticsService logisticsService;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -289,6 +294,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             if (currentOrderStatus != OrderStatus.forInstall) {
                 log.error(order.getSerialId() + "尚未收货就安装完成了。");
             }
+            applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
         });
     }
 
@@ -310,6 +316,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 case success:
                     if (currentOrderStatus == OrderStatus.forDeliverConfirm)
                         order.setOrderStatus(OrderStatus.forInstall);
+                    applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
             }
         });
 
