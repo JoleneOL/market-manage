@@ -9,6 +9,7 @@ import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductBatch;
+import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -46,7 +47,10 @@ public class ManageLogisticsController {
 
     @GetMapping("/manageShiftDetail")
     public String detail(Model model, long id) {
-        model.addAttribute("currentData", stockShiftUnitRepository.getOne(id));
+        final StockShiftUnit shiftUnit = stockShiftUnitRepository.getOne(id);
+        model.addAttribute("currentData", shiftUnit);
+        if (shiftUnit instanceof HaierOrder)
+            model.addAttribute("haierOrder", shiftUnit);
         return "_logisticsDetail.html";
     }
 

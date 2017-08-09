@@ -35,6 +35,22 @@
             </ol>
         </div>
     </div>
+    <!--日日顺专用 div-->
+    <!--/*@thymesVar id="haierOrder" type="me.jiangcai.logistics.haier.entity.HaierOrder"*/-->
+    <div class="row" th:if="${haierOrder!=null}">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="col-md-6">
+                        <span>日日顺订单号：</span><span th:text="${haierOrder.orderNumber}">Hello</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span>日日顺快递号：</span><span th:text="${haierOrder.expressId}">Hello</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row" th:if="${false}">
         <div class="col-sm-12">
             <div class="ibox">
@@ -75,9 +91,10 @@
                                         <span class="date" th:text="${{event.time.toLocalDate()}}">2017-04-12</span>
                                         <span class="week" th:text="${{event.time.getDayOfWeek()}}">周三</span>
                                         <span class="time" th:text="${{event.time.toLocalTime()}}">13:26:46 下午</span>
-                                        <div class="text" th:text="${event.message}">
-                                            <span>您的订单开始处理</span>
-                                            <div class="hide">
+                                        <div class="text">
+                                            <span th:text="${event.message}">您的订单开始处理</span>
+                                            <div class="hide" th:if="${event.source!=null}"
+                                                 th:utext="${event.source.toHTML()}">
                                                 <ul class="eventEntity">
                                                     <li>也许是这样的！</li>
                                                     <li>也许是这样的！</li>
@@ -290,7 +307,7 @@
             </div>
         </div>
     </div>
-    <div class="row" th:if="${false}">
+    <div class="row">
         <div class="col-sm-6">
             <div class="ibox">
                 <div class="ibox-title">
@@ -303,34 +320,29 @@
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered" th:object="${currentData.destinationData}">
                             <tbody>
-                            <!--<tr>-->
-                            <!--<td width="120px">收件人</td>-->
-                            <!--<td>李菲菲</td>-->
-                            <!--</tr>-->
-                            <!--<tr>-->
-                            <!--<td>手机号</td>-->
-                            <!--<td>18958044532</td>-->
-                            <!--</tr>-->
+                            <tr>
+                                <td width="120px">收件人</td>
+                                <td th:text="*{people}">李菲菲</td>
+                            </tr>
+                            <tr>
+                                <td>手机号</td>
+                                <td th:text="*{mobile}">18958044532</td>
+                            </tr>
                             <tr>
                                 <td width="120px">收货地址</td>
-                                <td>浙江杭州西湖大西湖国际</td>
+                                <td th:text="*{toString()}">浙江杭州西湖大西湖国际</td>
                             </tr>
-                            <tr>
-                                <td rowspan="2">货品 / 数量</td>
-                                <td>量子立式净水机 / 300（台）</td>
+                            <tr th:each="product:${currentData.amounts.entrySet()}">
+                                <td rowspan="2" th:if="${productStat.first}">货品 / 数量</td>
+                                <td><span th:text="${product.key.name}">量子立式净水机</span>&nbsp;/&nbsp;<span
+                                        th:text="${product.value.amount}">300</span>（<span
+                                        th:text="${product.key.unit}">台</span>）
+                                </td>
                             </tr>
-                            <tr>
+                            <tr th:remove="all">
                                 <td>量子水宝 / 300（盒）</td>
-                            </tr>
-                            <tr>
-                                <td>订单时间</td>
-                                <td>2017-09-09</td>
-                            </tr>
-                            <tr>
-                                <td>订单号</td>
-                                <td>20213XSD234</td>
                             </tr>
                             </tbody>
                         </table>
@@ -350,30 +362,19 @@
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-hover table-bordered" th:object="${currentData.originData}">
                             <tbody>
-                            <!--<tr>-->
-                            <!--<td width="120px">物流公司</td>-->
-                            <!--<td>日日顺</td>-->
-                            <!--</tr>-->
-                            <!--<tr>-->
-                            <!--<td>物流仓储</td>-->
-                            <!--<td>华东仓</td>-->
-                            <!--</tr>-->
                             <tr>
-                                <td width="120px" rowspan="2">发货后库存量</td>
-                                <td>量子立式净水机 / 506（台）</td>
+                                <td width="120px">发件人</td>
+                                <td th:text="*{people}">李菲菲</td>
                             </tr>
                             <tr>
-                                <td>量子水宝 / 1300（盒）</td>
+                                <td>手机号</td>
+                                <td th:text="*{mobile}">18958044532</td>
                             </tr>
                             <tr>
-                                <td>发货时间</td>
-                                <td>2017-09-09</td>
-                            </tr>
-                            <tr>
-                                <td>订单号</td>
-                                <td>20213XSD234</td>
+                                <td width="120px">发货地址</td>
+                                <td th:text="*{toString()}">浙江杭州西湖大西湖国际</td>
                             </tr>
                             </tbody>
                         </table>

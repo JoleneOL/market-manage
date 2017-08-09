@@ -1,7 +1,8 @@
 package me.jiangcai.logistics.entity.support;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import me.jiangcai.jpa.entity.support.Address;
 
 import javax.persistence.Column;
@@ -10,9 +11,10 @@ import javax.persistence.Embeddable;
 /**
  * @author CJ
  */
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Embeddable
-@Data
+@Setter
+@Getter
 public class DeliverableData extends Address {
 
     @Column(length = 20)

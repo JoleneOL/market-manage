@@ -146,7 +146,7 @@ $(function () {
                 "className": 'table-action',
                 "orderable": false,
                 data: function (item) {
-                    return '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
+                    return '<a href="javascript:;" class="js-info" data-unit-id="' + item.unitId + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
                 }
             }
         ],
@@ -327,6 +327,12 @@ $(function () {
         var table = $('.tab-pane.active').attr('id');
         if (table === 'factory')
             window.location.href = detailUrl + '?id=' + $(this).data('id');
+        else if (table === 'logistics') {
+            var unitId = $(this).data('unit-id');
+            if (unitId) {
+                window.location.href = detailUrl + '?id=' + unitId;
+            }//否则是查看订单详情
+        }
     });
 
     $('input[name="status"]').on('change', function () {
@@ -360,5 +366,5 @@ $(function () {
 
     var tabHash = window.location.hash;
     $(tabHash).addClass('active').siblings().removeClass('active');
-    $('a[href="'+tabHash+'"]').parent().addClass('active').siblings().removeClass('active');
+    $('a[href="' + tabHash + '"]').parent().addClass('active').siblings().removeClass('active');
 });
