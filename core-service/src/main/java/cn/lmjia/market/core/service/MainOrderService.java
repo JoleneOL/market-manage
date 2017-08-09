@@ -8,6 +8,7 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.StockInfo;
+import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
@@ -130,4 +131,8 @@ public interface MainOrderService {
     @EventListener(ShiftEvent.class)
     @Transactional
     void forShiftEvent(ShiftEvent event);
+
+    @EventListener(InstallationEvent.class)
+    @Transactional
+    void forInstallationEvent(InstallationEvent event);
 }

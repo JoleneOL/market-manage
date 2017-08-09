@@ -59,7 +59,7 @@ public class LogisticsServiceTest extends LogisticsTestBase {
 
 
         // 让之前的那笔入库订单发生效果
-        demoSupplier.mockEvent(unit.getId(), ShiftStatus.success);
+        logisticsService.mockToStatus(unit.getId(), ShiftStatus.success);
 
         assertThat(stockService.usableStock(depot, thing.getProduct()))
                 .isEqualTo(stock + thing.getAmount());

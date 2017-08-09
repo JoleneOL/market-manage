@@ -1,6 +1,7 @@
 package me.jiangcai.logistics.haier.service;
 
 import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.haier.HaierCoreDriver;
 import me.jiangcai.logistics.haier.entity.HaierOrder;
@@ -51,9 +52,9 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
 
         if (event.isComplete()) {
             applicationEventPublisher.publishEvent(new ShiftEvent(order, ShiftStatus.success, event.getDate()
-                    , "进出库:" + event.getRemark()));
+                    , event.getRemark(), event));
         } else {
-            log.debug("尚未完成丢这个干嘛？" + event);
+            log.error("[HR] why fired un-completed OutInStore? " + event);
         }
 
     }
@@ -81,6 +82,9 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
 //        ok	TMS_DB_CREATE 调拨单生成		调拨单创建成功
 //        ok	TMS_DB_OUT调拨单出库		调拨出库完成
 //        ok	TMS_DB_IN 调拨单入库		调拨入库完成
+        //ok  签收安装后又拒收 TMS_SIGN_AZ1_F
+//        签收并安装 TMS_SIGN_AZ1
+//       无视即可 签收未安装 TMS_SIGN_AZ0
 // 3.3.2、采购入库单、销售出库单相关订单的入库、出库过程中的订单状态日日顺都通过这个接口回传给客户
 // ，具体订单状态对应文档14页 status字段，具体描述参见本文档下面部分。（全部的订单状态都是通过这个接口回传）
         HaierOrder order = haierOrderRepository.findByOrderNumber(event.getOrderNo());
@@ -93,8 +97,10 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
             order.setExpressId(expressId);
 
         final String status = event.getStatus();
-        String message = status + event.getContent();
+        String message = "[" + event.getOperator() + "]" + event.getContent();
         ShiftStatus shiftStatus;
+        // 关于安装信息 这个应该是一个额外事件！
+
         if ("WMS_ACCEPT".equalsIgnoreCase(status)
                 || "TMS_ACCEPT".equalsIgnoreCase(status)
                 || "TMS_DB_CREATE".equalsIgnoreCase(status)
@@ -107,6 +113,7 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
                 ) {
             shiftStatus = ShiftStatus.reject;
         } else if ("TMS_FAILED".equalsIgnoreCase(status)
+                || "TMS_SIGN_AZ1_F".equalsIgnoreCase(status)
                 ) {
             // 货物送达后，用户拒签
             shiftStatus = ShiftStatus.failed;
@@ -119,17 +126,20 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
                 || "TMS_RESULT_S".equalsIgnoreCase(status)
                 ) {
             shiftStatus = ShiftStatus.movement;
-        } else if ("TMS_SIGN".equalsIgnoreCase(status)
+        } else if (status.startsWith("TMS_SIGN")
                 || "TMS_DB_OUT".equalsIgnoreCase(status)
                 || "TMS_DB_IN".equalsIgnoreCase(status)
                 ) {
             shiftStatus = ShiftStatus.success;
         } else {
-
             shiftStatus = order.getCurrentStatus();
         }
 
-        applicationEventPublisher.publishEvent(new ShiftEvent(order, shiftStatus, event.getOperateDate(), message));
+        applicationEventPublisher.publishEvent(new ShiftEvent(order, shiftStatus, event.getOperateDate(), message, event));
+        if ("TMS_SIGN_AZ1".equalsIgnoreCase(status)) {
+            // 发布安装成功时间
+            applicationEventPublisher.publishEvent(new InstallationEvent(order, null, null, null, event.getOperateDate()));
+        }
     }
 
     @Override
@@ -143,9 +153,9 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
         // 拒收完成，则订单应该切换到拒绝
         if (event.isComplete()) {
             applicationEventPublisher.publishEvent(new ShiftEvent(order, ShiftStatus.reject, event.getDate()
-                    , "被拒信息:" + event.getContent()));
+                    , event.getContent(), event));
         } else {
-            log.debug("尚未完成丢这个干嘛？" + event);
+            log.error("[HR] why fired un-completed RejectInfo? " + event);
         }
     }
 }

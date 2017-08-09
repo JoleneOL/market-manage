@@ -1,6 +1,7 @@
 package me.jiangcai.logistics;
 
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,14 @@ import java.util.Collection;
  */
 public interface LogisticsService {
 
+    /**
+     * 尝试模拟一个状态的变化
+     *
+     * @param unitId 物流订单pk
+     * @param status 改变至状态
+     */
+    @Transactional
+    void mockToStatus(long unitId, ShiftStatus status);
     //Distribution resource planning
 
     /**

@@ -6,17 +6,16 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.manage.ManageServiceTest;
 import com.jayway.jsonpath.JsonPath;
+import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
-import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.repository.DepotRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,6 +38,8 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     private MainOrderService mainOrderService;
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
+    @Autowired
+    private LogisticsService logisticsService;
 
     @Test
     public void go() throws Exception {
@@ -92,7 +93,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 
         // 那么物流订单失败之后呢？
         StockShiftUnit rejectUnit = mainOrderService.getOrder(order.getId()).getLogisticsSet().iterator().next();
-        applicationEventPublisher.publishEvent(new ShiftEvent(rejectUnit, ShiftStatus.reject, LocalDateTime.now(), ""));
+        logisticsService.mockToStatus(rejectUnit.getId(), ShiftStatus.reject);
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .isEqualByComparingTo(OrderStatus.forDeliver);
@@ -107,7 +108,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         StockShiftUnit goSuccess = mainOrderService.getOrder(order.getId()).getLogisticsSet().stream()
                 .filter(unit -> !Objects.equals(unit.getId(), rejectUnit.getId()))
                 .findFirst().orElse(null);
-        applicationEventPublisher.publishEvent(new ShiftEvent(goSuccess, ShiftStatus.success, LocalDateTime.now(), ""));
+        logisticsService.mockToStatus(rejectUnit.getId(), ShiftStatus.success);
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .isEqualByComparingTo(OrderStatus.forInstall);

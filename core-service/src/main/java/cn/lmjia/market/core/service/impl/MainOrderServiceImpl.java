@@ -21,6 +21,7 @@ import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.StockInfo;
+import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.option.LogisticsOptions;
@@ -51,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @author CJ
@@ -280,6 +282,17 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
+    public void forInstallationEvent(InstallationEvent event) {
+        logisticsToMainOrder(event.getUnit(), order -> {
+            final OrderStatus currentOrderStatus = order.getOrderStatus();
+            order.setOrderStatus(OrderStatus.afterSale);
+            if (currentOrderStatus != OrderStatus.forInstall) {
+                log.error(order.getSerialId() + "尚未收货就安装完成了。");
+            }
+        });
+    }
+
+    @Override
     public void forShiftEvent(ShiftEvent event) {
         // 基于物流的变化，需要对订单进行状态更新
         // 只关注 拒绝事件
@@ -287,15 +300,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         if (toStatus != ShiftStatus.reject
                 && toStatus != ShiftStatus.success)
             return;
-        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
-        Root<MainOrder> root = cq.from(MainOrder.class);
-        final StockShiftUnit unit = event.getUnit();
-        try {
-            MainOrder order = entityManager.createQuery(cq
-                    .where(cb.isMember(unit, root.get("logisticsSet")))
-            )
-                    .getSingleResult();
+        logisticsToMainOrder(event.getUnit(), order -> {
             final OrderStatus currentOrderStatus = order.getOrderStatus();
             switch (toStatus) {
                 case reject:
@@ -306,11 +311,22 @@ public class MainOrderServiceImpl implements MainOrderService {
                     if (currentOrderStatus == OrderStatus.forDeliverConfirm)
                         order.setOrderStatus(OrderStatus.forInstall);
             }
+        });
 
+    }
+
+    private void logisticsToMainOrder(final StockShiftUnit unit, Consumer<MainOrder> consumer) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        try {
+            MainOrder order = entityManager.createQuery(cq
+                    .where(cb.isMember(unit, root.get("logisticsSet")))
+            )
+                    .getSingleResult();
+            consumer.accept(order);
         } catch (NoResultException ignored) {
-            log.debug("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
+            log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
         }
-
-
     }
 }

@@ -2,6 +2,7 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.logistics.PersistingReadable;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 
 import javax.persistence.Column;
@@ -34,5 +35,6 @@ public class StockShiftUnitEvent {
     @Column(length = 100)
     private String message;
     private ShiftStatus toStatus;
+    private PersistingReadable source;
 
 }

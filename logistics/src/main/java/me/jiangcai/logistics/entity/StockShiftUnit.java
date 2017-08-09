@@ -2,6 +2,7 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.logistics.PersistingReadable;
 import me.jiangcai.logistics.entity.support.DeliverableData;
 import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ProductStatus;
@@ -140,7 +141,7 @@ public class StockShiftUnit {
             amounts.put(product, new ProductBatch(status, amount));
     }
 
-    public void addStatus(LocalDateTime time, String message, ShiftStatus status) {
+    public void addStatus(LocalDateTime time, String message, ShiftStatus status, PersistingReadable source) {
         setCurrentStatus(status);
         setLastStatusTime(time);
         if (events == null)
@@ -149,6 +150,7 @@ public class StockShiftUnit {
         event.setMessage(message);
         event.setTime(time);
         event.setToStatus(status);
+        event.setSource(source);
         events.put(time, event);
     }
 }

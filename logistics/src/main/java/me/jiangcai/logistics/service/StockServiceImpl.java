@@ -238,7 +238,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public void shiftEventUp(ShiftEvent event) {
-        event.getUnit().addStatus(event.getTime(), event.getMessage(), event.getStatus());
+        event.getUnit().addStatus(event.getTime(), event.getMessage(), event.getStatus(), event.getSource());
     }
 
     @Override
