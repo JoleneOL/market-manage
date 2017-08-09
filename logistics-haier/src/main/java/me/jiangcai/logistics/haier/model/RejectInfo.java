@@ -1,6 +1,5 @@
 package me.jiangcai.logistics.haier.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
@@ -14,7 +13,6 @@ import java.util.List;
  * @author CJ
  */
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class RejectInfo {
 
     @JsonProperty("orderno")
@@ -35,5 +33,5 @@ public class RejectInfo {
     private boolean complete;
     @JsonProperty("RejectItems")
     private List<InOutItem> items;
-    private String remark;
+    private String content;
 }

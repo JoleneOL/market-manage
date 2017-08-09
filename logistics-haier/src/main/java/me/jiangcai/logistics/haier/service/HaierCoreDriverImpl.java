@@ -143,7 +143,7 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
         // 拒收完成，则订单应该切换到拒绝
         if (event.isComplete()) {
             applicationEventPublisher.publishEvent(new ShiftEvent(order, ShiftStatus.reject, event.getDate()
-                    , "被拒信息:" + event.getRemark()));
+                    , "被拒信息:" + event.getContent()));
         } else {
             log.debug("尚未完成丢这个干嘛？" + event);
         }
