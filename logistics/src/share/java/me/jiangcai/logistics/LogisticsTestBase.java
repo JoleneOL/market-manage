@@ -3,17 +3,23 @@ package me.jiangcai.logistics;
 import lombok.Getter;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.test.SpringWebTest;
+import me.jiangcai.logistics.demo.LogisticsEventCatch;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.support.ProductStatus;
+import me.jiangcai.logistics.event.InstallationEvent;
+import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.logistics.repository.ProductRepository;
 import org.apache.commons.lang.RandomStringUtils;
+import org.assertj.core.api.AbstractObjectAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 基本的物流测试
@@ -27,6 +33,22 @@ public abstract class LogisticsTestBase extends SpringWebTest {
     private ProductRepository productRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private LogisticsEventCatch logisticsEventCatch;
+
+    /**
+     * @return 断言刚收到的shiftEvent
+     */
+    protected AbstractObjectAssert<?, ShiftEvent> assertLastShiftEvent() {
+        return assertThat(logisticsEventCatch.getShiftEvent());
+    }
+
+    /**
+     * @return 断言刚收到的InstallationEvent
+     */
+    protected AbstractObjectAssert<?, InstallationEvent> assertLastInstallationEvent() {
+        return assertThat(logisticsEventCatch.getInstallationEvent());
+    }
 
     protected LogisticsSource randomSource() {
         return new LogisticsSource() {
