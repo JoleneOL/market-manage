@@ -6,12 +6,17 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import me.jiangcai.logistics.haier.util.BooleanDeserializer;
 
+import java.io.Serializable;
+
 /**
  * @author CJ
  */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InOutItem {
+public class InOutItem implements Serializable {
+
+    private static final long serialVersionUID = 5928930928174888678L;
+
     @JsonProperty("storagetype")
     private String type;
     @JsonProperty("productcode")

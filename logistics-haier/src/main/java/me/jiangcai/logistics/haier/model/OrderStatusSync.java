@@ -3,6 +3,7 @@ package me.jiangcai.logistics.haier.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import me.jiangcai.logistics.haier.util.LocalDateTimeConverter;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,11 @@ import java.util.Map;
  * @author CJ
  */
 @Data
-public class OrderStatusSync {
+@EqualsAndHashCode(callSuper = false)
+public class OrderStatusSync extends AbstractModel {
+
+    private static final long serialVersionUID = -4697669264286587472L;
+
     @JsonProperty("orderno")
     private String orderNo;
     @JsonProperty("storecode")
@@ -59,4 +64,5 @@ public class OrderStatusSync {
      * 可选
      */
     private Map<String, Object> attributes;
+
 }

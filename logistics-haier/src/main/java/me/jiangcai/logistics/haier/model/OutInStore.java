@@ -3,6 +3,7 @@ package me.jiangcai.logistics.haier.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import me.jiangcai.logistics.haier.util.BooleanDeserializer;
 import me.jiangcai.logistics.haier.util.LocalDateTimeConverter;
 
@@ -13,8 +14,11 @@ import java.util.Map;
 /**
  * @author CJ
  */
+@EqualsAndHashCode(callSuper = false)
 @Data
-public class OutInStore {
+public class OutInStore extends AbstractModel {
+
+    private static final long serialVersionUID = -7542764911047031068L;
     @JsonProperty("orderno")
     private String orderNo;
     @JsonProperty("expno")
@@ -44,6 +48,5 @@ public class OutInStore {
     private String remark1;
     private String remark2;
     private String remark3;
-
 
 }
