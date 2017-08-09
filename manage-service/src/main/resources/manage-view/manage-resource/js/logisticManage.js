@@ -357,4 +357,8 @@ $(function () {
     function clearSearchValue() {
         //TODO
     }
+
+    var tabHash = window.location.hash;
+    $(tabHash).addClass('active').siblings().removeClass('active');
+    $('a[href="'+tabHash+'"]').parent().addClass('active').siblings().removeClass('active');
 });
