@@ -2,11 +2,14 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.logistics.entity.support.DeliverableData;
 import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -33,6 +36,7 @@ import java.util.Map;
  *
  * @author CJ
  */
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Setter
 @Getter
@@ -52,11 +56,33 @@ public class StockShiftUnit {
      */
     @ManyToOne
     private Depot origin;
+    @AttributeOverrides(
+            {
+                    @AttributeOverride(name = "people", column = @Column(name = "ORIGIN_PEOPLE", length = 20))
+                    , @AttributeOverride(name = "mobile", column = @Column(name = "ORIGIN_MOBILE", length = 20))
+                    , @AttributeOverride(name = "province", column = @Column(name = "ORIGIN_PROVINCE", length = 20))
+                    , @AttributeOverride(name = "prefecture", column = @Column(name = "ORIGIN_PREFECTURE", length = 20))
+                    , @AttributeOverride(name = "county", column = @Column(name = "ORIGIN_COUNTRY", length = 20))
+                    , @AttributeOverride(name = "otherAddress", column = @Column(name = "ORIGIN_OTHER_ADDRESS", length = 100))
+            }
+    )
+    private DeliverableData originData;
     /**
      * 可选的目的仓库；
      */
     @ManyToOne
     private Depot destination;
+    @AttributeOverrides(
+            {
+                    @AttributeOverride(name = "people", column = @Column(name = "DESTINATION_PEOPLE", length = 20))
+                    , @AttributeOverride(name = "mobile", column = @Column(name = "DESTINATION_MOBILE", length = 20))
+                    , @AttributeOverride(name = "province", column = @Column(name = "DESTINATION_PROVINCE", length = 20))
+                    , @AttributeOverride(name = "prefecture", column = @Column(name = "DESTINATION_PREFECTURE", length = 20))
+                    , @AttributeOverride(name = "county", column = @Column(name = "DESTINATION_COUNTRY", length = 20))
+                    , @AttributeOverride(name = "otherAddress", column = @Column(name = "DESTINATION_OTHER_ADDRESS", length = 100))
+            }
+    )
+    private DeliverableData destinationData;
     /**
      * 建立本次改变的时间
      */

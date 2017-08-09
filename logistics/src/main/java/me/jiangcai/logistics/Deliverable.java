@@ -1,5 +1,7 @@
 package me.jiangcai.logistics;
 
+import me.jiangcai.logistics.entity.support.DeliverableData;
+
 /**
  * @author CJ
  */
@@ -33,4 +35,14 @@ public interface Deliverable {
      * @return 收货人手机
      */
     String getConsigneeMobile();
+
+    default DeliverableData toDeliverableData() {
+        DeliverableData data = new DeliverableData();
+        data.setProvince(getProvince());
+        data.setPrefecture(getCity());
+        data.setCounty(getCountry());
+        data.setPeople(getConsigneeName());
+        data.setMobile(getConsigneeMobile());
+        return data;
+    }
 }

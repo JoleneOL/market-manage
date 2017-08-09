@@ -54,6 +54,9 @@ public class LogisticsServiceImpl implements LogisticsService {
                 stockShiftUnit.setDestination((Depot) destination);
             }
 
+            stockShiftUnit.setOriginData(source.toDeliverableData());
+            stockShiftUnit.setDestinationData(destination.toDeliverableData());
+
             stockShiftUnit.setAmounts(things.stream()
                     .collect(Collectors.toMap(Thing::getProduct
                             , thing -> new ProductBatch(thing.getProductStatus(), thing.getAmount()))));

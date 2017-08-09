@@ -156,6 +156,7 @@ public abstract class LogisticsTestBase extends SpringWebTest {
         address.setPrefecture(destination.getCity());
         address.setCounty(destination.getCountry());
         address.setOtherAddress(destination.getDetailAddress());
+        depot.setAddress(address);
         postNewDepot(depot);
         return depot;
     }
