@@ -6,6 +6,7 @@ import lombok.Data;
 import me.jiangcai.logistics.haier.util.LocalDateTimeConverter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * 订单同步
@@ -57,5 +58,5 @@ public class OrderStatusSync {
     /**
      * 可选
      */
-    private String attributes;
+    private Map<String, Object> attributes;
 }

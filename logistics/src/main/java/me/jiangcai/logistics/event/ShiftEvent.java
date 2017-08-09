@@ -7,7 +7,7 @@ import me.jiangcai.logistics.entity.support.ShiftStatus;
 import java.time.LocalDateTime;
 
 /**
- * 库存转移事件
+ * 物流订单变化事件，应当确保在事务内发起该事件！
  *
  * @author CJ
  */
@@ -22,5 +22,8 @@ public class ShiftEvent {
      */
     private final ShiftStatus status;
     private final LocalDateTime time;
+    /**
+     * 人类可识别的信息
+     */
     private final String message;
 }

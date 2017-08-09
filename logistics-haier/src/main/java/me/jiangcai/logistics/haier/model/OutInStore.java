@@ -8,6 +8,7 @@ import me.jiangcai.logistics.haier.util.LocalDateTimeConverter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author CJ
@@ -39,7 +40,7 @@ public class OutInStore {
     /**
      * 可选
      */
-    private String attributes;
+    private Map<String, Object> attributes;
     private String remark1;
     private String remark2;
     private String remark3;

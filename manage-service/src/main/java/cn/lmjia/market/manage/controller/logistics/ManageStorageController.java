@@ -75,7 +75,7 @@ public class ManageStorageController {
     @GetMapping("/manage/storage")
     @ResponseBody
     @Transactional(readOnly = true)
-    public Object data(Long depotId, String productCode) {
+    public Object data(int draw, Long depotId, String productCode) {
         StockInfoSet set = stockService.enabledUsableStockInfo(
                 StringUtils.isEmpty(productCode) ? null
                         : (BiFunction<Path<Product>, CriteriaBuilder, Predicate>) (productPath, criteriaBuilder)
@@ -85,7 +85,7 @@ public class ManageStorageController {
                         -> criteriaBuilder.equal(depotPath.get("id"), depotId));
         Set<StockInfo> stockInfoSet = set.forAll();
         Map<String, Object> data = new HashMap<>();
-        data.put("draw", 1);
+        data.put("draw", draw);
         data.put("recordsTotal", stockInfoSet.size());
         data.put("recordsFiltered", stockInfoSet.size());
         data.put("data", stockInfoSet.stream()
