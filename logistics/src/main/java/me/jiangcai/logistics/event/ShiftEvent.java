@@ -19,7 +19,7 @@ public class ShiftEvent {
      */
     private final StockShiftUnit unit;
     /**
-     * 进入的状态
+     * 进入的状态，可以为null表示该事件并未导致实际的变化
      */
     private final ShiftStatus status;
     /**

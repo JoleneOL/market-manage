@@ -336,6 +336,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                     if (currentOrderStatus == OrderStatus.forDeliverConfirm)
                         order.setOrderStatus(OrderStatus.forInstall);
                     applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
+                    break;
             }
         });
 

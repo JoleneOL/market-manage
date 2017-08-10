@@ -43,15 +43,16 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
 
         // bustype	String(16)	必选	业务类型：1出库  2入库
         // 确认订单是否正确
-        if ("1".equals(event.getType()) && order.getOrigin() == null) {
-            throw new IllegalStateException("[HR]" + event.getOrderNo() + "为出库单，我方并不这么认为。");
-        }
-        if ("2".equals(event.getType()) && order.getDestination() == null) {
-            throw new IllegalStateException("[HR]" + event.getOrderNo() + "为入库单，我方并不这么认为。");
-        }
-
+        // TODO 考虑设计单独的进出库监管
+//        if ("1".equals(event.getType()) && order.getOrigin() == null) {
+//            throw new IllegalStateException("[HR]" + event.getOrderNo() + "为出库单，我方并不这么认为。");
+//        }
+//        if ("2".equals(event.getType()) && order.getDestination() == null) {
+//            throw new IllegalStateException("[HR]" + event.getOrderNo() + "为入库单，我方并不这么认为。");
+//        }
+//
         if (event.isComplete()) {
-            applicationEventPublisher.publishEvent(new ShiftEvent(order, ShiftStatus.success, event.getDate()
+            applicationEventPublisher.publishEvent(new ShiftEvent(order, null, event.getDate()
                     , event.getRemark(), event));
         } else {
             log.error("[HR] why fired un-completed OutInStore? " + event);
