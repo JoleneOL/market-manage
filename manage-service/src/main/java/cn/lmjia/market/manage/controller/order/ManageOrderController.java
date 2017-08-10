@@ -134,4 +134,13 @@ public class ManageOrderController {
         mainOrderService.makeLogistics(HaierSupplier.class, orderId, NumberUtils.parseNumber(depotId, Long.class));
     }
 
+    @GetMapping("/manageShiftDetailForMainOrder")
+    @Transactional(readOnly = true)
+    public String shiftDetail(long id) {
+        MainOrder order = mainOrderService.getOrder(id);
+        if (order.getCurrentLogistics() == null)
+            return "redirect:/orderManage";
+        return "redirect:/manageShiftDetail?id" + order.getCurrentLogistics().getId();
+    }
+
 }

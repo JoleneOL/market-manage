@@ -8,6 +8,7 @@ $(function () {
 
     var _body = $('body');
 
+    var logisticsDetailUrl = _body.attr('data-logistics-detail-url');
     var quickUrl = _body.attr('data-quick-url');
     var allowMockPay = _body.attr('data-allow-mock-pay') === 'true';
     var allowSettlement = _body.attr('data-allow-settlement') === 'true';
@@ -101,6 +102,8 @@ $(function () {
                 data: function (item) {
                     var makeLogistics = '<a href="javascript:;" class="js-makeLogistics" data-id="' + item.id + '"><i class="fa fa-truck"></i>&nbsp;物流发货</a>';
 
+                    var viewLogistics = '<a href="javascript:;" class="js-viewLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
+
                     var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '" data-from="' + item.methodCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
                     var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;修改</a>';
                     var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;快速完成订单</a>';
@@ -123,6 +126,8 @@ $(function () {
                     if (item.statusCode === 2) {
                         // 物流发货
                         a = a + makeLogistics;
+                    } else if (item.statusCode >= 3) {
+                        a = a + viewLogistics;
                     }
 
                     if (item.methodCode === 0) {
@@ -209,6 +214,8 @@ $(function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
         $('input[name=from]', detailForm).val($(this).attr('data-from'));
         detailForm.submit();
+    }).on('click', '.js-viewLogistics', function () {
+        window.location.href = logisticsDetailUrl + '?id=' + $(this).data('id');
     }).on('click', '.js-makeLogistics', function () {
         var orderId = $(this).attr('data-id');
         $.ajax('/orderData/logistics/' + orderId, {

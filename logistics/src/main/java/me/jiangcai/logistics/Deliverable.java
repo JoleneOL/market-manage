@@ -41,6 +41,7 @@ public interface Deliverable {
         data.setProvince(getProvince());
         data.setPrefecture(getCity());
         data.setCounty(getCountry());
+        data.setOtherAddress(getDetailAddress());
         data.setPeople(getConsigneeName());
         data.setMobile(getConsigneeMobile());
         return data;

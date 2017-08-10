@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
     <title>用户订单</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
@@ -33,21 +33,25 @@
       data-allow-mock-pay="true"
       th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}"
       data-allow-settlement="true"
+      data-logistics-detail-url="_logisticsDetail.html"
+      th:data-logistics-detail-url="@{/manageShiftDetailForMainOrder}"
 >
 
-    <form id="detailForm" action="_orderDetail.html" method="get">
-        <input type="hidden" name="id" value="" />
-        <input type="hidden" name="from" value="" />
-    </form>
-    <section>
-        <div class="wrapper wrapper-content">
-            <div class="row">
-                <div class="col-md-12 mb10">
-                    <div class="form-inline">
-                        <div class="js-selectToolbar">
-                            <input type="search" class="form-control input-sm" placeholder="订单编号" name="orderId" aria-controls="orderTable">
-                            <input type="search" class="form-control input-sm" placeholder="手机号" name="phone" aria-controls="orderTable">
-                            <label>
+<form id="detailForm" action="_orderDetail.html" method="get">
+    <input type="hidden" name="id" value=""/>
+    <input type="hidden" name="from" value=""/>
+</form>
+<section>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-md-12 mb10">
+                <div class="form-inline">
+                    <div class="js-selectToolbar">
+                        <input type="search" class="form-control input-sm" placeholder="订单编号" name="orderId"
+                               aria-controls="orderTable">
+                        <input type="search" class="form-control input-sm" placeholder="手机号" name="phone"
+                               aria-controls="orderTable">
+                        <label>
                             <select class="form-control input-sm" name="goodId">
                                 <option value=" " disabled="" selected="" class="hidden">商品类型</option>
                                 <option value="0">全部</option>
@@ -62,61 +66,63 @@
                                 <option th:remove="all" value="6">食品优化宝</option>
                             </select>
                         </label>
-                            <div class="input-group input-group-sm">
-                                <input type="text" class="form-control" placeholder="下单日期" id="J_datePicker" name="orderDate">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                            </div>
-                            <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
-                            <button type="button" class="btn btn-primary btn-sm js-orderMaintain">订单状态维护</button>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" placeholder="下单日期" id="J_datePicker"
+                                   name="orderDate">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
+                        <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                        <button type="button" class="btn btn-primary btn-sm js-orderMaintain">订单状态维护</button>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="nav nav-tabs nav-dark js-orderStatus">
-                        <li class="active">
-                            <a href="#orderDatagrid" data-toggle="tab" data-status="0">
-                                <strong>全部</strong>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#orderDatagrid" data-toggle="tab" data-status="6">
-                                <strong>待派单</strong>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#orderDatagrid" data-toggle="tab" data-status="1">
-                                <strong>待付款</strong>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#orderDatagrid" data-toggle="tab" data-status="2">
-                                <strong>待发货</strong>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#orderDatagrid" data-toggle="tab" data-status="4">
-                                <strong>待安装</strong>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#orderDatagrid" data-toggle="tab" data-status="5">
-                                <strong>已安装</strong>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="orderDatagrid">
-                            <div class="table-responsive">
-                                <table id="orderTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
-                            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs nav-dark js-orderStatus">
+                    <li class="active">
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="0">
+                            <strong>全部</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="6">
+                            <strong>待派单</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="1">
+                            <strong>待付款</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="2">
+                            <strong>待发货</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="4">
+                            <strong>待安装</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#orderDatagrid" data-toggle="tab" data-status="5">
+                            <strong>已安装</strong>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="orderDatagrid">
+                        <div class="table-responsive">
+                            <table id="orderTable" class="table table-hover table-success" cellspacing="0"
+                                   width="100%"></table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 </body>
 <template id="J_quickDone">
     <form class="form-horizontal">
@@ -141,13 +147,15 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">发货时间 <span class="asterisk">*</span></label>
             <div class="col-sm-6">
-                <input type="text" id="J_shipmentTime" placeholder="请选择发货时间" class="form-control" name="shipmentTime" required>
+                <input type="text" id="J_shipmentTime" placeholder="请选择发货时间" class="form-control" name="shipmentTime"
+                       required>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">送达时间 <span class="asterisk">*</span></label>
             <div class="col-sm-6">
-                <input type="text" id="J_deliverTime" placeholder="请选择送达时间" class="form-control" name="deliverTime" required>
+                <input type="text" id="J_deliverTime" placeholder="请选择送达时间" class="form-control" name="deliverTime"
+                       required>
             </div>
         </div>
     </form>
@@ -191,6 +199,6 @@
 <script src="./mock/mock-min.js" th:remove="all"></script>
 <script src="./mock/api.js" th:remove="all"></script>
 
-<script src="manage-resource/js/orderManage.js"></script>
+<script src="manage-resource/js/orderManage.js?v=1"></script>
 
 </html>

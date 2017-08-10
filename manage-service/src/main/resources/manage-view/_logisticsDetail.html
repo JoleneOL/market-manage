@@ -335,7 +335,9 @@
                                 <td th:text="*{toString()}">浙江杭州西湖大西湖国际</td>
                             </tr>
                             <tr th:each="product:${currentData.amounts.entrySet()}">
-                                <td rowspan="2" th:if="${productStat.first}">货品 / 数量</td>
+                                <td rowspan="2" th:rows="${currentData.amounts.size()}" th:if="${productStat.first}">货品
+                                    / 数量
+                                </td>
                                 <td><span th:text="${product.key.name}">量子立式净水机</span>&nbsp;/&nbsp;<span
                                         th:text="${product.value.amount}">300</span>（<span
                                         th:text="${product.key.unit}">台</span>）
