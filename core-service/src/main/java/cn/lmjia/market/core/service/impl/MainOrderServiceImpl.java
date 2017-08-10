@@ -323,8 +323,14 @@ public class MainOrderServiceImpl implements MainOrderService {
             final OrderStatus currentOrderStatus = order.getOrderStatus();
             switch (toStatus) {
                 case reject:
-                    if (currentOrderStatus == OrderStatus.forDeliverConfirm)
+                    if (currentOrderStatus == OrderStatus.forDeliverConfirm
+                            || currentOrderStatus == OrderStatus.forInstall
+                            || currentOrderStatus == OrderStatus.afterSale
+                            )
                         order.setOrderStatus(OrderStatus.forDeliver);
+                    else {
+                        log.error("错误逻辑，应该是未进入物流状态的订单 收到了物流失败的事件。" + order.getSerialId());
+                    }
                     break;
                 case success:
                     if (currentOrderStatus == OrderStatus.forDeliverConfirm)
