@@ -140,7 +140,7 @@ public class ManageOrderController {
         MainOrder order = mainOrderService.getOrder(id);
         if (order.getCurrentLogistics() == null)
             return "redirect:/orderManage";
-        return "redirect:/manageShiftDetail?id" + order.getCurrentLogistics().getId();
+        return "redirect:/manageShiftDetail?id=" + order.getCurrentLogistics().getId();
     }
 
 }
