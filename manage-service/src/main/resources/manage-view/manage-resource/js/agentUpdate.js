@@ -144,23 +144,36 @@ $(function () {
         });
     }).on('click', '.js-custom', function () {
         var id = $(this).data('id');
-        layer.prompt({
-            title: '自定义代理级别',
-            formType: 0
-        }, function (pass, index) {
+
+        function doPromotionRequests(title, index) {
             $.ajax('/manage/promotionRequests/' + id + '/approved', {
                 method: 'put',
                 contentType: 'text/plain;charset=UTF-8',
-                data: pass,
+                data: title,
                 success: function () {
                     table.ajax.reload();
-                    layer.close(index);
+                    if (index)
+                        layer.close(index);
                 },
                 error: function () {
                     layer.msg('服务器异常');
-                    layer.close(index);
+                    if (index)
+                        layer.close(index);
                 }
             });
+        }
+
+        layer.confirm('是否设置自定义代理级别', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            layer.prompt({
+                title: '自定义代理级别',
+                formType: 0
+            }, doPromotionRequests);
+            layer.close(index);
+        }, function (index) {
+            //do something
+            doPromotionRequests(null);
+            layer.close(index);
         });
     }).on('click', '.js-feedback-big', function () {
         var $img = $('<img class="img-feedback-big img-thumbnail"/>').attr('src', $(this).attr('src'));
