@@ -1,6 +1,7 @@
 package cn.lmjia.market.dealer.controller.commission;
 
 import cn.lmjia.market.core.converter.LocalDateConverter;
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.Commission;
@@ -25,6 +26,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,6 +41,13 @@ import java.util.function.Function;
  */
 @Controller
 public class CommissionController {
+
+    public static String formatCommonInfo(Object origin) {
+        String src = origin.toString();
+        int index = src.lastIndexOf("￥");
+        String first = src.substring(0, index - 1);
+        return first + Money.format.format(new BigDecimal(src.substring(index + 1)));
+    }
 
     /**
      * @param login 身份
@@ -133,7 +142,7 @@ public class CommissionController {
 
                             @Override
                             public Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe) {
-                                return origin;
+                                return formatCommonInfo(origin);
                             }
 
                             @Override
