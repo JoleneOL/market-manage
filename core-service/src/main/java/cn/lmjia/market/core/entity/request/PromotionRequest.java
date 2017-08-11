@@ -38,6 +38,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 提升申请
@@ -97,20 +98,8 @@ public class PromotionRequest implements PayableOrder {
     @Column(length = 68)
     private String businessLicensePath;
 
-    public static String toLevelName(int type) {
-        switch (type) {
-            case 1:
-                return "经销商";
-            case 2:
-                return "代理商";
-            case 3:
-                return "省代理";
-            default:
-                return "经销商";
-        }
-    }
-
-    public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile, ReadService readService, ResourceService resourceService, ConversionService conversionService) {
+    public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile, ReadService readService
+            , ResourceService resourceService, ConversionService conversionService, Function<Integer, String> toLevelName) {
         return new RowDefinition<PromotionRequest>() {
             @Override
             public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<PromotionRequest> root) {
@@ -137,7 +126,7 @@ public class PromotionRequest implements PayableOrder {
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "applicationLevel")
                                 .addSelect(promotionRequestRoot -> promotionRequestRoot.get("type"))
-                                .addFormat((object, type) -> toLevelName((int) object))
+                                .addFormat((object, type) -> toLevelName.apply((int) object))
                                 .build()
 //                        , FieldBuilder.asName(PromotionRequest.class, "type")
 //                                .build()

@@ -17,6 +17,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
+@ActiveProfiles("mysql2")
 @ContextConfiguration(classes = {ManageConfig.class, SecurityConfig.class})
 public class WechatUpgradeControllerTest extends WechatTestBase {
 
@@ -41,7 +43,21 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
     private PromotionRequestRepository promotionRequestRepository;
 
     @Test
-    public void upgrade() throws Exception {
+    public void upgrade1() throws Exception {
+        upgrade(1, 4);
+    }
+
+    @Test
+    public void upgrade2() throws Exception {
+        upgrade(2, 3);
+    }
+
+    @Test
+    public void upgrade3() throws Exception {
+        upgrade(3, 2);
+    }
+
+    private void upgrade(int level, int targetLevel) throws Exception {
         // 找一个新晋的login
         Login user = createNewUserByShare();
         bindDeveloperWechat(user);
@@ -60,7 +76,6 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
                 .isEqualToIgnoringCase("我要升级");
 
 
-        int level = 1;
         String agentName = RandomStringUtils.randomAlphabetic(10);
         Address address = randomAddress();
         String cardFrontPath = newRandomImagePath();
@@ -89,7 +104,7 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         approvedOnlyRequest(user, "我的省代理");
         // 断言等级
         assertThat(readService.agentLevelForPrincipal(user))
-                .isEqualTo(4);
+                .isEqualTo(targetLevel);
         // 然后继续升级
         // 断言申请
         // 再批准

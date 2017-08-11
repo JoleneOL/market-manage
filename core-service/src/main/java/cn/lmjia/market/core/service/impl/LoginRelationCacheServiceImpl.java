@@ -188,22 +188,30 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
 
         log.debug("准备移除从" + level.getSuperior().getLogin().getId() + "到" + level.getLogin().getId() + "的关系");
 
-        int deleted = entityManager.createQuery("delete from LoginRelation as l where l.from in " +
-                "(select toSuperiorRelation.from from LoginRelation as toSuperiorRelation where toSuperiorRelation.to = :s)" +
-                " and l.to in " +
-                "(select fromLevelRelation.to from LoginRelation as fromLevelRelation where fromLevelRelation.from = :self) ")
+        List<LoginRelation> resultList = entityManager.createQuery("select distinct l from LoginRelation as l where l.from in " +
+                        "(select toSuperiorRelation.from from LoginRelation as toSuperiorRelation where toSuperiorRelation.to = :s)" +
+                        " and l.to in " +
+                        "(select fromLevelRelation.to from LoginRelation as fromLevelRelation where fromLevelRelation.from = :self) "
+                , LoginRelation.class)
                 .setParameter("s", level.getSuperior().getLogin())
                 .setParameter("self", level.getLogin())
-                .executeUpdate();
+                .getResultList();
+        resultList.forEach(this::deleteThisId);
 
-        log.debug("已移除关系删除缓存关系(次级):" + deleted);
+        log.debug("已移除关系删除缓存关系(次级):" + resultList.size());
 
         // 还有删除我自己
-        deleted = entityManager.createQuery("delete from LoginRelation as l where l.from=:s and l.to = :self")
+        resultList = entityManager.createQuery("select distinct l from LoginRelation as l where l.from=:s and l.to = :self"
+                , LoginRelation.class)
                 .setParameter("s", level.getSuperior().getLogin())
                 .setParameter("self", level.getLogin())
-                .executeUpdate();
+                .getResultList();
+        resultList.forEach(this::deleteThisId);
 //        long removed = loginRelationRepository.deleteByFromAndTo(level.getSuperior().getLogin(), level.getLogin());
-        log.debug("已移除关系删除缓存关系(主级):" + deleted);
+        log.debug("已移除关系删除缓存关系(主级):" + resultList.size());
+    }
+
+    private void deleteThisId(LoginRelation id) {
+        entityManager.remove(id);
     }
 }

@@ -73,7 +73,19 @@ public class ManagePromotionRequestController {
     @GetMapping("/manage/promotionRequests")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition<PromotionRequest> data(String applicationDate, String mobile) {
-        return PromotionRequest.Rows(applicationDate, mobile, readService, resourceService, conversionService);
+        return PromotionRequest.Rows(applicationDate, mobile, readService, resourceService, conversionService
+                , integer -> {
+                    switch (integer) {
+                        case 1:
+                            return readService.getLoginTitle(4);
+                        case 2:
+                            return readService.getLoginTitle(3);
+                        case 3:
+                            return readService.getLoginTitle(2);
+                        default:
+                            return "";
+                    }
+                });
     }
 
 
@@ -141,15 +153,15 @@ public class ManagePromotionRequestController {
                 agentFinancingService.recordAgentFee(login, agentLevel, request.getPrice(), null, null);
         }
         if (request.getType() >= 3) {
-            if (StringUtils.isEmpty(title))
-                throw new IllegalStateException("请输入自定义代理等级");
+//            if (StringUtils.isEmpty(title))
+//                throw new IllegalStateException("请输入自定义代理等级");
             if (agentLevel.getLevel() > 2) {
                 agentLevel = promotionService.agentLevelUpgrade(login, agentLevel);
             }
             agentLevel.setBeginDate(LocalDate.now());
             agentLevel.setEndDate(LocalDate.now().plusYears(1));
             agentLevel.setCreatedBy(manager);
-            agentLevel.setLevelTitle(title);
+            agentLevel.setLevelTitle(StringUtils.isEmpty(title) ? null : title);
             if (request.getPrice() != null)
                 agentFinancingService.recordAgentFee(login, agentLevel, request.getPrice(), null, null);
         }
