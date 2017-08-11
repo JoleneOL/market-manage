@@ -53,7 +53,7 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
 //
         if (event.isComplete()) {
             applicationEventPublisher.publishEvent(new ShiftEvent(order, null, event.getDate()
-                    , event.getRemark(), event));
+                    , StringUtils.isEmpty(event.getRemark()) ? "进出库确认" : event.getRemark(), event));
         } else {
             log.error("[HR] why fired un-completed OutInStore? " + event);
         }

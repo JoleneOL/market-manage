@@ -25,6 +25,9 @@ public class OutInStore extends AbstractModel {
     private String expNo;
     @JsonProperty("bustype")
     private String type;
+    /**
+     * 11 -> 客户退货
+     */
     @JsonProperty("ordertype")
     private String orderType;
     @JsonProperty("outindate")
