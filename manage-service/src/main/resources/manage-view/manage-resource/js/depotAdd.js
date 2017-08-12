@@ -51,4 +51,6 @@ $(function () {
             form.submit();
         }
     });
+
+    $('#J_selectRegion').chosen();
 });
