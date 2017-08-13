@@ -322,19 +322,19 @@ public class StockServiceImpl implements StockService {
         jdbcService.runJdbcWork(connection -> {
             String fileName;
             if (connection.profile().isMySQL()) {
-                fileName = "mysql.sql";
+                fileName = "mysql";
             } else if (connection.profile().isH2()) {
-                fileName = "h2.sql";
+                fileName = "h2";
             } else
                 throw new IllegalStateException("not support for:" + connection.getConnection());
-            String resourceName = "/logistics_views/" + fileName;
             try {
-                String code = StreamUtils.copyToString(new ClassPathResource(resourceName).getInputStream()
-                        , Charset.forName("UTF-8"));
                 try (Statement statement = connection.getConnection().createStatement()) {
                     statement.executeUpdate("DROP TABLE IF EXISTS `UNSETTLEMENTUSAGESTOCK`");
                     statement.executeUpdate("DROP TABLE IF EXISTS `USAGESTOCK`");
-                    statement.executeUpdate(code);
+                    statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource("/logistics_views/" + fileName + "0.sql").getInputStream()
+                            , Charset.forName("UTF-8")));
+                    statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource("/logistics_views/" + fileName + "1.sql").getInputStream()
+                            , Charset.forName("UTF-8")));
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("读取SQL失败", e);
