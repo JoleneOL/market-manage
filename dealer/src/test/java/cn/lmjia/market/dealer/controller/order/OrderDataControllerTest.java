@@ -3,6 +3,7 @@ package cn.lmjia.market.dealer.controller.order;
 import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import com.jayway.jsonpath.JsonPath;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.function.Function;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -53,7 +55,7 @@ public class OrderDataControllerTest extends DealerServiceTest {
         newRandomOrderFor(order, order);
         String serialId = mainOrderService.allOrders().stream()
                 .filter(mainOrder -> mainOrder.getOrderBy().equals(order))
-                .max(new RandomComparator())
+                .max(Comparator.comparing(MainOrder::getId))
                 .orElse(null)
                 .getSerialId();
 
