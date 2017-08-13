@@ -1,13 +1,11 @@
 package cn.lmjia.market.wechat.controller;
 
-import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.IndexPage;
 import cn.lmjia.market.wechat.page.LoginPage;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.util.UUID;
 
@@ -16,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
-@ContextConfiguration(classes = SecurityConfig.class)
 public class WechatControllerTest extends WechatTestBase {
 
     @Test

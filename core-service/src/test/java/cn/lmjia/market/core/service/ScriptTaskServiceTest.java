@@ -4,6 +4,7 @@ import cn.lmjia.market.core.CoreServiceTest;
 import cn.lmjia.market.core.repository.ScriptTaskRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
+@Ignore
 public class ScriptTaskServiceTest extends CoreServiceTest {
 
     @SuppressWarnings("WeakerAccess")
@@ -40,7 +42,7 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
                 .isEqualTo(0);
 
         // 成功 则调用成功代码
-        scriptTaskService.submitTask(randomMobile(), Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(2)", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
+        scriptTaskService.submitTask(randomMobile(), Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(2)", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(3)");
         Thread.sleep(2000);
         log.info("checking");
         assertThat(testValue.get())

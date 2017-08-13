@@ -1,4 +1,8 @@
 # market-manage
+## 当前状态
+* prodution:![prodution](https://api.travis-ci.org/JoleneOL/market-manage.svg?branch=prodution)
+* master:![master](https://api.travis-ci.org/JoleneOL/market-manage.svg?branch=master)
+
 它会尽可能将所有模块区分开；每个模块都具备模板处理和静态资源处理的功能
 
 

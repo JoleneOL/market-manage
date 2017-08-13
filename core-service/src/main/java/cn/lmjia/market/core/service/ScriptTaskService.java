@@ -1,7 +1,6 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.ScriptTask;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -64,7 +63,4 @@ public interface ScriptTaskService {
     @Transactional
     ScriptTask submitTask(String name, Instant instant, String code);
 
-    @Scheduled(fixedDelay = 500)
-    @Transactional
-    void go();
 }

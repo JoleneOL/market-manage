@@ -5,12 +5,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * 数据支持配置，运行时也应当载入该配置
@@ -48,7 +52,33 @@ import java.lang.reflect.Method;
 //@EnableLoadTimeWeaving
 //@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 @EnableScheduling
-class DataSupportConfig {
+class DataSupportConfig implements SchedulingConfigurer {
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        taskRegistrar.setScheduler(taskScheduler());
+//        taskRegistrar.addTriggerTask(
+//                new Runnable() {
+//                    public void run() {
+//                        myTask().work();
+//                    }
+//                },
+//                new CustomTrigger()
+//        );
+    }
+
+//    @Autowired
+//    private
+
+    @Bean(destroyMethod = "shutdown")
+    public Executor taskScheduler() {
+        return new ScheduledThreadPoolExecutor(10);
+    }
+//
+//    @Bean
+//    public MyTask myTask() {
+//        return new MyTask();
+//    }
 
     //    @Autowired
 //    @Resource
