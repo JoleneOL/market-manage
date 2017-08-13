@@ -332,7 +332,8 @@ public class StockServiceImpl implements StockService {
                 String code = StreamUtils.copyToString(new ClassPathResource(resourceName).getInputStream()
                         , Charset.forName("UTF-8"));
                 try (Statement statement = connection.getConnection().createStatement()) {
-                    statement.executeUpdate("DROP  TABLE IF EXISTS `UNSETTLEMENTUSAGESTOCK`");
+                    statement.executeUpdate("DROP TABLE IF EXISTS `UNSETTLEMENTUSAGESTOCK`");
+                    statement.executeUpdate("DROP TABLE IF EXISTS `USAGESTOCK`");
                     statement.executeUpdate(code);
                 }
             } catch (IOException e) {

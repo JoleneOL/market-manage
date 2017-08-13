@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
-@ActiveProfiles("mysql2")
+@ActiveProfiles({"mysql2", "h2file2"})
 public class LogisticsServiceTest extends LogisticsTestBase {
 
     @Autowired

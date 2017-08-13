@@ -2,6 +2,11 @@ package cn.lmjia.market.manage.controller.logistics;
 
 import cn.lmjia.market.core.entity.Factory;
 import cn.lmjia.market.core.repository.FactoryRepository;
+import cn.lmjia.market.core.row.FieldDefinition;
+import cn.lmjia.market.core.row.RowCustom;
+import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.field.FieldBuilder;
+import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.Deliverable;
@@ -11,6 +16,7 @@ import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.UsageStock;
 import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.StockInfo;
 import me.jiangcai.logistics.haier.HaierSupplier;
@@ -18,6 +24,7 @@ import me.jiangcai.logistics.haier.entity.HaierDepot;
 import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.logistics.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +32,11 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -71,11 +78,65 @@ public class ManageStorageController {
         return "redirect:/manageStorage";
     }
 
-    // 所有库存信息
     @GetMapping("/manage/storage")
-    @ResponseBody
     @Transactional(readOnly = true)
-    public Object data(Integer draw, Long depotId, String productCode) {
+    @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
+    public RowDefinition<UsageStock> data(Long depotId, String productCode) {
+        return new RowDefinition<UsageStock>() {
+            @Override
+            public Class<UsageStock> entityClass() {
+                return UsageStock.class;
+            }
+
+            @Override
+            public List<FieldDefinition<UsageStock>> fields() {
+                return Arrays.asList(
+                        FieldBuilder.asName(UsageStock.class, "storageType")
+                                .addBiSelect((usageStockRoot, criteriaBuilder)
+                                        -> criteriaBuilder.selectCase(usageStockRoot.get("depot").get("classType"))
+                                        .when("HaierDepot", "日日顺")
+                                        .otherwise("普通"))
+                                .build()
+                        , FieldBuilder.asName(UsageStock.class, "storage")
+                                .addSelect(usageStockRoot -> usageStockRoot.get("depot").get("name"))
+                                .build()
+                        , FieldBuilder.asName(UsageStock.class, "depotId")
+                                .addSelect(usageStockRoot -> usageStockRoot.get("depot").get("id"))
+                                .build()
+                        , FieldBuilder.asName(UsageStock.class, "product")
+                                .addSelect(usageStockRoot -> usageStockRoot.get("product").get("name"))
+                                .build()
+                        , FieldBuilder.asName(UsageStock.class, "productCode")
+                                .addSelect(usageStockRoot -> usageStockRoot.get("product").get("code"))
+                                .build()
+                        , FieldBuilder.asName(UsageStock.class, "inventory")
+                                .addSelect(usageStockRoot -> usageStockRoot.get("amount"))
+                                .build()
+                );
+            }
+
+            @Override
+            public Specification<UsageStock> specification() {
+                return (root, query, cb) -> {
+                    final Predicate predicate = cb.and(
+                            depotId == null ? cb.isTrue(root.get("depot").get("enable"))
+                                    : cb.equal(root.get("depot").get("id"), depotId)
+                            , StringUtils.isEmpty(productCode) ? cb.isTrue(root.get("product").get("enable"))
+                                    : cb.equal(root.get("product").get("code"), productCode)
+                    );
+                    if (StringUtils.isEmpty(productCode) && depotId == null)
+                        return cb.and(predicate, cb.greaterThan(root.get("amount"), 0));
+                    return predicate;
+                };
+            }
+        };
+    }
+
+    // 所有库存信息
+//    @GetMapping("/manage/storage")
+//    @ResponseBody
+//    @Transactional(readOnly = true)
+    public Object data2(Integer draw, Long depotId, String productCode) {
         StockInfoSet set = stockService.enabledUsableStockInfo(
                 StringUtils.isEmpty(productCode) ? null
                         : (BiFunction<Path<Product>, CriteriaBuilder, Predicate>) (productPath, criteriaBuilder)

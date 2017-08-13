@@ -41,7 +41,7 @@ public class ManageStorageControllerTest extends ManageServiceTest {
 
 //        manageStoragePage = initPage(ManageStoragePage.class);
         mockMvc.perform(get("/manage/storage"))
-//                .andDo(print())
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 

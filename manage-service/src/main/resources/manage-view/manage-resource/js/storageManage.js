@@ -47,8 +47,8 @@ $(function () {
                 return $.extend({}, d, extendData());
             }
         },
-        "paging": false,
-        "ordering": false,
+        "paging": true,
+        "ordering": true,
         "lengthChange": false,
         "searching": false,
         "colReorder": true,

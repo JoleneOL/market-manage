@@ -38,6 +38,9 @@ public class LogisticsTestBaseConfig extends H2DataSourceConfig {
             dataSource.setUsername("root");
             return dataSource;
         }
+        if (environment.acceptsProfiles("h2file")) {
+            return fileDataSource("logistics");
+        }
         return memDataSource("logistics");
     }
 }

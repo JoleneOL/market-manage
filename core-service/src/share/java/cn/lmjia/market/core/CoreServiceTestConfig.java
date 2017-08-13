@@ -163,6 +163,9 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
             dataSource.setUsername("root");
             return dataSource;
         }
+        if (environment.acceptsProfiles("h2file")) {
+            return fileDataSource("market");
+        }
         return memDataSource("cn/lmjia/market");
     }
 
