@@ -26,7 +26,6 @@ import me.jiangcai.wx.test.WeixinUserMocker;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.test.web.servlet.htmlunit.webdriver.WebConnectionHtmlUnitDriver;
@@ -41,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ActiveProfiles({"stopTaskScript"})
+//@ActiveProfiles({"stopTaskScript"})
 @ContextConfiguration(classes = {WeixinTestConfig.class, WechatConfig.class, MVCConfig.class, SecurityConfig.class, ManageConfig.class})
 public abstract class WechatTestBase extends DealerServiceTest {
 
