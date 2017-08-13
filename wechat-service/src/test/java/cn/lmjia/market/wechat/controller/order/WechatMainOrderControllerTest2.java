@@ -1,6 +1,5 @@
 package cn.lmjia.market.wechat.controller.order;
 
-import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
@@ -14,7 +13,6 @@ import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.core.trj.TRJService;
-import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import cn.lmjia.market.wechat.page.WechatOrderPage;
@@ -24,7 +22,6 @@ import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author CJ
  */
-@ContextConfiguration(classes = {SecurityConfig.class, ManageConfig.class})
 public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -101,7 +97,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         // 使用 driver 打开!
         driver.get("http://localhost" + result);
-        PaySuccessPage.waitingForSuccess(this, driver, 3);
+        PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatPaySuccess?mainOrderId=1");
 
         // 添加一个客服好让它收到消息
         addCustomerServiceWithDeveloperWechatId();

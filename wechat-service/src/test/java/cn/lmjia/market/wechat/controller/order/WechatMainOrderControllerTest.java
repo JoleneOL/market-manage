@@ -1,6 +1,5 @@
 package cn.lmjia.market.wechat.controller.order;
 
-import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.wechat.WechatTestBase;
@@ -8,7 +7,6 @@ import cn.lmjia.market.wechat.page.PaySuccessPage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ContextConfiguration(classes = SecurityConfig.class)
 public class WechatMainOrderControllerTest extends WechatTestBase {
 
     private static final Log log = LogFactory.getLog(WechatMainOrderControllerTest.class);
@@ -45,7 +42,7 @@ public class WechatMainOrderControllerTest extends WechatTestBase {
                 driver.get("http://localhost" + result);
 //                    mockMvc.perform(wechatGet("/paySuccess?mainOrderId=1"))
 //                            .andDo(print());
-                PaySuccessPage page = PaySuccessPage.waitingForSuccess(this, driver, 3);
+                PaySuccessPage page = PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatPaySuccess?mainOrderId=1");
                 // 然后模拟订单完成支付
                 return;
             } catch (AssertionError error) {

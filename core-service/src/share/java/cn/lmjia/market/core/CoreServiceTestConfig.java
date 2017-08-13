@@ -3,6 +3,7 @@ package cn.lmjia.market.core;
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.config.MVCConfig;
 import cn.lmjia.market.core.config.WebModule;
+import cn.lmjia.market.core.util.TestDataSource;
 import com.huotu.vefification.test.VerificationCodeTestConfig;
 import lombok.SneakyThrows;
 import me.jiangcai.chanpay.event.TradeEvent;
@@ -115,8 +116,14 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
     @Bean
     public DataSource dataSource() {
         if (environment.acceptsProfiles("mysql")) {
-            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            DriverManagerDataSource dataSource;
+            if (environment.acceptsProfiles("jdbcProfile"))
+                dataSource = new TestDataSource();
+            else
+                dataSource = new DriverManagerDataSource();
+
             dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+            // ?profileSQL=true
             dataSource.setUrl("jdbc:mysql://localhost/market");
             dataSource.setUsername("root");
             return dataSource;

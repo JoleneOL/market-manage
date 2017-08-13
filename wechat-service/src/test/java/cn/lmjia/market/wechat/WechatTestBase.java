@@ -2,12 +2,14 @@ package cn.lmjia.market.wechat;
 
 
 import cn.lmjia.market.core.config.MVCConfig;
+import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.DealerServiceTest;
+import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.wechat.config.WechatConfig;
 import cn.lmjia.market.wechat.page.WechatMyPage;
 import cn.lmjia.market.wechat.page.WechatMyTeamPage;
@@ -24,6 +26,7 @@ import me.jiangcai.wx.test.WeixinUserMocker;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.test.web.servlet.htmlunit.webdriver.WebConnectionHtmlUnitDriver;
@@ -38,7 +41,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ContextConfiguration(classes = {WeixinTestConfig.class, WechatConfig.class, MVCConfig.class})
+@ActiveProfiles({"stopTaskScript"})
+@ContextConfiguration(classes = {WeixinTestConfig.class, WechatConfig.class, MVCConfig.class, SecurityConfig.class, ManageConfig.class})
 public abstract class WechatTestBase extends DealerServiceTest {
 
     @Autowired

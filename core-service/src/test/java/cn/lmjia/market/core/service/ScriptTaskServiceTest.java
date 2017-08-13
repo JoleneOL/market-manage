@@ -40,7 +40,7 @@ public class ScriptTaskServiceTest extends CoreServiceTest {
                 .isEqualTo(0);
 
         // 成功 则调用成功代码
-        scriptTaskService.submitTask(randomMobile(), Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(2)", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.incrementAndGet()");
+        scriptTaskService.submitTask(randomMobile(), Instant.now(), "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(2)", "Packages.cn.lmjia.market.core.service.ScriptTaskServiceTest.testValue.set(3)");
         Thread.sleep(2000);
         log.info("checking");
         assertThat(testValue.get())

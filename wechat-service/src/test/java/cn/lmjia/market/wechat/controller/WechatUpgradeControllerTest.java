@@ -1,6 +1,5 @@
 package cn.lmjia.market.wechat.controller;
 
-import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
@@ -8,7 +7,6 @@ import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
-import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.manage.controller.ManagePromotionRequestController;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
@@ -18,7 +16,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author CJ
  */
 @ActiveProfiles("mysql2")
-@ContextConfiguration(classes = {ManageConfig.class, SecurityConfig.class})
 public class WechatUpgradeControllerTest extends WechatTestBase {
 
     @Autowired
@@ -91,12 +87,17 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
                 .param("cardBackPath", cardBackPath)
                 .param("businessLicensePath", businessLicensePath)
         )
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn().getResponse().getHeader("Location");
 
+//        if (level == 1){
+//            System.out.println("for rollback checking..!!!");
+//            Thread.sleep(Long.MAX_VALUE);
+//        }
+
         driver.get("http://localhost" + payUri);
-        PaySuccessPage.waitingForSuccess(this, driver, 3);
+        PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatUpgradeApplySuccess");
 
         // 这个时候业务算是完成了；我们可以看到后端请求了
         assertExistingRequest(user);
