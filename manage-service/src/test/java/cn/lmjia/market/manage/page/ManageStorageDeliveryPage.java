@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 
 /**
  * 工厂发货至物流仓库
- * _
+ * _delivery.html
  *
  * @author CJ
  */
@@ -27,9 +27,10 @@ public class ManageStorageDeliveryPage extends AbstractContentPage {
         assertTitle("发货");
     }
 
-    public void submitAsAmount(int amount) {
+    public ManageLogisticsPage submitAsAmount(int amount) {
         deliverQuantity.clear();
         deliverQuantity.sendKeys(String.valueOf(amount));
         submit.click();
+        return initPage(ManageLogisticsPage.class);
     }
 }
