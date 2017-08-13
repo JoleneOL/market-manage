@@ -6,14 +6,15 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.manage.ManageServiceTest;
 import com.jayway.jsonpath.JsonPath;
+import me.jiangcai.lib.test.matcher.NumberMatcher;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
 import me.jiangcai.logistics.repository.DepotRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 
 import java.util.List;
@@ -37,8 +38,6 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     @Autowired
     private MainOrderService mainOrderService;
     @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
-    @Autowired
     private LogisticsService logisticsService;
 
     @Test
@@ -60,7 +59,9 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         // 首先得有仓库
         addNewHaierDepot();
         stockService.addStock(
-                depotRepository.findAll().stream().max(new RandomComparator()).orElse(null)
+                depotRepository.findAll().stream()
+                        .filter(depot -> depot instanceof HaierDepot)
+                        .max(new RandomComparator()).orElse(null)
                 , order.getGood().getProduct()
                 , 100000, null
         );
@@ -70,7 +71,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 
         String responseString = mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.depots.length()").value(1))
+                .andExpect(jsonPath("$.depots.length()").value(NumberMatcher.numberGreatThanOrEquals(1)))
                 .andReturn().getResponse().getContentAsString();
 
         List<Map<String, Object>> depots = JsonPath.read(responseString, "$.depots");

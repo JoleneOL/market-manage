@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.page;
 
 import cn.lmjia.market.core.pages.AbstractContentPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -27,7 +28,8 @@ public class ManageStorageDeliveryPage extends AbstractContentPage {
         assertTitle("发货");
     }
 
-    public ManageLogisticsPage submitAsAmount(int amount) {
+    public ManageLogisticsPage submitAsAmount(String depotName, int amount) {
+        inputSelect(webDriver.findElement(By.id("J_deliverForm")), "depot", depotName);
         deliverQuantity.clear();
         deliverQuantity.sendKeys(String.valueOf(amount));
         submit.click();
