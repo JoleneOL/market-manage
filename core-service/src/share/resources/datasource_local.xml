@@ -49,7 +49,7 @@
 
                 <!--<entry key="eclipselink.session.customizer" value="me.jiangcai.dating.jpa.MysqlSessionCustomizer"/>-->
                 <entry key="javax.persistence.schema-generation.database.action" value="create"/>
-                <entry key="eclipselink.logging.level" value="FINE"/>
+                <entry key="eclipselink.logging.level" value="INFO"/>
                 <!--<entry key="eclipselink.target-database" value="cn.lmjia.market.core.eclipselink.MySQLPlatform"/>-->
                 <!--<entry key="eclipselink.logging.logger"-->
                 <!--value="org.eclipse.persistence.logging.CommonsLoggingLog"/>-->
