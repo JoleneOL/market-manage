@@ -4,6 +4,7 @@ import cn.lmjia.market.core.CoreServiceTest;
 import cn.lmjia.market.core.repository.ScriptTaskRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
+@Ignore
 public class ScriptTaskServiceTest extends CoreServiceTest {
 
     @SuppressWarnings("WeakerAccess")
