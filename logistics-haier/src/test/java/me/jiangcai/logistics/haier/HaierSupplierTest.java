@@ -9,6 +9,7 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -29,14 +30,24 @@ public class HaierSupplierTest extends LogisticsTestBase {
     private HaierSupplier haierSupplier;
     @Autowired
     private LogisticsService logisticsService;
+    @Autowired
+    private Environment environment;
 
     @Test
     public void product() {
+        if (!haierApiTestSupport())
+            return;
         haierSupplier.updateProduct(randomProductData());
+    }
+
+    private boolean haierApiTestSupport() {
+        return environment.getProperty("_haier_api_test", Boolean.class, false);
     }
 
     @Test
     public void sign() throws UnsupportedEncodingException, DecoderException {
+        if (!haierApiTestSupport())
+            return;
         String content = "\uFEFF{\"sourcesn\":\"227e2ba80afa42c9b5fab7e334de8d48\",\"busflag\":\"1\",\"orderno\":\"227e2ba80afa42c9b5fab7e334de8d48\",\"city\":\"pur市\",\"county\":\"VgV区\",\"mobile\":\"17694614718\",\"orderdate\":\"2017-07-24 16:01:08\",\"bustype\":\"2\",\"storecode\":\"kV9E\",\"province\":\"YHf省\",\"name\":\"AhX人\",\"expno\":\"227e2ba80afa42c9b5fab7e334de8d48\",\"addr\":\"FTFHGg\",\"items\":[{\"number\":5,\"productcode\":\"3jjecj\",\"itemno\":1,\"prodes\":\"wMjN产品\",\"storagetype\":\"10\"},{\"number\":7,\"productcode\":\"UyYIBw\",\"itemno\":2,\"prodes\":\"wmtP产品\",\"storagetype\":\"10\"}],\"ordertype\":\"3\"}";
         String keyValue = "RRS,123";
 
@@ -54,6 +65,8 @@ public class HaierSupplierTest extends LogisticsTestBase {
     // 临时入库
     @Test
     public void tempIn() {
+        if (!haierApiTestSupport())
+            return;
         logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomSource(), randomDepot());
 //        Set<Thing> goods = new HashSet<>();
 //        // uXkelZ和KWkLZc
@@ -68,6 +81,8 @@ public class HaierSupplierTest extends LogisticsTestBase {
 
     @Test
     public void go() {
+        if (!haierApiTestSupport())
+            return;
         logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomDepot(), randomDestination());
 //        Set<Thing> goods = new HashSet<>();
 //        // uXkelZ和KWkLZc
