@@ -52,6 +52,7 @@ public class OrderDataControllerTest extends DealerServiceTest {
         // 按业务订单号查询
         newRandomOrderFor(order, randomLogin(false));
         String serialId = mainOrderService.allOrders().stream()
+                .filter(mainOrder -> mainOrder.getOrderBy().equals(order))
                 .max(new RandomComparator())
                 .orElse(null)
                 .getSerialId();
