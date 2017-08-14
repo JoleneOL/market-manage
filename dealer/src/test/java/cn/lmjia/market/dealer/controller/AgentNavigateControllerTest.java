@@ -7,6 +7,7 @@ import cn.lmjia.market.dealer.page.AgentManageMainPage;
 import cn.lmjia.market.dealer.page.AgentManagePage;
 import cn.lmjia.market.dealer.page.AgentOrderManagePage;
 import cn.lmjia.market.dealer.page.AgentPlaceOrderPage;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -14,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
  * @author CJ
  */
 @ContextConfiguration(classes = SecurityConfig.class)
+@Ignore // 暂时忽略该平台
 public class AgentNavigateControllerTest extends DealerServiceTest {
 
     // 访问首页

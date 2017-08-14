@@ -11,6 +11,9 @@ import me.jiangcai.lib.thread.ThreadLocker;
  */
 @Data
 public class MainOrderFinishEvent implements ThreadLocker {
+    /**
+     * 事务内订单
+     */
     private final MainOrder mainOrder;
 
     @Override

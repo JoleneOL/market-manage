@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="payOrder" type="cn.lmjia.market.core.entity.trj.TRJPayOrder"*/-->
+<!--/*@thymesVar id="mainOrder" type="cn.lmjia.market.core.entity.MainOrder"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>申请信审</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="gray-bg" data-upload-url="/resourceUpload/webUploader">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_mortgageTRG.html" th:href="@{/mortgageTRG}">投融家按揭码</a></li>
+                <li><strong>申请信审</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row js-condition">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    分期审核反馈处理
+                </div>
+                <div class="ibox-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="timeline">
+                                    <div class="timeline-item" th:if="${payOrder.authorisingInfo.message!=null}">
+                                        <div class="row">
+                                            <div class="col-xs-3 date">
+                                                <i class="fa fa-exclamation-triangle text-danger"></i>
+                                                <span th:text="${{payOrder.authorisingInfo.auditingTime}}">2107-09-17 19:45</span>
+                                            </div>
+                                            <div class="col-xs-7 content">
+                                                <p class="m-b-xs text-danger"><strong>分期审核反馈结果</strong></p>
+                                                <p th:text="${payOrder.authorisingInfo.message}">安装信息不全</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div th:remove="all" class="timeline-item">
+                                        <div class="row">
+                                            <div class="col-xs-3 date">
+                                                <i class="fa fa-exclamation-triangle text-danger"></i>
+                                                <span>2107-09-17 19:45</span>
+                                            </div>
+                                            <div class="col-xs-7 content">
+                                                <p class="m-b-xs text-danger"><strong>分期审核反馈结果</strong></p>
+                                                <p>安装信息虚假</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <form class="form-horizontal" id="J_applyForm" method="post" action="_mortgageTRG.html"
+                                      th:action="@{/mortgageTRGAppeal}">
+                                    <input type="hidden" name="id" th:value="${mainOrder.id}">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">安装人员 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装人员" class="form-control"
+                                                   name="installer"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">安装公司 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装公司" class="form-control"
+                                                   name="installCompany" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">安装人员手机 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="tel" placeholder="请输入安装人员手机" class="form-control" name="mobile"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">安装时间 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装时间" id="J_installDate"
+                                                   class="form-control"
+                                                   name="installDate" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">上传附件 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <div id="J_uploadShow" class="upload-items"></div>
+                                            <div id="J_upload" class="upload-items"></div>
+                                            <input type="hidden" name="applyFile"/>
+                                            <p>支持附件格式：doc、docx、xls、xlsx、gif、jpg、jpeg、png（不超过3M）</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">申请信审</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
+<script src="manage-resource/js/orderDetail.js"></script>
+</html>

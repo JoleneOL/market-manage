@@ -1,5 +1,6 @@
 package cn.lmjia.market.dealer.controller;
 
+import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
@@ -8,6 +9,7 @@ import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -17,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
+@ContextConfiguration(classes = SecurityConfig.class)
 public class AgentDataControllerTest extends DealerServiceTest {
 
     @Autowired

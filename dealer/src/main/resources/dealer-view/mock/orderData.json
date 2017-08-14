@@ -5,6 +5,10 @@
   "data": [
     {
       "id": 1,
+      "user": "某人",
+      "userLevel": "爱心天使",
+      "goods": "帅风立式净水器",
+      "methodCode": 0,
       "orderId": "20164100145",
       "orderUser": "老常A",
       "phone": 15677776666,
@@ -22,6 +26,10 @@
     },
     {
       "id": 2,
+      "user": "某人",
+      "userLevel": "爱心天使",
+      "goods": "帅风立式净水器",
+      "methodCode": 0,
       "orderId": "20164100145",
       "orderUser": "李菲菲",
       "phone": 15677776666,
@@ -39,6 +47,10 @@
     },
     {
       "id": 3,
+      "user": "某人",
+      "userLevel": "爱心天使",
+      "goods": "帅风立式净水器",
+      "methodCode": 0,
       "orderId": "20164100145",
       "orderUser": "呵呵~",
       "phone": 15677776666,
@@ -55,6 +67,10 @@
     },
     {
       "id": 4,
+      "user": "某人",
+      "userLevel": "爱心天使",
+      "goods": "帅风立式净水器",
+      "methodCode": 0,
       "orderId": "20164100145",
       "orderUser": "maybe",
       "phone": 15677776666,
@@ -71,6 +87,10 @@
     },
     {
       "id": 5,
+      "user": "某人",
+      "userLevel": "爱心天使",
+      "goods": "帅风立式净水器",
+      "methodCode": 0,
       "orderId": "20164100145",
       "orderUser": "在家",
       "phone": 15677776666,
@@ -87,6 +107,10 @@
     },
     {
       "id": 6,
+      "user": "某人",
+      "userLevel": "爱心天使",
+      "goods": "帅风立式净水器",
+      "methodCode": 0,
       "orderId": "20164100145",
       "orderUser": "放假哦发生的",
       "phone": 15677776666,
@@ -103,6 +127,10 @@
     },
     {
       "id": 6,
+      "user": "某人",
+      "userLevel": "爱心天使",
+      "goods": "帅风立式净水器",
+      "methodCode": 0,
       "orderId": "20164100145",
       "orderUser": "放假哦发生的",
       "phone": 15677776666,

@@ -5,10 +5,12 @@ import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
+import me.jiangcai.user.notice.User;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -172,4 +174,10 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional
     void unbindWechat(String loginName);
+
+    /**
+     * @param input 用户
+     * @return 微信模板消息接收者
+     */
+    Collection<User> toWechatUser(Collection<? extends Login> input);
 }

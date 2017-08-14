@@ -1,6 +1,8 @@
 package cn.lmjia.market.core.controller.advice;
 
 import cn.lmjia.market.core.model.ApiResult;
+import cn.lmjia.market.core.trj.InvalidAuthorisingException;
+import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import com.huotu.verification.FrequentlySendException;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
@@ -19,6 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 public class ControllerSupport {
 
     private static final Log log = LogFactory.getLog(ControllerSupport.class);
+
+    @ExceptionHandler(InvalidAuthorisingException.class)
+    public String sawInvalidAuthorisingException() {
+        return "redirect:" + TRJEnhanceConfig.TRJOrderURI + "?InvalidAuthorisingException";
+    }
 
     @ExceptionHandler(SystemMaintainException.class)
     public String sawSystemMaintainException(HttpServletRequest request, SystemMaintainException ex) {

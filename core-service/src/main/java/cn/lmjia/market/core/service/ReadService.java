@@ -77,11 +77,11 @@ public interface ReadService {
             case 1:
                 return "超级代理";
             case 2:
-                return "省总代";
+                return "市级代理";// 5% 1% 区域服务费 1%
             case 3:
-                return "市代理";
+                return "区县代理";// 5% 1% 未来再实现的1%
             case 4:
-                return "经销商";
+                return "经销商";// 5% 1%
             case Customer.LEVEL:
                 return "爱心天使";
             case Customer.LEVEL * 2:

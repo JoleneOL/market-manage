@@ -35,7 +35,7 @@ public class AgentOrderController extends AbstractMainOrderController {
 
     @GetMapping("/agentOrder")
     public String index(Model model, @AuthenticationPrincipal Login login) {
-        orderIndex(login, model);
+        orderIndex(login, model, null);
         return "orderPlace.html";
     }
 
@@ -45,7 +45,7 @@ public class AgentOrderController extends AbstractMainOrderController {
             , String activityCode, long recommend, @AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException {
         MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile, goodId, amount
-                , activityCode);
+                , activityCode, null);
         HashMap<String, Object> data = new HashMap<>();
         data.put("desktop", true);
         return paymentService.startPay(request, order, chanpayPaymentForm, data);

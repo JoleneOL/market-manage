@@ -1,6 +1,7 @@
 package cn.lmjia.market.dealer.controller.commission;
 
 import cn.lmjia.market.core.converter.LocalDateConverter;
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.Commission;
@@ -11,8 +12,6 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
-import cn.lmjia.market.dealer.service.CommissionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +26,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,8 +42,12 @@ import java.util.function.Function;
 @Controller
 public class CommissionController {
 
-    @Autowired
-    private CommissionService commissionService;
+    public static String formatCommonInfo(Object origin) {
+        String src = origin.toString();
+        int index = src.lastIndexOf("￥");
+        String first = src.substring(0, index - 1);
+        return first + Money.format.format(new BigDecimal(src.substring(index + 1)));
+    }
 
     /**
      * @param login 身份
@@ -138,7 +142,7 @@ public class CommissionController {
 
                             @Override
                             public Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe) {
-                                return origin;
+                                return formatCommonInfo(origin);
                             }
 
                             @Override
@@ -238,12 +242,12 @@ public class CommissionController {
             @Override
             public Specification<Commission> specification() {
                 if ("pending".equals(type))
-                    return commissionService.listAllSpecification(login, (root, query, cb)
+                    return Commission.listAllSpecification(login, (root, query, cb)
                             -> Commission.Reality(root, cb).not());
 
                 if ("all".equals(type))
-                    return commissionService.listRealitySpecification(login, null);
-                return commissionService.listRealitySpecification(login, (root, query, cb) -> {
+                    return Commission.listRealitySpecification(login, null);
+                return Commission.listRealitySpecification(login, (root, query, cb) -> {
                     if ("today".equals(type))
                         return JpaFunctionUtils.DateEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now());

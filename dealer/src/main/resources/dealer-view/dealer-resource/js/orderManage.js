@@ -64,17 +64,17 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;查看</a>';
-                    var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;修改</a>';
+                    var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
+                    var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;修改</a>';
                     if (item.statusCode === 0)
                         a = a + b;
-                    var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;快速完成订单</a>';
+                    var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;快速完成订单</a>';
                     if (item.quickDoneAble && quickUrl)
                         a = a + c;
-                    var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;模拟支付</a>';
+                    var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;模拟支付</a>';
                     if (item.statusCode === 1 && allowMockPay)
                         a = a + d;
-                    var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;重新结算</a>';
+                    var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o" ></i>&nbsp;重新结算</a>';
                     if (item.statusCode !== 0 && item.statusCode !== 1 && allowSettlement)
                         a = a + e;
                     // 模拟支付

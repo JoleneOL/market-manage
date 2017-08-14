@@ -58,4 +58,8 @@ public class Address {
     public String getStandardWithoutOther() {
         return province + "/" + prefecture + "/" + county;
     }
+
+    public String toTRJString() {
+        return province + "-" + prefecture + "-" + county + "-" + otherAddress;
+    }
 }

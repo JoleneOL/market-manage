@@ -52,6 +52,10 @@ public class Login implements UserDetails {
      * 可以管理员工列表；没有这个权限则只可以查看
      */
     public static final String ROLE_GRANT = "GRANT";
+    /**
+     * 可以管理订单
+     */
+    public static final String ROLE_ALL_ORDER = "ALL_ORDER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

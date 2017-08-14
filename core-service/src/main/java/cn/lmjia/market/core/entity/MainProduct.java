@@ -27,7 +27,7 @@ public class MainProduct {
     @Column(length = 40)
     private String name;
     /**
-     * 每台保证金
+     * 设备款
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal deposit;
@@ -37,7 +37,7 @@ public class MainProduct {
     @Column(scale = 2, precision = 12)
     private BigDecimal serviceCharge;
     /**
-     * 每台安装费用，没有就0
+     * 服务费
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal install;
