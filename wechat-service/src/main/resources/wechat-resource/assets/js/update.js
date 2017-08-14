@@ -21,7 +21,7 @@ $(function () {
 
 
     updateLevel.change(function () {
-        if ($(this).val() === '4') {
+        if ($(this).val() === '1') {
             license.find('.extra-badge').hide();
             updateCost.show();
             submit.text('支  付');
@@ -59,7 +59,7 @@ $(function () {
 
         updateName.text($(this).find('option:selected').text());
 
-        if ($(this).find('option:selected').val() === '4') {
+        if ($(this).find('option:selected').val() === '1') {
             $('#J_subText').show();
         } else {
             $('#J_subText').hide();
