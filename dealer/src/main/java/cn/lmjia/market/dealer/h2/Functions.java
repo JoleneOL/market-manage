@@ -1,7 +1,5 @@
 package cn.lmjia.market.dealer.h2;
 
-import cn.lmjia.market.core.entity.deal.AgentLevel;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +37,7 @@ public class Functions {
      *
      * @param connection 当前链接
      * @param agentId    id
-     * @return 规则上认同 {@link cn.lmjia.market.dealer.service.AgentService#agentLevel(AgentLevel)}
+     * @return 规则上认同 {@link cn.lmjia.market.dealer.service.AgentService#agentLevel(cn.lmjia.market.core.entity.deal.AgentLevel)}
      * @throws IOException
      * @throws SQLException
      */

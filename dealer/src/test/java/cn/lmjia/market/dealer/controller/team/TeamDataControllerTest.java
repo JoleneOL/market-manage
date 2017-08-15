@@ -7,7 +7,6 @@ import cn.lmjia.market.core.entity.cache.LoginRelation;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
 import cn.lmjia.market.core.service.SystemService;
-import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.dealer.service.TeamService;
 import org.apache.commons.logging.Log;
@@ -39,8 +38,6 @@ public class TeamDataControllerTest extends DealerServiceTest {
     private SystemService systemService;
     @Autowired
     private LoginRelationRepository loginRelationRepository;
-    @Autowired
-    private LoginRelationCacheService loginRelationCacheService;
     private Login userLogin;
     @Autowired
     private TeamService teamService;

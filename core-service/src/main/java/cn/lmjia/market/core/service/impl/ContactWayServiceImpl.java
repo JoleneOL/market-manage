@@ -35,15 +35,15 @@ public class ContactWayServiceImpl implements ContactWayService {
     }
 
     private ContactWay updateContactWay(Login loginInput, Consumer<ContactWay> contactWayConsumer) {
+        Login login;
         if (loginInput.getId() != null) {
-            Login login = loginRepository.getOne(loginInput.getId());
-            if (login.getContactWay() == null) {
-                login.setContactWay(new ContactWay());
-            }
-            contactWayConsumer.accept(login.getContactWay());
-            return login.getContactWay();
+            login = loginRepository.getOne(loginInput.getId());
+        } else login = loginInput;
+        if (login.getContactWay() == null) {
+            login.setContactWay(new ContactWay());
         }
-        throw new IllegalStateException("not support for temporal Login");
+        contactWayConsumer.accept(login.getContactWay());
+        return login.getContactWay();
     }
 
     @Override

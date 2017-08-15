@@ -109,7 +109,7 @@ public class JpaFunctionUtils {
             try (Statement statement = connection.getConnection().createStatement()) {
                 statement.executeUpdate("DROP ALIAS IF EXISTS `IF`");
                 statement.executeUpdate("CREATE ALIAS IF NOT EXISTS `IF` FOR \""
-                        + JpaFunctionUtils.class.getName() + ".H2If\"");
+                        + JpaFunctionUtils.class.getName() + ".h2If\"");
 //
 //                statement.executeUpdate("DROP ALIAS IF EXISTS `DATEDIFF`");
 //                statement.executeUpdate("CREATE ALIAS IF NOT EXISTS `DATEDIFF` FOR \"" + JpaFunctionUtils.class.getName() + ".H2DATEDIFF\"");
@@ -118,7 +118,8 @@ public class JpaFunctionUtils {
         }
     }
 
-    public static Object H2If(Value exp, Value var, Value var2) {
+    @SuppressWarnings("unused")
+    public static Object h2If(Value exp, Value var, Value var2) {
         Value result = exp.getByte() != 0 ? var : var2;
         if (result instanceof ValueNull)
             return null;

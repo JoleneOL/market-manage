@@ -43,16 +43,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static cn.lmjia.market.core.entity.Login.ROLE_GRANT;
-import static cn.lmjia.market.core.entity.Login.ROLE_MANAGER;
-
 /**
  * 管理员工的控制器，除了root之外拥有grant权限的人 也可以管理，但是无法管理
  *
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT','" + ROLE_MANAGER + "')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_MANAGER + "')")
 public class ManageManagerController {
 
     @Autowired
@@ -217,7 +214,7 @@ public class ManageManagerController {
         };
     }
 
-    @PreAuthorize("hasAnyRole('ROOT','" + ROLE_GRANT + "')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_GRANT + "')")
     @PostMapping("/manage/manager")
     @Transactional
     public String updateUser(String name, String department, String realName, boolean enable, String comment
@@ -227,7 +224,7 @@ public class ManageManagerController {
         return "redirect:/manageManager";
     }
 
-    @PreAuthorize("hasAnyRole('ROOT','" + ROLE_GRANT + "')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_GRANT + "')")
     @PostMapping("/manage/managers")
     @Transactional
     public String addUser(String name, String department, String realName, boolean enable, String comment
