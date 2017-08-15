@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -28,7 +27,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * </ul>
  *
  * @author CJ
- * @see TransactionAspectSupport#invokeWithinTransaction(Method, Class, TransactionAspectSupport.InvocationCallback)
+ * @see TransactionAspectSupport#invokeWithinTransaction(java.lang.reflect.Method, Class, TransactionAspectSupport.InvocationCallback)
  * <p>
  * <p>
  * 这里的复杂度可以写一篇很长的文章

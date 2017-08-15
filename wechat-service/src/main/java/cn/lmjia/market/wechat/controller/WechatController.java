@@ -5,7 +5,6 @@ import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.LoginAuthentication;
-import cn.lmjia.market.dealer.service.AgentService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.wx.OpenId;
@@ -47,8 +46,6 @@ public class WechatController {
     private final RequestCache requestCache = new HttpSessionRequestCache();
     @Autowired
     private LoginService loginService;
-    @Autowired
-    private AgentService agentService;
     @Autowired
     private VerificationCodeService verificationCodeService;
     @Autowired

@@ -42,8 +42,6 @@ public class ReadServiceImpl implements ReadService {
     private LoginRepository loginRepository;
     @Autowired
     private SystemService systemService;
-    @Autowired
-    private CommissionRepository commissionRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;

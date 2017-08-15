@@ -7,7 +7,6 @@ import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
-import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.ReadService;
@@ -49,10 +48,6 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private MainGoodService mainGoodService;
-    @Autowired
-    private SystemStringService systemStringService;
-    @Autowired
-    private MainOrderRepository mainOrderRepository;
     @Autowired
     private TRJService trjService;
     @Autowired

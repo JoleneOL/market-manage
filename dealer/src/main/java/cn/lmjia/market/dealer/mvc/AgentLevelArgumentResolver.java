@@ -1,7 +1,6 @@
 package cn.lmjia.market.dealer.mvc;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.dealer.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -22,8 +21,6 @@ import java.lang.annotation.Annotation;
 @Component
 public class AgentLevelArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Autowired
-    private AgentLevelRepository agentLevelRepository;
     @Autowired
     private AgentService agentService;
 

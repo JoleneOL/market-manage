@@ -43,10 +43,6 @@ public class MyPublicAccount extends PublicAccount implements PublicAccountSuppl
     private final SystemStringService systemStringService;
     private final Map<String, Object> channelCredential = new HashMap<>();
 
-    {
-        channelCredential.put(WechatNoticeChannel.PublicAccountCredentialFrom, this);
-    }
-
     @Autowired
     public MyPublicAccount(SystemStringService systemStringService, Environment environment) {
         this.systemStringService = systemStringService;
@@ -59,6 +55,7 @@ public class MyPublicAccount extends PublicAccount implements PublicAccountSuppl
         setJavascriptTicket(systemStringService.getSystemString(JavascriptTicket, String.class, null));
         setTimeToExpire(systemStringService.getSystemString(TimeToExpire, LocalDateTime.class, null));
         setJavascriptTimeToExpire(systemStringService.getSystemString(JavascriptTimeToExpire, LocalDateTime.class, null));
+        channelCredential.put(WechatNoticeChannel.PublicAccountCredentialFrom, this);
     }
 
     @Override
