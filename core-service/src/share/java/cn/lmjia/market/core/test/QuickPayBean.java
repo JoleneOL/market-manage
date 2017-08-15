@@ -20,8 +20,8 @@ public class QuickPayBean {
     private MainOrderRepository mainOrderRepository;
 
     @Transactional
-    public void makePay(MainOrder order) {
-        order = mainOrderRepository.getOne(order.getId());
+    public void makePay(MainOrder orderInput) {
+        MainOrder order = mainOrderRepository.getOne(orderInput.getId());
         applicationEventPublisher.publishEvent(new OrderPaySuccess(order, null));
     }
 

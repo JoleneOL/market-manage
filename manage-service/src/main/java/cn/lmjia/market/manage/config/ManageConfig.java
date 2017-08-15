@@ -38,6 +38,7 @@ public class ManageConfig implements WebModule {
             case "/manage-resource/**":
                 registration.addResourceLocations("classpath:/manage-view/manage-resource/");
                 break;
+            default:
         }
     }
 }

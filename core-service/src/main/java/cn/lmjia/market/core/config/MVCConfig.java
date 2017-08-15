@@ -315,9 +315,12 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             }
 
             private SpringResourceTemplateResolver createHtmlTemplateResolver(
-                    Supplier<SpringResourceTemplateResolver> supplier) {
-                if (supplier == null)
+                    Supplier<SpringResourceTemplateResolver> supplierInput) {
+                Supplier<SpringResourceTemplateResolver> supplier;
+                if (supplierInput == null)
                     supplier = NewSpringResourceTemplateResolver::new;
+                else
+                    supplier = supplierInput;
                 SpringResourceTemplateResolver resolver = supplier.get();
                 resolver.setCacheable(!environment.acceptsProfiles("development")
                         && !environment.acceptsProfiles("test"));

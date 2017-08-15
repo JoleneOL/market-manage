@@ -351,10 +351,13 @@ public abstract class CoreServiceTest extends SpringWebTest {
     /**
      * @return 随机的下单请求原数据
      */
-    protected OrderRequest randomOrderRequest(Long channelId, MainGood good, String authorising, String idNumber) {
+    protected OrderRequest randomOrderRequest(Long channelId, MainGood goodInput, String authorising, String idNumber) {
         Address address = randomAddress();
-        if (good == null)
+        MainGood good;
+        if (goodInput == null)
             good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        else
+            good = goodInput;
         String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
         Login recommend = randomLogin(true);
         final String name = "W客户" + RandomStringUtils.randomAlphabetic(6);

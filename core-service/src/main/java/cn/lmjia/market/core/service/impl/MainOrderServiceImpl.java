@@ -142,10 +142,11 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     @Override
     public Login getEnjoyability(Login orderBy) {
-        while (!loginService.isRegularLogin(orderBy)) {
-            orderBy = orderBy.getGuideUser();
+        Login login = orderBy;
+        while (!loginService.isRegularLogin(login)) {
+            login = login.getGuideUser();
         }
-        return orderBy;
+        return login;
     }
 
     @Override

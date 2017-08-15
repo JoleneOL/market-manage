@@ -93,10 +93,11 @@ public class ManageManagerControllerTest extends ManageServiceTest {
     }
 
     private RequestBuilder paramLevel(MockHttpServletRequestBuilder builder, Collection<ManageLevel> levelSet) {
+        MockHttpServletRequestBuilder newBuilder = builder;
         for (ManageLevel level : levelSet) {
-            builder = builder.param("role", level.name());
+            newBuilder = newBuilder.param("role", level.name());
         }
-        return builder;
+        return newBuilder;
     }
 
     private Collection<ManageLevel> randomLevel() {

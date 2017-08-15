@@ -12,7 +12,7 @@ import java.sql.SQLException;
 @SuppressWarnings("unused")
 public class Functions {
 
-    public static int AgentBelongs(Connection connection, long id, long superior) throws SQLException {
+    public static int agentBelongs(Connection connection, long id, long superior) throws SQLException {
         long currentId = id;
         try (PreparedStatement superStatement
                      = connection.prepareStatement("SELECT `SUPERIOR_ID` FROM `AGENTLEVEL` WHERE `ID`=?")) {
@@ -41,7 +41,7 @@ public class Functions {
      * @throws IOException
      * @throws SQLException
      */
-    public static int AgentLevel(Connection connection, long agentId) throws IOException, SQLException {
+    public static int agentLevel(Connection connection, long agentId) throws IOException, SQLException {
         // 找到没有上级的 那是0
         int pass = 0;
         long currentId = agentId;

@@ -46,9 +46,9 @@ public class WechatConfig implements WebModule {
                     return null;
                 // 然后把相关的名字去掉
 //                String newTemplate = template.substring("wechat@".length());
-                resourceName = resourceName.replaceFirst("wechat@", "");
+                String newResourceName = resourceName.replaceFirst("wechat@", "");
                 SpringResourceTemplateResource resourceTemplateResource = (SpringResourceTemplateResource)
-                        super.computeTemplateResource(configuration, ownerTemplate, template, resourceName, characterEncoding
+                        super.computeTemplateResource(configuration, ownerTemplate, template, newResourceName, characterEncoding
                                 , templateResolutionAttributes);
                 if (resourceTemplateResource.exists())
                     return resourceTemplateResource;
@@ -73,6 +73,7 @@ public class WechatConfig implements WebModule {
             case "/wechat-resource/**":
                 registration.addResourceLocations("classpath:/wechat-resource/");
                 break;
+            default:
         }
     }
 }

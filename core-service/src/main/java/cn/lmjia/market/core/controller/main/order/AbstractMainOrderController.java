@@ -50,9 +50,8 @@ public abstract class AbstractMainOrderController {
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
             , Address address, String mobile, long goodId, int amount, String mortgageIdentifier, Long channelId) {
         final MainGood good = mainGoodRepository.getOne(goodId);
-        if (channelId != null) {
-            if (good.getChannel() == null || !good.getChannel().getId().equals(channelId))
-                throw new IllegalArgumentException("特定的频道只能购买特定的商品");
+        if ((channelId != null) && (good.getChannel() == null || !good.getChannel().getId().equals(channelId))) {
+            throw new IllegalArgumentException("特定的频道只能购买特定的商品");
         }
         return mainOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age
                 , gender, address

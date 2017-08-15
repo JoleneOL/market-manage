@@ -87,12 +87,11 @@ public class InitService {
         }
 
         // 在测试 或者 staging 找一款价格为3000的商品 作为投融家商品
-        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest) || environment.acceptsProfiles("staging")) {
-            if (mainGoodService.forSale(channel).isEmpty()) {
-                MainGood good = mainGoodRepository.findAll((root, query, cb)
-                        -> cb.equal(MainGood.getTotalPrice(root, cb), new BigDecimal("3000"))).get(0);
-                channelService.setupChannel(good, channel);
-            }
+        if ((environment.acceptsProfiles(CoreConfig.ProfileUnitTest) || environment.acceptsProfiles("staging"))
+                && mainGoodService.forSale(channel).isEmpty()) {
+            MainGood good = mainGoodRepository.findAll((root, query, cb)
+                    -> cb.equal(MainGood.getTotalPrice(root, cb), new BigDecimal("3000"))).get(0);
+            channelService.setupChannel(good, channel);
         }
     }
 
@@ -167,6 +166,7 @@ public class InitService {
                 switch (version) {
                     case init:
                         break;
+                    default:
                 }
 
             }
