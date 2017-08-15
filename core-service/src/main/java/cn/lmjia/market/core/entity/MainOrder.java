@@ -227,6 +227,16 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
         return amount + "个" + goodName;
     }
 
+    @Override
+    public String getOrderProductModel() {
+        return getGood().getProduct().getCode();
+    }
+
+    @Override
+    public String getOrderProductCode() {
+        return getGood().getProduct().getCode();
+    }
+
     /**
      * @return 业务订单号
      * @see #getSerialId(Path, CriteriaBuilder)
