@@ -22,4 +22,5 @@ public class OrderRequest {
     private final String authorising;
     private final String idNumber;
     private final Long channelId;
+    private boolean installmentHuabai;
 }

@@ -129,6 +129,11 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     private boolean disableSettlement;
 
     /**
+     * 是否使用花呗支付
+     */
+    private boolean huabei;
+
+    /**
      * @param from order表
      * @return 到客户的登录表的关联
      */
@@ -236,6 +241,16 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     public String getOrderProductBrand() {
         // TODO 在物流上线之后可以更换为正式的品牌
         return getOrderProductName();
+    }
+
+    @Override
+    public String getOrderedName() {
+        return getCustomer().getName();
+    }
+
+    @Override
+    public String getOrderedMobile() {
+        return getCustomer().getMobile();
     }
 
     @Override

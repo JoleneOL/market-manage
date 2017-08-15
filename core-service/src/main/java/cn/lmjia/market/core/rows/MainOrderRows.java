@@ -12,6 +12,7 @@ import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import me.jiangcai.payment.hua.huabei.entity.HuaHuabeiPayOrder;
 import me.jiangcai.payment.paymax.entity.PaymaxPayOrder;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -88,6 +89,8 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                                 return "畅捷";
                             if (x instanceof TRJPayOrder)
                                 return "投融家";
+                            if (x instanceof HuaHuabeiPayOrder)
+                                return "花呗";
                             return "未知";
                         })
                         .build()
@@ -103,6 +106,8 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                                 return 4;
                             if (x instanceof TRJPayOrder)
                                 return 2;
+                            if (x instanceof HuaHuabeiPayOrder)
+                                return 3;
                             return 99;
                         })
                         .build()

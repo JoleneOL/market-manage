@@ -93,8 +93,11 @@ public class WechatUpgradeController {
             return new ModelAndView("redirect:/wechatUpgradeApplySuccess");
         }
 
+        request.setOrderedName(readService.nameForPrincipal(login));
+        request.setOrderedMobile(readService.mobileFor(login));
+        
         // 开始支付
-        return payAssistanceService.payOrder(login.getWechatUser().getOpenId(), servletRequest, request);
+        return payAssistanceService.payOrder(login.getWechatUser().getOpenId(), servletRequest, request, false);
     }
 
 }

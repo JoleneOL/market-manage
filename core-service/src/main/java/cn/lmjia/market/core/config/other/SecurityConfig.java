@@ -98,6 +98,8 @@ public class SecurityConfig {
                     .antMatchers("/t/**").permitAll()
                     // API 不经过安全机制
                     .antMatchers("/api/**").permitAll()
+                    // 开放支付
+                    .antMatchers("/_pay/paying").permitAll()
                     .antMatchers("/alimama/**").permitAll()
                     .antMatchers("/huotao/**").permitAll()
                     .antMatchers("/weChatGroup/**").permitAll()
