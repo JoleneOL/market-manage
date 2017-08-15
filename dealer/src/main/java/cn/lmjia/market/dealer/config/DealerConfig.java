@@ -61,6 +61,7 @@ public class DealerConfig extends WebMvcConfigurerAdapter implements WebModule {
             case "/dealer-resource/**":
                 registration.addResourceLocations("classpath:/dealer-view/dealer-resource/");
                 break;
+            default:
         }
     }
 

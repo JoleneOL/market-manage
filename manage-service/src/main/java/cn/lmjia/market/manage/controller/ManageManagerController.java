@@ -279,11 +279,11 @@ public class ManageManagerController {
     /**
      * 检查current是否可以管辖login
      *
-     * @param current
+     * @param currentInput
      * @param login
      */
-    private void manageLogin(Login current, Login login) {
-        current = loginService.get(current.getId());
+    private void manageLogin(Login currentInput, Login login) {
+        Login current = loginService.get(currentInput.getId());
         if (current.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ROOT")))
             // root 可以执行任何管理
             return;

@@ -20,8 +20,8 @@ public class QuickTradeServiceImpl implements QuickTradeService {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public void makeDone(MainOrder order) {
-        order = mainOrderRepository.getOne(order.getId());
+    public void makeDone(MainOrder inputOrder) {
+        MainOrder order = mainOrderRepository.getOne(inputOrder.getId());
         if (!order.isPay()) {
             throw new IllegalArgumentException("该订单尚未支付，无法直接完成。");
         }

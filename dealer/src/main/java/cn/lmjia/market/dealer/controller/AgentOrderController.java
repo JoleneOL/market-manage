@@ -4,7 +4,6 @@ import cn.lmjia.market.core.controller.main.order.AbstractMainOrderController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.Address;
-import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.service.PaymentService;
@@ -30,8 +29,6 @@ public class AgentOrderController extends AbstractMainOrderController {
     private PaymentService paymentService;
     @Autowired
     private ChanpayPaymentForm chanpayPaymentForm;
-    @Autowired
-    private MainOrderService mainOrderService;
 
     @GetMapping("/agentOrder")
     public String index(Model model, @AuthenticationPrincipal Login login) {
