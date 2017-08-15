@@ -121,7 +121,7 @@ public class InitService {
     }
 
     private void commons() throws SQLException {
-        jdbcService.runJdbcWork(JpaFunctionUtils::Enhance);
+        jdbcService.runJdbcWork(JpaFunctionUtils::enhance);
     }
 
     private void products() throws IOException {

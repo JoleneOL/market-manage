@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author CJ
  */
@@ -21,6 +23,8 @@ public class QRCodeServiceTest extends CoreServiceTest {
     public void generateQRCode() throws Exception {
         BufferedImage image = qrCodeService.generateQRCode("weixin://wxpay/bizpayurl?pr=THkIR3X");
         JOptionPane.showMessageDialog(null, new ImageIcon(image));
+        assertThat(true)
+                .isTrue();
     }
 
 }

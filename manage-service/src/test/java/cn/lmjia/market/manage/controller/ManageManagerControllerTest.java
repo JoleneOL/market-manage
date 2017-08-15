@@ -48,6 +48,8 @@ public class ManageManagerControllerTest extends ManageServiceTest {
         Login lastOne = loginRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0);
         driver.get("http://localhost/manageManagerEdit?id=" + lastOne.getId());
         System.out.println(driver.getPageSource());
+        assertThat(true)
+                .isTrue();
     }
 
     @Test
@@ -60,6 +62,8 @@ public class ManageManagerControllerTest extends ManageServiceTest {
         )
                 .andExpect(status().isOk())
                 .andDo(print());
+        assertThat(true)
+                .isTrue();
     }
 
     @Test

@@ -35,15 +35,15 @@ public class JpaFunctionUtils {
      * @param date 如果某参数为传入值则推荐使用字符串，可以避免因为数据库的异常而导致类型异常；通常各个数据库对于字符串都是比较友好的
      * @return Predicate for same date
      */
-    public static Predicate DateEqual(CriteriaBuilder criteriaBuilder, Expression arg, String date) {
-        return DateEqual(criteriaBuilder, arg, criteriaBuilder.literal(date));
+    public static Predicate dateEqual(CriteriaBuilder criteriaBuilder, Expression arg, String date) {
+        return dateEqual(criteriaBuilder, arg, criteriaBuilder.literal(date));
     }
 
     /**
-     * @return {@link #DateEqual(CriteriaBuilder, Expression, Expression)}
+     * @return {@link #dateEqual(CriteriaBuilder, Expression, Expression)}
      */
-    public static Predicate DateEqual(CriteriaBuilder criteriaBuilder, Expression arg, LocalDate date) {
-        return DateEqual(criteriaBuilder, arg, date.format(databaseFriendLyDateFormatter));
+    public static Predicate dateEqual(CriteriaBuilder criteriaBuilder, Expression arg, LocalDate date) {
+        return dateEqual(criteriaBuilder, arg, date.format(databaseFriendLyDateFormatter));
     }
 
     /**
@@ -51,7 +51,7 @@ public class JpaFunctionUtils {
      *
      * @return Predicate for same date
      */
-    public static <T> Predicate DateEqual(CriteriaBuilder criteriaBuilder, Expression arg, Expression<T> arg2) {
+    public static <T> Predicate dateEqual(CriteriaBuilder criteriaBuilder, Expression arg, Expression<T> arg2) {
         return criteriaBuilder.and(
                 criteriaBuilder.equal(criteriaBuilder.function("year", Integer.class, arg)
                         , criteriaBuilder.function("year", Integer.class, arg2))
@@ -72,7 +72,7 @@ public class JpaFunctionUtils {
      * @param with            使用什么字符填充
      * @return 「左边填充」的表达式
      */
-    public static Expression<String> LeftPaddingWith(CriteriaBuilder criteriaBuilder, Expression to, int length
+    public static Expression<String> leftPaddingWith(CriteriaBuilder criteriaBuilder, Expression to, int length
             , char with) {
         return criteriaBuilder.function("LPAD", String.class, to
                 , criteriaBuilder.literal(length), criteriaBuilder.literal(with));
@@ -83,7 +83,7 @@ public class JpaFunctionUtils {
      *
      * @return 如果x非null则返回x, 否则返回y
      */
-    public static <Y> Expression<Y> IfNull(CriteriaBuilder criteriaBuilder, Class<Y> type, Expression<Y> x
+    public static <Y> Expression<Y> ifNull(CriteriaBuilder criteriaBuilder, Class<Y> type, Expression<Y> x
             , Expression<Y> y) {
         return criteriaBuilder.function("IFNULL", type, x, y);
     }
@@ -93,7 +93,7 @@ public class JpaFunctionUtils {
      *
      * @return expression?x:y
      */
-    public static <Y> Expression<Y> IfElse(CriteriaBuilder criteriaBuilder, Class<Y> type, Expression<?> expression
+    public static <Y> Expression<Y> ifElse(CriteriaBuilder criteriaBuilder, Class<Y> type, Expression<?> expression
             , Expression<Y> x, Expression<Y> y) {
         return criteriaBuilder.function("IF", type, expression, x, y);
     }
@@ -104,7 +104,7 @@ public class JpaFunctionUtils {
      * @param connection 链接
      * @throws SQLException
      */
-    public static void Enhance(ConnectionProvider connection) throws SQLException {
+    public static void enhance(ConnectionProvider connection) throws SQLException {
         if (connection.profile().isH2()) {
             try (Statement statement = connection.getConnection().createStatement()) {
                 statement.executeUpdate("DROP ALIAS IF EXISTS `IF`");
@@ -131,14 +131,14 @@ public class JpaFunctionUtils {
      * @param date 如果某参数为传入值则推荐使用字符串，可以避免因为数据库的异常而导致类型异常；通常各个数据库对于字符串都是比较友好的
      * @return 同年同月的谓语
      */
-    public static Predicate YearAndMonthEqual(CriteriaBuilder cb, Expression arg, String date) {
-        return YearAndMonthEqual(cb, arg, cb.literal(date));
+    public static Predicate yearAndMonthEqual(CriteriaBuilder cb, Expression arg, String date) {
+        return yearAndMonthEqual(cb, arg, cb.literal(date));
     }
 
     /**
      * @return 同年同月的谓语
      */
-    public static <T> Predicate YearAndMonthEqual(CriteriaBuilder criteriaBuilder, Expression arg, Expression<T> date) {
+    public static <T> Predicate yearAndMonthEqual(CriteriaBuilder criteriaBuilder, Expression arg, Expression<T> date) {
         return criteriaBuilder.and(
                 criteriaBuilder.equal(criteriaBuilder.function("year", Integer.class, arg)
                         , criteriaBuilder.function("year", Integer.class, date))
@@ -150,68 +150,68 @@ public class JpaFunctionUtils {
     /**
      * @return 同年同月的谓语
      */
-    public static Predicate YearAndMonthEqual(CriteriaBuilder cb, Expression arg, LocalDate date) {
-        return YearAndMonthEqual(cb, arg, date.format(databaseFriendLyDateFormatter));
+    public static Predicate yearAndMonthEqual(CriteriaBuilder cb, Expression arg, LocalDate date) {
+        return yearAndMonthEqual(cb, arg, date.format(databaseFriendLyDateFormatter));
     }
 
-    // YM 定义为Y*12+M
+    // ym 定义为Y*12+M
 
     /**
-     * YM 定义为Y*12+M
+     * ym 定义为Y*12+M
      *
      * @return YM一致的谓语
      */
-    public static Predicate YMEqual(CriteriaBuilder cb, Expression arg, LocalDate date) {
-        return YMEqual(cb, arg, date.format(databaseFriendLyDateFormatter));
+    public static Predicate ymEqual(CriteriaBuilder cb, Expression arg, LocalDate date) {
+        return ymEqual(cb, arg, date.format(databaseFriendLyDateFormatter));
     }
 
     /**
-     * YM 定义为Y*12+M
+     * ym 定义为Y*12+M
      *
      * @return YM一致的谓语
      */
-    public static Predicate YMEqual(CriteriaBuilder cb, Expression arg, String date) {
-        return YMEqual(cb, arg, cb.literal(date));
+    public static Predicate ymEqual(CriteriaBuilder cb, Expression arg, String date) {
+        return ymEqual(cb, arg, cb.literal(date));
     }
 
     /**
-     * YM 定义为Y*12+M
+     * ym 定义为Y*12+M
      *
      * @return YM一致的谓语
      */
-    public static <T> Predicate YMEqual(CriteriaBuilder cb, Expression arg, Expression<T> date) {
-        return YM(cb, arg, date, CriteriaBuilder::equal);
+    public static <T> Predicate ymEqual(CriteriaBuilder cb, Expression arg, Expression<T> date) {
+        return ym(cb, arg, date, CriteriaBuilder::equal);
     }
 
     /**
-     * YM 定义为Y*12+M
+     * ym 定义为Y*12+M
      *
      * @param ymPredicateGenerator 条件生成器
      * @return YM符合'条件生成器'的谓语
      */
-    public static Predicate YM(CriteriaBuilder cb, Expression arg, LocalDate date
+    public static Predicate ym(CriteriaBuilder cb, Expression arg, LocalDate date
             , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> ymPredicateGenerator) {
-        return YM(cb, arg, date.format(databaseFriendLyDateFormatter), ymPredicateGenerator);
+        return ym(cb, arg, date.format(databaseFriendLyDateFormatter), ymPredicateGenerator);
     }
 
     /**
-     * YM 定义为Y*12+M
+     * ym 定义为Y*12+M
      *
      * @param ymPredicateGenerator 条件生成器
      * @return YM符合'条件生成器'的谓语
      */
-    public static Predicate YM(CriteriaBuilder cb, Expression arg, String date
+    public static Predicate ym(CriteriaBuilder cb, Expression arg, String date
             , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> ymPredicateGenerator) {
-        return YM(cb, arg, cb.literal(date), ymPredicateGenerator);
+        return ym(cb, arg, cb.literal(date), ymPredicateGenerator);
     }
 
     /**
-     * YM 定义为Y*12+M
+     * ym 定义为Y*12+M
      *
      * @param ymPredicateGenerator 条件生成器
      * @return YM符合'条件生成器'的谓语
      */
-    public static <T> Predicate YM(CriteriaBuilder cb, Expression arg, Expression<T> date
+    public static <T> Predicate ym(CriteriaBuilder cb, Expression arg, Expression<T> date
             , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> ymPredicateGenerator) {
         return ymPredicateGenerator.apply(cb, getYM(cb, arg)
                 , getYM(cb, date)
@@ -229,25 +229,25 @@ public class JpaFunctionUtils {
      * @param monthPredicateGenerator 可选的关于月的谓语
      * @return 同年谓语
      */
-    public static Predicate YearEqual(CriteriaBuilder cb, Expression arg, String date
+    public static Predicate yearEqual(CriteriaBuilder cb, Expression arg, String date
             , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> monthPredicateGenerator) {
-        return YearEqual(cb, arg, cb.literal(date), monthPredicateGenerator);
+        return yearEqual(cb, arg, cb.literal(date), monthPredicateGenerator);
     }
 
     /**
      * @param monthPredicateGenerator 可选的关于月的谓语
      * @return 同年谓语
      */
-    public static Predicate YearEqual(CriteriaBuilder cb, Expression arg, LocalDate date
+    public static Predicate yearEqual(CriteriaBuilder cb, Expression arg, LocalDate date
             , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> monthPredicateGenerator) {
-        return YearEqual(cb, arg, date.format(databaseFriendLyDateFormatter), monthPredicateGenerator);
+        return yearEqual(cb, arg, date.format(databaseFriendLyDateFormatter), monthPredicateGenerator);
     }
 
     /**
      * @param monthPredicateGenerator 可选的关于月的谓语
      * @return 同年谓语
      */
-    public static <T> Predicate YearEqual(CriteriaBuilder criteriaBuilder, Expression arg, Expression<T> date
+    public static <T> Predicate yearEqual(CriteriaBuilder criteriaBuilder, Expression arg, Expression<T> date
             , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> monthPredicateGenerator) {
         final Predicate baseEqual = criteriaBuilder.equal(criteriaBuilder.function("year", Integer.class, arg)
                 , criteriaBuilder.function("year", Integer.class, date));
@@ -271,7 +271,7 @@ public class JpaFunctionUtils {
      * @return 将args使用 {@link CriteriaBuilder#concat(Expression, Expression)}链接起来
      */
     @SafeVarargs
-    public static Expression<String> Contact(CriteriaBuilder criteriaBuilder, Expression<String>... args) {
+    public static Expression<String> contact(CriteriaBuilder criteriaBuilder, Expression<String>... args) {
         if (args.length == 1)
             return criteriaBuilder.concat(args[0], criteriaBuilder.literal(""));
         if (args.length == 2)
@@ -288,6 +288,6 @@ public class JpaFunctionUtils {
             else
                 newArgs[i] = criteriaBuilder.concat(args[i * 2], args[i * 2 + 1]);
         }
-        return Contact(criteriaBuilder, newArgs);
+        return contact(criteriaBuilder, newArgs);
     }
 }
