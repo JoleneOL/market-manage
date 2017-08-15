@@ -5,10 +5,12 @@ import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
+import cn.lmjia.market.core.repository.channel.ChannelRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.jpa.entity.support.Address;
@@ -50,6 +52,8 @@ public class ReadServiceImpl implements ReadService {
     private DepotRepository depotRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ChannelRepository channelRepository;
 
     @Override
     public String mobileFor(Object principal) {
@@ -168,6 +172,11 @@ public class ReadServiceImpl implements ReadService {
     @Override
     public List<MainProduct> allEnabledMainProduct() {
         return mainProductRepository.findByEnableTrue();
+    }
+
+    @Override
+    public List<Channel> allChannel() {
+        return channelRepository.findAll();
     }
 
     @Override

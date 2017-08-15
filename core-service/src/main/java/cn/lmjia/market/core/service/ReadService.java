@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.entity.Depot;
@@ -165,6 +166,12 @@ public interface ReadService {
      */
     @Transactional(readOnly = true)
     List<MainProduct> allEnabledMainProduct();
+
+    /**
+     * @return 所有渠道
+     */
+    @Transactional(readOnly = true)
+    List<Channel> allChannel();
 
     /**
      * @return 可用主要货品
