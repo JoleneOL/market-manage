@@ -83,7 +83,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
 //    }
 
     @GetMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId) throws SystemMaintainException {
+    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId)
+            throws SystemMaintainException {
         final MainOrder order = from(orderId, null);
         return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
     }
@@ -122,7 +123,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
 
     @GetMapping("/_pay/paying")
     @Transactional(readOnly = true)
-    public String paying(@RequestHeader(required = false, value = "User-Agent") String agent, String payableOrderId, long payOrderId, String checkUri
+    public String paying(@RequestHeader(required = false, value = "User-Agent") String agent, String payableOrderId
+            , long payOrderId, String checkUri
             , String successUri, Model model) {
         final PayOrder payOrder = paymentService.payOrder(payOrderId);
         String qrCodeUrl;
