@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>订单详情</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="gray-bg" data-url="/storage/detail" data-upload-url="/resourceUpload/webUploader">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="row js-condition">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    下单
+                </div>
+                <div class="ibox-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-7 col-lg-6">
+                                <form class="form-horizontal" id="J_ManualForm" method="post" action="_orderManage.html">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">货品型号 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装人员" class="form-control"
+                                                   name="installer"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货数量 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="number" placeholder="请输入安装公司" class="form-control"
+                                                   name="installCompany" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">订单金额 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装人员" class="form-control"
+                                                   name="installer"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">收货人 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装人员" class="form-control"
+                                                   name="installer"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">收货地址 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装人员" class="form-control"
+                                                   name="installer"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">详细地址 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入安装人员" class="form-control"
+                                                   name="installer"
+                                                   required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">收货人手机号 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="tel" placeholder="请输入安装人员手机" class="form-control" name="mobile"
+                                                   required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">重新申请信审
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
+<script src="manage-resource/js/orderDetail.js"></script>
+
+</html>

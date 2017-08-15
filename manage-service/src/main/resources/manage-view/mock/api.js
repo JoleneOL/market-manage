@@ -359,7 +359,7 @@ Mock.mock(/\/product\/cat/, "get", {
         {
             'id': '@id',
             'category': '@pick(["饮水机", "净化器", "量子", "食品优化宝"])',
-            'goods': ['量子立式净水机', '量子净化器', '量子芯片', '量子食品优化宝'],
+            'goods': ['量子立式净水机', '量子净化器', '量子芯片', '量子食品优化宝']
         }
     ]
 });
@@ -586,6 +586,28 @@ Mock.mock(/\/orderData\/logistics\/\d/, 'get', {
             'name': '@region',
             'quantity': '@integer(100, 999)',
             'distance': '@integer(100, 999)'
+        }
+    ]
+});
+
+Mock.mock(/\/manual\/list/, {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'orderId': '@id',
+            'goods': '量子立式净水机',
+            'model': 'SCRO-200LK/A',
+            'amount': '@integer(1, 100)',
+            'total': '@integer(3600, 10000)',
+            'orderUser': '@cname',
+            'address': '@county(true)',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'status': '@pick(["待发货", "已发货"])',
+            'statusCode': '@pick([2, 9])'
         }
     ]
 });
