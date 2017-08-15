@@ -16,7 +16,7 @@ public class EnumConverterFactory implements ConverterFactory<String, Enum> {
 
     private final Map<Class, Converter> converterMap = new HashMap<>();
 
-    {
+    public EnumConverterFactory() {
         converterMap.put(Gender.class, new GenderConverter());
         converterMap.put(OrderStatus.class, new OrderStatusConverter());
         converterMap.put(ManageLevel.class, new ManageLevelConverter());

@@ -2,7 +2,6 @@ package cn.lmjia.market.core.config;
 
 import cn.lmjia.market.core.converter.AddressResolver;
 import cn.lmjia.market.core.converter.EnumConverterFactory;
-import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.row.IndefiniteRowDefinitionHandler;
@@ -75,9 +74,6 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     private RowDefinitionHandler rowDefinitionHandler;
     @Autowired
     private IndefiniteRowDefinitionHandler indefiniteRowDefinitionHandler;
-    //    private final BigDecimalConverter bigDecimalConverter;
-    @Autowired
-    private LocalDateConverter localDateConverter;
 
     @Autowired
     public MVCConfig(ThymeleafViewResolver htmlViewResolver, Environment environment, Set<WebModule> webModules) {
@@ -309,7 +305,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 this.webModules = webModules;
             }
 
-            SpringTemplateEngine templateEngine(Set<ITemplateResolver> templateResolvers) {
+            private SpringTemplateEngine templateEngine(Set<ITemplateResolver> templateResolvers) {
                 SpringTemplateEngine engine = new SpringTemplateEngine();
                 engine.setTemplateResolvers(templateResolvers);
                 engine.addDialect(new Java8TimeDialect());
@@ -319,9 +315,12 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             }
 
             private SpringResourceTemplateResolver createHtmlTemplateResolver(
-                    Supplier<SpringResourceTemplateResolver> supplier) {
-                if (supplier == null)
+                    Supplier<SpringResourceTemplateResolver> supplierInput) {
+                Supplier<SpringResourceTemplateResolver> supplier;
+                if (supplierInput == null)
                     supplier = NewSpringResourceTemplateResolver::new;
+                else
+                    supplier = supplierInput;
                 SpringResourceTemplateResolver resolver = supplier.get();
                 resolver.setCacheable(!environment.acceptsProfiles("development")
                         && !environment.acceptsProfiles("test"));

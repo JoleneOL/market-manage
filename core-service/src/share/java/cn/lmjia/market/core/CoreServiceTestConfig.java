@@ -242,8 +242,8 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
     }
 
     @Override
-    public void resourceHandler(String pattern, ResourceHandlerRegistration registration) {
-        pattern = pattern.substring(1, pattern.length() - 3);
+    public void resourceHandler(String patternInput, ResourceHandlerRegistration registration) {
+        String pattern = patternInput.substring(1, patternInput.length() - 3);
         registration.addResourceLocations(urlToWebApp() + pattern + "/");
     }
 

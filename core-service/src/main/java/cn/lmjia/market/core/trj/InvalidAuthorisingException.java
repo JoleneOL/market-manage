@@ -1,10 +1,13 @@
 package cn.lmjia.market.core.trj;
 
+import lombok.Getter;
+
 /**
  * 按揭码无效
  *
  * @author CJ
  */
+@Getter
 public class InvalidAuthorisingException extends Exception {
 
     private final String authorising;

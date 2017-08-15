@@ -39,9 +39,9 @@ public class WechatUpgradeController {
 
     @GetMapping("/wechatUpgrade")
     @Transactional(readOnly = true)
-    public String index(@AuthenticationPrincipal Login login, Model model) {
+    public String index(@AuthenticationPrincipal Login loginInput, Model model) {
         // 正在申请 错误
-        login = loginService.get(login.getId());
+        Login login = loginService.get(loginInput.getId());
         if (!loginService.isRegularLogin(login)) {
             return "redirect:" + SystemService.wechatOrderURi;
         }

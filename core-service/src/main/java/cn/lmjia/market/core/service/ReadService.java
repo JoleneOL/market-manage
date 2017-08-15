@@ -33,8 +33,8 @@ public interface ReadService {
         Expression<String> loginName = loginPath.get("loginName");
         Expression<String> name = contactWayJoin.get("mobile");
         //
-        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
-                , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
+                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
     static Expression<Integer> agentLevelForLogin(From<?, Login> loginPath, CriteriaBuilder criteriaBuilder) {
@@ -51,8 +51,8 @@ public interface ReadService {
         Expression<String> loginName = loginPath.get("loginName");
         Expression<String> name = contactWayJoin.get("name");
         //
-        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
-                , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
+                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
     /**
@@ -62,7 +62,7 @@ public interface ReadService {
      */
     static Expression<String> nameForCustomer(From<?, Customer> customerFrom, CriteriaBuilder criteriaBuilder) {
         Expression<String> name = customerFrom.get("name");
-        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
+        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
                 , nameForLogin(customerFrom.join("login"), criteriaBuilder));
     }
 

@@ -11,7 +11,6 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.repository.deal.OrderCommissionRepository;
-import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
@@ -44,8 +43,6 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     private CommissionRateService commissionRateService;
     @Autowired
     private CommissionRepository commissionRepository;
-    @Autowired
-    private LoginService loginService;
     @Autowired
     private MainOrderService mainOrderService;
     @Autowired

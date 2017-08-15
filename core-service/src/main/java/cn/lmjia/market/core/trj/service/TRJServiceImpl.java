@@ -9,7 +9,6 @@ import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
-import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ManagerService;
 import cn.lmjia.market.core.service.NoticeService;
@@ -112,8 +111,6 @@ public class TRJServiceImpl implements TRJService {
     private NoticeService noticeService;
     @Autowired
     private ResourceService resourceService;
-    @Autowired
-    private ChannelService channelService;
 
     @Autowired
     public TRJServiceImpl(Environment environment) throws IOException {
@@ -445,7 +442,7 @@ public class TRJServiceImpl implements TRJService {
         return newUriRequest(uri, null, pairs);
     }
 
-    private HttpUriRequest newUriRequest(String uri, Function<List<NameValuePair>, HttpEntity> toEntity, NameValuePair... pairs) {
+    private HttpUriRequest newUriRequest(String uri, Function<List<NameValuePair>, HttpEntity> toEntityInput, NameValuePair... pairs) {
         List<NameValuePair> list = new ArrayList<>();
         list.addAll(Arrays.asList(pairs));
         list.add(new BasicNameValuePair("sign", sign(list)));
@@ -467,12 +464,14 @@ public class TRJServiceImpl implements TRJService {
 //        if (log.isDebugEnabled())
 //            log.debug("[TRJ]" + urlBuilder.toString());
 
-        if (toEntity == null) {
+        Function<List<NameValuePair>, HttpEntity> toEntity;
+        if (toEntityInput == null)
             toEntity = nameValuePairs -> EntityBuilder.create()
                     .setContentType(ContentType.APPLICATION_FORM_URLENCODED.withCharset("UTF-8"))
                     .setParameters(nameValuePairs)
                     .build();
-        }
+        else
+            toEntity = toEntityInput;
 
         HttpPost post = new HttpPost(urlBuilder.toString());
         post.setEntity(toEntity.apply(list));

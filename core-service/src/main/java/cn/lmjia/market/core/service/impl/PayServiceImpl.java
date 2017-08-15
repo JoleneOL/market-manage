@@ -4,7 +4,6 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.support.PaymentStatus;
-import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.PayOrderRepository;
 import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
 import cn.lmjia.market.core.service.MainOrderService;
@@ -39,8 +38,6 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     private MainOrderService mainOrderService;
-    @Autowired
-    private MainOrderRepository mainOrderRepository;
     @Autowired
     private PayOrderRepository payOrderRepository;
     @Autowired
