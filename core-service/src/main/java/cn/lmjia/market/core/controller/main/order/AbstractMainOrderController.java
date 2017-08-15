@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.channel.InstallmentChannel;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -45,6 +46,8 @@ public abstract class AbstractMainOrderController {
     protected void orderIndex(Login login, Model model, Channel channel) {
         model.addAttribute("goodList", mainGoodService.forSale(channel));
         model.addAttribute("channel", channel);
+        // 该量表示 渠道已经支持分期；如果这样的话，支付时不应该提供分期选项
+        model.addAttribute("installmentSupported", (channel != null) && channel instanceof InstallmentChannel);
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender

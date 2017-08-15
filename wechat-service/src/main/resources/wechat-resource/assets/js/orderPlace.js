@@ -38,7 +38,7 @@ $(function () {
 
 
         orderTotal.find('strong').text(total);
-        // installmentFunc(total);
+        installmentFunc(total);
         $('input[name="orderTotal"]').val(total);
     }
 
@@ -80,7 +80,7 @@ $(function () {
     installment.change(function () {
         if ($(this).is(':checked')) {
             $('#J_checkCode').removeClass('displayNone');
-            // info.removeClass('displayNone');
+            info.removeClass('displayNone');
             submitBtn.text('提交分期订单');
             isValid.rules('add', {
                 required: true,
@@ -90,7 +90,7 @@ $(function () {
             });
         } else {
             $('#J_checkCode').addClass('displayNone');
-            // info.addClass('displayNone');
+            info.addClass('displayNone');
             submitBtn.html('下&nbsp;&nbsp;单');
             isValid.rules('remove');
             isValid.val('');
@@ -99,7 +99,7 @@ $(function () {
 
     function installmentFunc(total) {
         var num = +total;
-        info.find('.js-total').text(num);
+        info.find('.js-total').text(num * 1.19);
         info.find('.js-installment').text((num / 24).toFixed(2));
     }
 

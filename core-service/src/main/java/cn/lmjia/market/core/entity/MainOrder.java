@@ -233,6 +233,12 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     }
 
     @Override
+    public String getOrderProductBrand() {
+        // TODO 在物流上线之后可以更换为正式的品牌
+        return getOrderProductName();
+    }
+
+    @Override
     public String getOrderProductCode() {
         return getGood().getProduct().getCode();
     }

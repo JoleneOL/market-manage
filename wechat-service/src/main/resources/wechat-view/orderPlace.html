@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="goodList" type="java.util.Collection<cn.lmjia.market.core.entity.MainGood>"*/-->
 <!--/*@thymesVar id="trj" type="boolean"*/-->
+<!--/*@thymesVar id="installmentSupported" type="boolean"*/-->
 <!--/*@thymesVar id="channel" type="cn.lmjia.market.core.entity.channel.Channel"*/-->
 <head>
     <meta charset="UTF-8">
@@ -282,7 +283,7 @@
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
         </div>
-        <div th:if="${!trj}" class="weui-cells weui-cells_checkbox">
+        <div th:if="${!installmentSupported}" class="weui-cells weui-cells_checkbox">
             <label class="weui-cell weui-check__label" for="J_installment">
                 <div class="weui-cell__hd">
                     <input type="checkbox" class="weui-check" name="installmentHuabai" id="J_installment" value="1">
@@ -294,7 +295,8 @@
             </label>
         </div>
         <div class="weui-cells__tips text-right displayNone" id="J_installmentInfo">
-            分期金额￥<span class="js-total">**</span>.00&nbsp;&nbsp;分24期&nbsp;￥<span class="js-installment">**</span>/期
+            分期金额￥<span class="js-total">**</span>&nbsp;&nbsp;分24期&nbsp;
+            ￥<span class="js-installment">**</span>/期
         </div>
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_custom" id="J_submitBtn">下&nbsp;&nbsp;单</button>
@@ -516,7 +518,7 @@
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
 <script src="../wechat-resource/assets/js/orderPlace.js"
-        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=2)}"></script>
+        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=3)}"></script>
 <script th:if="${trj}">
     $(function () {
         var input = $('#J_goodsAmount');
