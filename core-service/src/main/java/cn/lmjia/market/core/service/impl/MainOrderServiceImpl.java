@@ -338,6 +338,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                         order.setOrderStatus(OrderStatus.forInstall);
                     applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
                     break;
+                default:
             }
         });
 

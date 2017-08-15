@@ -15,8 +15,6 @@ import me.jiangcai.logistics.entity.support.StockInfo;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.repository.StockSettlementRepository;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -54,7 +52,6 @@ import java.util.function.BiFunction;
 @Service
 public class StockServiceImpl implements StockService {
 
-    private static final Log log = LogFactory.getLog(StockServiceImpl.class);
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
@@ -97,16 +94,22 @@ public class StockServiceImpl implements StockService {
     @Override
     public StockInfoSet usableStockInfo(BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpec
             , BiFunction<Path<Depot>, CriteriaBuilder, Predicate> depotSpec) {
+        final BiFunction<Path<Product>, CriteriaBuilder, Predicate> productSpecFinal;
+        final BiFunction<Path<Depot>, CriteriaBuilder, Predicate> depotSpecFinal;
         if (productSpec == null)
-            productSpec = (productPath, criteriaBuilder) -> criteriaBuilder.conjunction();
+            productSpecFinal = (productPath, criteriaBuilder) -> criteriaBuilder.conjunction();
+        else
+            productSpecFinal = productSpec;
         if (depotSpec == null)
-            depotSpec = (depotJoin, criteriaBuilder) -> criteriaBuilder.conjunction();
+            depotSpecFinal = (depotJoin, criteriaBuilder) -> criteriaBuilder.conjunction();
+        else
+            depotSpecFinal = depotSpec;
         // 获取 该库存的最新结算量
         // 这里存在一个尴尬的情况
         // 如果存在结算库存 是否不符合规格也要返回 ？
         // 反之当前没有临时数据，那么就是拥有结算库存 也要忽略么？
         // 这2个结果都不符合需求
-        StockSettlement settlement = lastStockSettlement(productSpec, depotSpec);
+        StockSettlement settlement = lastStockSettlement(productSpecFinal, depotSpecFinal);
         // 获取 其后的和未结算的进出库订单合计
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         // 这个不一样 是直接读取Number的
@@ -130,13 +133,13 @@ public class StockServiceImpl implements StockService {
                                 cb.and(
                                         cb.or(
                                                 destinationDepotJoin.isNull()
-                                                , depotSpec.apply(destinationDepotJoin, cb)
+                                                , depotSpecFinal.apply(destinationDepotJoin, cb)
                                         )
                                         , cb.or(
                                                 originDepotJoin.isNull()
-                                                , depotSpec.apply(originDepotJoin, cb)
+                                                , depotSpecFinal.apply(originDepotJoin, cb)
                                         )
-                                        , productSpec.apply(productJoin, cb)
+                                        , productSpecFinal.apply(productJoin, cb)
                                 )
                         )
         ).getResultList().forEach(
@@ -160,8 +163,8 @@ public class StockServiceImpl implements StockService {
         Root<Depot> depotRoot = dcq.from(Depot.class);
 
         resultList.initAll(
-                entityManager.createQuery(dcq.where(depotSpec.apply(depotRoot, cb))).getResultList()
-                , entityManager.createQuery(pcq.where(productSpec.apply(productRoot, cb))).getResultList()
+                entityManager.createQuery(dcq.where(depotSpecFinal.apply(depotRoot, cb))).getResultList()
+                , entityManager.createQuery(pcq.where(productSpecFinal.apply(productRoot, cb))).getResultList()
         );
 
         return resultList;

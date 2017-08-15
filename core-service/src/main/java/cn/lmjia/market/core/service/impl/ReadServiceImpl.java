@@ -9,7 +9,6 @@ import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
-import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.jpa.entity.support.Address;
