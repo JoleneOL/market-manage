@@ -119,8 +119,6 @@ public class TRJServiceImpl implements TRJService {
     @Autowired
     private ResourceService resourceService;
     @Autowired
-    private ChannelService channelService;
-    @Autowired
     private SystemStringService systemStringService;
 
     @Autowired

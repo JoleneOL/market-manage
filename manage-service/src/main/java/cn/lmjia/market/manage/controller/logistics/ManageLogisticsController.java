@@ -83,7 +83,7 @@ public class ManageLogisticsController {
                     if (orderDate != null) {
                         predicate = cb.and(
                                 predicate
-                                , JpaFunctionUtils.DateEqual(cb, StockShiftUnit.createDate(root), orderDate));
+                                , JpaFunctionUtils.dateEqual(cb, StockShiftUnit.createDate(root), orderDate));
                     }
                     return predicate;
                 };

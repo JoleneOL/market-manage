@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
+import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.ReadService;
@@ -15,7 +16,6 @@ import cn.lmjia.market.core.trj.TRJService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import cn.lmjia.market.wechat.page.WechatOrderPage;
-import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
@@ -56,6 +56,8 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     private ChannelService channelService;
     @Autowired
     private LogisticsService logisticsService;
+    @Autowired
+    private MainOrderRepository mainOrderRepository;
 
     @Test
     public void go1() throws Exception {
