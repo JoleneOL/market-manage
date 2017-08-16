@@ -27,13 +27,13 @@ $(function () {
                 "title": "下单数量", "data": "amount", "name": "amount"
             },
             {
-                "title": "下单金额", "data": "total", "name": "total"
+                "title": "订单金额", "data": "total", "name": "total"
             },
             {
                 "title": "收货人", "data": "orderUser", "name": "orderUser"
             },
             {
-                "title": "收获地址", "data": "address", "name": "address"
+                "title": "收货地址", "data": "address", "name": "address"
             },
             {
                 "title": "手机号", "data": "mobile", "name": "mobile"
