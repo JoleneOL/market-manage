@@ -590,24 +590,23 @@ Mock.mock(/\/orderData\/logistics\/\d/, 'get', {
     ]
 });
 
-Mock.mock(/\/manual\/list/, {
+Mock.mock(/\/manage\/manualOrders/, {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
     "data|10": [
         {
             'id': '@id',
-            'orderId': '@id',
-            'goods': '量子立式净水机',
-            'model': 'SCRO-200LK/A',
+            'productName': '量子立式净水机',
+            'productCode': 'SCRO-200LK/A',
             'amount': '@integer(1, 100)',
-            'total': '@integer(3600, 10000)',
-            'orderUser': '@cname',
+            'price': '@integer(3600, 10000)',
+            'name': '@cname',
             'address': '@county(true)',
             'mobile': /^1([34578])\d{9}$/,
-            'orderTime': '@datetime("yyyy-MM-dd")',
+            'createdTime': '@datetime("yyyy-MM-dd")',
             'status': '@pick(["待发货", "已发货"])',
-            'statusCode': '@pick([2, 9])'
+            'unitId': '@id'
         }
     ]
 });

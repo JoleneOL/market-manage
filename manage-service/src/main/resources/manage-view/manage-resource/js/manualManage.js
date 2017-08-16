@@ -4,7 +4,7 @@ $(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/manual/list",
+            "url": "/manage/manualOrders",
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
@@ -15,23 +15,23 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "订单号", "data": "orderId", "name": "orderId"
+                "title": "订单号", "data": "id", "name": "id"
             },
             {
                 "title": "产品及型号",
                 "orderable": false,
                 data: function (item) {
-                    return item.goods + ' / ' + item.model;
+                    return item.productName + ' / ' + item.productCode;
                 }
             },
             {
                 "title": "下单数量", "data": "amount", "name": "amount"
             },
             {
-                "title": "订单金额", "data": "total", "name": "total"
+                "title": "订单金额", "data": "price", "name": "price"
             },
             {
-                "title": "收货人", "data": "orderUser", "name": "orderUser"
+                "title": "收货人", "data": "name", "name": "name"
             },
             {
                 "title": "收货地址", "data": "address", "name": "address"
@@ -40,7 +40,7 @@ $(function () {
                 "title": "手机号", "data": "mobile", "name": "mobile"
             },
             {
-                "title": "订单时间", "data": "orderTime", "name": "orderTime"
+                "title": "订单时间", "data": "createdTime", "name": "createdTime"
             },
             {
                 "title": "状态", "data": "status", "name": "status"
@@ -52,7 +52,7 @@ $(function () {
                     // var b = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>';
                     // if (item.statusCode === 2)
                     //     a += b;
-                    return '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
+                    return '<a href="javascript:;" class="js-info" data-id="' + item.unitId + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
                 }
             }
         ],
