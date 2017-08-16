@@ -24,7 +24,7 @@
     <![endif]-->
 </head>
 
-<body data-url="/goods/list">
+<body data-url="/goods/list" data-edit-url="_goodsOperate.html" th:data-edit-url="@{/manageGoodEdit}">
 
 <section>
     <div class="wrapper wrapper-content">
@@ -32,7 +32,7 @@
             <div class="col-md-12">
                 <div class="form-inline">
                     <div>
-                        <a class="btn btn-primary btn-sm" href="_goodsOperate.html">添加商品</a>
+                        <a class="btn btn-primary btn-sm" href="_goodsOperate.html" th:href="@{/manageGoodAdd}">新增商品</a>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="form-inline">
                     <div class="js-selectToolbar">
                         <input type="search" class="form-control input-sm" placeholder="货品名称"
-                               name="goodsName">
+                               name="productName">
                         <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
                     </div>
                 </div>

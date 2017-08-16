@@ -123,7 +123,7 @@ public class TeamDataController {
         return new LoginRelationRows(level) {
 
             @Override
-            Specification<LoginRelation> newSpecification() {
+            protected Specification<LoginRelation> newSpecification() {
                 return (root, query, cb) -> {
                     query.groupBy(root.get("to"));
                     return cb.equal(root.get("from"), login);
@@ -180,7 +180,7 @@ public class TeamDataController {
             return new AndSpecification<>(fixedSpecification(), newSpecification());
         }
 
-        abstract Specification<LoginRelation> newSpecification();
+        protected abstract Specification<LoginRelation> newSpecification();
 
         //        private Predicate newSpecification(Root<LoginRelation> root, AbstractQuery<?> query, CriteriaBuilder cb) {
 ////                if (!(query instanceof Subquery) && query.getResultType() == Long.class) {

@@ -94,9 +94,10 @@ Mock.mock(/\/goods\/list/, "get", {
     "data|10": [
         {
             'id|+1': 1,
-            'goodsName': '量子' + '@pick(["橱下净水器","空气净化器","食品优化宝"])',
             'productName': '@pick(["净水机","净化器","优化宝","量子"])',
-            'onSale': '@boolean'
+            'channelName': null,
+            'createTime': '@datetime("yyyy-MM-dd")',
+            'enable': '@boolean'
         }
     ]
 });

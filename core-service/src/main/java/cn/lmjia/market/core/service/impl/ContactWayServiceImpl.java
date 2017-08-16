@@ -34,10 +34,11 @@ public class ContactWayServiceImpl implements ContactWayService {
         return updateContactWay(login, contactWay -> contactWay.setMobile(mobile));
     }
 
-    private ContactWay updateContactWay(Login login, Consumer<ContactWay> contactWayConsumer) {
-        if (login.getId() != null)
-            login = loginRepository.getOne(login.getId());
-
+    private ContactWay updateContactWay(Login loginInput, Consumer<ContactWay> contactWayConsumer) {
+        Login login;
+        if (loginInput.getId() != null) {
+            login = loginRepository.getOne(loginInput.getId());
+        } else login = loginInput;
         if (login.getContactWay() == null) {
             login.setContactWay(new ContactWay());
         }

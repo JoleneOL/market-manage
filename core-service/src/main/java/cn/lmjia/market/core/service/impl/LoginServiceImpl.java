@@ -9,7 +9,6 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -18,7 +17,6 @@ import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.user.notice.NoticeChannel;
 import me.jiangcai.user.notice.User;
 import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
-import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
@@ -61,8 +59,6 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private PublicAccount publicAccount;
-    @Autowired
     private StandardWeixinUserRepository standardWeixinUserRepository;
     @Autowired
     private VerificationCodeService verificationCodeService;
@@ -70,13 +66,11 @@ public class LoginServiceImpl implements LoginService {
     private AgentLevelRepository agentLevelRepository;
     @Autowired
     private CustomerRepository customerRepository;
-    @Autowired
-    private MainOrderRepository mainOrderRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
 
-    {
+    public LoginServiceImpl() {
         payStatus.add(OrderStatus.forDeliver);
         payStatus.add(OrderStatus.forDeliverConfirm);
         payStatus.add(OrderStatus.forInstall);

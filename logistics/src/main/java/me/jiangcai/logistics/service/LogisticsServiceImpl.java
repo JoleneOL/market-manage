@@ -55,11 +55,13 @@ public class LogisticsServiceImpl implements LogisticsService {
     }
 
     @Override
-    public StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
+    public StockShiftUnit makeShift(LogisticsSupplier supplier1, Collection<Thing> things, LogisticsSource source
             , LogisticsDestination destination, int options) {
-        if (supplier == null) {
+        LogisticsSupplier supplier;
+        if (supplier1 == null) {
             supplier = applicationContext.getBean(LogisticsSupplier.class);
-        }
+        } else
+            supplier = supplier1;
         Consumer<StockShiftUnit> consumer = stockShiftUnit -> {
             stockShiftUnit.setShiftType(ShiftType.logistics);
             stockShiftUnit.setCreateTime(LocalDateTime.now());

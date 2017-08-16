@@ -49,8 +49,8 @@ public abstract class ProductOperatePage extends AbstractContentPage {
     private WebElement weight;
     @FindBy(name = "productSummary")
     private WebElement productSummary;
-    @FindBy(name = "richDescription")
-    private WebElement richDescription;
+//    @FindBy(name = "richDescription")
+//    private WebElement richDescription;
 
     public ProductOperatePage(WebDriver webDriver) {
         super(webDriver);

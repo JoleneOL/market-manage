@@ -2,11 +2,7 @@ package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.repository.MainOrderRepository;
-import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
-import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
-import cn.lmjia.market.manage.controller.ManagePromotionRequestController;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import com.jayway.jsonpath.JsonPath;
@@ -28,15 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class WechatUpgradeControllerTest extends WechatTestBase {
 
     @Autowired
-    private MainOrderService mainOrderService;
-    @Autowired
-    private MainOrderRepository mainOrderRepository;
-    @Autowired
     private ReadService readService;
-    @Autowired
-    private ManagePromotionRequestController managePromotionRequestController;
-    @Autowired
-    private PromotionRequestRepository promotionRequestRepository;
 
     @Test
     public void upgrade1() throws Exception {

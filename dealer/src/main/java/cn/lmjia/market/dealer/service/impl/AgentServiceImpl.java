@@ -379,7 +379,7 @@ public class AgentServiceImpl implements AgentService {
         query = query.where(
                 criteriaBuilder.and(
                         Address.AlmostMatch(
-                                ContactWayService.AddressForLogin(root.join("login"), criteriaBuilder)
+                                ContactWayService.addressForLogin(root.join("login"), criteriaBuilder)
                                 , address
                                 , criteriaBuilder)
                         , criteriaBuilder.equal(root.get("level").as(Integer.class), systemService.addressRateForLevel())

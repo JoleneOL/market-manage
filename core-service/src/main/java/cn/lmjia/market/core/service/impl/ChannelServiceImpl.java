@@ -8,6 +8,7 @@ import cn.lmjia.market.core.service.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 /**
@@ -47,6 +48,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public MainGood cloneGoodToChannel(MainGood good, Channel channel) {
         MainGood newGood = new MainGood();
+        newGood.setCreateTime(LocalDateTime.now());
         newGood.setEnable(good.isEnable());
         newGood.setProduct(good.getProduct());
         newGood.setChannel(channel);

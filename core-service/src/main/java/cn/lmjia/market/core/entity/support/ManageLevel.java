@@ -34,10 +34,10 @@ public enum ManageLevel {
     }
 
     public static String roleNameToRole(String role) {
-        role = role.toUpperCase(Locale.CHINA);
-        if (role.startsWith("ROLE_"))
-            return role;
-        return "ROLE_" + role;
+        String role2 = role.toUpperCase(Locale.CHINA);
+        if (role2.startsWith("ROLE_"))
+            return role2;
+        return "ROLE_" + role2;
     }
 
     /**

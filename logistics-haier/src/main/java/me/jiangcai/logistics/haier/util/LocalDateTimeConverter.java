@@ -10,7 +10,7 @@ import java.util.Locale;
  * @author CJ
  */
 public class LocalDateTimeConverter extends StdConverter<String, LocalDateTime> {
-    static final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
 
     @Override
     public LocalDateTime convert(String value) {
