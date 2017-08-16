@@ -13,6 +13,7 @@ import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -253,8 +254,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 
     @Override
     public String getOrderProductBrand() {
-        // TODO 在物流上线之后可以更换为正式的品牌
-        return getOrderProductName();
+        return StringUtils.isEmpty(getGood().getProduct().getBrand()) ? getOrderProductName()
+                : getGood().getProduct().getBrand();
     }
 
     @Override
