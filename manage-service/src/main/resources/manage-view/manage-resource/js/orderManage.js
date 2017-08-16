@@ -8,6 +8,7 @@ $(function () {
 
     var _body = $('body');
 
+    var logisticsDetailUrl = _body.attr('data-logistics-detail-url');
     var quickUrl = _body.attr('data-quick-url');
     var allowMockPay = _body.attr('data-allow-mock-pay') === 'true';
     var allowSettlement = _body.attr('data-allow-settlement') === 'true';
@@ -99,7 +100,9 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
+                    var makeLogistics = '<a href="javascript:;" class="js-makeLogistics" data-id="' + item.id + '"><i class="fa fa-truck"></i>&nbsp;物流发货</a>';
 
+                    var viewLogistics = '<a href="javascript:;" class="js-viewLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
 
                     var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '" data-from="' + item.methodCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
                     var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;修改</a>';
@@ -119,6 +122,12 @@ $(function () {
                     if (item.statusCode !== 1 && allowSettlement) {
                         // 已付款及其以上（排除待付款）
                         a = a + e;
+                    }
+                    if (item.statusCode === 2) {
+                        // 物流发货
+                        a = a + makeLogistics;
+                    } else if (item.statusCode >= 3) {
+                        a = a + viewLogistics;
                     }
 
                     if (item.methodCode === 0) {
@@ -167,6 +176,35 @@ $(function () {
 
     $._table = table;
 
+    //物流相关
+    var makeLogisticsRegion = $('#J_makeLogistics');
+    var makeLogisticsRegionDepotId;
+
+    function depotSelectChange(parent) {
+        var quantity = $('[name=quantity]', parent);
+        var distance = $('[name=distance]', parent);
+        var current = +makeLogisticsRegionDepotId.val();
+        // 从 $.depots 里寻找匹配的
+        $.each($.depots, function (_, data) {
+            if (data.id == current) {
+                quantity.val(data.quantity);
+                distance.val(data.distance);
+            }
+        });
+    }
+
+
+    function depotsUpdate(depots) {
+        $.depots = depots;
+        makeLogisticsRegionDepotId.empty();
+        $.each($.depots, function (_, data) {
+            makeLogisticsRegionDepotId.append('<option value="' + data.id + '">' + data.name + '</option>');
+        });
+        depotSelectChange();
+    }
+
+    //物流相关结束
+
     var detailForm = $('#detailForm');
 
     $(document).on('click', '.js-search', function () {
@@ -176,6 +214,55 @@ $(function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
         $('input[name=from]', detailForm).val($(this).attr('data-from'));
         detailForm.submit();
+    }).on('click', '.js-viewLogistics', function () {
+        window.location.href = logisticsDetailUrl + '?id=' + $(this).data('id');
+    }).on('click', '.js-makeLogistics', function () {
+        var orderId = $(this).attr('data-id');
+        $.ajax('/orderData/logistics/' + orderId, {
+            dataType: 'json',
+            method: 'get',
+            success: function (response) {
+                // 获取可用仓库
+                var depots = response.depots;
+                if (depots.length === 0)
+                    layer.msg('没有该货品可用的库存，请尽快补充库存。');
+                else {
+                    layer.open({
+                        content: makeLogisticsRegion.html(),
+                        area: ['500px', 'auto'],
+                        btn: ['确认', '取消'],
+                        zIndex: 9999,
+                        success: function (layerd) {
+                            makeLogisticsRegionDepotId = $('[name=depotId]', layerd);
+                            $('[name=depotId]', layerd).change(function () {
+                                depotSelectChange(layerd);
+                            });
+                            $('[name=depotId]', layerd).blur(function () {
+                                depotSelectChange(layerd);
+                            });
+                            depotsUpdate(depots);
+                        },
+                        yes: function (index) {
+                            var value = makeLogisticsRegionDepotId.val();
+                            if (value) {
+                                $.ajax('/orderData/logistics/' + orderId, {
+                                    method: 'put',
+                                    contentType: 'text/plain',
+                                    data: value,
+                                    success: function () {
+                                        table.ajax.reload();
+                                        layer.close(index);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+
+            }, error: function () {
+                layer.msg('服务异常，请稍候重试');
+            }
+        });
     }).on('click', '.js-settlement', function () {
         // 重新接收端
         $.ajax('/orderData/settlement/' + $(this).attr('data-id'), {

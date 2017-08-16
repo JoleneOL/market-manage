@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="currentData" type="me.jiangcai.logistics.entity.StockShiftUnit"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>物流详情</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="gray-bg"
+      data-url="/storage/detail">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_logisticsManage.html" th:href="@{/manageLogistics}">物流管理</a></li>
+                <li><strong>物流详情</strong></li>
+            </ol>
+        </div>
+    </div>
+    <!--日日顺专用 div-->
+    <!--/*@thymesVar id="haierOrder" type="me.jiangcai.logistics.haier.entity.HaierOrder"*/-->
+    <div class="row" th:if="${haierOrder!=null}">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="col-md-6">
+                        <span>日日顺订单号：</span><span th:text="${haierOrder.orderNumber}">Hello</span>
+                    </div>
+                    <div class="col-md-6">
+                        <span>日日顺快递号：</span><span th:text="${haierOrder.expressId}">Hello</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" th:if="${false}">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <div class="col-md-9">
+                        <span class="label label-xlg label-danger">未发货</span>
+                        <span class="label label-xlg label-warning">待收货</span>
+                        <span class="label label-xlg label-success">已签收</span>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="text-right">操作员&nbsp;&nbsp;&nbsp;&nbsp;<strong class="view-operator">超级玛丽</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    物流信息
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="panel-package">
+                        <div class="package-title">
+                            <h3 class="title-text" th:text="${currentData.currentStatus}">您的包裹已被签收</h3>
+                        </div>
+                        <div class="package-status">
+                            <div class="status-box">
+                                <ul class="list-unstyled status-list">
+                                    <li class="latest" th:each="event:${currentData.events.values()}"
+                                        th:classappend="${eventStat.last?'latest':'latest'}">
+                                        <span class="date" th:text="${{event.time.toLocalDate()}}">2017-04-12</span>
+                                        <span class="week" th:text="${{event.time.getDayOfWeek()}}">周三</span>
+                                        <span class="time" th:text="${{event.time.toLocalTime()}}">13:26:46 下午</span>
+                                        <div class="text">
+                                            <span th:text="${event.message}">您的订单开始处理</span>
+                                            <div class="hide" th:if="${event.source!=null}"
+                                                 th:utext="${event.source.toHTML()}">
+                                                <ul class="eventEntity">
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-12</span>
+                                        <span class="week">周三</span>
+                                        <span class="time">13:26:46 下午</span>
+                                        <div class="text">
+                                            <span>您的订单待配货</span>
+                                            <div class="hide">
+                                                <ul class="eventEntity">
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                    <li>也许是这样的！</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-12</span>
+                                        <span class="week">周三</span>
+                                        <span class="time">13:37:00 下午</span>
+                                        <div class="text">
+                                            <span>卖家发货</span>
+                                            <div class="hide">
+                                                <ul class="eventEntity">
+                                                    <li><span class="propertyName">attributes:</span>
+                                                        <ul class="propertyMap">
+                                                            <li><span class="propertyName">certification:</span><span
+                                                                    class="propertyValue">4974752222</span></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><span class="propertyName">complete:</span><span
+                                                            class="propertyValue">true</span></li>
+                                                    <li><span class="propertyName">date:</span><span
+                                                            class="propertyValue">2017-08-02T00:00</span></li>
+                                                    <li><span class="propertyName">expNo:</span><span
+                                                            class="propertyValue">6132846602</span></li>
+                                                    <li><span class="propertyName">items:</span>
+                                                        <ul class="propertyList">
+                                                            <li><span class="propertyValue">InOutItem(type=10, productCode=KWkLZc, hrCode=3XQ000122, name=KWkLZc, number=500, complete=true)</span>
+                                                            </li>
+                                                            <li><span class="propertyValue">InOutItem(type=10, productCode=uXkelZ, hrCode=3XQ000121, name=uXkelZ, number=500, complete=true)</span>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><span class="propertyName">orderNo:</span><span
+                                                            class="propertyValue">2d1e134ce1b74a849adbf87096f1128d</span>
+                                                    </li>
+                                                    <li><span class="propertyName">orderType:</span><span
+                                                            class="propertyValue">2</span></li>
+                                                    <li><span class="propertyName">remark:</span><span
+                                                            class="propertyValue">&nbsp;</span></li>
+                                                    <li><span class="propertyName">remark1:</span><span
+                                                            class="propertyValue">&nbsp;</span></li>
+                                                    <li><span class="propertyName">remark2:</span><span
+                                                            class="propertyValue">&nbsp;</span></li>
+                                                    <li><span class="propertyName">remark3:</span><span
+                                                            class="propertyValue">&nbsp;</span></li>
+                                                    <li><span class="propertyName">storeCode:</span><span
+                                                            class="propertyValue">C12101</span></li>
+                                                    <li><span class="propertyName">type:</span><span
+                                                            class="propertyValue">1</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-13</span>
+                                        <span class="week">周四</span>
+                                        <span class="time">13:26:46 下午</span>
+                                        <div class="text">
+                                            <span>在山东烟台芝罘区三站公司进行揽件扫描</span>
+                                            <div class="hide">
+                                                <ul class="eventEntity">
+                                                    <li><span class="propertyName">attributes:</span><span
+                                                            class="propertyValue">&nbsp;</span></li>
+                                                    <li><span class="propertyName">content:</span><span
+                                                            class="propertyValue">接单</span></li>
+                                                    <li><span class="propertyName">expNo:</span><span
+                                                            class="propertyValue">6132846602</span></li>
+                                                    <li><span class="propertyName">operateDate:</span><span
+                                                            class="propertyValue">2017-08-02T15:55:03</span></li>
+                                                    <li><span class="propertyName">operator:</span><span
+                                                            class="propertyValue">WMS</span></li>
+                                                    <li><span class="propertyName">orderNo:</span><span
+                                                            class="propertyValue">2d1e134ce1b74a849adbf87096f1128d</span>
+                                                    </li>
+                                                    <li><span class="propertyName">remark:</span><span
+                                                            class="propertyValue">&nbsp;</span></li>
+                                                    <li><span class="propertyName">status:</span><span
+                                                            class="propertyValue">WMS_ACCEPT</span></li>
+                                                    <li><span class="propertyName">storeCode:</span><span
+                                                            class="propertyValue">C12101</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-13</span>
+                                        <span class="week">周四</span>
+                                        <span class="time">13:26:46 下午</span>
+                                        <div class="text">
+                                            <span>在山东烟台芝罘区三站公司进行下级地点扫描，即将发往：山东烟台分拨中心</span>
+                                            <div class="hide">
+                                                <ul class="eventEntity">
+                                                    <li><span class="propertyName">complete:</span><span
+                                                            class="propertyValue">true</span></li>
+                                                    <li><span class="propertyName">content:</span><span
+                                                            class="propertyValue">1</span></li>
+                                                    <li><span class="propertyName">date:</span><span
+                                                            class="propertyValue">2017-08-02T00:00</span></li>
+                                                    <li><span class="propertyName">expNo:</span><span
+                                                            class="propertyValue">6132846602</span></li>
+                                                    <li><span class="propertyName">items:</span>
+                                                        <ul class="propertyList">
+                                                            <li><span class="propertyValue">InOutItem(type=10, productCode=KWkLZc, hrCode=3XQ000122, name=KWkLZc, number=500, complete=true)</span>
+                                                            </li>
+                                                            <li><span class="propertyValue">InOutItem(type=10, productCode=uXkelZ, hrCode=3XQ000121, name=uXkelZ, number=500, complete=true)</span>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><span class="propertyName">orderNo:</span><span
+                                                            class="propertyValue">2d1e134ce1b74a849adbf87096f1128d</span>
+                                                    </li>
+                                                    <li><span class="propertyName">orderType:</span><span
+                                                            class="propertyValue">2</span></li>
+                                                    <li><span class="propertyName">storeCode:</span><span
+                                                            class="propertyValue">C12101</span></li>
+                                                    <li><span class="propertyName">type:</span><span
+                                                            class="propertyValue">1</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-14</span>
+                                        <span class="week">周五</span>
+                                        <span class="time">17:01:30 下午</span>
+                                        <div class="text">在分拨中心山东烟台分拨中心进行称重扫描</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-14</span>
+                                        <span class="week">周五</span>
+                                        <span class="time">20:43:47 下午</span>
+                                        <div class="text">在山东烟台分拨中心进行中转集包扫描，将发往：浙江萧山分拨中心</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-14</span>
+                                        <span class="week">周五</span>
+                                        <span class="time">21:13:55 下午</span>
+                                        <div class="text">在山东烟台分拨中心进行装车扫描，即将发往：浙江杭州分拨中心</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-15</span>
+                                        <span class="week">周六</span>
+                                        <span class="time">20:23:22 下午</span>
+                                        <div class="text">在分拨中心浙江杭州分拨中心进行卸车扫描</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-15</span>
+                                        <span class="week">周六</span>
+                                        <span class="time">20:33:45 下午</span>
+                                        <div class="text">从浙江杭州分拨中心发出，本次转运目的地：浙江杭州滨江区公司</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-15</span>
+                                        <span class="week">周六</span>
+                                        <span class="time">20:34:12 下午</span>
+                                        <div class="text">到达目的地网点浙江杭州滨江区公司，快件将很快进行派送</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-16</span>
+                                        <span class="week">周日</span>
+                                        <span class="time">08:40:23 下午</span>
+                                        <div class="text">在浙江杭州滨江区公司进行派件扫描；派送业务员：韩建军；联系电话：15088757006</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-16</span>
+                                        <span class="week">周日</span>
+                                        <span class="time">10:48:07 下午</span>
+                                        <div class="text">在浙江杭州滨江区公司进行签收扫描，快件已被 E邮站快递柜 签收</div>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-16</span>
+                                        <span class="week">周日</span>
+                                        <span class="time">10:46:48 下午</span>
+                                        <span class="text">您的快件已被智慧E谷E邮站【自提柜】代收，请及时取件。有问题请联系派件员15088757006</span>
+                                    </li>
+                                    <li th:remove="all">
+                                        <span class="date">2017-04-17</span>
+                                        <span class="week">周一</span>
+                                        <span class="time">09:25:07 下午</span>
+                                        <div class="text">已签收，签收人凭取货码签收。感谢使用韵达快递及智慧E谷E邮站【自提柜】，期待再次为您服务。</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    收货信息
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" th:object="${currentData.destinationData}">
+                            <tbody>
+                            <tr>
+                                <td width="120px">收件人</td>
+                                <td th:text="*{people}">李菲菲</td>
+                            </tr>
+                            <tr>
+                                <td>手机号</td>
+                                <td th:text="*{mobile}">18958044532</td>
+                            </tr>
+                            <tr>
+                                <td width="120px">收货地址</td>
+                                <td th:text="*{toString()}">浙江杭州西湖大西湖国际</td>
+                            </tr>
+                            <tr th:each="product:${currentData.amounts.entrySet()}">
+                                <td rowspan="2" th:rowspan="${currentData.amounts.size()}" th:if="${productStat.first}">
+                                    货品
+                                    / 数量
+                                </td>
+                                <td><span th:text="${product.key.name}">量子立式净水机</span>&nbsp;/&nbsp;<span
+                                        th:text="${product.value.amount}">300</span>（<span
+                                        th:text="${product.key.unit}">台</span>）
+                                </td>
+                            </tr>
+                            <tr th:remove="all">
+                                <td>量子水宝 / 300（盒）</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    发货信息
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" th:object="${currentData.originData}">
+                            <tbody>
+                            <tr>
+                                <td width="120px">发件人</td>
+                                <td th:text="*{people}">李菲菲</td>
+                            </tr>
+                            <tr>
+                                <td>手机号</td>
+                                <td th:text="*{mobile}">18958044532</td>
+                            </tr>
+                            <tr>
+                                <td width="120px">发货地址</td>
+                                <td th:text="*{toString()}">浙江杭州西湖大西湖国际</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-sm-4">-->
+        <!--<div class="ibox">-->
+        <!--<div class="ibox-title">-->
+        <!--安装信息-->
+        <!--<div class="ibox-tools">-->
+        <!--<a class="collapse-link">-->
+        <!--<i class="fa fa-chevron-up"></i>-->
+        <!--</a>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="ibox-content">-->
+        <!--<div class="table-responsive">-->
+        <!--<table class="table table-hover table-bordered">-->
+        <!--<tbody>-->
+        <!--<tr>-->
+        <!--<td width="120px">安装公司</td>-->
+        <!--<td>海尔</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<td>安装人员</td>-->
+        <!--<td>节星得</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<td>安装人员电话</td>-->
+        <!--<td>18958044532</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<td>安装时间</td>-->
+        <!--<td>2017-09-09</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+        <!--<td>订单号</td>-->
+        <!--<td>20213XSD234</td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+        <!--</table>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+<script src="manage-resource/js/logisticDetail.js"></script>
+</html>

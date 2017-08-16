@@ -37,17 +37,22 @@ public class WechatInitService {
             log.info("单元测试时没有必要更新公众号菜单");
             return;
         }
-        Protocol.forAccount(publicAccount).createMenu(
-                new Menu[]
-                        {
-                                createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
-                                , createMenu("下单"
-                                , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
-                                , createMenu("分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
-                                , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
-                        }
-        );
-        log.info("updated the menus");
+        try {
+            Protocol.forAccount(publicAccount).createMenu(
+                    new Menu[]
+                            {
+                                    createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
+                                    , createMenu("下单"
+                                    , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
+                                    , createMenu("分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
+                                    , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
+                            }
+            );
+            log.info("updated the menus");
+        } catch (Throwable ex) {
+            log.warn("Error on Update Wechat Menus", ex);
+        }
+
     }
 
     private Menu createMenu(String name, Menu... menus) {

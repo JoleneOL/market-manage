@@ -5,49 +5,67 @@
   "data": [
     {
       "id": 1,
+      "type": "日日顺",
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
       "address": "阡陌路482号智慧E谷B栋",
       "name": "出门右转",
-      "haierCode": "1001",
+      "supplierInfo": "1001",
       "createTime": "2999-11-11",
       "enable": true
     },
     {
       "id": 2,
+      "type": "日日顺",
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
       "address": "阡陌路482号智慧E谷B栋",
       "name": "何桂芳",
-      "haierCode": "1002",
+      "supplierInfo": "1002",
       "createTime": "2999-11-11",
       "enable": true
     },
     {
       "id": 3,
+      "type": "日日顺",
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
       "address": "阡陌路482号智慧E谷B栋",
       "name": "天涯",
-      "haierCode": "1003",
+      "supplierInfo": "1003",
       "createTime": "2999-11-11",
       "enable": true
     },
     {
       "id": 4,
+      "type": "日日顺",
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
       "address": "阡陌路482号智慧E谷B栋",
       "name": "芳草",
-      "haierCode": "1004",
+      "supplierInfo": "1004",
       "createTime": "2999-11-11",
       "enable": false
     },
     {
       "id": 5,
+      "type": "日日顺",
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
       "address": "阡陌路482号智慧E谷B栋",
       "name": "右腿的左边",
-      "haierCode": "1005",
+      "supplierInfo": "1005",
       "createTime": "2999-11-11",
       "enable": true
     },
     {
       "id": 6,
+      "type": "日日顺",
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
       "address": "阡陌路482号智慧E谷B栋",
       "name": "左腿的右边",
-      "haierCode": "1006",
+      "supplierInfo": "1006",
       "createTime": "2999-11-11",
       "enable": true
     }

@@ -1,0 +1,61 @@
+{
+  "draw": 1,
+  "recordsTotal": 23,
+  "recordsFiltered": 23,
+  "data": [
+    {
+      "id": 1,
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
+      "address": "阡陌路482号智慧E谷B栋",
+      "name": "出门右转",
+      "createTime": "2999-11-11",
+      "enable": true
+    },
+    {
+      "id": 2,
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
+      "address": "阡陌路482号智慧E谷B栋",
+      "name": "何桂芳",
+      "createTime": "2999-11-11",
+      "enable": true
+    },
+    {
+      "id": 3,
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
+      "address": "阡陌路482号智慧E谷B栋",
+      "name": "天涯",
+      "createTime": "2999-11-11",
+      "enable": true
+    },
+    {
+      "id": 4,
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
+      "address": "阡陌路482号智慧E谷B栋",
+      "name": "芳草",
+      "createTime": "2999-11-11",
+      "enable": false
+    },
+    {
+      "id": 5,
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
+      "address": "阡陌路482号智慧E谷B栋",
+      "name": "右腿的左边",
+      "createTime": "2999-11-11",
+      "enable": true
+    },
+    {
+      "id": 6,
+      "chargePeopleName": "何桂芳",
+      "chargePeopleMobile": "18812341243",
+      "address": "阡陌路482号智慧E谷B栋",
+      "name": "左腿的右边",
+      "createTime": "2999-11-11",
+      "enable": true
+    }
+  ]
+}

@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -149,6 +150,7 @@ public class InitService {
                 MainGood mainGood = mainGoodRepository.findByProduct(mainProduct);
                 if (mainGood == null) {
                     mainGood = new MainGood();
+                    mainGood.setCreateTime(LocalDateTime.now());
                     mainGood.setProduct(mainProduct);
                     mainGood.setEnable(true);
                     mainGoodRepository.save(mainGood);

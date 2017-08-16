@@ -318,13 +318,13 @@ input[type=checkbox] {
   background-color: #009bb6;
   border-color: lightblue;
 }
-.panel-package .package-status .status-list .data,
+.panel-package .package-status .status-list .date,
 .panel-package .package-status .status-list .week,
 .panel-package .package-status .status-list .time,
 .panel-package .package-status .status-list .text {
   display: inline-block;
 }
-.panel-package .package-status .status-list .data {
+.panel-package .package-status .status-list .date {
   width: 78px;
   font-weight: 700;
   margin-right: 8px;

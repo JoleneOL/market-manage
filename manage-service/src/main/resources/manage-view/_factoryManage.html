@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>工厂管理</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <!--重置库-->
+    <!--<link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">-->
+    <link rel="stylesheet" href="manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<!--可以展示-->
+<!--可以添加 新页面去POST?-->
+<!--可以禁用|启用-->
+<body class="gray-bg" data-url="mock/factoryList.json"
+      th:data-url="@{/manage/factoryList}">
+
+<section>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-md-12 mb10">
+                <div class="form-inline">
+                    <div>
+                        <a class="btn btn-primary btn-sm" href="_factoryAdd.html"
+                           th:href="@{/manageFactoryAdd}">新增工厂</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="factoryDatagrid">
+                            <div class="table-responsive">
+                                <table id="factoryTable" class="table table-hover table-success" cellspacing="0"
+                                       width="100%"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<!--额外工具-->
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+<script src="manage-resource/js/factoryManage.js"></script>
+</html>

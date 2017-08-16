@@ -2,8 +2,8 @@ package cn.lmjia.market.core.model;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
-import cn.lmjia.market.core.entity.support.Address;
 import lombok.Data;
+import me.jiangcai.jpa.entity.support.Address;
 
 /**
  * @author CJ

@@ -4,17 +4,37 @@ import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
+import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.LogisticsService;
+import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.StockService;
+import me.jiangcai.logistics.Thing;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ProductStatus;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.entity.support.StockInfo;
+import me.jiangcai.logistics.event.InstallationEvent;
+import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.option.LogisticsOptions;
+import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.NumberUtils;
@@ -22,6 +42,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -29,11 +50,14 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @author CJ
@@ -56,6 +80,18 @@ public class MainOrderServiceImpl implements MainOrderService {
      * 保存每日序列号的
      */
     private Map<LocalDate, AtomicInteger> dailySerials = Collections.synchronizedMap(new HashMap<>());
+    @Autowired
+    private StockService stockService;
+    @Autowired
+    private HaierSupplier haierSupplier;
+    @Autowired
+    private LogisticsService logisticsService;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -144,6 +180,9 @@ public class MainOrderServiceImpl implements MainOrderService {
     public Login getEnjoyability(Login orderBy) {
         Login login = orderBy;
         while (!loginService.isRegularLogin(login)) {
+            // 最终都没有找到收益人 则给 管理员。。
+            if (login == null)
+                return loginService.byLoginName("root");
             login = login.getGuideUser();
         }
         return login;
@@ -213,5 +252,110 @@ public class MainOrderServiceImpl implements MainOrderService {
         Root<MainOrder> root = criteriaUpdate.from(MainOrder.class);
         criteriaUpdate = criteriaUpdate.set(root.get("orderTime"), time);
         entityManager.createQuery(criteriaUpdate).executeUpdate();
+    }
+
+    @Override
+    public Set<StockInfo> depotsForOrder(long orderId) {
+        MainOrder order = getOrder(orderId);
+        final MainProduct product = order.getGood().getProduct();
+        return stockService.enabledUsableStockInfo(((productPath, criteriaBuilder)
+                -> criteriaBuilder.equal(productPath, product)), null)
+                .forProduct(product);
+    }
+
+    @Override
+    public StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId) {
+        MainOrder order = getOrder(orderId);
+        Depot depot = depotRepository.getOne(depotId);
+
+        LogisticsSupplier supplier;
+        if (supplierType == HaierSupplier.class)
+            supplier = haierSupplier;
+        else
+            supplier = applicationContext.getBean(supplierType);
+
+        StockShiftUnit unit = logisticsService.makeShift(supplier, Collections.singleton(new Thing() {
+            @Override
+            public Product getProduct() {
+                return order.getGood().getProduct();
+            }
+
+            @Override
+            public ProductStatus getProductStatus() {
+                return ProductStatus.normal;
+            }
+
+            @Override
+            public int getAmount() {
+                return order.getAmount();
+            }
+        }), depot, order, LogisticsOptions.Installation);
+
+        if (order.getLogisticsSet() == null)
+            order.setLogisticsSet(new ArrayList<>());
+
+        order.getLogisticsSet().add(unit);
+        order.setCurrentLogistics(unit);
+        order.setOrderStatus(OrderStatus.forDeliverConfirm);
+        return unit;
+    }
+
+    @Override
+    public void forInstallationEvent(InstallationEvent event) {
+        logisticsToMainOrder(event.getUnit(), order -> {
+            final OrderStatus currentOrderStatus = order.getOrderStatus();
+            order.setOrderStatus(OrderStatus.afterSale);
+            if (currentOrderStatus != OrderStatus.forInstall) {
+                log.error(order.getSerialId() + "尚未收货就安装完成了。");
+            }
+            applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
+        });
+    }
+
+    @Override
+    public void forShiftEvent(ShiftEvent event) {
+        // 基于物流的变化，需要对订单进行状态更新
+        // 只关注 拒绝事件
+        final ShiftStatus toStatus = event.getStatus();
+        if (toStatus != ShiftStatus.reject
+                && toStatus != ShiftStatus.success)
+            return;
+        logisticsToMainOrder(event.getUnit(), order -> {
+            final OrderStatus currentOrderStatus = order.getOrderStatus();
+            switch (toStatus) {
+                case reject:
+                    if (currentOrderStatus == OrderStatus.forDeliverConfirm
+                            || currentOrderStatus == OrderStatus.forInstall
+                            || currentOrderStatus == OrderStatus.afterSale
+                            )
+                        order.setOrderStatus(OrderStatus.forDeliver);
+                    else {
+                        log.error("错误逻辑，应该是未进入物流状态的订单 收到了物流失败的事件。" + order.getSerialId());
+                    }
+                    break;
+                case success:
+                    if (currentOrderStatus == OrderStatus.forDeliverConfirm)
+                        order.setOrderStatus(OrderStatus.forInstall);
+                    applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
+                    break;
+                default:
+            }
+        });
+
+    }
+
+    private void logisticsToMainOrder(final StockShiftUnit unit, Consumer<MainOrder> consumer) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        try {
+            MainOrder order = entityManager.createQuery(cq
+                    .where(cb.isMember(unit, root.get("logisticsSet")))
+            )
+                    .getSingleResult();
+            consumer.accept(order);
+        } catch (NoResultException ignored) {
+            log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
+        }
     }
 }

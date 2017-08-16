@@ -2,13 +2,15 @@ package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.util.CommissionSource;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.thread.ThreadLocker;
+import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 
@@ -19,7 +21,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
@@ -30,6 +34,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -40,7 +45,7 @@ import java.util.Locale;
 @Entity
 @Setter
 @Getter
-public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
+public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, LogisticsDestination {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
@@ -127,6 +132,15 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
      * 暂停结算
      */
     private boolean disableSettlement;
+
+    /**
+     * 物流信息
+     */
+    @OneToMany
+    @OrderBy("createTime desc")
+    private List<StockShiftUnit> logisticsSet;
+    @ManyToOne
+    private StockShiftUnit currentLogistics;
 
     /**
      * @param from order表
@@ -249,5 +263,35 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     @Override
     public Object lockObject() {
         return ("mainOrder-" + id).intern();
+    }
+
+    @Override
+    public String getProvince() {
+        return installAddress.getProvince();
+    }
+
+    @Override
+    public String getCity() {
+        return installAddress.getPrefecture();
+    }
+
+    @Override
+    public String getCountry() {
+        return installAddress.getCounty();
+    }
+
+    @Override
+    public String getDetailAddress() {
+        return installAddress.getOtherAddress();
+    }
+
+    @Override
+    public String getConsigneeName() {
+        return customer.getName();
+    }
+
+    @Override
+    public String getConsigneeMobile() {
+        return customer.getMobile();
     }
 }

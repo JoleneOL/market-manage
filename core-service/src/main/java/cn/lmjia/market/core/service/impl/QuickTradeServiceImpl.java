@@ -32,7 +32,7 @@ public class QuickTradeServiceImpl implements QuickTradeService {
             order.setOrderStatus(OrderStatus.afterSale);
 //            order = mainOrderRepository.save(order);
         }
-        
-        applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order));
+
+        applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, null));
     }
 }
