@@ -611,3 +611,49 @@ Mock.mock(/\/manual\/list/, {
         }
     ]
 });
+
+Mock.mock(/\/search\/url/, {
+    "total_count": 12,
+    "items": [
+        {
+            "id": 1,
+            "goods": "量子手机防辐射芯片",
+            "model": "LZXP01"
+        },
+        {
+            "id": 2,
+            "goods": "立式净水机（黑色）",
+            "model": "SCRO-200LK/A"
+        },
+        {
+            "id": 3,
+            "goods": "立式净水机（白色）",
+            "model": "SCRO-200LK/B"
+        },
+        {
+            "id": 4,
+            "goods": "台式净水机（黑色）",
+            "model": "SCRO-200TK/A"
+        },
+        {
+            "id": 5,
+            "goods": "台式净水机（白色）",
+            "model": "SCRO-200TK/B"
+        },
+        {
+            "id": 6,
+            "goods": "量子厨下净水机",
+            "model": "M537R"
+        },
+        {
+            "id": 7,
+            "goods": "量子空气净化器",
+            "model": "ESL-HM01"
+        },
+        {
+            "id": 8,
+            "goods": "量子食品优化宝",
+            "model": "SP70"
+        }
+    ]
+});

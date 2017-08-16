@@ -17,7 +17,8 @@ $(function () {
                 "title": "订单号", "data": "orderId", "name": "orderId"
             },
             {
-                "title": "产品及型号", "name": "phone",
+                "title": "产品及型号",
+                "orderable": false,
                 data: function (item) {
                     return item.goods + ' / ' + item.model;
                 }

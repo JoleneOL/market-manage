@@ -3,11 +3,6 @@
  */
 $(function () {
 
-    $('#J_cityPicker').on('cp:updated',function(){
-        var val = $(this).val();
-        $(this).val(val.replace(/\//g,' '));
-    });
-
     $.validator.addMethod("hasCity", function (value, element) {
         var val = $('#J_cityPicker').val();
         return val.split(' ').length === 3;
