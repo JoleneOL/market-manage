@@ -1,12 +1,12 @@
 package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import com.jayway.jsonpath.JsonPath;
+import me.jiangcai.jpa.entity.support.Address;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

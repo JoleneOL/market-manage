@@ -127,6 +127,8 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
     @Override
     public void addCustomerCache(Customer customer) {
         // 只新增关系！
+        if (customer.getAgentLevel() == null)
+            return;
         final AgentSystem system = customer.getAgentLevel().getSystem();
         final Login from = customer.getAgentLevel().getLogin();
         Set<LoginRelation> relations = loginRelationRepository.findBySystemAndTo(system

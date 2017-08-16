@@ -21,16 +21,16 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body data-edit-url="_userEdit.html" th:data-edit-url="@{/manageManagerEdit}">
+<body class="gray-bg" data-edit-url="_userEdit.html" th:data-edit-url="@{/manageManagerEdit}">
 <div class="wrapper wrapper-content">
     <div class="row m-b-sm">
         <div class="col-sm-10">
             <div class="form-inline">
                 <div class="js-selectToolbar">
-                    <input type="search" class="form-control input-sm js-searchName" placeholder="手机号"
+                    <input type="search" class="form-control input-sm" placeholder="手机号"
                            name="mobile">
                     <label>
-                        <select class="form-control input-sm js-searchRank" name="applicationDate">
+                        <select class="form-control input-sm" name="applicationDate">
                             <option value=" " disabled="" selected="" class="hidden">申请时间</option>
                             <option value="month">本月</option>
                             <option value="quarter">近三个月</option>
@@ -44,8 +44,11 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <div class="table-responsive">
-                <table id="updateTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table id="updateTable" class="table table-hover table-success" cellspacing="0"
+                           width="100%"></table>
+                </div>
             </div>
         </div>
     </div>

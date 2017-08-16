@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainGood"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title th:if="${currentData==null}">新增商品</title>
+    <title th:if="${currentData!=null}">编辑商品</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_goodsManage.html" th:href="@{/manageGood}">商品管理</a></li>
+                <li><strong th:if="${currentData==null}">新增商品</strong><strong th:if="${currentData!=null}">编辑商品</strong>
+            </ol>
+        </div>
+    </div>
+    <form id="J_goodsForm" method="post"
+          action="_goodsManage.html" th:action="@{/manageGoodSubmit}">
+        <input type="hidden" name="id" th:if="${currentData!=null}" th:value="${currentData.id}"/>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        详细信息
+                    </div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-horizontal">
+                                        <!--<div class="form-group">-->
+                                        <!--<label class="col-sm-3 control-label">商品名称 </label>-->
+                                        <!--<div class="col-sm-6">-->
+                                        <!--<input type="text" placeholder="请输入商品名称" class="form-control"-->
+                                        <!--name="goodsName">-->
+                                        <!--</div>-->
+                                        <!--</div>-->
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="J_selectCat">关联货品 <span
+                                                    class="asterisk">*</span></label>
+                                            <div class="col-sm-6">
+                                                <select data-placeholder="请选择货品" id="J_selectCat"
+                                                        class="chosen-select form-control"
+                                                        name="product" th:disabled="${currentData!=null}">
+                                                    <option value="净水机"
+                                                            th:each="product:${@readService.allEnabledMainProduct()}"
+                                                            th:selected="${currentData!=null && product.equals(currentData.product)}"
+                                                            th:value="${product.code}" th:text="${product.name}">净水机
+                                                    </option>
+                                                    <option th:remove="all" value="净化器">净化器</option>
+                                                    <option th:remove="all" value="优化宝">优化宝</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label" for="J_selectChannel">渠道 <span
+                                                    class="asterisk">*</span></label>
+                                            <div class="col-sm-6">
+                                                <select data-placeholder="请选择渠道" id="J_selectChannel"
+                                                        class="chosen-select form-control"
+                                                        name="channel">
+                                                    <option value="0">无</option>
+                                                    <option value="1"
+                                                            th:each="channel:${@readService.allChannel()}"
+                                                            th:selected="${currentData!=null && channel.equals(currentData.channel)}"
+                                                            th:value="${channel.id}" th:text="${channel.name}">投融家
+                                                    </option>
+                                                    <option th:remove="all" value="净化器">京东</option>
+                                                    <option th:remove="all" value="优化宝">淘宝</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6 col-sm-offset-3 control-label">
+                                                <button th:if="${currentData==null}" type="submit"
+                                                        class="btn btn-primary btn-block btn-lg">
+                                                    添&nbsp;加
+                                                </button>
+                                                <button th:if="${currentData!=null}" type="submit"
+                                                        class="btn btn-primary btn-block btn-lg">
+                                                    修&nbsp;改
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+
+</html>

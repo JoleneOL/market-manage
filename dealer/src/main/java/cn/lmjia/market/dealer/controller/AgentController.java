@@ -1,10 +1,10 @@
 package cn.lmjia.market.dealer.controller;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.dealer.service.AgentService;
+import me.jiangcai.jpa.entity.support.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;

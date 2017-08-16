@@ -2,7 +2,7 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
+import me.jiangcai.jpa.entity.support.Address;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;

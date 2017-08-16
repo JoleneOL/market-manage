@@ -4,11 +4,13 @@
 $(function () {
     "use strict";
 
+    var _body = $('body');
+
     var table = $('#productTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/product/list",
+            "url": _body.data('url'),
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
@@ -19,36 +21,37 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "产品品类", "data": "category", "name": "category"
+                "title": "货品名称", "data": "productName", "name": "productName"
             },
             {
-                "title": "型号", "data": "type", "name": "type"
+                "title": "类目", "data": "category", "name": "category"
             },
             {
-                "title": "厂家", "data": "supplier", "name": "supplier"
+                "title": "型号", "data": "code", "name": "code"
             },
             {
-                "title": "单价（元）", "data": "price", "name": "price"
+                "title": "品牌", "data": "brand", "name": "brand"
+            },
+            // {
+            //     "title": "厂家", "data": "supplier", "name": "supplier"
+            // },
+            {
+                "title": "设备款", "data": "price", "name": "price"
             },
             {
-                "title": "使用费（元）", "data": "cost", "name": "cost"
-            },
-            {
-                "title": "安装费（元）", "data": "installFee", "name": "installFee"
-            },
-            {
-                "title": "分期数", "data": "stagesTime", "name": "stagesTime"
-            },
-            {
-                "title": "分期产品", "data": "stagesType", "name": "stagesType"
+                "title": "服务费", "data": "installFee", "name": "installFee"
             },
             {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o" aria-hidden="true"></i>&nbsp;详情</a>';
-                    var b = '<a href="javascript:;" class="js-delete" data-id="' + item.id + '"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;删除</a>';
-                    return a + b;
+                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.code + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>';
+                    var b = '<a href="javascript:;" class="js-delete" data-id="' + item.code + '"><i class="fa fa-trash-o"></i>&nbsp;禁用</a>';
+                    var b2 = '<a href="javascript:;" class="js-active" data-id="' + item.code + '"><i class="fa fa-caret-square-o-up"></i>&nbsp;激活</a>';
+                    var c = '<a href="javascript:;" class="js-pushHR" data-id="' + item.code + '"><i class="fa fa-cloud-upload"></i>&nbsp;推送给日日顺</a>';
+                    if (item.enable)
+                        return a + b + c;
+                    return a + b2 + c;
                 }
             }
         ],
@@ -75,18 +78,44 @@ $(function () {
 
 
     $(document).on('click', '.js-search', function () {
-        // 点击搜索方法。但如果数据为空，是否阻止
         table.ajax.reload();
     }).on('click', '.js-checkInfo', function () {
-        // TODO
-        // 需要获取一些参数供详情跳转
-        window.location.href = '_productDetail.html?id=' + $(this).data('id');
+        // 需要url encoding
+        window.location.href = _body.data('detail-url') + '?code=' + encodeURIComponent($(this).data('id'));
+    }).on('click', '.js-pushHR', function () {
+        var id = $(this).data('id');
+        layer.confirm('确定要将货品作为物料推送至日日顺？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            $.ajax('/productsHaier?code=' + encodeURIComponent(id), {
+                method: 'put',
+                success: function () {
+                    table.ajax.reload();
+                    layer.close(index);
+                    layer.msg('成功推送');
+                },
+                error: function () {
+                    layer.msg('服务器异常或者货品信息不完整');
+                }
+            });
+        });
+    }).on('click', '.js-active', function () {
+        var id = $(this).data('id');
+        $.ajax('/products?code=' + encodeURIComponent(id), {
+            method: 'put',
+            success: function () {
+                table.ajax.reload();
+            },
+            error: function () {
+                layer.msg('服务器异常');
+            }
+        });
     }).on('click', '.js-delete', function () {
         var id = $(this).data('id');
-        layer.confirm('确定删除该产品？', {
-            btn: ['确定', '取消'] //按钮
+        layer.confirm('确定禁用货品？', {
+            btn: ['确定', '取消']
         }, function (index) {
-            $.ajax('/products/' + id, {
+            $.ajax('/products?code=' + encodeURIComponent(id), {
                 method: 'delete',
                 success: function () {
                     table.ajax.reload();

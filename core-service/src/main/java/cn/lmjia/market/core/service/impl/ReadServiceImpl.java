@@ -4,13 +4,21 @@ import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.repository.MainProductRepository;
+import cn.lmjia.market.core.repository.channel.ChannelRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.seext.NumberUtils;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.repository.DepotRepository;
+import me.jiangcai.logistics.repository.ProductRepository;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +31,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author CJ
@@ -37,6 +46,14 @@ public class ReadServiceImpl implements ReadService {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private MainProductRepository mainProductRepository;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ChannelRepository channelRepository;
 
     @Override
     public String mobileFor(Object principal) {
@@ -145,6 +162,26 @@ public class ReadServiceImpl implements ReadService {
                 .where(criteriaBuilder.equal(root, login))
         ;
         return entityManager.createQuery(integerCriteriaQuery).getSingleResult();
+    }
+
+    @Override
+    public List<Depot> allEnabledDepot() {
+        return depotRepository.findByEnableTrue();
+    }
+
+    @Override
+    public List<MainProduct> allEnabledMainProduct() {
+        return mainProductRepository.findByEnableTrue();
+    }
+
+    @Override
+    public List<Channel> allChannel() {
+        return channelRepository.findAll();
+    }
+
+    @Override
+    public List<Product> allEnabledProduct() {
+        return productRepository.findByEnableTrue();
     }
 
     //    @Override

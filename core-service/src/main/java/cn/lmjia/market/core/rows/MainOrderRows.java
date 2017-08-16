@@ -6,7 +6,6 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
@@ -30,19 +29,16 @@ import java.util.function.Function;
  *
  * @author CJ
  */
-public abstract class MainOrderRows implements RowDefinition<MainOrder> {
+public abstract class MainOrderRows extends AbstractRows<MainOrder> {
 
-    //    private final LocalDateConverter localDateConverter = new LocalDateConverter();
-
-    protected final Function<LocalDateTime, String> orderTimeFormatter;
     /**
      * 要渲染这些记录的身份
      */
     private final Login login;
 
-    public MainOrderRows(Login login, Function<LocalDateTime, String> orderTimeFormatter) {
+    public MainOrderRows(Login login, Function<LocalDateTime, String> localDateTimeFormatter) {
+        super(localDateTimeFormatter);
         this.login = login;
-        this.orderTimeFormatter = orderTimeFormatter;
     }
 
     @Override
@@ -125,10 +121,7 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                         .addSelect(root -> root.get("orderStatus"))
                         .addFormat((data, type) -> data == null ? null : ((Enum) data).ordinal())
                         .build()
-                , FieldBuilder.asName(MainOrder.class, "orderTime")
-                        .addFormat((data, type)
-                                -> orderTimeFormatter.apply(((LocalDateTime) data)))
-                        .build()
+                , getOrderTime()
                 , FieldBuilder.asName(MainOrder.class, "quickDoneAble")
                         .addSelect(root -> root.get("orderStatus"))
                         .addFormat((data, type) -> {
@@ -137,5 +130,12 @@ public abstract class MainOrderRows implements RowDefinition<MainOrder> {
                         })
                         .build()
         );
+    }
+
+    protected FieldDefinition<MainOrder> getOrderTime() {
+        return FieldBuilder.asName(MainOrder.class, "orderTime")
+                .addFormat((data, type)
+                        -> localDateTimeFormatter.apply(((LocalDateTime) data)))
+                .build();
     }
 }

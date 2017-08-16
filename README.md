@@ -15,8 +15,8 @@
 ## web 项目
 管理各模块共享的web资源
 
-## payment-support-huabei
-花呗支付的支持
+## logistics 物流API
+独立设计的物流API，它不依赖于其他项目
 
 ### 注意
 目前暂时将所有页面都管理与web模块，这是仅仅临时的解决方案

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="depotList" type="java.util.List<me.jiangcai.logistics.entity.Depot>"*/-->
+<!--/*@thymesVar id="prefectDepot" type="me.jiangcai.logistics.entity.Depot"*/-->
+<!--/*@thymesVar id="factoryList" type="java.util.List<cn.lmjia.market.core.entity.Factory>"*/-->
+<!--/*@thymesVar id="productList" type="java.util.List<me.jiangcai.logistics.entity.Product>"*/-->
+<!--/*@thymesVar id="prefectProduct" type="me.jiangcai.logistics.entity.Product"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>发货</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_storageManage.html" th:href="@{/manageStorage}">仓储管理</a></li>
+                <li><strong>发货</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <form class="form-horizontal" id="J_deliverForm" method="post"
+              action="_storageManage.html" th:action="@{/manageStorageDelivery}">
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        发货信息
+                    </div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-7 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货工厂</label>
+                                        <div class="col-sm-6">
+                                            <select id="J_deliver_factory" class="form-control" name="factory" required>
+                                                <!--<option value="" disabled="" selected="" class="hidden">发货工厂-->
+                                                <!--</option>-->
+                                                <option th:each="factory:${factoryList}" th:value="${factory.id}"
+                                                        th:text="${factory.name}" value="1">帅风
+                                                </option>
+                                                <option th:remove="all" value="2">帅雨</option>
+                                                <option th:remove="all" value="3">帅云</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货机型</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" name="product" required>
+                                                <!--<option value="" disabled="" selected="" class="hidden">发货机型-->
+                                                <!--</option>-->
+                                                <option th:each="product:${productList}" th:value="${product.code}"
+                                                        th:text="${product.name}"
+                                                        th:selected="${prefectProduct!=null&&product.equals(prefectProduct)}"
+                                                        value="1">帅风立式净水器
+                                                </option>
+                                                <option th:remove="all" value="2">帅雨立式净水器</option>
+                                                <option th:remove="all" value="3">帅云立式净水器</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货数量 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入数量" class="form-control"
+                                                   name="deliverQuantity" min="1" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">详细地址 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入详细地址" class="form-control"
+                                                   name="factoryAddress" value="浙江 杭州 滨江" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">联系人 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入联系人" class="form-control"
+                                                   name="factoryName" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">联系电话 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="tel" placeholder="请输入联系电话" class="form-control"
+                                                   name="factoryMobile" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox">
+                    <div class="ibox-title">收货信息</div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-7 col-lg-6">
+                                    <!--<div class="form-group">-->
+                                    <!--<label class="col-sm-3 control-label">收货物流</label>-->
+                                    <!--<div class="col-sm-6">-->
+                                    <!--<select class="form-control" name="logistics" required>-->
+                                    <!--&lt;!&ndash;<option value="" disabled="" selected="" class="hidden">发货工厂&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</option>&ndash;&gt;-->
+                                    <!--<option value="1">日日顺</option>-->
+                                    <!--</select>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">仓库</label>
+                                        <div class="col-sm-6">
+                                            <select id="J_deliver_depot" class="form-control" name="depot" required>
+                                                <!--<option value="" disabled="" selected="" class="hidden">发货机型-->
+                                                <!--</option>-->
+                                                <option th:each="depot:${depotList}" th:value="${depot.id}"
+                                                        th:text="${depot.name}"
+                                                        th:selected="${prefectDepot!=null&&depot.equals(prefectDepot)}"
+                                                        value="1">华东
+                                                </option>
+                                                <option th:remove="all" value="2">华南</option>
+                                                <option th:remove="all" value="3">华北</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">详细地址 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入详细地址" class="form-control"
+                                                   name="depotAddress" value="浙江 杭州 滨江" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">联系人 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入联系人" class="form-control"
+                                                   name="depotName" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">联系电话 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <input type="tel" placeholder="请输入联系电话" class="form-control"
+                                                   name="depotMobile" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                                确定发货
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+
+<!--这里包含工厂和仓库的几个地址联系人选项，结构上是一致的-->
+<script th:inline="javascript">
+    $.depotCS = /*[[${depotCS}]]*/ {
+        "1": {
+            name: '刘备',
+            mobile: '18812340000',
+            address: '成都'
+        }, "2": {
+            name: '关羽',
+            mobile: '18812341111',
+            address: '襄阳'
+        }, "3": {
+            name: '张飞',
+            mobile: '18812342222',
+            address: '汉中'
+        }
+    };
+    $.factoryCS = /*[[${factoryCS}]]*/ {
+        "1": {
+            name: '悟空',
+            mobile: '18843210000',
+            address: '那美克星'
+        }, "2": {
+            name: '悟饭',
+            mobile: '18843211111',
+            address: '空中花园'
+        }, "3": {
+            name: '悟天',
+            mobile: '18843212222',
+            address: '游泳池'
+        }
+    };
+</script>
+
+<script src="manage-resource/js/transfer.js"></script>
+
+</html>

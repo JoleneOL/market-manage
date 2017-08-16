@@ -42,6 +42,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.time.DayOfWeek;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -167,6 +168,29 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 default:
                     return "";
             }
+        });
+        registry.addConverter(DayOfWeek.class, String.class, source -> {
+            if (source == null)
+                return null;
+            switch (source) {
+                case MONDAY:
+                    return "周一";
+                case TUESDAY:
+                    return "周二";
+                case WEDNESDAY:
+                    return "周三";
+                case THURSDAY:
+                    return "周四";
+                case FRIDAY:
+                    return "周五";
+                case SATURDAY:
+                    return "周六";
+                case SUNDAY:
+                    return "周日";
+                default:
+                    return null;
+            }
+
         });
     }
 

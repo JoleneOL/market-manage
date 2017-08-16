@@ -13,12 +13,13 @@ public abstract class AbstractContentPage extends AbstractPage {
 
     public AbstractContentPage(WebDriver webDriver) {
         super(webDriver);
+        waitForTable();
     }
 
     /**
      * 点击面包屑里面的第一个链接
      */
-    protected void clickBreadcrumb() {
+    public void clickBreadcrumb() {
         clickBreadcrumb(e -> true);
     }
 
@@ -27,7 +28,7 @@ public abstract class AbstractContentPage extends AbstractPage {
      *
      * @param filter 过滤器
      */
-    protected void clickBreadcrumb(Predicate<WebElement> filter) {
+    public void clickBreadcrumb(Predicate<WebElement> filter) {
         String href = webDriver.findElement(By.className("breadcrumb")).findElements(By.tagName("a")).stream()
                 .filter(filter)
                 .findFirst()

@@ -2,7 +2,6 @@ package cn.lmjia.market.core.entity.request;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.PaymentStatus;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
@@ -12,6 +11,7 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.service.ReadService;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;

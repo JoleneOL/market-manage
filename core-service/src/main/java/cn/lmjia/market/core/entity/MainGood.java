@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.channel.InstallmentChannel;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 具体的商品，用以销售
@@ -39,6 +41,8 @@ public class MainGood {
     private MainProduct product;
     @ManyToOne
     private Channel channel;
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime createTime = LocalDateTime.now();
 
     public static Expression<BigDecimal> getTotalPrice(From<?, MainGood> path, CriteriaBuilder criteriaBuilder) {
         final Path<Object> product = path.get("product");

@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>产品中心</title>
+    <title>商品管理</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -23,11 +23,8 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<!--可以展示-->
-<!--可以添加 新页面去POST?-->
-<!--可以禁用|启用-->
-<body data-url="mock/depotList.json"
-      th:data-url="@{/manage/depotList}">
+
+<body data-url="/goods/list" data-edit-url="_goodsOperate.html" th:data-edit-url="@{/manageGoodEdit}">
 
 <section>
     <div class="wrapper wrapper-content">
@@ -35,7 +32,7 @@
             <div class="col-md-12">
                 <div class="form-inline">
                     <div>
-                        <a class="btn btn-primary btn-sm js-new" href="_productOperate.html">新增产品</a>
+                        <a class="btn btn-primary btn-sm" href="_goodsOperate.html" th:href="@{/manageGoodAdd}">新增商品</a>
                     </div>
                 </div>
             </div>
@@ -44,10 +41,8 @@
             <div class="col-sm-10">
                 <div class="form-inline">
                     <div class="js-selectToolbar">
-                        <input type="search" class="form-control input-sm js-searchName" placeholder="产品名称"
+                        <input type="search" class="form-control input-sm" placeholder="货品名称"
                                name="productName">
-                        <input type="search" class="form-control input-sm js-searchName" placeholder="型号"
-                               name="type">
                         <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
                     </div>
                 </div>
@@ -58,7 +53,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="depotDatagrid">
                         <div class="table-responsive">
-                            <table id="productTable" class="table table-hover table-success" cellspacing="0"
+                            <table id="goodsTable" class="table table-hover table-success" cellspacing="0"
                                    width="100%"></table>
                         </div>
                     </div>
@@ -87,5 +82,5 @@
 <script src="mock/mock-min.js" th:remove="all"></script>
 <script src="mock/api.js" th:remove="all"></script>
 <!--生产环境请移除 End-->
-<script src="manage-resource/js/productManage.js"></script>
+<script src="manage-resource/js/goodsManage.js"></script>
 </html>

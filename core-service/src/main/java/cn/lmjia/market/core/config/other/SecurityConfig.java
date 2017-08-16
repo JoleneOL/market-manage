@@ -64,7 +64,7 @@ public class SecurityConfig {
                     // 畅捷支付回调
                     .antMatchers("/cash/notify/chanpay")
                     // 投融家
-                    .antMatchers("/_tourongjia_event_")
+                    .antMatchers("/_tourongjia_event_", "/_haier_callback")
                     // paymax 支付回调
                     .antMatchers(environment
                             .getRequiredProperty("com.paymax.spring.hookUriWithoutAppId") + "/**");
