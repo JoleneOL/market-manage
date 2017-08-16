@@ -1,4 +1,5 @@
 $(function () {
+    var detailUrl = $('body').attr('data-detail-url');
     var table = $('#manualTable').DataTable({
         "processing": true,
         "serverSide": true,
@@ -48,11 +49,10 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
-                    var b = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>';
-                    if (item.statusCode === 2)
-                        a += b;
-                    return a;
+                    // var b = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>';
+                    // if (item.statusCode === 2)
+                    //     a += b;
+                    return '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
                 }
             }
         ],
@@ -80,9 +80,7 @@ $(function () {
     $(document).on('click', '.js-search', function () {
         table.ajax.reload();
     }).on('click', '.js-info', function () {
-        window.location.href = '_manualOrderDetail.html'
-    }).on('click', '.js-edit', function () {
-        window.location.href = '_manualOrder.html'
+        window.location.href = detailUrl + '?id=' + $(this).data('id');
     });
 
     // 添加额外的参数
