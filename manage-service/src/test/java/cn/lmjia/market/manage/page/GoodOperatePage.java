@@ -37,7 +37,7 @@ public abstract class GoodOperatePage extends AbstractContentPage {
      */
     public ManageGoodPage submitWithoutChannel() {
         if (product.isEnabled()) {
-            inputSelect(webDriver.findElement(By.tagName("form")), "product", (x) -> true);
+            inputSelect(webDriver.findElement(By.tagName("form")), "product", s -> true);
         }
         inputSelect(webDriver.findElement(By.tagName("form")), "channel", "无");
         webDriver.findElement(By.cssSelector("[type=submit]")).click();
@@ -46,9 +46,9 @@ public abstract class GoodOperatePage extends AbstractContentPage {
 
     public ManageGoodPage submitWithChannel() {
         if (product.isEnabled()) {
-            inputSelect(webDriver.findElement(By.tagName("form")), "product", (x) -> true);
+            inputSelect(webDriver.findElement(By.tagName("form")), "product", s -> true);
         }
-        inputSelect(webDriver.findElement(By.tagName("form")), "channel", (x) -> !"无".equals(x));
+        inputSelect(webDriver.findElement(By.tagName("form")), "channel", x -> !"无".equals(x));
         webDriver.findElement(By.cssSelector("[type=submit]")).click();
         return initPage(ManageGoodPage.class);
     }
