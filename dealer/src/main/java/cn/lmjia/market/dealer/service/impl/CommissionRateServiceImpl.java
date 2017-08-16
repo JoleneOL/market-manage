@@ -5,9 +5,7 @@ import cn.lmjia.market.core.entity.deal.AgentRate;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
 import cn.lmjia.market.core.service.SystemService;
-import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
-import me.jiangcai.lib.sys.service.SystemStringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,10 +20,6 @@ import java.util.function.Function;
 @Service("commissionRateService")
 public class CommissionRateServiceImpl implements CommissionRateService {
 
-    @Autowired
-    private AgentService agentService;
-    @Autowired
-    private SystemStringService systemStringService;
     @Autowired
     private SystemService systemService;
     @Autowired

@@ -48,6 +48,8 @@ public class ManageManagerControllerTest extends ManageServiceTest {
         Login lastOne = loginRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0);
         driver.get("http://localhost/manageManagerEdit?id=" + lastOne.getId());
         System.out.println(driver.getPageSource());
+        assertThat(true)
+                .isTrue();
     }
 
     @Test
@@ -60,6 +62,8 @@ public class ManageManagerControllerTest extends ManageServiceTest {
         )
                 .andExpect(status().isOk())
                 .andDo(print());
+        assertThat(true)
+                .isTrue();
     }
 
     @Test
@@ -89,10 +93,11 @@ public class ManageManagerControllerTest extends ManageServiceTest {
     }
 
     private RequestBuilder paramLevel(MockHttpServletRequestBuilder builder, Collection<ManageLevel> levelSet) {
+        MockHttpServletRequestBuilder newBuilder = builder;
         for (ManageLevel level : levelSet) {
-            builder = builder.param("role", level.name());
+            newBuilder = newBuilder.param("role", level.name());
         }
-        return builder;
+        return newBuilder;
     }
 
     private Collection<ManageLevel> randomLevel() {

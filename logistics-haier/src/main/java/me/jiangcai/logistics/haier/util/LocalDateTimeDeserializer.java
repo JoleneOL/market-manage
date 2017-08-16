@@ -13,7 +13,7 @@ import java.util.Locale;
  * @author CJ
  */
 public class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
-    static final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.CHINA);
+    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.CHINA);
 
     @Override
     public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt)

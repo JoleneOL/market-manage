@@ -4,9 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
-import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainOrderRepository;
-import cn.lmjia.market.core.service.QuickTradeService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.DealerServiceTest;
@@ -38,10 +36,6 @@ public class CommissionSettlementServiceTest extends DealerServiceTest {
     @Autowired
     private MainOrderRepository mainOrderRepository;
     @Autowired
-    private QuickTradeService quickTradeService;
-    @Autowired
-    private LoginRepository loginRepository;
-    @Autowired
     private ReadService readService;
     @Autowired
     private CommissionSettlementService commissionSettlementService;
@@ -53,7 +47,7 @@ public class CommissionSettlementServiceTest extends DealerServiceTest {
                 .isEqualTo(systemService.defaultAgentRates().get(level.getLevel()).getRecommendRate());
     }
 
-    private BigDecimal F(BigDecimal total, int i) {
+    private BigDecimal f(BigDecimal total, int i) {
         if (i == 1)
             return total.setScale(3, BigDecimal.ROUND_HALF_UP);
         BigDecimal rate = BigDecimal.valueOf(0.1D + 1.8D * Math.abs(random.nextDouble()));
@@ -65,7 +59,7 @@ public class CommissionSettlementServiceTest extends DealerServiceTest {
      */
     private BigDecimal[] randomCute(BigDecimal all, int count) {
         BigDecimal[] data = new BigDecimal[count];
-        // F(剩余量,剩余次数)
+        // f(剩余量,剩余次数)
         // 剩余次数==1 > 剩余量
         // 剩余量/剩余次数*0.1-1.9
         for (int i = 0; i < data.length; i++) {
@@ -74,7 +68,7 @@ public class CommissionSettlementServiceTest extends DealerServiceTest {
                 total = total.add(data[j]);
             }
             total = all.subtract(total);
-            data[i] = F(total, count - i);
+            data[i] = f(total, count - i);
         }
         return data;
     }

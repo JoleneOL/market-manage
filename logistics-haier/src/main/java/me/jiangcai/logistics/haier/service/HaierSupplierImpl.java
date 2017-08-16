@@ -236,13 +236,13 @@ public class HaierSupplierImpl implements HaierSupplier {
     }
 
     @Override
-    public Object event(String businessType, String source, String contentType, String sign, String content) throws IOException {
+    public Object event(String businessType, String source, String contentType, String sign, String encryptContent) throws IOException {
         // <Return/>
         log.debug("[HR]businessType:" + businessType);
-        content = cipherDecrypt(content);
+        String content = cipherDecrypt(encryptContent);
         if (!sign.equals(sign(content, keyValue)))
             throw new IllegalArgumentException("Bad Sign.");
-        if (!source.equals("LIMEIJIA"))
+        if (!"LIMEIJIA".equals(source))
             throw new IllegalArgumentException("Bad Source:" + source);
 
         if ("rrs_outinstore".equalsIgnoreCase(businessType)) {

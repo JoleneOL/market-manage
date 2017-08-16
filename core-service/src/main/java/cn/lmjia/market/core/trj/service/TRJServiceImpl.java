@@ -10,7 +10,6 @@ import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
-import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ManagerService;
 import cn.lmjia.market.core.service.NoticeService;
@@ -120,8 +119,6 @@ public class TRJServiceImpl implements TRJService {
     @Autowired
     private ResourceService resourceService;
     @Autowired
-    private ChannelService channelService;
-    @Autowired
     private SystemStringService systemStringService;
 
     @Autowired
@@ -223,7 +220,7 @@ public class TRJServiceImpl implements TRJService {
         } catch (Exception e) {
             log.debug("[TRJ]", e);
             String code;
-            if (org.springframework.util.StringUtils.isEmpty(resourcePath))
+            if (StringUtils.isEmpty(resourcePath))
                 code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderCompleteRequest(" +
                                 "\"%s\",%d" +
                                 ",\"%s\",\"%s\",\"%s\",\"%s\"" +
@@ -315,9 +312,9 @@ public class TRJServiceImpl implements TRJService {
             // 如果有安装事件 则自动完成
             final InstallationEvent source = event.getSource();
             if (source != null) {
-                if (!org.springframework.util.StringUtils.isEmpty(source.getInstaller())
-                        && !org.springframework.util.StringUtils.isEmpty(source.getInstallCompany())
-                        && !org.springframework.util.StringUtils.isEmpty(source.getMobile())) {
+                if (!StringUtils.isEmpty(source.getInstaller())
+                        && !StringUtils.isEmpty(source.getInstallCompany())
+                        && !StringUtils.isEmpty(source.getMobile())) {
                     submitOrderCompleteRequest(mainOrder, source.getInstaller(), source.getInstallCompany(), source.getMobile(), source.getInstallTime(), null);
                 } else if (source.getUnit() instanceof HaierOrder) {
                     submitOrderCompleteRequest(mainOrder
@@ -406,7 +403,7 @@ public class TRJServiceImpl implements TRJService {
             , String installCompany, String mobile, String installTime, Number amount, String resourcePath) throws IOException {
         try (CloseableHttpClient client = requestClient()) {
             Function<List<NameValuePair>, HttpEntity> entity;
-            if (!org.springframework.util.StringUtils.isEmpty(resourcePath)) {
+            if (!StringUtils.isEmpty(resourcePath)) {
                 Resource resource = resourceService.getResource(resourcePath);
                 if (resource.exists()) {
                     final String fileName = resourcePath.substring(resourcePath.lastIndexOf("/") + 1);
@@ -492,7 +489,7 @@ public class TRJServiceImpl implements TRJService {
         return newUriRequest(uri, null, pairs);
     }
 
-    private HttpUriRequest newUriRequest(String uri, Function<List<NameValuePair>, HttpEntity> toEntity, NameValuePair... pairs) {
+    private HttpUriRequest newUriRequest(String uri, Function<List<NameValuePair>, HttpEntity> toEntityInput, NameValuePair... pairs) {
         List<NameValuePair> list = new ArrayList<>();
         list.addAll(Arrays.asList(pairs));
         list.add(new BasicNameValuePair("sign", sign(list)));
@@ -514,12 +511,14 @@ public class TRJServiceImpl implements TRJService {
 //        if (log.isDebugEnabled())
 //            log.debug("[TRJ]" + urlBuilder.toString());
 
-        if (toEntity == null) {
+        Function<List<NameValuePair>, HttpEntity> toEntity;
+        if (toEntityInput == null)
             toEntity = nameValuePairs -> EntityBuilder.create()
                     .setContentType(ContentType.APPLICATION_FORM_URLENCODED.withCharset("UTF-8"))
                     .setParameters(nameValuePairs)
                     .build();
-        }
+        else
+            toEntity = toEntityInput;
 
         HttpPost post = new HttpPost(urlBuilder.toString());
         post.setEntity(toEntity.apply(list));
@@ -561,7 +560,7 @@ public class TRJServiceImpl implements TRJService {
 
     @Override
     public AuthorisingInfo checkAuthorising(String authorising, String idNumber) throws InvalidAuthorisingException {
-        if (org.springframework.util.StringUtils.isEmpty(authorising))
+        if (StringUtils.isEmpty(authorising))
             throw new InvalidAuthorisingException(authorising, idNumber);
         AuthorisingInfo info = authorisingInfoRepository.findOne(authorising);
         if (info == null)

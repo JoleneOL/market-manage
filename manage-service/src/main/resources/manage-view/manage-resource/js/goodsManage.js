@@ -1,9 +1,10 @@
 $(function () {
+    var _body = $('body');
     var table = $('#goodsTable').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": $('body').data('url'),
+            "url": _body.data('url'),
             "data": function (d) {
                 return $.extend({}, d, extendData());
             }
@@ -14,24 +15,28 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "商品名称", "data": "goodsName", "name": "goodsName"
+                "title": "ID", "data": "id", "name": "id"
             },
             {
                 "title": "关联货品", "data": "productName", "name": "productName"
+            },
+            {
+                "title": "创建时间", "data": "createTime", "name": "createTime"
+            },
+            {
+                "title": "特供渠道", "data": "channelName", "name": "channelName"
             },
             {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;修改</a>';
-                    if(item.onSale) {
+                    if (item.enable) {
                         a += '<a href="javascript:;" class="js-offSale" data-id="' + item.id + '"><i class="fa fa-arrow-circle-down"></i>&nbsp;下架</a>';
                     } else {
                         a += '<a href="javascript:;" class="js-onSale" data-id="' + item.id + '"><i class="fa fa-arrow-circle-up"></i>&nbsp;上架</a>';
                     }
-
-                    var b = '<a href="javascript:;" class="js-delete" data-id="' + item.id + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
-                    return a + b;
+                    return a;
                 }
             }
         ],
@@ -58,26 +63,9 @@ $(function () {
 
 
     $(document).on('click', '.js-search', function () {
-
         table.ajax.reload();
     }).on('click', '.js-checkInfo', function () {
-        window.location.href = '_goodsOperate.html?id=' + $(this).data('id');
-    }).on('click', '.js-delete', function () {
-        var id = $(this).data('id');
-        layer.confirm('确定删除商品？', {
-            btn: ['确定', '取消']
-        }, function (index) {
-            $.ajax('/goods/' + id, {
-                method: 'delete',
-                success: function () {
-                    table.ajax.reload();
-                    layer.close(index);
-                },
-                error: function () {
-                    layer.msg('服务器异常');
-                }
-            });
-        });
+        window.location.href = _body.data('edit-url') + '?id=' + $(this).data('id');
     }).on('click', '.js-offSale', function () {
         var id = $(this).data('id');
         layer.confirm('确定下架该商品？', {
@@ -96,19 +84,14 @@ $(function () {
         });
     }).on('click', '.js-onSale', function () {
         var id = $(this).data('id');
-        layer.confirm('确定上架该商品？', {
-            btn: ['确定', '取消']
-        }, function (index) {
-            $.ajax('/goods/' + id + '/on', {
-                method: 'put',
-                success: function () {
-                    table.ajax.reload();
-                    layer.close(index);
-                },
-                error: function () {
-                    layer.msg('服务器异常');
-                }
-            });
+        $.ajax('/goods/' + id + '/on', {
+            method: 'put',
+            success: function () {
+                table.ajax.reload();
+            },
+            error: function () {
+                layer.msg('服务器异常');
+            }
         });
     });
 

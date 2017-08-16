@@ -16,7 +16,6 @@ import cn.lmjia.market.core.trj.TRJService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import cn.lmjia.market.wechat.page.WechatOrderPage;
-import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
@@ -50,10 +49,6 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     @Autowired
     private MainGoodService mainGoodService;
     @Autowired
-    private SystemStringService systemStringService;
-    @Autowired
-    private MainOrderRepository mainOrderRepository;
-    @Autowired
     private TRJService trjService;
     @Autowired
     private ReadService readService;
@@ -61,6 +56,8 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     private ChannelService channelService;
     @Autowired
     private LogisticsService logisticsService;
+    @Autowired
+    private MainOrderRepository mainOrderRepository;
 
     @Test
     public void go1() throws Exception {

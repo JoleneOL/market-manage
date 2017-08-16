@@ -118,7 +118,7 @@ public class ManageOrderController {
                     if (!StringUtils.isEmpty(productCode))
                         predicate = cb.and(predicate, cb.equal(root.get("good").get("product").get("code"), productCode));
                     if (orderDate != null) {
-                        predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), orderDate));
+                        predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate));
                     }
                     return predicate;
                 };

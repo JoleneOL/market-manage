@@ -86,29 +86,29 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public AgentLevel agentLevelUpgrade(Login login, AgentLevel level) {
+    public AgentLevel agentLevelUpgrade(Login login, AgentLevel levelInput) {
 //        contactWayService.updateName(newLogin, agentName);
 //        contactWayService.updateMobile(newLogin, mobile);
 //        contactWayService.updateAddress(newLogin, address);
 //        contactWayService.updateIDCardImages(newLogin, cardFrontPath, cardBackPath);
-        if (level != null) {
+        if (levelInput != null) {
             // 升级比较好处理
             // 断裂时 应当放弃所有因  之前Login,我 而产生的所有关联 既 from是之前Login,
-            if (level.getSuperior().getSuperior() == null || !level.getSuperior().getLogin().equals(level.getSuperior().getSuperior().getLogin()))
-                loginRelationCacheService.breakConnection(level);
+            if (levelInput.getSuperior().getSuperior() == null || !levelInput.getSuperior().getLogin().equals(levelInput.getSuperior().getSuperior().getLogin()))
+                loginRelationCacheService.breakConnection(levelInput);
 
             AgentLevel top = new AgentLevel();
-            top.setSystem(level.getSystem());
+            top.setSystem(levelInput.getSystem());
             top.setCreatedBy(null);
             top.setCreatedTime(LocalDateTime.now());
             top.setLogin(login);
-            top.setRank(level.getRank());
+            top.setRank(levelInput.getRank());
             // 使用原来上级的上级
-            top.setSuperior(level.getSuperior().getSuperior());
-            top.setLevel(level.getLevel() - 1);
+            top.setSuperior(levelInput.getSuperior().getSuperior());
+            top.setLevel(levelInput.getLevel() - 1);
             top = agentLevelRepository.save(top);
 
-            level.setSuperior(top);
+            levelInput.setSuperior(top);
             // 原来跟我的关系需要复制成新的等级
             // 原来我跟其他人的关系
             loginRelationCacheService.addLowestAgentLevelCache(top);
@@ -120,7 +120,7 @@ public class PromotionServiceImpl implements PromotionService {
             if (login.getGuideUser() == null)
                 throw new IllegalStateException("无法将一个引导者为空的身份，升级为代理商。");
 
-            level = loginService.lowestAgentLevel(login.getGuideUser());
+            AgentLevel level = loginService.lowestAgentLevel(login.getGuideUser());
             if (level == null)
                 throw new IllegalStateException("无法将一个引导者不具备代理商兴致的身份，升级为代理商。");
 

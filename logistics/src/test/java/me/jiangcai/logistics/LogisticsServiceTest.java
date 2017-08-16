@@ -1,6 +1,5 @@
 package me.jiangcai.logistics;
 
-import me.jiangcai.logistics.demo.DemoSupplier;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
@@ -20,8 +19,6 @@ public class LogisticsServiceTest extends LogisticsTestBase {
 
     @Autowired
     private LogisticsService logisticsService;
-    @Autowired
-    private DemoSupplier demoSupplier;
     @Autowired
     private StockService stockService;
 

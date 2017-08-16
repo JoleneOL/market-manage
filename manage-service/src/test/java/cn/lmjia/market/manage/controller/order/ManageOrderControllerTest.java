@@ -13,6 +13,8 @@ import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
 import me.jiangcai.logistics.repository.DepotRepository;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@ActiveProfiles("mysql")
 public class ManageOrderControllerTest extends ManageServiceTest {
 
+    private static final Log log = LogFactory.getLog(ManageOrderControllerTest.class);
     @Autowired
     private StockService stockService;
     @Autowired
@@ -109,6 +112,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         StockShiftUnit goSuccess = mainOrderService.getOrder(order.getId()).getLogisticsSet().stream()
                 .filter(unit -> !Objects.equals(unit.getId(), rejectUnit.getId()))
                 .findFirst().orElse(null);
+        log.debug(goSuccess);
         logisticsService.mockToStatus(rejectUnit.getId(), ShiftStatus.success);
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())

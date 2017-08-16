@@ -125,7 +125,7 @@ public class CommissionController {
                             @Override
                             public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<Commission> root) {
                                 From<?, MainOrder> orderFrom = root.join("orderCommission").join("source");
-                                return JpaFunctionUtils.Contact(
+                                return JpaFunctionUtils.contact(
                                         criteriaBuilder
                                         , orderFrom.get("amount")
                                         , criteriaBuilder.literal("个")
@@ -243,22 +243,22 @@ public class CommissionController {
             public Specification<Commission> specification() {
                 if ("pending".equals(type))
                     return Commission.listAllSpecification(login, (root, query, cb)
-                            -> Commission.Reality(root, cb).not());
+                            -> Commission.reality(root, cb).not());
 
                 if ("all".equals(type))
                     return Commission.listRealitySpecification(login, null);
                 return Commission.listRealitySpecification(login, (root, query, cb) -> {
                     if ("today".equals(type))
-                        return JpaFunctionUtils.DateEqual(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.dateEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now());
                     if ("month".equals(type))
-                        return JpaFunctionUtils.YearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.yearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now());
                     if ("previous".equals(type))
-                        return JpaFunctionUtils.YearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.yearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now().minusMonths(1));
                     if ("quarter".equals(type))
-                        return JpaFunctionUtils.YM(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.ym(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now()
                                 , (criteriaBuilder, integerExpression, integerExpression2) -> {
                                     // >= ym-3

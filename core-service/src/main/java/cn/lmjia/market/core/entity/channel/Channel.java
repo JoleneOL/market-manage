@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -56,4 +57,16 @@ public class Channel {
     @Column(name = "DTYPE", insertable = false, updatable = false)
     private String classType;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Channel)) return false;
+        Channel channel = (Channel) o;
+        return Objects.equals(name, channel.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }
