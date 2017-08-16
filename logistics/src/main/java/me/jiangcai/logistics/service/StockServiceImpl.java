@@ -338,6 +338,8 @@ public class StockServiceImpl implements StockService {
                             , Charset.forName("UTF-8")));
                     statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource("/logistics_views/" + fileName + "1.sql").getInputStream()
                             , Charset.forName("UTF-8")));
+                    statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource("/logistics_views/" + fileName + "2.sql").getInputStream()
+                            , Charset.forName("UTF-8")));
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("读取SQL失败", e);
