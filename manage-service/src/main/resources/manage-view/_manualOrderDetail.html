@@ -55,6 +55,40 @@
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-title">
+                    订单信息
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered" th:object="${currentData.destinationData}">
+                            <tbody>
+                            <tr>
+                                <td width="120px">收货人</td>
+                                <td>杜勇</td>
+                            </tr>
+                            <tr>
+                                <td>手机号</td>
+                                <td >18958044532</td>
+                            </tr>
+                            <tr>
+                                <td>收货地址</td>
+                                <td>贵州省 黔东南苗族侗族自治州 台江县</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
                     物流信息
                     <div class="ibox-tools">
                         <a class="collapse-link">
@@ -291,85 +325,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="ibox">
-                <div class="ibox-title">
-                    收货信息
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered" th:object="${currentData.destinationData}">
-                            <tbody>
-                            <tr>
-                                <td width="120px">收件人</td>
-                                <td th:text="*{people}">李菲菲</td>
-                            </tr>
-                            <tr>
-                                <td>手机号</td>
-                                <td th:text="*{mobile}">18958044532</td>
-                            </tr>
-                            <tr>
-                                <td width="120px">收货地址</td>
-                                <td th:text="*{toString()}">浙江杭州西湖大西湖国际</td>
-                            </tr>
-                            <tr th:each="product:${currentData.amounts.entrySet()}">
-                                <td rowspan="2" th:rowspan="${currentData.amounts.size()}" th:if="${productStat.first}">
-                                    货品
-                                    / 数量
-                                </td>
-                                <td><span th:text="${product.key.name}">量子立式净水机</span>&nbsp;/&nbsp;<span
-                                        th:text="${product.value.amount}">300</span>（<span
-                                        th:text="${product.key.unit}">台</span>）
-                                </td>
-                            </tr>
-                            <tr th:remove="all">
-                                <td>量子水宝 / 300（盒）</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="ibox">
-                <div class="ibox-title">
-                    发货信息
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered" th:object="${currentData.originData}">
-                            <tbody>
-                            <tr>
-                                <td width="120px">发件人</td>
-                                <td th:text="*{people}">李菲菲</td>
-                            </tr>
-                            <tr>
-                                <td>手机号</td>
-                                <td th:text="*{mobile}">18958044532</td>
-                            </tr>
-                            <tr>
-                                <td width="120px">发货地址</td>
-                                <td th:text="*{toString()}">浙江杭州西湖大西湖国际</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
