@@ -156,6 +156,12 @@
     <profiles>
         <profile>
             <id>_cj_approved_deploy</id>
+            <activation>
+                <property>
+                    <name>_cj_approved_deploy</name>
+                    <value>1</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
