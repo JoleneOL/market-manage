@@ -1,6 +1,8 @@
 $(function () {
 
-    $('#J_modelSelect').select2({
+    var $body = $('body');
+    var $modelSelect = $('#J_modelSelect');
+    var $select = $modelSelect.select2({
         theme: "bootstrap",
         width: null,
         containerCssClass: ':all:',
@@ -8,7 +10,7 @@ $(function () {
         allowClear: true,
         language: "zh-CN",
         ajax: {
-            url: $('body').attr('data-search-url'),
+            url: $body.attr('data-search-url'),
             dataType: 'json',
             delay: 250,
             data: function (params) {
@@ -36,7 +38,7 @@ $(function () {
         templateResult: formatRepo,
         templateSelection: formatRepoSelection
     }).on("change", function (e) {
-        if ( $(this).val()) {
+        if ($(this).val()) {
             $(this).parent().addClass("has-success").removeClass("has-error");
             $(this).siblings('.error').hide();
         } else {
@@ -44,6 +46,9 @@ $(function () {
             $(this).siblings('.error').show();
         }
     });
+    var selectVal = $modelSelect.data('value');
+    var selectId = $modelSelect.data('id');
+    if(selectVal && selectId ) $select.append($('<option></option>').val('' + selectId + '').text('' + selectVal + '')).trigger("change");
 
     function formatRepo(repo) {
         if (repo.loading) return repo.text;
@@ -79,19 +84,24 @@ $(function () {
 
 
     $('#J_ManualForm').validate({
-        ignore: "",
+        ignore: '',
         rules: {
+            amount: {
+                isPositive: true
+            },
+            total: {
+                isFloat2: true
+            },
             fullAddress: {
-                required: true,
-                hasCity: true
+                required: true
+            },
+            mobile: {
+                isPhone: true
             }
         },
         messages: {
-            goodsModel: "请填写商品型号",
-            fullAddress: {
-                required: '请填写详细地址'
-            },
-            haierCode: "请填写仓库编号"
+            goodsId: "请填写商品型号",
+            storage: "请发货仓库"
         },
         errorElement: "span",
         errorPlacement: function (error, element) {
@@ -109,4 +119,73 @@ $(function () {
         }
     });
 
+    var readyForDraw = false;
+
+
+    var table = $('#storageForm').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": $body.data('storage-url'),
+            "data": function (d) {
+                return $.extend({}, d, extendData());
+            }
+        },
+        "ordering": true,
+        "lengthChange": false,
+        "searching": false,
+        "columns": [
+            {
+                "title": "仓储仓", "data": "storage", "name": "storage"
+            },
+            {
+                "title": "库存量(台）", "data": "quantity", "name": "quantity"
+            },
+            {
+                "title": "操作",
+                "className": 'table-action',
+                "orderable": false,
+                data: function (item) {
+                    return '<a href="javascript:;" class="js-operate" data-storage="' + item.storage + '"><i class="fa fa-check-square-o"></i>&nbsp;选择</a>';
+                }
+            }
+        ],
+        "displayLength": 4,
+        "retrieve": true,
+        "preDrawCallback": function () {
+            return readyForDraw;
+        }
+    });
+
+    $(document).on('click', '.js-operate', function () {
+        var storage = $(this).data('storage');
+        $('#J_changeStorage')
+            .find('input').val(storage)
+            .end()
+            .next().val(storage);
+        $('#J_storage').removeClass('in');
+    });
+
+
+    function extendData() {
+        var data = {};
+        data.goodsId = $('select[name="goodsId"]').val();
+        data.amount = $('input[name="amount"]').val();
+        return data;
+    }
+
+
+    $('#J_changeStorage').click(function () {
+        var goodsId = $('select[name="goodsId"]').val();
+        var goodsAmount = $('input[name="amount"]').val();
+
+        if (goodsId && goodsAmount) {
+            $('#J_storage').addClass('in');
+            readyForDraw = true;
+            table.ajax.reload();
+        } else {
+            layer.msg('型号或者数量不能为空');
+        }
+
+    });
 });

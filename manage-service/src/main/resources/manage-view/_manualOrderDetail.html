@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
-<!--/*@thymesVar id="currentData" type="me.jiangcai.logistics.entity.StockShiftUnit"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -9,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>物流详情</title>
+    <title>详情</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -30,28 +29,13 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_logisticsManage.html" th:href="@{/manageLogistics}">物流管理</a></li>
-                <li><strong>物流详情</strong></li>
+                <li><a href="_manualOrderManage.html">手动订单管理</a></li>
+                <li><strong>详情</strong></li>
             </ol>
         </div>
     </div>
-    <!--日日顺专用 div-->
-    <!--/*@thymesVar id="haierOrder" type="me.jiangcai.logistics.haier.entity.HaierOrder"*/-->
-    <div class="row" th:if="${haierOrder!=null}">
-        <div class="col-sm-12">
-            <div class="ibox">
-                <div class="ibox-title">
-                    <div class="col-md-6">
-                        <span>日日顺订单号：</span><span th:text="${haierOrder.orderNumber}">Hello</span>
-                    </div>
-                    <div class="col-md-6">
-                        <span>日日顺快递号：</span><span th:text="${haierOrder.expressId}">Hello</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" th:if="${false}">
+
+    <div class="row">
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-title">

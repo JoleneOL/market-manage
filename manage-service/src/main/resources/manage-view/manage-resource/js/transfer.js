@@ -2,12 +2,7 @@ $(function () {
     var table = $('#storageForm').DataTable({
         "processing": true,
         "serverSide": true,
-        "ajax": {
-            "url": $('body').data('url'),
-            "data": function (d) {
-                return $.extend({}, d, extendData());
-            }
-        },
+        "ajax": $('body').data('url'),
         "ordering": true,
         "lengthChange": false,
         "searching": false,
@@ -31,15 +26,10 @@ $(function () {
                 }
             }
         ],
-        "displayLength": 4,
-        "drawCallback": function () {
-            clearSearchValue();
-        }
+        "displayLength": 4
     });
 
-    $(document).on('click', '.js-search', function () {
-        table.ajax.reload();
-    }).on('click', '.js-operate', function () {
+    $(document).on('click', '.js-operate', function () {
         var storage = $(this).data('storage');
         var max = $(this).data('max');
         $('#J_changeStorage').find('input').val(storage);
@@ -49,24 +39,6 @@ $(function () {
         });
         $('#J_storage').removeClass('in');
     });
-
-    function extendData() {
-        var formItem = $('.js-selectToolbar').find('.form-control');
-        if (formItem.length === 0)  return {};
-        var data = {};
-
-        formItem.each(function () {
-            var t = $(this);
-            var n = t.attr('name');
-            var v = t.val();
-            if (v) data[n] = v;
-        });
-        return data;
-    }
-
-    function clearSearchValue() {
-        //TODO
-    }
 
     $('#J_changeStorage').click(function () {
         $('#J_storage').addClass('in');

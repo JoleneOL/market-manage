@@ -9,10 +9,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>订单详情</title>
+    <title>下单发货</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
@@ -26,8 +27,16 @@
     <![endif]-->
 </head>
 
-<body class="gray-bg" data-search-url="/search/url">
+<body class="gray-bg" data-search-url="/search/url" data-storage-url="/storage/transfer">
 <div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_manualOrderManage.html">手动订单管理</a></li>
+                <li><strong>下单发货</strong></li>
+            </ol>
+        </div>
+    </div>
     <div class="row js-condition">
         <div class="col-sm-12">
             <div class="ibox">
@@ -44,7 +53,7 @@
                                         <label class="col-sm-3 control-label">商品型号 <span
                                                 class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <select id="J_modelSelect" name="goodsModel" required></select>
+                                            <select id="J_modelSelect" name="goodsId" data-value="RPG-001" data-id="1000" required></select>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -53,6 +62,17 @@
                                         <div class="col-sm-6">
                                             <input type="number" placeholder="请输入发货数量" class="form-control"
                                                    name="amount" min="1" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">发货仓库 <span
+                                                class="asterisk">*</span></label>
+                                        <div class="col-sm-6">
+                                            <div class="input-group" id="J_changeStorage">
+                                                <input type="text" class="form-control" value="选择仓储" readonly>
+                                                <span class="input-group-addon"><i class="fa fa-angle-right"></i></span>
+                                            </div>
+                                            <input type="hidden" name="storage" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -106,6 +126,12 @@
                                     </div>
                                 </form>
                             </div>
+                            <div class="col-sm-5 col-lg-6 fade" id="J_storage">
+                                <div class="table-responsive">
+                                    <table id="storageForm" class="table table-hover table-success" cellspacing="0"
+                                           width="100%"></table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -122,6 +148,11 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+
 
 <script src="./mock/mock-min.js" th:remove="all"></script>
 <script src="./mock/api.js" th:remove="all"></script>
