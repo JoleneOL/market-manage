@@ -17,8 +17,8 @@ public abstract class GoodOperatePage extends AbstractContentPage {
 
     @FindBy(name = "product")
     private WebElement product;
-    @FindBy(name = "channel")
-    private WebElement channel;
+//    @FindBy(name = "channel")
+//    private WebElement channel;
 
     public GoodOperatePage(WebDriver webDriver) {
         super(webDriver);
