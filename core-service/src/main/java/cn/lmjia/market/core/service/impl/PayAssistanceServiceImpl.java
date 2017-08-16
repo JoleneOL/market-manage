@@ -62,7 +62,7 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
         if (payService.isPaySuccess(order.getPayableOrderId().toString()))
             throw new IllegalStateException("订单并不在待支付状态");
 
-        if (environment.acceptsProfiles("autoPay")) {
+        if (!huabei && environment.acceptsProfiles("autoPay")) {
             // 3 秒之后自动付款
             log.warn("3秒之后自动付款:" + order);
             executorService.schedule(()

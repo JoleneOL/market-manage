@@ -129,6 +129,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         final PayOrder payOrder = paymentService.payOrder(payOrderId);
         String qrCodeUrl;
         String scriptCode;
+        // 微信环境下是否友好支付
+        boolean wechatFriendly;
         if (payOrder instanceof TRJPayOrder) {
             return "redirect:/wechatPaySuccess";
         } else if (payOrder instanceof HuaHuabeiPayOrder) {
@@ -139,9 +141,11 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             }
             qrCodeUrl = qrController.urlForText(((HuaHuabeiPayOrder) payOrder).getAliPayCodeUrl()).toString();
             scriptCode = null;
+            wechatFriendly = false;
         } else if (payOrder instanceof ChanpayPayOrder) {
             qrCodeUrl = ((ChanpayPayOrder) payOrder).getUrl();
             scriptCode = null;
+            wechatFriendly = true;
         } else if (payOrder instanceof PaymaxPayOrder) {
             // 我们自己写了一个控制器 可以让一个地址变成一个二维码
             // 公众号支付页面是有点不同的 我们叫它额外JS支付
@@ -153,9 +157,11 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 qrCodeUrl = qrController.urlForText(paymaxPayOrder.getScanUrl()).toString();
                 scriptCode = null;
             }
+            wechatFriendly = true;
         } else if (payOrder.isTestOrder()) {
             qrCodeUrl = "";
             scriptCode = "";
+            wechatFriendly = true;
         } else
             throw new IllegalStateException("尚未支持扫码的支付系统");
 
@@ -165,6 +171,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         model.addAttribute("scriptCode", scriptCode);
         model.addAttribute("checkUri", checkUri);
         model.addAttribute("successUri", successUri);
+        model.addAttribute("wechatFriendly", wechatFriendly);
         if (scriptCode != null)
             return "wechat@payWithJS.html";
         return "wechat@pay.html";
