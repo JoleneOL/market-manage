@@ -122,7 +122,7 @@
                                 th:data-model="${good.product.code}"
                                 th:text="${good.product.name}">厨下净水机
                         </option>
-                        <option th:remove="all" value="2" data-price="2820" data-price-channel="0" data-model="HZLS01">
+                        <option th:remove="all" value="2" data-price="3000" data-price-channel="0" data-model="HZLS01">
                             立式净水器
                         </option>
                         <option th:remove="all" value="4" data-price="3000" data-price-channel="0"
@@ -320,9 +320,11 @@
                     <p>甲乙双方在平等自愿、公平诚信的基础上，基于对乙方提供的产品和服务的了解和需求，达成协议如下：</p>
                 </section>
                 <section>
-                    <p><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□量子净水机、□空气净化器、□食品优化宝、□量子水宝、□量子防辐射芯片销售或租赁优惠活动，用户支付设备费或保证金，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），详细费用按下表执行：
+                    <p th:if="${!trj}"><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机、□量子净水机、□空气净化器、□食品优化宝、□量子水宝、□量子防辐射芯片销售或租赁优惠活动，用户支付设备费或保证金，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），详细费用按下表执行：
                     </p>
-                    <table class="view_table" border="1">
+                    <p th:if="${trj}"><strong>第一条</strong>&nbsp;&nbsp;&nbsp;&nbsp;甲方自愿参加乙方的□净水机销售或租赁优惠活动，用户支付设备费或保证金，甲方承诺在使用期间不退保证金、不退机、不过户（可移机），详细费用按下表执行：
+                    </p>
+                    <table th:if="${!trj}" class="view_table" border="1">
                         <thead>
                         <tr>
                             <th>产品名称</th>
@@ -337,18 +339,18 @@
                             <td>3000 元/盒（30个）</td>
                         </tr>
                         <tr>
-                            <td>量子水宝</td>
-                            <td>LZSB01</td>
-                            <td>3000 元/条</td>
+                            <td>量子立式净水机（黑色）</td>
+                            <td>SCRO-200LK/A</td>
+                            <td>5000 元/台</td>
                         </tr>
                         <tr>
-                            <td>立式净水机</td>
-                            <td>SCRO-200LKB</td>
-                            <td>3000 元/台</td>
+                            <td>量子立式净水机（白色）</td>
+                            <td>SCRO-200LK/B</td>
+                            <td>5000 元/台</td>
                         </tr>
                         <tr>
                             <td>量子厨下净水机</td>
-                            <td>LZCX01</td>
+                            <td>M537R</td>
                             <td>5000 元/台</td>
                         </tr>
                         <tr>
@@ -360,6 +362,27 @@
                             <td>量子食品优化宝</td>
                             <td>SP70</td>
                             <td>9800 元/台</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table th:if="${trj}" class="view_table" border="1">
+                        <thead>
+                        <tr>
+                            <th>产品名称</th>
+                            <th>型号</th>
+                            <th>一次性支付设备费或保证金</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>立式净水机（黑色）</td>
+                            <td>SCRO-200LK/A</td>
+                            <td>3600 元/台</td>
+                        </tr>
+                        <tr>
+                            <td>立式净水机（白色）</td>
+                            <td>SCRO-200LK/B</td>
+                            <td>3600 元/台</td>
                         </tr>
                         </tbody>
                     </table>
