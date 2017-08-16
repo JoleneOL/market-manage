@@ -209,11 +209,11 @@ public class PromotionRequest implements PayableOrder {
                     if (!StringUtils.isEmpty(applicationDate)) {
                         if (applicationDate.equalsIgnoreCase("month"))
                             predicate = cb.and(predicate
-                                    , JpaFunctionUtils.YearAndMonthEqual(cb, root.get("requestTime")
+                                    , JpaFunctionUtils.yearAndMonthEqual(cb, root.get("requestTime")
                                             , LocalDate.now()));
                         else if (applicationDate.equalsIgnoreCase("quarter"))
                             predicate = cb.and(predicate
-                                    , JpaFunctionUtils.YM(cb, root.get("requestTime")
+                                    , JpaFunctionUtils.ym(cb, root.get("requestTime")
                                             , LocalDate.now()
                                             , (criteriaBuilder, integerExpression, integerExpression2) -> {
                                                 // >= ym-3
@@ -222,7 +222,7 @@ public class PromotionRequest implements PayableOrder {
                                             }));
                         else
                             predicate = cb.and(predicate
-                                    , JpaFunctionUtils.YM(cb, root.get("requestTime")
+                                    , JpaFunctionUtils.ym(cb, root.get("requestTime")
                                             , LocalDate.now()
                                             , (criteriaBuilder, integerExpression, integerExpression2) -> {
                                                 // >= ym-3

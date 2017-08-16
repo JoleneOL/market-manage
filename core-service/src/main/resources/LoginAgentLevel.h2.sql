@@ -1,1 +1,1 @@
-CREATE ALIAS IF NOT EXISTS `LoginAgentLevel` FOR "cn.lmjia.market.core.jpa.Functions.LoginAgentLevel"
+CREATE ALIAS IF NOT EXISTS `LoginAgentLevel` FOR "cn.lmjia.market.core.jpa.Functions.loginAgentLevel"

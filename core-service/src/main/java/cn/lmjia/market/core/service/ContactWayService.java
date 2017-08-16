@@ -20,7 +20,7 @@ public interface ContactWayService {
      * @param criteriaBuilder cb
      * @return 表示地址的path
      */
-    static Path<Address> AddressForLogin(From<?, Login> login, CriteriaBuilder criteriaBuilder) {
+    static Path<Address> addressForLogin(From<?, Login> login, CriteriaBuilder criteriaBuilder) {
         return login.get("contactWay").get("address");
     }
 

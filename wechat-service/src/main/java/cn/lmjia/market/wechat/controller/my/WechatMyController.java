@@ -45,8 +45,8 @@ public class WechatMyController {
         return "redirect:" + SystemService.wechatMyURi;
     }
 
-    private String myTeam(@AuthenticationPrincipal Login login, Model model) {
-        login = loginService.get(login.getId());
+    private String myTeam(@AuthenticationPrincipal Login loginInput, Model model) {
+        Login login = loginService.get(loginInput.getId());
         if (loginService.isRegularLogin(login))
             model.addAttribute("agentLevel", agentService.loginTitle(agentService.highestAgent(login)));
         else

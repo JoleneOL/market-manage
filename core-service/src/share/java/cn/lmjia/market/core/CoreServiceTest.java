@@ -28,14 +28,10 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -48,7 +44,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -78,8 +73,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private MainOrderService mainOrderService;
     @Autowired
     private MainGoodRepository mainGoodRepository;
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     private QuickPayBean quickPayBean;
     @Autowired
@@ -179,47 +172,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
             updateAllRunWith(oldAll);
 //            SecurityContextHolder.setContext(securityContext);
         }
-    }
-
-    private void loginAs(final Login login) {
-        SecurityContextImpl securityContext1 = new SecurityContextImpl();
-        securityContext1.setAuthentication(new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return login.getAuthorities();
-            }
-
-            @Override
-            public Object getCredentials() {
-                return login;
-            }
-
-            @Override
-            public Object getDetails() {
-                return login;
-            }
-
-            @Override
-            public Object getPrincipal() {
-                return login;
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return true;
-            }
-
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-            }
-
-            @Override
-            public String getName() {
-                return login.getLoginName();
-            }
-        });
-        SecurityContextHolder.setContext(securityContext1);
     }
 
     protected BufferedImage randomImage() throws IOException {
@@ -399,10 +351,13 @@ public abstract class CoreServiceTest extends SpringWebTest {
     /**
      * @return 随机的下单请求原数据
      */
-    protected OrderRequest randomOrderRequest(Long channelId, MainGood good, String authorising, String idNumber) {
+    protected OrderRequest randomOrderRequest(Long channelId, MainGood goodInput, String authorising, String idNumber) {
         Address address = randomAddress();
-        if (good == null)
+        MainGood good;
+        if (goodInput == null)
             good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        else
+            good = goodInput;
         String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
         Login recommend = randomLogin(true);
         final String name = "W客户" + RandomStringUtils.randomAlphabetic(6);

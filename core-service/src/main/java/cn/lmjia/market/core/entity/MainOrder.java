@@ -161,16 +161,16 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
      * @see #getSerialId()
      */
     public static Expression<String> getSerialId(Path<MainOrder> root, CriteriaBuilder criteriaBuilder) {
-        Expression<String> daily = JpaFunctionUtils.LeftPaddingWith(criteriaBuilder, root.get("dailySerialId"), MaxDailySerialIdBit, '0');
+        Expression<String> daily = JpaFunctionUtils.leftPaddingWith(criteriaBuilder, root.get("dailySerialId"), MaxDailySerialIdBit, '0');
         // 然后是日期
         Path<LocalDateTime> orderTime = root.get("orderTime");
         // https://dev.mysql.com/doc/refman/5.5/en/date-and-time-functions.html#function_date-format
         // date_format(current_date(),'%Y%m%d');
         Expression<String> year = criteriaBuilder.function("year", String.class, orderTime);
-        Expression<String> month = JpaFunctionUtils.LeftPaddingWith(
+        Expression<String> month = JpaFunctionUtils.leftPaddingWith(
                 criteriaBuilder, criteriaBuilder.function("month", String.class, orderTime), 2, '0'
         );
-        Expression<String> day = JpaFunctionUtils.LeftPaddingWith(
+        Expression<String> day = JpaFunctionUtils.leftPaddingWith(
                 criteriaBuilder, criteriaBuilder.function("day", String.class, orderTime), 2, '0'
         );
         return criteriaBuilder.concat(

@@ -113,9 +113,9 @@ public abstract class WechatTestBase extends DealerServiceTest {
     /**
      * 绑定开发者微信号到该登录
      *
-     * @param login 登录
+     * @param loginInput 登录
      */
-    protected void bindDeveloperWechat(Login login) {
+    protected void bindDeveloperWechat(Login loginInput) {
         StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId("oiKvNt0neOAB8ddS0OzM_7QXQDZw");
         if (weixinUser == null) {
             weixinUser = new StandardWeixinUser();
@@ -123,7 +123,7 @@ public abstract class WechatTestBase extends DealerServiceTest {
             weixinUser.setAppId(publicAccount.getAppID());
             weixinUser = standardWeixinUserRepository.save(weixinUser);
         }
-        login = loginRepository.getOne(login.getId());
+        Login login = loginRepository.getOne(loginInput.getId());
         login.setWechatUser(weixinUser);
         loginRepository.save(login);
     }

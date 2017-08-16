@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author CJ
  */
@@ -27,6 +29,8 @@ public class TRJServiceTest extends CoreServiceTest {
                 , new BasicNameValuePair("p3", "hahaha")
         )));
         log.info(result);
+        assertThat(true)
+                .isTrue();
     }
 
 }

@@ -91,7 +91,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Integer> max = criteriaBuilder.createQuery(Integer.class);
             Root<MainOrder> root = max.from(MainOrder.class);
-            max = max.where(JpaFunctionUtils.DateEqual(criteriaBuilder, root.get("orderTime")
+            max = max.where(JpaFunctionUtils.dateEqual(criteriaBuilder, root.get("orderTime")
                     , now.toString()));
             max = max.select(criteriaBuilder.max(root.get("dailySerialId")));
             try {
@@ -142,10 +142,11 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     @Override
     public Login getEnjoyability(Login orderBy) {
-        while (!loginService.isRegularLogin(orderBy)) {
-            orderBy = orderBy.getGuideUser();
+        Login login = orderBy;
+        while (!loginService.isRegularLogin(login)) {
+            login = login.getGuideUser();
         }
-        return orderBy;
+        return login;
     }
 
     @Override
@@ -159,7 +160,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, orderIdPredicate(orderId, root, cb));
             } else if (orderDate != null) {
                 log.debug("search order with orderDate:" + orderDate);
-                predicate = cb.and(predicate, JpaFunctionUtils.DateEqual(cb, root.get("orderTime"), orderDate.toString()));
+                predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate.toString()));
             }
             if (!StringUtils.isEmpty(mobile)) {
                 log.debug("search order with mobile:" + mobile);
@@ -181,7 +182,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         String ymd = orderId.substring(0, 8);
         return cb.and(
                 cb.equal(root.get("dailySerialId"), NumberUtils.parseNumber(orderId.substring(8), Integer.class))
-                , JpaFunctionUtils.DateEqual(cb, root.get("orderTime")
+                , JpaFunctionUtils.dateEqual(cb, root.get("orderTime")
                         , LocalDate.from(MainOrder.SerialDateTimeFormatter.parse(ymd)).toString())
         );
     }

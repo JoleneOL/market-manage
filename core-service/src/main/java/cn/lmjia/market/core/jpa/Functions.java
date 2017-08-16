@@ -18,7 +18,7 @@ public class Functions {
      *
      * @return
      */
-    public static int LoginAgentLevel(Connection connection, long id) throws SQLException {
+    public static int loginAgentLevel(Connection connection, long id) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("SELECT min(`LEVEL`) FROM `agentLevel` WHERE `LOGIN_ID`=?")) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {

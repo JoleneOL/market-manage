@@ -8,7 +8,6 @@ import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.lib.seext.NumberUtils;
@@ -35,8 +34,6 @@ public class ReadServiceImpl implements ReadService {
     private LoginRepository loginRepository;
     @Autowired
     private SystemService systemService;
-    @Autowired
-    private CommissionRepository commissionRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;

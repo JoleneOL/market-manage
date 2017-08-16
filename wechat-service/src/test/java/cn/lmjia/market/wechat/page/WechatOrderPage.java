@@ -34,10 +34,10 @@ public class WechatOrderPage extends AbstractWechatPage {
     /**
      * 所有商品价格都为price
      *
-     * @param price 特定价格
+     * @param priceInput 特定价格
      */
-    public void allPriced(BigDecimal price) {
-        price = price.setScale(0, BigDecimal.ROUND_HALF_UP);
+    public void allPriced(BigDecimal priceInput) {
+        BigDecimal price = priceInput.setScale(0, BigDecimal.ROUND_HALF_UP);
 //        if (!"1".equals(webDriver.findElement(By.id("J_goodsAmount")).getAttribute("value")))
 //            inputText(webDriver.findElement(By.id("J_form")), "amount", "1");
         WebElement select = webDriver.findElement(By.id("J_goodsType"));

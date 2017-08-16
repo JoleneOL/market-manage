@@ -8,14 +8,12 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.service.ChannelService;
-import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.core.trj.TRJService;
-import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
@@ -23,8 +21,6 @@ import me.jiangcai.payment.paymax.entity.PaymaxPayOrder;
 import me.jiangcai.payment.service.PaymentService;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.Gender;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -43,19 +39,14 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class WechatMainOrderController extends AbstractMainOrderController {
 
-    private static final Log log = LogFactory.getLog(WechatMainOrderController.class);
     @Autowired
     private PaymentService paymentService;
-    @Autowired
-    private MainOrderService mainOrderService;
     @Autowired
     private QRController qrController;
     @Autowired
     private PayAssistanceService payAssistanceService;
     @Autowired
     private PayService payService;
-    @Autowired
-    private SystemStringService systemStringService;
     @Autowired
     private ChannelService channelService;
 

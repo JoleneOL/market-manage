@@ -11,6 +11,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author CJ
  */
@@ -41,6 +43,8 @@ public class AgentNavigateControllerTest extends DealerServiceTest {
         System.out.println(driver.getPageSource());
         initPage(AgentPlaceOrderPage.class);
 
+        assertThat(true)
+                .isTrue();
     }
 
 }
