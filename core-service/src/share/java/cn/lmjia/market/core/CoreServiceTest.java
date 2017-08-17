@@ -328,6 +328,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 .param("recommend", String.valueOf(request.getRecommend().getId()));
         if (request.getChannelId() != null)
             newBuilder = newBuilder.param("channelId", String.valueOf(request.getChannelId()));
+        if (request.isInstallmentHuabai())
+            newBuilder = newBuilder.param("installmentHuabai", "1");
 
         if (StringUtils.isEmpty(request.getAuthorising()))
             return newBuilder;

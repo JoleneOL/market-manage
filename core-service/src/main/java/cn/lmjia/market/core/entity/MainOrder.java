@@ -13,6 +13,7 @@ import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -143,6 +144,11 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     private StockShiftUnit currentLogistics;
 
     /**
+     * 是否使用花呗支付
+     */
+    private boolean huabei;
+
+    /**
      * @param from order表
      * @return 到客户的登录表的关联
      */
@@ -239,6 +245,32 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Override
     public String getOrderBody() {
         return amount + "个" + goodName;
+    }
+
+    @Override
+    public String getOrderProductModel() {
+        return getGood().getProduct().getCode();
+    }
+
+    @Override
+    public String getOrderProductBrand() {
+        return StringUtils.isEmpty(getGood().getProduct().getBrand()) ? getOrderProductName()
+                : getGood().getProduct().getBrand();
+    }
+
+    @Override
+    public String getOrderedName() {
+        return getCustomer().getName();
+    }
+
+    @Override
+    public String getOrderedMobile() {
+        return getCustomer().getMobile();
+    }
+
+    @Override
+    public String getOrderProductCode() {
+        return getGood().getProduct().getCode();
     }
 
     /**

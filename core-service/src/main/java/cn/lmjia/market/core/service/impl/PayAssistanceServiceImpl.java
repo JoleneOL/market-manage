@@ -10,6 +10,7 @@ import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.PaymentConfig;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
 import me.jiangcai.payment.exception.SystemMaintainException;
+import me.jiangcai.payment.hua.huabei.HuabeiPaymentForm;
 import me.jiangcai.payment.paymax.PaymaxChannel;
 import me.jiangcai.payment.paymax.PaymaxPaymentForm;
 import me.jiangcai.payment.service.PaymentService;
@@ -45,6 +46,8 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
     @Autowired
     private PaymaxPaymentForm paymaxPaymentForm;
     @Autowired
+    private HuabeiPaymentForm huabeiPaymentForm;
+    @Autowired
     private Environment environment;
     @Autowired
     private TRJService trjService;
@@ -55,11 +58,11 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
     }
 
     @Override
-    public ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order) throws SystemMaintainException {
+    public ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, boolean huabei) throws SystemMaintainException {
         if (payService.isPaySuccess(order.getPayableOrderId().toString()))
             throw new IllegalStateException("订单并不在待支付状态");
 
-        if (environment.acceptsProfiles("autoPay")) {
+        if (!huabei && environment.acceptsProfiles("autoPay")) {
             // 3 秒之后自动付款
             log.warn("3秒之后自动付款:" + order);
             executorService.schedule(()
@@ -77,6 +80,9 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
             parameters.put("channel", PaymaxChannel.wechatScan);
         }
         parameters.put("openId", openId);
+        parameters.put(HuabeiPaymentForm.PERIODS, 24);
+        if (huabei)
+            return paymentService.startPay(request, order, huabeiPaymentForm, parameters);
         return paymentService.startPay(request, order, paymaxPaymentForm, parameters);
     }
 

@@ -80,6 +80,11 @@
             <version>${payment.version}</version>
         </dependency>
         <dependency>
+            <groupId>me.jiangcai.payment</groupId>
+            <artifactId>support-huabei-hua</artifactId>
+            <version>${payment.version}</version>
+        </dependency>
+        <dependency>
             <groupId>me.jiangcai.chanpay</groupId>
             <artifactId>chanpay-test</artifactId>
             <version>1.0-SNAPSHOT</version>
