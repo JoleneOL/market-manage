@@ -81,7 +81,7 @@ $(function () {
                 "title": "状态",
                 "name": "status",
                 "data": function (item) {
-                    if (item.methodCode === 0 && item.statusCode === 7) return '<span class="text-danger">' + item.status + '</span>';
+                    if (item.methodCode !== 2 && item.statusCode === 7) return '<span class="text-danger">' + item.status + '</span>';
                     if (item.methodCode === 2 && item.statusCode === 4) return '<span class="text-danger">' + item.status + '</span>';
                     return item.status
                 }
@@ -130,8 +130,8 @@ $(function () {
                         a = a + viewLogistics;
                     }
 
-                    if (item.methodCode === 0) {
-                        //全额
+                    if (item.methodCode !== 2) {
+                        //其他
                         if (item.quickDoneAble && quickUrl) {
                             a = a + c;
                         }
