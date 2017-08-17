@@ -28,6 +28,7 @@
                 <value>cn.lmjia.market.dealer.entity</value>
                 <value>cn.lmjia.market.wechat.entity</value>
                 <value>com.huotu.verification.entity</value>
+                <value>me.jiangcai.payment.hua.huabei.entity</value>
                 <value>me.jiangcai.payment.chanpay.entity</value>
                 <value>me.jiangcai.payment.paymax.entity</value>
                 <value>me.jiangcai.payment.entity</value>

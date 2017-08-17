@@ -17,6 +17,7 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
+import me.jiangcai.payment.hua.huabei.entity.HuaHuabeiPayOrder;
 import me.jiangcai.payment.paymax.entity.PaymaxPayOrder;
 import me.jiangcai.payment.service.PaymentService;
 import me.jiangcai.wx.OpenId;
@@ -26,8 +27,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -80,9 +83,10 @@ public class WechatMainOrderController extends AbstractMainOrderController {
 //    }
 
     @GetMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId) throws SystemMaintainException {
+    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId)
+            throws SystemMaintainException {
         final MainOrder order = from(orderId, null);
-        return payAssistanceService.payOrder(openId, request, order);
+        return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
     }
 
     @GetMapping("/wechatOrderDetail")
@@ -100,7 +104,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             , Address address, String mobile, long goodId, int amount
             , String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
-            , String authorising, String idNumber)
+            , String authorising, String idNumber, boolean installmentHuabai)
             throws SystemMaintainException, InvalidAuthorisingException {
         int age = 20;
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile, goodId, amount
@@ -112,22 +116,36 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 return payAssistanceService.payOrder(openId, request, order, authorising, idNumber);
             }
         }
+        order.setHuabei(installmentHuabai);
 
-        return payAssistanceService.payOrder(openId, request, order);
+        return payAssistanceService.payOrder(openId, request, order, installmentHuabai);
     }
 
     @GetMapping("/_pay/paying")
     @Transactional(readOnly = true)
-    public String paying(String payableOrderId, long payOrderId, String checkUri
+    public String paying(@RequestHeader(required = false, value = "User-Agent") String agent, String payableOrderId
+            , long payOrderId, String checkUri
             , String successUri, Model model) {
         final PayOrder payOrder = paymentService.payOrder(payOrderId);
         String qrCodeUrl;
         String scriptCode;
+        // 微信环境下是否友好支付
+        boolean wechatFriendly;
         if (payOrder instanceof TRJPayOrder) {
             return "redirect:/wechatPaySuccess";
+        } else if (payOrder instanceof HuaHuabeiPayOrder) {
+            // 这个url 应该开放权限；在微信场景渲染pay.html；在非微信场景下 直接跳转这个支付地址。
+            // MicroMessenger
+            if (!StringUtils.isEmpty(agent) && !agent.contains("MicroMessenger")) {
+                return "redirect:" + ((HuaHuabeiPayOrder) payOrder).getAliPayCodeUrl();
+            }
+            qrCodeUrl = qrController.urlForText(((HuaHuabeiPayOrder) payOrder).getAliPayCodeUrl()).toString();
+            scriptCode = null;
+            wechatFriendly = false;
         } else if (payOrder instanceof ChanpayPayOrder) {
             qrCodeUrl = ((ChanpayPayOrder) payOrder).getUrl();
             scriptCode = null;
+            wechatFriendly = true;
         } else if (payOrder instanceof PaymaxPayOrder) {
             // 我们自己写了一个控制器 可以让一个地址变成一个二维码
             // 公众号支付页面是有点不同的 我们叫它额外JS支付
@@ -139,9 +157,11 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 qrCodeUrl = qrController.urlForText(paymaxPayOrder.getScanUrl()).toString();
                 scriptCode = null;
             }
+            wechatFriendly = true;
         } else if (payOrder.isTestOrder()) {
             qrCodeUrl = "";
             scriptCode = "";
+            wechatFriendly = true;
         } else
             throw new IllegalStateException("尚未支持扫码的支付系统");
 
@@ -151,6 +171,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         model.addAttribute("scriptCode", scriptCode);
         model.addAttribute("checkUri", checkUri);
         model.addAttribute("successUri", successUri);
+        model.addAttribute("wechatFriendly", wechatFriendly);
         if (scriptCode != null)
             return "wechat@payWithJS.html";
         return "wechat@pay.html";

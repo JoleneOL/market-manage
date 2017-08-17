@@ -20,10 +20,11 @@ public interface PayAssistanceService {
      * @param openId  openId
      * @param request mvc请求
      * @param order   需支付订单
+     * @param huabei  是否使用花呗支付
      * @return 视图
      * @throws SystemMaintainException
      */
-    ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order) throws SystemMaintainException;
+    ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, boolean huabei) throws SystemMaintainException;
 
     /**
      * 发起投融家分期支付

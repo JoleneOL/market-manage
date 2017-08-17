@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
@@ -97,6 +98,10 @@ public class PromotionRequest implements PayableOrder {
     private String backImagePath;
     @Column(length = 68)
     private String businessLicensePath;
+    @Transient
+    private String orderedName;
+    @Transient
+    private String orderedMobile;
 
     public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile, ReadService readService
             , ResourceService resourceService, ConversionService conversionService, Function<Integer, String> toLevelName) {
@@ -255,6 +260,21 @@ public class PromotionRequest implements PayableOrder {
 
     @Override
     public String getOrderBody() {
+        return "经销商开通费";
+    }
+
+    @Override
+    public String getOrderProductModel() {
+        return "经销商开通费";
+    }
+
+    @Override
+    public String getOrderProductCode() {
+        return "经销商开通费";
+    }
+
+    @Override
+    public String getOrderProductBrand() {
         return "经销商开通费";
     }
 }

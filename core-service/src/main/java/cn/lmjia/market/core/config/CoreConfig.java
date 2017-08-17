@@ -3,6 +3,7 @@ package cn.lmjia.market.core.config;
 import me.jiangcai.logistics.haier.HaierConfig;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import me.jiangcai.payment.chanpay.PaymentChanpayConfig;
+import me.jiangcai.payment.hua.huabei.HuabeiConfig;
 import me.jiangcai.payment.paymax.PaymentPaymaxConfig;
 import me.jiangcai.user.notice.wechat.UserNoticeWechatConfig;
 import me.jiangcai.wx.standard.StandardWeixinConfig;
@@ -28,8 +29,8 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 @Configuration
 @PropertySource("classpath:/defaultSystem.properties")
 @Import({CommonConfig.class, DataSupportConfig.class, StandardWeixinConfig.class, PaymentChanpayConfig.class
-        , PaymentPaymaxConfig.class, UserNoticeWechatConfig.class
-        , HaierConfig.class, TRJEnhanceConfig.class
+        , PaymentPaymaxConfig.class, HuabeiConfig.class, UserNoticeWechatConfig.class
+        , TRJEnhanceConfig.class, HaierConfig.class
 
 //        ServiceConfig.class
 })
