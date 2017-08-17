@@ -52,11 +52,11 @@ $(function () {
 
     function formatRepo(repo) {
         if (repo.loading) return repo.text;
-        return '<strong>' + repo.goods + '</strong>&nbsp;<em>' + repo.model + '</em>'
+        return '<strong>' + repo.name + '</strong>&nbsp;<em>' + repo.id + '</em>'
     }
 
     function formatRepoSelection(repo) {
-        return repo.model || repo.text;
+        return repo.name;
     }
 
 
@@ -169,7 +169,7 @@ $(function () {
 
     function extendData() {
         var data = {};
-        data.goodsId = $('select[name="goodsId"]').val();
+        data.product = $('select[name="goodsId"]').val();
         data.amount = $('input[name="amount"]').val();
         return data;
     }

@@ -27,7 +27,7 @@
     <![endif]-->
 </head>
 
-<body class="gray-bg" data-search-url="/search/url" data-storage-url="/storage/transfer">
+<body class="gray-bg" data-search-url="/product/search" data-storage-url="/storage/transfer">
 <div class="wrapper wrapper-content gray-bg">
     <div class="ibox">
         <div class="ibox-content">
@@ -50,10 +50,10 @@
                                 <form class="form-horizontal" id="J_ManualForm" method="post"
                                       action="_manualOrderManage.html">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">商品型号 <span
+                                        <label for="J_modelSelect" class="col-sm-3 control-label">商品型号 <span
                                                 class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <select id="J_modelSelect" name="goodsId" data-value="RPG-001" data-id="1000" required></select>
+                                            <select id="J_modelSelect" name="goodsId" required></select>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -79,7 +79,7 @@
                                         <label class="col-sm-3 control-label">订单金额 <span
                                                 class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="请输入订单金额" class="form-control"
+                                            <input type="number" placeholder="请输入订单金额" class="form-control"
                                                    name="total" required>
                                         </div>
                                     </div>
@@ -114,7 +114,7 @@
                                         <label class="col-sm-3 control-label">收货人手机号 <span
                                                 class="asterisk">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="tel" placeholder="请输入安装人员手机" class="form-control" name="mobile"
+                                            <input type="tel" placeholder="请输入收货人手机号" class="form-control" name="mobile"
                                                    required>
                                         </div>
                                     </div>

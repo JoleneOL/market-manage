@@ -346,8 +346,7 @@ Mock.mock(/\/storage\/transfer/, "get", {
         {
             'id': '@id',
             'storage': '@region',
-            'quantity': '@integer(100, 999)',
-            'distance': '@integer(100, 999)公里'
+            'quantity': '@integer(100, 999)'
         }
     ]
 });
@@ -591,70 +590,61 @@ Mock.mock(/\/orderData\/logistics\/\d/, 'get', {
     ]
 });
 
-Mock.mock(/\/manual\/list/, {
+Mock.mock(/\/manage\/manualOrders/, {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
     "data|10": [
         {
             'id': '@id',
-            'orderId': '@id',
-            'goods': '量子立式净水机',
-            'model': 'SCRO-200LK/A',
+            'productName': '量子立式净水机',
+            'productCode': 'SCRO-200LK/A',
             'amount': '@integer(1, 100)',
-            'total': '@integer(3600, 10000)',
-            'orderUser': '@cname',
+            'price': '@integer(3600, 10000)',
+            'name': '@cname',
             'address': '@county(true)',
             'mobile': /^1([34578])\d{9}$/,
-            'orderTime': '@datetime("yyyy-MM-dd")',
+            'createdTime': '@datetime("yyyy-MM-dd")',
             'status': '@pick(["待发货", "已发货"])',
-            'statusCode': '@pick([2, 9])'
+            'unitId': '@id'
         }
     ]
 });
 
-Mock.mock(/\/search\/url/, {
+Mock.mock(/\/product\/search/, {
     "total_count": 12,
     "items": [
         {
-            "id": 1,
-            "goods": "量子手机防辐射芯片",
-            "model": "LZXP01"
+            "name": "量子手机防辐射芯片",
+            "id": "LZXP01"
         },
         {
-            "id": 2,
-            "goods": "立式净水机（黑色）",
-            "model": "SCRO-200LK/A"
+            "name": "立式净水机（黑色）",
+            "id": "SCRO-200LK/A"
         },
         {
-            "id": 3,
-            "goods": "立式净水机（白色）",
-            "model": "SCRO-200LK/B"
+            "name": "立式净水机（白色）",
+            "id": "SCRO-200LK/B"
         },
         {
-            "id": 4,
-            "goods": "台式净水机（黑色）",
-            "model": "SCRO-200TK/A"
+            "name": "台式净水机（黑色）",
+            "id": "SCRO-200TK/A"
         },
         {
-            "id": 5,
-            "goods": "台式净水机（白色）",
-            "model": "SCRO-200TK/B"
+            "name": "台式净水机（白色）",
+            "id": "SCRO-200TK/B"
         },
         {
-            "id": 6,
-            "goods": "量子厨下净水机",
-            "model": "M537R"
+            "name": "量子厨下净水机",
+            "id": "M537R"
         },
         {
-            "id": 7,
-            "goods": "量子空气净化器",
-            "model": "ESL-HM01"
+            "name": "量子空气净化器",
+            "id": "ESL-HM01"
         },
         {
-            "id": 8,
-            "goods": "量子食品优化宝",
-            "model": "SP70"
+            "name": "量子食品优化宝",
+            "id": "SP70"
         }
     ]
 });
