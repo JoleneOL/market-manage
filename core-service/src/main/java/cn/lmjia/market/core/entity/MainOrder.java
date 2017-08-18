@@ -88,7 +88,9 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      * 具体的产品
      */
     @ManyToOne
+    @Deprecated
     private MainGood good;
+    @Deprecated
     private int amount;
     /**
      * 按揭识别码
