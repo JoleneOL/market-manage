@@ -3,7 +3,9 @@ package cn.lmjia.market.core.service.impl;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
@@ -207,7 +209,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root)), "%" + mobile + "%"));
             }
             if (goodId != null) {
-                predicate = cb.and(predicate, cb.equal(root.get("good").get("id"), goodId));
+                predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.good).get(MainGood_.id), goodId));
             }
             if (status != null && status != OrderStatus.EMPTY) {
                 predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));

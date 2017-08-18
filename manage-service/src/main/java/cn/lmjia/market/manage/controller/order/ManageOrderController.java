@@ -2,7 +2,9 @@ package cn.lmjia.market.manage.controller.order;
 
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -14,6 +16,7 @@ import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.rows.StockShiftUnitRows;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
+import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +78,10 @@ public class ManageOrderController {
                                         -> StockShiftUnitRows.getSupplierId(root.join("currentLogistics"), criteriaBuilder))
                                 .build()
                         , Fields.asBiFunction("orderId", MainOrder::getSerialId)
-                        , Fields.asFunction("goods", root -> root.get("good").get("product").get("name"))
-                        , Fields.asBasic("amount")
+                        , Fields.asFunction("goods", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.name))
+                        , FieldBuilder.asName(MainOrder.class, "amount")
+                                .addSelect(root -> root.get(MainOrder_.amount))
+                                .build()
                         , getOrderTime()
                         , FieldBuilder.asName(MainOrder.class, "address")
                                 .addSelect(root -> root.get("installAddress"))
@@ -116,7 +121,7 @@ public class ManageOrderController {
                         predicate = cb.and(predicate, cb.equal(root.join("currentLogistics").get("origin").get("id"), depotId));
                     }
                     if (!StringUtils.isEmpty(productCode))
-                        predicate = cb.and(predicate, cb.equal(root.get("good").get("product").get("code"), productCode));
+                        predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.good).get(MainGood_.product).get(Product_.code), productCode));
                     if (orderDate != null) {
                         predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate));
                     }

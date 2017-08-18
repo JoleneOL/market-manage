@@ -3,15 +3,20 @@ package cn.lmjia.market.dealer.controller.commission;
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.entity.deal.Commission_;
 import cn.lmjia.market.core.entity.deal.OrderCommission;
+import cn.lmjia.market.core.entity.deal.OrderCommission_;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
+import me.jiangcai.logistics.entity.Product_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -124,12 +129,12 @@ public class CommissionController {
                         , new FieldDefinition<Commission>() {
                             @Override
                             public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<Commission> root) {
-                                From<?, MainOrder> orderFrom = root.join("orderCommission").join("source");
+                                From<?, MainOrder> orderFrom = root.join(Commission_.orderCommission).join(OrderCommission_.source);
                                 return JpaFunctionUtils.contact(
                                         criteriaBuilder
-                                        , orderFrom.get("amount")
+                                        , orderFrom.get(MainOrder_.amount).as(String.class)
                                         , criteriaBuilder.literal("个")
-                                        , orderFrom.get("good").get("product").get("name")
+                                        , orderFrom.get(MainOrder_.good).get(MainGood_.product).get(Product_.name)
                                         , criteriaBuilder.literal(" ￥")
                                         , MainOrder.getOrderDueAmount(orderFrom, criteriaBuilder).as(String.class)
                                 );
