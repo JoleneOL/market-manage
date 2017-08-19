@@ -88,7 +88,7 @@ public class SecurityConfig {
                     // misc
                     .antMatchers("/misc/sendLoginCode", "/misc/sendRegisterCode").permitAll()
                     // 登录跳转页面
-                    .antMatchers("/wechatJoin", "/wechatRegister").permitAll()
+                    .antMatchers("/wechatJoin**", "/wechatRegister").permitAll()
                     .antMatchers("/toLoginWechat", "/wechatLogin").permitAll()
                     // 手机号码可用性检测
                     .antMatchers("/loginData/mobileValidation").permitAll()
