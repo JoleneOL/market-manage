@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author CJ
@@ -49,7 +50,7 @@ public class WechatShareController {
             return "redirect:" + SystemService.wechatShareMoreUri;
         model.addAttribute("login", login);
         model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(login).getImageUrl());
-        model.addAttribute("url", systemService.toUrl("/wechatJoin?id=" + login.getId()));
+        model.addAttribute("url", systemService.toUrl("/wechatJoin" + login.getId()));
         return "wechat@shareQC.html";
     }
 
@@ -59,8 +60,8 @@ public class WechatShareController {
         return "wechat@chance.html";
     }
 
-    @GetMapping("/wechatJoin")
-    public String join(long id, @OpenId String openId, @AuthenticationPrincipal Object login, Model model) {
+    @GetMapping("/wechatJoin{id}")
+    public String join(@PathVariable long id, @OpenId String openId, @AuthenticationPrincipal Object login, Model model) {
         // 如果已登录 那么直接去下单
         if (login != null && login instanceof Login)
             return "redirect:" + SystemService.wechatOrderURi;

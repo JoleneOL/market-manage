@@ -31,6 +31,10 @@ public class Product {
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime = LocalDateTime.now();
     /**
+     * 是否需要安装
+     */
+    private boolean installation;
+    /**
      * 货物编码|产品编码
      */
     @Id

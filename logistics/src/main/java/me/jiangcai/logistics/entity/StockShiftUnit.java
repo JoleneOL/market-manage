@@ -162,4 +162,14 @@ public class StockShiftUnit {
     public String getSupplierOrganizationName() {
         return null;
     }
+
+    /**
+     * @return 检查下 是否需要安装
+     */
+    public boolean checkInstallation() {
+        return amounts.entrySet().stream()
+                .filter(entry -> entry.getValue().getAmount() > 0)
+                .filter(entry -> entry.getKey().isInstallation())
+                .count() > 0;
+    }
 }

@@ -22,89 +22,86 @@
     <![endif]-->
 </head>
 <body class="gray-bg">
-    <div class="wrapper wrapper-content">
-        <div class="ibox">
-            <div class="ibox-content">
-                <ol class="breadcrumb">
-                    <li><a href="_productManage.html" th:href="@{/manageProduct}">货品管理</a></li>
-                    <li><strong>货品详情</strong></li>
-                </ol>
-            </div>
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_productManage.html" th:href="@{/manageProduct}">货品管理</a></li>
+                <li><strong>货品详情</strong></li>
+            </ol>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        货品信息
-                        <div class="ibox-tools">
-                            <a class="btn btn-primary btn-sm" href="_productOperate.html"
-                               th:href="@{/manageProductEdit(code=${currentData.code})}">
-                                <i class="fa fa fa-pencil-square-o"></i>&nbsp;修改
-                            </a>
-                        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    货品信息
+                    <div class="ibox-tools">
+                        <a class="btn btn-primary btn-sm" href="_productOperate.html"
+                           th:href="@{/manageProductEdit(code=${currentData.code})}">
+                            <i class="fa fa fa-pencil-square-o"></i>&nbsp;修改
+                        </a>
                     </div>
-                    <div class="ibox-content">
-                        <div class="table-responsive" th:object="${currentData}">
-                            <table class="table table-hover table-bordered">
-                                <tbody>
-                                <tr>
-                                    <td width="120px">货品</td>
-                                    <td th:text="*{name}">尼维柯立式净水机</td>
-                                </tr>
-                                <tr>
-                                    <td>品类</td>
-                                    <td th:text="*{mainCategory}">净水机</td>
-                                </tr>
-                                <tr>
-                                    <td>型号</td>
-                                    <td th:text="*{mainCategory}">CRP-2000LK-L</td>
-                                </tr>
-                                <tr>
-                                    <td>设备款（元）</td>
-                                    <td th:text="*{{depositMoney}}">400.00</td>
-                                </tr>
-                                <tr>
-                                    <td>服务费（元）</td>
-                                    <td th:text="*{{install}}">3000</td>
-                                </tr>
-                                <tr>
-                                    <td>添加时间</td>
-                                    <td th:text="*{{createTime}}">2017-09-09</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <!--<table class="table table-hover table-bordered">-->
-                            <!--<tbody>-->
-                            <!--<tr>-->
-                            <!--<td width="120px">分期期数</td>-->
-                            <!--<td>3期、6期、12期</td>-->
-                            <!--</tr>-->
-                            <!--<tr>-->
-                            <!--<td>分期货品</td>-->
-                            <!--<td>花呗</td>-->
-                            <!--</tr>-->
-                            <!--</tbody>-->
-                            <!--</table>-->
-                            <div class="clearfix product-textarea">
-                                <div class="pull-left text-center product-textarea-hd">
-                                    货品详情
-                                </div>
-                                <div class="pull-left product-textarea-bd">
-                                    <p th:utext="*{richDescription}">
-                                        <p>肤白貌美！肤白貌美!肤白貌美!</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                        <p>肤白貌美！</p>
-                                    </p>
-                                </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive" th:object="${currentData}">
+                        <table class="table table-hover table-bordered">
+                            <tbody>
+                            <tr>
+                                <td width="120px">货品</td>
+                                <td th:text="*{name}">尼维柯立式净水机</td>
+                            </tr>
+                            <tr>
+                                <td>品类</td>
+                                <td th:text="*{mainCategory}">净水机</td>
+                            </tr>
+                            <tr>
+                                <td>型号</td>
+                                <td th:text="*{code}">CRP-2000LK-L</td>
+                            </tr>
+                            <tr>
+                                <td>设备款（元）</td>
+                                <td th:text="*{{depositMoney}}">400.00</td>
+                            </tr>
+                            <tr>
+                                <td>服务费（元）</td>
+                                <td th:text="*{{install}}">3000</td>
+                            </tr>
+                            <tr>
+                                <td>添加时间</td>
+                                <td th:text="*{{createTime}}">2017-09-09</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--<table class="table table-hover table-bordered">-->
+                        <!--<tbody>-->
+                        <!--<tr>-->
+                        <!--<td width="120px">分期期数</td>-->
+                        <!--<td>3期、6期、12期</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                        <!--<td>分期货品</td>-->
+                        <!--<td>花呗</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                        <!--</table>-->
+                        <div class="clearfix product-textarea">
+                            <div class="pull-left text-center product-textarea-hd">
+                                货品详情
+                            </div>
+                            <div class="pull-left product-textarea-bd" th:utext="*{richDescription}">
+                                <p>肤白貌美！肤白貌美!肤白貌美!</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
+                                <p>肤白貌美！</p>
                             </div>
                         </div>
                     </div>
@@ -112,5 +109,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

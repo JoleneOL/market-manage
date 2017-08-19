@@ -117,12 +117,14 @@ public class ManageProductController {
     public String edit(boolean createNew, String productName, String productBrand, String mainCategory
             , @RequestParam("type") String code, String SKU, BigDecimal productPrice, String unit, BigDecimal length
             , BigDecimal width, BigDecimal height, BigDecimal weight, BigDecimal serviceCharge, String productSummary
-            , String productDetail) {
+            , String productDetail, boolean installation) {
         MainProduct product;
         if (createNew) {
             if (StringUtils.isEmpty(code))
                 throw new IllegalArgumentException("");
             if (StringUtils.isEmpty(productName))
+                throw new IllegalArgumentException("");
+            if (mainProductRepository.findOne(code) != null)
                 throw new IllegalArgumentException("");
             product = new MainProduct();
             product.setCode(code);
@@ -131,6 +133,7 @@ public class ManageProductController {
         }
 
         product.setName(productName);
+        product.setInstallation(installation);
         product.setBrand(StringUtils.isEmpty(productBrand) ? null : productBrand);
         product.setMainCategory(StringUtils.isEmpty(mainCategory) ? null : mainCategory);
         product.setSKU(StringUtils.isEmpty(SKU) ? null : SKU);

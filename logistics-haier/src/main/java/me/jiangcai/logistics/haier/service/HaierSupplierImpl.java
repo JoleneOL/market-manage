@@ -14,7 +14,6 @@ import me.jiangcai.logistics.haier.http.ResponseHandler;
 import me.jiangcai.logistics.haier.model.OrderStatusSync;
 import me.jiangcai.logistics.haier.model.OutInStore;
 import me.jiangcai.logistics.haier.model.RejectInfo;
-import me.jiangcai.logistics.option.LogisticsOptions;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,6 +45,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -90,7 +90,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         parameters.put("productcode", product.getCode());
         parameters.put("brand", product.getBrand());
         parameters.put("category", product.getMainCategory());
-        parameters.put("prodes", product.getDescription());
+        parameters.put("prodes", product.getCode());
         parameters.put("skubarcode", product.getSKU());
         parameters.put("unit", product.getUnit());
         parameters.put("length", product.getVolumeLength());
@@ -107,14 +107,20 @@ public class HaierSupplierImpl implements HaierSupplier {
                                     LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options) {
         Map<String, Object> parameters = new HashMap<>();
 
-        String id = UUID.randomUUID().toString().replaceAll("-", "");
+        String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20).toUpperCase(Locale.ENGLISH);
+
+        HaierOrder order = new HaierOrder();
+        order.setOrderNumber(id);
+        forUnit.accept(order);
 
         // 判定要生成哪种类型的订单
         // 记住错误版本入库也是拿source的id!!!!!
+        boolean installation;
         if ((source instanceof HaierDepot) && !(destination instanceof HaierDepot)) {
             // 销售出库
+            installation = order.checkInstallation();
             parameters.put("ordertype", "2");
-            parameters.put("bustype", "2");
+            parameters.put("bustype", installation ? "2" : "70");
             parameters.put("storecode", ((HaierDepot) source).getHaierCode());
 
             parameters.put("province", destination.getProvince());
@@ -126,6 +132,7 @@ public class HaierSupplierImpl implements HaierSupplier {
 
         } else if (!(source instanceof HaierDepot) && (destination instanceof HaierDepot)) {
             // 入库
+            installation = false;
             parameters.put("ordertype", "1");
             parameters.put("bustype", "1");
             parameters.put("storecode", ((HaierDepot) destination).getHaierCode());
@@ -149,11 +156,9 @@ public class HaierSupplierImpl implements HaierSupplier {
         parameters.put("sourcesn", id);
         parameters.put("expno", id);// 快递单号：自动分配的快递单号或客户生成的快递单号
         parameters.put("orderdate", LocalDateTime.now().format(formatter));
-        parameters.put("busflag", (options & LogisticsOptions.Installation) == LogisticsOptions.Installation ? "1" : "2");
+//        parameters.put("busflag", (options & LogisticsOptions.Installation) == LogisticsOptions.Installation ? "1" : "2");
+        parameters.put("busflag", installation ? "1" : "2");
 
-        HaierOrder order = new HaierOrder();
-        order.setOrderNumber(id);
-        forUnit.accept(order);
 
         List<Map<String, Object>> items = order.getAmounts().entrySet().stream()
                 .map(this::toItemData)
@@ -306,7 +311,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         Map<String, Object> data = new HashMap<>();
         final Product product = entry.getKey();
         data.put("productcode", product.getCode());
-        data.put("prodes", product.getName());
+        data.put("prodes", product.getCode());
         final ProductBatch batch = entry.getValue();
         switch (batch.getProductStatus()) {
             case normal:
