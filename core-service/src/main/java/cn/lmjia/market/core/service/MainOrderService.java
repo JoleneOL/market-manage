@@ -7,8 +7,8 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
-import me.jiangcai.logistics.entity.support.StockInfo;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.wx.model.Gender;
@@ -21,7 +21,7 @@ import javax.persistence.criteria.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * @author CJ
@@ -38,16 +38,14 @@ public interface MainOrderService {
      * @param age                年龄
      * @param gender             性别
      * @param installAddress     安装地址
-     * @param good               商品
-     * @param amount             数量
+     * @param amounts            不可以包含数量0的商品！
      * @param mortgageIdentifier 可选的按揭识别码
      * @return 新创建的订单
      */
     @Transactional
     MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress
-            , MainGood good
-            , int amount, String mortgageIdentifier);
+            , Map<MainGood, Integer> amounts, String mortgageIdentifier);
 
     /**
      * @return 所有订单
@@ -117,7 +115,7 @@ public interface MainOrderService {
      * @return 这个订单需要的库存信息
      */
     @Transactional(readOnly = true)
-    Set<StockInfo> depotsForOrder(long orderId);
+    List<Depot> depotsForOrder(long orderId);
 
     /**
      * 物流开动

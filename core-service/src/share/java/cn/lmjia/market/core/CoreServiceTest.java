@@ -13,6 +13,7 @@ import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.QuickTradeService;
 import cn.lmjia.market.core.service.ReadService;
@@ -51,6 +52,8 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
@@ -93,6 +96,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private ReadService readService;
 
     //<editor-fold desc="自动登录相关">
+    @Autowired
+    private MainGoodService mainGoodService;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -112,6 +117,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager(ManageLevel... levels) {
         return newRandomManager(randomMobile(), UUID.randomUUID().toString(), levels);
     }
+    //</editor-fold>
 
     /**
      * 新增并且保存一个随机的管理员
@@ -123,7 +129,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager(String rawPassword, ManageLevel... levels) {
         return newRandomManager(randomMobile(), rawPassword, levels);
     }
-    //</editor-fold>
 
     /**
      * 新增并且保存一个随机的管理员
@@ -303,9 +308,19 @@ public abstract class CoreServiceTest extends SpringWebTest {
         return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
                 , mobile, 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
                 , randomAddress()
-                , mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null)
-                , 1 + random.nextInt(10)
-                , random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+                , randomMainOrderAmountSet(), random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+    }
+
+    private Map<MainGood, Integer> randomMainOrderAmountSet() {
+        Map<MainGood, Integer> data = new HashMap<>();
+        int count = 2 + random.nextInt(2);
+        while (count-- > 0) {
+            data.put(mainGoodService.forSale().stream()
+                    .filter(good -> !data.keySet().contains(good))
+                    .max(new RandomComparator()).orElse(null), 1 + random.nextInt(10)
+            );
+        }
+        return data;
     }
 
     /**

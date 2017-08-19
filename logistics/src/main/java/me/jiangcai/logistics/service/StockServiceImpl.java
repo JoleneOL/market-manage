@@ -8,6 +8,8 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockSettlement;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.UnSettlementUsageStock;
+import me.jiangcai.logistics.entity.UsageStock;
+import me.jiangcai.logistics.entity.UsageStock_;
 import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
@@ -43,6 +45,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
@@ -252,6 +255,20 @@ public class StockServiceImpl implements StockService {
                 .forProduct(product)
                 .stream().mapToInt(StockInfo::getAmount)
                 .sum();
+    }
+
+    @Override
+    public List<Depot> usableDepotFor(BiFunction<CriteriaBuilder, Root<UsageStock>, Predicate> condition) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Depot> cq = cb.createQuery(Depot.class);
+        Root<UsageStock> root = cq.from(UsageStock.class);
+        return entityManager.createQuery(cq
+                .select(root.get(UsageStock_.depot))
+                .groupBy(root.get(UsageStock_.depot))
+                .having(condition == null ? cb.conjunction() : condition.apply(cb, root))
+                .distinct(true)
+        )
+                .getResultList();
     }
 
     /**

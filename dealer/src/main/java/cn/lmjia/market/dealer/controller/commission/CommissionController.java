@@ -3,7 +3,6 @@ package cn.lmjia.market.dealer.controller.commission;
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.deal.Commission;
@@ -16,7 +15,6 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
-import me.jiangcai.logistics.entity.Product_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -132,9 +130,7 @@ public class CommissionController {
                                 From<?, MainOrder> orderFrom = root.join(Commission_.orderCommission).join(OrderCommission_.source);
                                 return JpaFunctionUtils.contact(
                                         criteriaBuilder
-                                        , orderFrom.get(MainOrder_.amount).as(String.class)
-                                        , criteriaBuilder.literal("个")
-                                        , orderFrom.get(MainOrder_.good).get(MainGood_.product).get(Product_.name)
+                                        , orderFrom.get(MainOrder_.orderBody)
                                         , criteriaBuilder.literal(" ￥")
                                         , MainOrder.getOrderDueAmount(orderFrom, criteriaBuilder).as(String.class)
                                 );

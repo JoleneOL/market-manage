@@ -11,11 +11,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -36,22 +37,30 @@ public class JpaElementSelectTest extends CoreServiceTest {
         entityManager.flush();
 
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
-        CriteriaQuery<List> cq = cb.createQuery(List.class);
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+//        CriteriaQuery<List> cq = cb.createQuery(List.class);
         Root<JpaElementSelect> root = cq.from(JpaElementSelect.class);
 
+        ListJoin<JpaElementSelect, OneForEntity> entityListJoin = root.join(JpaElementSelect_.entityList);
+        root.fetch(JpaElementSelect_.entityList);
+//        entityListJoin.get("data");
+
         entityManager.createQuery(cq
-                        .select(root.get(JpaElementSelect_.entityList))
-//                        .multiselect(root.get("name")
-////                        , root.get("elementList")
-//                                , root.join(JpaElementSelect_.entityList))
+//                        .select(root.get(JpaElementSelect_.entityList))
+                        .multiselect(root.get("name")
+//                        , root.get("elementList")
+                                , entityListJoin
+//                                , root.join(JpaElementSelect_.entityList)
+//                                , cb.array(entityListJoin)
+//                                cb.
+                        )
                         .distinct(true)
 //                .groupBy(root)
         )
                 .getResultList()
                 .forEach(tuple -> {
                     System.out.println(tuple.get(0));
-                    System.out.println(tuple.get(1));
+//                    System.out.println(tuple.get(1));
 //                    System.out.println(tuple.get(2));
                 });
 

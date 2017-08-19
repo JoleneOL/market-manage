@@ -17,10 +17,12 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -37,6 +39,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 订单
@@ -93,13 +98,17 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Deprecated
     private int amount;
     /**
+     * @since {@link cn.lmjia.market.core.Version#muPartOrder}
+     */
+    @ElementCollection
+    private Map<MainGood, Integer> amounts;
+    /**
      * 按揭识别码
      */
     @Column(length = 32)
     private String mortgageIdentifier;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime orderTime;
-
     /**
      * 成功支付的支付订单
      */
@@ -107,7 +116,6 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     private PayOrder payOrder;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime payTime;
-
     /**
      * 订单状态
      */
@@ -116,26 +124,52 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      * 下单时的总价
      * 将在{@link #makeRecord()}时被记录
      */
+    @Deprecated
     @Column(scale = 2, precision = 12)
     private BigDecimal goodTotalPrice;
     /**
      * 下单时用于结算佣金的价格
      * 将在{@link #makeRecord()}时被记录
      */
+    @Deprecated
     @Column(scale = 2, precision = 12)
     private BigDecimal goodCommissioningPrice;
     /**
+     * 下单时的总价，该总价不依赖于数量即已经被完整计算
+     * 将在{@link #makeRecord()}时被记录
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartOrder}
+     */
+    @Column(scale = 2, precision = 12)
+    private BigDecimal goodTotalPriceAmountIndependent;
+    /**
+     * 下单时用于结算佣金的价格
+     * 将在{@link #makeRecord()}时被记录
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartOrder}
+     */
+    @Column(scale = 2, precision = 12)
+    private BigDecimal goodCommissioningPriceAmountIndependent;
+    /**
      * 下单时的商品名称
      * 将在{@link #makeRecord()}时被记录
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartOrder} 需要变得更长
      */
-    @Column(length = 40)
+    @Column(length = 240)
     private String goodName;
-
+    /**
+     * "6个A,7个B"
+     * 将在{@link #makeRecord()}时被记录
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartOrder}
+     */
+    @Lob
+    private String orderBody;
     /**
      * 暂停结算
      */
     private boolean disableSettlement;
-
     /**
      * 物流信息
      */
@@ -144,7 +178,6 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     private List<StockShiftUnit> logisticsSet;
     @ManyToOne
     private StockShiftUnit currentLogistics;
-
     /**
      * 是否使用花呗支付
      */
@@ -170,10 +203,16 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return from.join("customer");
     }
 
-    public static Expression<BigDecimal> getOrderDueAmount(From<?, MainOrder> path, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.toBigDecimal(criteriaBuilder.prod(
-                MainGood.getTotalPrice(path.join(MainOrder_.good), criteriaBuilder)
-                , path.get(MainOrder_.amount)));
+    /**
+     * @param path 订单from
+     * @param cb   cb
+     * @return 订单价格的查询
+     */
+    public static Expression<BigDecimal> getOrderDueAmount(From<?, MainOrder> path, CriteriaBuilder cb) {
+        return path.get(MainOrder_.goodTotalPriceAmountIndependent);
+//        return cb.toBigDecimal(cb.prod(
+//                MainGood.getTotalPrice(path.join(MainOrder_.good), cb)
+//                , path.get(MainOrder_.amount)));
     }
 
     /**
@@ -202,6 +241,15 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     }
 
     /**
+     * @return 总的数量
+     */
+    public int getTotalAmount() {
+        return amounts.values().stream()
+                .mapToInt(value -> value)
+                .sum();
+    }
+
+    /**
      * 创建下单记录
      */
     public void makeRecord() {
@@ -210,19 +258,44 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         record = new MainOrderRecord();
         record.setOrderTime(orderTime);
         record.setAge(LocalDate.now().getYear() - customer.getBirthYear());
-        record.setAmount(amount);
         record.setGender(customer.getGender());
         record.setInstallAddress(installAddress);
         record.setMobile(customer.getMobile());
         record.setMortgageIdentifier(mortgageIdentifier);
         record.setName(customer.getName());
-        record.setProductName(good.getProduct().getName());
-        record.setProductType(good.getProduct().getCode());
+        record.updateAmounts(amounts);
         record.setRecommendByMobile(recommendBy.getLoginName());
 
-        setGoodTotalPrice(good.getTotalPrice());
-        setGoodName(good.getProduct().getName());
-        setGoodCommissioningPrice(good.getProduct().getDeposit());
+//        setGoodTotalPrice(good.getTotalPrice());
+        setGoodTotalPriceAmountIndependent(withAmount(MainGood::getTotalPrice));
+//        setGoodName(good.getProduct().getName());
+        setGoodName(amounts.keySet().stream()
+                .map(good1 -> good1.getProduct().getName())
+                .collect(Collectors.joining(",")));
+//        setGoodCommissioningPrice(good.getProduct().getDeposit());
+        setGoodCommissioningPriceAmountIndependent(withAmount(good1 -> good1.getProduct().getDeposit()));
+        setOrderBody(amounts.entrySet().stream()
+                .map(entry
+                        -> entry.getValue()
+                        + (StringUtils.isEmpty(entry.getKey().getProduct().getUnit())
+                        ? "个" : entry.getKey().getProduct().getUnit())
+                        + entry.getKey().getProduct().getName())
+                .collect(Collectors.joining(",")));
+    }
+
+    /**
+     * 结合数量结算金额
+     *
+     * @param function 每个商品所牵涉金额
+     * @return 总牵涉金额
+     */
+    private BigDecimal withAmount(Function<MainGood, BigDecimal> function) {
+        BigDecimal current = BigDecimal.ZERO;
+        for (MainGood good : amounts.keySet()) {
+            BigDecimal one = function.apply(good);
+            current = current.add(one.multiply(BigDecimal.valueOf(amounts.get(good))));
+        }
+        return current;
     }
 
     @Override
@@ -232,7 +305,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 
     @Override
     public BigDecimal getOrderDueAmount() {
-        return goodTotalPrice.multiply(BigDecimal.valueOf(amount));
+        return goodTotalPriceAmountIndependent;
     }
 
     public Money getOrderDueAmountMoney() {
@@ -245,19 +318,20 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     }
 
     @Override
-    public String getOrderBody() {
-        return amount + "个" + goodName;
-    }
-
-    @Override
     public String getOrderProductModel() {
-        return getGood().getProduct().getCode();
+        return getOrderProductCode();
     }
 
     @Override
     public String getOrderProductBrand() {
-        return StringUtils.isEmpty(getGood().getProduct().getBrand()) ? getOrderProductName()
-                : getGood().getProduct().getBrand();
+        // 随便找一个有品牌的 然后有多个就等
+        return amounts.keySet().stream()
+                .map(good1 -> good1.getProduct().getBrand())
+                .filter(name -> !StringUtils.isEmpty(name))
+                .findFirst()
+                .orElse(getOrderProductName());
+//        return StringUtils.isEmpty(getGood().getProduct().getBrand()) ? getOrderProductName()
+//                : getGood().getProduct().getBrand();
     }
 
     @Override
@@ -272,7 +346,12 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 
     @Override
     public String getOrderProductCode() {
-        return getGood().getProduct().getCode();
+        return amounts.keySet().stream()
+                .map(good1 -> good1.getProduct().getCode())
+                .filter(name -> !StringUtils.isEmpty(name))
+                .findFirst()
+                .orElse("无");
+//        return getGood().getProduct().getCode();
     }
 
     /**
@@ -280,7 +359,6 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      * @see #getSerialId(Path, CriteriaBuilder)
      */
     public String getSerialId() {
-
         return orderTime.format(SerialDateTimeFormatter)
                 + String.format("%0" + MaxDailySerialIdBit + "d", dailySerialId);
     }
@@ -291,7 +369,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 
     @Override
     public BigDecimal getCommissioningAmount() {
-        return goodCommissioningPrice.multiply(BigDecimal.valueOf(amount));
+        return goodCommissioningPriceAmountIndependent;
     }
 
     @Override

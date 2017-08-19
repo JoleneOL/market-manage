@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller.order;
 
+import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.OrderStatus;
@@ -61,16 +62,20 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 //                .andExpect(jsonPath("$.depots.length()").value(0));
         // 首先得有仓库
         addNewHaierDepot();
-        stockService.addStock(
+        order.getAmounts().forEach((good, integer) -> stockService.addStock(
                 depotRepository.findAll().stream()
                         .filter(depot -> depot instanceof HaierDepot)
                         .max(new RandomComparator()).orElse(null)
-                , order.getGood().getProduct()
+                , good.getProduct()
                 , 100000, null
-        );
+        ));
+
+//        设定一样商品为我们的检测数据
+        MainGood good = order.getAmounts().keySet().stream().max(new RandomComparator()).orElse(null);
+
 
         // 记录原来的库存总量
-        int originStock = stockService.usableStockTotal(order.getGood().getProduct());
+        int originStock = stockService.usableStockTotal(good.getProduct());
 
         String responseString = mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
                 .andExpect(status().isOk())
@@ -86,8 +91,8 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         )
                 .andExpect(status().is2xxSuccessful());
 
-        assertThat(stockService.usableStockTotal(order.getGood().getProduct()))
-                .isEqualTo(originStock - order.getAmount());
+        assertThat(stockService.usableStockTotal(good.getProduct()))
+                .isEqualTo(originStock - order.getAmounts().get(good));
 
         // 断言库存量 应该减少了 暂时跳过
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())

@@ -47,4 +47,24 @@ public interface RowDefinition<T> {
     default List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<T> root) {
         return null;
     }
+
+    /**
+     * @param cb    cb
+     * @param query query
+     * @param root  root
+     * @return 数据查询时的分组
+     */
+    default CriteriaQuery<T> dataGroup(CriteriaBuilder cb, CriteriaQuery<T> query, Root<T> root) {
+        return query;
+    }
+
+    /**
+     * @param cb    cb
+     * @param query query
+     * @param root  root
+     * @return 统计查询时的分组
+     */
+    default CriteriaQuery<Long> countQuery(CriteriaBuilder cb, CriteriaQuery<Long> query, Root<T> root) {
+        return query;
+    }
 }

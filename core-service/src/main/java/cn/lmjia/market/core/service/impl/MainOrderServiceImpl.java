@@ -6,7 +6,6 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
-import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
@@ -23,9 +22,9 @@ import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.UsageStock_;
 import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
-import me.jiangcai.logistics.entity.support.StockInfo;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.haier.HaierSupplier;
@@ -57,9 +56,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -97,7 +97,7 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
-            , Address installAddress, MainGood good, int amount, String mortgageIdentifier) {
+            , Address installAddress, Map<MainGood, Integer> amounts, String mortgageIdentifier) {
         // 客户处理
         Customer customer = customerService.getNoNullCustomer(name, mobile, loginService.lowestAgentLevel(getEnjoyability(who))
                 , recommendBy);
@@ -108,14 +108,15 @@ public class MainOrderServiceImpl implements MainOrderService {
         customer.setBirthYear(now.getYear() - age);
 
         MainOrder order = new MainOrder();
-        order.setAmount(amount);
+//        order.setAmount(amount);
+        order.setAmounts(amounts);
         order.setCustomer(customer);
         order.setInstallAddress(installAddress);
         order.setMortgageIdentifier(mortgageIdentifier);
         order.setOrderBy(who);
         order.setRecommendBy(recommendBy);
         order.setOrderTime(LocalDateTime.now());
-        order.setGood(good);
+//        order.setGood(good);
         order.makeRecord();
 
         queryDailySerialId(now, order);
@@ -209,7 +210,8 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root)), "%" + mobile + "%"));
             }
             if (goodId != null) {
-                predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.good).get(MainGood_.id), goodId));
+                root.fetch(MainOrder_.amounts);
+                predicate = cb.and(predicate, cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.id), goodId));
             }
             if (status != null && status != OrderStatus.EMPTY) {
                 predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));
@@ -257,12 +259,22 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
-    public Set<StockInfo> depotsForOrder(long orderId) {
+    public List<Depot> depotsForOrder(long orderId) {
         MainOrder order = getOrder(orderId);
-        final MainProduct product = order.getGood().getProduct();
-        return stockService.enabledUsableStockInfo(((productPath, criteriaBuilder)
-                -> criteriaBuilder.equal(productPath, product)), null)
-                .forProduct(product);
+        // 库存多的优先
+        return stockService.usableDepotFor((cb, root)
+                -> cb.and(
+                order.getAmounts().entrySet().stream()
+                        .map(entry -> cb.and(
+                                cb.equal(root.get(UsageStock_.product), entry.getKey().getProduct())
+                                , cb.greaterThanOrEqualTo(root.get(UsageStock_.amount), entry.getValue())
+                        ))
+                        .toArray(Predicate[]::new)
+        ));
+//        final MainProduct product = order.getGood().getProduct();
+//        return stockService.enabledUsableStockInfo(((productPath, criteriaBuilder)
+//                -> criteriaBuilder.equal(productPath, product)), null)
+//                .forProduct(product);
     }
 
     @Override
@@ -276,22 +288,25 @@ public class MainOrderServiceImpl implements MainOrderService {
         else
             supplier = applicationContext.getBean(supplierType);
 
-        StockShiftUnit unit = logisticsService.makeShift(supplier, Collections.singleton(new Thing() {
-            @Override
-            public Product getProduct() {
-                return order.getGood().getProduct();
-            }
+        StockShiftUnit unit = logisticsService.makeShift(supplier, order.getAmounts().entrySet().stream()
+                        .map((Function<Map.Entry<MainGood, Integer>, Thing>) entry -> new Thing() {
+                            @Override
+                            public Product getProduct() {
+                                return entry.getKey().getProduct();
+                            }
 
-            @Override
-            public ProductStatus getProductStatus() {
-                return ProductStatus.normal;
-            }
+                            @Override
+                            public ProductStatus getProductStatus() {
+                                return ProductStatus.normal;
+                            }
 
-            @Override
-            public int getAmount() {
-                return order.getAmount();
-            }
-        }), depot, order, LogisticsOptions.Installation);
+                            @Override
+                            public int getAmount() {
+                                return entry.getValue();
+                            }
+                        })
+                        .collect(Collectors.toSet())
+                , depot, order, LogisticsOptions.Installation);
 
         if (order.getLogisticsSet() == null)
             order.setLogisticsSet(new ArrayList<>());

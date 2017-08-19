@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.InstallmentChannel;
+import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
@@ -14,6 +15,8 @@ import me.jiangcai.wx.model.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author CJ
@@ -51,13 +54,17 @@ public abstract class AbstractMainOrderController {
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
-            , Address address, String mobile, long goodId, int amount, String mortgageIdentifier, Long channelId) {
-        final MainGood good = mainGoodRepository.getOne(goodId);
-        if ((channelId != null) && (good.getChannel() == null || !good.getChannel().getId().equals(channelId))) {
-            throw new IllegalArgumentException("特定的频道只能购买特定的商品");
-        }
+            , Address address, String mobile, long goodId, int amount, String mortgageIdentifier, Long channelId
+            , MainGoodsAndAmounts amounts) {
+        Map<MainGood, Integer> realAmounts = amounts.toReal(mainGoodRepository);
+        realAmounts.keySet().forEach(good -> {
+            if ((channelId != null) && (good.getChannel() == null || !good.getChannel().getId().equals(channelId))) {
+                throw new IllegalArgumentException("特定的频道只能购买特定的商品");
+            }
+        });
+
         return mainOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age
                 , gender, address
-                , good, amount, mortgageIdentifier);
+                , realAmounts, mortgageIdentifier);
     }
 }

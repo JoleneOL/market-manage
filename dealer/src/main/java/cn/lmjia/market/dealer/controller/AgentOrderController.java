@@ -42,7 +42,7 @@ public class AgentOrderController extends AbstractMainOrderController {
             , String activityCode, long recommend, @AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException {
         MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile, goodId, amount
-                , activityCode, null);
+                , activityCode, null, null);
         HashMap<String, Object> data = new HashMap<>();
         data.put("desktop", true);
         return paymentService.startPay(request, order, chanpayPaymentForm, data);

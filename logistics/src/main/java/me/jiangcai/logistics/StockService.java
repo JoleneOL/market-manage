@@ -2,6 +2,7 @@ package me.jiangcai.logistics;
 
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.UsageStock;
 import me.jiangcai.logistics.event.ShiftEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.function.BiFunction;
 
 /**
@@ -49,6 +52,7 @@ public interface StockService {
 
     /**
      * 如果给定了条件，则不再检查是否是上架状态的
+     *
      * @param productSpec 可选的产品规格
      * @param depotSpec   可选的仓库规格
      * @return 特定条件的上架库存信息
@@ -82,4 +86,11 @@ public interface StockService {
      */
     @Transactional(readOnly = true)
     int usableStockTotal(Product product);
+
+    /**
+     * @param condition 相关条件
+     * @return 符合条件的仓库
+     */
+    @Transactional(readOnly = true)
+    List<Depot> usableDepotFor(BiFunction<CriteriaBuilder, Root<UsageStock>, Predicate> condition);
 }
