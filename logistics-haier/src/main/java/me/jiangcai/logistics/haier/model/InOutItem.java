@@ -24,7 +24,7 @@ public class InOutItem implements Serializable {
     @JsonProperty("hrcode")
     private String hrCode;
     @JsonProperty("prodes")
-    private String name;
+    private String productModel;
     private int number;
     @JsonProperty("iscomplete")
     @JsonDeserialize(using = BooleanDeserializer.class)

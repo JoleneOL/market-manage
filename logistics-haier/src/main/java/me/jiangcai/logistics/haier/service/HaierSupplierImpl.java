@@ -46,6 +46,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -90,7 +91,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         parameters.put("productcode", product.getCode());
         parameters.put("brand", product.getBrand());
         parameters.put("category", product.getMainCategory());
-        parameters.put("prodes", product.getDescription());
+        parameters.put("prodes", product.getCode());
         parameters.put("skubarcode", product.getSKU());
         parameters.put("unit", product.getUnit());
         parameters.put("length", product.getVolumeLength());
@@ -107,7 +108,7 @@ public class HaierSupplierImpl implements HaierSupplier {
                                     LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options) {
         Map<String, Object> parameters = new HashMap<>();
 
-        String id = UUID.randomUUID().toString().replaceAll("-", "");
+        String id = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 20).toUpperCase(Locale.ENGLISH);
 
         // 判定要生成哪种类型的订单
         // 记住错误版本入库也是拿source的id!!!!!
@@ -306,7 +307,7 @@ public class HaierSupplierImpl implements HaierSupplier {
         Map<String, Object> data = new HashMap<>();
         final Product product = entry.getKey();
         data.put("productcode", product.getCode());
-        data.put("prodes", product.getName());
+        data.put("prodes", product.getCode());
         final ProductBatch batch = entry.getValue();
         switch (batch.getProductStatus()) {
             case normal:
