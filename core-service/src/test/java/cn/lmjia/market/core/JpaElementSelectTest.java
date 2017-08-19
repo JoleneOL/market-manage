@@ -1,6 +1,7 @@
 package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.entity.JpaElementSelect;
+import cn.lmjia.market.core.entity.JpaElementSelect_;
 import cn.lmjia.market.core.entity.OneForElement;
 import cn.lmjia.market.core.entity.OneForEntity;
 import org.apache.commons.lang.RandomStringUtils;
@@ -10,7 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.UUID;
  */
 public class JpaElementSelectTest extends CoreServiceTest {
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
 
@@ -33,13 +35,18 @@ public class JpaElementSelectTest extends CoreServiceTest {
         entityManager.persist(select);
         entityManager.flush();
 
-        CriteriaQuery<Tuple> cq = entityManager.getCriteriaBuilder().createTupleQuery();
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        CriteriaQuery<List> cq = cb.createQuery(List.class);
         Root<JpaElementSelect> root = cq.from(JpaElementSelect.class);
 
         entityManager.createQuery(cq
-                        .multiselect(root.get("name")
-//                        , root.get("elementList")
-                                , root.get("entityList").as(List.class))
+                        .select(root.get(JpaElementSelect_.entityList))
+//                        .multiselect(root.get("name")
+////                        , root.get("elementList")
+//                                , root.join(JpaElementSelect_.entityList))
+                        .distinct(true)
+//                .groupBy(root)
         )
                 .getResultList()
                 .forEach(tuple -> {
