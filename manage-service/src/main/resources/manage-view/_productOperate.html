@@ -64,12 +64,21 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">是否需要安装 </label>
+                                            <div class="col-sm-6">
+                                                <input type="checkbox" class="form-control"
+                                                       name="installation" value="true"
+                                                       th:checked="${currentData!=null?currentData.installation:false}"
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-sm-3 control-label">品牌 </label>
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入货品品牌" class="form-control"
                                                        name="productBrand"
                                                        th:value="${currentData!=null?currentData.brand:''}"
-                                                       th:readonly="${currentData!=null && currentData.brand!=null}">
+                                                >
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -78,7 +87,7 @@
                                                 <input type="text" placeholder="请输入货品类目" class="form-control"
                                                        name="mainCategory"
                                                        th:value="${currentData!=null?currentData.mainCategory:''}"
-                                                       th:readonly="${currentData!=null && currentData.mainCategory!=null}">
+                                                >
                                             </div>
                                         </div>
                                         <!--<div class="form-group">-->
@@ -155,7 +164,7 @@
                                                 <input type="number" placeholder="请输入货品单价" class="form-control"
                                                        name="productPrice" min="0"
                                                        th:value="${currentData!=null?currentData.deposit:''}"
-                                                       th:readonly="${currentData!=null}" required>
+                                                       required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -163,7 +172,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="请输入单位" class="form-control"
                                                        name="unit" th:value="${currentData!=null?currentData.unit:''}"
-                                                       th:readonly="${currentData!=null && currentData.unit!=null}">
+                                                >
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -172,19 +181,19 @@
                                                 <input type="number" placeholder="请输入长" class="form-control"
                                                        name="length"
                                                        th:value="${currentData!=null?currentData.volumeLength:''}"
-                                                       th:readonly="${currentData!=null && currentData.volumeLength!=null}">
+                                                >
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="number" placeholder="请输入宽" class="form-control"
                                                        name="width"
                                                        th:value="${currentData!=null?currentData.volumeWidth:''}"
-                                                       th:readonly="${currentData!=null && currentData.volumeWidth!=null}">
+                                                >
                                             </div>
                                             <div class="col-sm-3">
                                                 <input type="number" placeholder="请输入高" class="form-control"
                                                        name="height"
                                                        th:value="${currentData!=null?currentData.volumeHeight:''}"
-                                                       th:readonly="${currentData!=null && currentData.volumeHeight!=null}">
+                                                >
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -193,7 +202,7 @@
                                                 <input type="number" placeholder="请输入重量" class="form-control"
                                                        name="weight" min="0"
                                                        th:value="${currentData!=null?currentData.weight:''}"
-                                                       th:readonly="${currentData!=null && currentData.weight!=null}">
+                                                >
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -201,8 +210,8 @@
                                             <div class="col-sm-6">
                                                 <input type="number" placeholder="请输入服务费" class="form-control"
                                                        name="serviceCharge"
-                                                       th:value="${currentData!=null?currentData.install:''}"
-                                                       th:readonly="${currentData!=null}" min="0" required>
+                                                       th:value="${currentData!=null?currentData.install:'0'}"
+                                                       min="0" required>
                                             </div>
                                         </div>
                                         <!--<div class="form-group">-->
@@ -255,8 +264,7 @@
                                             <div class="col-sm-9">
                                                 <textarea class="form-control" rows="3" placeholder="请输入货品简介"
                                                           name="productSummary"
-                                                          th:text="${currentData!=null?currentData.description:''}"
-                                                          th:readonly="${currentData!=null && currentData.description!=null}"></textarea>
+                                                          th:text="${currentData!=null?currentData.description:''}"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">

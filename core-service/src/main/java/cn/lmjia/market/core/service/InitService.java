@@ -139,6 +139,7 @@ public class InitService {
                 MainProduct mainProduct = mainProductRepository.findOne(type);
                 if (mainProduct == null) {
                     mainProduct = new MainProduct();
+                    mainProduct.setEnable(true);
                     mainProduct.setCode(type);
                     mainProduct.setName(productName);
                     mainProduct.setDeposit(new BigDecimal(value[1]));
