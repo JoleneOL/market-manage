@@ -1,9 +1,12 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.MainGoodService;
+import me.jiangcai.logistics.entity.Product_;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,18 +34,20 @@ public class MainGoodServiceImpl implements MainGoodService {
     public List<MainGood> forSale(Channel channel) {
         if (channel == null)
             return mainGoodRepository.findAll((root, query, cb) -> {
-                Join<MainGood, Channel> channelJoin = root.join("channel", JoinType.LEFT);
+                Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
                 return cb.and(
-                        cb.isTrue(root.get("enable"))
+                        cb.isTrue(root.get(MainGood_.enable))
+                        , cb.isTrue(root.get(MainGood_.product).get(Product_.enable))
                         , cb.or(
                                 channelJoin.isNull()
-                                , cb.isFalse(channelJoin.get("extra"))
+                                , cb.isFalse(channelJoin.get(Channel_.extra))
                         )
                 );
             });
         return mainGoodRepository.findAll((root, query, cb) -> cb.and(
-                cb.isTrue(root.get("enable"))
-                , cb.equal(root.get("channel"), channel)
+                cb.isTrue(root.get(MainGood_.enable))
+                , cb.isTrue(root.get(MainGood_.product).get(Product_.enable))
+                , cb.equal(root.get(MainGood_.channel), channel)
         ));
     }
 
