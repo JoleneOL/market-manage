@@ -45,11 +45,11 @@ public class MainGood {
     private LocalDateTime createTime = LocalDateTime.now();
 
     public static Expression<BigDecimal> getTotalPrice(From<?, MainGood> path, CriteriaBuilder criteriaBuilder) {
-        final Path<Object> product = path.get("product");
-        Join<MainGood, Channel> channel = path.join("channel", JoinType.LEFT);
+        final Path<MainProduct> product = path.get(MainGood_.product);
+        Join<MainGood, Channel> channel = path.join(MainGood_.channel, JoinType.LEFT);
 
         // deposit+install
-        final Expression<Number> simpleSum = criteriaBuilder.sum(product.get("deposit"), product.get("install"));
+        final Expression<Number> simpleSum = criteriaBuilder.sum(product.get(MainProduct_.deposit), product.get(MainProduct_.install));
         // 这个情况下 价格等于 deposit*depositRate*(1+poundageRate)+ install
         final Expression<Number> installmentChannelSum = criteriaBuilder.sum(
                 criteriaBuilder.prod(
