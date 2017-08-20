@@ -2,7 +2,6 @@ package cn.lmjia.market.core.config;
 
 import cn.lmjia.market.core.converter.AddressResolver;
 import cn.lmjia.market.core.converter.EnumConverterFactory;
-import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.row.IndefiniteRowDefinitionHandler;
@@ -43,6 +42,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import java.time.DayOfWeek;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -75,9 +75,6 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     private RowDefinitionHandler rowDefinitionHandler;
     @Autowired
     private IndefiniteRowDefinitionHandler indefiniteRowDefinitionHandler;
-    //    private final BigDecimalConverter bigDecimalConverter;
-    @Autowired
-    private LocalDateConverter localDateConverter;
 
     @Autowired
     public MVCConfig(ThymeleafViewResolver htmlViewResolver, Environment environment, Set<WebModule> webModules) {
@@ -171,6 +168,29 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 default:
                     return "";
             }
+        });
+        registry.addConverter(DayOfWeek.class, String.class, source -> {
+            if (source == null)
+                return null;
+            switch (source) {
+                case MONDAY:
+                    return "周一";
+                case TUESDAY:
+                    return "周二";
+                case WEDNESDAY:
+                    return "周三";
+                case THURSDAY:
+                    return "周四";
+                case FRIDAY:
+                    return "周五";
+                case SATURDAY:
+                    return "周六";
+                case SUNDAY:
+                    return "周日";
+                default:
+                    return null;
+            }
+
         });
     }
 
@@ -309,7 +329,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 this.webModules = webModules;
             }
 
-            SpringTemplateEngine templateEngine(Set<ITemplateResolver> templateResolvers) {
+            private SpringTemplateEngine templateEngine(Set<ITemplateResolver> templateResolvers) {
                 SpringTemplateEngine engine = new SpringTemplateEngine();
                 engine.setTemplateResolvers(templateResolvers);
                 engine.addDialect(new Java8TimeDialect());
@@ -319,9 +339,12 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             }
 
             private SpringResourceTemplateResolver createHtmlTemplateResolver(
-                    Supplier<SpringResourceTemplateResolver> supplier) {
-                if (supplier == null)
+                    Supplier<SpringResourceTemplateResolver> supplierInput) {
+                Supplier<SpringResourceTemplateResolver> supplier;
+                if (supplierInput == null)
                     supplier = NewSpringResourceTemplateResolver::new;
+                else
+                    supplier = supplierInput;
                 SpringResourceTemplateResolver resolver = supplier.get();
                 resolver.setCacheable(!environment.acceptsProfiles("development")
                         && !environment.acceptsProfiles("test"));

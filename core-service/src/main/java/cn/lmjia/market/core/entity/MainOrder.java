@@ -2,15 +2,18 @@ package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.util.CommissionSource;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.thread.ThreadLocker;
+import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,7 +22,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
@@ -30,6 +35,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -40,7 +46,7 @@ import java.util.Locale;
 @Entity
 @Setter
 @Getter
-public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
+public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, LogisticsDestination {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
@@ -124,6 +130,25 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     private String goodName;
 
     /**
+     * 暂停结算
+     */
+    private boolean disableSettlement;
+
+    /**
+     * 物流信息
+     */
+    @OneToMany
+    @OrderBy("createTime desc")
+    private List<StockShiftUnit> logisticsSet;
+    @ManyToOne
+    private StockShiftUnit currentLogistics;
+
+    /**
+     * 是否使用花呗支付
+     */
+    private boolean huabei;
+
+    /**
      * @param from order表
      * @return 到客户的登录表的关联
      */
@@ -131,14 +156,22 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
         return getCustomer(from).join("login");
     }
 
+    /**
+     * @param from order表
+     * @return 到下单者的登录表的关联
+     */
+    public static Join<MainOrder, Login> getOrderByLogin(From<?, MainOrder> from) {
+        return from.join("orderBy");
+    }
+
     public static Join<MainOrder, Customer> getCustomer(From<?, MainOrder> from) {
         return from.join("customer");
     }
 
-    public static Expression<BigDecimal> getOrderDueAmount(Path<MainOrder> path, CriteriaBuilder criteriaBuilder) {
+    public static Expression<BigDecimal> getOrderDueAmount(From<?, MainOrder> path, CriteriaBuilder criteriaBuilder) {
         return criteriaBuilder.toBigDecimal(criteriaBuilder.prod(
-                MainGood.getTotalPrice(path.get("good"), criteriaBuilder)
-                , path.get("amount")));
+                MainGood.getTotalPrice(path.join(MainOrder_.good), criteriaBuilder)
+                , path.get(MainOrder_.amount)));
     }
 
     /**
@@ -148,16 +181,16 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
      * @see #getSerialId()
      */
     public static Expression<String> getSerialId(Path<MainOrder> root, CriteriaBuilder criteriaBuilder) {
-        Expression<String> daily = JpaFunctionUtils.LeftPaddingWith(criteriaBuilder, root.get("dailySerialId"), MaxDailySerialIdBit, '0');
+        Expression<String> daily = JpaFunctionUtils.leftPaddingWith(criteriaBuilder, root.get("dailySerialId"), MaxDailySerialIdBit, '0');
         // 然后是日期
         Path<LocalDateTime> orderTime = root.get("orderTime");
         // https://dev.mysql.com/doc/refman/5.5/en/date-and-time-functions.html#function_date-format
         // date_format(current_date(),'%Y%m%d');
         Expression<String> year = criteriaBuilder.function("year", String.class, orderTime);
-        Expression<String> month = JpaFunctionUtils.LeftPaddingWith(
+        Expression<String> month = JpaFunctionUtils.leftPaddingWith(
                 criteriaBuilder, criteriaBuilder.function("month", String.class, orderTime), 2, '0'
         );
-        Expression<String> day = JpaFunctionUtils.LeftPaddingWith(
+        Expression<String> day = JpaFunctionUtils.leftPaddingWith(
                 criteriaBuilder, criteriaBuilder.function("day", String.class, orderTime), 2, '0'
         );
         return criteriaBuilder.concat(
@@ -214,6 +247,32 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
         return amount + "个" + goodName;
     }
 
+    @Override
+    public String getOrderProductModel() {
+        return getGood().getProduct().getCode();
+    }
+
+    @Override
+    public String getOrderProductBrand() {
+        return StringUtils.isEmpty(getGood().getProduct().getBrand()) ? getOrderProductName()
+                : getGood().getProduct().getBrand();
+    }
+
+    @Override
+    public String getOrderedName() {
+        return getCustomer().getName();
+    }
+
+    @Override
+    public String getOrderedMobile() {
+        return getCustomer().getMobile();
+    }
+
+    @Override
+    public String getOrderProductCode() {
+        return getGood().getProduct().getCode();
+    }
+
     /**
      * @return 业务订单号
      * @see #getSerialId(Path, CriteriaBuilder)
@@ -236,5 +295,35 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker {
     @Override
     public Object lockObject() {
         return ("mainOrder-" + id).intern();
+    }
+
+    @Override
+    public String getProvince() {
+        return installAddress.getProvince();
+    }
+
+    @Override
+    public String getCity() {
+        return installAddress.getPrefecture();
+    }
+
+    @Override
+    public String getCountry() {
+        return installAddress.getCounty();
+    }
+
+    @Override
+    public String getDetailAddress() {
+        return installAddress.getOtherAddress();
+    }
+
+    @Override
+    public String getConsigneeName() {
+        return customer.getName();
+    }
+
+    @Override
+    public String getConsigneeMobile() {
+        return customer.getMobile();
     }
 }

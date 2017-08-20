@@ -7,7 +7,6 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.CustomerRepository;
@@ -16,44 +15,49 @@ import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.QuickTradeService;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.test.QuickPayBean;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
+import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.util.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author CJ
@@ -77,14 +81,16 @@ public abstract class CoreServiceTest extends SpringWebTest {
     @Autowired
     private MainGoodRepository mainGoodRepository;
     @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
-    @Autowired
     private QuickPayBean quickPayBean;
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
     private QuickTradeService quickTradeService;
     private Login allRunWith;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ReadService readService;
 
     //<editor-fold desc="自动登录相关">
 
@@ -179,47 +185,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
         }
     }
 
-    private void loginAs(final Login login) {
-        SecurityContextImpl securityContext1 = new SecurityContextImpl();
-        securityContext1.setAuthentication(new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return login.getAuthorities();
-            }
-
-            @Override
-            public Object getCredentials() {
-                return login;
-            }
-
-            @Override
-            public Object getDetails() {
-                return login;
-            }
-
-            @Override
-            public Object getPrincipal() {
-                return login;
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return true;
-            }
-
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-            }
-
-            @Override
-            public String getName() {
-                return login.getLoginName();
-            }
-        });
-        SecurityContextHolder.setContext(securityContext1);
-    }
-
     protected BufferedImage randomImage() throws IOException {
         try (InputStream inputStream = randomPngImageResource().getInputStream()) {
             return ImageIO.read(inputStream);
@@ -271,6 +236,13 @@ public abstract class CoreServiceTest extends SpringWebTest {
     }
 
     /**
+     * @return 新增一个普通身份
+     */
+    protected Login newRandomLogin() {
+        return loginService.newLogin(Login.class, randomMobile(), randomLogin(false), randomMobile());
+    }
+
+    /**
      * @param manager 管理员可以么？
      * @return 随便一个已存在的身份
      */
@@ -297,7 +269,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
                             .contains(login);
                 })
                 .max(new RandomComparator())
-                .orElseThrow(() -> new IllegalStateException("一个都没有？"));
+                .orElseGet(() -> loginService.newLogin(Login.class, randomMobile(), null, randomMobile()));
     }
 
     /**
@@ -342,7 +314,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 执行下单请求
      */
     protected MockHttpServletRequestBuilder orderRequestBuilder(MockHttpServletRequestBuilder builder, OrderRequest request) {
-        return builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MockHttpServletRequestBuilder newBuilder = builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("name", request.getName())
                 .param("age", String.valueOf(request.getAge()))
                 .param("gender", String.valueOf(request.getGender()))
@@ -354,14 +326,58 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 .param("amount", String.valueOf(request.getAmount()))
                 .param("activityCode", request.getCode())
                 .param("recommend", String.valueOf(request.getRecommend().getId()));
+        if (request.getChannelId() != null)
+            newBuilder = newBuilder.param("channelId", String.valueOf(request.getChannelId()));
+        if (request.isInstallmentHuabai())
+            newBuilder = newBuilder.param("installmentHuabai", "1");
+
+        if (StringUtils.isEmpty(request.getAuthorising()))
+            return newBuilder;
+        return newBuilder.param("authorising", request.getAuthorising())
+                .param("idNumber", request.getIdNumber());
     }
+
 
     /**
      * @return 随机的下单请求原数据
      */
     protected OrderRequest randomOrderRequest() {
+        return randomOrderRequest(null, null, null, null);
+    }
+
+    /**
+     * 使用MVC的方式添加一个按揭码
+     *
+     * @param authorising
+     * @param idNumber
+     * @throws Exception
+     */
+    protected void addAuthorising(String authorising, String idNumber) throws Exception {
+        // 无需安全
+        Login current = allRunWith;
+        try {
+            mockMvc.perform(post("/_tourongjia_event_")
+                    .param("event", "code")
+                    .param("authorising", authorising)
+                    .param("idNumber", idNumber)
+            )
+                    .andExpect(status().isOk())
+                    .andExpect(similarJsonObjectAs("classpath:/mock/trj_response.json"));
+        } finally {
+            allRunWith = current;
+        }
+    }
+
+    /**
+     * @return 随机的下单请求原数据
+     */
+    protected OrderRequest randomOrderRequest(Long channelId, MainGood goodInput, String authorising, String idNumber) {
         Address address = randomAddress();
-        MainGood good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        MainGood good;
+        if (goodInput == null)
+            good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        else
+            good = goodInput;
         String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
         Login recommend = randomLogin(true);
         final String name = "W客户" + RandomStringUtils.randomAlphabetic(6);
@@ -373,6 +389,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 address, good, code
                 , recommend, name, age, gender
                 , mobile, amount
+                , authorising, idNumber, channelId
         );
     }
 
@@ -392,5 +409,43 @@ public abstract class CoreServiceTest extends SpringWebTest {
      */
     protected void makeOrderDone(MainOrder order) {
         quickTradeService.makeDone(order);
+    }
+
+    /**
+     * 让物流系统随便找一个仓库或者新建一个仓库给订单配货
+     *
+     * @param order         order
+     * @param depotSupplier 新仓库构造器 可选
+     * @param supplierType  物流供应商 可选
+     * @return 物流订单
+     */
+    protected StockShiftUnit logisticsForMainOrderFromAnyDepot(MainOrder order, Supplier<Depot> depotSupplier
+            , Class<? extends LogisticsSupplier> supplierType) {
+        // 先找仓库呗
+        Depot depot = findOrCreateEnableDepot(depotSupplier);
+
+        // MarketBuildInLogisticsSupplier
+        return mainOrderService.makeLogistics(supplierType == null ? MarketBuildInLogisticsSupplier.class : supplierType
+                , order.getId(), depot.getId());
+    }
+
+    /**
+     * @param depotSupplier 如果需要新仓库的话 新仓库的构造器
+     * @return 找一个可用或者新建一个可用的仓库 同时也是符合新仓库需要的
+     */
+    private Depot findOrCreateEnableDepot(Supplier<Depot> depotSupplier) {
+        return readService.allEnabledDepot().stream()
+                .filter(depot -> depotSupplier == null || depot.getClass().equals(depotSupplier.get().getClass()))
+                .max(new RandomComparator())
+                .orElseGet(() -> {
+                    Depot depot = depotSupplier == null ? new Depot() : depotSupplier.get();
+                    depot.setAddress(randomAddress());
+                    depot.setChargePeopleMobile(randomMobile());
+                    depot.setChargePeopleName(RandomStringUtils.randomAlphabetic(5) + "名字");
+                    depot.setEnable(true);
+                    depot.setCreateTime(LocalDateTime.now());
+                    depot.setName(RandomStringUtils.randomAlphabetic(5) + "仓库名字");
+                    return depotRepository.saveAndFlush(depot);
+                });
     }
 }

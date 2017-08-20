@@ -3,11 +3,18 @@ package cn.lmjia.market.core;
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.config.MVCConfig;
 import cn.lmjia.market.core.config.WebModule;
+import cn.lmjia.market.core.util.TestDataSource;
 import com.huotu.vefification.test.VerificationCodeTestConfig;
 import lombok.SneakyThrows;
 import me.jiangcai.chanpay.event.TradeEvent;
 import me.jiangcai.chanpay.test.ChanpayTestSpringConfig;
 import me.jiangcai.lib.test.config.H2DataSourceConfig;
+import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.LogisticsSource;
+import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
@@ -56,6 +63,7 @@ import java.security.SignatureException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * @author CJ
@@ -70,6 +78,41 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
     private static final Log log = LogFactory.getLog(CoreServiceTestConfig.class);
     @Autowired
     private Environment environment;
+
+    @Bean
+    @Primary
+    public HaierSupplier haierSupplier() {
+        return new HaierSupplier() {
+            @Override
+            public void cancelOrder(String id, boolean focus, String reason) {
+
+            }
+
+            @Override
+            public void updateProduct(Product product) {
+
+            }
+
+            @Override
+            public String sign(String content, String keyValue) {
+                return null;
+            }
+
+            @Override
+            public Object event(String businessType, String source, String contentType, String sign, String content) throws IOException {
+                return null;
+            }
+
+            @Override
+            public StockShiftUnit makeShift(LogisticsSource source, LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options) {
+                HaierOrder unit = new HaierOrder();
+                forUnit.accept(unit);
+                unit.setOrderNumber(UUID.randomUUID().toString().replaceAll("-", ""));
+                //
+                return unit;
+            }
+        };
+    }
 
     @Bean
     @Primary
@@ -115,11 +158,20 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
     @Bean
     public DataSource dataSource() {
         if (environment.acceptsProfiles("mysql")) {
-            DriverManagerDataSource dataSource = new DriverManagerDataSource();
+            DriverManagerDataSource dataSource;
+            if (environment.acceptsProfiles("jdbcProfile"))
+                dataSource = new TestDataSource();
+            else
+                dataSource = new DriverManagerDataSource();
+
             dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+            // ?profileSQL=true
             dataSource.setUrl("jdbc:mysql://localhost/market");
             dataSource.setUsername("root");
             return dataSource;
+        }
+        if (environment.acceptsProfiles("h2file")) {
+            return fileDataSource("market");
         }
         return memDataSource("cn/lmjia/market");
     }
@@ -235,8 +287,8 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
     }
 
     @Override
-    public void resourceHandler(String pattern, ResourceHandlerRegistration registration) {
-        pattern = pattern.substring(1, pattern.length() - 3);
+    public void resourceHandler(String patternInput, ResourceHandlerRegistration registration) {
+        String pattern = patternInput.substring(1, patternInput.length() - 3);
         registration.addResourceLocations(urlToWebApp() + pattern + "/");
     }
 

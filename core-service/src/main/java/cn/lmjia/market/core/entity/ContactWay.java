@@ -1,8 +1,8 @@
 package cn.lmjia.market.core.entity;
 
-import cn.lmjia.market.core.entity.support.Address;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.jpa.entity.support.Address;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;

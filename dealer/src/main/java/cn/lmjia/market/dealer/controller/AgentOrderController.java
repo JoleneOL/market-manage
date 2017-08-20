@@ -3,8 +3,7 @@ package cn.lmjia.market.dealer.controller;
 import cn.lmjia.market.core.controller.main.order.AbstractMainOrderController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.support.Address;
-import cn.lmjia.market.core.service.MainOrderService;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.service.PaymentService;
@@ -30,12 +29,10 @@ public class AgentOrderController extends AbstractMainOrderController {
     private PaymentService paymentService;
     @Autowired
     private ChanpayPaymentForm chanpayPaymentForm;
-    @Autowired
-    private MainOrderService mainOrderService;
 
     @GetMapping("/agentOrder")
     public String index(Model model, @AuthenticationPrincipal Login login) {
-        orderIndex(login, model);
+        orderIndex(login, model, null);
         return "orderPlace.html";
     }
 
@@ -45,7 +42,7 @@ public class AgentOrderController extends AbstractMainOrderController {
             , String activityCode, long recommend, @AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException {
         MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile, goodId, amount
-                , activityCode);
+                , activityCode, null);
         HashMap<String, Object> data = new HashMap<>();
         data.put("desktop", true);
         return paymentService.startPay(request, order, chanpayPaymentForm, data);

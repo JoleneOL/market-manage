@@ -23,79 +23,85 @@
     <![endif]-->
 </head>
 <body class="gray-bg"
-      data-logistics-url="/url/logistics"
-      data-factory-url="/url/factory"
+      data-logistics-url="/manage/orderData/logistics"
+      data-factory-url="/manage/factoryOut"
+      data-detail-url="_logisticsDetail.html" th:data-detail-url="@{/manageShiftDetail}"
       data-storage-url="/url/storage"
 >
 <div class="wrapper wrapper-content">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="ibox">
-                <div class="ibox-title">
-                    待收货总量
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="echarts" id="J_waitReceive"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="ibox">
-                <div class="ibox-title">
-                    待安装总量
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="echarts" id="J_waitInstall"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--暂时先隐藏-->
+    <!--<div class="row">-->
+    <!--<div class="col-sm-6">-->
+    <!--<div class="ibox">-->
+    <!--<div class="ibox-title">-->
+    <!--待收货总量-->
+    <!--<div class="ibox-tools">-->
+    <!--<a class="collapse-link">-->
+    <!--<i class="fa fa-chevron-up"></i>-->
+    <!--</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ibox-content">-->
+    <!--<div class="echarts" id="J_waitReceive"></div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-sm-6">-->
+    <!--<div class="ibox">-->
+    <!--<div class="ibox-title">-->
+    <!--待安装总量-->
+    <!--<div class="ibox-tools">-->
+    <!--<a class="collapse-link">-->
+    <!--<i class="fa fa-chevron-up"></i>-->
+    <!--</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ibox-content">-->
+    <!--<div class="echarts" id="J_waitInstall"></div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
     <div class="row m-b-sm">
         <div class="col-sm-10">
             <div class="form-inline">
                 <div class="js-selectToolbar">
                     <input type="search" class="form-control input-sm" placeholder="手机号"
                            name="mobile">
+                    <!--<label>-->
+                    <!--<select class="form-control input-sm" name="logisticsCompany">-->
+                    <!--<option value=" " disabled="" selected="" class="hidden">物流公司</option>-->
+                    <!--<option value="1">x</option>-->
+                    <!--<option value="2">xx</option>-->
+                    <!--<option value="3">xxx</option>-->
+                    <!--</select>-->
+                    <!--</label>-->
                     <label>
-                        <select class="form-control input-sm" name="logisticsCompany">
-                            <option value=" " disabled="" selected="" class="hidden">物流公司</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
-                        </select>
-                    </label>
-                    <label>
-                        <select class="form-control input-sm" name="logisticsStorage">
+                        <select class="form-control input-sm" name="depotId">
                             <option value=" " disabled="" selected="" class="hidden">物流仓储</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                            <option th:each="depot:${@readService.allEnabledDepot()}" th:value="${depot.id}"
+                                    th:text="${depot.name}" value="1">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
+                    <!--<label>-->
+                    <!--<select class="form-control input-sm" name="installStorage">-->
+                    <!--<option value=" " disabled="" selected="" class="hidden">安装公司</option>-->
+                    <!--<option value="1">x</option>-->
+                    <!--<option value="2">xx</option>-->
+                    <!--<option value="3">xxx</option>-->
+                    <!--</select>-->
+                    <!--</label>-->
                     <label>
-                        <select class="form-control input-sm" name="installStorage">
-                            <option value=" " disabled="" selected="" class="hidden">安装公司</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
-                        </select>
-                    </label>
-                    <label>
-                        <select class="form-control input-sm" name="goodsName">
-                            <option value=" " disabled="" selected="" class="hidden">商品名称</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                        <select class="form-control input-sm" name="productCode">
+                            <option value=" " disabled="" selected="" class="hidden">货品名称</option>
+                            <option th:each="product:${@readService.allEnabledProduct()}" th:value="${product.code}"
+                                    th:text="${product.name}" value="1">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
                     <div class="input-group input-group-sm">
@@ -114,9 +120,11 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a></li>
+                            <li class="active"><a data-toggle="tab" href="#logistics" aria-expanded="true">物流发货</a>
+                            </li>
                             <li><a data-toggle="tab" href="#factory" aria-expanded="false">工厂发货</a></li>
-                            <li><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a></li>
+                            <!--<li><a data-toggle="tab" href="#storage" aria-expanded="false">仓储调货</a>-->
+                            <!--</li>-->
                         </ul>
                         <div class="tab-content">
                             <div id="logistics" class="tab-pane active">
@@ -140,7 +148,8 @@
                                         </div>
                                     </div>
                                     <div class="table-responsive">
-                                        <table id="logisticsForm" class="table table-hover table-success" cellspacing="0"
+                                        <table id="logisticsForm" class="table table-hover table-success"
+                                               cellspacing="0"
                                                width="100%"></table>
                                     </div>
                                 </div>
@@ -167,28 +176,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="storage" class="tab-pane">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-sm-12 m-b-sm">
-                                            <div data-toggle="buttons" class="btn-group js-radio-status">
-                                                <label class="btn btn-sm btn-white active">
-                                                    <input type="radio" name="status" value="all" checked>全部</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="0">待发货</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="1">待收货</label>
-                                                <label class="btn btn-sm btn-white">
-                                                    <input type="radio" name="status" value="2">已收货</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table id="storageForm" class="table table-hover table-success" cellspacing="0"
-                                               width="100%"></table>
-                                    </div>
-                                </div>
-                            </div>
+                            <!--<div id="storage" class="tab-pane">-->
+                            <!--<div class="panel-body">-->
+                            <!--<div class="row">-->
+                            <!--<div class="col-sm-12 m-b-sm">-->
+                            <!--<div data-toggle="buttons" class="btn-group js-radio-status">-->
+                            <!--<label class="btn btn-sm btn-white active">-->
+                            <!--<input type="radio" name="status" value="all" checked>全部</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="0">待发货</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="1">待收货</label>-->
+                            <!--<label class="btn btn-sm btn-white">-->
+                            <!--<input type="radio" name="status" value="2">已收货</label>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="table-responsive">-->
+                            <!--<table id="storageForm" class="table table-hover table-success" cellspacing="0"-->
+                            <!--width="100%"></table>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
                         </div>
                     </div>
                 </div>
@@ -197,7 +206,7 @@
     </div>
 </div>
 </body>
-<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
@@ -219,5 +228,5 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
 
-<script src="manage-resource/js/logisticManage.js"></script>
+<script src="manage-resource/js/logisticManage.js?v=2"></script>
 </html>

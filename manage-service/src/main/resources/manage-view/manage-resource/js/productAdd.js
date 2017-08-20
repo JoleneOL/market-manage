@@ -47,8 +47,8 @@ $(function () {
                 data: pass,
                 success: function () {
                     layer.msg('添加成功');
-                    $('#J_selectCat').append('<option value="'+pass+'">'+pass+'</option>');
-                    $('#J_selectCat').trigger("chosen:updated")
+                    $('#J_selectCat').append('<option value="'+pass+'">'+pass+'</option>')
+                        .trigger("chosen:updated");
                     layer.close(index);
                 },
                 error: function () {

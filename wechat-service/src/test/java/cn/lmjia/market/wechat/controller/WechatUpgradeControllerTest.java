@@ -1,23 +1,17 @@
 package cn.lmjia.market.wechat.controller;
 
-import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.repository.MainOrderRepository;
-import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
-import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
-import cn.lmjia.market.manage.config.ManageConfig;
-import cn.lmjia.market.manage.controller.ManagePromotionRequestController;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import com.jayway.jsonpath.JsonPath;
+import me.jiangcai.jpa.entity.support.Address;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,22 +20,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ContextConfiguration(classes = {ManageConfig.class, SecurityConfig.class})
+@ActiveProfiles("mysql2")
 public class WechatUpgradeControllerTest extends WechatTestBase {
 
     @Autowired
-    private MainOrderService mainOrderService;
-    @Autowired
-    private MainOrderRepository mainOrderRepository;
-    @Autowired
     private ReadService readService;
-    @Autowired
-    private ManagePromotionRequestController managePromotionRequestController;
-    @Autowired
-    private PromotionRequestRepository promotionRequestRepository;
 
     @Test
-    public void upgrade() throws Exception {
+    public void upgrade1() throws Exception {
+        upgrade(1, 4);
+    }
+
+    @Test
+    public void upgrade2() throws Exception {
+        upgrade(2, 3);
+    }
+
+    @Test
+    public void upgrade3() throws Exception {
+        upgrade(3, 2);
+    }
+
+    private void upgrade(int level, int targetLevel) throws Exception {
         // 找一个新晋的login
         Login user = createNewUserByShare();
         bindDeveloperWechat(user);
@@ -60,7 +60,6 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
                 .isEqualToIgnoringCase("我要升级");
 
 
-        int level = 1;
         String agentName = RandomStringUtils.randomAlphabetic(10);
         Address address = randomAddress();
         String cardFrontPath = newRandomImagePath();
@@ -76,12 +75,17 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
                 .param("cardBackPath", cardBackPath)
                 .param("businessLicensePath", businessLicensePath)
         )
-                .andDo(print())
+//                .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn().getResponse().getHeader("Location");
 
+//        if (level == 1){
+//            System.out.println("for rollback checking..!!!");
+//            Thread.sleep(Long.MAX_VALUE);
+//        }
+
         driver.get("http://localhost" + payUri);
-        PaySuccessPage.waitingForSuccess(this, driver, 3);
+        PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatUpgradeApplySuccess");
 
         // 这个时候业务算是完成了；我们可以看到后端请求了
         assertExistingRequest(user);
@@ -89,7 +93,7 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         approvedOnlyRequest(user, "我的省代理");
         // 断言等级
         assertThat(readService.agentLevelForPrincipal(user))
-                .isEqualTo(4);
+                .isEqualTo(targetLevel);
         // 然后继续升级
         // 断言申请
         // 再批准

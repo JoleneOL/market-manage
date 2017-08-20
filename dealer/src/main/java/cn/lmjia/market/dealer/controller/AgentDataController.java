@@ -61,7 +61,7 @@ public class AgentDataController {
                         , new FieldDefinition<AgentLevel>() {
                             @Override
                             public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<AgentLevel> root) {
-                                return JpaFunctionUtils.Contact(criteriaBuilder, root.get("rank")
+                                return JpaFunctionUtils.contact(criteriaBuilder, root.get("rank")
                                         , criteriaBuilder.literal(" "), root.get("level"));
                             }
 

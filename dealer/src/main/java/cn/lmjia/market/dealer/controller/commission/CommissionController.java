@@ -1,18 +1,22 @@
 package cn.lmjia.market.dealer.controller.commission;
 
 import cn.lmjia.market.core.converter.LocalDateConverter;
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.entity.deal.Commission_;
 import cn.lmjia.market.core.entity.deal.OrderCommission;
+import cn.lmjia.market.core.entity.deal.OrderCommission_;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
-import cn.lmjia.market.dealer.service.CommissionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import me.jiangcai.logistics.entity.Product_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +31,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,8 +47,12 @@ import java.util.function.Function;
 @Controller
 public class CommissionController {
 
-    @Autowired
-    private CommissionService commissionService;
+    public static String formatCommonInfo(Object origin) {
+        String src = origin.toString();
+        int index = src.lastIndexOf("￥");
+        String first = src.substring(0, index - 1);
+        return first + Money.format.format(new BigDecimal(src.substring(index + 1)));
+    }
 
     /**
      * @param login 身份
@@ -120,12 +129,12 @@ public class CommissionController {
                         , new FieldDefinition<Commission>() {
                             @Override
                             public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<Commission> root) {
-                                From<?, MainOrder> orderFrom = root.join("orderCommission").join("source");
-                                return JpaFunctionUtils.Contact(
+                                From<?, MainOrder> orderFrom = root.join(Commission_.orderCommission).join(OrderCommission_.source);
+                                return JpaFunctionUtils.contact(
                                         criteriaBuilder
-                                        , orderFrom.get("amount")
+                                        , orderFrom.get(MainOrder_.amount).as(String.class)
                                         , criteriaBuilder.literal("个")
-                                        , orderFrom.get("good").get("product").get("name")
+                                        , orderFrom.get(MainOrder_.good).get(MainGood_.product).get(Product_.name)
                                         , criteriaBuilder.literal(" ￥")
                                         , MainOrder.getOrderDueAmount(orderFrom, criteriaBuilder).as(String.class)
                                 );
@@ -138,7 +147,7 @@ public class CommissionController {
 
                             @Override
                             public Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe) {
-                                return origin;
+                                return formatCommonInfo(origin);
                             }
 
                             @Override
@@ -238,23 +247,23 @@ public class CommissionController {
             @Override
             public Specification<Commission> specification() {
                 if ("pending".equals(type))
-                    return commissionService.listAllSpecification(login, (root, query, cb)
-                            -> Commission.Reality(root, cb).not());
+                    return Commission.listAllSpecification(login, (root, query, cb)
+                            -> Commission.reality(root, cb).not());
 
                 if ("all".equals(type))
-                    return commissionService.listRealitySpecification(login, null);
-                return commissionService.listRealitySpecification(login, (root, query, cb) -> {
+                    return Commission.listRealitySpecification(login, null);
+                return Commission.listRealitySpecification(login, (root, query, cb) -> {
                     if ("today".equals(type))
-                        return JpaFunctionUtils.DateEqual(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.dateEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now());
                     if ("month".equals(type))
-                        return JpaFunctionUtils.YearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.yearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now());
                     if ("previous".equals(type))
-                        return JpaFunctionUtils.YearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.yearAndMonthEqual(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now().minusMonths(1));
                     if ("quarter".equals(type))
-                        return JpaFunctionUtils.YM(cb, root.get("orderCommission").get("generateTime")
+                        return JpaFunctionUtils.ym(cb, root.get("orderCommission").get("generateTime")
                                 , LocalDate.now()
                                 , (criteriaBuilder, integerExpression, integerExpression2) -> {
                                     // >= ym-3

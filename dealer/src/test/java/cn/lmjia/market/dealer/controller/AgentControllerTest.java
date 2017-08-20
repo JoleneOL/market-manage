@@ -2,9 +2,9 @@ package cn.lmjia.market.dealer.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.dealer.DealerServiceTest;
+import me.jiangcai.jpa.entity.support.Address;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.http.MediaType;

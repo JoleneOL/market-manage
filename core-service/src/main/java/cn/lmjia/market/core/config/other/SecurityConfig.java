@@ -63,6 +63,8 @@ public class SecurityConfig {
                     .antMatchers("/404.html", "/500.html")
                     // 畅捷支付回调
                     .antMatchers("/cash/notify/chanpay")
+                    // 投融家
+                    .antMatchers("/_tourongjia_event_", "/_haier_callback")
                     // paymax 支付回调
                     .antMatchers(environment
                             .getRequiredProperty("com.paymax.spring.hookUriWithoutAppId") + "/**");
@@ -86,8 +88,10 @@ public class SecurityConfig {
                     // misc
                     .antMatchers("/misc/sendLoginCode", "/misc/sendRegisterCode").permitAll()
                     // 登录跳转页面
-                    .antMatchers("/wechatJoin", "/wechatRegister").permitAll()
+                    .antMatchers("/wechatJoin**", "/wechatRegister").permitAll()
                     .antMatchers("/toLoginWechat", "/wechatLogin").permitAll()
+                    // 微信绑定
+                    .antMatchers("/wechat/bindTo**").permitAll()
                     // 手机号码可用性检测
                     .antMatchers("/loginData/mobileValidation").permitAll()
                     // 首页允许访问
@@ -96,18 +100,8 @@ public class SecurityConfig {
                     .antMatchers("/t/**").permitAll()
                     // API 不经过安全机制
                     .antMatchers("/api/**").permitAll()
-                    .antMatchers("/alimama/**").permitAll()
-                    .antMatchers("/huotao/**").permitAll()
-                    .antMatchers("/weChatGroup/**").permitAll()
-                    .antMatchers("/task/**").permitAll()
-                    .antMatchers("/hotUser/**").permitAll()
-                    .antMatchers("/goods/**").permitAll()
-                    //非导购页无需登录访问
-                    .antMatchers("/public-platform/**").permitAll()
-                    //浏览采集网页面不需要登录
-                    .antMatchers("/portal/**").permitAll()
-                    .antMatchers("/goodInfoLink/**").permitAll()
-                    .antMatchers("/manage/agency/pidList").permitAll()
+                    // 开放支付
+                    .antMatchers("/_pay/paying").permitAll()
                     // 其他必须接受保护
                     .antMatchers("/**").authenticated()
 //                    .antMatchers("/manage/**").hasAnyRole(Login.Role_Manage_Value, "ROOT")

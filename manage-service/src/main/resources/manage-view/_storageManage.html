@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="emptyList" type="java.util.List<me.jiangcai.logistics.entity.support.StockInfo>"*/-->
+<!--/*@thymesVar id="warnList" type="java.util.List<me.jiangcai.logistics.entity.support.StockInfo>"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -21,13 +23,53 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="gray-bg" data-url="/manage/storage" th:data-url="@{}">
+<body class="gray-bg" data-url="/manage/storage">
 <div class="wrapper wrapper-content">
+    <div class="row">
+        <form action="_storageManage.html" th:action="@{/manage/addStockAsRoot}" method="post">
+            <div class="col-md-12 mb10">
+                <div class="form-inline">
+                    <label>手工添加库存</label>
+                    <label>
+                        <select class="form-control input-sm" name="depotId" required>
+                            <option value=" " disabled="" selected="" class="hidden">仓库</option>
+                            <option th:each="depot:${@readService.allEnabledDepot()}" value="1" th:value="${depot.id}"
+                                    th:text="${depot.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        <select class="form-control input-sm" name="productCode" required>
+                            <option value=" " disabled="" selected="" class="hidden">货品</option>
+                            <option th:each="product:${@readService.allEnabledMainProduct()}" value="1"
+                                    th:value="${product.code}"
+                                    th:text="${product.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
+                        </select>
+                    </label>
+                    <label>
+                        数量
+                        <input name="amount" size="3" type="number" min="1" value="1" class="form-control input-sm" placeholder="数量" required/>
+                    </label>
+                    <label>
+                        备注
+                        <input name="message" type="text" class="form-control input-sm" placeholder="备注"/>
+                    </label>
+                    <button type="button" class="btn btn-primary btn-sm js-addAsRoot">添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
     <div class="row">
         <div class="col-md-12 mb10">
             <div class="form-inline">
                 <div>
-                    <a class="btn btn-primary btn-sm" href="_delivery.html">发&nbsp;&nbsp;货</a>
+                    <a id="J_DeliveryLink" class="btn btn-primary btn-sm" href="_delivery.html"
+                       th:href="@{/manageStorageDelivery}">发&nbsp;&nbsp;货</a>
                 </div>
             </div>
         </div>
@@ -58,19 +100,20 @@
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <tbody>
-                                            <tr>
-                                                <td>日日顺华东仓帅风立式净水器已无货发货</td>
-                                                <td>2017-07-03</td>
+                                            <tr th:each="info:${emptyList}">
+                                                <td><span th:text="${info.depot.name}">日日顺华东仓</span><span
+                                                        th:text="${info.product.name}">帅风立式净水器</span>已无货发货
+                                                </td>
                                                 <td>
-                                                    <a href="_delivery.html">发货</a>
+                                                    <a href="_delivery.html"
+                                                       th:href="@{/manageStorageDelivery(depotId=${info.depot.id},productCode=${info.product.code})}">发货</a>
                                                 </td>
                                                 <td>
                                                     <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:remove="all">
                                                 <td>日日顺华南仓帅风立式净水器已无货发货</td>
-                                                <td>2017-07-03</td>
                                                 <td>
                                                     <a href="_delivery.html">发货</a>
                                                 </td>
@@ -78,9 +121,8 @@
                                                     <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:remove="all">
                                                 <td>日日顺华西仓帅风立式净水器已无货发货</td>
-                                                <td>2017-07-03</td>
                                                 <td>
                                                     <a href="_delivery.html">发货</a>
                                                 </td>
@@ -88,9 +130,8 @@
                                                     <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:remove="all">
                                                 <td>日日顺滨江仓帅风立式净水器已无货发货</td>
-                                                <td>2017-07-03</td>
                                                 <td>
                                                     <a href="_delivery.html">发货</a>
                                                 </td>
@@ -108,32 +149,44 @@
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <tbody>
-                                            <tr>
-                                                <td>日日顺华东仓帅风立式净水器只剩50台</td>
-                                                <td>2017-07-03</td>
+                                            <tr th:each="info:${warnList}">
+                                                <td><span th:text="${info.depot.name}">日日顺华东仓</span><span
+                                                        th:text="${info.product.name}">帅风立式净水器</span>只剩<span
+                                                        th:text="${info.amount}">50</span>台
+                                                </td>
                                                 <td>
-                                                    <a href="_delivery.html">发货</a>
+                                                    <a href="_delivery.html"
+                                                       th:href="@{/manageStorageDelivery(depotId=${info.depot.id},productCode=${info.product.code})}">发货</a>
+                                                </td>
+                                                <td>
+                                                    <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:remove="all">
                                                 <td>日日顺华北仓帅风立式净水器只剩50台</td>
-                                                <td>2017-07-03</td>
                                                 <td>
                                                     <a href="_delivery.html">发货</a>
                                                 </td>
+                                                <td>
+                                                    <a href="_transfer.html">调仓</a>
+                                                </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:remove="all">
                                                 <td>日日顺省仓帅风立式净水器只剩50台</td>
-                                                <td>2017-07-03</td>
                                                 <td>
                                                     <a href="_delivery.html">发货</a>
                                                 </td>
+                                                <td>
+                                                    <a href="_transfer.html">调仓</a>
+                                                </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:remove="all">
                                                 <td>日日顺滨江仓帅风立式净水器只剩50台</td>
-                                                <td>2017-07-03</td>
                                                 <td>
                                                     <a href="_delivery.html">发货</a>
+                                                </td>
+                                                <td>
+                                                    <a href="_transfer.html">调仓</a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -167,27 +220,24 @@
             <div class="form-inline">
                 <div class="js-selectToolbar">
                     <label>
-                        <select class="form-control input-sm" name="logisticsCompany">
-                            <option value=" " disabled="" selected="" class="hidden">物流公司</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                        <select class="form-control input-sm" name="depotId">
+                            <option value=" " disabled="" selected="" class="hidden">仓库</option>
+                            <option th:each="depot:${@readService.allEnabledDepot()}" value="1" th:value="${depot.id}"
+                                    th:text="${depot.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
                     <label>
-                        <select class="form-control input-sm" name="storage">
-                            <option value=" " disabled="" selected="" class="hidden">仓储库</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
-                        </select>
-                    </label>
-                    <label>
-                        <select class="form-control input-sm" name="goodsName">
-                            <option value=" " disabled="" selected="" class="hidden">商品名称</option>
-                            <option value="1">x</option>
-                            <option value="2">xx</option>
-                            <option value="3">xxx</option>
+                        <select class="form-control input-sm" name="productCode">
+                            <option value=" " disabled="" selected="" class="hidden">货品</option>
+                            <option th:each="product:${@readService.allEnabledMainProduct()}" value="1"
+                                    th:value="${product.code}"
+                                    th:text="${product.name}">x
+                            </option>
+                            <option th:remove="all" value="2">xx</option>
+                            <option th:remove="all" value="3">xxx</option>
                         </select>
                     </label>
                     <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
@@ -200,16 +250,16 @@
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="table-responsive">
-                    <table id="storageForm" class="table table-hover table-success" cellspacing="0"
-                           width="100%"></table>
-                </div>
+                        <table id="storageForm" class="table table-hover table-success" cellspacing="0"
+                               width="100%"></table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
@@ -229,5 +279,20 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
 
-<script src="manage-resource/js/storageManage.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+
+<script th:inline="javascript">
+    $.allProduct = /*[[${allProduct}]]*/ ['厨下净水机', '立式净水器', '量子厨下净水机', '量子立式净水机', '量子空气净化器', '量子食品优化宝', '量子防辐射芯片', '量子水宝'];
+    $.allProductAmount = /*[[${allProductAmount}]]*/ [
+        {value: 300, name: '厨下净水机'},
+        {value: 310, name: '立式净水器'},
+        {value: 234, name: '量子厨下净水机'},
+        {value: 335, name: '量子立式净水机'},
+        {value: 535, name: '量子空气净化器'},
+        {value: 135, name: '量子食品优化宝'},
+        {value: 335, name: '量子防辐射芯片'},
+        {value: 1548, name: '量子水宝'}
+    ];
+</script>
+<script src="manage-resource/js/storageManage.js?v=1"></script>
 </html>

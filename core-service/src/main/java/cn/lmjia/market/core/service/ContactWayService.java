@@ -2,7 +2,7 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
+import me.jiangcai.jpa.entity.support.Address;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,7 +20,7 @@ public interface ContactWayService {
      * @param criteriaBuilder cb
      * @return 表示地址的path
      */
-    static Path<Address> AddressForLogin(From<?, Login> login, CriteriaBuilder criteriaBuilder) {
+    static Path<Address> addressForLogin(From<?, Login> login, CriteriaBuilder criteriaBuilder) {
         return login.get("contactWay").get("address");
     }
 

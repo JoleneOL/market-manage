@@ -1,8 +1,11 @@
 package cn.lmjia.market.core.entity.deal;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder_;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.lib.spring.data.AndSpecification;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,7 +63,44 @@ public class Commission {
      * @param criteriaBuilder cb
      * @return 该佣金是否真实可用的
      */
-    public static Predicate Reality(From<?, Commission> commissionFrom, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.isFalse(commissionFrom.get("orderCommission").get("pending"));
+    public static Predicate reality(From<?, Commission> commissionFrom, CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.and(
+                criteriaBuilder.isFalse(commissionFrom.get(Commission_.orderCommission).get(OrderCommission_.pending))
+                , criteriaBuilder.isFalse(commissionFrom.get(Commission_.orderCommission).get(OrderCommission_.source).get(MainOrder_.disableSettlement))
+        );
+    }
+
+    /**
+     * @param login         当前身份
+     * @param specification 既定规则
+     * @return 属于当前身份所有佣金记录的规格
+     */
+    public static Specification<Commission> listAllSpecification(Login login, Specification<Commission> specification) {
+        return new AndSpecification<>((root, query, cb) -> {
+            query.groupBy(root.get("orderCommission"));
+            return cb.and(
+                    cb.equal(root.get("who"), login)
+//                    , cb.isFalse(root.get("orderCommission").get("source").get("disableSettlement"))
+                    , cb.notEqual((root.get("amount")), BigDecimal.ZERO)
+//                        , Commission.reality(root, cb)
+            );
+        }, specification);
+    }
+
+    /**
+     * @param login         当前身份
+     * @param specification 既定规则
+     * @return 属于当前身份真实可用佣金记录的规格
+     */
+    public static Specification<Commission> listRealitySpecification(Login login, Specification<Commission> specification) {
+        return new AndSpecification<>((root, query, cb) -> {
+            query.groupBy(root.get("orderCommission"));
+            return cb.and(
+                    cb.equal(root.get("who"), login)
+                    , cb.isFalse(root.get("orderCommission").get("source").get("disableSettlement"))
+                    , cb.notEqual((root.get("amount")), BigDecimal.ZERO)
+                    , Commission.reality(root, cb)
+            );
+        }, specification);
     }
 }

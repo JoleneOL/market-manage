@@ -1,0 +1,30 @@
+<Cancel>
+    <orderno>2d1e134ce1b74a849adbf87096f1128d</orderno>
+    <expno>6132846602</expno>
+    <bustype>1</bustype>
+    <ordertype>2</ordertype>
+    <outindate>2017-08-02 00:00:00</outindate>
+    <storecode>C12101</storecode>
+    <iscomplete>1</iscomplete>
+    <RejectItems>
+        <InOutItem>
+            <itemno>1</itemno>
+            <storagetype>10</storagetype>
+            <productcode>KWkLZc</productcode>
+            <hrcode>3XQ000122</hrcode>
+            <prodes>KWkLZc</prodes>
+            <number>500</number>
+            <iscomplete>1</iscomplete>
+        </InOutItem>
+        <InOutItem>
+            <itemno>2</itemno>
+            <storagetype>10</storagetype>
+            <productcode>uXkelZ</productcode>
+            <hrcode>3XQ000121</hrcode>
+            <prodes>uXkelZ</prodes>
+            <number>500</number>
+            <iscomplete>1</iscomplete>
+        </InOutItem>
+    </RejectItems>
+    <content>1</content>
+</Cancel>

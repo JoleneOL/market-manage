@@ -28,6 +28,11 @@
             <version>${jiangcai.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>${eclipselink.version}</version>
+        </dependency>
+        <dependency>
             <groupId>me.jiangcai.wx</groupId>
             <artifactId>weixin-web</artifactId>
             <version>${wx.version}</version>
@@ -75,6 +80,11 @@
             <version>${payment.version}</version>
         </dependency>
         <dependency>
+            <groupId>me.jiangcai.payment</groupId>
+            <artifactId>support-huabei-hua</artifactId>
+            <version>${payment.version}</version>
+        </dependency>
+        <dependency>
             <groupId>me.jiangcai.chanpay</groupId>
             <artifactId>chanpay-test</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -113,6 +123,36 @@
             <artifactId>supplier-wechat</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>me.jiangcai.lib</groupId>
+            <artifactId>jpa</artifactId>
+            <version>${jiangcai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.lmjia.market-manage</groupId>
+            <artifactId>logistics-haier</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.8.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -145,7 +185,7 @@
                 <executions>
                     <execution>
                         <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>add-test-source</goal>
                         </goals>

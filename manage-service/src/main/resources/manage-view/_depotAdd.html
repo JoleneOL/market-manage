@@ -55,6 +55,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-sm-3 control-label" for="J_Type">类型</label>
+                                        <div class="col-sm-6">
+                                            <select id="J_Type" class="form-control"
+                                                    name="type" required>
+                                                <option value="HaierDepot">日日顺</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-sm-3 control-label">地址</label>
                                         <div class="col-sm-6">
                                             <input class="form-control" id="J_cityPicker" readonly type="text"
@@ -69,12 +78,28 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-sm-3 control-label">负责人</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入负责人姓名" class="form-control"
+                                                   name="chargePeopleName" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">电话</label>
+                                        <div class="col-sm-6">
+                                            <input type="tel" placeholder="请输入负责人联系电话" class="form-control"
+                                                   name="chargePeopleMobile" required>
+                                        </div>
+                                    </div>
+                                    <!--HaierDepot Only-->
+                                    <div class="form-group">
                                         <label class="col-sm-3 control-label">日日顺仓库编号</label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入仓库编号" class="form-control"
                                                    name="haierCode" required maxlength="32">
                                         </div>
                                     </div>
+                                    <!--HaierDepot Only End-->
                                     <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-3 control-label">
                                             <button type="submit" class="btn btn-primary btn-block btn-lg">
@@ -95,7 +120,7 @@
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
-<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.min.js"></script>
+<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.m.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="manage-resource/js/depotAdd.js"></script>

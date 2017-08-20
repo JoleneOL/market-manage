@@ -22,7 +22,8 @@ public enum ManageLevel {
      */
     manager("经理", Login.ROLE_PROMOTION, Login.ROLE_AllAgent, Login.ROLE_GRANT),
     agentManager("代理商管理员", Login.ROLE_AllAgent),
-    promotion("升级专员", Login.ROLE_PROMOTION);
+    promotion("升级专员", Login.ROLE_PROMOTION),
+    customerService("客服", Login.ROLE_ALL_ORDER);
 
     private final String[] roles;
     private final String title;
@@ -33,10 +34,10 @@ public enum ManageLevel {
     }
 
     public static String roleNameToRole(String role) {
-        role = role.toUpperCase(Locale.CHINA);
-        if (role.startsWith("ROLE_"))
-            return role;
-        return "ROLE_" + role;
+        String role2 = role.toUpperCase(Locale.CHINA);
+        if (role2.startsWith("ROLE_"))
+            return role2;
+        return "ROLE_" + role2;
     }
 
     /**

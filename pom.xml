@@ -14,13 +14,17 @@
         <module>web</module>
         <module>manage-service</module>
         <module>wechat-service</module>
+        <module>logistics</module>
+        <module>logistics-haier</module>
     </modules>
 
     <properties>
+        <eclipselink.version>2.6.2</eclipselink.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <javaee.version>7.0</javaee.version>
+        <eclipselink.version>2.6.2</eclipselink.version>
         <jiangcai.version>3.0-SNAPSHOT</jiangcai.version>
         <spring.version>4.3.8.RELEASE</spring.version>
         <spring.data.rest.version>2.4.4.RELEASE</spring.data.rest.version>
@@ -36,7 +40,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <goods.version>1.0.0-SNAPSHOT</goods.version>
-        <payment.version>1.0-SNAPSHOT</payment.version>
+        <payment.version>1.1-SNAPSHOT</payment.version>
         <vc.version>1.2</vc.version>
         <wx.version>1.0-SNAPSHOT</wx.version>
     </properties>
@@ -120,6 +124,31 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <processors>
+                                <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+                            </processors>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-jpamodelgen</artifactId>
+                        <version>5.2.10.Final</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

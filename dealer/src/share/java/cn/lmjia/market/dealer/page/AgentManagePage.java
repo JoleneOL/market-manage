@@ -1,8 +1,6 @@
 package cn.lmjia.market.dealer.page;
 
 import cn.lmjia.market.core.pages.AbstractContentPage;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,7 +15,6 @@ import java.util.stream.Stream;
  * @author CJ
  */
 public class AgentManagePage extends AbstractContentPage {
-    private static final Log log = LogFactory.getLog(AgentManagePage.class);
 
     public AgentManagePage(WebDriver webDriver) {
         super(webDriver);

@@ -4,8 +4,12 @@ import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
+import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
+import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -14,6 +18,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 获取信息服务
@@ -33,8 +38,8 @@ public interface ReadService {
         Expression<String> loginName = loginPath.get("loginName");
         Expression<String> name = contactWayJoin.get("mobile");
         //
-        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
-                , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
+                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
     static Expression<Integer> agentLevelForLogin(From<?, Login> loginPath, CriteriaBuilder criteriaBuilder) {
@@ -51,8 +56,8 @@ public interface ReadService {
         Expression<String> loginName = loginPath.get("loginName");
         Expression<String> name = contactWayJoin.get("name");
         //
-        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
-                , JpaFunctionUtils.IfElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
+                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
     /**
@@ -62,7 +67,7 @@ public interface ReadService {
      */
     static Expression<String> nameForCustomer(From<?, Customer> customerFrom, CriteriaBuilder criteriaBuilder) {
         Expression<String> name = customerFrom.get("name");
-        return JpaFunctionUtils.IfNull(criteriaBuilder, String.class, name
+        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
                 , nameForLogin(customerFrom.join("login"), criteriaBuilder));
     }
 
@@ -77,11 +82,11 @@ public interface ReadService {
             case 1:
                 return "超级代理";
             case 2:
-                return "省总代";
+                return "市级代理";// 5% 1% 区域服务费 1%
             case 3:
-                return "市代理";
+                return "区县代理";// 5% 1% 未来再实现的1%
             case 4:
-                return "经销商";
+                return "经销商";// 5% 1%
             case Customer.LEVEL:
                 return "爱心天使";
             case Customer.LEVEL * 2:
@@ -149,6 +154,31 @@ public interface ReadService {
      */
     @Transactional(readOnly = true)
     int agentLevelForPrincipal(Object principal);
+
+    /**
+     * @return 可用仓库
+     */
+    @Transactional(readOnly = true)
+    List<Depot> allEnabledDepot();
+
+    /**
+     * @return 可用主要货品
+     */
+    @Transactional(readOnly = true)
+    List<MainProduct> allEnabledMainProduct();
+
+    /**
+     * @return 所有渠道
+     */
+    @Transactional(readOnly = true)
+    List<Channel> allChannel();
+
+    /**
+     * @return 可用主要货品
+     */
+    @Transactional(readOnly = true)
+    List<Product> allEnabledProduct();
+
 
     /**
      * @return 所有等级名称

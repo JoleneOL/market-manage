@@ -3,12 +3,12 @@ package cn.lmjia.market.wechat.controller;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.request.PromotionRequestService;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,9 +39,9 @@ public class WechatUpgradeController {
 
     @GetMapping("/wechatUpgrade")
     @Transactional(readOnly = true)
-    public String index(@AuthenticationPrincipal Login login, Model model) {
+    public String index(@AuthenticationPrincipal Login loginInput, Model model) {
         // 正在申请 错误
-        login = loginService.get(login.getId());
+        Login login = loginService.get(loginInput.getId());
         if (!loginService.isRegularLogin(login)) {
             return "redirect:" + SystemService.wechatOrderURi;
         }
@@ -93,8 +93,11 @@ public class WechatUpgradeController {
             return new ModelAndView("redirect:/wechatUpgradeApplySuccess");
         }
 
+        request.setOrderedName(readService.nameForPrincipal(login));
+        request.setOrderedMobile(readService.mobileFor(login));
+        
         // 开始支付
-        return payAssistanceService.payOrder(login.getWechatUser().getOpenId(), servletRequest, request);
+        return payAssistanceService.payOrder(login.getWechatUser().getOpenId(), servletRequest, request, false);
     }
 
 }

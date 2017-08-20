@@ -62,9 +62,9 @@
                 </div>
                 <div class="weui-cell__bd">
                     <select class="weui-select" name="newLevel" id="J_updateLevel">
-                        <option th:if="${u1Enable}" value="1">经销商</option>
-                        <option th:if="${u2Enable}" value="2">市代理</option>
-                        <option th:if="${u3Enable}" value="3">省总代</option>
+                        <option th:if="${u1Enable}" value="1" th:text="${@readService.getLoginTitle(4)}">经销商</option>
+                        <option th:if="${u2Enable}" value="2" th:text="${@readService.getLoginTitle(3)}">区县代理</option>
+                        <option th:if="${u3Enable}" value="3" th:text="${@readService.getLoginTitle(2)}">市级代理</option>
                     </select>
                 </div>
             </div>
@@ -157,7 +157,7 @@
                 <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
                     <label class="weui-cell weui-check__label" for="isPayment">
                         <div class="weui-cell__hd">
-                            <input type="radio" class="weui-check" name="upgradeMode" id="isPayment" checked="checked"
+                            <input type="radio" class="weui-check" name="upgradeMode" id="isPayment" checked
                                    value="1">
                             <i class="weui-icon-checked"></i>
                         </div>

@@ -2,7 +2,6 @@ package cn.lmjia.market.core.entity.request;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.entity.support.PaymentStatus;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
@@ -12,6 +11,7 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.service.ReadService;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
@@ -38,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 提升申请
@@ -96,21 +98,13 @@ public class PromotionRequest implements PayableOrder {
     private String backImagePath;
     @Column(length = 68)
     private String businessLicensePath;
+    @Transient
+    private String orderedName;
+    @Transient
+    private String orderedMobile;
 
-    public static String toLevelName(int type) {
-        switch (type) {
-            case 1:
-                return "经销商";
-            case 2:
-                return "代理商";
-            case 3:
-                return "省代理";
-            default:
-                return "经销商";
-        }
-    }
-
-    public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile, ReadService readService, ResourceService resourceService, ConversionService conversionService) {
+    public static RowDefinition<PromotionRequest> Rows(String applicationDate, String mobile, ReadService readService
+            , ResourceService resourceService, ConversionService conversionService, Function<Integer, String> toLevelName) {
         return new RowDefinition<PromotionRequest>() {
             @Override
             public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<PromotionRequest> root) {
@@ -137,7 +131,7 @@ public class PromotionRequest implements PayableOrder {
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "applicationLevel")
                                 .addSelect(promotionRequestRoot -> promotionRequestRoot.get("type"))
-                                .addFormat((object, type) -> toLevelName((int) object))
+                                .addFormat((object, type) -> toLevelName.apply((int) object))
                                 .build()
 //                        , FieldBuilder.asName(PromotionRequest.class, "type")
 //                                .build()
@@ -220,11 +214,11 @@ public class PromotionRequest implements PayableOrder {
                     if (!StringUtils.isEmpty(applicationDate)) {
                         if (applicationDate.equalsIgnoreCase("month"))
                             predicate = cb.and(predicate
-                                    , JpaFunctionUtils.YearAndMonthEqual(cb, root.get("requestTime")
+                                    , JpaFunctionUtils.yearAndMonthEqual(cb, root.get("requestTime")
                                             , LocalDate.now()));
                         else if (applicationDate.equalsIgnoreCase("quarter"))
                             predicate = cb.and(predicate
-                                    , JpaFunctionUtils.YM(cb, root.get("requestTime")
+                                    , JpaFunctionUtils.ym(cb, root.get("requestTime")
                                             , LocalDate.now()
                                             , (criteriaBuilder, integerExpression, integerExpression2) -> {
                                                 // >= ym-3
@@ -233,7 +227,7 @@ public class PromotionRequest implements PayableOrder {
                                             }));
                         else
                             predicate = cb.and(predicate
-                                    , JpaFunctionUtils.YM(cb, root.get("requestTime")
+                                    , JpaFunctionUtils.ym(cb, root.get("requestTime")
                                             , LocalDate.now()
                                             , (criteriaBuilder, integerExpression, integerExpression2) -> {
                                                 // >= ym-3
@@ -266,6 +260,21 @@ public class PromotionRequest implements PayableOrder {
 
     @Override
     public String getOrderBody() {
+        return "经销商开通费";
+    }
+
+    @Override
+    public String getOrderProductModel() {
+        return "经销商开通费";
+    }
+
+    @Override
+    public String getOrderProductCode() {
+        return "经销商开通费";
+    }
+
+    @Override
+    public String getOrderProductBrand() {
         return "经销商开通费";
     }
 }

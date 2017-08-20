@@ -2,6 +2,7 @@ package cn.lmjia.market.wechat.service;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import me.jiangcai.wx.model.Menu;
 import me.jiangcai.wx.model.MenuType;
 import me.jiangcai.wx.model.PublicAccount;
@@ -36,15 +37,30 @@ public class WechatInitService {
             log.info("单元测试时没有必要更新公众号菜单");
             return;
         }
-        Protocol.forAccount(publicAccount).createMenu(
-                new Menu[]
-                        {
-                                createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
-                                , createMenu("下单", systemService.toUrl(SystemService.wechatOrderURi))
-                                , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
-                        }
-        );
-        log.info("updated the menus");
+        try {
+            Protocol.forAccount(publicAccount).createMenu(
+                    new Menu[]
+                            {
+                                    createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
+                                    , createMenu("下单"
+                                    , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
+                                    , createMenu("分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
+                                    , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
+                            }
+            );
+            log.info("updated the menus");
+        } catch (Throwable ex) {
+            log.warn("Error on Update Wechat Menus", ex);
+        }
+
+    }
+
+    private Menu createMenu(String name, Menu... menus) {
+        Menu menu = new Menu();
+        menu.setType(MenuType.parent);
+        menu.setName(name);
+        menu.setSubs(menus);
+        return menu;
     }
 
     private Menu createMenu(String name, String url) {

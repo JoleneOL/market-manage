@@ -2,9 +2,9 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ContactWayService;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
 import org.apache.commons.logging.Log;
@@ -34,10 +34,11 @@ public class ContactWayServiceImpl implements ContactWayService {
         return updateContactWay(login, contactWay -> contactWay.setMobile(mobile));
     }
 
-    private ContactWay updateContactWay(Login login, Consumer<ContactWay> contactWayConsumer) {
-        if (login.getId() != null)
-            login = loginRepository.getOne(login.getId());
-
+    private ContactWay updateContactWay(Login loginInput, Consumer<ContactWay> contactWayConsumer) {
+        Login login;
+        if (loginInput.getId() != null) {
+            login = loginRepository.getOne(loginInput.getId());
+        } else login = loginInput;
         if (login.getContactWay() == null) {
             login.setContactWay(new ContactWay());
         }

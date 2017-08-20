@@ -5,7 +5,6 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
-import cn.lmjia.market.core.entity.support.Address;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
 import cn.lmjia.market.core.service.AgentFinancingService;
@@ -15,6 +14,7 @@ import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.service.AgentService;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -379,7 +379,7 @@ public class AgentServiceImpl implements AgentService {
         query = query.where(
                 criteriaBuilder.and(
                         Address.AlmostMatch(
-                                ContactWayService.AddressForLogin(root.join("login"), criteriaBuilder)
+                                ContactWayService.addressForLogin(root.join("login"), criteriaBuilder)
                                 , address
                                 , criteriaBuilder)
                         , criteriaBuilder.equal(root.get("level").as(Integer.class), systemService.addressRateForLevel())

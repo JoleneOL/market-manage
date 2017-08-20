@@ -1,11 +1,12 @@
 package cn.lmjia.market.core.entity;
 
+import cn.lmjia.market.core.define.Money;
 import lombok.Getter;
 import lombok.Setter;
+import me.jiangcai.logistics.entity.Product;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 
 /**
@@ -16,18 +17,9 @@ import java.math.BigDecimal;
 @Entity
 @Setter
 @Getter
-public class MainProduct {
-
+public class MainProduct extends Product {
     /**
-     * 货物编码
-     */
-    @Id
-    @Column(length = 20)
-    private String code;
-    @Column(length = 40)
-    private String name;
-    /**
-     * 每台保证金
+     * 设备款
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal deposit;
@@ -37,8 +29,16 @@ public class MainProduct {
     @Column(scale = 2, precision = 12)
     private BigDecimal serviceCharge;
     /**
-     * 每台安装费用，没有就0
+     * 服务费
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal install;
+
+    public Money getDepositMoney() {
+        return new Money(deposit);
+    }
+
+    public Money getInstallMoney() {
+        return new Money(install);
+    }
 }

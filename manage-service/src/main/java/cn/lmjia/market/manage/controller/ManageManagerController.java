@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
@@ -10,6 +11,8 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.SystemService;
+import com.google.zxing.WriterException;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.criteria.Predicate;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -43,22 +48,28 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static cn.lmjia.market.core.entity.Login.ROLE_GRANT;
-import static cn.lmjia.market.core.entity.Login.ROLE_MANAGER;
-
 /**
  * 管理员工的控制器，除了root之外拥有grant权限的人 也可以管理，但是无法管理
  *
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT','" + ROLE_MANAGER + "')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_MANAGER + "')")
 public class ManageManagerController {
 
     @Autowired
     private LoginService loginService;
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private QRController qrController;
+    @Autowired
+    private SystemService systemService;
+
+    @GetMapping("/manage/bindManager{id}")
+    public BufferedImage toScanImage(@PathVariable("id") long id) throws IOException, WriterException {
+        return qrController.toQRCode(systemService.toUrl("/wechat/bindTo" + id));
+    }
 
     /**
      * @param login 身份
@@ -217,7 +228,7 @@ public class ManageManagerController {
         };
     }
 
-    @PreAuthorize("hasAnyRole('ROOT','" + ROLE_GRANT + "')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_GRANT + "')")
     @PostMapping("/manage/manager")
     @Transactional
     public String updateUser(String name, String department, String realName, boolean enable, String comment
@@ -227,7 +238,7 @@ public class ManageManagerController {
         return "redirect:/manageManager";
     }
 
-    @PreAuthorize("hasAnyRole('ROOT','" + ROLE_GRANT + "')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_GRANT + "')")
     @PostMapping("/manage/managers")
     @Transactional
     public String addUser(String name, String department, String realName, boolean enable, String comment
@@ -279,11 +290,11 @@ public class ManageManagerController {
     /**
      * 检查current是否可以管辖login
      *
-     * @param current
+     * @param currentInput
      * @param login
      */
-    private void manageLogin(Login current, Login login) {
-        current = loginService.get(current.getId());
+    private void manageLogin(Login currentInput, Login login) {
+        Login current = loginService.get(currentInput.getId());
         if (current.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ROOT")))
             // root 可以执行任何管理
             return;

@@ -1,6 +1,7 @@
 $(function () {
-    var receive = echarts.init(document.getElementById('J_waitReceive'));
-    var install = echarts.init(document.getElementById('J_waitInstall'));
+    var detailUrl = $('body').attr('data-detail-url');
+    // var receive = echarts.init(document.getElementById('J_waitReceive'));
+    // var install = echarts.init(document.getElementById('J_waitInstall'));
 
     var optionReceive = {
         tooltip: {
@@ -76,8 +77,8 @@ $(function () {
         ]
     };
 
-    receive.setOption(optionReceive);
-    install.setOption(optionInstall);
+    // receive.setOption(optionReceive);
+    // install.setOption(optionInstall);
 
 
     $('#J_datePicker').flatpickr({
@@ -105,10 +106,13 @@ $(function () {
                 "title": "订单号", "data": "orderId", "name": "orderId"
             },
             {
+                "title": "物流编号", "data": "supplierId", "name": "supplierId"
+            },
+            {
                 "title": "商品名称", "data": "goods", "name": "goods"
             },
             {
-                "title": "发货数量", "data": "deliverQuantity", "name": "deliverQuantity"
+                "title": "发货数量", "data": "amount", "name": "amount"
             },
             {
                 "title": "订单时间", "data": "orderTime", "name": "orderTime"
@@ -122,27 +126,27 @@ $(function () {
             {
                 "title": "手机号", "data": "mobile", "name": "mobile"
             },
-            {
-                "title": "物流公司", "data": "logistics", "name": "logistics"
-            },
+            // {
+            //     "title": "物流公司", "data": "logistics", "name": "logistics"
+            // },
             {
                 "title": "物流仓储", "data": "storage", "name": "storage"
             },
-            {
-                "title": "安装公司", "data": "installation", "name": "installation"
-            },
+            // {
+            //     "title": "安装公司", "data": "installation", "name": "installation"
+            // },
             {
                 "title": "发货时间", "data": "deliverTime", "name": "deliverTime"
             },
             {
-                "title": "状态", "data": "status", "name": "status"
+                "title": "物流状态", "data": "status", "name": "status"
             },
             {
                 "title": "操作",
                 "className": 'table-action',
                 "orderable": false,
                 data: function (item) {
-                    return '<a href="javascript:;" class="js-info" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
+                    return '<a href="javascript:;" class="js-info" data-unit-id="' + item.unitId + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
                 }
             }
         ],
@@ -182,22 +186,20 @@ $(function () {
         "colReorder": true,
         "columns": [
             {
-                "title": "订单号", "data": "orderId", "name": "orderId"
+                "title": "物流编号", "data": "supplierId", "name": "supplierId"
             },
-            {
-                "title": "商品名称", "data": "goods", "name": "goods"
-            },
-            {
-                "title": "发货数量", "data": "deliverQuantity", "name": "deliverQuantity"
-            },
+            // {
+            //     "title": "总发货量", "data": "deliverQuantity", "name": "deliverQuantity"
+            // },
             {
                 "title": "订单时间", "data": "orderTime", "name": "orderTime"
             },
+            // {
+            //     "title": "发货工厂", "data": "deliverFactory", "name": "deliverFactory"
+            // },
+
             {
-                "title": "发货工厂", "data": "deliverFactory", "name": "deliverFactory"
-            },
-            {
-                "title": "发货时间", "data": "deliverTime", "name": "deliverTime"
+                "title": "收货仓库", "data": "depotName", "name": "depotName"
             },
             {
                 "title": "收货地址", "data": "address", "name": "address"
@@ -322,7 +324,15 @@ $(function () {
         if (table === 'storage') return storage.ajax.reload();
     }).on('click', '.js-info', function () {
         var from = $(this).closest('.tab-pane').attr('id');
-        window.location.href = '_logisticsDetail.html?id=' + $(this).data('id') + '&from=' + from;
+        var table = $('.tab-pane.active').attr('id');
+        if (table === 'factory')
+            window.location.href = detailUrl + '?id=' + $(this).data('id');
+        else if (table === 'logistics') {
+            var unitId = $(this).data('unit-id');
+            if (unitId) {
+                window.location.href = detailUrl + '?id=' + unitId;
+            }//否则是查看订单详情
+        }
     });
 
     $('input[name="status"]').on('change', function () {
@@ -353,4 +363,8 @@ $(function () {
     function clearSearchValue() {
         //TODO
     }
+
+    var tabHash = window.location.hash;
+    $(tabHash).addClass('active').siblings().removeClass('active');
+    $('a[href="' + tabHash + '"]').parent().addClass('active').siblings().removeClass('active');
 });

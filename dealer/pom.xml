@@ -49,12 +49,6 @@
             <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -109,7 +103,7 @@
                 <executions>
                     <execution>
                         <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>add-test-source</goal>
                         </goals>

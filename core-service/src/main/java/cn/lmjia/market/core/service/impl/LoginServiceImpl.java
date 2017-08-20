@@ -9,13 +9,15 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
-import me.jiangcai.wx.model.PublicAccount;
+import me.jiangcai.user.notice.NoticeChannel;
+import me.jiangcai.user.notice.User;
+import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
+import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
@@ -32,9 +34,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -53,8 +59,6 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private PublicAccount publicAccount;
-    @Autowired
     private StandardWeixinUserRepository standardWeixinUserRepository;
     @Autowired
     private VerificationCodeService verificationCodeService;
@@ -62,13 +66,11 @@ public class LoginServiceImpl implements LoginService {
     private AgentLevelRepository agentLevelRepository;
     @Autowired
     private CustomerRepository customerRepository;
-    @Autowired
-    private MainOrderRepository mainOrderRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
 
-    {
+    public LoginServiceImpl() {
         payStatus.add(OrderStatus.forDeliver);
         payStatus.add(OrderStatus.forDeliverConfirm);
         payStatus.add(OrderStatus.forInstall);
@@ -139,7 +141,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Login asWechat(String openId) {
-        return loginRepository.findOne((root, query, cb) -> cb.equal(root.get("wechatUser").get("openId"), openId));
+        return loginRepository.findOne((root, query, cb)
+                -> cb.and(cb.equal(root.get("wechatUser").get("openId"), openId)
+                , cb.notEqual(root.type(), Manager.class))
+        );
     }
 
     @Override
@@ -171,6 +176,8 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public AgentLevel lowestAgentLevel(Login who) {
+        if (who == null)
+            return null;
         List<AgentLevel> allAgent = agentLevelRepository.findByLogin(who);
 
         if (allAgent.isEmpty()) {
@@ -237,5 +244,28 @@ public class LoginServiceImpl implements LoginService {
         if (loginName == null)
             throw new IllegalStateException("未设置登录名的帐号是无法解绑微信的");
         byLoginName(loginName).setWechatUser(null);
+    }
+
+    @Override
+    public Collection<User> toWechatUser(Collection<? extends Login> input) {
+        return input.stream().filter(login -> login.getWechatUser() != null)
+                .map(login -> toUser(login.getWechatUser()))
+                .collect(Collectors.toList());
+    }
+
+    private User toUser(final WeixinUserDetail detail) {
+        return new User() {
+            @Override
+            public boolean supportNoticeChannel(NoticeChannel channel) {
+                return channel == WechatNoticeChannel.templateMessage;
+            }
+
+            @Override
+            public Map<String, Object> channelCredential(NoticeChannel channel) {
+                Map<String, Object> map = new HashMap<>();
+                map.put(WechatNoticeChannel.OpenIdCredentialTo, detail.getOpenId());
+                return map;
+            }
+        };
     }
 }
