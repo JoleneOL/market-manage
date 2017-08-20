@@ -62,7 +62,8 @@ public interface LoginService extends UserDetailsService {
      * 更新密码
      *
      * @param login       一个登录
-     * @param rawPassword 明文密码  @return 已被保存的登录
+     * @param rawPassword 明文密码
+     * @return 已被保存的登录
      */
     @Transactional
     default <T extends Login> T password(T login, String rawPassword) {
