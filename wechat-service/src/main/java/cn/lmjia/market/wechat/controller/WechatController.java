@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
@@ -64,10 +65,15 @@ public class WechatController {
     @Transactional
     @ResponseBody
     public String bindTo(@OpenId String openId, @PathVariable("id") long id) {
-        Login login = loginService.asWechat(openId);
-        if (login != null)
-            return "你已经绑定了一个帐号。请更换微信号重试。";
-        login = loginService.get(id);
+//        Login login = loginService.asWechat(openId);
+//        if (login != null)
+//            return "Failed! You really has bind to Login; please switch your wechatId and try it again.";
+        Login login = loginService.get(id);
+        if (!(login instanceof Manager)) {
+            return "you can only bind wechat to ManagerID";
+        }
+        if (login.getWechatUser() != null)
+            return "there is some one bind th this MangerID!";
         StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId(openId);
         if (weixinUser == null) {
             weixinUser = new StandardWeixinUser();
@@ -76,7 +82,7 @@ public class WechatController {
             weixinUser = standardWeixinUserRepository.save(weixinUser);
         }
         login.setWechatUser(weixinUser);
-        return "绑定成功";
+        return "success";
     }
 
     // name mobile  authCode
