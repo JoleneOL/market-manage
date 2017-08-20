@@ -9,8 +9,6 @@ $(function () {
         $.toptip('按揭码或者身份证号码无效');
     }
 
-    $('#recommendId').makeRecommendSelect();
-
     $('#J_cityPicker, #J_invoiceAddress').cityPicker({
         title: "请选择收货地址",
         onChange: function () {
@@ -18,62 +16,62 @@ $(function () {
         }
     });
 
-    $('#J_goodsAmount').keyup(function () {
-        countTotal();
-    });
+    // 待删除
+    // $('#J_goodsAmount').keyup(function () {
+    //     countTotal();
+    // });
+    //
+    // $('#J_goodsType').change(function () {
+    //     changeAllMoney($(this));
+    //     countTotal();
+    // });
+    //
+    //
+    // function countTotal() {
+    //     var orderTotal = $('#J_orderTotal');
+    //     var price = +$('#J_userCost').find('span').eq(0).text();
+    //     var cost = +$('#J_serviceCharge').find('span').eq(0).text();
+    //     var channel = +orderTotal.attr('data-price-channel');
+    //     var amout = +$('#J_goodsAmount').val();
+    //     var total = (price + channel + cost) * amout;
+    //
+    //
+    //     orderTotal.find('strong').text(total);
+    //     installmentFunc(total);
+    //     $('input[name="orderTotal"]').val(total);
+    // }
+    //
+    // function changeAllMoney($ele) {
+    //     var $type = $ele.find('option:checked');
+    //     // var deposit = $type.attr('data-deposit');
+    //     // var isNeed = $type.attr('data-need-install');
+    //     // var cost = $type.attr('data-day-cost');
+    //
+    //     var price = $type.attr('data-price');
+    //     // 渠道溢价或者优惠，就保存在总价那个dom中 如果以后有显示该费用的需求，再放到别的地方去
+    //     var channel = $type.attr('data-price-channel');
+    //     $('#J_orderTotal').attr('data-price-channel', channel);
+    //     var model = $type.attr('data-model');
+    //     var serviceCharge = $type.attr('data-service-charge');
+    //
+    //
+    //     var fee = serviceCharge ? parseInt(serviceCharge) : 0;
+    //
+    //     if (fee > 0) {
+    //         $('.js-service').removeClass('displayNone');
+    //         $('#J_serviceCharge').find('span').eq(0).text(fee);
+    //     } else {
+    //         $('.js-service').addClass('displayNone');
+    //         $('#J_serviceCharge').find('span').eq(0).text(0);
+    //     }
+    //     $('#J_userCost').find('span').eq(0).text(price);
+    //     $('#J_leasedType').val(model);
+    //
+    //     // $('#J_userDeposit').find('span').eq(0).text(deposit);
+    //     // $('#J_package').val('服务费 ' + cost + '元 / 天');
+    // }
+    // 待删除
 
-    $('#J_goodsType').change(function () {
-        changeAllMoney($(this));
-        countTotal();
-    });
-
-
-    function countTotal() {
-        var orderTotal = $('#J_orderTotal');
-        var price = +$('#J_userCost').find('span').eq(0).text();
-        var cost = +$('#J_serviceCharge').find('span').eq(0).text();
-        var channel = +orderTotal.attr('data-price-channel');
-        var amout = +$('#J_goodsAmount').val();
-        var total = (price + channel + cost) * amout;
-
-
-        orderTotal.find('strong').text(total);
-        installmentFunc(total);
-        $('input[name="orderTotal"]').val(total);
-    }
-
-    function changeAllMoney($ele) {
-        var $type = $ele.find('option:checked');
-        // var deposit = $type.attr('data-deposit');
-        // var isNeed = $type.attr('data-need-install');
-        // var cost = $type.attr('data-day-cost');
-
-        var price = $type.attr('data-price');
-        // 渠道溢价或者优惠，就保存在总价那个dom中 如果以后有显示该费用的需求，再放到别的地方去
-        var channel = $type.attr('data-price-channel');
-        $('#J_orderTotal').attr('data-price-channel', channel);
-        var model = $type.attr('data-model');
-        var serviceCharge = $type.attr('data-service-charge');
-
-
-        var fee = serviceCharge ? parseInt(serviceCharge) : 0;
-
-        if (fee > 0) {
-            $('.js-service').removeClass('displayNone');
-            $('#J_serviceCharge').find('span').eq(0).text(fee);
-        } else {
-            $('.js-service').addClass('displayNone');
-            $('#J_serviceCharge').find('span').eq(0).text(0);
-        }
-        $('#J_userCost').find('span').eq(0).text(price);
-        $('#J_leasedType').val(model);
-
-        // $('#J_userDeposit').find('span').eq(0).text(deposit);
-        // $('#J_package').val('服务费 ' + cost + '元 / 天');
-    }
-
-    var $mortgageCode = $('#J_mortgageCode');
-    var isValid = $('input[name="isValid"]');
     var installment = $('#J_installment');
     var submitBtn = $('#J_submitBtn');
     var info = $('#J_installmentInfo');
@@ -82,18 +80,11 @@ $(function () {
             $('#J_checkCode').removeClass('displayNone');
             info.removeClass('displayNone');
             submitBtn.text('提交分期订单');
-            isValid.rules('add', {
-                required: true,
-                messages: {
-                    required: "校验按揭码失败"
-                }
-            });
+
         } else {
             $('#J_checkCode').addClass('displayNone');
             info.addClass('displayNone');
             submitBtn.html('下&nbsp;&nbsp;单');
-            isValid.rules('remove');
-            isValid.val('');
         }
     });
 
@@ -103,54 +94,6 @@ $(function () {
         info.find('.js-installment').text((num / 24).toFixed(2));
     }
 
-    // $mortgageCode.on('keyup mouseout input', function () {
-    //     var $this = $(this);
-    //     var v = $this.val();
-    //     if (v) {
-    //         isValid.rules('add', {
-    //             required: true,
-    //             messages: {
-    //                 required: "校验按揭码失败"
-    //             }
-    //         });
-    //     } else {
-    //         isValid.rules('remove');
-    //         isValid.val('');
-    //     }
-    // });
-
-    $('#J_checkBtn').click(function () {
-        var mortgageCode = $mortgageCode.val();
-        if (!mortgageCode) return '';
-        $.showLoading('数据校验中');
-        $.ajax('/api/mortgageCode', {
-            method: 'POST',
-            data: {
-                mortgageCode: mortgageCode
-            },
-            dataType: 'json',
-            success: function (data) {
-                if (data.resultCode === 400) {
-                    $.toptip(data.resultMsg);
-                    isValid.val('');
-                    $.hideLoading();
-                    return false;
-                }
-                if (data.resultCode !== 200) {
-                    $.toptip("发送失败，请重试");
-                    $.hideLoading();
-                    return false;
-                }
-                $.hideLoading();
-                $.toptip("校验成功", "success");
-                isValid.val('ok');
-            },
-            error: function () {
-                $.hideLoading();
-                $.toptip("系统错误");
-            }
-        })
-    });
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1([34578])\d{9}$/;
@@ -162,18 +105,12 @@ $(function () {
         ignore: "",
         rules: {
             name: "required",
-            // age: {
-            //     required: true,
-            //     number: true,
-            //     digits: true
-            // },
             address: 'required',
             fullAddress: 'required',
             mobile: {
                 required: true,
                 isPhone: true
             },
-            // recommend: 'required',
             amount: {
                 required: true
             },
@@ -181,14 +118,9 @@ $(function () {
         },
         messages: {
             name: "请填写客户姓名",
-            // age: {
-            //     required: "请填写年龄",
-            //     digits: "请输入整数"
-            // },
             mobile: {
                 required: "请填写手机号码"
             },
-            // recommend: '请填写该项',
             address: "请选择地址",
             fullAddress: "请填写详细地址",
             amount: {
@@ -244,6 +176,7 @@ $(function () {
         $.closePopup();
         invoiceFunc.clearWarn();
     });
+
     function disableInput() {
         $('#J_invoiceArea').find('input[type="hidden"]').each(function () {
             $(this).prop('disabled', true)
@@ -305,4 +238,164 @@ $(function () {
             $('#J_needInvoice').html($('#J_invoiceForm').find('.js-company').val());
         }
     };
+
+
+    var $goodListData = $('#J_goodsList').find('.js-goods-list');
+    var $goodsListArea = $('#J_goodsListArea');
+
+    function getBuyData() {
+        var dataJSON = [];
+        $goodListData.each(function () {
+            var data = {};
+            if ($(this).attr('data-amount') > 0) {
+                data['model'] = $(this).attr('data-model');
+                data['goods'] = $(this).attr('data-goods');
+                data['price'] = $(this).attr('data-price');
+                data['amount'] = $(this).attr('data-amount');
+                dataJSON.push(data);
+            }
+        });
+        return dataJSON;
+    }
+
+
+    function setButData(array) {
+        $goodsListArea.empty();
+        $.each(array, function (i, v) {
+            var hiddenInput = $('<input type="hidden" name="goods[]">').val(v['model']+','+v['amount']);
+            $goodsListArea.append(hiddenInput);
+        });
+    }
+
+    var slideout = new Slideout({
+        'panel': document.getElementById('J_main'),
+        'menu': document.getElementById('J_goodsList'),
+        'padding': 280,
+        'tolerance': 70,
+        'touch': false,
+        'side': 'right'
+    });
+
+    $('#J_addGoods').click(function () {
+        slideout.open();
+    });
+
+    $('#J_goodsCancel').click(closeMenu);
+
+
+    $('#J_goodsOK').click(function (e) {
+        var dataJSON = getBuyData();
+        if (dataJSON.length > 0) setButData(dataJSON);
+        closeMenu(e);
+    });
+
+    function closeMenu(eve) {
+        eve.preventDefault();
+        slideout.close();
+    }
+
+    slideout
+        .on('beforeopen', function () {
+            this.panel.classList.add('panel-open');
+            this.menu.classList.add('open');
+        })
+        .on('open', function () {
+            this.panel.addEventListener('click', closeMenu);
+        })
+        .on('beforeclose', function () {
+            this.panel.classList.remove('panel-open');
+            this.panel.removeEventListener('click', closeMenu);
+        });
+
+    var Spinner = {
+        $parent: $('.spinner'),
+        decrease: function () {
+            var root = this.$parent;
+            root.find('.decrease').click(function () {
+                var input = $(this).next('.value');
+                var siblings = $(this).siblings('.increase');
+                var min = input.attr('min') || 0;
+                var val = +input.val();
+                if (val < +min) return false;
+                input.val(val - 1);
+                input.trigger('change');
+
+                if (siblings.prop('disabled') === true)
+                    siblings.removeClass('disabled').prop('disabled', false);
+                if (+input.val() === +min)
+                    $(this).addClass('disabled').prop('disabled', true);
+
+            });
+        },
+        increase: function () {
+            var root = this.$parent;
+            root.find('.increase').click(function () {
+                var input = $(this).prev('.value');
+                var siblings = $(this).siblings('.decrease');
+                var max = input.attr('max') || 9999;
+                var val = +input.val();
+                if (val > +max) return false;
+                input.val(val + 1);
+                input.trigger('change');
+
+                if (siblings.prop('disabled') === true)
+                    siblings.removeClass('disabled').prop('disabled', false);
+                if (+input.val() === +max)
+                    $(this).addClass('disabled').prop('disabled', true);
+
+            });
+        },
+        validate: function (ele, val) {
+            var min = ele.attr('min') || 0;
+            var max = ele.attr('max') || 9999;
+            if (val < +min) return -1;
+            if (val > +max) return 1;
+            return 0;
+        },
+        change: function () {
+            var self = this;
+            var root = self.$parent;
+            root.find('.value').change(function () {
+                var val = +$(this).val();
+                var min = $(this).attr('min') || 0;
+                var max = $(this).attr('max') || 9999;
+                var valid = self.validate($(this), val);
+                var parent = $(this).closest('.js-goods-list');
+                if (valid !== 0) val = (valid === -1) ? function () {
+                    $(this).prev('button').addClass('disabled').prop('disabled', true);
+                    $(this).next('button').removeClass('disabled').prop('disabled', false);
+                    return min;
+                } : function () {
+                    $(this).prev('button').removeClass('disabled').prop('disabled', false);
+                    $(this).next('button').addClass('disabled').prop('disabled', true);
+                    return max;
+                };
+                $(this).val(val);
+                var flag = parent.attr('data-amount') < val;
+                parent.attr('data-amount', val);
+                countTotal(this, flag);
+            });
+        },
+        init: function () {
+            this.decrease();
+            this.increase();
+            this.change();
+        }
+    };
+
+    var goodsTotal = $('#J_goodsTotal');
+
+    function countTotal(ele, flag) {
+        var nowTotal = Number(goodsTotal.text());
+        var parent = $(ele).closest('.js-goods-list');
+        var price = Number(parent.attr('data-price'));
+        if (flag)
+            nowTotal += price;
+        else
+            nowTotal -= price;
+        goodsTotal.text(nowTotal.toFixed(2));
+    }
+
+    Spinner.init();
+
 });
