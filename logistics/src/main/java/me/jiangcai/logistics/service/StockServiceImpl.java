@@ -351,6 +351,7 @@ public class StockServiceImpl implements StockService {
                 try (Statement statement = connection.getConnection().createStatement()) {
                     statement.executeUpdate("DROP TABLE IF EXISTS `UNSETTLEMENTUSAGESTOCK`");
                     statement.executeUpdate("DROP TABLE IF EXISTS `USAGESTOCK`");
+                    statement.executeUpdate("DROP TABLE IF EXISTS `UsageStockInfo`");
                     statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource("/logistics_views/" + fileName + "0.sql").getInputStream()
                             , Charset.forName("UTF-8")));
                     statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource("/logistics_views/" + fileName + "1.sql").getInputStream()
