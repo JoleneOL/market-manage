@@ -1,16 +1,14 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
-import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.wechat.WechatTestBase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = SecurityConfig.class)
+//@Ignore
 public class WechatWithdrawControllerTest extends WechatTestBase {
 
     private static final Log log = LogFactory.getLog(WechatWithdrawControllerTest.class);
