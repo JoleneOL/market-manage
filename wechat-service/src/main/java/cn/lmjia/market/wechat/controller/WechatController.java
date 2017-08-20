@@ -1,14 +1,19 @@
 package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.wx.OpenId;
+import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.model.WeixinUserDetail;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
+import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +30,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +57,36 @@ public class WechatController {
     private VerificationCodeService verificationCodeService;
     @Autowired
     private ContactWayService contactWayService;
+    @Autowired
+    private StandardWeixinUserRepository standardWeixinUserRepository;
+    @Autowired
+    private PublicAccount publicAccount;
+    @Autowired
+    private NoticeService noticeService;
+
+    @GetMapping("/wechat/bindTo{id}")
+    @Transactional
+    @ResponseBody
+    public String bindTo(@OpenId String openId, @PathVariable("id") long id) {
+//        Login login = loginService.asWechat(openId);
+//        if (login != null)
+//            return "Failed! You really has bind to Login; please switch your wechatId and try it again.";
+        Login login = loginService.get(id);
+        if (!(login instanceof Manager)) {
+            return "you can only bind wechat to ManagerID";
+        }
+        if (login.getWechatUser() != null)
+            return "there is some one bind th this MangerID!";
+        StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId(openId);
+        if (weixinUser == null) {
+            weixinUser = new StandardWeixinUser();
+            weixinUser.setOpenId(openId);
+            weixinUser.setAppId(publicAccount.getAppID());
+            weixinUser = standardWeixinUserRepository.save(weixinUser);
+        }
+        login.setWechatUser(weixinUser);
+        return "success";
+    }
 
     // name mobile  authCode
     @PostMapping("/wechatRegister")
@@ -69,6 +106,9 @@ public class WechatController {
 
         contactWayService.updateMobile(login, mobile);
         contactWayService.updateName(login, name);
+
+        if (login.getGuideUser() != null)
+            noticeService.newLogin(login, mobile);
 
         return "redirect:" + SystemService.wechatOrderURi;
     }

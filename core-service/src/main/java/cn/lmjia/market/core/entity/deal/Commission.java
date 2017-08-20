@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.entity.deal;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder_;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.lib.spring.data.AndSpecification;
@@ -63,7 +64,10 @@ public class Commission {
      * @return 该佣金是否真实可用的
      */
     public static Predicate reality(From<?, Commission> commissionFrom, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.isFalse(commissionFrom.get("orderCommission").get("pending"));
+        return criteriaBuilder.and(
+                criteriaBuilder.isFalse(commissionFrom.get(Commission_.orderCommission).get(OrderCommission_.pending))
+                , criteriaBuilder.isFalse(commissionFrom.get(Commission_.orderCommission).get(OrderCommission_.source).get(MainOrder_.disableSettlement))
+        );
     }
 
     /**
@@ -76,7 +80,7 @@ public class Commission {
             query.groupBy(root.get("orderCommission"));
             return cb.and(
                     cb.equal(root.get("who"), login)
-                    , cb.isFalse(root.get("orderCommission").get("source").get("disableSettlement"))
+//                    , cb.isFalse(root.get("orderCommission").get("source").get("disableSettlement"))
                     , cb.notEqual((root.get("amount")), BigDecimal.ZERO)
 //                        , Commission.reality(root, cb)
             );
