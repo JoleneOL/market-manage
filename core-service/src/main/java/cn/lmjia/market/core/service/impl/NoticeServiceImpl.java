@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.ManageLevel;
@@ -12,11 +13,8 @@ import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.request.PromotionRequestService;
 import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
 import me.jiangcai.payment.event.OrderPaySuccess;
-import me.jiangcai.user.notice.NoticeChannel;
-import me.jiangcai.user.notice.User;
 import me.jiangcai.user.notice.UserNoticeService;
 import me.jiangcai.user.notice.UserNoticeType;
-import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
 import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
@@ -33,10 +31,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author CJ
@@ -128,6 +125,23 @@ public class NoticeServiceImpl implements NoticeService {
                 return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "Ibbpm1SUpkPdiVcNSffv75PlbQzjY2753q3951YL2RM";
             }
         }, null);
+
+        wechatSendSupplier.registerTemplateMessage(new NewLoginToLogin(), new AbstractTemplateMessageStyle() {
+            @Override
+            public Collection<? extends TemplateMessageParameter> parameterStyles() {
+                return Arrays.asList(
+                        new SimpleTemplateMessageParameter("first", "恭喜您，您的团队增加了一位新人。")
+                        , new SimpleTemplateMessageParameter("keyword1", "{0}")
+                        , new SimpleTemplateMessageParameter("keyword2", "{1}")
+                        , new SimpleTemplateMessageParameter("remark", "")
+                );
+            }
+
+            @Override
+            public String getTemplateId() {
+                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "XBZMILcxV55ATb5Dkn_BWjfvzUT4ySRvsXskzzOuS14";
+            }
+        }, systemService.toUrl(SystemService.wechatMyURi));
     }
 
     @Override
@@ -138,7 +152,8 @@ public class NoticeServiceImpl implements NoticeService {
             WeixinUserDetail detail = order.getOrderBy().getWechatUser();
             if (detail != null) {
                 // 需要确保收益者和下单人是同一个人
-                userNoticeService.sendMessage(null, toUser(detail), null
+                userNoticeService.sendMessage(null
+                        , loginService.toWechatUser(Collections.singleton(order.getOrderBy())), null
                         , mainOrderService.getEnjoyability(order).equals(order.getOrderBy()) ? new PaySuccessToOrder()
                                 : new PaySuccessToJustOrder(), new Date(), order.getId(), order.getSerialId()
                         , order.getOrderProductName(), order.getOrderDueAmount());
@@ -161,7 +176,9 @@ public class NoticeServiceImpl implements NoticeService {
             PromotionRequest request = (PromotionRequest) event.getPayableOrder();
             WeixinUserDetail detail = request.getWhose().getWechatUser();
             if (detail != null) {
-                userNoticeService.sendMessage(null, toUser(detail), null, promotionRequestService.getPaySuccessMessage()
+                userNoticeService.sendMessage(null
+                        , loginService.toWechatUser(Collections.singleton(request.getWhose())), null
+                        , promotionRequestService.getPaySuccessMessage()
                         , detail.getNickname()
                         , request.getId()
                         , request.getOrderDueAmount()
@@ -186,20 +203,53 @@ public class NoticeServiceImpl implements NoticeService {
 
     }
 
-    private User toUser(final WeixinUserDetail detail) {
-        return new User() {
-            @Override
-            public boolean supportNoticeChannel(NoticeChannel channel) {
-                return channel == WechatNoticeChannel.templateMessage;
-            }
+    @Override
+    public void newLogin(Login login, String mobile) {
+        if (login.getGuideUser() != null) {
+            userNoticeService.sendMessage(null
+                    , loginService.toWechatUser(Collections.singleton(login.getGuideUser())), null
+                    , new NewLoginToLogin(), login.getWechatUser().getNickname(), mobile);
+        }
+    }
 
-            @Override
-            public Map<String, Object> channelCredential(NoticeChannel channel) {
-                Map<String, Object> map = new HashMap<>();
-                map.put(WechatNoticeChannel.OpenIdCredentialTo, detail.getOpenId());
-                return map;
-            }
-        };
+    /**
+     * String.class// 昵称 0
+     * , String.class//手机 1
+     */
+    private class NewLoginToLogin implements UserNoticeType {
+
+        @Override
+        public String id() {
+            return "NewLoginToLogin";
+        }
+
+        @Override
+        public String title() {
+            return "新的合伙人加入给老用户";
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) {
+            return "欢迎新合伙人加入";
+        }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) {
+            return "欢迎新合伙人加入";
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[]{
+                    String.class// 昵称 0
+                    , String.class//手机 1
+            };
+        }
     }
 
     /**

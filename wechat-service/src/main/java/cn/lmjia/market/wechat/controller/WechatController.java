@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.huotu.verification.IllegalVerificationCodeException;
@@ -60,6 +61,8 @@ public class WechatController {
     private StandardWeixinUserRepository standardWeixinUserRepository;
     @Autowired
     private PublicAccount publicAccount;
+    @Autowired
+    private NoticeService noticeService;
 
     @GetMapping("/wechat/bindTo{id}")
     @Transactional
@@ -103,6 +106,9 @@ public class WechatController {
 
         contactWayService.updateMobile(login, mobile);
         contactWayService.updateName(login, name);
+
+        if (login.getGuideUser() != null)
+            noticeService.newLogin(login, mobile);
 
         return "redirect:" + SystemService.wechatOrderURi;
     }
