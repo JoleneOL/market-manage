@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <title>投融家测试</title>
+</head>
+<body>
+
+<h2><a th:href="@{/_TRJ_snickerData}" href="_trj.html" target="_blank">查看可用按揭码</a></h2>
+
+<h2>添加按揭码</h2>
+<form th:action="@{/_tourongjia_event_}" method="post">
+    <input type="hidden" name="event" value="code"/>
+    <label>
+        按揭码
+        <input type="text" name="authorising" required minlength="10" maxlength="10">
+    </label>
+    <label>
+        身份证号码
+        <input type="text" name="idNumber" required minlength="18" maxlength="18">
+    </label>
+    <input type="submit">
+</form>
+
+<h2>信审结果</h2>
+<form th:action="@{/_tourongjia_event_}" method="post">
+    <input type="hidden" name="event" value="v1"/>
+    <input type="hidden" name="orderId" value="v1"/>
+    <label>
+        按揭码
+        <input type="text" name="authorising" required minlength="10" maxlength="10">
+    </label>
+    <label>
+        留言
+        <input type="text" name="message" required maxlength="20">
+    </label>
+    <label>
+        是否通过
+        <input type="radio" name="result" value="true">通过
+        <input type="radio" name="result" value="false">不通过
+    </label>
+    <input type="submit">
+</form>
+
+<h2>结算</h2>
+<form th:action="@{/_tourongjia_event_}" method="post">
+    <input type="hidden" name="event" value="v4"/>
+    <input type="hidden" name="orderId" value="v1"/>
+    <label>
+        按揭码
+        <input type="text" name="authorising" required minlength="10" maxlength="10">
+    </label>
+    <label>
+        时间
+        <input type="text" name="time" required id="J_Time">
+    </label>
+    <input type="submit">
+</form>
+
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+<script>
+    $(function () {
+        $('#J_Time').flatpickr({
+            minDate: new Date(),
+            enableTime: true,
+            enableSeconds: true,
+            locale: 'zh'
+        });
+    })
+</script>
+</body>
+</html>
