@@ -141,7 +141,10 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Login asWechat(String openId) {
-        return loginRepository.findOne((root, query, cb) -> cb.equal(root.get("wechatUser").get("openId"), openId));
+        return loginRepository.findOne((root, query, cb)
+                -> cb.and(cb.equal(root.get("wechatUser").get("openId"), openId)
+                , cb.notEqual(root.type(), Manager.class))
+        );
     }
 
     @Override

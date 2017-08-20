@@ -8,7 +8,10 @@ import cn.lmjia.market.core.util.LoginAuthentication;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.wx.OpenId;
+import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.model.WeixinUserDetail;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
+import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +55,29 @@ public class WechatController {
     private VerificationCodeService verificationCodeService;
     @Autowired
     private ContactWayService contactWayService;
+    @Autowired
+    private StandardWeixinUserRepository standardWeixinUserRepository;
+    @Autowired
+    private PublicAccount publicAccount;
+
+    @GetMapping("/wechat/bindTo{id}")
+    @Transactional
+    @ResponseBody
+    public String bindTo(@OpenId String openId, @PathVariable("id") long id) {
+        Login login = loginService.asWechat(openId);
+        if (login != null)
+            return "你已经绑定了一个帐号。请更换微信号重试。";
+        login = loginService.get(id);
+        StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId(openId);
+        if (weixinUser == null) {
+            weixinUser = new StandardWeixinUser();
+            weixinUser.setOpenId(openId);
+            weixinUser.setAppId(publicAccount.getAppID());
+            weixinUser = standardWeixinUserRepository.save(weixinUser);
+        }
+        login.setWechatUser(weixinUser);
+        return "绑定成功";
+    }
 
     // name mobile  authCode
     @PostMapping("/wechatRegister")

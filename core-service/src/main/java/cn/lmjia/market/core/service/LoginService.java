@@ -116,6 +116,7 @@ public interface LoginService extends UserDetailsService {
 
     /**
      * 应当在数据约束上保证该返回值不可为多
+     * 结果中将过滤掉管理员的角色
      *
      * @param openId 微信的openId
      * @return null;如果尚未跟这个微信号产生关联
