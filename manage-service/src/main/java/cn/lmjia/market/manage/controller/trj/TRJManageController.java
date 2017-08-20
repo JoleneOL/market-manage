@@ -100,6 +100,14 @@ public class TRJManageController {
         return null;
     }
 
+    @GetMapping("/trj")
+    @PreAuthorize("hasAnyRole('ROOT')")
+    public String trjTestIndex() {
+        if (environment.acceptsProfiles(CoreConfig.ProfileUnitTest) || environment.acceptsProfiles("staging"))
+            return "_trj.html";
+        throw new IllegalArgumentException();
+    }
+
     @GetMapping("/mortgageTRGAppeal")
     public String appeal(long id, Model model) {
         final MainOrder order = mainOrderService.getOrder(id);

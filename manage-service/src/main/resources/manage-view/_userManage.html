@@ -21,7 +21,8 @@
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body data-edit-url="_userEdit.html" th:data-edit-url="@{/manageManagerEdit}">
+<body data-edit-url="_userEdit.html" th:data-edit-url="@{/manageManagerEdit}"
+      data-scan-url="http://placehold.it/228x178?text=SCAN" th:data-scan-url="@{/manage/bindManager}">
 <div class="wrapper wrapper-content">
     <div class="row m-b-sm">
         <div class="col-md-12">
@@ -74,6 +75,12 @@
         </div>
     </div>
 </div>
+
+<template id="J_ScanZone">
+    <span><b>请确保已关注微信公众号</b></span>
+    <img name="scanUrl" style="width: 200px;height: 200px;" src="http://placehold.it/200*200?text=Loading"/>
+</template>
+
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -93,5 +100,5 @@
 <script src="mock/mock-min.js" th:remove="all"></script>
 <script src="mock/api.js" th:remove="all"></script>
 <!--生产环境请移除 End-->
-<script src="./manage-resource/js/userManage.js?170712"></script>
+<script src="./manage-resource/js/userManage.js?170820"></script>
 </html>

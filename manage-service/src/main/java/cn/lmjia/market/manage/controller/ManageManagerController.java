@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
@@ -10,6 +11,8 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.SystemService;
+import com.google.zxing.WriterException;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.criteria.Predicate;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -56,6 +61,15 @@ public class ManageManagerController {
     private LoginService loginService;
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private QRController qrController;
+    @Autowired
+    private SystemService systemService;
+
+    @GetMapping("/manage/bindManager{id}")
+    public BufferedImage toScanImage(@PathVariable("id") long id) throws IOException, WriterException {
+        return qrController.toQRCode(systemService.toUrl("/wechat/bindTo" + id));
+    }
 
     /**
      * @param login 身份

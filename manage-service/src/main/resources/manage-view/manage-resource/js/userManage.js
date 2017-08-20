@@ -49,8 +49,10 @@ $(function () {
                 data: function (item) {
                     var a = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-edit"></i>&nbsp;编辑</a>';
                     a += '<a href="javascript:;" class="js-resetPassword" data-id="' + item.id + '"><i class="fa fa-repeat"></i>&nbsp;重置密码</a>';
-                    if (item.stateCode == 0)
+                    if (item.stateCode == 0) {
                         a += '<a href="javascript:;" class="js-disableUser" data-id="' + item.id + '" ><i class="fa fa-lock"></i>&nbsp;禁用</a>';
+                        a += '<a href="javascript:;" class="js-bindWechat" data-id="' + item.id + '" ><i class="fa fa-barcode"></i>&nbsp;扫码绑定微信</a>';
+                    }
                     else
                         a += '<a href="javascript:;" class="js-enableUser" data-id="' + item.id + '"><i class="fa fa-unlock"></i>&nbsp;启用</a>';
                     a += '<a href="javascript:;" class="js-delete" data-id="' + item.id + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
@@ -80,8 +82,19 @@ $(function () {
     });
 
     $(document).on('click', '.js-search', function () {
-
         table.ajax.reload();
+    }).on('click', '.js-bindWechat', function () {
+        var targetRegion = $('#J_ScanZone');
+        var targetUrl = $('body').attr('data-scan-url') + $(this).data('id');
+        layer.open({
+            content: targetRegion.html(),
+            area: ['200px', '350px'],
+            // btn: ['确认', '取消'],
+            zIndex: 9999,
+            success: function (layerUi) {
+                $('img[name=scanUrl]', layerUi).attr('src', targetUrl);
+            }
+        });
     }).on('click', '.js-edit', function () {
         // 需要获取一些参数供详情跳转
         window.location.href = $('body').attr('data-edit-url') + '?id=' + $(this).data('id');

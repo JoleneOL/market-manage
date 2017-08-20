@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://security.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="manager" type="cn.lmjia.market.core.entity.Manager"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -27,21 +28,21 @@
             <ul class="nav" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element">
-                        <span><img alt="image" class="img-circle" src="manage-resource/img/profile_small.jpg"/></span>
+                        <span><img alt="image" style="width: 64px;height: 64px;" class="img-circle"
+                                   src="manage-resource/img/profile_small.jpg"
+                                   th:src="${manager.wechatUser!=null?(manager.wechatUser.headImageUrl?:'http://placehold.it/64x64?text=??'):'http://placehold.it/64x64?text=??'}"/></span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
-                               <span class="block m-t-xs"><strong class="font-bold">Beaut-zihan</strong></span>
-                                <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
+                               <span class="block m-t-xs">
+                               <strong class="font-bold"
+                                       th:text="${manager.realName?:manager.loginName}">Beaut-zihan</strong></span>
+                                <span class="text-muted text-xs block"><span
+                                        th:text="${manager.loginTitle}">超级管理员</span><b class="caret"></b></span>
                                 </span>
                         </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                            <li><a class="J_menuItem" href="#">修改头像</a>
-                            </li>
-                            <li><a class="J_menuItem" href="#">个人资料</a>
-                            </li>
-                            <li><a class="J_menuItem" href="#">联系我们</a>
-                            </li>
-                            <li><a class="J_menuItem" href="#">信箱</a>
+                            <li><a class="J_menuItem" href="_changePassword.html"
+                                   th:href="@{/loginChangePassword}">修改密码</a>
                             </li>
                             <li class="divider"></li>
                             <li><a href="_index.html" th:href="@{/logout}">安全退出</a>
@@ -276,7 +277,8 @@
             </button>
             <nav class="page-tabs J_menuTabs">
                 <div class="page-tabs-content">
-                    <a href="javascript:;" class="active J_menuTab" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" title="双击Tab可刷新页面" data-id="_main.html">首页</a>
+                    <a href="javascript:;" class="active J_menuTab" data-toggle="tooltip" data-placement="bottom"
+                       data-trigger="hover" title="双击Tab可刷新页面" data-id="_main.html">首页</a>
                 </div>
             </nav>
             <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
