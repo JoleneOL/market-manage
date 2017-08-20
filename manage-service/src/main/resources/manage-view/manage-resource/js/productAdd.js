@@ -35,8 +35,13 @@ $(function () {
 
     $('#J_selectCat').chosen();
 
+    $('#J_datePicker').flatpickr({
+        minDate: new Date(),
+        locale: 'zh'
+    });
 
-    $('#J_addCategory').click(function() {
+
+    $('#J_addCategory').click(function () {
         layer.prompt({
             title: '添加类目',
             formType: 0
@@ -47,7 +52,7 @@ $(function () {
                 data: pass,
                 success: function () {
                     layer.msg('添加成功');
-                    $('#J_selectCat').append('<option value="'+pass+'">'+pass+'</option>')
+                    $('#J_selectCat').append('<option value="' + pass + '">' + pass + '</option>')
                         .trigger("chosen:updated");
                     layer.close(index);
                 },
