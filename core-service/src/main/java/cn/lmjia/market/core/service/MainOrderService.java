@@ -140,11 +140,30 @@ public interface MainOrderService {
 
     /**
      * 指定货品冻结库存：订单状态为{未支付，未发货}的订单货品数
+     *
      * @param product 指定货品
      * @return 冻结库存
      */
     @Transactional(readOnly = true)
     int lockedStock(Product product);
+
+    /**
+     * 计算指定货品的可用库存 = 仓库库存合计 - 冻结库存
+     *
+     * @param product 指定货品
+     * @return 可用库存
+     */
+    @Transactional(readOnly = true)
+    int usableStock(Product product);
+
+    /**
+     * 计算今日可销售库存 = 可用库存 / 计划售罄天数
+     *
+     * @param product 主要货品
+     * @return 限购库存
+     */
+    @Transactional(readOnly = true)
+    int limitStock(Product product);
 
 
 }

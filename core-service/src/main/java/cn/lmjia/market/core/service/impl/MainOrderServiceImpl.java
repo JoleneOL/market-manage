@@ -1,11 +1,6 @@
 package cn.lmjia.market.core.service.impl;
 
-import cn.lmjia.market.core.entity.Customer;
-import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood;
-import cn.lmjia.market.core.entity.MainGood_;
-import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.MainOrder_;
+import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
@@ -47,6 +42,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -340,6 +336,33 @@ public class MainOrderServiceImpl implements MainOrderService {
         cq.select(cb.sum(amountsRoot.value()));
         Object result = entityManager.createQuery(cq).getSingleResult();
         return result != null ? (int) result : 0;
+    }
+
+    @Override
+    public int usableStock(Product product) {
+        int totalUsableStock = stockService.usableStockTotal(product);
+        int lockedStock = lockedStock(product);
+        return lockedStock > totalUsableStock ? 0 : totalUsableStock - lockedStock;
+    }
+
+    @Override
+    public int limitStock(Product product) {
+        long limitDay;
+        LocalDateTime now = LocalDateTime.now();
+        //如果未设置限购时间，或者限购时间已经超过了，那么货品就不限购
+        if (product instanceof MainProduct) {
+            LocalDate planSellOutDate = ((MainProduct) product).getPlanSellOutDate();
+            if (planSellOutDate == null || planSellOutDate.isBefore(now.toLocalDate())) {
+                limitDay = 1L;
+            } else {
+                // TODO: 2017/8/21 这里要获取 核算时间的偏移量，单位：小时
+                limitDay = ChronoUnit.DAYS.between(now.minusHours(9).toLocalDate(), planSellOutDate) + 1;
+            }
+        } else {
+            limitDay = 1L;
+
+        }
+        return (int) (usableStock(product) / limitDay);
     }
 
     @Override
