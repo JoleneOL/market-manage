@@ -44,11 +44,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -327,6 +323,24 @@ public class MainOrderServiceImpl implements MainOrderService {
             }
             applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
         });
+    }
+
+    @Override
+    public int lockedStock(Product product) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        MapJoin<MainOrder, MainGood, Integer> amountsRoot = root.join(MainOrder_.amounts);
+        cq.where(cb.and(
+                cb.equal(amountsRoot.key(), product)
+                //需要锁定库存的订单状态：待付款，代发货
+                , cb.in(root.get(MainOrder_.orderStatus)
+                        .in(OrderStatus.forPay)
+                        .in(OrderStatus.forDeliver))
+        ));
+        cq.multiselect(cb.sum(amountsRoot.value()));
+        List resultList = entityManager.createQuery(cq).getResultList();
+        return resultList != null && resultList.size() > 0 ? (int) resultList.get(0) : 0;
     }
 
     @Override

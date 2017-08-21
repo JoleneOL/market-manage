@@ -4,10 +4,12 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
@@ -135,4 +137,14 @@ public interface MainOrderService {
     @EventListener(InstallationEvent.class)
     @Transactional
     void forInstallationEvent(InstallationEvent event);
+
+    /**
+     * 指定货品冻结库存：订单状态为{未支付，未发货}的订单货品数
+     * @param product 指定货品
+     * @return 冻结库存
+     */
+    @Transactional(readOnly = true)
+    int lockedStock(Product product);
+
+
 }
