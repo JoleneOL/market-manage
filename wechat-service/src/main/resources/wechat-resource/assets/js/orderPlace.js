@@ -250,7 +250,6 @@ $(function () {
 
     $('#J_goodsOK').click(function (e) {
         var dataJSON = getBuyData();
-        console.log(dataJSON);
         setBuyData(dataJSON);
         makeBuyList(dataJSON);
         closeMenu(e);

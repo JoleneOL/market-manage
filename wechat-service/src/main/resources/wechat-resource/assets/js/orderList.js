@@ -19,7 +19,7 @@ $(function () {
             '        </div>\n' +
             '        <div class="view-order-list_ex">\n' +
             '            <p class="view-order_ex_title">合计：￥' + obj.total + '</p>\n' +
-            '            <p class="view-order_ex_title">订单时间：' + obj.orderTime + '</p>\n' +
+            '            <p class="view-order_ex_title text-gray">订单时间：' + obj.orderTime + '</p>\n' +
             '        </div>\n' +
             '        <div class="view-order-list_ft">\n' +
             '            <div class="button_sp_area">\n' +
