@@ -20,7 +20,12 @@ import java.util.stream.Stream;
  */
 public class MainGoodsAndAmounts extends ArrayList<MainGoodsAndAmounts.MainGoodAndAmount> {
 
-    public static MainGoodsAndAmounts ofArray(String[] strings) {
+    public static MainGoodsAndAmounts ofArray(String[] originStrings) {
+        String[] strings;
+        if (originStrings.length == 2 && !originStrings[0].contains(","))
+            strings = new String[]{originStrings[0] + "," + originStrings[1]};
+        else
+            strings = originStrings;
         MainGoodsAndAmounts amounts = new MainGoodsAndAmounts();
         Stream.of(strings)
                 .map(s -> {

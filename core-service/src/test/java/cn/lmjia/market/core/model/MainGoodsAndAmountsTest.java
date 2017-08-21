@@ -21,6 +21,14 @@ public class MainGoodsAndAmountsTest extends CoreWebTest {
                 .andDo(print())
                 .andExpect(status().isOk())
         ;
+        mockMvc.perform(post("/MainGoodsAndAmountsTestController")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("goods", "1,1")
+//                .param("goods", "2,1")
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
     }
 
 }

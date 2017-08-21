@@ -71,19 +71,19 @@
             </div>
         </div>
     </div>
-    <div class="view-order-list" th:remove="all">
+    <div class="view-order-list">
         <div class="weui-cells__title">商品信息</div>
-        <div class="weui-cells">
+        <div class="weui-cells" th:each="record:${order.record.amountRecord}">
             <div class="weui-cell">
-                <div class="weui-cell__bd">量子立式净水机（黑色）</div>
-                <div class="weui-cell__ft text-error">￥<span>3000.00</span></div>
+                <div class="weui-cell__bd" th:text="${record.productName}">量子立式净水机（黑色）</div>
+                <div class="weui-cell__ft text-error" th:text="${record.price}">￥<span>3000.00</span></div>
             </div>
             <div class="weui-cell">
-                <div class="weui-cell__bd">SCRO-200LK-L</div>
-                <div class="weui-cell__ft text-error">x<span>1</span></div>
+                <div class="weui-cell__bd" th:text="${record.productType}">SCRO-200LK-L</div>
+                <div class="weui-cell__ft text-error">x<span th:text="${record.amount}">1</span></div>
             </div>
         </div>
-        <div class="weui-cells">
+        <div class="weui-cells" th:remove="all">
             <div class="weui-cell">
                 <div class="weui-cell__bd">量子立式净水机（白色）</div>
                 <div class="weui-cell__ft text-error">￥<span>5000.00</span></div>
@@ -94,8 +94,8 @@
             </div>
         </div>
         <div class="view-order-list_ex">
-            <p class="view-order_ex_title">合计：￥1841937</p>
-            <p class="view-order_ex_title text-gray">订单时间：2000-04-07</p>
+            <p class="view-order_ex_title">合计：<span th:text="${{order.orderDueAmountMoney}}">￥1841937</span></p>
+            <p class="view-order_ex_title text-gray">订单时间：<span th:text="${{order.orderTime}}">2000-04-07</span></p>
         </div>
     </div>
 </section>
