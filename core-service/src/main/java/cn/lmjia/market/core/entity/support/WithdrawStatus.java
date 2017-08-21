@@ -1,14 +1,16 @@
 package cn.lmjia.market.core.entity.support;
 
 /**
- *提现状态
+ * 提现状态
  */
 public enum WithdrawStatus {
     EMPTY("E"),
+    init("初始化"),
     /**
      * 待审核
      */
     checkPending("待审核"),
+    refuse("被拒绝"),
     /**
      * 提现成功
      */

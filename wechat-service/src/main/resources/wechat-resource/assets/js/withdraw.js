@@ -134,7 +134,7 @@ $(function () {
             }
         },
         errorPlacement: function (error, element) {
-            console.log(error);
+            console.log($(element).attr('name'), ' has error');
         },
         highlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').addClass("weui-cell_warn")

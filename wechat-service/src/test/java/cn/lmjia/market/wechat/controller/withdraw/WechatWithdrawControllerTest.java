@@ -8,8 +8,6 @@ import cn.lmjia.market.wechat.page.WechatMyPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawVerifyPage;
 import com.huotu.verification.repository.VerificationCodeRepository;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 
 public class WechatWithdrawControllerTest extends WechatTestBase {
-
-    private static final Log log = LogFactory.getLog(WechatWithdrawControllerTest.class);
 
     @Autowired
     private ReadService readService;
@@ -28,7 +24,7 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
     private VerificationCodeRepository verificationCodeRepository;
 
     @Test
-    public void go() {
+    public void go() throws InterruptedException {
         // 测试就是校验我们的工作成功
         // 就提现这个功能而言 我们要做的测试很简单
         // 1，新用户
@@ -43,11 +39,12 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
                 .as("这个时候没有可提现余额")
                 .isCloseTo(BigDecimal.ZERO, Offset.offset(new BigDecimal("0.000000000001")));
 
-        WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
-        log.info("准备失败的提现");
-        withdrawPage.randomRequestWithoutInvoice("1");
-        withdrawPage.reloadPageInfo();
-        withdrawPage.assertHaveTooltip();
+        // JS前端依然限制了
+//        WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
+//        log.info("准备失败的提现");
+//        withdrawPage.randomRequestWithoutInvoice("1");
+//        withdrawPage.reloadPageInfo();
+//        withdrawPage.assertHaveTooltip();
 
         // 2，新用户
         // 成功下了一笔订单 获得佣金X
@@ -59,17 +56,18 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
                 .as("有了")
                 .isCloseTo(amount, Offset.offset(new BigDecimal("0.000000000001")));
         // 强行输入 X+1 会看到错误信息
-        log.info("准备失败的提现");
-        withdrawPage = myPage.toWithdrawPage();
-        withdrawPage.randomRequestWithoutInvoice(amount.add(BigDecimal.ONE).toString());
-        withdrawPage.reloadPageInfo();
-        withdrawPage.assertHaveTooltip();
+//        log.info("准备失败的提现");
+        WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
+//        withdrawPage.randomRequestWithoutInvoice(amount.add(BigDecimal.ONE).toString());
+//        withdrawPage.reloadPageInfo();
+//        withdrawPage.assertHaveTooltip();
         // 调整为输入Y (Y<X)
         BigDecimal toWithdraw = amount.subtract(BigDecimal.ONE).divideToIntegralValue(new BigDecimal("2"));
 
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
 
         WechatWithdrawVerifyPage verifyPage = initPage(WechatWithdrawVerifyPage.class);
+        Thread.sleep(1000);
         // 此时验证手机号码
         verifyPage.submitCode("1234");
         // 成功验证
@@ -98,6 +96,7 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
         verifyPage = initPage(WechatWithdrawVerifyPage.class);
         // 此时验证手机号码
+        Thread.sleep(1000);
         verifyPage.submitCode("1234");
 
         // 此时会看到该提现申请
@@ -119,6 +118,7 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         withdrawPage.randomRequestWithInvoice(toWithdraw.toString());
         verifyPage = initPage(WechatWithdrawVerifyPage.class);
         // 此时验证手机号码
+        Thread.sleep(1000);
         verifyPage.submitCode("1234");
 
         // 回来看看提现记录呗

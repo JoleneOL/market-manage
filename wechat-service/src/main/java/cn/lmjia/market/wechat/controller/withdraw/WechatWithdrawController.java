@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
+import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import org.apache.commons.logging.Log;
@@ -56,19 +57,27 @@ public class WechatWithdrawController {
     public String withdrawNew(String payee, String account
             , String bank, String mobile, BigDecimal withdraw,
                               boolean invoice, String logisticsCode, String logisticsCompany
-            , @AuthenticationPrincipal Login login)
+            , @AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException, IOException {
         log.debug(login.getLoginName() + "申请提现");
         if (readService.currentBalance(login).getAmount().compareTo(withdraw) < 0) {
-            return "用户可提现余额不足";
+            return "redirect:/wechatWithdraw";
         }
         if (invoice)
-            withdrawService.withdrawNew(null, payee, account, bank, mobile, withdraw, logisticsCode
+            withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, logisticsCode
                     , logisticsCompany);
         else
-            withdrawService.withdrawNew(null, payee, account, bank, mobile, withdraw, null
+            withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
                     , null);
+        model.addAttribute("badCode", false);
+        return toVerify(login, model);
+    }
 
+    private String toVerify(Login login, Model model) {
+        String mobile = readService.mobileFor(login);
+        String start = mobile.substring(0, 3);
+        String end = mobile.substring(mobile.length() - 4, mobile.length());
+        model.addAttribute("mosaicMobile", start + "****" + end);
         return "wechat@withdrawVerify.html";
     }
 
@@ -83,8 +92,13 @@ public class WechatWithdrawController {
      * @return 手机验证码验证
      */
     @PostMapping("/withdrawVerify")
-    public String withdrawVerify(String mobile, String authCode) {
-        withdrawService.checkWithdrawCode(mobile, authCode);
+    public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model) {
+        try {
+            withdrawService.submitRequest(login, authCode);
+        } catch (IllegalVerificationCodeException ex) {
+            model.addAttribute("badCode", true);
+            return toVerify(login, model);
+        }
         return "wechat@withdrawSuccess.html";
     }
 }

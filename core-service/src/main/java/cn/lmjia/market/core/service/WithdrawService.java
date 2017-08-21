@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public interface WithdrawService {
 
     /**
-     * 新创建提现
+     * 新创建提现，新申请总是没法马上开始工作的。
      *
      * @param who              提现者
      * @param payee            收款人
@@ -51,10 +51,14 @@ public interface WithdrawService {
     BigDecimal getCostRateForNoInvoice();
 
     /**
+     * 提交指定用户最后的申请
+     *
+     * @param login 用户
+     * @param code  验证码
      * @throws IllegalVerificationCodeException - 验证码无效
      * @see com.huotu.verification.service.VerificationCodeService#verify(String, String, VerificationType)
      */
     @Transactional
-    void checkWithdrawCode(String mobile, String code) throws IllegalVerificationCodeException;
+    void submitRequest(Login login, String code) throws IllegalVerificationCodeException;
 
 }

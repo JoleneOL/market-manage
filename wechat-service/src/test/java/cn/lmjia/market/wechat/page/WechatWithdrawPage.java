@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 /**
- * 提现页面
+ * 我要提现
  * withdraw.html
  */
 public class WechatWithdrawPage extends AbstractWechatPage {
@@ -43,7 +43,7 @@ public class WechatWithdrawPage extends AbstractWechatPage {
 
     @Override
     public void validatePage() {
-        assertTitle("提现页面");
+        assertTitle("我要提现");
     }
 
     /**
