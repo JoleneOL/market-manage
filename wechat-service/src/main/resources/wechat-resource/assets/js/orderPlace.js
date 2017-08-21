@@ -196,6 +196,7 @@ $(function () {
         $goodListData.each(function () {
             var data = {};
             if ($(this).attr('data-amount') > 0) {
+                data['id'] = $(this).attr('data-id');
                 data['model'] = $(this).attr('data-model');
                 data['goods'] = $(this).attr('data-goods');
                 data['price'] = $(this).attr('data-price');
@@ -209,7 +210,7 @@ $(function () {
     function setBuyData(array) {
         $goodsListArea.empty();
         $.each(array, function (i, v) {
-            var hiddenInput = $('<input type="hidden" name="goods[]">').val(v['model'] + ',' + v['amount']);
+            var hiddenInput = $('<input type="hidden" name="goods[]">').val(v['id'] + ',' + v['amount']);
             $goodsListArea.append(hiddenInput);
         });
     }
