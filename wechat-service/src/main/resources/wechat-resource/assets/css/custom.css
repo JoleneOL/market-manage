@@ -794,6 +794,89 @@
   -webkit-flex: 1;
   flex: 1;
 }
+.view-order-lists .view-scroll-list {
+  background-color: #fbf9fe;
+}
+.view-order-list {
+  background-color: #fff;
+}
+.view-order-list .weui-cells__title {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  padding-top: 6px;
+}
+.view-order-list .weui-cells__title:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #e5e5e5;
+  color: #e5e5e5;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  z-index: 2;
+}
+.view-order-list .view-order-list_ex {
+  padding: 10px 15px;
+}
+.view-order-list .view-order-list_ex .view-order_ex_title {
+  text-align: right;
+}
+.view-order-list .weui-cells .weui-cell__bd,
+.view-order-list .weui-cells .weui-cell__ft {
+  font-size: 12px;
+}
+.view-order-list .weui-cells__title {
+  margin-bottom: .29em;
+}
+.view-order-list .view-order-list_ft {
+  position: relative;
+}
+.view-order-list .view-order-list_ft .button_sp_area {
+  text-align: right;
+}
+.view-order-list .view-order-list_ft .weui-btn {
+  margin-top: 7px;
+}
+.view-order-list .view-order-list_ft:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #e5e5e5;
+  color: #e5e5e5;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  z-index: 2;
+}
+.view-order-list .view-order-list_ft:after {
+  content: " ";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-bottom: 1px solid #e5e5e5;
+  color: #e5e5e5;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+  z-index: 2;
+}
 .weui-cells_checkbox .weui-check:checked + .weui-icon-checked:before {
   color: #009bb6;
 }
