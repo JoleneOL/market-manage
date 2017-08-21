@@ -110,6 +110,10 @@ public class UpgradeTest extends CoreServiceTest {
                     .isEqualTo(mainOrderRecord.getProductType());
             assertThat(record.getAmount())
                     .isEqualTo(mainOrderRecord.getAmount());
+            assertThat(record.getPrice())
+                    .isNotNull();
+            assertThat(record.getCommissioningPrice())
+                    .isNotNull();
         });
     }
 

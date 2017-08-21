@@ -37,8 +37,9 @@ public class MainProduct extends Product {
 
     /**
      * 计划售罄日期
+     * @since  {@link cn.lmjia.market.core.Version#muPartOrder}
      */
-    @Column(columnDefinition = "timestamp")
+    @Column(columnDefinition = "datetime")
     private LocalDate planSellOutDate;
 
     public Money getDepositMoney() {

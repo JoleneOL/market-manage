@@ -172,6 +172,10 @@ public class InitService {
                     case init:
                         break;
                     case muPartOrder:
+                        try {
+                            jdbcService.tableAlterAddColumn(MainProduct.class, "planSellOutDate", null);
+                        } catch (Throwable ignored) {
+                        }
                         jdbcService.tableAlterAddColumn(MainOrder.class, "goodTotalPriceAmountIndependent", null);
                         jdbcService.tableAlterAddColumn(MainOrder.class, "goodCommissioningPriceAmountIndependent", null);
                         jdbcService.tableAlterAddColumn(MainOrder.class, "orderBody", null);
