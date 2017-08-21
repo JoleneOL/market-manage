@@ -51,10 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -314,8 +311,9 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private Map<MainGood, Integer> randomMainOrderAmountSet() {
         Map<MainGood, Integer> data = new HashMap<>();
         int count = 2 + random.nextInt(2);
+        List<MainGood> forSaleGoodList = mainGoodService.forSale();
         while (count-- > 0) {
-            data.put(mainGoodService.forSale().stream()
+            data.put(forSaleGoodList.stream()
                     .filter(good -> !data.keySet().contains(good))
                     .max(new RandomComparator()).orElse(null), 1 + random.nextInt(10)
             );

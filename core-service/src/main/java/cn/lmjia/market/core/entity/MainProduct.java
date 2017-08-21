@@ -38,7 +38,7 @@ public class MainProduct extends Product {
     /**
      * 计划售罄日期
      */
-    @Column(columnDefinition = "timestamp")
+    @Column(columnDefinition = "datetime")
     private LocalDate planSellOutDate;
 
     public Money getDepositMoney() {
