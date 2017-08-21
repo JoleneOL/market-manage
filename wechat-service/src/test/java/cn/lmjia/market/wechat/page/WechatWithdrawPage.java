@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.page;
 
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,15 +10,32 @@ import org.openqa.selenium.support.FindBy;
  * 提现页面
  * withdraw.html
  */
-public class WechatWithdrawPage extends AbstractWechatPage{
+public class WechatWithdrawPage extends AbstractWechatPage {
 
+    @FindBy(name = "payee")
+    private WebElement payee;
+    @FindBy(id = "J_Bank")
+    private WebElement account;
+    @FindBy(name = "bank")
+    private WebElement bank;
+    @FindBy(name = "mobile")
     private WebElement mobile;
-    private WebElement authCode;
-    private WebElement name;
+    @FindBy(name = "withdraw")
+    private WebElement withdraw;
+
+    // 发票
+    @FindBy(id = "J_haveInvoice")
+    private WebElement haveInvoice;
+    @FindBy(id = "J_noInvoice")
+    private WebElement noInvoice;
+    // 物流
+    @FindBy(name = "logisticsCode")
+    private WebElement logisticsCode;
+    @FindBy(name = "logisticsCompany")
+    private WebElement logisticsCompany;
+
     @FindBy(css = "button[type=submit]")
     private WebElement submit;
-    @FindBy(id = "J_authCode")
-    private WebElement sendButton;
 
     public WechatWithdrawPage(WebDriver webDriver) {
         super(webDriver);
@@ -28,17 +46,42 @@ public class WechatWithdrawPage extends AbstractWechatPage{
         assertTitle("提现页面");
     }
 
-    public void sendAuthCode(String mobile) {
-        this.mobile.clear();
-        this.mobile.sendKeys(mobile);
-        sendButton.click();
+    /**
+     * 随机填入数据，然后不提供发票并且提现特定金额
+     *
+     * @param amount 特定金额
+     */
+    public void randomRequestWithoutInvoice(String amount) {
+        randomRequestWithAmount(amount);
+        noInvoice.click();
+        submit.click();
     }
 
-    public void submitSuccessAs(String name) {
-        authCode.clear();
-        authCode.sendKeys("6456");
-        this.name.clear();
-        this.name.sendKeys(name);
+    private void randomRequestWithAmount(String amount) {
+        payee.clear();
+        payee.sendKeys(RandomStringUtils.randomAlphabetic(8));
+        account.clear();
+        account.sendKeys(RandomStringUtils.randomNumeric(20));
+        bank.clear();
+        bank.sendKeys(RandomStringUtils.randomAlphabetic(8));
+        mobile.clear();
+        mobile.sendKeys("13" + RandomStringUtils.randomNumeric(9));
+        withdraw.clear();
+        withdraw.sendKeys(amount);
+    }
+
+    /**
+     * 随机填入数据，然后提供发票并且提现特定金额
+     *
+     * @param amount 特定金额
+     */
+    public void randomRequestWithInvoice(String amount) {
+        randomRequestWithAmount(amount);
+        haveInvoice.click();
+        logisticsCode.clear();
+        logisticsCode.sendKeys(RandomStringUtils.randomAlphabetic(10));
+        logisticsCompany.sendKeys(RandomStringUtils.randomAlphabetic(10));
+        logisticsCompany.sendKeys(RandomStringUtils.randomAlphabetic(10));
         submit.click();
     }
 }

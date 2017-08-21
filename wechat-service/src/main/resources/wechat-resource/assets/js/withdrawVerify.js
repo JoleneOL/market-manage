@@ -1,19 +1,16 @@
-$(function() {
+$(function () {
 
     if (window.document.location.search.indexOf('type=codeError') >= 0) {
         $.toptip('验证码错误');
     }
 
-   var sendAuthCodeUrl = $('body').attr('data-url-sendAuthCode');
+    var sendAuthCodeUrl = $('body').attr('data-url-sendAuthCode');
 
     $('#J_authCode').click(function () {
         var self = $(this);
         sendSMS(self);
         $.ajax(sendAuthCodeUrl, {
             method: 'POST',
-            data: {
-                mobile: $('#J_mobile').data('mobile')
-            },
             dataType: 'json',
             success: function (data) {
                 if (data.resultCode == 400) {
