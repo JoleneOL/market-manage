@@ -29,7 +29,8 @@
                                                class="weui-cell_link">订单列表</a></div>
         <div class="weui-cells">
             <div class="weui-cell weui-cell_access" id="J_addGoods">
-                <div class="weui-cell__bd"> <i class="fa fa-plus-circle text-big text-custom view-add-icon"></i>添加商品</div>
+                <div class="weui-cell__bd"><i class="fa fa-plus-circle text-big text-custom view-add-icon"></i>添加商品
+                </div>
                 <div class="weui-cell__ft"></div>
             </div>
             <div class="weui-cells view-mt-0" id="J_showGoodsList"></div>
@@ -189,20 +190,28 @@
                  data-goods="量子立式净水机（黑色）"
                  data-price="5000.00"
                  data-price-channel="-1000"
-                 data-amount="0">
+                 data-amount="0"
+                 th:each="good:${goodList}"
+                 th:data-id="${good.id}"
+                 th:data-price="${good.product.deposit}"
+                 th:data-price-channel="${good.channelChangeAsAdd}"
+                 th:data-service-charge="${good.product.install}"
+                 th:data-model="${good.product.code}"
+                 th:data-goods="${good.product.name}">
                 <!--暂时无缩略图-->
                 <!--<div class="weui-media-box__hd">-->
-                    <!--<img class="weui-media-box__thumb" src="http://iph.href.lu/120x120?text=Goods">-->
+                <!--<img class="weui-media-box__thumb" src="http://iph.href.lu/120x120?text=Goods">-->
                 <!--</div>-->
                 <div class="weui-media-box__bd">
                     <div class="weui-flex view-mb-4">
-                        <h4 class="view_flex-2 weui-media-box__title">量子立式净水机（黑色）</h4>
-                        <h4 class="view_flex-1 weui-media-box__title text-error">￥<span>5000.00</span></h4>
+                        <h4 class="view_flex-2 weui-media-box__title" th:text="${good.product.name}">量子立式净水机（黑色）</h4>
+                        <h4 class="view_flex-1 weui-media-box__title text-error">￥<span
+                                th:text="${#numbers.formatDecimal(good.totalPrice,1,2)}">5000.00</span></h4>
                     </div>
                     <div class="weui-flex">
                         <div class="view_flex-1">
-                            <p class="weui-media-box__desc view-mb-4">SCRO-200QL/A</p>
-                            <!--限购显示，不限购隐藏-->
+                            <p class="weui-media-box__desc view-mb-4" th:text="${good.product.code}">SCRO-200QL/A</p>
+                            <!--限购显示，不限购隐藏 可以嘛，给婷姐都考虑到了-->
                             <p class="weui-media-box__desc text-error">限购<span>100</span><span>台</span></p>
                         </div>
                         <div class="view_flex-1 view_flex-right text-right">
@@ -256,8 +265,10 @@
             <em class="weui-form-preview__value text-error">￥<span id="J_goodsTotal">0.00</span></em>
         </div>
         <div class="weui-form-preview__ft">
-            <a class="weui-form-preview__btn weui-form-preview__btn_default close-button" href="javascript:" id="J_goodsCancel">取消</a>
-            <button type="submit" class="weui-form-preview__btn view-form-preview__btn_primary" id="J_goodsOK">确定</button>
+            <a class="weui-form-preview__btn weui-form-preview__btn_default close-button" href="javascript:"
+               id="J_goodsCancel">取消</a>
+            <button type="submit" class="weui-form-preview__btn view-form-preview__btn_primary" id="J_goodsOK">确定
+            </button>
         </div>
     </div>
 </aside>
