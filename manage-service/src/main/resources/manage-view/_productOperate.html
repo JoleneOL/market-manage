@@ -67,10 +67,11 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">是否需要安装 </label>
                                             <div class="col-sm-6">
-                                                <input type="checkbox" class="form-control"
-                                                       name="installation" value="true"
-                                                       th:checked="${currentData!=null?currentData.installation:false}"
-                                                >
+                                                <label class="checkbox-inline i-checks">
+                                                    <input type="checkbox"
+                                                           name="installation"
+                                                           value="true"
+                                                           th:checked="${currentData!=null?currentData.installation:false}"></label>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -137,9 +138,16 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">计划售罄日期</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="日期" class="form-control"
-                                                       name="planSellOutDate" id="J_datePicker" value="2017-08-20"
-                                                       th:value="${currentData!=null && currentData.planSellOutDate != null ?#temporals.format(currentData.planSellOutDate,'yyyy-MM-dd'):''}">
+                                                <div class="input-group" id="J_datePicker">
+                                                    <input type="text" placeholder="日期"
+                                                           class="form-control flatpickr-input"
+                                                           data-input
+                                                           name="planSellOutDate" value="2017-08-20"
+                                                           th:value="${currentData!=null && currentData.planSellOutDate != null ?#temporals.format(currentData.planSellOutDate,'yyyy-MM-dd'):''}">
+                                                    <a class="input-group-addon input-button " title="clear" data-clear>
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
