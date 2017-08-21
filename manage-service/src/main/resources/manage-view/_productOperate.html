@@ -139,7 +139,7 @@
                                             <div class="col-sm-6">
                                                 <input type="text" placeholder="日期" class="form-control"
                                                        name="planSellOutDate" id="J_datePicker" value="2017-08-20"
-                                                       th:value="${currentData!=null?#temporals.format(currentData.planSellOutDate,'yyyy-MM-dd'):''}">
+                                                       th:value="${currentData!=null && currentData.planSellOutDate != null ?#temporals.format(currentData.planSellOutDate,'yyyy-MM-dd'):''}">
                                             </div>
                                         </div>
                                     </div>
