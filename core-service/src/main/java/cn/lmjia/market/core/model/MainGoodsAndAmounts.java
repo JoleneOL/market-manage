@@ -3,11 +3,15 @@ package cn.lmjia.market.core.model;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import lombok.Data;
+import org.springframework.util.NumberUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 包含一组商品id以及数量的集合
@@ -15,6 +19,21 @@ import java.util.stream.Collectors;
  * @author CJ
  */
 public class MainGoodsAndAmounts extends ArrayList<MainGoodsAndAmounts.MainGoodAndAmount> {
+
+    public static MainGoodsAndAmounts ofArray(String[] strings) {
+        MainGoodsAndAmounts amounts = new MainGoodsAndAmounts();
+        Stream.of(strings)
+                .map(s -> {
+                    if (StringUtils.isEmpty(s))
+                        return null;
+                    String[] data = s.split(",");
+                    return new MainGoodAndAmount(NumberUtils.parseNumber(data[0], Long.class)
+                            , NumberUtils.parseNumber(data[1], Integer.class));
+                })
+                .filter(Objects::nonNull)
+                .forEach(amounts::add);
+        return amounts;
+    }
 
     public Map<MainGood, Integer> toReal(MainGoodRepository mainGoodRepository) {
         Map<Long, Integer> map = new HashMap<>();

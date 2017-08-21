@@ -54,7 +54,7 @@ public abstract class AbstractMainOrderController {
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
-            , Address address, String mobile, long goodId, int amount, String mortgageIdentifier, Long channelId
+            , Address address, String mobile, String mortgageIdentifier, Long channelId
             , MainGoodsAndAmounts amounts) {
         Map<MainGood, Integer> realAmounts = amounts.toReal(mainGoodRepository);
         realAmounts.keySet().forEach(good -> {

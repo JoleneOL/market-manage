@@ -102,14 +102,14 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     @PostMapping("/wechatOrder")
     @Transactional
     public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender
-            , Address address, String mobile, long goodId, int amount
-            , String activityCode, @AuthenticationPrincipal Login login, Model model
+            , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
-            , String authorising, String idNumber, boolean installmentHuabai, MainGoodsAndAmounts amounts)
+            , String authorising, String idNumber, boolean installmentHuabai, String[] goods)
             throws SystemMaintainException, InvalidAuthorisingException {
         int age = 20;
-        MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile, goodId, amount
-                , activityCode, channelId, amounts);
+        MainGoodsAndAmounts amounts = MainGoodsAndAmounts.ofArray(goods);
+        MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,
+                activityCode, channelId, amounts);
         if (channelId != null) {
             Channel channel = channelService.get(channelId);
             //        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))

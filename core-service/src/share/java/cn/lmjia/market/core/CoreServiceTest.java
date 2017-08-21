@@ -7,11 +7,13 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
+import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.MainOrderService;
@@ -54,8 +56,10 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -98,6 +102,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
     //<editor-fold desc="自动登录相关">
     @Autowired
     private MainGoodService mainGoodService;
+    @Autowired
+    private ChannelService channelService;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -107,6 +113,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager() {
         return newRandomManager(ManageLevel.values());
     }
+    //</editor-fold>
 
     /**
      * 新增并且保存一个随机的管理员
@@ -117,7 +124,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager(ManageLevel... levels) {
         return newRandomManager(randomMobile(), UUID.randomUUID().toString(), levels);
     }
-    //</editor-fold>
 
     /**
      * 新增并且保存一个随机的管理员
@@ -336,11 +342,14 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 .param("address", request.getAddress().getStandardWithoutOther())
                 .param("fullAddress", request.getAddress().getOtherAddress())
                 .param("mobile", request.getMobile())
-                .param("goodId", String.valueOf(request.getGood().getId()))
-                .param("leasedType", request.getGood().getProduct().getCode())
-                .param("amount", String.valueOf(request.getAmount()))
+//                .param("goodId", String.valueOf(request.getGood().getId()))
+//                .param("leasedType", request.getGood().getProduct().getCode())
+//                .param("amount", String.valueOf(request.getAmount()))
                 .param("activityCode", request.getCode())
                 .param("recommend", String.valueOf(request.getRecommend().getId()));
+
+        newBuilder = request.forGoods(newBuilder);
+
         if (request.getChannelId() != null)
             newBuilder = newBuilder.param("channelId", String.valueOf(request.getChannelId()));
         if (request.isInstallmentHuabai())
@@ -351,7 +360,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
         return newBuilder.param("authorising", request.getAuthorising())
                 .param("idNumber", request.getIdNumber());
     }
-
 
     /**
      * @return 随机的下单请求原数据
@@ -388,23 +396,33 @@ public abstract class CoreServiceTest extends SpringWebTest {
      */
     protected OrderRequest randomOrderRequest(Long channelId, MainGood goodInput, String authorising, String idNumber) {
         Address address = randomAddress();
-        MainGood good;
-        if (goodInput == null)
-            good = mainGoodRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        // 特定就1个，如果没有特定 就随机几个
+        Set<MainGood> goodSet;
+        Channel channel;
+        if (channelId != null)
+            channel = channelService.get(channelId);
         else
-            good = goodInput;
+            channel = null;
+
+        if (goodInput == null) {
+            goodSet = mainGoodService.forSale(channel).stream().sorted(new RandomComparator()).limit(1 + random.nextInt(2))
+                    .collect(Collectors.toSet());
+        } else
+            goodSet = Collections.singleton(goodInput);
+
         String code = random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", "");
         Login recommend = randomLogin(true);
         final String name = "W客户" + RandomStringUtils.randomAlphabetic(6);
         final int age = 20 + random.nextInt(50);
         final int gender = 1 + random.nextInt(2);
         final String mobile = randomMobile();
-        final int amount = 1 + random.nextInt(10);
+//        final int amount = 1 + random.nextInt(10);
         return new OrderRequest(
-                address, good, code
+                address, code
                 , recommend, name, age, gender
-                , mobile, amount
-                , authorising, idNumber, channelId
+                , mobile
+                , authorising, idNumber, channelId, goodSet.stream()
+                .collect(Collectors.toMap(Function.identity(), good -> 1 + random.nextInt(10)))
         );
     }
 

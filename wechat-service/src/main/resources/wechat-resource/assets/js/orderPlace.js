@@ -210,7 +210,7 @@ $(function () {
     function setBuyData(array) {
         $goodsListArea.empty();
         $.each(array, function (i, v) {
-            var hiddenInput = $('<input type="hidden" name="goods[]">').val(v['id'] + ',' + v['amount']);
+            var hiddenInput = $('<input type="hidden" name="goods">').val(v['id'] + ',' + v['amount']);
             $goodsListArea.append(hiddenInput);
         });
     }
