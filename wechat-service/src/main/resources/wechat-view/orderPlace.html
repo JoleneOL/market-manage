@@ -32,6 +32,7 @@
                 <div class="weui-cell__bd"> <i class="fa fa-plus-circle text-big text-custom view-add-icon"></i>添加商品</div>
                 <div class="weui-cell__ft"></div>
             </div>
+            <div class="weui-cells view-mt-0" id="J_showGoodsList"></div>
         </div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -162,7 +163,7 @@
                 </div>
             </label>
         </div>
-        <div class="weui-cells__tips text-right displayNone" id="J_installmentInfo" th:remove="all">
+        <div class="weui-cells__tips text-right displayNone" id="J_installmentInfo">
             分期金额￥<span class="js-total">**</span>&nbsp;&nbsp;分24期&nbsp;
             ￥<span class="js-installment">**</span>/期
         </div>
@@ -186,7 +187,7 @@
                  data-model="SCRO-200QL/A"
                  data-goods="量子立式净水机（黑色）"
                  data-price="5000.00"
-                 data-price-channel="0"
+                 data-price-channel="-1000"
                  data-amount="0">
                 <!--暂时无缩略图-->
                 <!--<div class="weui-media-box__hd">-->
@@ -221,7 +222,7 @@
                  data-model="SP70"
                  data-goods="量子食品优化宝"
                  data-price="9800.00"
-                 data-price-channel="-100"
+                 data-price-channel="-800"
                  data-amount="0"
                  th:remove="all">
                 <div class="weui-media-box__bd">
@@ -254,7 +255,7 @@
         </div>
         <div class="weui-form-preview__ft">
             <a class="weui-form-preview__btn weui-form-preview__btn_default close-button" href="javascript:" id="J_goodsCancel">取消</a>
-            <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" id="J_goodsOK">确定</button>
+            <button type="submit" class="weui-form-preview__btn view-form-preview__btn_primary" id="J_goodsOK">确定</button>
         </div>
     </div>
 </aside>

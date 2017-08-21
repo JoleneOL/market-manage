@@ -16,62 +16,6 @@ $(function () {
         }
     });
 
-    // 待删除
-    // $('#J_goodsAmount').keyup(function () {
-    //     countTotal();
-    // });
-    //
-    // $('#J_goodsType').change(function () {
-    //     changeAllMoney($(this));
-    //     countTotal();
-    // });
-    //
-    //
-    // function countTotal() {
-    //     var orderTotal = $('#J_orderTotal');
-    //     var price = +$('#J_userCost').find('span').eq(0).text();
-    //     var cost = +$('#J_serviceCharge').find('span').eq(0).text();
-    //     var channel = +orderTotal.attr('data-price-channel');
-    //     var amout = +$('#J_goodsAmount').val();
-    //     var total = (price + channel + cost) * amout;
-    //
-    //
-    //     orderTotal.find('strong').text(total);
-    //     installmentFunc(total);
-    //     $('input[name="orderTotal"]').val(total);
-    // }
-    //
-    // function changeAllMoney($ele) {
-    //     var $type = $ele.find('option:checked');
-    //     // var deposit = $type.attr('data-deposit');
-    //     // var isNeed = $type.attr('data-need-install');
-    //     // var cost = $type.attr('data-day-cost');
-    //
-    //     var price = $type.attr('data-price');
-    //     // 渠道溢价或者优惠，就保存在总价那个dom中 如果以后有显示该费用的需求，再放到别的地方去
-    //     var channel = $type.attr('data-price-channel');
-    //     $('#J_orderTotal').attr('data-price-channel', channel);
-    //     var model = $type.attr('data-model');
-    //     var serviceCharge = $type.attr('data-service-charge');
-    //
-    //
-    //     var fee = serviceCharge ? parseInt(serviceCharge) : 0;
-    //
-    //     if (fee > 0) {
-    //         $('.js-service').removeClass('displayNone');
-    //         $('#J_serviceCharge').find('span').eq(0).text(fee);
-    //     } else {
-    //         $('.js-service').addClass('displayNone');
-    //         $('#J_serviceCharge').find('span').eq(0).text(0);
-    //     }
-    //     $('#J_userCost').find('span').eq(0).text(price);
-    //     $('#J_leasedType').val(model);
-    //
-    //     // $('#J_userDeposit').find('span').eq(0).text(deposit);
-    //     // $('#J_package').val('服务费 ' + cost + '元 / 天');
-    // }
-    // 待删除
-
     var installment = $('#J_installment');
     var submitBtn = $('#J_submitBtn');
     var info = $('#J_installmentInfo');
@@ -138,7 +82,10 @@ $(function () {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
         },
         submitHandler: function (form) {
-            form.submit();
+            if($showGoodsList.children().length > 0)
+                form.submit();
+            else
+                $.toptip('商品列表不能为空', 1000);
         }
     });
     $('#J_needInvoice').click(function () {
@@ -242,6 +189,7 @@ $(function () {
 
     var $goodListData = $('#J_goodsList').find('.js-goods-list');
     var $goodsListArea = $('#J_goodsListArea');
+    var $showGoodsList = $('#J_showGoodsList');
 
     function getBuyData() {
         var dataJSON = [];
@@ -258,12 +206,28 @@ $(function () {
         return dataJSON;
     }
 
-
-    function setButData(array) {
+    function setBuyData(array) {
         $goodsListArea.empty();
         $.each(array, function (i, v) {
-            var hiddenInput = $('<input type="hidden" name="goods[]">').val(v['model']+','+v['amount']);
+            var hiddenInput = $('<input type="hidden" name="goods[]">').val(v['model'] + ',' + v['amount']);
             $goodsListArea.append(hiddenInput);
+        });
+    }
+
+    function makeBuyList(array) {
+        $showGoodsList.empty();
+        $.each(array, function (i, v) {
+            var goods = $('<div class="weui-cell">\n' +
+                '              <div class="weui-cell__bd">\n' +
+                '                  <p>' + v['goods'] + '</p>\n' +
+                '                  <p class="weui-media-box__desc">' + v['model'] + '</p>\n' +
+                '              </div>\n' +
+                '              <div class="weui-cell__bd">\n' +
+                '                  <p class="text-error text-right">￥<span>' + v['price'] + '</span></p>\n' +
+                '                  <p class="text-error text-right">x<span>' + v['amount'] + '</span></p>\n' +
+                '              </div>\n' +
+                '          </div>');
+            $showGoodsList.append(goods);
         });
     }
 
@@ -285,7 +249,9 @@ $(function () {
 
     $('#J_goodsOK').click(function (e) {
         var dataJSON = getBuyData();
-        if (dataJSON.length > 0) setButData(dataJSON);
+        console.log(dataJSON);
+        setBuyData(dataJSON);
+        makeBuyList(dataJSON);
         closeMenu(e);
     });
 
@@ -388,12 +354,15 @@ $(function () {
     function countTotal(ele, flag) {
         var nowTotal = Number(goodsTotal.text());
         var parent = $(ele).closest('.js-goods-list');
-        var price = Number(parent.attr('data-price'));
+        var price = Number(parent.attr('data-price')) + Number(parent.attr('data-price-channel'));
         if (flag)
             nowTotal += price;
         else
             nowTotal -= price;
         goodsTotal.text(nowTotal.toFixed(2));
+        $('input[name="orderTotal"]').val(nowTotal);
+        installmentFunc(nowTotal);
+        $('#J_orderTotal').find('strong').text(nowTotal.toFixed(2));
     }
 
     Spinner.init();
