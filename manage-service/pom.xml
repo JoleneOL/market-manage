@@ -121,7 +121,7 @@
                         <configuration>
                             <sources>
                                 <source>target/demo-sources</source>
-                                <!--<source>src/share/java</source>-->
+                                <source>src/share/java</source>
                             </sources>
                         </configuration>
                     </execution>

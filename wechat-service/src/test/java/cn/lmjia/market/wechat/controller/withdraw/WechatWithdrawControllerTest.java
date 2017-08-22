@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
 import cn.lmjia.market.wechat.WechatTestBase;
@@ -149,7 +150,8 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
      * @param login
      */
     private void managerApproval(Login login) {
-
+        updateAllRunWith(newRandomManager(ManageLevel.root));
+//        withdrawManage
     }
 
     /**

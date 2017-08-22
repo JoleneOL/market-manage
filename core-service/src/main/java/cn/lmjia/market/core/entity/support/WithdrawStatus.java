@@ -10,11 +10,11 @@ public enum WithdrawStatus {
      * 待审核
      */
     checkPending("待审核"),
-    refuse("被拒绝"),
+    refuse("已拒绝"),
     /**
      * 提现成功
      */
-    success("成功");
+    success("已成功");
 
     private final String message;
 

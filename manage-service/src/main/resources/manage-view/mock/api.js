@@ -590,3 +590,28 @@ Mock.mock(/\/orderData\/logistics\/\d/, 'get', {
         }
     ]
 });
+
+Mock.mock(/\/manage\/withdraws/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|5": [
+        {
+            'id': '@id',
+            'user': '@cname',
+            'userLevel': '@pick(经销商,市代理,爱心天使)',
+            'payee': '@cname',
+            'bank': '某银行',
+            'account': '@id',
+            'mobile': /^1([34578])\d{9}$/,
+            'amount': '@integer(100, 10000)',
+            'actualAmount': '@integer(100, 10000)',
+            'requestTime': '@datetime("yyyy-MM-dd")',
+            'logisticsCompany': '@pick(["-", "某公司"])',
+            'logisticsCode': '@pick(["-", "@id"])',
+            'comment': null,
+            'status': '@pick(["待审核","已拒绝","已成功"])',
+            'statusCode': '@integer(2, 4)'
+        }
+    ]
+});
