@@ -82,7 +82,7 @@ $(function () {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
         },
         submitHandler: function (form) {
-            if($showGoodsList.children().length > 0)
+            if ($showGoodsList.children().length > 0)
                 form.submit();
             else
                 $.toptip('商品列表不能为空', 1000);
@@ -327,19 +327,23 @@ $(function () {
                 var max = $(this).attr('max') || 9999;
                 var valid = self.validate($(this), val);
                 var parent = $(this).closest('.js-goods-list');
-                if (valid !== 0) val = (valid === -1) ? function () {
-                    $(this).prev('button').addClass('disabled').prop('disabled', true);
-                    $(this).next('button').removeClass('disabled').prop('disabled', false);
-                    return min;
-                } : function () {
-                    $(this).prev('button').removeClass('disabled').prop('disabled', false);
-                    $(this).next('button').addClass('disabled').prop('disabled', true);
-                    return max;
-                };
+
+                if (valid !== 0) {
+                    if (valid === -1) {
+                        $(this).prev('button').addClass('disabled').prop('disabled', true);
+                        $(this).next('button').removeClass('disabled').prop('disabled', false);
+                        val = min;
+                    } else {
+                        $(this).prev('button').removeClass('disabled').prop('disabled', false);
+                        $(this).next('button').addClass('disabled').prop('disabled', true);
+                        val = max;
+                    }
+                }
                 $(this).val(val);
-                var flag = parent.attr('data-amount') < val;
+                var flag = +parent.attr('data-amount') < +val;
+                var step = Math.abs(parent.attr('data-amount') - val);
                 parent.attr('data-amount', val);
-                countTotal(this, flag);
+                countTotal(this, step, flag);
             });
         },
         init: function () {
@@ -351,14 +355,14 @@ $(function () {
 
     var goodsTotal = $('#J_goodsTotal');
 
-    function countTotal(ele, flag) {
+    function countTotal(ele, step, flag) {
         var nowTotal = Number(goodsTotal.text());
         var parent = $(ele).closest('.js-goods-list');
         var price = Number(parent.attr('data-price')) + Number(parent.attr('data-price-channel'));
         if (flag)
-            nowTotal += price;
+            nowTotal += (price * step);
         else
-            nowTotal -= price;
+            nowTotal -= (price * step);
         goodsTotal.text(nowTotal.toFixed(2));
         $('input[name="orderTotal"]').val(nowTotal);
         installmentFunc(nowTotal);

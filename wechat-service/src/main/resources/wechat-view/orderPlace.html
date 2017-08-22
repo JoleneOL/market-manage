@@ -188,8 +188,8 @@
                  data-id="1"
                  data-model="SCRO-200QL/A"
                  data-goods="量子立式净水机（黑色）"
-                 data-price="5000.00"
-                 data-price-channel="-1000"
+                 data-price="1000.00"
+                 data-price-channel="0"
                  data-amount="0"
                  th:each="good:${goodList}"
                  th:data-id="${good.id}"
@@ -206,7 +206,7 @@
                     <div class="weui-flex view-mb-4">
                         <h4 class="view_flex-2 weui-media-box__title" th:text="${good.product.name}">量子立式净水机（黑色）</h4>
                         <h4 class="view_flex-1 weui-media-box__title text-error">￥<span
-                                th:text="${#numbers.formatDecimal(good.totalPrice,1,2)}">5000.00</span></h4>
+                                th:text="${#numbers.formatDecimal(good.totalPrice,1,2)}">1000.00</span></h4>
                     </div>
                     <div class="weui-flex">
                         <div class="view_flex-1">
