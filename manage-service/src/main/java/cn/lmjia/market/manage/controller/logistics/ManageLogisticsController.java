@@ -27,6 +27,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.MapJoin;
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -51,6 +52,9 @@ public class ManageLogisticsController {
         model.addAttribute("currentData", shiftUnit);
         if (shiftUnit instanceof HaierOrder)
             model.addAttribute("haierOrder", shiftUnit);
+        model.addAttribute("events", shiftUnit.getEvents().values().stream()
+                .sorted((o1, o2) -> o2.getTime().compareTo(o1.getTime()))
+                .collect(Collectors.toList()));
         return "_logisticsDetail.html";
     }
 
