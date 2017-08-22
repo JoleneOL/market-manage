@@ -72,7 +72,7 @@ public class Login implements UserDetails {
     /**
      * 添加时间
      */
-    @Column(columnDefinition = "timestamp")
+    @Column(columnDefinition = "timestamp", updatable = false)
     private LocalDateTime createdTime;
     /**
      * 引导者

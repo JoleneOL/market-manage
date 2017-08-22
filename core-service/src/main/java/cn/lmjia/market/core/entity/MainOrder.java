@@ -95,7 +95,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      */
     @Column(length = 32)
     private String mortgageIdentifier;
-    @Column(columnDefinition = "timestamp")
+    @Column(columnDefinition = "timestamp", updatable = false)
     private LocalDateTime orderTime;
 
     /**

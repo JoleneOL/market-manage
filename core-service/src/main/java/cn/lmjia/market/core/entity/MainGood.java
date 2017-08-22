@@ -41,7 +41,7 @@ public class MainGood {
     private MainProduct product;
     @ManyToOne
     private Channel channel;
-    @Column(columnDefinition = "timestamp")
+    @Column(columnDefinition = "timestamp", updatable = false)
     private LocalDateTime createTime = LocalDateTime.now();
 
     public static Expression<BigDecimal> getTotalPrice(From<?, MainGood> path, CriteriaBuilder criteriaBuilder) {
