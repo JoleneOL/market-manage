@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
+import cn.lmjia.market.manage.page.ManageWithdrawPage;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.WechatMyPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawPage;
@@ -142,6 +143,10 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
      * @param login
      */
     private void managerSawInvoice(Login login) {
+        updateAllRunWith(newRandomManager(ManageLevel.root));
+        ManageWithdrawPage.of(this, driver)
+                .assertInvoice(readService.nameForPrincipal(login))
+                .isTrue();
     }
 
     /**
@@ -149,9 +154,10 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
      *
      * @param login
      */
-    private void managerApproval(Login login) {
+    private void managerApproval(Login login) throws InterruptedException {
         updateAllRunWith(newRandomManager(ManageLevel.root));
-//        withdrawManage
+        ManageWithdrawPage.of(this, driver)
+                .approval(readService.nameForPrincipal(login));
     }
 
     /**
@@ -159,8 +165,10 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
      *
      * @param login
      */
-    private void managerReject(Login login) {
-
+    private void managerReject(Login login) throws InterruptedException {
+        updateAllRunWith(newRandomManager(ManageLevel.root));
+        ManageWithdrawPage.of(this, driver)
+                .reject(readService.nameForPrincipal(login));
     }
 
 //    @Test

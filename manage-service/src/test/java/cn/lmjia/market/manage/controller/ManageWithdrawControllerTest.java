@@ -26,6 +26,8 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
     private WithdrawService withdrawService;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private WithdrawRequestRepository withdrawRequestRepository;
 
     @Test
     public void go() throws InterruptedException {
@@ -56,40 +58,6 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
         page.refresh();
         page.assertInvoice(readService.nameForPrincipal(target))
                 .isTrue();
-
-
-    }
-
-    @Test
-    public void go() throws InterruptedException {
-
-
-        // 可以检查是否存在发票
-        Login target = newRandomLogin();
-        WithdrawRequest request1 = randomWithdrawRequest(target);
-
-        updateAllRunWith(newRandomManager(ManageLevel.root));
-        ManageWithdrawPage page = ManageWithdrawPage.of(this, driver);
-        page.reject(readService.nameForPrincipal(target));
-
-        assertThat(withdrawService.get(request1.getId()).getWithdrawStatus())
-                .isEqualByComparingTo(WithdrawStatus.refuse);
-
-        WithdrawRequest request2 = randomWithdrawRequest(target);
-
-        page.refresh();
-        page.approval(readService.nameForPrincipal(target));
-
-        assertThat(withdrawService.get(request2.getId()).getWithdrawStatus())
-                .isEqualByComparingTo(WithdrawStatus.success);
-
-        // 提交一个带发票的
-        randomWithdrawRequestWithInvoice(target);
-
-        page.refresh();
-        page.assertInvoice(readService.nameForPrincipal(target))
-                .isTrue();
-
 
     }
 
@@ -99,8 +67,7 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
                 , randomMobile(), new BigDecimal("100"), RandomStringUtils.randomNumeric(10)
                 , RandomStringUtils.randomAlphabetic(10));
         mockPadding(request);
-    }    @Autowired
-    private WithdrawRequestRepository withdrawRequestRepository;
+    }
 
     private void mockPadding(WithdrawRequest request) {
         request.setWithdrawStatus(WithdrawStatus.checkPending);

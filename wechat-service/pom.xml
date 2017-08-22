@@ -113,6 +113,7 @@
                                 <copy todir="target/demo-sources">
                                     <fileset dir="../core-service/src/share/java"/>
                                     <fileset dir="../dealer/src/share/java"/>
+                                    <fileset dir="../manage-service/src/share/java"/>
                                 </copy>
                             </tasks>
                         </configuration>
