@@ -93,7 +93,7 @@ public class WithdrawRequest {
      * 备注信息，最多100个字
      */
     @Column(length = 100)
-    private String remark;
+    private String comment;
     /**
      * 处理时间
      */

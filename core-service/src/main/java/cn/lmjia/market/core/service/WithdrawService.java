@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service;
 
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
@@ -61,4 +62,27 @@ public interface WithdrawService {
     @Transactional
     void submitRequest(Login login, String code) throws IllegalVerificationCodeException;
 
+    @Transactional(readOnly = true)
+    WithdrawRequest get(long id);
+
+    /**
+     * 拒绝特定提现申请
+     *
+     * @param manager   处理人
+     * @param requestId 请求
+     * @param comment   留言
+     */
+    @Transactional
+    void reject(Manager manager, long requestId, String comment);
+
+    /**
+     * 通过特定提现申请
+     *
+     * @param manager                 处理人
+     * @param requestId               请求
+     * @param comment                 留言
+     * @param transactionRecordNumber 收据id
+     */
+    @Transactional
+    void approval(Manager manager, long requestId, String comment, String transactionRecordNumber);
 }

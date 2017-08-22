@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
@@ -71,5 +72,28 @@ public class WithdrawServiceImpl implements WithdrawService {
                 , cb.equal(root.get(WithdrawRequest_.withdrawStatus), WithdrawStatus.init)
         ), new PageRequest(0, 1, Sort.Direction.DESC, "requestTime"))
                 .getContent().get(0).setWithdrawStatus(WithdrawStatus.checkPending);
+    }
+
+    @Override
+    public WithdrawRequest get(long id) {
+        return withdrawRequestRepository.getOne(id);
+    }
+
+    @Override
+    public void reject(Manager manager, long requestId, String comment) {
+        WithdrawRequest request = get(requestId);
+        request.setWithdrawStatus(WithdrawStatus.refuse);
+        request.setManageBy(manager);
+        request.setManageTime(LocalDateTime.now());
+        request.setComment(comment);
+    }
+
+    @Override
+    public void approval(Manager manager, long requestId, String comment, String transactionRecordNumber) {
+        WithdrawRequest request = get(requestId);
+        request.setWithdrawStatus(WithdrawStatus.success);
+        request.setManageBy(manager);
+        request.setManageTime(LocalDateTime.now());
+        request.setComment(comment);
     }
 }

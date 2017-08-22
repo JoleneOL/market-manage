@@ -5,7 +5,7 @@ package cn.lmjia.market.core.entity.support;
  */
 public enum WithdrawStatus {
     EMPTY("E"),
-    init("初始化"),
+    init("待验证"),
     /**
      * 待审核
      */
