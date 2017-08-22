@@ -32,7 +32,7 @@ public class Factory implements LogisticsDestination, LogisticsSource {
      */
     private boolean enable = true;
 
-    @Column(columnDefinition = "timestamp", updatable = false)
+    @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime;
 
     @Column(length = 100)
