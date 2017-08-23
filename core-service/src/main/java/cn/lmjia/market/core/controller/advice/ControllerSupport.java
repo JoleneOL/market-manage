@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.controller.advice;
 
+import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
@@ -39,6 +40,11 @@ public class ControllerSupport {
     @ResponseBody
     public ApiResult sawFrequentlySendException(FrequentlySendException ex) {
         return ApiResult.withCodeAndMessage(400, ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(MainGoodLimitStockException.class)
+    public void sawMainGoodLimitStockException(MainGoodLimitStockException ex){
+        // TODO: 2017/8/23 库存不足以及限购的处理
     }
 
     @ExceptionHandler(Throwable.class)

@@ -1,15 +1,19 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
+import cn.lmjia.market.core.exception.MainGoodLimitStockException;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.StockService;
@@ -31,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.NumberUtils;
@@ -43,11 +48,7 @@ import javax.persistence.criteria.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -86,13 +87,25 @@ public class MainOrderServiceImpl implements MainOrderService {
     private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private SystemStringService systemStringService;
+    @Autowired
+    private Environment env;
+
+    // TODO: 2017/8/23 定义schedule来清空Map
+    private Map<String, Integer> productStockMap = new HashMap<>();
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
-            , Address installAddress, Map<MainGood, Integer> amounts, String mortgageIdentifier) {
+            , Address installAddress, Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException {
         // 客户处理
         Customer customer = customerService.getNoNullCustomer(name, mobile, loginService.lowestAgentLevel(getEnjoyability(who))
                 , recommendBy);
+        //检查货品库存数量
+        // TODO: 2017/8/24 单元测试初始化时应该对货品的可用数量复制
+        if(!env.acceptsProfiles(CoreConfig.ProfileUnitTest)){
+            checkGoodStock(amounts);
+        }
 
         customer.setInstallAddress(installAddress);
         customer.setGender(gender);
@@ -113,6 +126,7 @@ public class MainOrderServiceImpl implements MainOrderService {
 
         queryDailySerialId(now, order);
         order.setOrderStatus(OrderStatus.forPay);
+        // TODO: 2017/8/23 订单创建成功后建立Eexecutor
         return mainOrderRepository.saveAndFlush(order);
     }
 
@@ -322,31 +336,43 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
-    public int lockedStock(Product product) {
+    public int sumProductNum(Product product) {
+        return sumProductNum(product,null,null,OrderStatus.forPay, OrderStatus.forDeliver);
+    }
+
+    @Override
+    public int sumProductNum(Product product, LocalDateTime beginTime, LocalDateTime endTime,OrderStatus... orderStatuses) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery cq = cb.createQuery();
         Root<MainOrder> root = cq.from(MainOrder.class);
+        //今日核算时间之前的订单
         MapJoin<MainOrder, MainGood, Integer> amountsRoot = root.join(MainOrder_.amounts);
-        cq.where(cb.and(
-                cb.equal(amountsRoot.key().get(MainGood_.product), product)
-                //需要锁定库存的订单状态：待付款，代发货
-                , root.get(MainOrder_.orderStatus)
-                        .in(OrderStatus.forPay, OrderStatus.forDeliver)
-        ));
+        List<Predicate> list = new ArrayList<>();
+        list.add(cb.isFalse(root.get(MainOrder_.isClose)));
+        list.add(cb.equal(amountsRoot.key().get(MainGood_.product), product));
+        if(orderStatuses != null){
+            list.add(root.get(MainOrder_.orderStatus)
+                    .in(orderStatuses));
+        }
+        if (beginTime != null) {
+            list.add(cb.greaterThanOrEqualTo(root.get(MainOrder_.orderTime), beginTime));
+        }
+        if (endTime != null) {
+            list.add(cb.lessThanOrEqualTo(root.get(MainOrder_.orderTime), endTime));
+        }
+        Predicate[] p = new Predicate[list.size()];
+        cq.where(cb.and(list.toArray(p)));
         cq.select(cb.sum(amountsRoot.value()));
         Object result = entityManager.createQuery(cq).getSingleResult();
         return result != null ? (int) result : 0;
     }
 
     @Override
-    public int usableStock(Product product) {
-        int totalUsableStock = stockService.usableStockTotal(product);
-        int lockedStock = lockedStock(product);
-        return lockedStock > totalUsableStock ? 0 : totalUsableStock - lockedStock;
-    }
-
-    @Override
     public int limitStock(Product product) {
+        //如果已经计算过了，就直接从 map 中获取
+        if (productStockMap.containsKey(product.getCode())) {
+            return productStockMap.get(product.getCode());
+        }
         long limitDay;
         LocalDateTime now = LocalDateTime.now();
         //如果未设置限购时间，或者限购时间已经超过了，那么货品就不限购
@@ -355,14 +381,48 @@ public class MainOrderServiceImpl implements MainOrderService {
             if (planSellOutDate == null || planSellOutDate.isBefore(now.toLocalDate())) {
                 limitDay = 1L;
             } else {
-                // TODO: 2017/8/21 这里要获取 核算时间的偏移量，单位：小时
-                limitDay = ChronoUnit.DAYS.between(now.minusHours(9).toLocalDate(), planSellOutDate) + 1;
+                int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, 9);
+                limitDay = ChronoUnit.DAYS.between(now.minusHours(offsetHour).toLocalDate(), planSellOutDate) + 1;
             }
         } else {
             limitDay = 1L;
 
         }
-        return (int) (usableStock(product) / limitDay);
+        int totalUsableStock = stockService.usableStockTotal(product);
+        //锁定库存包括 代付款，待发货
+        int lockedStock = sumProductNum(product);
+        //(UsageStock - sumProductNum) / N
+        int productStock = lockedStock > totalUsableStock ? 0 : (int) ((totalUsableStock - lockedStock) / limitDay);
+        productStockMap.put(product.getCode(), productStock);
+        return productStock;
+    }
+
+    @Override
+    public int usableStock(Product product) {
+        int limitStock = limitStock(product);
+        int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, 9);
+        LocalDateTime orderBeginTime = LocalDateTime.now().withHour(offsetHour);
+        //计算今日所有未关闭订单的货品数量
+        int todayStock = sumProductNum(product,orderBeginTime,null);
+        return todayStock > limitStock ? 0 : limitStock - todayStock;
+    }
+
+    @Override
+    public void calculateGoodStock(Collection<MainGood> mainGoodSet) {
+        mainGoodSet.forEach(mainGood -> mainGood.getProduct().setStock(usableStock(mainGood.getProduct())));
+    }
+
+    private void checkGoodStock(Map<MainGood, Integer> amounts) throws MainGoodLowStockException {
+        for (MainGood good : amounts.keySet()) {
+            int usableStock = usableStock(good.getProduct());
+            if (good.getProduct().getPlanSellOutDate() == null && usableStock < amounts.get(good)) {
+                throw new MainGoodLowStockException(good);
+            } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
+                int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, 9);
+                LocalDateTime localDateTime = LocalDate.now().plusDays(1).atStartOfDay().plusHours(offsetHour);
+                throw new MainGoodLimitStockException(good, localDateTime);
+            }
+        }
     }
 
     @Override

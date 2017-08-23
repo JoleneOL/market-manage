@@ -184,6 +184,14 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     private boolean huabei;
 
     /**
+     * 订单是否已关闭
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartOrder}
+     */
+    @Column(nullable = false)
+    private boolean isClose;
+
+    /**
      * @param from order表
      * @return 到客户的登录表的关联
      */

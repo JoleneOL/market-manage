@@ -9,6 +9,7 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
@@ -307,20 +308,28 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 新增的随机订单
      */
     protected MainOrder newRandomOrderFor(Login who, Login recommend, String mobile) {
-        return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
-                , mobile, 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
-                , randomAddress()
-                , randomMainOrderAmountSet(), random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+        try {
+            return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
+                    , mobile, 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
+                    , randomAddress()
+                    , randomMainOrderAmountSet(), random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+        } catch (MainGoodLowStockException e) {
+            e.printStackTrace();
+        }
+        //单元测试时需要保证是由返回数据的
+        return null;
     }
 
     private Map<MainGood, Integer> randomMainOrderAmountSet() {
         Map<MainGood, Integer> data = new HashMap<>();
         int count = 2 + random.nextInt(2);
         List<MainGood> forSaleGoodList = mainGoodService.forSale();
-        //保证 订单中至少有2个 非空的货品
-        while (count-- > 0 || data.size() < 2) {
+        //计算货品可用库存
+        mainOrderService.calculateGoodStock(forSaleGoodList);
+        //保证 订单中至少有1个 非空的货品
+        while (count-- > 0 || data.size() == 0) {
             MainGood randomGood = forSaleGoodList.stream()
-                    .filter(good -> !data.keySet().contains(good) && good.getProduct() != null)
+                    .filter(good -> !data.keySet().contains(good) && good.getProduct() != null)// && good.getProduct().getStock() > 0)
                     .max(new RandomComparator()).orElse(null);
             if(randomGood != null){
                 data.put(randomGood, 1 + random.nextInt(10));

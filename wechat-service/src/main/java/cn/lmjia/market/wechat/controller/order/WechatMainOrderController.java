@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.PayAssistanceService;
@@ -105,7 +106,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
             , String authorising, String idNumber, boolean installmentHuabai, String[] goods)
-            throws SystemMaintainException, InvalidAuthorisingException {
+            throws SystemMaintainException, InvalidAuthorisingException, MainGoodLowStockException {
         int age = 20;
         MainGoodsAndAmounts amounts = MainGoodsAndAmounts.ofArray(goods);
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,

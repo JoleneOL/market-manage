@@ -4,10 +4,8 @@ import cn.lmjia.market.core.CoreServiceTest;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,7 +38,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         List<MainGood> saleGoodList = mainGoodService.forSale();
         Map<Long, Integer> lockStockMap = new HashMap<>();
         //没有订单，冻结库存应该为0
-        saleGoodList.forEach(mainGood -> assertEquals(0, mainOrderService.lockedStock(mainGood.getProduct())));
+        saleGoodList.forEach(mainGood -> assertEquals(0, mainOrderService.sumProductNum(mainGood.getProduct())));
 
         //未支付订单
         MainOrder forPayOrder = newRandomOrderFor(order, order);
@@ -49,10 +47,10 @@ public class MainOrderServiceTest extends CoreServiceTest {
             Optional<MainGood> amountMainGood = forPayOrder.getAmounts().keySet().stream().filter(p -> p.getId().equals(mainGood.getId())).findAny();
             if (amountMainGood.isPresent()) {
                 int exceptLockStock = forPayOrder.getAmounts().get(amountMainGood.get());
-                assertEquals(exceptLockStock, mainOrderService.lockedStock(mainGood.getProduct()));
+                assertEquals(exceptLockStock, mainOrderService.sumProductNum(mainGood.getProduct()));
                 lockStockMap.put(mainGood.getId(), exceptLockStock);
             } else {
-                assertEquals(0, mainOrderService.lockedStock(mainGood.getProduct()));
+                assertEquals(0, mainOrderService.sumProductNum(mainGood.getProduct()));
             }
         });
 
@@ -67,7 +65,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
             if (amountMainGood.isPresent()) {
                 int exceptLockStock = (lockStockMap.getOrDefault(mainGood.getId(), 0))
                         + finalForDeliveryOrder.getAmounts().get(amountMainGood.get());
-                assertEquals(exceptLockStock, mainOrderService.lockedStock(mainGood.getProduct()));
+                assertEquals(exceptLockStock, mainOrderService.sumProductNum(mainGood.getProduct()));
                 lockStockMap.put(mainGood.getId(), exceptLockStock);
             }
         });
@@ -79,9 +77,9 @@ public class MainOrderServiceTest extends CoreServiceTest {
         assertEquals(OrderStatus.afterSale, doneOrder.getOrderStatus());
         saleGoodList.forEach(mainGood -> {
             if (lockStockMap.containsKey(mainGood.getId())) {
-                assertEquals((int) lockStockMap.get(mainGood.getId()), mainOrderService.lockedStock(mainGood.getProduct()));
+                assertEquals((int) lockStockMap.get(mainGood.getId()), mainOrderService.sumProductNum(mainGood.getProduct()));
             } else {
-                assertEquals(0, mainOrderService.lockedStock(mainGood.getProduct()));
+                assertEquals(0, mainOrderService.sumProductNum(mainGood.getProduct()));
             }
         });
 
