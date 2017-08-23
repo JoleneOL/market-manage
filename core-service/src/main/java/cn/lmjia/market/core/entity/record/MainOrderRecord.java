@@ -64,11 +64,13 @@ public class MainOrderRecord {
 
     public void updateAmounts(Map<MainGood, Integer> amounts) {
         amountRecord = amounts.entrySet().stream()
-                .map(mainGoodIntegerEntry -> {
+                .map(entry -> {
                     ProductAmountRecord record = new ProductAmountRecord();
-                    record.setProductName(mainGoodIntegerEntry.getKey().getProduct().getName());
-                    record.setProductType(mainGoodIntegerEntry.getKey().getProduct().getCode());
-                    record.setAmount(mainGoodIntegerEntry.getValue());
+                    record.setProductName(entry.getKey().getProduct().getName());
+                    record.setProductType(entry.getKey().getProduct().getCode());
+                    record.setAmount(entry.getValue());
+                    record.setPrice(entry.getKey().getTotalPrice());
+                    record.setCommissioningPrice(entry.getKey().getProduct().getDeposit());
                     return record;
                 })
                 .collect(Collectors.toList());

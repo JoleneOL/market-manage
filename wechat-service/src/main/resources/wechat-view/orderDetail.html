@@ -31,14 +31,6 @@
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    <label class="weui-label">年龄</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p th:text="${@readService.ageForCustomer(order.customer)}">24</p>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
                     <label class="weui-label">性别</label>
                 </div>
                 <div class="weui-cell__bd">
@@ -61,28 +53,12 @@
                     <p th:text="${{order.orderTime}}">2017-09-09</p>
                 </div>
             </div>
-            <!--<div class="weui-cell">-->
-            <!--<div class="weui-cell__hd">-->
-            <!--<label class="weui-label">购买套餐</label>-->
-            <!--</div>-->
-            <!--<div class="weui-cell__bd">-->
-            <!--<p>3年收费</p>-->
-            <!--</div>-->
-            <!--</div>-->
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">收货地址</label>
                 </div>
                 <div class="weui-cell__bd">
                     <p th:text="${order.installAddress}">浙江杭州西湖大西湖国际</p>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">购买数量</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p th:text="${order.totalAmount}">1</p>
                 </div>
             </div>
             <div class="weui-cell">
@@ -95,55 +71,31 @@
             </div>
         </div>
     </div>
-    <div class="view-form-list" th:remove="all">
+    <div class="view-order-list">
         <div class="weui-cells__title">商品信息</div>
-        <div class="weui-cells">
+        <div class="weui-cells" th:each="record:${order.record.amountRecord}">
             <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">商品型号</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>滤芯 u56  立式</p>
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="view_badge view_badge-custom">使用中</span>
-                    <!--<span class="view_badge view_badge-error">退货中</span>-->
-                    <!--<span class="view_badge view_badge-warn">维修中</span>-->
-                </div>
+                <div class="weui-cell__bd" th:text="${record.productName}">量子立式净水机（黑色）</div>
+                <div class="weui-cell__ft text-error" th:text="${record.price}">￥<span>3000.00</span></div>
             </div>
             <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">商品编码</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>42857487523234</p>
-                </div>
+                <div class="weui-cell__bd" th:text="${record.productType}">SCRO-200LK-L</div>
+                <div class="weui-cell__ft text-error">x<span th:text="${record.amount}">1</span></div>
+            </div>
+        </div>
+        <div class="weui-cells" th:remove="all">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">量子立式净水机（白色）</div>
+                <div class="weui-cell__ft text-error">￥<span>5000.00</span></div>
             </div>
             <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">入口时间</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>2017-04-09</p>
-                </div>
+                <div class="weui-cell__bd">SCRO-200LK-B</div>
+                <div class="weui-cell__ft text-error">x<span>10</span></div>
             </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">出库时间</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>2017-06-09</p>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">维修记录</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>2017-09-09  更改滤芯</p>
-                    <p>2016-09-09  更换水口</p>
-                </div>
-            </div>
+        </div>
+        <div class="view-order-list_ex">
+            <p class="view-order_ex_title">合计：<span th:text="${{order.orderDueAmountMoney}}">￥1841937</span></p>
+            <p class="view-order_ex_title text-gray">订单时间：<span th:text="${{order.orderTime}}">2000-04-07</span></p>
         </div>
     </div>
 </section>

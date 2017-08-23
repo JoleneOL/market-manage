@@ -43,16 +43,6 @@ $(function () {
                 "name": "userLevel"
             },
             {
-                "title": "购买产品",
-                "data": "goods",
-                "name": "goods"
-            },
-            {
-                "title": "数量",
-                "data": "amount",
-                "name": "amount"
-            },
-            {
                 "title": "订单用户",
                 "data": "orderUser",
                 "name": "orderUser"
@@ -91,11 +81,6 @@ $(function () {
                 "data": "orderTime",
                 "name": "orderTime"
             },
-            // {
-            //     "title": "操作人",
-            //     "data": "operator",
-            //     "name": "operator"
-            // },
             {
                 title: "操作",
                 className: 'table-action',

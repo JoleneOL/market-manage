@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" class="infinite">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="goodList" type="java.util.Collection<cn.lmjia.market.core.entity.MainGood>"*/-->
 <!--/*@thymesVar id="trj" type="boolean"*/-->
 <!--/*@thymesVar id="installmentSupported" type="boolean"*/-->
@@ -15,26 +15,19 @@
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
 
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small">
-<section class="view_body view-bg-color panel" id="J_main">
+<body class="view-bg-color view-fs-small"
+      data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
+      th:data-search-login-url="@{/loginData/select2}">
+<section class="view_body">
     <form action="orderSuccess.html" method="post" th:action="@{/wechatOrder}" th:method="post" id="J_form">
         <div class="weui-cells__title">我要下单 <a href="orderList.html" th:href="@{/wechatOrderList}"
                                                class="weui-cell_link">订单列表</a></div>
-        <div class="weui-cells">
-            <div class="weui-cell weui-cell_access" id="J_addGoods">
-                <div class="weui-cell__bd"><i class="fa fa-plus-circle text-big text-custom view-add-icon"></i>添加商品
-                </div>
-                <div class="weui-cell__ft"></div>
-            </div>
-            <div class="weui-cells view-mt-0" id="J_showGoodsList"></div>
-        </div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -46,6 +39,16 @@
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
+            <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">年龄</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<input class="weui-input" type="number" min="1" max="99" placeholder="请输入年龄" name="age"-->
+            <!--th:value="${@environment.acceptsProfiles('staging')?'33':''}">-->
+            <!--</div>-->
+            <!--<div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>-->
+            <!--</div>-->
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">性别</label>
@@ -53,7 +56,8 @@
                 <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
                     <label class="weui-cell weui-check__label" for="isMan">
                         <div class="weui-cell__hd">
-                            <input type="radio" class="weui-check" name="gender" id="isMan" checked value="1">
+                            <input type="radio" class="weui-check" name="gender" id="isMan" checked="checked"
+                                   value="1">
                             <i class="weui-icon-checked"></i>
                         </div>
                         <div class="weui-cell__bd">
@@ -101,6 +105,111 @@
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after">
                 <div class="weui-cell__hd">
+                    <label class="weui-label">产品类型</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select class="weui-select" name="goodId" id="J_goodsType" required>
+                        <option value="" disabled selected class="hidden">产品类型
+                        </option>
+                        <!--data-price 价格 原data-deposit-->
+                        <!--data-service-charge 服务费-->
+                        <!--data-model 型号-->
+                        <option value="1" data-price="2820" data-model="HZCX01"
+                                th:each="good:${goodList}"
+                                th:value="${good.id}"
+                                th:data-price="${good.product.deposit}"
+                                th:data-price-channel="${good.channelChangeAsAdd}"
+                                th:data-service-charge="${good.product.install}"
+                                th:data-model="${good.product.code}"
+                                th:text="${good.product.name}">厨下净水机
+                        </option>
+                        <option th:remove="all" value="2" data-price="3000" data-price-channel="0" data-model="HZLS01">
+                            立式净水器
+                        </option>
+                        <option th:remove="all" value="4" data-price="3000" data-price-channel="0"
+                                data-service-charge="980"
+                                data-model="LZCX01">量子厨下净水机
+                        </option>
+                        <option th:remove="all" value="5" data-price="3000" data-price-channel="0"
+                                data-service-charge="980"
+                                data-model="LZLS01">量子立式净水机
+                        </option>
+                        <option th:remove="all" value="7" data-price="5000" data-price-channel="100"
+                                data-model="ESL-HM01">量子空气净化器
+                        </option>
+                        <option th:remove="all" value="8" data-price="9800" data-price-channel="-100" data-model="SP70">
+                            量子食品优化宝
+                        </option>
+                        <option th:remove="all" value="9" data-price="100" data-price-channel="0" data-model="LZXP01">
+                            量子防辐射芯片（片）
+                        </option>
+                        <option th:remove="all" value="10" data-price="3000" data-price-channel="0" data-model="LZSB01">
+                            量子水宝
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">租用机型</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入租用机型" name="leasedType"
+                           id="J_leasedType" readonly>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">数量</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" placeholder="请输入数量" min="1" name="amount"
+                           id="J_goodsAmount" th:value="${@environment.acceptsProfiles('staging')?'1':''}">
+                </div>
+                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+            </div>
+
+            <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">现金支付</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<input class="weui-input" type="text" name="package" value="服务费 3元 / 天" disabled id="J_package">-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">设备款</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p class="weui-input" id="J_userCost">
+                        <span>0</span>
+                        <span class="unit-txt">元</span>
+                    </p>
+                </div>
+            </div>
+            <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">推荐人</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<select class="weui-input" id="recommendId" name="recommend"></select>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>-->
+            <!--</div>-->
+            <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">用户保证金</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<p class="weui-input" id="J_userDeposit">-->
+            <!--<span>3000</span>-->
+            <!--<span class="unit-txt">元 / 台</span>-->
+            <!--</p>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="weui-cell weui-cell_select weui-cell_select-after">
+                <div class="weui-cell__hd">
                     <label class="weui-label">发票</label>
                 </div>
                 <div class="weui-cell__bd">
@@ -115,7 +224,28 @@
                 <input type="hidden" title="详细地址" name="invoiceFullAddress" disabled>
                 <input type="hidden" title="联系电话" name="invoiceMobile" disabled>
             </div>
-            <div id="J_goodsListArea"></div>
+            <!--<div class="weui-cell js-install">-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">初装费用</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<p class="weui-input" id="J_installationCost">-->
+            <!--<span>180</span>-->
+            <!--<span class="unit-txt">元 / 台</span>-->
+            <!--</p>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="weui-cell displayNone js-service">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">服务费</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p class="weui-input" id="J_serviceCharge">
+                        <span>0</span>
+                        <span class="unit-txt">元</span>
+                    </p>
+                </div>
+            </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">订单总金额</label>
@@ -180,98 +310,6 @@
         <a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules">查看</a>
     </form>
 </section>
-<aside id="J_goodsList">
-    <div class="weui-panel weui-panel_access view-goods_list">
-        <div class="weui-panel__hd">商品列表</div>
-        <div class="weui-panel__bd">
-            <div class="weui-media-box weui-media-box_appmsg js-goods-list"
-                 data-id="1"
-                 data-model="SCRO-200QL/A"
-                 data-goods="量子立式净水机（黑色）"
-                 data-price="1000.00"
-                 data-price-channel="0"
-                 data-amount="0"
-                 th:each="good:${goodList}"
-                 th:data-id="${good.id}"
-                 th:data-price="${good.product.deposit}"
-                 th:data-price-channel="${good.channelChangeAsAdd}"
-                 th:data-service-charge="${good.product.install}"
-                 th:data-model="${good.product.code}"
-                 th:data-goods="${good.product.name}">
-                <!--暂时无缩略图-->
-                <!--<div class="weui-media-box__hd">-->
-                <!--<img class="weui-media-box__thumb" src="http://iph.href.lu/120x120?text=Goods">-->
-                <!--</div>-->
-                <div class="weui-media-box__bd">
-                    <div class="weui-flex view-mb-4">
-                        <h4 class="view_flex-2 weui-media-box__title" th:text="${good.product.name}">量子立式净水机（黑色）</h4>
-                        <h4 class="view_flex-1 weui-media-box__title text-error">￥<span
-                                th:text="${#numbers.formatDecimal(good.totalPrice,1,2)}">1000.00</span></h4>
-                    </div>
-                    <div class="weui-flex">
-                        <div class="view_flex-1">
-                            <p class="weui-media-box__desc view-mb-4" th:text="${good.product.code}">SCRO-200QL/A</p>
-                            <!--限购显示，不限购隐藏 可以嘛，给婷姐都考虑到了-->
-                            <p class="weui-media-box__desc text-error">限购<span>100</span><span>台</span></p>
-                        </div>
-                        <div class="view_flex-1 view_flex-right text-right">
-                            <div class="spinner view-mt-4">
-                                <!--如果数量为0，class有 disabled，参数有disabled-->
-                                <button class="decrease disabled" disabled>&minus;</button>
-                                <!--max为限购的最大值-->
-                                <input type="number" class="value" min="0" max="11" value="0">
-                                <!--如果数量为最大值，class有 disabled，参数有disabled-->
-                                <button class="increase">&plus;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="weui-media-box weui-media-box_appmsg js-goods-list"
-                 data-id="2"
-                 data-model="SP70"
-                 data-goods="量子食品优化宝"
-                 data-price="9800.00"
-                 data-price-channel="-800"
-                 data-amount="0"
-                 th:remove="all">
-                <div class="weui-media-box__bd">
-                    <div class="weui-flex view-mb-4">
-                        <h4 class="view_flex-2 weui-media-box__title">量子食品优化宝</h4>
-                        <h4 class="view_flex-1 weui-media-box__title text-error">￥<span>9800.00</span></h4>
-                    </div>
-                    <div class="weui-flex">
-                        <div class="view_flex-1">
-                            <p class="weui-media-box__desc view-mb-4">SCRO-200QL/A</p>
-                            <p class="weui-media-box__desc text-error">限购<span>100</span><span>台</span></p>
-                        </div>
-                        <div class="view_flex-1 view_flex-right text-right">
-                            <div class="spinner view-mt-4">
-                                <button class="decrease disabled" disabled>&minus;</button>
-                                <input type="number" class="value" min="0" max="20" value="0">
-                                <button class="increase">&plus;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <div class=" weui-form-preview view-goods_footer">
-        <div class="weui-form-preview__hd">
-            <label class="weui-form-preview__label">合计</label>
-            <em class="weui-form-preview__value text-error">￥<span id="J_goodsTotal">0.00</span></em>
-        </div>
-        <div class="weui-form-preview__ft">
-            <a class="weui-form-preview__btn weui-form-preview__btn_default close-button" href="javascript:"
-               id="J_goodsCancel">取消</a>
-            <button type="submit" class="weui-form-preview__btn view-form-preview__btn_primary" id="J_goodsOK">确定
-            </button>
-        </div>
-    </div>
-</aside>
 <div id="J_upgradeRules" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>
     <div class="weui-popup__modal">
@@ -491,12 +529,14 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
-<script src="//cdn.lmjia.cn/slideout/1.0.1/slideout.min.js"></script>
-
-<script src="../wechat-resource/assets/js/orderPlace.js"
-        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=3)}"></script>
-
-
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js" th:remove="all"></script>
+<script src="../mock/api.js" th:remove="all"></script>
+<!--生产环境请移除 End-->
+<script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
+        th:src="@{/assets/js/common/recommend.js}"></script>
+<script src="../wechat-resource/assets/js/orderPlace-B.js"
+        th:src="@{/wechat-resource/assets/js/orderPlace-B.js(v=3)}"></script>
 <script th:if="${trj}">
     $(function () {
         var input = $('#J_goodsAmount');
