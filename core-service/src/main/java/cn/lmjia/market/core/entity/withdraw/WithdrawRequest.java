@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity.withdraw;
 
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
@@ -104,4 +105,16 @@ public class WithdrawRequest {
      */
     @ManyToOne
     private Manager manageBy;
+
+    public Money getActualAmountMoney() {
+        return new Money(actualAmount);
+    }
+
+    public Money getAmountMoney() {
+        return new Money(amount);
+    }
+
+    public Money getTaxFee() {
+        return new Money(amount.subtract(actualAmount));
+    }
 }

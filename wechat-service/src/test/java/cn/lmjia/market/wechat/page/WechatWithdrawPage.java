@@ -61,7 +61,7 @@ public class WechatWithdrawPage extends AbstractWechatPage {
         payee.clear();
         payee.sendKeys(RandomStringUtils.randomAlphabetic(8));
         account.clear();
-        account.sendKeys(RandomStringUtils.randomNumeric(20));
+        account.sendKeys(RandomStringUtils.randomNumeric(18));
         bank.clear();
         bank.sendKeys(RandomStringUtils.randomAlphabetic(8));
         mobile.clear();
@@ -80,7 +80,7 @@ public class WechatWithdrawPage extends AbstractWechatPage {
         haveInvoice.click();
         logisticsCode.clear();
         logisticsCode.sendKeys(RandomStringUtils.randomAlphabetic(10));
-        logisticsCompany.sendKeys(RandomStringUtils.randomAlphabetic(10));
+        logisticsCompany.clear();
         logisticsCompany.sendKeys(RandomStringUtils.randomAlphabetic(10));
         submit.click();
     }

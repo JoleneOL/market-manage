@@ -9,12 +9,12 @@ public enum WithdrawStatus {
     /**
      * 待审核
      */
-    checkPending("待审核"),
-    refuse("已拒绝"),
+    checkPending("审核中"),
+    refuse("失败"),
     /**
      * 提现成功
      */
-    success("已成功");
+    success("成功到账");
 
     private final String message;
 
@@ -25,5 +25,13 @@ public enum WithdrawStatus {
     @Override
     public String toString() {
         return message;
+    }
+
+    public boolean isSuccess() {
+        return this == success;
+    }
+
+    public boolean isFailed() {
+        return this == refuse;
     }
 }

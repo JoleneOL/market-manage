@@ -2,7 +2,10 @@ package cn.lmjia.market.wechat.controller.withdraw;
 
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.support.WithdrawStatus;
+import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.model.ApiResult;
+import cn.lmjia.market.core.repository.WithdrawRequestRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
 import com.huotu.verification.IllegalVerificationCodeException;
@@ -11,6 +14,8 @@ import me.jiangcai.payment.exception.SystemMaintainException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +41,26 @@ public class WechatWithdrawController {
     @Autowired
     private VerificationCodeService verificationCodeService;
     @Autowired
+    private WithdrawRequestRepository withdrawRequestRepository;
+    @Autowired
     private ReadService readService;
+
+    @GetMapping("/wechatWithdrawRecord")
+    public String record() {
+        return "wechat@withdrawRecord.html";
+    }
+
+    @GetMapping("/wechatWithdrawRecordData")
+    @Transactional(readOnly = true)
+    public String recordData(int page, @AuthenticationPrincipal Login login, Model model) {
+        model.addAttribute("dataList", withdrawRequestRepository.findAll((root, query, cb)
+                -> cb.and(
+                cb.equal(root.get(WithdrawRequest_.whose), login)
+                , root.get(WithdrawRequest_.withdrawStatus)
+                        .in(WithdrawStatus.checkPending, WithdrawStatus.refuse, WithdrawStatus.success)
+        ), new PageRequest(page, 5, new Sort(Sort.Direction.DESC, WithdrawRequest_.requestTime.getName()))));
+        return "wechat@withdrawRecordData.html";
+    }
 
     /**
      * @return 我要提现页面

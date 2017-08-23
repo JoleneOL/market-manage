@@ -8,6 +8,7 @@ import cn.lmjia.market.manage.page.ManageWithdrawPage;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.WechatMyPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawPage;
+import cn.lmjia.market.wechat.page.WechatWithdrawRecordPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawVerifyPage;
 import com.huotu.verification.repository.VerificationCodeRepository;
 import org.assertj.core.data.Offset;
@@ -125,10 +126,13 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
 
         // 回来看看提现记录呗
         myPage = getWechatMyPage();
-        myPage.toWithdrawRecordPage();
-
+        WechatWithdrawRecordPage recordPage = myPage.toWithdrawRecordPage();
+        if (System.getProperty("os.name").contains("Mac")) {
+            Thread.sleep(1000);
+            recordPage.printThisPage();
+        }
         // 管理员可以看到一个发票的申请
-        managerSawInvoice(login);
+//        managerSawInvoice(login);
     }
 
     private void deleteVC() {
@@ -170,47 +174,6 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         ManageWithdrawPage.of(this, driver)
                 .reject(readService.nameForPrincipal(login));
     }
-
-//    @Test
-//    public void doWithdraw() throws Exception {
-//        Login user = createNewUserByShare();
-//        bindDeveloperWechat(user);
-//        updateAllRunWith(user);
-//
-//        String withdrawUri = mockMvc.perform(wechatPost("/wechatWithdraw")
-//                .param("payee", "oneal")
-//                .param("account", "6217001480003532428")
-//                .param("bank", "建设银行")
-//                .param("mobile", "15267286525")
-//                .param("withdrawMoney", "500.00")
-//                .param("invoice", "0")
-////                .param("logisticsNumber", "710389211847")
-////                .param("logisticsCompany", "圆通物流")
-//        )
-//                .andDo(print())
-//                .andExpect(status().is2xxSuccessful())
-//                .andReturn().getResponse().getHeader("Location");
-//
-//        driver.get("http://localhost" + withdrawUri);
-//
-//    }
-//
-//    @Test
-//    public void withdrawVerify() throws Exception {
-//        Login user = createNewUserByShare();
-//        bindDeveloperWechat(user);
-//        updateAllRunWith(user);
-//
-//        String withdrawUri = mockMvc.perform(wechatPost("/misc/sendWithdrawCode")
-//                        .param("mobile", "15267286525")
-//        )
-//                .andDo(print())
-//                .andExpect(status().is2xxSuccessful())
-//                .andReturn().getResponse().getHeader("Location");
-//
-//        driver.get("http://localhost" + withdrawUri);
-//
-//    }
 
 
 }
