@@ -53,11 +53,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -321,11 +317,14 @@ public abstract class CoreServiceTest extends SpringWebTest {
         Map<MainGood, Integer> data = new HashMap<>();
         int count = 2 + random.nextInt(2);
         List<MainGood> forSaleGoodList = mainGoodService.forSale();
-        while (count-- > 0) {
-            data.put(forSaleGoodList.stream()
-                    .filter(good -> !data.keySet().contains(good))
-                    .max(new RandomComparator()).orElse(null), 1 + random.nextInt(10)
-            );
+        //保证 订单中至少有2个 非空的货品
+        while (count-- > 0 || data.size() < 2) {
+            MainGood randomGood = forSaleGoodList.stream()
+                    .filter(good -> !data.keySet().contains(good) && good.getProduct() != null)
+                    .max(new RandomComparator()).orElse(null);
+            if(randomGood != null){
+                data.put(randomGood, 1 + random.nextInt(10));
+            }
         }
         return data;
     }
