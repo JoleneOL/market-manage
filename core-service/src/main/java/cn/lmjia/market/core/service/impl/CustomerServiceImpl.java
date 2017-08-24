@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.event.LoginRelationChangedEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
@@ -11,6 +12,7 @@ import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
+import me.jiangcai.payment.event.OrderPaySuccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +58,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public LoginRelationChangedEvent orderFinish(MainOrderFinishEvent event) {
-        Customer customer = event.getMainOrder().getCustomer();
+        MainOrder mainOrder = event.getMainOrder();
+        return forSuccessMainOrder(mainOrder);
+    }
+
+    private LoginRelationChangedEvent forSuccessMainOrder(MainOrder mainOrder) {
+        Customer customer = mainOrder.getCustomer();
         customer = customerRepository.getOne(customer.getId());
         if (!customer.isSuccessOrder()) {
             customer.setSuccessOrder(true);
@@ -64,6 +71,14 @@ public class CustomerServiceImpl implements CustomerService {
             // 如果它有推荐则产生改变
             if (customer.getLogin().getGuideUser() != null)
                 return new LoginRelationChangedEvent(customer.getLogin().getGuideUser());
+        }
+        return null;
+    }
+
+    @Override
+    public LoginRelationChangedEvent orderPay(OrderPaySuccess event) {
+        if (event.getPayableOrder() instanceof MainOrder){
+            return forSuccessMainOrder((MainOrder) event.getPayableOrder());
         }
         return null;
     }

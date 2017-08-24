@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="goodList" type="java.util.Collection<cn.lmjia.market.core.entity.MainGood>"*/-->
 <!--/*@thymesVar id="trj" type="boolean"*/-->
+<!--/*@thymesVar id="huabeiEnable" type="boolean"*/-->
 <!--/*@thymesVar id="installmentSupported" type="boolean"*/-->
 <!--/*@thymesVar id="channel" type="cn.lmjia.market.core.entity.channel.Channel"*/-->
 <head>
@@ -283,7 +284,7 @@
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
         </div>
-        <div th:if="${!installmentSupported}" class="weui-cells weui-cells_checkbox">
+        <div th:if="${!installmentSupported && huabeiEnable}" class="weui-cells weui-cells_checkbox">
             <label class="weui-cell weui-check__label" for="J_installment">
                 <div class="weui-cell__hd">
                     <input type="checkbox" class="weui-check" name="installmentHuabai" id="J_installment" value="1">

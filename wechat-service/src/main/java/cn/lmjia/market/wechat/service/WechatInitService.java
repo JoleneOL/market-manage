@@ -42,9 +42,10 @@ public class WechatInitService {
                     new Menu[]
                             {
                                     createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
-                                    , createMenu("下单"
-                                    , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
-                                    , createMenu("分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
+                                    ,createMenu("下单", systemService.toUrl(SystemService.wechatOrderURi))
+                                    , createMenu("分期"
+                                    , createMenu("花呗", systemService.toUrl(SystemService.wechatOrderURiHB))
+                                    , createMenu("投融家", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
                                     , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
                             }
             );
