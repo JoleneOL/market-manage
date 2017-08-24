@@ -13,6 +13,7 @@ import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
+import me.jiangcai.wx.standard.entity.support.AppIdOpenID;
 import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,7 +68,7 @@ public class WechatController {
     @GetMapping("/wechat/bindTo{id}")
     @Transactional
     @ResponseBody
-    public String bindTo(@OpenId String openId, @PathVariable("id") long id) {
+    public String bindTo(WeixinUserDetail detail, @PathVariable("id") long id) {
 //        Login login = loginService.asWechat(openId);
 //        if (login != null)
 //            return "Failed! You really has bind to Login; please switch your wechatId and try it again.";
@@ -77,13 +78,8 @@ public class WechatController {
         }
         if (login.getWechatUser() != null)
             return "there is some one bind th this MangerID!";
-        StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId(openId);
-        if (weixinUser == null) {
-            weixinUser = new StandardWeixinUser();
-            weixinUser.setOpenId(openId);
-            weixinUser.setAppId(publicAccount.getAppID());
-            weixinUser = standardWeixinUserRepository.save(weixinUser);
-        }
+        StandardWeixinUser weixinUser = standardWeixinUserRepository.getOne(new AppIdOpenID(publicAccount.getAppID()
+                , detail.getOpenId()));
         login.setWechatUser(weixinUser);
         return "success";
     }
