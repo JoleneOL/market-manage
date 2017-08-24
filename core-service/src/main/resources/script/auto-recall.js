@@ -5,7 +5,7 @@
  */
 if (_this.executedCount >= 5) {
     //延迟到1千年之后
-    _this.targetInstant = _this.targetInstant.plusSeconds(31556952000);
+    _this.targetInstant = _this.targetInstant.plusSeconds(3155695200);
 } else if (_this.executedCount >= 4) {
     _this.targetInstant = _this.targetInstant.plusSeconds(3 * 3600);
 } else if (_this.executedCount >= 3) {
