@@ -94,17 +94,8 @@ public class MainOrderServiceTest extends CoreServiceTest {
 
     @Test
     public void closeOrderTest(){
-        //1.先不设定关闭时间
-        systemStringService.delete("market.core.service.order.maxMinuteForPay");
-        MainOrder orderWithoutClose = newRandomOrderFor(testLogin, testLogin);
-        assertEquals(OrderStatus.forPay,orderWithoutClose.getOrderStatus());
-        //等他2s,意思意思
-        orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
-        waitSometime(2);
-        assertEquals(OrderStatus.forPay,orderWithoutClose.getOrderStatus());
-
         //------------------
-        //2.设置关闭时间为10s
+        //1.设置关闭时间为10s
         systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay",10);
         MainOrder orderWithClose = newRandomOrderFor(testLogin,testLogin);
         assertEquals(OrderStatus.forPay,orderWithClose.getOrderStatus());
@@ -112,6 +103,22 @@ public class MainOrderServiceTest extends CoreServiceTest {
         waitSometime(15);
         orderWithClose = mainOrderService.getOrder(orderWithClose.getId());
         assertEquals(OrderStatus.close,orderWithClose.getOrderStatus());
+
+        //2.先不设定关闭时间，然后再开启关闭订单功能
+        systemStringService.delete("market.core.service.order.maxMinuteForPay");
+        MainOrder orderWithoutClose = newRandomOrderFor(testLogin, testLogin);
+        assertEquals(OrderStatus.forPay,orderWithoutClose.getOrderStatus());
+        //等他2s,意思意思
+        orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
+        waitSometime(2);
+        assertEquals(OrderStatus.forPay,orderWithoutClose.getOrderStatus());
+        systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay",10);
+        mainOrderService.createExecutorToForPayOrder();
+        //之前已经等了2s了，现在等9s 就够了
+        waitSometime(9);
+        orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
+        assertEquals(OrderStatus.close,orderWithoutClose.getOrderStatus());
+
 
     }
 

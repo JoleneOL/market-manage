@@ -53,6 +53,12 @@ public interface MainOrderService {
             , Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException;
 
     /**
+     * 给所有未支付的订单添加 Executor，如果想 {@message market.core.service.order.maxMinuteForPay} 实时生效，可以调这个方法
+     */
+    @Transactional
+    void createExecutorToForPayOrder();
+
+    /**
      * @return 所有订单
      */
     @Transactional(readOnly = true)

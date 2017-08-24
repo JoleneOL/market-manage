@@ -101,22 +101,7 @@ public class MainOrderServiceImpl implements MainOrderService {
     @PostConstruct
     @Transactional
     public void initExecutor() {
-        List<MainOrder> unPayOrderList = mainOrderRepository.findAll(search(null, OrderStatus.forPay));
-        Integer maxMinuteForPay = systemStringService.getCustomSystemString("market.core.service.order.maxMinuteForPay", null, true, Integer.class, null);
-        //如果需要 关闭订单 这个功能
-        if (maxMinuteForPay != null) {
-            LocalDateTime now = LocalDateTime.now();
-            //已经超过关闭时间的，直接把订单关掉
-            unPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isBefore(now))
-                    .forEach(order -> order.setOrderStatus(OrderStatus.close));
-            //还没超过时间的，定义ExecutorService
-            unPayOrderList.stream().filter(order -> order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now))
-                    .forEach(order -> {
-                        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-                        long waitMinute = ChronoUnit.MINUTES.between(now, order.getOrderTime().plusMinutes(maxMinuteForPay));
-                        executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), waitMinute, waitMinute, TimeUnit.MINUTES);
-                    });
-        }
+        createExecutorToForPayOrder();
     }
 
     @Override
@@ -161,6 +146,26 @@ public class MainOrderServiceImpl implements MainOrderService {
                     , !env.acceptsProfiles(CoreConfig.ProfileUnitTest) ? TimeUnit.MINUTES : TimeUnit.SECONDS);
         }
         return order;
+    }
+
+    @Override
+    public void createExecutorToForPayOrder() {
+        List<MainOrder> forPayOrderList = mainOrderRepository.findAll(search(null, OrderStatus.forPay));
+        Integer maxMinuteForPay = systemStringService.getCustomSystemString("market.core.service.order.maxMinuteForPay", null, true, Integer.class, null);
+        //如果需要 关闭订单 这个功能
+        if (maxMinuteForPay != null) {
+            LocalDateTime now = LocalDateTime.now();
+            //已经超过关闭时间的，直接把订单关掉
+            forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isBefore(now))
+                    .forEach(order -> order.setOrderStatus(OrderStatus.close));
+            //还没超过时间的，定义ExecutorService
+            forPayOrderList.stream().filter(order -> order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now))
+                    .forEach(order -> {
+                        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                        long waitMinute = ChronoUnit.MINUTES.between(now, order.getOrderTime().plusMinutes(maxMinuteForPay));
+                        executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), waitMinute, waitMinute, TimeUnit.MINUTES);
+                    });
+        }
     }
 
     private synchronized void queryDailySerialId(LocalDate now, MainOrder order) {
@@ -520,9 +525,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         @Override
         @Transactional
         public void run() {
-            log.info("check order:" + orderId);
             MainOrder order = mainOrderRepository.findOne(orderId);
-            log.info("order status:" + order.getOrderStatus());
             if (order.getOrderStatus() == OrderStatus.forPay) {
                 //还没付款，就关闭订单
                 order.setOrderStatus(OrderStatus.close);
