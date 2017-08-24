@@ -38,9 +38,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
@@ -49,6 +51,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -95,6 +98,27 @@ public class MainOrderServiceImpl implements MainOrderService {
     // TODO: 2017/8/23 定义schedule来清空Map
     private Map<String, Integer> productStockMap = new HashMap<>();
 
+    @PostConstruct
+    @Transactional
+    public void initExecutor() {
+        List<MainOrder> unPayOrderList = mainOrderRepository.findAll(search(null, OrderStatus.forPay));
+        Integer maxMinuteForPay = systemStringService.getCustomSystemString("market.core.service.order.maxMinuteForPay", null, true, Integer.class, null);
+        //如果需要 关闭订单 这个功能
+        if (maxMinuteForPay != null) {
+            LocalDateTime now = LocalDateTime.now();
+            //已经超过关闭时间的，直接把订单关掉
+            unPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isBefore(now))
+                    .forEach(order -> order.setOrderStatus(OrderStatus.close));
+            //还没超过时间的，定义ExecutorService
+            unPayOrderList.stream().filter(order -> order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now))
+                    .forEach(order -> {
+                        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                        long waitMinute = ChronoUnit.MINUTES.between(now, order.getOrderTime().plusMinutes(maxMinuteForPay));
+                        executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), waitMinute, waitMinute, TimeUnit.MINUTES);
+                    });
+        }
+    }
+
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress, Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException {
@@ -102,8 +126,8 @@ public class MainOrderServiceImpl implements MainOrderService {
         Customer customer = customerService.getNoNullCustomer(name, mobile, loginService.lowestAgentLevel(getEnjoyability(who))
                 , recommendBy);
         //检查货品库存数量
-        // TODO: 2017/8/24 单元测试初始化时应该对货品的可用数量复制
-        if(!env.acceptsProfiles(CoreConfig.ProfileUnitTest)){
+        // TODO: 2017/8/24 单元测试初始化时应该对货品的可用数量赋值
+        if (!env.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
             checkGoodStock(amounts);
         }
 
@@ -126,8 +150,17 @@ public class MainOrderServiceImpl implements MainOrderService {
 
         queryDailySerialId(now, order);
         order.setOrderStatus(OrderStatus.forPay);
-        // TODO: 2017/8/23 订单创建成功后建立Eexecutor
-        return mainOrderRepository.saveAndFlush(order);
+        order = mainOrderRepository.saveAndFlush(order);
+        Integer maxMinuteForPay = systemStringService.getCustomSystemString("market.core.service.order.maxMinuteForPay", null, true, Integer.class, null);
+        //如果开启了 关闭订单 这个功能
+        if (maxMinuteForPay != null) {
+            //创建成功，建立 Executor 在指定时间内关闭订单
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            //如果是跑单元测试，就把单位设置为秒
+            executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), maxMinuteForPay, maxMinuteForPay
+                    , !env.acceptsProfiles(CoreConfig.ProfileUnitTest) ? TimeUnit.MINUTES : TimeUnit.SECONDS);
+        }
+        return order;
     }
 
     private synchronized void queryDailySerialId(LocalDate now, MainOrder order) {
@@ -337,20 +370,20 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     @Override
     public int sumProductNum(Product product) {
-        return sumProductNum(product,null,null,OrderStatus.forPay, OrderStatus.forDeliver);
+        return sumProductNum(product, null, null, OrderStatus.forPay, OrderStatus.forDeliver);
     }
 
     @Override
-    public int sumProductNum(Product product, LocalDateTime beginTime, LocalDateTime endTime,OrderStatus... orderStatuses) {
+    public int sumProductNum(Product product, LocalDateTime beginTime, LocalDateTime endTime, OrderStatus... orderStatuses) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery cq = cb.createQuery();
         Root<MainOrder> root = cq.from(MainOrder.class);
         //今日核算时间之前的订单
         MapJoin<MainOrder, MainGood, Integer> amountsRoot = root.join(MainOrder_.amounts);
         List<Predicate> list = new ArrayList<>();
-        list.add(cb.isFalse(root.get(MainOrder_.isClose)));
+        list.add(cb.notEqual(root.get(MainOrder_.orderStatus), OrderStatus.close));
         list.add(cb.equal(amountsRoot.key().get(MainGood_.product), product));
-        if(orderStatuses != null){
+        if (orderStatuses != null) {
             list.add(root.get(MainOrder_.orderStatus)
                     .in(orderStatuses));
         }
@@ -403,7 +436,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, 9);
         LocalDateTime orderBeginTime = LocalDateTime.now().withHour(offsetHour);
         //计算今日所有未关闭订单的货品数量
-        int todayStock = sumProductNum(product,orderBeginTime,null);
+        int todayStock = sumProductNum(product, orderBeginTime, null);
         return todayStock > limitStock ? 0 : limitStock - todayStock;
     }
 
@@ -469,6 +502,33 @@ public class MainOrderServiceImpl implements MainOrderService {
             consumer.accept(order);
         } catch (NoResultException ignored) {
             log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
+        }
+    }
+
+    /**
+     * 用于关闭订单
+     */
+    class OrderPayStatusCheckThread implements Runnable {
+        private Long orderId;
+        private ExecutorService executor;
+
+        OrderPayStatusCheckThread(Long orderId, ExecutorService executor) {
+            this.orderId = orderId;
+            this.executor = executor;
+        }
+
+        @Override
+        @Transactional
+        public void run() {
+            log.info("check order:" + orderId);
+            MainOrder order = mainOrderRepository.findOne(orderId);
+            log.info("order status:" + order.getOrderStatus());
+            if (order.getOrderStatus() == OrderStatus.forPay) {
+                //还没付款，就关闭订单
+                order.setOrderStatus(OrderStatus.close);
+                mainOrderRepository.save(order);
+            }
+            executor.shutdown();
         }
     }
 }

@@ -31,7 +31,11 @@ public enum OrderStatus {
      * 总而言之是在退款
      * 这个状态并不会实际用于订单状态中，仅仅表示一个模糊值
      */
-    almostRefund("退款状态");
+    almostRefund("退款状态"),
+    /**
+     * 订单在指定时间内未付款，自动关闭
+     */
+    close("已关闭");
 
     private final String message;
 
