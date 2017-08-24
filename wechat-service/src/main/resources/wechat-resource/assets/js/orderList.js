@@ -23,7 +23,7 @@ $(function () {
             '        </div>\n' +
             '        <div class="view-order-list_ft">\n' +
             '            <div class="button_sp_area">\n' +
-            orderList.hasInvoice(obj) +
+            // orderList.hasInvoice(obj) +
             orderList.toPay(obj) +
             '                <a href="' + orderDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>' +
             // '             <a href="' + logisticsDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>' +
@@ -39,7 +39,8 @@ $(function () {
             if (obj.statusCode === 1) {
                 var a = '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">取消订单</a>';
                 var b = '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_primary">支付</a>';
-                return a + b;
+                // return a + b;
+                return b;
             }
             return dom;
         },
