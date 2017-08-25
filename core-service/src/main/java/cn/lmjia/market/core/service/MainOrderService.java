@@ -53,10 +53,17 @@ public interface MainOrderService {
             , Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException;
 
     /**
-     * 给所有未支付的订单添加 Executor，如果想 {@message market.core.service.order.maxMinuteForPay} 实时生效，可以调这个方法
+     * 给所有未支付的订单添加 Executor，如果想  <strong>market.core.service.order.maxMinuteForPay</strong> 实时生效，可以调这个方法
      */
     @Transactional
     void createExecutorToForPayOrder();
+
+    /**
+     * 商品修改计划售罄时间后，需要调用这个方法来实时生效
+     *
+     * @param product 货品
+     */
+    void cleanProductStock(Product product);
 
     /**
      * @return 所有订单
@@ -157,7 +164,7 @@ public interface MainOrderService {
     int sumProductNum(Product product);
 
     /**
-     * 指定条件的订单货品总数：订单状态为{未支付，未发货}的订单货品数
+     * 指定条件的订单货品总数
      *
      * @param product       指定货品
      * @param beginTime     订单区间起始时间，包含

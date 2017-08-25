@@ -8,6 +8,7 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -51,6 +52,8 @@ public class ManageProductController {
     private MainProductRepository mainProductRepository;
     @Autowired
     private HaierSupplier haierSupplier;
+    @Autowired
+    private MainOrderService mainOrderService;
 
     // 禁用和恢复
     @DeleteMapping("/products")
@@ -147,11 +150,17 @@ public class ManageProductController {
         product.setVolumeHeight(height);
         product.setWeight(weight);
         product.setInstall(serviceCharge);
+        //如果计划售罄时间有改动，就要重新计算今日限购数量
+        boolean isCleanProductStock = (planSellOutDate != null && !planSellOutDate.equals(product.getPlanSellOutDate()))
+                || (product.getPlanSellOutDate() != null && !product.getPlanSellOutDate().equals(planSellOutDate));
         product.setPlanSellOutDate(planSellOutDate);
         product.setDescription(StringUtils.isEmpty(productSummary) ? null : productSummary);
         product.setRichDescription(StringUtils.isEmpty(productDetail) ? null : productDetail);
 
         mainProductRepository.save(product);
+        if(isCleanProductStock){
+            mainOrderService.cleanProductStock(product);
+        }
         return "redirect:/manageProduct";
     }
 

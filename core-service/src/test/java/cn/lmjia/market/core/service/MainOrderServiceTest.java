@@ -4,12 +4,17 @@ import cn.lmjia.market.core.CoreServiceTest;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.exception.MainGoodLimitStockException;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
+import cn.lmjia.market.core.repository.MainProductRepository;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +30,8 @@ public class MainOrderServiceTest extends CoreServiceTest {
     private MainOrderService mainOrderService;
     @Autowired
     private MainGoodService mainGoodService;
+    @Autowired
+    private MainProductRepository mainProductRepository;
     @Autowired
     private SystemStringService systemStringService;
 
@@ -118,7 +125,75 @@ public class MainOrderServiceTest extends CoreServiceTest {
         waitSometime(9);
         orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
         assertEquals(OrderStatus.close,orderWithoutClose.getOrderStatus());
+    }
 
+    @Test
+    public void checkOrderStockWithExceptionTest() {
+        List<MainGood> saleGoodList = mainGoodService.forSale();
+        MainGood orderGood = saleGoodList.get(0);
+        //对这个订单下单超过货品库存
+        Map<MainGood,Integer> amounts = new HashMap<>();
+        amounts.put(orderGood,orderGood.getProduct().getStock() + random.nextInt(10));
+        MainOrder mainOrder = null;
+        try {
+            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        } catch (Exception e) {
+            assertTrue( e instanceof MainGoodLowStockException);
+        }
+
+        //对货品设置一个预计售罄时间，货品剩几件就加几天，这样今天理论上只能下一个数量为1的订单
+        LocalDate planSellOutDate = LocalDate.now().plusDays(orderGood.getProduct().getStock());
+        orderGood.getProduct().setPlanSellOutDate(planSellOutDate);
+        mainProductRepository.save(orderGood.getProduct());
+        mainOrderService.cleanProductStock(orderGood.getProduct());
+        amounts.clear();
+        amounts.put(orderGood,2);
+        try {
+            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        } catch (Exception e) {
+            assertTrue( e instanceof MainGoodLimitStockException);
+        }
+        //如果数量是1，是能下单成功的
+        amounts.clear();
+        amounts.put(orderGood,1);
+        try {
+            mainOrder = newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        } catch (MainGoodLowStockException ignored) {
+        }
+        assertNotNull(mainOrder);
+        //这个时候 上面的订单是未发货状态，但是还是冻结着的，所以还不能下单
+        try{
+            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        } catch (MainGoodLowStockException e) {
+            assertTrue( e instanceof MainGoodLimitStockException);
+        }
+        //再设置预计售罄时间为明天，这样今天应该还能下N/2个单，N是指货品的初始库存数
+        planSellOutDate = LocalDate.now().plusDays(1);
+        orderGood.getProduct().setPlanSellOutDate(planSellOutDate);
+        mainProductRepository.save(orderGood.getProduct());
+        //还没生效，应为map还没清空
+        try{
+            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        } catch (MainGoodLowStockException e) {
+            assertTrue( e instanceof MainGoodLimitStockException);
+        }
+        mainOrderService.cleanProductStock(orderGood.getProduct());
+        //试一试N/2+1的订单应该是限购的
+        amounts.clear();
+        amounts.put(orderGood,orderGood.getProduct().getStock() / 2 + 1);
+        try{
+            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        } catch (MainGoodLowStockException e) {
+            assertTrue( e instanceof MainGoodLimitStockException);
+        }
+        //N/2就能下单成功了
+        amounts.clear();
+        amounts.put(orderGood,orderGood.getProduct().getStock() / 2);
+        try {
+            mainOrder = newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        } catch (MainGoodLowStockException ignored) {
+        }
+        assertNotNull(mainOrder);
 
     }
 

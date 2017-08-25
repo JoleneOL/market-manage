@@ -13,10 +13,14 @@ import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import cn.lmjia.market.core.trj.TRJService;
+import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.jdbc.ConnectionProvider;
 import me.jiangcai.lib.jdbc.JdbcService;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
+import me.jiangcai.logistics.StockService;
+import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.repository.DepotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -64,6 +68,10 @@ public class InitService {
     private Environment environment;
     @Autowired
     private MainGoodService mainGoodService;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private StockService stockService;
 
     @PostConstruct
     @Transactional
@@ -72,6 +80,7 @@ public class InitService {
         database();
         upgrade();
         managers();
+        depots();
         products();
         others();
     }
@@ -126,6 +135,25 @@ public class InitService {
         jdbcService.runJdbcWork(JpaFunctionUtils::enhance);
     }
 
+    private void depots(){
+        if(depotRepository.count() > 0){
+            return;
+        }
+        Depot depot = new Depot();
+        depot.setEnable(true);
+        depot.setCreateTime(LocalDateTime.now());
+        depot.setName("测试仓库");
+        Address address = new Address();
+        address.setCounty("中国");
+        address.setProvince("浙江省");
+        address.setPrefecture("杭州市");
+        address.setOtherAddress("滨江区巴拉巴拉");
+        depot.setAddress(address);
+        depot.setChargePeopleName("张三");
+        depot.setChargePeopleMobile("110");
+        depotRepository.save(depot);
+    }
+
     private void products() throws IOException {
         if (mainProductRepository.count() > 0)
             return;
@@ -148,6 +176,10 @@ public class InitService {
                     mainProduct.setServiceCharge(new BigDecimal(value[2]));
                     mainProduct.setInstall(new BigDecimal(value[3]));
                     mainProduct = mainProductRepository.save(mainProduct);
+                }
+                if(stockService.usableStockTotal(mainProduct) == 0){
+                    Depot depot = depotRepository.findAll().get(0);
+                    stockService.addStock(depot,mainProduct,100,"测试");
                 }
 
                 MainGood mainGood = mainGoodRepository.findByProduct(mainProduct);

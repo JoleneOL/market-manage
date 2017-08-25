@@ -320,6 +320,22 @@ public abstract class CoreServiceTest extends SpringWebTest {
         return null;
     }
 
+    /**
+     * 对指定的商品下单,用于限购测试，需要抛出异常
+     *
+     * @param who       发起者
+     * @param recommend 推荐者
+     * @param mobile    客户手机号码
+     * @param amounts   商品及下单数
+     * @return
+     */
+    protected MainOrder newRandomOrderFor(Login who, Login recommend, String mobile, Map<MainGood, Integer> amounts) throws MainGoodLowStockException {
+        return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
+                , mobile, 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
+                , randomAddress()
+                , amounts, random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+    }
+
     private Map<MainGood, Integer> randomMainOrderAmountSet() {
         Map<MainGood, Integer> data = new HashMap<>();
         int count = 2 + random.nextInt(2);
@@ -329,9 +345,9 @@ public abstract class CoreServiceTest extends SpringWebTest {
         //保证 订单中至少有1个 非空的货品
         while (count-- > 0 || data.size() == 0) {
             MainGood randomGood = forSaleGoodList.stream()
-                    .filter(good -> !data.keySet().contains(good) && good.getProduct() != null)// && good.getProduct().getStock() > 0)
+                    .filter(good -> !data.keySet().contains(good) && good.getProduct() != null && good.getProduct().getStock() > 0)
                     .max(new RandomComparator()).orElse(null);
-            if(randomGood != null){
+            if (randomGood != null) {
                 data.put(randomGood, 1 + random.nextInt(10));
             }
         }
