@@ -8,6 +8,7 @@ import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
+import cn.lmjia.market.core.lock.MultiBusinessSafe;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
@@ -112,7 +113,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
                 LocalDateTime now = LocalDateTime.now();
                 LocalDateTime nextRuntime;
-                if(now.getHour() <= offsetHour){
+                if(now.getHour() >= offsetHour){
                     nextRuntime = LocalDate.now().plusDays(1).atTime(offsetHour,0);
                 }else{
                     nextRuntime = LocalDate.now().atTime(offsetHour,0);
@@ -126,14 +127,15 @@ public class MainOrderServiceImpl implements MainOrderService {
         });
     }
 
+    @MultiBusinessSafe
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
-            , Address installAddress, Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException {
+            , Address installAddress, Amounts amounts, String mortgageIdentifier) throws MainGoodLowStockException {
         // 客户处理
         Customer customer = customerService.getNoNullCustomer(name, mobile, loginService.lowestAgentLevel(getEnjoyability(who))
                 , recommendBy);
         //检查货品库存数量
-        checkGoodStock(amounts);
+        checkGoodStock(amounts.getAmounts());
 
         customer.setInstallAddress(installAddress);
         customer.setGender(gender);
@@ -142,7 +144,7 @@ public class MainOrderServiceImpl implements MainOrderService {
 
         MainOrder order = new MainOrder();
 //        order.setAmount(amount);
-        order.setAmounts(amounts);
+        order.setAmounts(amounts.getAmounts());
         order.setCustomer(customer);
         order.setInstallAddress(installAddress);
         order.setMortgageIdentifier(mortgageIdentifier);
@@ -155,16 +157,27 @@ public class MainOrderServiceImpl implements MainOrderService {
         queryDailySerialId(now, order);
         order.setOrderStatus(OrderStatus.forPay);
         order = mainOrderRepository.saveAndFlush(order);
-        Integer maxMinuteForPay = systemStringService.getCustomSystemString("market.core.service.order.maxMinuteForPay", null, true, Integer.class, defaultMaxMinuteForPay);
+        Integer maxMinuteForPay = systemStringService.getCustomSystemString(
+                "market.core.service.order.maxMinuteForPay", null, true, Integer.class
+                , defaultMaxMinuteForPay);
         //如果开启了 关闭订单 这个功能
         if (maxMinuteForPay != null) {
             //创建成功，建立 Executor 在指定时间内关闭订单
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             //如果是跑单元测试，就把单位设置为秒
-            executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), maxMinuteForPay, maxMinuteForPay
+            executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), maxMinuteForPay
+                    , maxMinuteForPay
                     , !env.acceptsProfiles(CoreConfig.ProfileUnitTest) ? TimeUnit.MINUTES : TimeUnit.SECONDS);
         }
         return order;
+    }
+
+    @Override
+    public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
+            , Address installAddress, Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException {
+        //这里通过外部来调用这个方法是防止跳过AOP
+        return applicationContext.getBean(MainOrderService.class).newOrder(who,recommendBy,name,mobile,age,gender
+                ,installAddress,new Amounts(amounts),mortgageIdentifier);
     }
 
     @Override

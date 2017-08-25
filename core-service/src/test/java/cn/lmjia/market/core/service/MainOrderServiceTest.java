@@ -10,7 +10,10 @@ import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import me.jiangcai.lib.sys.service.SystemStringService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +29,7 @@ import static org.junit.Assert.*;
  * Created by helloztt on 2017-08-21.
  */
 public class MainOrderServiceTest extends CoreServiceTest {
+    private static final Log log = LogFactory.getLog(MainOrderServiceTest.class);
     @Autowired
     private MainOrderService mainOrderService;
     @Autowired
@@ -195,6 +199,22 @@ public class MainOrderServiceTest extends CoreServiceTest {
         }
         assertNotNull(mainOrder);
 
+    }
+
+    @Test
+    @Ignore
+    public void newOrderLockTest(){
+        for(int i = 0 ; i < 5; i ++){
+            ((Runnable) () -> {
+                int j = 5;
+                while (j-- > 0){
+                    log.info(" begin to create order");
+                    newRandomOrderFor(testLogin,testLogin);
+                    waitSometime(5);
+                }
+            }).run();
+        }
+//        waitSometime(30);
     }
 
     private void waitSometime(long second){

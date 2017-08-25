@@ -4,9 +4,11 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
+import cn.lmjia.market.core.lock.MultiBusinessSafe;
+import cn.lmjia.market.core.lock.MultipleBusinessLocker;
+import lombok.Data;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.entity.Depot;
@@ -26,7 +28,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author CJ
@@ -51,6 +52,22 @@ public interface MainOrderService {
     MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress
             , Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException;
+    // 内部API
+    @Data
+    class Amounts implements MultipleBusinessLocker{
+        private final Map<MainGood, Integer> amounts;
+
+        @Override
+        public Object[] toLock() {
+            return amounts.keySet().stream()
+                    .map(mainGood -> ("MainGoodStockLock-"+mainGood.getProduct().getCode()).intern())
+                    .toArray(Object[]::new);
+        }
+    }
+    @MultiBusinessSafe
+    MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
+            , Address installAddress
+            , Amounts amounts, String mortgageIdentifier) throws MainGoodLowStockException;
 
     /**
      * 给所有未支付的订单添加 Executor，如果想  <strong>market.core.service.order.maxMinuteForPay</strong> 实时生效，可以调这个方法
