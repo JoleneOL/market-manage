@@ -52,7 +52,12 @@ public class HaierCoreDriverImpl implements HaierCoreDriver {
 //        }
 //
         if (event.isComplete()) {
-            applicationEventPublisher.publishEvent(new ShiftEvent(order, null, event.getDate()
+            // 如果 类型为入库 并且该订单为入库订单 则宣示成功
+            if ("2".equals(event.getType()) && order.isJustWarehousing())
+                applicationEventPublisher.publishEvent(new ShiftEvent(order, ShiftStatus.success, event.getDate()
+                        , StringUtils.isEmpty(event.getRemark()) ? "进出库确认" : event.getRemark(), event));
+            else
+                applicationEventPublisher.publishEvent(new ShiftEvent(order, null, event.getDate()
                     , StringUtils.isEmpty(event.getRemark()) ? "进出库确认" : event.getRemark(), event));
         } else {
             log.error("[HR] why fired un-completed OutInStore? " + event);

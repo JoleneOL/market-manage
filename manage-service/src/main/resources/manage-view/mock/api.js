@@ -440,6 +440,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'operator': '@pick(["-", "@cname"])',
             'status': '待付款',
             'statusCode': 1,
+            'orderBody': '1台汽车,2个轮子,3个座椅',
             'quickDoneAble': false
         },
         {
@@ -459,6 +460,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'operator': '@pick(["-", "@cname"])',
             'status': '已付款',
             'statusCode': 8,
+            'orderBody': '1台量子手机防辐射芯片,2个量子立式净水机（黑色）,3个量子立式净水机（白色）',
             'quickDoneAble': true
         },
         {
@@ -478,6 +480,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'operator': '@pick(["-", "@cname"])',
             'status': '待发货',
             'statusCode': 2,
+            'orderBody': '1台汽车,2个轮子,3个座椅,1台汽车,2个轮子,3个座椅,1台汽车,2个轮子,3个座椅',
             'quickDoneAble': true
         },
         {
@@ -496,6 +499,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'total': '@integer(3600, 10000)',
             'operator': '@pick(["-", "@cname"])',
             'status': '已发货',
+            'orderBody': '1台量子手机防辐射芯片,2个量子立式净水机（黑色）,3个量子立式净水机（白色）,1个量子台式净水机（黑色）,2个量子台式净水机（白色）,3个量子厨下净水机 ,4个量子空气净化器,10个量子食品优化宝(金色）,100个量子食品优化宝（银色）',
             'statusCode': 9
         },
         {
@@ -514,6 +518,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'total': '@integer(3600, 10000)',
             'operator': '@pick(["-", "@cname"])',
             'status': '订单异常',
+            'orderBody': '1台汽车,2个轮子,3个座椅',
             'statusCode': 7
         },
         {
@@ -533,6 +538,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'operator': '@pick(["-", "@cname"])',
             'status': '待信审',
             'statusCode': 2,
+            'orderBody': '1台汽车,2个轮子,3个座椅',
             'quickDoneAble': true
         },
         {
@@ -552,6 +558,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'operator': '@pick(["-", "@cname"])',
             'status': '信审被拒',
             'statusCode': 4,
+            'orderBody': '1台汽车,2个轮子,3个座椅',
             'quickDoneAble': true
         },
         {
@@ -571,6 +578,7 @@ Mock.mock(/\/orderData\/manageableList/, "get", {
             'operator': '@pick(["-", "@cname"])',
             'status': '待发货',
             'statusCode': 2,
+            'orderBody': '1台汽车,2个轮子,3个座椅',
             'quickDoneAble': '@boolean'
         }
     ]

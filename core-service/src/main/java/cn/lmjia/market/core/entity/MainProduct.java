@@ -8,6 +8,7 @@ import me.jiangcai.logistics.entity.Product;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * 主要货品
@@ -33,6 +34,13 @@ public class MainProduct extends Product {
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal install;
+
+    /**
+     * 计划售罄日期
+     * @since  {@link cn.lmjia.market.core.Version#muPartOrder}
+     */
+    @Column(columnDefinition = "datetime")
+    private LocalDate planSellOutDate;
 
     public Money getDepositMoney() {
         return new Money(deposit);

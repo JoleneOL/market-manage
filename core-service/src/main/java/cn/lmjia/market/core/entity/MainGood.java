@@ -19,6 +19,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 具体的商品，用以销售
@@ -102,5 +103,20 @@ public class MainGood {
             }
         }
         return price.add(product.getInstall());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MainGood)) return false;
+        MainGood good = (MainGood) o;
+        return Objects.equals(id, good.id) &&
+                Objects.equals(product, good.product) &&
+                Objects.equals(channel, good.channel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, product, channel);
     }
 }

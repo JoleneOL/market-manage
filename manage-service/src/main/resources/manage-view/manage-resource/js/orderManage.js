@@ -43,16 +43,6 @@ $(function () {
                 "name": "userLevel"
             },
             {
-                "title": "购买产品",
-                "data": "goods",
-                "name": "goods"
-            },
-            {
-                "title": "数量",
-                "data": "amount",
-                "name": "amount"
-            },
-            {
                 "title": "订单用户",
                 "data": "orderUser",
                 "name": "orderUser"
@@ -78,6 +68,29 @@ $(function () {
                 "name": "total"
             },
             {
+                "title": "订单内容",
+                className: 'table-show-box',
+                "data": function (item) {
+                    var divHeader = '<div class="table-show-list">';
+                    var divFooter = '</div>';
+                    var html = '';
+                    var a = '<ul class="table-show-hide">';
+                    var b = '</ul>';
+                    var htmlClone = '';
+                    $.each(item.orderBody.split(','), function (_, value) {
+                        if (_ < 3)
+                            html += '<span class="center-block m-b-xs">' + value + '</span>';
+                        else
+                            html += '<span class="center-block m-b-xs hide">' + value + '</span>';
+
+                        htmlClone += '<li><span class="center-block m-b-xs">' + value + '</span></li>'
+
+                    });
+                    return divHeader + html + a + htmlClone + b + divFooter;
+                },
+                "name": "orderBody"
+            },
+            {
                 "title": "状态",
                 "name": "status",
                 "data": function (item) {
@@ -91,11 +104,6 @@ $(function () {
                 "data": "orderTime",
                 "name": "orderTime"
             },
-            // {
-            //     "title": "操作人",
-            //     "data": "operator",
-            //     "name": "operator"
-            // },
             {
                 title: "操作",
                 className: 'table-action',
@@ -171,7 +179,14 @@ $(function () {
             "extend": 'colvis',
             "text": "筛选列",
             "className": "btn-success btn-xs"
-        }]
+        }],
+        'fnRowCallback': function (nRow) {
+            $(nRow).hover(function () {
+                $(this).find('.table-show-hide').show();
+            }, function () {
+                $(this).find('.table-show-hide').hide();
+            })
+        }
     });
 
     $._table = table;

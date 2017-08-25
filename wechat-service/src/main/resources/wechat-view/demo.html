@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Slideout Demo</title>
+    <meta http-equiv="cleartype" content="on">
+    <meta name="MobileOptimized" content="320">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        .slideout-menu {
+            position: fixed;
+            left: auto;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 0;
+            width: 256px;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            display: none;
+        }
+
+        .slideout-panel {
+            position: relative;
+            z-index: 1;
+            will-change: transform;
+        }
+
+        .slideout-open,
+        .slideout-open body,
+        .slideout-open .slideout-panel {
+            overflow: hidden;
+        }
+
+        .slideout-open .slideout-menu {
+            display: block;
+        }
+
+        .panel:before {
+            content: '';
+            display: block;
+            background-color: rgba(0,0,0,0);
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .panel-open:before {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,.5);
+            z-index: 99;
+        }
+    </style>
+</head>
+<body>
+
+<nav id="menu">
+    <h2>Menu</h2>
+    <button class="close-button">X</button>
+</nav>
+
+<main id="panel" class="panel">
+    <header>
+        <button class="open-button">☰</button>
+        <h2>Panel</h2>
+    </header>
+</main>
+
+<script src="../wechat-resource/assets/js/slideout.min.js"></script>
+<script>
+    var slideout = new Slideout({
+        'panel': document.getElementById('panel'),
+        'menu': document.getElementById('menu'),
+        'padding': 256,
+        'tolerance': 70,
+        'side': 'right'
+    });
+
+    // Toggle button
+    document.querySelector('.open-button').addEventListener('click', function() {
+        slideout.open();
+    });
+
+
+    document.querySelector('.close-button').addEventListener('click', close);
+
+
+    function close(eve) {
+        eve.preventDefault();
+        slideout.close();
+    }
+
+    slideout
+        .on('beforeopen', function() {
+            this.panel.classList.add('panel-open');
+        })
+        .on('open', function() {
+            this.panel.addEventListener('click', close);
+        })
+        .on('beforeclose', function() {
+            this.panel.classList.remove('panel-open');
+            this.panel.removeEventListener('click', close);
+        });
+</script>
+
+</body>
+</html>

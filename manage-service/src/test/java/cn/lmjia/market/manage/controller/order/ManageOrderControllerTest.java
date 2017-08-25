@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller.order;
 
+import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.OrderStatus;
@@ -9,6 +10,7 @@ import com.jayway.jsonpath.JsonPath;
 import me.jiangcai.lib.test.matcher.NumberMatcher;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.StockService;
+import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
@@ -54,6 +56,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 
         makeOrderPay(order);
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
+                .as("刚付款好，应该是待发货状态")
                 .isEqualByComparingTo(OrderStatus.forDeliver);
         // 假定当前无货 所以应该看不到任何可用仓库
 //        mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
@@ -61,17 +64,30 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 //                .andExpect(jsonPath("$.depots.length()").value(0));
         // 首先得有仓库
         addNewHaierDepot();
-        stockService.addStock(
-                depotRepository.findAll().stream()
-                        .filter(depot -> depot instanceof HaierDepot)
-                        .max(new RandomComparator()).orElse(null)
-                , order.getGood().getProduct()
+
+        final Depot targetDepot = depotRepository.findAll().stream()
+                .filter(depot -> depot instanceof HaierDepot)
+                .max(new RandomComparator()).orElse(null);
+
+        order.getAmounts().forEach((good, integer) -> stockService.addStock(
+                targetDepot
+                , good.getProduct()
                 , 100000, null
-        );
+        ));
+
+//        设定一样商品为我们的检测数据
+        MainGood good = order.getAmounts().keySet().stream().max(new RandomComparator()).orElse(null);
+
 
         // 记录原来的库存总量
-        int originStock = stockService.usableStockTotal(order.getGood().getProduct());
+        int originStock = stockService.usableStockTotal(good.getProduct());
 
+        log.info("原库存:" + originStock);
+        // 同货品的数量
+        int costTargetGoodProduct = order.getAmounts().entrySet().stream()
+                .filter(entry -> entry.getKey().getProduct().equals(good.getProduct()))
+                .mapToInt(Map.Entry::getValue)
+                .sum();
         String responseString = mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.depots.length()").value(NumberMatcher.numberGreatThanOrEquals(1)))
@@ -86,13 +102,16 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         )
                 .andExpect(status().is2xxSuccessful());
 
-        assertThat(stockService.usableStockTotal(order.getGood().getProduct()))
-                .isEqualTo(originStock - order.getAmount());
+        assertThat(stockService.usableStockTotal(good.getProduct()))
+                .as("执行发货之后，可用库存应该减少")
+                .isEqualTo(originStock - costTargetGoodProduct);
 
         // 断言库存量 应该减少了 暂时跳过
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
+                .as("调整为 已发货 并且等待物流的状态")
                 .isEqualByComparingTo(OrderStatus.forDeliverConfirm);
         assertThat(mainOrderService.getOrder(order.getId()).getLogisticsSet())
+                .as("肯定存在物流记录")
                 .isNotEmpty();
 
         // 那么物流订单失败之后呢？
@@ -100,6 +119,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         logisticsService.mockToStatus(rejectUnit.getId(), ShiftStatus.reject);
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
+                .as("物流最终被退回 那么状态应该恢复至待发货")
                 .isEqualByComparingTo(OrderStatus.forDeliver);
 
         // 重新发货
@@ -116,6 +136,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         logisticsService.mockToStatus(rejectUnit.getId(), ShiftStatus.success);
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
+                .as("物流完成之后 订单也应该完成")
                 .isEqualByComparingTo(OrderStatus.forInstall);
 
 

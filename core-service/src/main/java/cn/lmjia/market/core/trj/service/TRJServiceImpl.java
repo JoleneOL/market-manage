@@ -216,7 +216,7 @@ public class TRJServiceImpl implements TRJService {
         try {
             submitOrderCompleteRequest(payOrder.getAuthorisingInfo().getId(), order.getId()
                     , toTRJString(order.getInstallAddress()), installer, installCompany, mobile
-                    , installTime.format(formatter), order.getAmount(), resourcePath);
+                    , installTime.format(formatter), order.getTotalAmount(), resourcePath);
         } catch (Exception e) {
             log.debug("[TRJ]", e);
             String code;
@@ -227,7 +227,7 @@ public class TRJServiceImpl implements TRJService {
                                 ",\"%s\",%d,null)"
                         , payOrder.getAuthorisingInfo().getId(), order.getId()
                         , toTRJString(order.getInstallAddress()), installer, installCompany, mobile
-                        , installTime.format(formatter), order.getAmount());
+                        , installTime.format(formatter), order.getTotalAmount());
             else
                 code = String.format("context.getBean(Packages.cn.lmjia.market.core.trj.TRJService.class).submitOrderCompleteRequest(" +
                                 "\"%s\",%d" +
@@ -235,7 +235,7 @@ public class TRJServiceImpl implements TRJService {
                                 ",\"%s\",%d,\"%s\")"
                         , payOrder.getAuthorisingInfo().getId(), order.getId()
                         , toTRJString(order.getInstallAddress()), installer, installCompany, mobile
-                        , installTime.format(formatter), order.getAmount(), resourcePath);
+                        , installTime.format(formatter), order.getTotalAmount(), resourcePath);
 
             submitTask("提交信审请求", code);
         }
@@ -373,8 +373,8 @@ public class TRJServiceImpl implements TRJService {
             recommendId = 0L;
         try {
             submitOrderInfo(info.getId(), order.getId(), order.getCustomer().getName(), info.getIdNumber()
-                    , order.getCustomer().getMobile(), order.getGood().getProduct().getCode()
-                    , order.getGood().getProduct().getName(), order.getAmount()
+                    , order.getCustomer().getMobile(), order.getOrderProductCode()
+                    , order.getGoodName(), order.getTotalAmount()
                     , order.getOrderDueAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
                     , toTRJString(order.getInstallAddress()), order.getOrderTime().format(formatter)
                     , recommendId);
@@ -388,8 +388,8 @@ public class TRJServiceImpl implements TRJService {
                             ",\"%s\"" +
                             ",\"%s\",\"%s\",%d)"
                     , info.getId(), order.getId(), order.getCustomer().getName(), info.getIdNumber()
-                    , order.getCustomer().getMobile(), order.getGood().getProduct().getCode()
-                    , order.getGood().getProduct().getName(), order.getAmount()
+                    , order.getCustomer().getMobile(), order.getOrderProductCode()
+                    , order.getGoodName(), order.getTotalAmount()
                     , order.getOrderDueAmount().setScale(2, BigDecimal.ROUND_HALF_UP).toString()
                     , toTRJString(order.getInstallAddress()), order.getOrderTime().format(formatter)
                     , recommendId);

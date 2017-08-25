@@ -9,33 +9,27 @@ $(function () {
     var logisticsDetailURL = 'logisticsDetail.html';
     var invoiceURL = $body.attr('data-invoice-url');
     var orderTpl = function (obj) {
-        return '<div class="weui-form-preview view-mb-20 view-form-card_line">' +
-            '<div class="view-form-preview-ex"> <div class="weui-form-preview__item">' +
-            '<p class="weui-form-preview__value">订单时间：' + obj.orderTime + '</p>' +
-            '<label class="weui-form-preview__label text-black">' + obj.status + '</label> ' +
-            '</div> ' +
-            '</div> ' +
-            '<div class="weui-form-preview__bd">' +
-            '<div class="weui-flex"> ' +
-            '<div class="weui-flex__item">' + obj.orderUser + '</div>' +
-            '<div class="weui-flex__item">' + obj.category + ' ' + obj.type + '</div>' +
-            '<div class="weui-flex__item">￥' + obj.total + '</div>' +
-            '</div> ' +
-            '<div class="weui-flex">' +
-            '<div class="weui-flex__item">' + obj.phone + '</div>' +
-            '<div class="weui-flex__item">' + obj.package + '</div>' +
-            '<div class="weui-flex__item">x' + obj.amount + '</div> ' +
-            '</div>' +
-            '</div>' +
-            '<div class="weui-form-preview__ft view_form-button-group">' +
-            '<div class="button_sp_area">' +
-            orderList.hasInvoice(obj) +
+        return '<div class="view-order-list view-mb-20">\n' +
+            '        <div class="weui-cells__title">\n' +
+            '            <p class="weui-cell__bd text-black">收件人：' + obj.orderUser + '<br>手机号：' + obj.phone + '</p>\n' +
+            '            <label class="text-black">' + orderList.statusString(obj)  + '</label>' +
+            '        </div>\n' +
+            '        <div class="weui-cells">\n' +
+            goodsList(obj) +
+            '        </div>\n' +
+            '        <div class="view-order-list_ex">\n' +
+            '            <p class="view-order_ex_title">合计：￥' + obj.total + '</p>\n' +
+            '            <p class="view-order_ex_title text-gray">订单时间：' + obj.orderTime + '</p>\n' +
+            '        </div>\n' +
+            '        <div class="view-order-list_ft">\n' +
+            '            <div class="button_sp_area">\n' +
+            // orderList.hasInvoice(obj) +
             orderList.toPay(obj) +
-            '<a href="' + orderDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>' +
-            // '<a href="' + logisticsDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
+            '                <a href="' + orderDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>' +
+            // '             <a href="' + logisticsDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '    </div>'
     };
 
 
@@ -45,7 +39,8 @@ $(function () {
             if (obj.statusCode === 1) {
                 var a = '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">取消订单</a>';
                 var b = '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_primary">支付</a>';
-                return a + b;
+                // return a + b;
+                return b;
             }
             return dom;
         },
@@ -57,7 +52,26 @@ $(function () {
             return '<a href="refund-A.html" class="weui-btn weui-btn_mini weui-btn_default_custom">退款</a>' +
                 '<a href="' + invoiceURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">开发票</a>'
 
+        },
+        statusString: function (obj) {
+            if (obj.statusCode === 1) {
+                return '未付款';
+            } else {
+                return '已付款';
+            }
+
         }
+    };
+
+    var goodsList = function (obj) {
+        var dom = '';
+        $.each(obj.goods, function (i, v) {
+            dom += '<div class="weui-cell">\n' +
+                '       <div class="weui-cell__bd">' + v.name + '</div>\n' +
+                '       <div class="weui-cell__ft">x' + v.amount + '</div>\n' +
+                '   </div>\n';
+        });
+        return dom;
     };
     var tabsItem = $('.view-tabs_item');
     var tabsSwiper = $('#tabs-container').swiper({
@@ -104,7 +118,7 @@ $(function () {
                 v.reload({
                     debug: true,
                     ajaxData: {search: input},
-                    removeEle: '.view-form-card_line'
+                    removeEle: '.view-order-list'
                 })
             });
         }

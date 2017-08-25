@@ -88,7 +88,9 @@ public class RowDefinitionHandler implements HandlerMethodReturnValueHandler {
 
         // where
         dataQuery = where(criteriaBuilder, dataQuery, root, rowDefinition);
+        dataQuery = rowDefinition.dataGroup(criteriaBuilder, dataQuery, root);
         countQuery = where(criteriaBuilder, countQuery, countRoot, rowDefinition);
+        countQuery = rowDefinition.countQuery(criteriaBuilder, countQuery, countRoot);
 
         if (distinct)
             countQuery = countQuery.select(criteriaBuilder.countDistinct(rowDefinition.count(countQuery, criteriaBuilder, countRoot)));
