@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.lock;
+package cn.lmjia.market.core.aop;
 
 /**
  * 支持成为一个业务锁

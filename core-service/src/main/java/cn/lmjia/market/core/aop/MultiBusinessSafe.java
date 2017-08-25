@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.lock;
+package cn.lmjia.market.core.aop;
 
 import java.lang.annotation.*;
 

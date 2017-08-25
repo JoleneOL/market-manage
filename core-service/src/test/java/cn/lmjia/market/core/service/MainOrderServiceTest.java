@@ -4,7 +4,6 @@ import cn.lmjia.market.core.CoreServiceTest;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
@@ -13,7 +12,6 @@ import me.jiangcai.lib.sys.service.SystemStringService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -55,7 +56,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         //如果货品已经存在订单了，就先给他一个初始值
         saleGoodList.forEach(mainGood -> {
             int lockStock = mainOrderService.sumProductNum(mainGood.getProduct());
-            lockStockMap.put(mainGood.getId(),lockStock);
+            lockStockMap.put(mainGood.getId(), lockStock);
         });
 
         //未支付订单
@@ -104,31 +105,31 @@ public class MainOrderServiceTest extends CoreServiceTest {
     }
 
     @Test
-    public void closeOrderTest(){
+    public void closeOrderTest() {
         //------------------
         //1.设置关闭时间为10s
-        systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay",10);
-        MainOrder orderWithClose = newRandomOrderFor(testLogin,testLogin);
-        assertEquals(OrderStatus.forPay,orderWithClose.getOrderStatus());
+        systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay", 10);
+        MainOrder orderWithClose = newRandomOrderFor(testLogin, testLogin);
+        assertEquals(OrderStatus.forPay, orderWithClose.getOrderStatus());
         //等他15s，订单应该关闭了
         waitSometime(15);
         orderWithClose = mainOrderService.getOrder(orderWithClose.getId());
-        assertEquals(OrderStatus.close,orderWithClose.getOrderStatus());
+        assertEquals(OrderStatus.close, orderWithClose.getOrderStatus());
 
         //2.先不设定关闭时间，然后再开启关闭订单功能
         systemStringService.delete("market.core.service.order.maxMinuteForPay");
         MainOrder orderWithoutClose = newRandomOrderFor(testLogin, testLogin);
-        assertEquals(OrderStatus.forPay,orderWithoutClose.getOrderStatus());
+        assertEquals(OrderStatus.forPay, orderWithoutClose.getOrderStatus());
         //等他2s,意思意思
         orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
         waitSometime(2);
-        assertEquals(OrderStatus.forPay,orderWithoutClose.getOrderStatus());
-        systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay",10);
+        assertEquals(OrderStatus.forPay, orderWithoutClose.getOrderStatus());
+        systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay", 10);
         mainOrderService.createExecutorToForPayOrder();
         //之前已经等了2s了，现在等9s 就够了
         waitSometime(9);
         orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
-        assertEquals(OrderStatus.close,orderWithoutClose.getOrderStatus());
+        assertEquals(OrderStatus.close, orderWithoutClose.getOrderStatus());
     }
 
     @Test
@@ -136,13 +137,13 @@ public class MainOrderServiceTest extends CoreServiceTest {
         List<MainGood> saleGoodList = mainGoodService.forSale();
         MainGood orderGood = saleGoodList.get(0);
         //对这个订单下单超过货品库存
-        Map<MainGood,Integer> amounts = new HashMap<>();
-        amounts.put(orderGood,orderGood.getProduct().getStock() + random.nextInt(10));
+        Map<MainGood, Integer> amounts = new HashMap<>();
+        amounts.put(orderGood, orderGood.getProduct().getStock() + random.nextInt(10));
         MainOrder mainOrder = null;
         try {
-            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+            newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (Exception e) {
-            assertTrue( e instanceof MainGoodLowStockException);
+            assertTrue(e instanceof MainGoodLowStockException);
         }
 
         //对货品设置一个预计售罄时间，货品剩几件就加几天，这样今天理论上只能下一个数量为1的订单
@@ -151,73 +152,83 @@ public class MainOrderServiceTest extends CoreServiceTest {
         mainProductRepository.save(orderGood.getProduct());
         mainOrderService.cleanProductStock(orderGood.getProduct());
         amounts.clear();
-        amounts.put(orderGood,2);
+        amounts.put(orderGood, 2);
         try {
-            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+            newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (Exception e) {
-            assertTrue( e instanceof MainGoodLimitStockException);
+            assertTrue(e instanceof MainGoodLimitStockException);
         }
         //如果数量是1，是能下单成功的
         amounts.clear();
-        amounts.put(orderGood,1);
+        amounts.put(orderGood, 1);
         try {
-            mainOrder = newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+            mainOrder = newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (MainGoodLowStockException ignored) {
         }
         assertNotNull(mainOrder);
         //这个时候 上面的订单是未发货状态，但是还是冻结着的，所以还不能下单
-        try{
-            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        try {
+            newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (MainGoodLowStockException e) {
-            assertTrue( e instanceof MainGoodLimitStockException);
+            assertTrue(e instanceof MainGoodLimitStockException);
         }
         //再设置预计售罄时间为明天，这样今天应该还能下N/2个单，N是指货品的初始库存数
         planSellOutDate = LocalDate.now().plusDays(1);
         orderGood.getProduct().setPlanSellOutDate(planSellOutDate);
         mainProductRepository.save(orderGood.getProduct());
-        //还没生效，应为map还没清空
-        try{
-            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        //还没生效，因为map还没清空
+        try {
+            newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (MainGoodLowStockException e) {
-            assertTrue( e instanceof MainGoodLimitStockException);
+            assertTrue(e instanceof MainGoodLimitStockException);
         }
         mainOrderService.cleanProductStock(orderGood.getProduct());
         //试一试N/2+1的订单应该是限购的
         amounts.clear();
-        amounts.put(orderGood,orderGood.getProduct().getStock() / 2 + 1);
-        try{
-            newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        amounts.put(orderGood, orderGood.getProduct().getStock() / 2 + 1);
+        try {
+            newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (MainGoodLowStockException e) {
-            assertTrue( e instanceof MainGoodLimitStockException);
+            assertTrue(e instanceof MainGoodLimitStockException);
         }
         //N/2就能下单成功了
         amounts.clear();
-        amounts.put(orderGood,orderGood.getProduct().getStock() / 2);
+        amounts.put(orderGood, orderGood.getProduct().getStock() / 2);
         try {
-            mainOrder = newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+            mainOrder = newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (MainGoodLowStockException ignored) {
         }
         assertNotNull(mainOrder);
 
     }
 
+    /**
+     * 只是一个多线程的多重锁检查，没有做校验
+     */
     @Test
-    @Ignore
-    public void newOrderLockTest(){
-        for(int i = 0 ; i < 5; i ++){
-            ((Runnable) () -> {
-                int j = 5;
-                while (j-- > 0){
-                    log.info(" begin to create order");
-                    newRandomOrderFor(testLogin,testLogin);
-                    waitSometime(5);
+    public void newOrderLockTest() {
+//        List<MainGood> saleGoodList = mainGoodService.forSale();
+//        MainGood orderGood = saleGoodList.get(0);
+//        Map<MainGood, Integer> amounts = new HashMap<>();
+//        amounts.put(orderGood, orderGood.getProduct().getStock() + random.nextInt(10));
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
+        int threadNum = 3;
+        log.info("-------------");
+        while (threadNum-- > 0) {
+            //本次任务完成后才会执行新的任务
+            executor.scheduleWithFixedDelay(() -> {
+                int i = 5;
+                while (i-- > 0) {
+                    log.debug("thread:" + Thread.currentThread().getName());
+                    newRandomOrderFor(testLogin, testLogin);
                 }
-            }).run();
+            }, 0, 5, TimeUnit.SECONDS);
+
         }
-//        waitSometime(30);
+        waitSometime(5);
     }
 
-    private void waitSometime(long second){
+    private void waitSometime(long second) {
         try {
             Thread.sleep(second * 1000);
         } catch (InterruptedException ignored) {

@@ -8,7 +8,7 @@ import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
-import cn.lmjia.market.core.lock.MultiBusinessSafe;
+import cn.lmjia.market.core.aop.MultiBusinessSafe;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
@@ -127,7 +127,6 @@ public class MainOrderServiceImpl implements MainOrderService {
         });
     }
 
-    @MultiBusinessSafe
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress, Amounts amounts, String mortgageIdentifier) throws MainGoodLowStockException {
@@ -195,7 +194,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                     .forEach(order -> {
                         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
                         long waitMinute = ChronoUnit.MINUTES.between(now, order.getOrderTime().plusMinutes(maxMinuteForPay));
-                        executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), waitMinute, waitMinute, TimeUnit.MINUTES);
+                        executor.scheduleWithFixedDelay(new OrderPayStatusCheckThread(order.getId(), executor), waitMinute, waitMinute, TimeUnit.MINUTES);
                     });
         }
     }
