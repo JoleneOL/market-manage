@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.lock;
+package cn.lmjia.market.core.aop;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,15 +12,16 @@ import org.springframework.stereotype.Component;
  * Created by helloztt on 2017-01-09.
  */
 @Aspect
+@Component
 public class MakeSafe {
 
     private static final Log log = LogFactory.getLog(MakeSafe.class);
 
-    @Pointcut("@annotation(cn.lmjia.market.core.lock.BusinessSafe)")
+    @Pointcut("@annotation(cn.lmjia.market.core.aop.BusinessSafe)")
     public void safePoint() {
     }
 
-    @Pointcut("@annotation(cn.lmjia.market.core.lock.MultiBusinessSafe)")
+    @Pointcut("@annotation(cn.lmjia.market.core.aop.MultiBusinessSafe)")
     public void multipleSafePoint(){
     }
 
@@ -66,20 +67,24 @@ public class MakeSafe {
     }
 
     private Object multiLock(Object[] locks,ProceedingJoinPoint pjp) throws Throwable {
-        if(locks.length == 0){
+        if(locks.length == 1){
             synchronized (locks[0]){
                 try {
-                    log.debug("entering lock method:" + pjp.toShortString());
+                    log.debug(Thread.currentThread().getName() + " entering lock method:" + pjp.toShortString() + " with aop " + locks[0]);
                     return pjp.proceed();
                 } finally {
-                    log.debug("exited lock method:" + pjp.toShortString());
+                    log.debug(Thread.currentThread().getName() + "exited lock method:" + pjp.toShortString());
                 }
             }
         }else{
             Object[] newLocks = new Object[locks.length-1];
             System.arraycopy(locks,1,newLocks,0,newLocks.length);
-            multiLock(newLocks,pjp);
+            log.debug(Thread.currentThread().getName() + "lock:" + locks[0]);
+            try {
+                return multiLock(newLocks,pjp);
+            }finally {
+                log.debug(Thread.currentThread().getName() + "unlock:" + locks[0]);
+            }
         }
-        return null;
     }
 }
