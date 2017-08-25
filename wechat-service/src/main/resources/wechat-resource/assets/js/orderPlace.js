@@ -38,6 +38,52 @@ $(function () {
         info.find('.js-installment').text((num / 24).toFixed(2));
     }
 
+
+    var $goodListData = $('#J_goodsList').find('.js-goods-list');
+    var $goodsListArea = $('#J_goodsListArea');
+    var $showGoodsList = $('#J_showGoodsList');
+
+    function getBuyData() {
+        var dataJSON = [];
+        $goodListData.each(function () {
+            var data = {};
+            if ($(this).attr('data-amount') > 0) {
+                data['id'] = $(this).attr('data-id');
+                data['model'] = $(this).attr('data-model');
+                data['goods'] = $(this).attr('data-goods');
+                data['price'] = $(this).attr('data-price');
+                data['amount'] = $(this).attr('data-amount');
+                dataJSON.push(data);
+            }
+        });
+        return dataJSON;
+    }
+
+    function setBuyData(array) {
+        $goodsListArea.empty();
+        $.each(array, function (i, v) {
+            var hiddenInput = $('<input type="hidden" name="goods">').val(v['id'] + ',' + v['amount']).attr('data-id', v['id']);
+            $goodsListArea.append(hiddenInput);
+        });
+    }
+
+    function makeBuyList(array) {
+        $showGoodsList.empty();
+        $.each(array, function (i, v) {
+            var goods = $('<div class="weui-cell js-showList" data-id="' + v['id'] + '" data-amount="' + v['amount'] + '">\n' +
+                '              <div class="weui-cell__bd">\n' +
+                '                  <p>' + v['goods'] + '</p>\n' +
+                '                  <p class="weui-media-box__desc">' + v['model'] + '</p>\n' +
+                '              </div>\n' +
+                '              <div class="weui-cell__bd">\n' +
+                '                  <p class="text-error text-right">￥<span>' + v['price'] + '</span></p>\n' +
+                '                  <p class="text-error text-right">x<span>' + v['amount'] + '</span></p>\n' +
+                '              </div>\n' +
+                '          </div>');
+            $showGoodsList.append(goods);
+        });
+    }
+
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1([34578])\d{9}$/;
@@ -70,6 +116,10 @@ $(function () {
             amount: {
                 required: "请填写购买数量"
             },
+            idNumber: {
+                maxlength: '身份证长度为18位',
+                minlength: '身份证长度为18位'
+            },
             isAgree: "请同意《用户协议》"
         },
         errorPlacement: function (error, element) {
@@ -83,12 +133,70 @@ $(function () {
         },
         submitHandler: function (form) {
             if ($showGoodsList.children().length > 0)
-                // console.log($('#J_form').serialize());
-                form.submit();
+                submitOrder($('#J_form').serializeObject());
             else
                 $.toptip('商品列表不能为空', 1000);
         }
     });
+
+    function submitOrder(data) {
+        $.showLoading('订单提交中');
+        //TODO 接口请确认
+        $.ajax('/wechatOrder', {
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                $.hideLoading();
+                // TODO  目前不知道服务端状态码，假设401为缺货状态
+                // TODO  data[Array] {id:商品,stock:现在库存}
+                if (data.resultCode === 401) {
+                    $.toptip(data.resultMsg);
+                    resetGoodsList(data.data);
+                    return false;
+                }
+                if (data.resultCode !== 200) {
+                    $.toptip("订单提交失败，请重试");
+                    return false;
+                }
+                $.toptip("校验成功", "success");
+                //TODO 提交成功后的跳转
+                window.location.href = 'pay.html';
+            },
+            error: function () {
+                $.hideLoading();
+                $.toptip("系统错误");
+            }
+        })
+    }
+
+    function resetGoodsList(data) {
+        $.each(data, function (i, v) {
+            var id = v.id;
+            var stock = v.stock;
+            $goodListData.each(function () {
+                if ($(this).attr('data-id') == id) {
+                    var step = $(this).attr('data-amount');
+                    $(this).attr('data-amount', 0)
+                        .find('.js-limit-text').text(stock)
+                        .end()
+                        .find('.js-buy-value').prop('max', stock).val(0);
+                    if (stock == 0) {
+                        $(this).addClass('sold-out');
+                    }
+                    countTotal($(this), step, false)
+                }
+            });
+            $showGoodsList.find('.js-showList').each(function () {
+                if ($(this).attr('data-id') == id) $(this).remove();
+            });
+            $goodsListArea.find('input[name="goods"]').each(function () {
+                if ($(this).attr('data-id') == id) $(this).remove();
+            });
+        });
+    }
+
+
     $('#J_needInvoice').click(function () {
         var that = $(this);
         $.actions({
@@ -187,51 +295,6 @@ $(function () {
         }
     };
 
-
-    var $goodListData = $('#J_goodsList').find('.js-goods-list');
-    var $goodsListArea = $('#J_goodsListArea');
-    var $showGoodsList = $('#J_showGoodsList');
-
-    function getBuyData() {
-        var dataJSON = [];
-        $goodListData.each(function () {
-            var data = {};
-            if ($(this).attr('data-amount') > 0) {
-                data['id'] = $(this).attr('data-id');
-                data['model'] = $(this).attr('data-model');
-                data['goods'] = $(this).attr('data-goods');
-                data['price'] = $(this).attr('data-price');
-                data['amount'] = $(this).attr('data-amount');
-                dataJSON.push(data);
-            }
-        });
-        return dataJSON;
-    }
-
-    function setBuyData(array) {
-        $goodsListArea.empty();
-        $.each(array, function (i, v) {
-            var hiddenInput = $('<input type="hidden" name="goods">').val(v['id'] + ',' + v['amount']);
-            $goodsListArea.append(hiddenInput);
-        });
-    }
-
-    function makeBuyList(array) {
-        $showGoodsList.empty();
-        $.each(array, function (i, v) {
-            var goods = $('<div class="weui-cell">\n' +
-                '              <div class="weui-cell__bd">\n' +
-                '                  <p>' + v['goods'] + '</p>\n' +
-                '                  <p class="weui-media-box__desc">' + v['model'] + '</p>\n' +
-                '              </div>\n' +
-                '              <div class="weui-cell__bd">\n' +
-                '                  <p class="text-error text-right">￥<span>' + v['price'] + '</span></p>\n' +
-                '                  <p class="text-error text-right">x<span>' + v['amount'] + '</span></p>\n' +
-                '              </div>\n' +
-                '          </div>');
-            $showGoodsList.append(goods);
-        });
-    }
 
     var slideout = new Slideout({
         'panel': document.getElementById('J_main'),
@@ -372,4 +435,20 @@ $(function () {
 
     Spinner.init();
 
+
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    }
 });

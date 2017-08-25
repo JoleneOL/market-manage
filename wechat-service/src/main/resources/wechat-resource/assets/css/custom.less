@@ -1645,3 +1645,19 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 }
+
+.sold-out {
+  ::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, .1);
+    background-image: url("../img/sold-out.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50%;
+  }
+}
