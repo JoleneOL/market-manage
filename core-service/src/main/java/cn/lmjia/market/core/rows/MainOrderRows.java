@@ -55,6 +55,7 @@ public abstract class MainOrderRows extends AbstractRows<MainOrder> {
     public List<FieldDefinition<MainOrder>> fields() {
         return Arrays.asList(
                 Fields.asBasic("id")
+                , Fields.asBasic("orderBody")
                 , Fields.asBiFunction("user", ((root, criteriaBuilder)
                         -> ReadService.nameForLogin(MainOrder.getOrderByLogin(root)
                         , criteriaBuilder)))

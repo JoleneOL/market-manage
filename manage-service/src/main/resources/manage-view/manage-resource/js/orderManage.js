@@ -68,6 +68,17 @@ $(function () {
                 "name": "total"
             },
             {
+                "title": "订单内容",
+                "data": function (item) {
+                    var html = '';
+                    $.each(item.orderBody.split(','), function (_, value) {
+                        html += '<span>' + value + '</span>';
+                    });
+                    return html;
+                },
+                "name": "orderBody"
+            },
+            {
                 "title": "状态",
                 "name": "status",
                 "data": function (item) {
