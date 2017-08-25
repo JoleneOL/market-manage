@@ -69,12 +69,24 @@ $(function () {
             },
             {
                 "title": "订单内容",
+                className: 'table-show-box',
                 "data": function (item) {
+                    var divHeader = '<div class="table-show-list">';
+                    var divFooter = '</div>';
                     var html = '';
+                    var a = '<ul class="table-show-hide">';
+                    var b = '</ul>';
+                    var htmlClone = '';
                     $.each(item.orderBody.split(','), function (_, value) {
-                        html += '<span>' + value + '</span>';
+                        if (_ < 3)
+                            html += '<span class="center-block m-b-xs">' + value + '</span>';
+                        else
+                            html += '<span class="center-block m-b-xs hide">' + value + '</span>';
+
+                        htmlClone += '<li><span class="center-block m-b-xs">' + value + '</span></li>'
+
                     });
-                    return html;
+                    return divHeader + html + a + htmlClone + b + divFooter;
                 },
                 "name": "orderBody"
             },
@@ -167,7 +179,14 @@ $(function () {
             "extend": 'colvis',
             "text": "筛选列",
             "className": "btn-success btn-xs"
-        }]
+        }],
+        'fnRowCallback': function (nRow) {
+            $(nRow).hover(function () {
+                $(this).find('.table-show-hide').show();
+            }, function () {
+                $(this).find('.table-show-hide').hide();
+            })
+        }
     });
 
     $._table = table;
