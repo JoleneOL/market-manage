@@ -83,6 +83,7 @@ $(function () {
         },
         submitHandler: function (form) {
             if ($showGoodsList.children().length > 0)
+                // console.log($('#J_form').serialize());
                 form.submit();
             else
                 $.toptip('商品列表不能为空', 1000);
