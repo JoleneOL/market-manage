@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.controller.advice;
 
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
@@ -24,8 +25,9 @@ public class ControllerSupport {
     private static final Log log = LogFactory.getLog(ControllerSupport.class);
 
     @ExceptionHandler(InvalidAuthorisingException.class)
-    public String sawInvalidAuthorisingException() {
-        return "redirect:" + TRJEnhanceConfig.TRJOrderURI + "?InvalidAuthorisingException";
+    @ResponseBody
+    public ApiResult sawInvalidAuthorisingException() {
+        return ApiResult.withCodeAndMessage(401,null,null);
     }
 
     @ExceptionHandler(SystemMaintainException.class)
@@ -42,9 +44,14 @@ public class ControllerSupport {
         return ApiResult.withCodeAndMessage(400, ex.getMessage(), null);
     }
 
-    @ExceptionHandler(MainGoodLimitStockException.class)
-    public void sawMainGoodLimitStockException(MainGoodLimitStockException ex){
-        // TODO: 2017/8/23 库存不足以及限购的处理
+    @ExceptionHandler(MainGoodLowStockException.class)
+    @ResponseBody
+    public ApiResult sawMainGoodLimitStockException(MainGoodLowStockException ex){
+        String message = "存在商品库存不足";
+        if(ex instanceof MainGoodLimitStockException){
+            message = "存在商品下单数量超过限购数量";
+        }
+        return ApiResult.withCodeAndMessage(401,message,ex.toData());
     }
 
     @ExceptionHandler(Throwable.class)

@@ -12,6 +12,7 @@ import me.jiangcai.lib.sys.service.SystemStringService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -206,6 +207,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
      * 只是一个多线程的多重锁检查，没有做校验
      */
     @Test
+    @Ignore
     public void newOrderLockTest() {
 //        List<MainGood> saleGoodList = mainGoodService.forSale();
 //        MainGood orderGood = saleGoodList.get(0);

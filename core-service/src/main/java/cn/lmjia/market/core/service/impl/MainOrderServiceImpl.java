@@ -489,15 +489,21 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     private void checkGoodStock(Map<MainGood, Integer> amounts) throws MainGoodLowStockException {
+        Map<MainGood,Integer> lowStockProduct = new HashMap<>();
+        Map<MainGood,LocalDateTime> relieveTime = new HashMap<>();
         for (MainGood good : amounts.keySet()) {
             int usableStock = usableStock(good.getProduct());
             if (good.getProduct().getPlanSellOutDate() == null && usableStock < amounts.get(good)) {
-                throw new MainGoodLowStockException(good);
+                lowStockProduct.put(good,usableStock);
             } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
                 int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultMaxMinuteForPay);
                 LocalDateTime localDateTime = LocalDate.now().plusDays(1).atStartOfDay().plusHours(offsetHour);
-                throw new MainGoodLimitStockException(good, localDateTime);
+                lowStockProduct.put(good,usableStock);
+                relieveTime.put(good,localDateTime);
             }
+        }
+        if(lowStockProduct.size() > 0){
+            throw relieveTime.size() > 0 ? new MainGoodLowStockException(lowStockProduct) : new MainGoodLimitStockException(lowStockProduct,relieveTime);
         }
     }
 

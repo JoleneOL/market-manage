@@ -26,7 +26,7 @@ public abstract class AbstractMainOrderController {
     @Autowired
     private MainGoodRepository mainGoodRepository;
     @Autowired
-    private MainOrderService mainOrderService;
+    protected MainOrderService mainOrderService;
     @Autowired
     private LoginService loginService;
     @Autowired
