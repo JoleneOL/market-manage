@@ -11,6 +11,7 @@ import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -117,7 +119,8 @@ public class ManageProductController {
     public String edit(boolean createNew, String productName, String productBrand, String mainCategory
             , @RequestParam("type") String code, String SKU, BigDecimal productPrice, String unit, BigDecimal length
             , BigDecimal width, BigDecimal height, BigDecimal weight, BigDecimal serviceCharge, String productSummary
-            , String productDetail, boolean installation) {
+            , String productDetail, boolean installation
+            , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) {
         MainProduct product;
         if (createNew) {
             if (StringUtils.isEmpty(code))
@@ -144,6 +147,7 @@ public class ManageProductController {
         product.setVolumeHeight(height);
         product.setWeight(weight);
         product.setInstall(serviceCharge);
+        product.setPlanSellOutDate(planSellOutDate);
         product.setDescription(StringUtils.isEmpty(productSummary) ? null : productSummary);
         product.setRichDescription(StringUtils.isEmpty(productDetail) ? null : productDetail);
 

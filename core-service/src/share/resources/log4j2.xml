@@ -10,6 +10,8 @@
     <loggers>
         <logger name="cn.lmjia.market" level="debug"/>
 
+        <logger name="me.jiangcai.lib.jdbc.impl" level="debug"/>
+
         <logger name="cn.lmjia.market.core.util" level="info"/>
 
         <logger name="cn.lmjia.market.core.service.impl" level="trace"/>

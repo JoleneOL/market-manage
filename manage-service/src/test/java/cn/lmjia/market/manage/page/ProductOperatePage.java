@@ -51,6 +51,8 @@ public abstract class ProductOperatePage extends AbstractContentPage {
     private WebElement productSummary;
 //    @FindBy(name = "richDescription")
 //    private WebElement richDescription;
+    @FindBy(name = "planSellOutDate")
+    private WebElement planSellOutDate;
 
     public ProductOperatePage(WebDriver webDriver) {
         super(webDriver);
@@ -95,6 +97,9 @@ public abstract class ProductOperatePage extends AbstractContentPage {
             tryInput(height, "500");
         if (!fields.contains("weight"))
             tryInput(weight, "500");
+        if (!fields.contains("planSellOutDate")) {
+            // TODO: 2017/8/20 这里应该如何模拟时间控件点击事件？
+        }
 
         webDriver.findElement(By.cssSelector("[type=submit]")).click();
         return initPage(ManageProductPage.class);

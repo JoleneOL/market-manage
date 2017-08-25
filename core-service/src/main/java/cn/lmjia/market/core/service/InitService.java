@@ -3,6 +3,7 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.Version;
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
@@ -35,6 +36,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * 初始化服务
@@ -168,6 +170,33 @@ public class InitService {
             public void upgradeToVersion(Version version) throws Exception {
                 switch (version) {
                     case init:
+                        break;
+                    case muPartOrder:
+                        try {
+                            jdbcService.tableAlterAddColumn(MainProduct.class, "planSellOutDate", null);
+                        } catch (Throwable ignored) {
+                        }
+                        jdbcService.tableAlterAddColumn(MainOrder.class, "goodTotalPriceAmountIndependent", null);
+                        jdbcService.tableAlterAddColumn(MainOrder.class, "goodCommissioningPriceAmountIndependent", null);
+                        jdbcService.tableAlterAddColumn(MainOrder.class, "orderBody", null);
+                        jdbcService.runJdbcWork(connection -> {
+                            if (connection.profile().isMySQL()) {
+                                try (Statement statement = connection.getConnection().createStatement()) {
+                                    try {
+                                        String origin = StreamUtils.copyToString(
+                                                new ClassPathResource("/upgrade/muPartOrder.sql").getInputStream()
+                                                , Charset.forName("UTF-8"));
+                                        StringTokenizer tokenizer = new StringTokenizer(origin, ";");
+                                        while (tokenizer.hasMoreElements()) {
+                                            statement.addBatch(tokenizer.nextToken());
+                                        }
+                                        statement.executeBatch();
+                                    } catch (IOException e) {
+                                        throw new IllegalStateException("what??", e);
+                                    }
+                                }
+                            }
+                        });
                         break;
                     default:
                 }

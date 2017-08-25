@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
@@ -114,14 +115,14 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     @PostMapping("/wechatOrder")
     @Transactional
     public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender
-            , Address address, String mobile, long goodId, int amount
-            , String activityCode, @AuthenticationPrincipal Login login, Model model
+            , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
-            , String authorising, String idNumber, boolean installmentHuabai)
+            , String authorising, String idNumber, boolean installmentHuabai, String[] goods)
             throws SystemMaintainException, InvalidAuthorisingException {
         int age = 20;
-        MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile, goodId, amount
-                , activityCode, channelId);
+        MainGoodsAndAmounts amounts = MainGoodsAndAmounts.ofArray(goods);
+        MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,
+                activityCode, channelId, amounts);
         if (channelId != null) {
             Channel channel = channelService.get(channelId);
             //        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))

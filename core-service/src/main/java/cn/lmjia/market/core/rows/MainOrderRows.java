@@ -2,16 +2,13 @@ package cn.lmjia.market.core.rows;
 
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
-import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.hua.huabei.entity.HuaHuabeiPayOrder;
@@ -70,12 +67,12 @@ public abstract class MainOrderRows extends AbstractRows<MainOrder> {
                         , criteriaBuilder)))
                 , Fields.asBiFunction("phone", (root, criteriaBuilder)
                         -> Customer.getMobile(MainOrder.getCustomer(root)))
-                , Fields.asFunction("category", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.mainCategory))
-                , Fields.asFunction("goods", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.name))
-                , Fields.asFunction("type", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.code))
-                , FieldBuilder.asName(MainOrder.class, "amount")
-                        .addSelect(root -> root.get(MainOrder_.amount))
-                        .build()
+//                , Fields.asFunction("category", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.mainCategory))
+//                , Fields.asFunction("goods", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.name))
+//                , Fields.asFunction("type", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.code))
+//                , FieldBuilder.asName(MainOrder.class, "amount")
+//                        .addSelect(root -> root.get(MainOrder_.amount))
+//                        .build()
                 , Fields.asBiFunction("package", ((root, criteriaBuilder)
                         -> criteriaBuilder.literal("")))
                 , FieldBuilder.asName(MainOrder.class, "method")

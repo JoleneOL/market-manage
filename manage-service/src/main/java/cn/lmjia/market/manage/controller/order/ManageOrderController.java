@@ -78,10 +78,10 @@ public class ManageOrderController {
                                         -> StockShiftUnitRows.getSupplierId(root.join("currentLogistics"), criteriaBuilder))
                                 .build()
                         , Fields.asBiFunction("orderId", MainOrder::getSerialId)
-                        , Fields.asFunction("goods", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.name))
-                        , FieldBuilder.asName(MainOrder.class, "amount")
-                                .addSelect(root -> root.get(MainOrder_.amount))
-                                .build()
+//                        , Fields.asFunction("goods", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.name))
+//                        , FieldBuilder.asName(MainOrder.class, "amount")
+//                                .addSelect(root -> root.get(MainOrder_.amount))
+//                                .build()
                         , getOrderTime()
                         , FieldBuilder.asName(MainOrder.class, "address")
                                 .addSelect(root -> root.get("installAddress"))
@@ -116,12 +116,16 @@ public class ManageOrderController {
                 return (root, query, cb) -> {
                     Predicate predicate = cb.conjunction();
                     if (!StringUtils.isEmpty(mobile))
-                        predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root)), "%" + mobile + "%"));
+                        predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root))
+                                , "%" + mobile + "%"));
                     if (depotId != null) {
                         predicate = cb.and(predicate, cb.equal(root.join("currentLogistics").get("origin").get("id"), depotId));
                     }
                     if (!StringUtils.isEmpty(productCode))
-                        predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.good).get(MainGood_.product).get(Product_.code), productCode));
+                        root.fetch(MainOrder_.amounts);
+                    predicate = cb.and(predicate
+                            , cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.product).get(Product_.code)
+                                    , productCode));
                     if (orderDate != null) {
                         predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate));
                     }
@@ -136,20 +140,20 @@ public class ManageOrderController {
     @Transactional(readOnly = true)
     public Object preLogistics(@PathVariable("orderId") long orderId) {
         Map<String, Object> data = new HashMap<>();
-        MainOrder order = mainOrderService.getOrder(orderId);
+//        MainOrder order = mainOrderService.getOrder(orderId);
         data.put("depots", mainOrderService.depotsForOrder(orderId).stream()
-                .filter(stockInfo -> stockInfo.getAmount() >= order.getAmount())
-                // 库存多的优先
-                .sorted((o1, o2) -> o2.getAmount() - o1.getAmount())
-                .map(info -> {
-                    Map<String, Object> x = new HashMap<>();
-                    x.put("id", info.getDepot().getId());
-                    x.put("name", info.getDepot().getName());
-                    x.put("quantity", info.getAmount());
-                    x.put("distance", -1);
-                    return x;
-                })
-                .collect(Collectors.toSet())
+//                .filter(stockInfo -> stockInfo.getAmount() >= order.getAmount())
+                        // 库存多的优先
+//                .sorted((o1, o2) -> o2.getAmount() - o1.getAmount())
+                        .map(info -> {
+                            Map<String, Object> x = new HashMap<>();
+                            x.put("id", info.getId());
+                            x.put("name", info.getName());
+                            x.put("quantity", 99999);
+                            x.put("distance", -1);
+                            return x;
+                        })
+                        .collect(Collectors.toSet())
         );
         return data;
     }

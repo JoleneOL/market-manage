@@ -109,12 +109,6 @@ $(function () {
                 "title": "物流编号", "data": "supplierId", "name": "supplierId"
             },
             {
-                "title": "商品名称", "data": "goods", "name": "goods"
-            },
-            {
-                "title": "发货数量", "data": "amount", "name": "amount"
-            },
-            {
                 "title": "订单时间", "data": "orderTime", "name": "orderTime"
             },
             {
