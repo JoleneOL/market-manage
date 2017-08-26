@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.MainGoodService;
+import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.entity.Product_;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +27,17 @@ import java.util.List;
 public class MainGoodServiceImpl implements MainGoodService {
     @Autowired
     private MainGoodRepository mainGoodRepository;
+    @Autowired
+    private MainOrderService mainOrderService;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
 
     @Override
     public List<MainGood> forSale(Channel channel) {
+        List<MainGood> mainGoodList;
         if (channel == null)
-            return mainGoodRepository.findAll((root, query, cb) -> {
+            mainGoodList = mainGoodRepository.findAll((root, query, cb) -> {
                 Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
                 return cb.and(
                         cb.isTrue(root.get(MainGood_.enable))
@@ -44,11 +48,16 @@ public class MainGoodServiceImpl implements MainGoodService {
                         )
                 );
             });
-        return mainGoodRepository.findAll((root, query, cb) -> cb.and(
-                cb.isTrue(root.get(MainGood_.enable))
-                , cb.isTrue(root.get(MainGood_.product).get(Product_.enable))
-                , cb.equal(root.get(MainGood_.channel), channel)
-        ));
+        else
+            mainGoodList = mainGoodRepository.findAll((root, query, cb) -> cb.and(
+                    cb.isTrue(root.get(MainGood_.enable))
+                    , cb.isTrue(root.get(MainGood_.product).get(Product_.enable))
+                    , cb.equal(root.get(MainGood_.channel), channel)
+            ));
+        if (mainGoodList != null && mainGoodList.size() > 0) {
+            mainOrderService.calculateGoodStock(mainGoodList);
+        }
+        return mainGoodList;
     }
 
     @Override

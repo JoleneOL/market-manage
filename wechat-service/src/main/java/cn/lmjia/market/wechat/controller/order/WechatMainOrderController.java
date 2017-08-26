@@ -96,8 +96,21 @@ public class WechatMainOrderController extends AbstractMainOrderController {
 //        return payOrder(openId, request, from(null, id));
 //    }
 
+    /**
+     * 微信支付
+     *
+     * @param orderId           订单编号，注意！！！
+     * @param orderPKId         订单主键，注意！！！
+     * @param channelId         渠道
+     * @param authorising       按揭码
+     * @param idNumber          身份证
+     * @param installmentHuabai 是否使用花呗支付
+     * @return 支付页面
+     * @throws SystemMaintainException     系统维护异常
+     * @throws InvalidAuthorisingException 按揭码校验异常
+     */
     @GetMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId,Long orderPKId
+    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId, Long orderPKId
             , Long channelId, String authorising, String idNumber, Boolean installmentHuabai)
             throws SystemMaintainException, InvalidAuthorisingException {
         final MainOrder order = from(orderId, orderPKId);
@@ -108,7 +121,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 return payAssistanceService.payOrder(openId, request, order, authorising, idNumber);
             }
         }
-        if(installmentHuabai != null){
+        if (installmentHuabai != null) {
             order.setHuabei(installmentHuabai);
         }
         return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
@@ -120,6 +133,23 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "wechat@orderDetail.html";
     }
 
+    /**
+     * 微信下单
+     *
+     * @param name              客户姓名
+     * @param gender            客户性别
+     * @param address           地址
+     * @param mobile            手机号
+     * @param activityCode      可选的按揭识别码
+     * @param channelId         渠道
+     * @param authorising       按揭码
+     * @param idNumber          身份证
+     * @param installmentHuabai 是否使用花呗支付
+     * @param goods             下单商品
+     * @return 创建订单结果
+     * @throws MainGoodLowStockException   库存不足异常
+     * @throws InvalidAuthorisingException 按揭码校验异常
+     */
     // name=%E5%A7%93%E5%90%8D&age=99&gender=2
     // &address=%E6%B5%99%E6%B1%9F%E7%9C%81+%E6%9D%AD%E5%B7%9E%E5%B8%82+%E6%BB%A8%E6%B1%9F%E5%8C%BA
     // &fullAddress=%E6%B1%9F%E7%95%94%E6%99%95%E5%95%A6&mobile=18606509616&goodId=2&leasedType=hzts02&amount=0&activityCode=xzs&recommend=2
@@ -137,7 +167,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 activityCode, channelId, amounts);
         JSONObject result = new JSONObject();
         result.put("id", order.getId());
-        if(channelId != null){
+        if (channelId != null) {
             //校验按揭码
             payAssistanceService.checkAuthorising(authorising, idNumber);
             result.put("channelId", channelId);
