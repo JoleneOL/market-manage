@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 /**
  * 联系方式
@@ -21,9 +19,9 @@ import javax.persistence.UniqueConstraint;
 @Getter
 @Setter
 @Entity
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = "mobile")
-})
+//@Table(uniqueConstraints = {
+//        @UniqueConstraint(columnNames = "mobile")
+//})
 public class ContactWay {
 
     @Id

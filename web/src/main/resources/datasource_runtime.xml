@@ -42,6 +42,8 @@
 
         <property name="jpaPropertyMap">
             <map>
+                <!--需支持emoji-->
+                <entry key="eclipselink.session.customizer" value="cn.lmjia.market.core.jpa.MysqlSessionCustomizer"/>
                 <!--在发布初期使用无缓存模式-->
                 <entry key="eclipselink.cache.shared.default" value="false"/>
                 <!--<entry key="eclipselink.session.customizer" value="me.jiangcai.dating.jpa.MysqlSessionCustomizer"/>-->
