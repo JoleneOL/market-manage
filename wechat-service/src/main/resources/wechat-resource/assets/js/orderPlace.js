@@ -170,12 +170,19 @@ $(function () {
                 var idNumber = data.data.idNumber;
                 var authorising = data.data.authorising;
                 //提交成功后的跳转
-                window.location.href = 'wechatOrderPay.html'
+                var payOrderHref = "wechatOrderPay.html"
                     + "?orderPKId=" + orderPKId
-                    + "&channelId=" + channelId
-                    + "&installmentHuabai=" + installmentHuabai
-                    + "&idNumber=" + idNumber
-                    + "&authorising=" + authorising;
+                    + "&installmentHuabai=" + installmentHuabai;
+                if(!!channelId)
+                    payOrderHref = payOrderHref
+                        + "&channelId=" + channelId;
+                if(!!idNumber)
+                    payOrderHref = payOrderHref
+                        + "&idNumber=" + idNumber;
+                if(!!authorising)
+                    payOrderHref = payOrderHref
+                        + "&authorising=" + authorising;
+                window.location.href = payOrderHref;
             },
             error: function () {
                 $.hideLoading();
