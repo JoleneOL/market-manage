@@ -17,10 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public abstract class AbstractWechatMainOrderControllerTest extends WechatTestBase {
 
-    private static final Log log = LogFactory.getLog(AbstractWechatMainOrderControllerTest.class);
-
     private void doOrder() throws Exception {
         mockMvc.perform(wechatGet(SystemService.wechatOrderURi))
+//                    .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("wechat@orderPlace.html"));
+        mockMvc.perform(wechatGet(SystemService.wechatOrderURiHB))
 //                    .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("wechat@orderPlace.html"));

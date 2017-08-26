@@ -445,3 +445,20 @@ textarea {
     margin-right: 6px;
     font-weight: 700;
 }
+
+.table-show-list {
+    position: relative;
+}
+.table-show-hide {
+    padding: 10px;
+    display: none;
+    list-style: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    z-index: 999;
+    box-shadow: 0 12px 24px 0 rgba(7,17,27,.2);
+}

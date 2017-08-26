@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
 <!--/*@thymesVar id="currentData" type="me.jiangcai.logistics.entity.StockShiftUnit"*/-->
+<!--/*@thymesVar id="events" type="java.util.List<me.jiangcai.logistics.entity.StockShiftUnitEvent>"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -86,7 +87,7 @@
                         <div class="package-status">
                             <div class="status-box">
                                 <ul class="list-unstyled status-list">
-                                    <li class="latest" th:each="event:${currentData.events.values()}"
+                                    <li class="latest" th:each="event:${events}"
                                         th:classappend="${eventStat.last?'latest':'latest'}">
                                         <span class="date" th:text="${{event.time.toLocalDate()}}">2017-04-12</span>
                                         <span class="week" th:text="${{event.time.getDayOfWeek()}}">周三</span>

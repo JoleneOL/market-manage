@@ -11,8 +11,8 @@ $(function () {
     var orderTpl = function (obj) {
         return '<div class="view-order-list view-mb-20">\n' +
             '        <div class="weui-cells__title">\n' +
-            '            <p class="weui-cell__bd text-black">收件人：' + obj.orderUser + '&nbsp;&nbsp;' + obj.phone + '</p>\n' +
-            '            <label class="text-black">成功</label>' +
+            '            <p class="weui-cell__bd text-black">收件人：' + obj.orderUser + '<br>手机号：' + obj.phone + '</p>\n' +
+            '            <label class="text-black">' + orderList.statusString(obj)  + '</label>' +
             '        </div>\n' +
             '        <div class="weui-cells">\n' +
             goodsList(obj) +
@@ -23,7 +23,7 @@ $(function () {
             '        </div>\n' +
             '        <div class="view-order-list_ft">\n' +
             '            <div class="button_sp_area">\n' +
-            orderList.hasInvoice(obj) +
+            // orderList.hasInvoice(obj) +
             orderList.toPay(obj) +
             '                <a href="' + orderDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">详情</a>' +
             // '             <a href="' + logisticsDetailURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">查看物流</a>' +
@@ -39,7 +39,8 @@ $(function () {
             if (obj.statusCode === 1) {
                 var a = '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">取消订单</a>';
                 var b = '<a href="' + payURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_primary">支付</a>';
-                return a + b;
+                // return a + b;
+                return b;
             }
             return dom;
         },
@@ -51,6 +52,14 @@ $(function () {
             return '<a href="refund-A.html" class="weui-btn weui-btn_mini weui-btn_default_custom">退款</a>' +
                 '<a href="' + invoiceURL + '?orderId=' + obj.orderId + '" class="weui-btn weui-btn_mini weui-btn_default_custom">开发票</a>'
 
+        },
+        statusString: function (obj) {
+            if (obj.statusCode === 1) {
+                return '未付款';
+            } else {
+                return '已付款';
+            }
+
         }
     };
 
@@ -58,9 +67,9 @@ $(function () {
         var dom = '';
         $.each(obj.goods, function (i, v) {
             dom += '<div class="weui-cell">\n' +
-                '            <div class="weui-cell__bd">' + v.name + '</div>\n' +
-                '            <div class="weui-cell__ft">x' + v.amount + '</div>\n' +
-                '        </div>\n';
+                '       <div class="weui-cell__bd">' + v.name + '</div>\n' +
+                '       <div class="weui-cell__ft">x' + v.amount + '</div>\n' +
+                '   </div>\n';
         });
         return dom;
     };

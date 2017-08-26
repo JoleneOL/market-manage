@@ -70,7 +70,7 @@ public class WechatShareController {
         final Protocol protocol = Protocol.forAccount(publicAccount);
         if (!environment.acceptsProfiles("unit_test")
                 && !protocol.userDetail(openId).isSubscribe()) {
-            model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(loginService.get(id)));
+            model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(loginService.get(id)).getImageUrl());
             return "wechat@subscribe_required.html";
         }
 

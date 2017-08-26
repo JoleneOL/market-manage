@@ -57,9 +57,21 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     /**
      * @return 展示下单页面
      */
+    @GetMapping(SystemService.wechatOrderURiHB)
+    public String indexForHB(@AuthenticationPrincipal Login login, Model model) {
+        model.addAttribute("trj", false);
+        model.addAttribute("huabeiEnable", true);
+        orderIndex(login, model, null);
+        return "wechat@orderPlace.html";
+    }
+
+    /**
+     * @return 展示下单页面
+     */
     @GetMapping(SystemService.wechatOrderURi)
     public String index(@AuthenticationPrincipal Login login, Model model) {
         model.addAttribute("trj", false);
+        model.addAttribute("huabeiEnable", false);
         orderIndex(login, model, null);
         return "wechat@orderPlace.html";
     }
@@ -70,6 +82,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     @GetMapping(TRJEnhanceConfig.TRJOrderURI)
     public String indexForTRJ(@AuthenticationPrincipal Login login, Model model) {
         model.addAttribute("trj", true);
+        model.addAttribute("huabeiEnable", false);
         final Channel channel = channelService.findByName(TRJService.ChannelName);
         if (channel == null)
             throw new IllegalStateException("必要的分期没有被设置。");

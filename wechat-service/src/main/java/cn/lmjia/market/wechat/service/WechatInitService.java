@@ -44,7 +44,10 @@ public class WechatInitService {
                                     createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
                                     , createMenu("下单"
                                     , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
-                                    , createMenu("分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI)))
+                                            , createMenu("花呗分期", systemService.toUrl(SystemService.wechatOrderURiHB))
+                                            , createMenu("投融家分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI))
+                            )
+//                                    ,createMenu("下单", systemService.toUrl(SystemService.wechatOrderURi))
                                     , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
                             }
             );

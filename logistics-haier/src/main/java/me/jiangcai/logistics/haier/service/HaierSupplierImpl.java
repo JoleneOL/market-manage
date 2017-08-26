@@ -120,7 +120,11 @@ public class HaierSupplierImpl implements HaierSupplier {
             // 销售出库
             installation = order.checkInstallation();
             parameters.put("ordertype", "2");
-            parameters.put("bustype", installation ? "2" : "70");
+//            parameters.put("bustype", installation ? "2" : "70");
+            parameters.put("bustype", "2");
+            if (!installation)
+                parameters.put("remark1", "XJ");
+
             parameters.put("storecode", ((HaierDepot) source).getHaierCode());
 
             parameters.put("province", destination.getProvince());

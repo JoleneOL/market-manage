@@ -172,4 +172,12 @@ public class StockShiftUnit {
                 .filter(entry -> entry.getKey().isInstallation())
                 .count() > 0;
     }
+
+    /**
+     *
+     * @return 是否仅仅为入库单
+     */
+    public boolean isJustWarehousing() {
+        return origin==null && destination!=null;
+    }
 }
