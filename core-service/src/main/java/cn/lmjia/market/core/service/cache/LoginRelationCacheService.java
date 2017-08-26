@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.cache;
 
 import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ public interface LoginRelationCacheService {
      * @param customer 新的客户
      */
     @Transactional
+    @Deprecated
     void addCustomerCache(Customer customer);
 
     /**
@@ -48,4 +50,10 @@ public interface LoginRelationCacheService {
      */
     @Transactional
     void breakConnection(AgentLevel level);
+
+    /**
+     * @param login 这个人完成了首次下单
+     */
+    @Transactional
+    void loginFirstOrder(Login login);
 }

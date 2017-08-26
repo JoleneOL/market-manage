@@ -183,13 +183,14 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      */
     private boolean huabei;
 
-    /**
-     * @param from order表
-     * @return 到客户的登录表的关联
-     */
-    public static Join<MainOrder, Login> getCustomerLogin(From<?, MainOrder> from) {
-        return getCustomer(from).join("login");
-    }
+//    /**
+//     * @param from order表
+//     * @return 到客户的登录表的关联
+//     */
+//    @Deprecated
+//    public static Join<Customer, Login> getCustomerLogin(From<?, MainOrder> from) {
+//        return getCustomer(from).join(Customer_.login);
+//    }
 
     /**
      * @param from order表
@@ -264,7 +265,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         record.setMortgageIdentifier(mortgageIdentifier);
         record.setName(customer.getName());
         record.updateAmounts(amounts);
-        record.setRecommendByMobile(recommendBy.getLoginName());
+        if (recommendBy != null)
+            record.setRecommendByMobile(recommendBy.getLoginName());
 
 //        setGoodTotalPrice(good.getTotalPrice());
         setGoodTotalPriceAmountIndependent(withAmount(MainGood::getTotalPrice));

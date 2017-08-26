@@ -99,6 +99,13 @@ public class Login implements UserDetails {
     @Column(scale = 2, precision = 20)
     private BigDecimal commissionBalance = BigDecimal.ZERO;
 
+    /**
+     * 是否拥有一个成功的订单，算是爱心天使的标志吧
+     *
+     * @since {@link cn.lmjia.market.core.Version#newLogin}
+     */
+    private boolean successOrder;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

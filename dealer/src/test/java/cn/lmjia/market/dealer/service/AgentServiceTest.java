@@ -44,7 +44,7 @@ public class AgentServiceTest extends DealerServiceTest {
                 .isEqualTo(system);
         MainOrder order = newRandomOrderFor(sub, login);
 
-        assertThat(agentService.agentSystem(order.getCustomer().getLogin()))
+        assertThat(agentService.agentSystem(order.getOrderBy()))
                 .isEqualTo(system);
 
         // line
@@ -56,7 +56,7 @@ public class AgentServiceTest extends DealerServiceTest {
         assertThat(line2)
                 .hasSize(systemService.systemLevel());
 
-        AgentLevel[] line3 = agentService.agentLine(order.getCustomer().getLogin());
+        AgentLevel[] line3 = agentService.agentLine(order.getOrderBy());
         assertThat(line3)
                 .hasSize(systemService.systemLevel())
                 .containsExactly(line2);

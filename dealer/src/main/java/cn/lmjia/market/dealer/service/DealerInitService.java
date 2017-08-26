@@ -70,6 +70,7 @@ public class DealerInitService {
                 try {
                     addFunction(name, statement, "agentLevel");
                     addFunction(name, statement, "agentBelongs");
+                    addFunction(name, statement, "loginBelongs");
                 } catch (IOException e) {
                     throw new InternalError(e);
                 }

@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
 
 /**
  * @author CJ
@@ -33,7 +29,7 @@ public class TeamServiceImpl implements TeamService {
                         "count( distinct relation.to) " +
                         "from LoginRelation as relation " +
                         (valid ? "" : "where relation.to in (select l from Login as l where  l.guideUser=:current) ") +
-                        (!valid ? "" : "where relation.to in (select cw.login from Customer as cw where cw.login.guideUser=:current and cw.successOrder=true ) ") +
+                        (!valid ? "" : "where relation.to in (select l from Login as l where  l.guideUser=:current and l.successOrder=true ) ") +
 //                (level == null ? "" : " and min(relation.level)=:level ") +
                         "group by relation.to " +
                         (level == null ? "" : " having min(relation.level)=:level ")
@@ -52,20 +48,20 @@ public class TeamServiceImpl implements TeamService {
         }
     }
 
-    @Override
-    public int customers(Login login) {
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Customer> customerRoot = countQuery.from(Customer.class);
-        final Path<Object> loginPath = customerRoot.get("login");
-        countQuery = countQuery.where(criteriaBuilder.equal(loginPath.get("guideUser"), login));
-        countQuery = countQuery.select(criteriaBuilder.countDistinct(loginPath));
-        try {
-            return Math.toIntExact(entityManager.createQuery(countQuery).getSingleResult());
-        } catch (NoResultException ignored) {
-            return 0;
-        }
-    }
+//    @Override
+//    public int customers(Login login) {
+//        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+//        Root<Customer> customerRoot = countQuery.from(Customer.class);
+//        final Path<Login> loginPath = customerRoot.get(Customer_.login);
+//        countQuery = countQuery.where(criteriaBuilder.equal(loginPath.get("guideUser"), login));
+//        countQuery = countQuery.select(criteriaBuilder.countDistinct(loginPath));
+//        try {
+//            return Math.toIntExact(entityManager.createQuery(countQuery).getSingleResult());
+//        } catch (NoResultException ignored) {
+//            return 0;
+//        }
+//    }
 
     @Override
     public int validCustomers(Login login) {

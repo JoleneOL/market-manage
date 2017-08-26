@@ -14,15 +14,18 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
     Customer findByNameAndMobile(String name, String mobile);
 
+    @Deprecated
     List<Customer> findByLogin(Login login);
 
     /**
      * @return 该login已完成订单的客户数
      */
+    @Deprecated
     long countByLoginAndSuccessOrderTrue(Login login);
 
     /**
      * @return 这个代理体系的所有客户
      */
+    @Deprecated
     List<Customer> findByAgentLevel_SystemAndSuccessOrderTrue(AgentSystem system);
 }

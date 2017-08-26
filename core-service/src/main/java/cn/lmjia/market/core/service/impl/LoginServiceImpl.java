@@ -1,6 +1,5 @@
 package cn.lmjia.market.core.service.impl;
 
-import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
@@ -181,10 +180,10 @@ public class LoginServiceImpl implements LoginService {
         List<AgentLevel> allAgent = agentLevelRepository.findByLogin(who);
 
         if (allAgent.isEmpty()) {
-            List<Customer> customers = customerRepository.findByLogin(who);
-            if (customers.isEmpty())
+//            List<Customer> customers = customerRepository.findByLogin(who);
+//            if (customers.isEmpty())
                 return lowestAgentLevel(who.getGuideUser());
-            return customers.get(0).getAgentLevel();
+//            return customers.get(0).getAgentLevel();
 //            return lowestAgentLevel(who.getGuideUser());
         }
 
@@ -218,10 +217,15 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public boolean isRegularLogin(Login login) {
+        if (login == null)
+            return false;
         if (agentLevelRepository.countByLogin(login) > 0)
             return true;
         // 看下是否为已支付用户
-        if (customerRepository.countByLoginAndSuccessOrderTrue(login) > 0)
+//        if (customerRepository.countByLoginAndSuccessOrderTrue(login) > 0)
+//            return true;
+
+        if (login.isSuccessOrder())
             return true;
         // 订单是否存在
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

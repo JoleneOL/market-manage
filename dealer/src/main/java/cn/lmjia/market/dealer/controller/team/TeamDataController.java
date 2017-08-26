@@ -101,7 +101,7 @@ public class TeamDataController {
                         "from LoginRelation as relation " +
                         "left join relation.to.contactWay as cw " +
                         ((level != null && level == Customer.LEVEL)
-                                ? "where relation.to in (select cw.login from Customer as cw where cw.login.guideUser=:current and cw.successOrder=true ) "
+                                ? "where relation.to in (select cw from Login as cw where cw.guideUser=:current and cw.successOrder=true ) "
                                 : "where relation.to in (select l from Login as l where  l.guideUser=:current) ") +
                         "group by relation.to " +
                         (level == null ? "" : " having min(relation.level)=:level "))

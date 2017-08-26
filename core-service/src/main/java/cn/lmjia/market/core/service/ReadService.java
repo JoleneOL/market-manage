@@ -60,16 +60,16 @@ public interface ReadService {
                 , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
     }
 
-    /**
-     * @param customerFrom    登录者
-     * @param criteriaBuilder cb
-     * @return {@link #nameForPrincipal(Object)}
-     */
-    static Expression<String> nameForCustomer(From<?, Customer> customerFrom, CriteriaBuilder criteriaBuilder) {
-        Expression<String> name = customerFrom.get("name");
-        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
-                , nameForLogin(customerFrom.join("login"), criteriaBuilder));
-    }
+//    /**
+//     * @param customerFrom    登录者
+//     * @param criteriaBuilder cb
+//     * @return {@link #nameForPrincipal(Object)}
+//     */
+//    static Expression<String> nameForCustomer(From<?, Customer> customerFrom, CriteriaBuilder criteriaBuilder) {
+//        Expression<String> name = customerFrom.get("name");
+//        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
+//                , nameForLogin(customerFrom.join(Customer_.login), criteriaBuilder));
+//    }
 
     /**
      * @param i 登录者级别；可以视作代理级别

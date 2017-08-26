@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface TeamService {
 
-    /**
-     * @param login 身份
-     * @return 推荐客户数量
-     */
-    @Transactional(readOnly = true)
-    int customers(Login login);
+//    /**
+//     * @param login 身份
+//     * @return 推荐客户数量
+//     */
+//    @Transactional(readOnly = true)
+//    int customers(Login login);
 
     /**
      * @param login 身份

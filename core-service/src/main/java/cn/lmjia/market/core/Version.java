@@ -8,5 +8,9 @@ public enum Version {
     /**
      * 订单包含多样商品版本
      */
-    muPartOrder
+    muPartOrder,
+    /**
+     * 新的登录体系
+     */
+    newLogin
 }

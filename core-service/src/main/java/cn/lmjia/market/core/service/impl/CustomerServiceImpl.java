@@ -13,6 +13,8 @@ import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import me.jiangcai.payment.event.OrderPaySuccess;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+    private static final Log log = LogFactory.getLog(CustomerServiceImpl.class);
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
@@ -48,8 +51,8 @@ public class CustomerServiceImpl implements CustomerService {
 //            contactWayService.u
         }
         customer = new Customer();
-        customer.setupAgentLevel(agentLevel);
-        customer.setLogin(customerLogin);
+//        customer.setupAgentLevel(agentLevel);
+//        customer.setLogin(customerLogin);
         customer.setName(name);
         customer.setMobile(mobile);
         customer = customerRepository.save(customer);
@@ -63,21 +66,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private LoginRelationChangedEvent forSuccessMainOrder(MainOrder mainOrder) {
-        Customer customer = mainOrder.getCustomer();
-        customer = customerRepository.getOne(customer.getId());
-        if (!customer.isSuccessOrder()) {
-            customer.setSuccessOrder(true);
-            loginRelationCacheService.addCustomerCache(customer);
+//        Customer customer = mainOrder.getCustomer();
+        Login login = loginRepository.getOne(mainOrder.getOrderBy().getId());
+        if (!login.isSuccessOrder()) {
+            log.debug(login + "首付付费成功，成为【爱心天使】");
+            login.setSuccessOrder(true);
+            loginRelationCacheService.loginFirstOrder(login);
             // 如果它有推荐则产生改变
-            if (customer.getLogin().getGuideUser() != null)
-                return new LoginRelationChangedEvent(customer.getLogin().getGuideUser());
+            if (login.getGuideUser() != null)
+                return new LoginRelationChangedEvent(login.getGuideUser());
         }
         return null;
     }
 
     @Override
     public LoginRelationChangedEvent orderPay(OrderPaySuccess event) {
-        if (event.getPayableOrder() instanceof MainOrder){
+        if (event.getPayableOrder() instanceof MainOrder) {
             return forSuccessMainOrder((MainOrder) event.getPayableOrder());
         }
         return null;

@@ -2,8 +2,11 @@ package cn.lmjia.market.dealer.service.impl;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel_;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
@@ -97,12 +100,13 @@ public class AgentServiceImpl implements AgentService {
         // 是购买者所可以代表的最低代理商 是否从属于 当前登录者所能代表的最高代理商
         final AgentLevel agentLevel = highestAgent(login);
         if (agentLevel == null) // 客户？
-            return (root, query, cb) -> cb.equal(MainOrder.getCustomerLogin(root), login);
-        long id = agentLevel.getId();
+            return (root, query, cb) -> cb.equal(root.get(MainOrder_.orderBody), login);
+        long id = agentLevel.getLogin().getId();
         return (root, query, cb)
                 -> cb.equal(agentBelongsExpression(
                 // 下单的人
-                root.get("customer").get("agentLevel").get("id").as(Integer.class)
+                root.get(MainOrder_.orderBy).get(Login_.id).as(Integer.class)
+//                root.get("customer").get("agentLevel").get("id").as(Integer.class)
                 , cb.literal(id).as(Integer.class)
                 , cb
         ), 1);
@@ -203,11 +207,11 @@ public class AgentServiceImpl implements AgentService {
             nameSpecification = (root, query, cb) -> {
                 String name = "%" + agentName + "%";
 //                Path<ContactWay> contactWayPath = cb.treat(root.get("login").get("contactWay"), ContactWay.class);
-                Join<Login, AgentLevel> loginAgentLevelJoin = root.join("login");
+                Join<AgentLevel, Login> loginAgentLevelJoin = root.join(AgentLevel_.login);
                 Join<ContactWay, Login> contactWayLoginJoin = loginAgentLevelJoin.join("contactWay", JoinType.LEFT);
 //                Path<ContactWay> contactWayPath = root.get("login").get("contactWay");
                 return cb.or(
-                        cb.like(root.get("login").get("loginName"), name)
+                        cb.like(root.get(AgentLevel_.login).get("loginName"), name)
                         , cb.like(root.get("rank"), name)
                         , cb.like(contactWayLoginJoin.get("name"), name)
                         , cb.like(contactWayLoginJoin.get("mobile"), name)
@@ -270,7 +274,7 @@ public class AgentServiceImpl implements AgentService {
         CriteriaQuery<AgentSystem> systemCriteriaQuery = criteriaBuilder.createQuery(AgentSystem.class);
         Root<AgentLevel> agentLevelRoot = systemCriteriaQuery.from(AgentLevel.class);
         systemCriteriaQuery = systemCriteriaQuery.select(agentLevelRoot.get("system"));
-        systemCriteriaQuery = systemCriteriaQuery.where(criteriaBuilder.equal(agentLevelRoot.get("login"), login));
+        systemCriteriaQuery = systemCriteriaQuery.where(criteriaBuilder.equal(agentLevelRoot.get(AgentLevel_.login), login));
         systemCriteriaQuery = systemCriteriaQuery.distinct(true);
         try {
             return entityManager.createQuery(systemCriteriaQuery).getSingleResult();
@@ -379,7 +383,7 @@ public class AgentServiceImpl implements AgentService {
         query = query.where(
                 criteriaBuilder.and(
                         Address.AlmostMatch(
-                                ContactWayService.addressForLogin(root.join("login"), criteriaBuilder)
+                                ContactWayService.addressForLogin(root.join(AgentLevel_.login), criteriaBuilder)
                                 , address
                                 , criteriaBuilder)
                         , criteriaBuilder.equal(root.get("level").as(Integer.class), systemService.addressRateForLevel())
