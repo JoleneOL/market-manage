@@ -2,12 +2,20 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.Version;
 import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Customer_;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.InstallmentChannel;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel_;
+import cn.lmjia.market.core.entity.request.PromotionRequest;
+import cn.lmjia.market.core.entity.request.PromotionRequest_;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainGoodRepository;
@@ -17,6 +25,8 @@ import me.jiangcai.lib.jdbc.ConnectionProvider;
 import me.jiangcai.lib.jdbc.JdbcService;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -26,6 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,6 +49,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -46,6 +61,7 @@ import java.util.StringTokenizer;
 @Service
 public class InitService {
 
+    private static final Log log = LogFactory.getLog(InitService.class);
     @Autowired
     private LoginService loginService;
     @Autowired
@@ -64,6 +80,9 @@ public class InitService {
     private Environment environment;
     @Autowired
     private MainGoodService mainGoodService;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
 
     @PostConstruct
     @Transactional
@@ -197,6 +216,60 @@ public class InitService {
                                 }
                             }
                         });
+                        break;
+                    case newLogin:
+                        jdbcService.tableAlterAddColumn(Login.class, "successOrder", "0");
+                        // 任意一个 拥有过 一个成功客户的订单 的Login就设置为true
+                        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+                        CriteriaQuery<Login> loginCq = cb.createQuery(Login.class);
+                        Root<MainOrder> orderRoot = loginCq.from(MainOrder.class);
+                        entityManager.createQuery(
+                                loginCq.select(orderRoot.get(MainOrder_.orderBy))
+                                        .where(cb.isTrue(
+                                                orderRoot.get(MainOrder_.customer)
+                                                        .get(Customer_.successOrder)
+                                        ))
+                                        .distinct(true)
+                        ).getResultList().forEach(login -> login.setSuccessOrder(true));
+                        //  customer 既然该表相关的量已不再重要……
+                        // 创建于 customer 的Login 而且它自己未曾下过单
+                        loginCq = cb.createQuery(Login.class);
+                        Root<Customer> customerRoot = loginCq.from(Customer.class);
+                        List<Login> all = entityManager.createQuery(loginCq
+                                .select(customerRoot.get(Customer_.login))
+                                .distinct(true)
+                        ).getResultList();
+                        // 将下过单的用户排除
+                        loginCq = cb.createQuery(Login.class);
+                        orderRoot = loginCq.from(MainOrder.class);
+                        List<Login> reallyOrder = entityManager.createQuery(
+                                loginCq.select(orderRoot.get(MainOrder_.orderBy))
+                                        .distinct(true)
+                        ).getResultList();
+                        // 将申请过什么什么
+                        loginCq = cb.createQuery(Login.class);
+                        Root<PromotionRequest> requestRoot = loginCq.from(PromotionRequest.class);
+                        List<Login> requested = entityManager.createQuery(
+                                loginCq.select(requestRoot.get(PromotionRequest_.whose))
+                                        .distinct(true)
+                        ).getResultList();
+                        // 将跟代理商存在关系的
+                        loginCq = cb.createQuery(Login.class);
+                        Root<AgentLevel> levelRoot = loginCq.from(AgentLevel.class);
+                        List<Login> level = entityManager.createQuery(
+                                loginCq.select(levelRoot.get(AgentLevel_.login))
+                                        .distinct(true)
+                        ).getResultList();
+                        // 将剩下进行一次数据转换！
+                        all.removeAll(reallyOrder);
+                        all.removeAll(requested);
+                        all.removeAll(level);
+                        log.info("即将转换" + all.size() + "个身份");
+                        all.forEach(login -> {
+                            login.setEnabled(false);
+                            login.setLoginName("!" + login.getLoginName() + " ");
+                        });
+                        // 对login缓存的关系呢？ 这个不管了
                         break;
                     default:
                 }
