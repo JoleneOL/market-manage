@@ -9,9 +9,12 @@ import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import cn.lmjia.market.dealer.DealerServiceTest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class PromotionServiceTest extends DealerServiceTest {
 
+    private static final Log log = LogFactory.getLog(PromotionServiceTest.class);
     @Autowired
     private PromotionService promotionService;
     @Autowired
@@ -68,18 +72,26 @@ public class PromotionServiceTest extends DealerServiceTest {
         // 41
         long current = loginRelationRepository.countBySystem(system);
         List<LoginRelation> currentList = loginRelationRepository.findBySystem(system);
-        final Comparator<LoginRelation> c = (o1, o2) -> (int) (o1.getFrom().getId() * 1000000 - o2.getFrom().getId() * 1000000 + o1.getTo().getId() * 1000 - o2.getTo().getId() * 1000 + o1.getLevel() - o2.getLevel());
-        currentList.sort(c);
+
         loginRelationCacheService.rebuildAgentSystem(system);
 
         List<LoginRelation> allList = loginRelationRepository.findBySystem(system);
-        allList.sort(c);
-        allList.removeAll(currentList);
-        allList.forEach(System.out::println);
+
+        log.info("临时关系比永久关系多");
+        showDiff(currentList, allList);
+        log.info("永久关系比临时关系多");
+        showDiff(allList, currentList);
 
         assertThat(loginRelationRepository.countBySystem(system))
                 .isEqualTo(current);
+    }
 
+    private void showDiff(List<LoginRelation> bigOne, List<LoginRelation> lessOne) {
+        final Comparator<LoginRelation> c = (o1, o2) -> (int) (o1.getFrom().getId() * 1000000 - o2.getFrom().getId() * 1000000 + o1.getTo().getId() * 1000 - o2.getTo().getId() * 1000 + o1.getLevel() - o2.getLevel());
+        ArrayList<LoginRelation> allList = new ArrayList<>(bigOne);
+        allList.sort(c);
+        allList.removeAll(lessOne);
+        allList.forEach(System.out::println);
     }
 
     /**

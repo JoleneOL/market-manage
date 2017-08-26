@@ -103,21 +103,21 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
             addExistingRelation(system, relations, loginRelationStream);
         }
 
-        Set<Login> levelLogins = levels.stream()
-                .map(AgentLevel::getLogin)
-                .collect(Collectors.toSet());
-        // 然后是客户么
-        // 然后就是最后一个等级了，它还不算一个等级 只是成功下了单
-        Stream<LoginRelation> loginRelationStream = loginRepository.findBySuccessOrderTrue()
-                .stream()
-                // 来自我方系统推荐的
-                .filter(login -> login.getGuideUser() != null && levelLogins.contains(login.getGuideUser()))
-                .map(login -> createRelationFromLevel(system, login.getGuideUser(), login, Customer.LEVEL));
-//        Stream<LoginRelation> loginRelationStream = customerRepository.findByAgentLevel_SystemAndSuccessOrderTrue(system).stream()
-//                .map(customer
-//                        -> createRelationFromLevel(system, customer.getAgentLevel().getLogin(), customer.getLogin()
-//                        , Customer.LEVEL));
-        addExistingRelation(system, relations, loginRelationStream);
+//        Set<Login> levelLogin = levels.stream()
+//                .map(AgentLevel::getLogin)
+//                .collect(Collectors.toSet());
+//        // 然后是客户么
+//        // 然后就是最后一个等级了，它还不算一个等级 只是成功下了单
+//        Stream<LoginRelation> loginRelationStream = loginRepository.findBySuccessOrderTrue()
+//                .stream()
+//                // 来自我方系统推荐的
+//                .filter(login -> login.getGuideUser() != null && levelLogin.contains(login.getGuideUser()))
+//                .map(login -> createRelationFromLevel(system, login.getGuideUser(), login, Customer.LEVEL));
+////        Stream<LoginRelation> loginRelationStream = customerRepository.findByAgentLevel_SystemAndSuccessOrderTrue(system).stream()
+////                .map(customer
+////                        -> createRelationFromLevel(system, customer.getAgentLevel().getLogin(), customer.getLogin()
+////                        , Customer.LEVEL));
+//        addExistingRelation(system, relations, loginRelationStream);
 
         // 移除跟自己的关系
         saveValidRelations(relations);
@@ -227,28 +227,32 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
     @Override
     public void loginFirstOrder(Login login) {
         // 先找到最近的代理商
-        AgentLevel level = agentLevelFor(login);
-        if (level == null) {
-            log.info("NULL agentSystem for " + login);
-            return;
-        }
-        final Login from = level.getLogin();
-        // 自己和自己的关联不用管
-//        if (from.equals(login))
+//        AgentLevel level = agentLevelFor(login);
+//        if (level == null) {
+//            log.info("NULL agentSystem for " + login);
 //            return;
-        final AgentSystem system = level.getSystem();
-        Set<LoginRelation> relations = loginRelationRepository.findBySystemAndTo(system
-                , from);
-
-        if (!loginRelationRepository.findBySystemAndFromAndToAndLevel(system, from, login, Customer.LEVEL).isEmpty()) {
-            log.debug("客户" + login + "的关系缓存已存在");
-            return;
-        }
-
-        // 如果该关系已存在 则不重复添加！
-        addExistingRelation(system, relations
-                , Stream.of(createRelationFromLevel(system, from, login, Customer.LEVEL)));
-        saveValidRelations(relations);
+//        }
+//        final Login from = login.getGuideUser();
+//        if (from==null){
+//            log.debug("引导人不存在，则不予建立关系");
+//            return;
+//        }
+//        // 自己和自己的关联不用管
+////        if (from.equals(login))
+////            return;
+//        final AgentSystem system = level.getSystem();
+//        Set<LoginRelation> relations = loginRelationRepository.findBySystemAndTo(system
+//                , from);
+//
+//        if (!loginRelationRepository.findBySystemAndFromAndToAndLevel(system, from, login, Customer.LEVEL).isEmpty()) {
+//            log.debug("客户" + login + "的关系缓存已存在");
+//            return;
+//        }
+//
+//        // 如果该关系已存在 则不重复添加！
+//        addExistingRelation(system, relations
+//                , Stream.of(createRelationFromLevel(system, from, login, Customer.LEVEL)));
+//        saveValidRelations(relations);
     }
 
     private AgentLevel agentLevelFor(Login login) {

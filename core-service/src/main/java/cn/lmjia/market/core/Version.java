@@ -11,6 +11,7 @@ public enum Version {
     muPartOrder,
     /**
      * 新的登录体系
+     * 在登录关系中不再存在所谓200的客户关系
      */
     newLogin
 }

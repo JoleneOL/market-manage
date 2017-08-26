@@ -1,7 +1,7 @@
 package cn.lmjia.market.dealer.service.impl;
 
-import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.dealer.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * @author CJ
@@ -21,15 +24,10 @@ public class TeamServiceImpl implements TeamService {
     private EntityManager entityManager;
 
     private int createQuery(Login login, Integer level) {
-        return createQuery(login, level, false);
-    }
-
-    private int createQuery(Login login, Integer level, boolean valid) {
         Query query = entityManager.createQuery("select " +
                         "count( distinct relation.to) " +
                         "from LoginRelation as relation " +
-                        (valid ? "" : "where relation.to in (select l from Login as l where  l.guideUser=:current) ") +
-                        (!valid ? "" : "where relation.to in (select l from Login as l where  l.guideUser=:current and l.successOrder=true ) ") +
+                        "where relation.to in (select l from Login as l where  l.guideUser=:current) " +
 //                (level == null ? "" : " and min(relation.level)=:level ") +
                         "group by relation.to " +
                         (level == null ? "" : " having min(relation.level)=:level ")
@@ -65,7 +63,21 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public int validCustomers(Login login) {
-        return createQuery(login, Customer.LEVEL, true);
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<Login> root = cq.from(Login.class);
+        try {
+            return entityManager.createQuery(cq
+                    .select(cb.count(root))
+                    .where(cb.and(
+                            cb.equal(root.get(Login_.guideUser), login)
+                            , cb.isTrue(root.get(Login_.successOrder))
+                    ))
+            ).getSingleResult().intValue();
+        } catch (Exception ignored) {
+            return 0;
+        }
+//        return createQuery(login, Customer.LEVEL, true);
     }
 
     @Override
@@ -75,6 +87,6 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public int all(Login login) {
-        return createQuery(login, null);
+        return createQuery(login, null) + validCustomers(login);
     }
 }
