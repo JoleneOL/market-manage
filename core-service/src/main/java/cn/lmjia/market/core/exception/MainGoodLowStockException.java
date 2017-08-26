@@ -1,15 +1,14 @@
 package cn.lmjia.market.core.exception;
 
 import cn.lmjia.market.core.entity.MainGood;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.rest.core.annotation.Description;
 
 import javax.servlet.ServletException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,21 +24,14 @@ public class MainGoodLowStockException extends ServletException {
 
 
 
-    public Data[] toData(){
-        List<Data> dataList = new ArrayList<>();
+    public JSONArray toData(){
+        JSONArray jsonArray = new JSONArray();
         usableGoodStock.keySet().forEach(mainGood -> {
-            dataList.add(new Data(mainGood.getId(),usableGoodStock.get(mainGood)));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("goodId",mainGood.getId());
+            jsonObject.put("stock",usableGoodStock.get(mainGood));
+            jsonArray.add(jsonObject);
         });
-        return dataList.stream().toArray(Data[]::new);
-    }
-
-    class Data{
-        private Long goodId;
-        private Integer stock;
-
-        public Data(Long goodId, Integer stock) {
-            this.goodId = goodId;
-            this.stock = stock;
-        }
+        return jsonArray;
     }
 }

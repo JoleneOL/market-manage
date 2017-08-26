@@ -148,11 +148,15 @@ $(function () {
             dataType: 'json',
             success: function (data) {
                 $.hideLoading();
-                // TODO  目前不知道服务端状态码，假设401为缺货状态
+                //401为缺货状态
                 // TODO  data[Array] {id:商品,stock:现在库存}
                 if (data.resultCode === 401) {
                     $.toptip(data.resultMsg);
                     resetGoodsList(data.data);
+                    return false;
+                }
+                if (data.resultCode === 402){
+                    $.toptip('按揭码或者身份证号码无效');
                     return false;
                 }
                 if (data.resultCode !== 200) {
@@ -160,8 +164,18 @@ $(function () {
                     return false;
                 }
                 $.toptip("校验成功", "success");
-                //TODO 提交成功后的跳转
-                window.location.href = 'pay.html';
+                var orderPKId = data.data.id;
+                var channelId = data.data.channelId;
+                var installmentHuabai = data.data.installmentHuabai;
+                var idNumber = data.data.idNumber;
+                var authorising = data.data.authorising;
+                //提交成功后的跳转
+                window.location.href = 'wechatOrderPay.html'
+                    + "?orderPKId=" + orderPKId
+                    + "&channelId=" + channelId
+                    + "&installmentHuabai=" + installmentHuabai
+                    + "&idNumber=" + idNumber
+                    + "&authorising=" + authorising;
             },
             error: function () {
                 $.hideLoading();

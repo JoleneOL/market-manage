@@ -4,13 +4,13 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * @author CJ
@@ -32,11 +32,29 @@ public abstract class AbstractWechatMainOrderControllerTest extends WechatTestBa
         String result = mockMvc.perform(
                 requestBuilder
         )
-                .andExpect(status().is3xxRedirection())
-                .andReturn().getResponse().getHeader("Location");
-
+                .andExpect(status().isOk())
+                .andDo(print())
+//                .andExpect(jsonPath("$.resultCode").value(200))
+//                .andExpect(jsonPath("$.data.id").exists())
+//                .andExpect(jsonPath("$.data.installmentHuabai").exists())
+                .andReturn().getResponse().getContentAsString();
+        JSONObject data = JSONObject.parseObject(result).getJSONObject("data");
+        Long orderPKId = data.getLong("id");
+        String channelId = data.getString("channelId")
+                ,idNumber = data.getString("idNumber")
+                ,authorising = data.getString("authorising");
+        Boolean installmentHuabai = data.getBoolean("installmentHuabai");
+        StringBuilder orderPayURL = new StringBuilder("http://localhost").append(SystemService.wechatPayOrderURi)
+                .append("?orderPKId=").append(orderPKId)
+                .append("&installmentHuabai=").append(installmentHuabai);
+        if(channelId != null){
+            orderPayURL = orderPayURL
+                    .append("&channelId=").append(channelId)
+                    .append("&idNumber=").append(idNumber)
+                    .append("&authorising=").append(authorising);
+        }
         // 使用 driver 打开!
-        driver.get("http://localhost" + result);
+        driver.get(orderPayURL.toString());
 //                    mockMvc.perform(wechatGet("/paySuccess?mainOrderId=1"))
 //                            .andDo(print());
         PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatPaySuccess?mainOrderId=1");

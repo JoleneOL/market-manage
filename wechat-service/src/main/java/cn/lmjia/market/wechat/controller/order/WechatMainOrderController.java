@@ -16,6 +16,7 @@ import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.core.trj.TRJService;
+import com.alibaba.fastjson.JSONObject;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
@@ -35,8 +36,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author CJ
@@ -85,18 +84,10 @@ public class WechatMainOrderController extends AbstractMainOrderController {
 //    }
 
     @GetMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId)
-            throws SystemMaintainException {
-        final MainOrder order = from(orderId, null);
-        return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
-    }
-
-    @PostMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @RequestParam Long orderId
-            , @RequestParam(required = false) Long channelId
-            , String authorising, String idNumber, boolean installmentHuabai)
-            throws InvalidAuthorisingException, SystemMaintainException {
-        MainOrder order = mainOrderService.getOrder(orderId);
+    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId,Long orderPKId
+            , Long channelId, String authorising, String idNumber, Boolean installmentHuabai)
+            throws SystemMaintainException, InvalidAuthorisingException {
+        final MainOrder order = from(orderId, orderPKId);
         if (channelId != null) {
             Channel channel = channelService.get(channelId);
             //        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))
@@ -104,9 +95,10 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 return payAssistanceService.payOrder(openId, request, order, authorising, idNumber);
             }
         }
-        order.setHuabei(installmentHuabai);
-
-        return payAssistanceService.payOrder(openId, request, order, installmentHuabai);
+        if(installmentHuabai != null){
+            order.setHuabei(installmentHuabai);
+        }
+        return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
     }
 
     @GetMapping("/wechatOrderDetail")
@@ -125,18 +117,22 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
             , String authorising, String idNumber, boolean installmentHuabai, String[] goods)
-            throws MainGoodLowStockException {
+            throws MainGoodLowStockException, InvalidAuthorisingException {
         int age = 20;
         MainGoodsAndAmounts amounts = MainGoodsAndAmounts.ofArray(goods);
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,
                 activityCode, channelId, amounts);
-        Map<String, Object> result = new HashMap<>();
+        JSONObject result = new JSONObject();
         result.put("id", order.getId());
-        result.put("channelId", channelId);
+        if(channelId != null){
+            //校验按揭码
+            payAssistanceService.checkAuthorising(authorising, idNumber);
+            result.put("channelId", channelId);
+            result.put("idNumber", idNumber);
+            result.put("authorising", authorising);
+        }
         result.put("installmentHuabai", installmentHuabai);
-        result.put("idNumber", idNumber);
-        result.put("authorising", authorising);
-        return ApiResult.withCode(200, request);
+        return ApiResult.withCode(200, result);
     }
 
     @GetMapping("/_pay/paying")

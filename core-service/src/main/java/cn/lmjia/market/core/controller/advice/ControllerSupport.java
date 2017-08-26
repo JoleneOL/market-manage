@@ -10,11 +10,15 @@ import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author CJ
@@ -25,9 +29,18 @@ public class ControllerSupport {
     private static final Log log = LogFactory.getLog(ControllerSupport.class);
 
     @ExceptionHandler(InvalidAuthorisingException.class)
-    @ResponseBody
-    public ApiResult sawInvalidAuthorisingException() {
-        return ApiResult.withCodeAndMessage(401,null,null);
+    public String sawInvalidAuthorisingException(HttpServletRequest request, HttpServletResponse response) {
+        boolean isAjax = isAjaxRequestOrBackJson(request);
+        if(isAjax){
+            ApiResult result = ApiResult.withCodeAndMessage(402,null,null);
+            try {
+                response.getWriter().write(result.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        return "redirect:" + TRJEnhanceConfig.TRJOrderURI + "?InvalidAuthorisingException";
     }
 
     @ExceptionHandler(SystemMaintainException.class)
@@ -58,6 +71,18 @@ public class ControllerSupport {
     public void all(Throwable ex) throws Throwable {
         log.debug("", ex);
         throw ex;
+    }
+
+    /***
+     * 判断当前请求是http请求还是ajax请求
+     * @param request
+     * @return
+     */
+    private boolean isAjaxRequestOrBackJson(HttpServletRequest request) {
+        String x_request_with = request.getHeader("X-Requested-With");
+        if (!StringUtils.isEmpty(x_request_with) && x_request_with.toLowerCase().contains("xmlhttprequest"))
+            return true;
+        return false;
     }
 
 }

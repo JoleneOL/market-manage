@@ -360,7 +360,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 执行下单请求
      */
     protected MockHttpServletRequestBuilder orderRequestBuilder(MockHttpServletRequestBuilder builder, OrderRequest request) {
-        MockHttpServletRequestBuilder newBuilder = builder.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MockHttpServletRequestBuilder newBuilder = builder
                 .param("name", request.getName())
                 .param("age", String.valueOf(request.getAge()))
                 .param("gender", String.valueOf(request.getGender()))
