@@ -135,8 +135,13 @@ public class MainOrderServiceTest extends CoreServiceTest {
 
     @Test
     public void checkOrderStockWithExceptionTest() {
+        systemStringService.updateSystemString("market.core.service.product.offsetHour", 0);
+        mainGoodService.forSale().forEach(p->{
+            mainOrderService.cleanProductStock(p.getProduct());
+        });
         List<MainGood> saleGoodList = mainGoodService.forSale();
         MainGood orderGood = saleGoodList.get(0);
+        mainOrderService.cleanProductStock(orderGood.getProduct());
         //对这个订单下单超过货品库存
         Map<MainGood, Integer> amounts = new HashMap<>();
         amounts.put(orderGood, orderGood.getProduct().getStock() + random.nextInt(10));
@@ -147,8 +152,8 @@ public class MainOrderServiceTest extends CoreServiceTest {
             assertTrue(e instanceof MainGoodLowStockException);
         }
 
-        //对货品设置一个预计售罄时间，货品剩几件就加几天，这样今天理论上只能下一个数量为1的订单
-        LocalDate planSellOutDate = LocalDate.now().plusDays(orderGood.getProduct().getStock());
+        //对货品设置一个预计售罄时间，货品剩几件就加N-1天，这样今天理论上只能下一个数量为1的订单
+        LocalDate planSellOutDate = LocalDate.now().plusDays(orderGood.getProduct().getStock() - 1);
         orderGood.getProduct().setPlanSellOutDate(planSellOutDate);
         mainProductRepository.save(orderGood.getProduct());
         mainOrderService.cleanProductStock(orderGood.getProduct());
@@ -158,6 +163,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
             newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (Exception e) {
             assertTrue(e instanceof MainGoodLimitStockException);
+            log.debug(((MainGoodLimitStockException)e).toData());
         }
         //如果数量是1，是能下单成功的
         amounts.clear();

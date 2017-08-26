@@ -496,14 +496,14 @@ public class MainOrderServiceImpl implements MainOrderService {
             if (good.getProduct().getPlanSellOutDate() == null && usableStock < amounts.get(good)) {
                 lowStockProduct.put(good,usableStock);
             } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
-                int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultMaxMinuteForPay);
+                int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
                 LocalDateTime localDateTime = LocalDate.now().plusDays(1).atStartOfDay().plusHours(offsetHour);
                 lowStockProduct.put(good,usableStock);
                 relieveTime.put(good,localDateTime);
             }
         }
         if(lowStockProduct.size() > 0){
-            throw relieveTime.size() > 0 ? new MainGoodLowStockException(lowStockProduct) : new MainGoodLimitStockException(lowStockProduct,relieveTime);
+            throw relieveTime.size() == 0 ? new MainGoodLowStockException(lowStockProduct) : new MainGoodLimitStockException(lowStockProduct,relieveTime);
         }
     }
 
