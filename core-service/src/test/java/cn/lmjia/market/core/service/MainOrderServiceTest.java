@@ -212,17 +212,18 @@ public class MainOrderServiceTest extends CoreServiceTest {
 
     @Test
     public void testSumStock() throws MainGoodLowStockException {
+        //先看看初始时候的可用库存
         List<MainGood> saleGoodList = mainGoodService.forSale();
         MainGood orderGood = saleGoodList.get(0);
-        LocalDateTime beginTime = LocalDate.now().atStartOfDay();
-        int todayStock = mainOrderService.sumProductNum(orderGood.getProduct(),beginTime,null,null);
-        assertEquals(0,todayStock);
+        //下个单
         Map<MainGood, Integer> amounts = new HashMap<>();
         amounts.put(orderGood, random.nextInt(10));
         MainOrder order = newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
         assertNotNull(order);
-        int todayStock1 = mainOrderService.sumProductNum(orderGood.getProduct(),beginTime,null,null);
-        assertEquals(amounts.get(orderGood) - todayStock,todayStock1);
+        //再次获取商品的可用库存
+        List<MainGood> afterSaleGoodList = mainGoodService.forSale();
+        MainGood afterOrderGood = afterSaleGoodList.get(0);
+        assertEquals(orderGood.getProduct().getStock() - amounts.get(orderGood) , afterOrderGood.getProduct().getStock());
 
     }
 

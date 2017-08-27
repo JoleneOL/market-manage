@@ -482,16 +482,13 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public int usableStock(Product product) {
         int limitStock = limitStock(product);
-        log.debug("货品：" + product.getCode() + " 的限购库存为：" + limitStock);
         int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
         if(offsetHour >= 23 || offsetHour < 0){
             offsetHour = defaultOffsetHour;
         }
         LocalDateTime orderBeginTime = LocalDate.now().atTime(offsetHour,0);
-        log.debug("今日清算起始时间：" + orderBeginTime);
         //计算今日所有未关闭订单的货品数量
-        int todayStock = sumProductNum(product, orderBeginTime, null);
-        log.debug("货品：" + product.getCode() + " 的今日冻结为：" + todayStock);
+        int todayStock = sumProductNum(product, orderBeginTime, null,null);
         return todayStock > limitStock ? 0 : limitStock - todayStock;
     }
 
@@ -501,7 +498,6 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     private void checkGoodStock(Map<MainGood, Integer> amounts) throws MainGoodLowStockException {
-        log.debug("开始检查货品可售库存");
         Map<MainGood,Integer> lowStockProduct = new HashMap<>();
         Map<MainGood,LocalDateTime> relieveTime = new HashMap<>();
         for (MainGood good : amounts.keySet()) {
