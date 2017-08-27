@@ -6,16 +6,14 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.ReadService;
-import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.core.trj.TRJService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
-import cn.lmjia.market.wechat.page.WechatOrderPage;
+import cn.lmjia.market.wechat.page.WechatOrderPageForTRJ;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
@@ -72,6 +70,9 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
     private void go(boolean normal) throws Exception {
         //选择一个商品的价格 认定它为投融家价格
         Channel trj = channelService.findByName(TRJService.ChannelName);
+        assertThat(trj)
+                .as("需存在投融家渠道")
+                .isNotNull();
 
         final MainGood good = mainGoodService.forSale(trj).get(0);
 
@@ -79,39 +80,30 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         final Login login = randomLogin(false);
         updateAllRunWith(login);
-        mockMvc.perform(wechatGet(TRJEnhanceConfig.TRJOrderURI))
-                .andExpect(status().isOk())
-                .andExpect(view().name("wechat@orderPlace.html"));
-        // 应该只能看到部分商品
-        driver.get("http://localhost" + TRJEnhanceConfig.TRJOrderURI);
-        WechatOrderPage orderPage = initPage(WechatOrderPage.class);
 
-        orderPage.allPriced(price);
+        WechatOrderPageForTRJ page = WechatOrderPageForTRJ.of(this, driver);
+        // 不提交不行
+        page.submitRandomOrder(s -> good.getProduct().getName().equals(s), null);
+        page.assertHaveTooltip();
 
-        // 不提交也不行
-        OrderRequest request = randomOrderRequest(trj.getId(), good, null, null);
-        String result = submitOrderRequest(request);
-        // 应该是一个错误地址
-        assertThat(result)
-                .contains("InvalidAuthorisingException");
-        // 特定按揭码和身份证给他们
-        request = randomOrderRequest(trj.getId(), good, RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomNumeric(18));
-        result = submitOrderRequest(request);
-        // 应该是一个错误地址
-        assertThat(result)
-                .contains("InvalidAuthorisingException");
+        // 提交一个错误的
+        page = WechatOrderPageForTRJ.of(this, driver);
+        page.submitAuthorising(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomNumeric(18));
+        page.submitRandomOrder(s -> good.getProduct().getName().equals(s), null);
+        page.assertHaveTooltip();
+
         // 新增按揭码
         final String authorising = RandomStringUtils.randomAlphabetic(10);
         final String idNumber = RandomStringUtils.randomNumeric(18);
         addAuthorising(authorising, idNumber);
         // 使用刚新增的按揭码
-        request = randomOrderRequest(trj.getId(), good, authorising, idNumber);
-        result = submitOrderRequest(request);
+        page = WechatOrderPageForTRJ.of(this, driver);
+        page.submitAuthorising(authorising, idNumber);
+        page.submitRandomOrder(s -> good.getProduct().getName().equals(s), null);
 
         Thread.sleep(1100L);
 
         // 使用 driver 打开!
-        driver.get("http://localhost" + result);
         PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatPaySuccess?mainOrderId=1");
 
         // 添加一个客服好让它收到消息
@@ -149,9 +141,10 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
                 .isGreaterThan(originBalance);
 
         // 再试一次？ 肯定是不行的
-        result = submitOrderRequest(request);
-        assertThat(result)
-                .contains("InvalidAuthorisingException");
+        page = WechatOrderPageForTRJ.of(this, driver);
+        page.submitAuthorising(authorising, idNumber);
+        page.submitRandomOrder(s -> good.getProduct().getName().equals(s), null);
+        page.assertHaveTooltip();
 
         // 持续等待……
 //        Thread.sleep(Long.MAX_VALUE);

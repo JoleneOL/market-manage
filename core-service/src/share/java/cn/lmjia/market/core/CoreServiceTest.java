@@ -343,12 +343,13 @@ public abstract class CoreServiceTest extends SpringWebTest {
         //计算货品可用库存
         mainOrderService.calculateGoodStock(forSaleGoodList);
         //保证 订单中至少有1个 非空的货品
+        // TODO: 2017/8/27 如果所有货品库存都为0，那就死掉了，考虑什么做法比较妥当
         while (count-- > 0 || data.size() == 0) {
             MainGood randomGood = forSaleGoodList.stream()
                     .filter(good -> !data.keySet().contains(good) && good.getProduct() != null && good.getProduct().getStock() > 0)
                     .max(new RandomComparator()).orElse(null);
             if (randomGood != null) {
-                data.put(randomGood, 1 + random.nextInt(10));
+                data.put(randomGood, random.nextInt(randomGood.getProduct().getStock()));
             }
         }
         return data;

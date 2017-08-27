@@ -13,6 +13,9 @@ import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.LogisticsService;
@@ -96,38 +99,15 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Autowired
     private Environment env;
 
-    private Map<String, Integer> productStockMap = new HashMap<>();
-    private static final int defaultMaxMinuteForPay = 60*24*3;
+    //货品的限购数量及清算时间
+    private Map<String, CleanStock> productStockMap = new HashMap<>();
+    private static final int defaultMaxMinuteForPay = 60 * 24 * 3;
     private static final int defaultOffsetHour = 9;
 
     @PostConstruct
     @Transactional
     public void initExecutor() {
         createExecutorToForPayOrder();
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(() -> {
-            while (true){
-                //获取限购清算时间
-                log.info("清除货品限购");
-                productStockMap.clear();
-                int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
-                if(offsetHour >= 23 || offsetHour < 0){
-                    offsetHour = defaultOffsetHour;
-                }
-                LocalDateTime now = LocalDateTime.now();
-                LocalDateTime nextRuntime;
-                if(now.getHour() >= offsetHour){
-                    nextRuntime = LocalDate.now().plusDays(1).atTime(offsetHour,0);
-                }else{
-                    nextRuntime = LocalDate.now().atTime(offsetHour,0);
-                }
-                long sleepTime = ChronoUnit.MILLIS.between(now,nextRuntime);
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException ignored) {
-                }
-            }
-        });
     }
 
     @Override
@@ -159,9 +139,10 @@ public class MainOrderServiceImpl implements MainOrderService {
         queryDailySerialId(now, order);
         order.setOrderStatus(OrderStatus.forPay);
         order = mainOrderRepository.saveAndFlush(order);
+        //单元测试默认为空
         Integer maxMinuteForPay = systemStringService.getCustomSystemString(
                 "market.core.service.order.maxMinuteForPay", null, true, Integer.class
-                , defaultMaxMinuteForPay);
+                , !env.acceptsProfiles(CoreConfig.ProfileUnitTest) ? defaultMaxMinuteForPay : null);
         //如果开启了 关闭订单 这个功能
         if (maxMinuteForPay != null) {
             //创建成功，建立 Executor 在指定时间内关闭订单
@@ -178,8 +159,8 @@ public class MainOrderServiceImpl implements MainOrderService {
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress, Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException {
         //这里通过外部来调用这个方法是防止跳过AOP
-        return applicationContext.getBean(MainOrderService.class).newOrder(who,recommendBy,name,mobile,age,gender
-                ,installAddress,new Amounts(amounts),mortgageIdentifier);
+        return applicationContext.getBean(MainOrderService.class).newOrder(who, recommendBy, name, mobile, age, gender
+                , installAddress, new Amounts(amounts), mortgageIdentifier);
     }
 
     @Override
@@ -446,25 +427,34 @@ public class MainOrderServiceImpl implements MainOrderService {
         return result != null ? (int) result : 0;
     }
 
+    private int getOffsetHour() {
+        int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
+        if (offsetHour >= 23 || offsetHour < 0) {
+            offsetHour = defaultOffsetHour;
+        }
+        return offsetHour;
+    }
+
     @Override
     public int limitStock(Product product) {
         //如果已经计算过了，就直接从 map 中获取
+        LocalDateTime now = LocalDateTime.now();
         if (productStockMap.containsKey(product.getCode())) {
-            return productStockMap.get(product.getCode());
+            CleanStock cleanStock = productStockMap.get(product.getCode());
+            long diffHour = ChronoUnit.HOURS.between(cleanStock.getCleanTime(), now);
+            //如果清算时间有改动，或者已经超过24小时，那么需要重新计算限购数量
+            if (cleanStock.getCleanTime().getHour() == getOffsetHour() && diffHour < 24) {
+                return cleanStock.getStock();
+            }
         }
         long limitDay;
-        LocalDateTime now = LocalDateTime.now();
         //如果未设置限购时间，或者限购时间已经超过了，那么货品就不限购
         if (product instanceof MainProduct) {
             LocalDate planSellOutDate = ((MainProduct) product).getPlanSellOutDate();
             if (planSellOutDate == null || planSellOutDate.isBefore(now.toLocalDate())) {
                 limitDay = 1L;
             } else {
-                int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
-                if(offsetHour >= 23 || offsetHour < 0){
-                    offsetHour = defaultOffsetHour;
-                }
-                limitDay = ChronoUnit.DAYS.between(now.minusHours(offsetHour).toLocalDate(), planSellOutDate) + 1;
+                limitDay = ChronoUnit.DAYS.between(now.minusHours(getOffsetHour()).toLocalDate(), planSellOutDate) + 1;
             }
         } else {
             limitDay = 1L;
@@ -475,20 +465,21 @@ public class MainOrderServiceImpl implements MainOrderService {
         int lockedStock = sumProductNum(product);
         //(UsageStock - sumProductNum) / N，这里计算的不算精确，没有考虑到今日冻结的库存数，但是在可接受范围内
         int productStock = lockedStock > totalUsableStock ? 0 : (int) ((totalUsableStock - lockedStock) / limitDay);
-        productStockMap.put(product.getCode(), productStock);
+        log.debug("Product:" + product.getCode() + "UsableStock:" + totalUsableStock + ";lockStock:" + lockedStock + ";limitDay:" + limitDay);
+        //今日清算时间
+        LocalDateTime cleanTime = LocalDate.now().atTime(getOffsetHour(),0);
+        log.debug("cleanTime:" +cleanTime);
+        productStockMap.put(product.getCode(), new CleanStock(cleanTime, productStock));
         return productStock;
     }
 
     @Override
     public int usableStock(Product product) {
         int limitStock = limitStock(product);
-        int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
-        if(offsetHour >= 23 || offsetHour < 0){
-            offsetHour = defaultOffsetHour;
-        }
-        LocalDateTime orderBeginTime = LocalDate.now().atTime(offsetHour,0);
+        LocalDateTime orderBeginTime = LocalDate.now().atTime(getOffsetHour(), 0);
         //计算今日所有未关闭订单的货品数量
-        int todayStock = sumProductNum(product, orderBeginTime, null,null);
+        int todayStock = sumProductNum(product, orderBeginTime, null, null);
+        log.debug("todayStock:" + todayStock);
         return todayStock > limitStock ? 0 : limitStock - todayStock;
     }
 
@@ -498,24 +489,21 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     private void checkGoodStock(Map<MainGood, Integer> amounts) throws MainGoodLowStockException {
-        Map<MainGood,Integer> lowStockProduct = new HashMap<>();
-        Map<MainGood,LocalDateTime> relieveTime = new HashMap<>();
+        Map<MainGood, Integer> lowStockProduct = new HashMap<>();
+        Map<MainGood, LocalDateTime> relieveTime = new HashMap<>();
         for (MainGood good : amounts.keySet()) {
             int usableStock = usableStock(good.getProduct());
             if (good.getProduct().getPlanSellOutDate() == null && usableStock < amounts.get(good)) {
-                lowStockProduct.put(good,usableStock);
+                lowStockProduct.put(good, usableStock);
             } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
-                int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
-                if(offsetHour >= 23 || offsetHour < 0){
-                    offsetHour = defaultOffsetHour;
-                }
+                int offsetHour = getOffsetHour();
                 LocalDateTime localDateTime = LocalDate.now().plusDays(1).atStartOfDay().plusHours(offsetHour);
-                lowStockProduct.put(good,usableStock);
-                relieveTime.put(good,localDateTime);
+                lowStockProduct.put(good, usableStock);
+                relieveTime.put(good, localDateTime);
             }
         }
-        if(lowStockProduct.size() > 0){
-            throw relieveTime.size() != 0 ? new MainGoodLowStockException(lowStockProduct) : new MainGoodLimitStockException(lowStockProduct,relieveTime);
+        if (lowStockProduct.size() > 0) {
+            throw relieveTime.size() == 0 ? new MainGoodLowStockException(lowStockProduct) : new MainGoodLimitStockException(lowStockProduct, relieveTime);
         }
     }
 
@@ -564,6 +552,14 @@ public class MainOrderServiceImpl implements MainOrderService {
         } catch (NoResultException ignored) {
             log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    class CleanStock {
+        //清算时间
+        private LocalDateTime cleanTime;
+        private Integer stock;
     }
 
     /**

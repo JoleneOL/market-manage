@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-//@ActiveProfiles("mysql")
+@ActiveProfiles("mysql2")
 public class ManageOrderControllerTest extends ManageServiceTest {
 
     private static final Log log = LogFactory.getLog(ManageOrderControllerTest.class);
@@ -44,6 +45,13 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     private MainOrderService mainOrderService;
     @Autowired
     private LogisticsService logisticsService;
+
+    @Test
+    public void upgradeIssue() throws Exception {
+        updateAllRunWith(newRandomManager(ManageLevel.root));
+        mockMvc.perform(get("/manage/orderData/logistics"))
+                .andDo(print());
+    }
 
     @Test
     public void go() throws Exception {
