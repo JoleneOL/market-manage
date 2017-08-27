@@ -20,6 +20,7 @@ import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
 import me.jiangcai.logistics.repository.DepotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -135,23 +136,23 @@ public class InitService {
         jdbcService.runJdbcWork(JpaFunctionUtils::enhance);
     }
 
-    private void depots(){
-        if(depotRepository.count() > 0){
-            return;
+    private void depots() {
+        if ((environment.acceptsProfiles(CoreConfig.ProfileUnitTest)
+                || environment.acceptsProfiles("staging")) && depotRepository.count() == 0) {
+            Depot depot = new HaierDepot();
+            depot.setEnable(true);
+            depot.setCreateTime(LocalDateTime.now());
+            depot.setName("测试仓库");
+            Address address = new Address();
+            address.setCounty("中国");
+            address.setProvince("浙江省");
+            address.setPrefecture("杭州市");
+            address.setOtherAddress("滨江区巴拉巴拉");
+            depot.setAddress(address);
+            depot.setChargePeopleName("张三");
+            depot.setChargePeopleMobile("110");
+            depotRepository.save(depot);
         }
-        Depot depot = new Depot();
-        depot.setEnable(true);
-        depot.setCreateTime(LocalDateTime.now());
-        depot.setName("测试仓库");
-        Address address = new Address();
-        address.setCounty("中国");
-        address.setProvince("浙江省");
-        address.setPrefecture("杭州市");
-        address.setOtherAddress("滨江区巴拉巴拉");
-        depot.setAddress(address);
-        depot.setChargePeopleName("张三");
-        depot.setChargePeopleMobile("110");
-        depotRepository.save(depot);
     }
 
     private void products() throws IOException {
@@ -177,9 +178,9 @@ public class InitService {
                     mainProduct.setInstall(new BigDecimal(value[3]));
                     mainProduct = mainProductRepository.save(mainProduct);
                 }
-                if(stockService.usableStockTotal(mainProduct) == 0){
+                if (stockService.usableStockTotal(mainProduct) == 0) {
                     Depot depot = depotRepository.findAll().get(0);
-                    stockService.addStock(depot,mainProduct,100,"测试");
+                    stockService.addStock(depot, mainProduct, 100, "测试");
                 }
 
                 MainGood mainGood = mainGoodRepository.findByProduct(mainProduct);
