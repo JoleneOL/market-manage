@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -206,6 +207,22 @@ public class MainOrderServiceTest extends CoreServiceTest {
         } catch (MainGoodLowStockException ignored) {
         }
         assertNotNull(mainOrder);
+
+    }
+
+    @Test
+    public void testSumStock() throws MainGoodLowStockException {
+        List<MainGood> saleGoodList = mainGoodService.forSale();
+        MainGood orderGood = saleGoodList.get(0);
+        LocalDateTime beginTime = LocalDate.now().atStartOfDay();
+        int todayStock = mainOrderService.sumProductNum(orderGood.getProduct(),beginTime,null,null);
+        assertEquals(0,todayStock);
+        Map<MainGood, Integer> amounts = new HashMap<>();
+        amounts.put(orderGood, random.nextInt(10));
+        MainOrder order = newRandomOrderFor(testLogin,testLogin,randomMobile(),amounts);
+        assertNotNull(order);
+        int todayStock1 = mainOrderService.sumProductNum(orderGood.getProduct(),beginTime,null,null);
+        assertEquals(amounts.get(orderGood) - todayStock,todayStock1);
 
     }
 
