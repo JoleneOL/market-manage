@@ -1,9 +1,13 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
@@ -32,13 +36,18 @@ import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +58,10 @@ public class LoginServiceImpl implements LoginService {
 
     private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
     private final Set<OrderStatus> payStatus = new HashSet<>();
+    /**
+     * 负责干这个事儿的，5线程应该是足够了
+     */
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     @Autowired
     private LoginRepository loginRepository;
     @Autowired
@@ -182,7 +195,7 @@ public class LoginServiceImpl implements LoginService {
         if (allAgent.isEmpty()) {
 //            List<Customer> customers = customerRepository.findByLogin(who);
 //            if (customers.isEmpty())
-                return lowestAgentLevel(who.getGuideUser());
+            return lowestAgentLevel(who.getGuideUser());
 //            return customers.get(0).getAgentLevel();
 //            return lowestAgentLevel(who.getGuideUser());
         }
@@ -255,6 +268,110 @@ public class LoginServiceImpl implements LoginService {
         return input.stream().filter(login -> login.getWechatUser() != null)
                 .map(login -> toUser(login.getWechatUser()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void tryAutoDeleteLogin() {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Login> cq = cb.createQuery(Login.class);
+        Root<Login> root = cq.from(Login.class);
+        // 它也没有推荐给任何人过
+        Subquery<Long> teamNumber = cq.subquery(Long.class);
+        Root<Login> teamRoot = teamNumber.from(Login.class);
+        teamNumber = teamNumber.select(cb.count(teamRoot))
+                .where(cb.equal(teamRoot.get(Login_.guideUser), root));
+        // 代理商所有的身份
+        Subquery<Long> agentLogin = cq.subquery(Long.class);
+        Root<AgentLevel> agentRoot = agentLogin.from(AgentLevel.class);
+        agentLogin = agentLogin.select(agentRoot.get(AgentLevel_.login).get(Login_.id))
+                .distinct(true);
+        // 顺手把客户生成的身份也给过滤掉
+        Subquery<Long> customerLogin = cq.subquery(Long.class);
+        Root<Customer> customerRoot = customerLogin.from(Customer.class);
+        customerLogin = customerLogin.select(customerRoot.get(Customer_.login).get(Login_.id))
+                .distinct(true)
+                .where(cb.isNotNull(customerRoot.get(Customer_.login)));
+        //
+        entityManager.createQuery(cq
+                .where(
+                        // 非管理员
+                        cb.notEqual(root.type(), Manager.class)
+                        // 非代理商
+                        , root.get(Login_.id).in(agentLogin).not()
+                        // 非客户
+                        , root.get(Login_.id).in(customerLogin).not()
+                        // 团队数量等于0
+                        , cb.equal(teamNumber, 0)
+                        // 未曾下单
+                        , cb.isFalse(root.get(Login_.successOrder))
+                )
+        )
+                .getResultList().forEach(login -> {
+            // 计划删除的时间
+            LocalDateTime targetDeleteTime = login.getCreatedTime().plusMinutes(30);
+            // 计划警告时间
+            LocalDateTime targetWarnTime = targetDeleteTime.minusMinutes(5);
+            LocalDateTime now = LocalDateTime.now();
+            // 调度每10分钟进行，所以有什么事情不是10分之内可以完成的 那就先不做
+            LocalDateTime nextRun = now.plusMinutes(10);
+
+
+            if (targetDeleteTime.isBefore(now)) {
+                // 早就应该删除了
+                deleteLogin(login);
+            } else {
+                // 是否需要调度警告？
+                if (targetWarnTime.isBefore(now))
+                    // 需要立刻警告
+                    warnDeleteLogin(login);
+                else if (targetWarnTime.isBefore(nextRun)) {
+                    // 下次调度前就需要了
+                    long ms = now.until(targetWarnTime, ChronoUnit.MILLIS);
+                    log.debug(ms + "后发布警告删除" + login);
+                    scheduledExecutorService.schedule(() -> {
+                        if (needDelete(login))
+                            warnDeleteLogin(login);
+                    }, ms, TimeUnit.MILLISECONDS);
+                }
+
+                // 是否需要调度删除
+                if (targetDeleteTime.isBefore(nextRun)) {
+                    long ms = now.until(targetDeleteTime, ChronoUnit.MILLIS);
+                    log.debug(ms + "后删除" + login);
+                    scheduledExecutorService.schedule(() -> {
+                        if (needDelete(login))
+                            deleteLogin(login);
+                    }, ms, TimeUnit.MILLISECONDS);
+                }
+
+            }
+        });
+    }
+
+    /**
+     * @param login 老的登录
+     * @return 是否有必要删除
+     */
+    private boolean needDelete(Login login) {
+        Login currentLogin = loginRepository.getOne(login.getId());
+
+        return loginRepository.countByGuideUser(currentLogin) == 0
+                && !(currentLogin instanceof Manager)
+                && !currentLogin.isSuccessOrder()
+                && agentLevelRepository.findByLogin(currentLogin).isEmpty();
+    }
+
+    private void warnDeleteLogin(Login login) {
+        log.warn(login + "要被警告了哦！");
+    }
+
+    private void deleteLogin(Login login) {
+        loginRepository.delete(login);
+    }
+
+    @Override
+    public void preDestroy() {
+        scheduledExecutorService.shutdown();
     }
 
     private User toUser(final WeixinUserDetail detail) {

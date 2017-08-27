@@ -7,9 +7,11 @@ import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
 import me.jiangcai.user.notice.User;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PreDestroy;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import java.util.Collection;
@@ -195,4 +197,14 @@ public interface LoginService extends UserDetailsService {
      * @return 微信模板消息接收者
      */
     Collection<User> toWechatUser(Collection<? extends Login> input);
+
+    /**
+     * 每10分钟尝试自动删除无效身份
+     */
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    @Transactional(readOnly = true)
+    void tryAutoDeleteLogin();
+
+    @PreDestroy
+    void preDestroy();
 }
