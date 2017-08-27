@@ -4,8 +4,8 @@
  * Created by CJ on 30/07/2017.
  */
 if (_this.executedCount >= 5) {
-    //延迟到1千年之后
-    _this.targetInstant = _this.targetInstant.plusSeconds(3155695200);
+    //延迟到10年之后
+    _this.targetInstant = _this.targetInstant.plusSeconds(315569520);
 } else if (_this.executedCount >= 4) {
     _this.targetInstant = _this.targetInstant.plusSeconds(3 * 3600);
 } else if (_this.executedCount >= 3) {

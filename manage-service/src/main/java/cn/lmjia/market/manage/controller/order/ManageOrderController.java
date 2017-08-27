@@ -114,18 +114,19 @@ public class ManageOrderController {
             @Override
             public Specification<MainOrder> specification() {
                 return (root, query, cb) -> {
-                    Predicate predicate = cb.conjunction();
+                    Predicate predicate = cb.isNotNull(root.get(MainOrder_.currentLogistics));
                     if (!StringUtils.isEmpty(mobile))
                         predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root))
                                 , "%" + mobile + "%"));
                     if (depotId != null) {
                         predicate = cb.and(predicate, cb.equal(root.join("currentLogistics").get("origin").get("id"), depotId));
                     }
-                    if (!StringUtils.isEmpty(productCode))
+                    if (!StringUtils.isEmpty(productCode)) {
                         root.fetch(MainOrder_.amounts);
-                    predicate = cb.and(predicate
-                            , cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.product).get(Product_.code)
-                                    , productCode));
+                        predicate = cb.and(predicate
+                                , cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.product).get(Product_.code)
+                                        , productCode));
+                    }
                     if (orderDate != null) {
                         predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate));
                     }
