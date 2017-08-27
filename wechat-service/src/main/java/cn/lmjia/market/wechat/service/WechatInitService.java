@@ -76,7 +76,7 @@ public class WechatInitService {
     }
 
     private Menu createMenu(String name, String url) {
-        if (name.equals("投融家分期")
+        if ("投融家分期".equals(name)
                 && !systemStringService.getCustomSystemString("market.trj.enable", null
                 , false, Boolean.class, false)) {
             return null;

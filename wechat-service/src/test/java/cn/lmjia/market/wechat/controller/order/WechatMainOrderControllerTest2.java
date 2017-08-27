@@ -76,7 +76,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
 
         final MainGood good = mainGoodService.forSale(trj).get(0);
 
-        BigDecimal price = good.getTotalPrice();
+//        BigDecimal price = good.getTotalPrice();
 
         final Login login = randomLogin(false);
         updateAllRunWith(login);

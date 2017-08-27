@@ -12,7 +12,6 @@ import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
@@ -85,8 +84,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private LoginRepository loginRepository;
     @Autowired
     private MainOrderService mainOrderService;
-    @Autowired
-    private MainGoodRepository mainGoodRepository;
     @Autowired
     private QuickPayBean quickPayBean;
     @Autowired
