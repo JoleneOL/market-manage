@@ -2,6 +2,7 @@ package cn.lmjia.market.dealer.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel_;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -156,7 +157,7 @@ public class AgentDataController {
 
                             @Override
                             public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
-                                return root.get("login");
+                                return root.get(AgentLevel_.login);
                             }
                         }, new AgentLevelField() {
                             @Override
@@ -171,7 +172,7 @@ public class AgentDataController {
 
                             @Override
                             public Expression<?> order(Root<AgentLevel> root, CriteriaBuilder criteriaBuilder) {
-                                return root.get("login");
+                                return root.get(AgentLevel_.login);
                             }
                         }, new AgentLevelField() {
                             @Override

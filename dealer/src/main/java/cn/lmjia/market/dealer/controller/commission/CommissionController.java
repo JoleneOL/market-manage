@@ -2,6 +2,7 @@ package cn.lmjia.market.dealer.controller.commission;
 
 import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.define.Money;
+import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
@@ -13,7 +14,7 @@ import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
@@ -173,27 +174,10 @@ public class CommissionController {
                                 return null;
                             }
                         }
-                        , new FieldDefinition<Commission>() {
-                            @Override
-                            public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<Commission> root) {
-                                return ReadService.nameForCustomer(root.join("orderCommission").join("source").join("customer"), criteriaBuilder);
-                            }
-
-                            @Override
-                            public String name() {
-                                return "name";
-                            }
-
-                            @Override
-                            public Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe) {
-                                return origin;
-                            }
-
-                            @Override
-                            public Expression<?> order(Root<Commission> root, CriteriaBuilder criteriaBuilder) {
-                                return null;
-                            }
-                        }
+                        , FieldBuilder.asName(Commission.class, "name")
+                                .addSelect(commissionRoot -> commissionRoot
+                                        .get(Commission_.orderCommission).get(OrderCommission_.source).get(MainOrder_.customer).get(Customer_.name))
+                                .build()
                         , new FieldDefinition<Commission>() {
                             @Override
                             public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<Commission> root) {
