@@ -159,10 +159,16 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     public ApiResult newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
-            , String authorising, String idNumber, boolean installmentHuabai, String[] goods)
+            , String authorising, String idNumber, boolean installmentHuabai
+            , String[] goods,@RequestParam(name = "goods[]",required = false) String[] goodsArray)
             throws MainGoodLowStockException, InvalidAuthorisingException {
         int age = 20;
-        MainGoodsAndAmounts amounts = MainGoodsAndAmounts.ofArray(goods);
+        MainGoodsAndAmounts amounts = null;
+        if(goods != null){
+            amounts = MainGoodsAndAmounts.ofArray(goods);
+        }else if(goodsArray != null){
+            amounts = MainGoodsAndAmounts.ofArray(goodsArray);
+        }
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,
                 activityCode, channelId, amounts);
         JSONObject result = new JSONObject();
