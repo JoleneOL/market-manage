@@ -111,6 +111,9 @@ public class MainOrderServiceImpl implements MainOrderService {
                 log.info("清除货品限购");
                 productStockMap.clear();
                 int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
+                if(offsetHour >= 23 || offsetHour < 0){
+                    offsetHour = defaultOffsetHour;
+                }
                 LocalDateTime now = LocalDateTime.now();
                 LocalDateTime nextRuntime;
                 if(now.getHour() >= offsetHour){
@@ -458,6 +461,9 @@ public class MainOrderServiceImpl implements MainOrderService {
                 limitDay = 1L;
             } else {
                 int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
+                if(offsetHour >= 23 || offsetHour < 0){
+                    offsetHour = defaultOffsetHour;
+                }
                 limitDay = ChronoUnit.DAYS.between(now.minusHours(offsetHour).toLocalDate(), planSellOutDate) + 1;
             }
         } else {
@@ -477,6 +483,9 @@ public class MainOrderServiceImpl implements MainOrderService {
     public int usableStock(Product product) {
         int limitStock = limitStock(product);
         int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
+        if(offsetHour >= 23 || offsetHour < 0){
+            offsetHour = defaultOffsetHour;
+        }
         LocalDateTime orderBeginTime = LocalDateTime.now().withHour(offsetHour);
         //计算今日所有未关闭订单的货品数量
         int todayStock = sumProductNum(product, orderBeginTime, null);
@@ -497,6 +506,9 @@ public class MainOrderServiceImpl implements MainOrderService {
                 lowStockProduct.put(good,usableStock);
             } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
                 int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
+                if(offsetHour >= 23 || offsetHour < 0){
+                    offsetHour = defaultOffsetHour;
+                }
                 LocalDateTime localDateTime = LocalDate.now().plusDays(1).atStartOfDay().plusHours(offsetHour);
                 lowStockProduct.put(good,usableStock);
                 relieveTime.put(good,localDateTime);
