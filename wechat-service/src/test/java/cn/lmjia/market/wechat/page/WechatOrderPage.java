@@ -1,5 +1,7 @@
 package cn.lmjia.market.wechat.page;
 
+import me.jiangcai.lib.test.SpringWebTest;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.http.NameValuePair;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -34,6 +36,10 @@ public class WechatOrderPage extends AbstractWechatPage {
     private WebElement buttonToAddGoods;
     @FindBy(id = "J_goodsList")
     private WebElement goodListRegion;
+    @FindBy(name = "name")
+    private WebElement name;
+    @FindBy(name = "mobile")
+    private WebElement mobile;
 
     public WechatOrderPage(WebDriver webDriver) {
         super(webDriver);
@@ -103,7 +109,8 @@ public class WechatOrderPage extends AbstractWechatPage {
      * @param goodChooser   可选的商品选择；输入参数为商品名称；默认为都选择
      * @param amountChooser 可选的数量选择；输入参数为商品名称:限购数量;默认为选择1-1/4。如果界面没有提供限购数量则购买1-9个
      */
-    public void submitRandomOrder(Function<String, Boolean> goodChooser, Function<NameValuePair, Integer> amountChooser) {
+    public final void submitRandomOrder(Function<String, Boolean> goodChooser
+            , Function<NameValuePair, Integer> amountChooser) {
         // 如果选择商品窗口没打开 则打开它
         if (!goodListRegion.isDisplayed()) {
             buttonToAddGoods.click();
@@ -165,6 +172,82 @@ public class WechatOrderPage extends AbstractWechatPage {
                     }
                 });
 
+        // 点击完成关闭商品选择
+        webDriver.findElement(By.id("J_goodsOK")).click();
+//        new WebDriverWait(webDriver, 2)
+//                .until(ExpectedConditions.invisibilityOf(goodListRegion));
 
+        // 其他信息
+        name.clear();
+        name.sendKeys("W客户" + RandomStringUtils.randomAlphabetic(6));
+
+//        webDriver.findElements(By.name("gender")).stream()
+//                .sorted(new SpringWebTest.RandomComparator())
+//                .findFirst().orElse(null);
+
+        randomAddress(webDriver.findElement(By.id("J_form")), "address", "fullAddress");
+
+        // 手机号码
+        mobile.clear();
+        mobile.sendKeys(SpringWebTest.randomAllMobile());
+
+        typeOtherInformation();
+
+        webDriver.findElement(By.id("J_submitBtn")).click();
+    }
+
+    /**
+     * 填写其他订单信息
+     */
+    protected void typeOtherInformation() {
+
+    }
+
+    /**
+     * city-picker技术的随机地址填写
+     *
+     * @param form            form
+     * @param addressName     address 字段的名称
+     * @param fullAddressName 详细地址字段的名称
+     */
+    private void randomAddress(WebElement form, String addressName, String fullAddressName) {
+        //
+        // 点击地址弹出选择框
+        form.findElement(By.name(addressName)).click();
+        new WebDriverWait(webDriver, 2)
+                .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("col-province")));
+        // col-province
+        // 选择省级
+        webDriver.findElement(By.className("col-province")).findElements(By.className("picker-item")).stream()
+                .filter(WebElement::isDisplayed)
+                .sorted(new SpringWebTest.RandomComparator())
+                .findFirst()
+                .ifPresent(provinceElement -> {
+                    provinceElement.click();
+
+                    webDriver.findElement(By.className("col-city")).findElements(By.className("picker-item")).stream()
+                            .filter(WebElement::isDisplayed)
+                            .sorted(new SpringWebTest.RandomComparator())
+                            .findFirst()
+                            .ifPresent(cityElement -> {
+                                cityElement.click();
+
+                                webDriver.findElement(By.className("col-district")).findElements(By.className("picker-item")).stream()
+                                        .filter(WebElement::isDisplayed)
+                                        .sorted(new SpringWebTest.RandomComparator())
+                                        .findFirst()
+                                        .ifPresent(WebElement::click);
+                            });
+
+                });
+
+        // 点击完成
+        webDriver.findElement(By.className("close-picker")).click();
+//        new WebDriverWait(webDriver, 2)
+//                .until(ExpectedConditions.invisibilityOfElementLocated(By.className("col-province")));
+
+        // 填写其他地址
+        form.findElement(By.name(fullAddressName)).clear();
+        form.findElement(By.name(fullAddressName)).sendKeys("其他地址" + RandomStringUtils.randomAlphabetic(10));
     }
 }

@@ -1,15 +1,10 @@
 package cn.lmjia.market.wechat.controller.order;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.PaySuccessPage;
 import cn.lmjia.market.wechat.page.WechatOrderPage;
 import org.junit.Test;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * @author CJ
@@ -23,32 +18,7 @@ public abstract class AbstractWechatMainOrderControllerTest<T extends WechatOrde
 
     private void doOrder() throws Exception {
         T page = openOrderPage();
-
-//        page.submitRandomOrder();
-
-        mockMvc.perform(wechatGet(SystemService.wechatOrderURi))
-//                    .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("wechat@orderPlace.html"));
-        mockMvc.perform(wechatGet(SystemService.wechatOrderURiHB))
-//                    .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(view().name("wechat@orderPlace.html"));
-        // 这波则是开干了
-        //
-        MockHttpServletRequestBuilder requestBuilder =
-                orderRequestBuilder(wechatPost("/wechatOrder"), randomOrderRequest());
-
-        String result = mockMvc.perform(
-                requestBuilder
-        )
-                .andExpect(status().is3xxRedirection())
-                .andReturn().getResponse().getHeader("Location");
-
-        // 使用 driver 打开!
-        driver.get("http://localhost" + result);
-//                    mockMvc.perform(wechatGet("/paySuccess?mainOrderId=1"))
-//                            .andDo(print());
+        page.submitRandomOrder(null, null);
         PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatPaySuccess?mainOrderId=1");
         // 然后模拟订单完成支付
     }
