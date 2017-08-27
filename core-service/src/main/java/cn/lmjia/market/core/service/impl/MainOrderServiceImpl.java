@@ -427,12 +427,24 @@ public class MainOrderServiceImpl implements MainOrderService {
         return result != null ? (int) result : 0;
     }
 
+    /**
+     * 获取清算时间配置
+     * @return
+     */
     private int getOffsetHour() {
         int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
         if (offsetHour >= 23 || offsetHour < 0) {
             offsetHour = defaultOffsetHour;
         }
         return offsetHour;
+    }
+
+    /**
+     * 获取今日清算时间
+     * @return
+     */
+    private LocalDateTime getOffsetTime(){
+        return LocalDate.now().atTime(getOffsetHour(),0);
     }
 
     @Override
@@ -467,7 +479,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         int productStock = lockedStock > totalUsableStock ? 0 : (int) ((totalUsableStock - lockedStock) / limitDay);
         log.debug("Product:" + product.getCode() + "UsableStock:" + totalUsableStock + ";lockStock:" + lockedStock + ";limitDay:" + limitDay);
         //今日清算时间
-        LocalDateTime cleanTime = LocalDate.now().atTime(getOffsetHour(),0);
+        LocalDateTime cleanTime = getOffsetTime();
         log.debug("cleanTime:" +cleanTime);
         productStockMap.put(product.getCode(), new CleanStock(cleanTime, productStock));
         return productStock;
@@ -476,7 +488,7 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public int usableStock(Product product) {
         int limitStock = limitStock(product);
-        LocalDateTime orderBeginTime = LocalDate.now().atTime(getOffsetHour(), 0);
+        LocalDateTime orderBeginTime = getOffsetTime();
         //计算今日所有未关闭订单的货品数量
         int todayStock = sumProductNum(product, orderBeginTime, null, null);
         log.debug("todayStock:" + todayStock);
@@ -496,10 +508,8 @@ public class MainOrderServiceImpl implements MainOrderService {
             if (good.getProduct().getPlanSellOutDate() == null && usableStock < amounts.get(good)) {
                 lowStockProduct.put(good, usableStock);
             } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
-                int offsetHour = getOffsetHour();
-                LocalDateTime localDateTime = LocalDate.now().plusDays(1).atStartOfDay().plusHours(offsetHour);
                 lowStockProduct.put(good, usableStock);
-                relieveTime.put(good, localDateTime);
+                relieveTime.put(good, getOffsetTime().plusDays(1));
             }
         }
         if (lowStockProduct.size() > 0) {
