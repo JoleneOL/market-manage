@@ -36,8 +36,14 @@ $(function () {
     infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
 
     var listTpl = function (obj) {
+        var link;
+        if (obj.nextRank)
+            link = 'memberList.html?userId=' + obj.id + '&rank=' + obj.nextRank;
+        else
+            link = 'javascript:;';
+
         return '<div class="weui-cells view-mt-0">\n' +
-            '    <a class="weui-cell weui-cell_access view-team-list_link" href="javascript:;">\n' +
+            '    <a class="weui-cell weui-cell_access view-team-list_link" href="' + link + '">\n' +
             '        <div class="weui-cell__bd view-team-list_items">\n' +
             '            <div class="ellipsis">' + obj.name + '</div>\n' +
             '            <div class="ellipsis">' + obj.rank + '</div>\n' +

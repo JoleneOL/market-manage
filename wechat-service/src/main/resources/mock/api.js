@@ -11,6 +11,7 @@ Mock.mock(/^\/api\/subordinate\?page=\d{1,100}$/, "get", {
     "resultMsg": "ok",
     "data|20": [
         {
+            id: '@id',
             name: "@cname",
             rank: '区县代理',
             joinTime: '@now("yyyy-MM-dd")',
