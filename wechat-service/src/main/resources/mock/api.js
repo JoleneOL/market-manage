@@ -6,13 +6,66 @@ Mock.setup({
     timeout: '1000'
 });
 
+Mock.mock(/^\/api\/subordinate\?page=\d{1,100}$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|20": [
+        {
+            name: "@cname",
+            rank: '区县代理',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1([34578])\d{9}$/,
+            nextRank:3
+        }
+    ]
+});
+
+Mock.mock(/^\/api\/directly\?page=\d{1,100}$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|20": [
+        {
+            name: "@cname",
+            rank: '区县代理',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1([34578])\d{9}$/
+        },
+        {
+            name: "@cname",
+            rank: '经销商',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1([34578])\d{9}$/
+        },
+        {
+            name: "@cname",
+            rank: '爱心天使',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1([34578])\d{9}$/
+        }
+    ]
+});
+
+
 Mock.mock(/^\/api\/teamList\?rank=all&page=\d{1,100}$/, "get", {
     "resultCode": 200,
     "resultMsg": "ok",
-    "data|5": [
+    "data|20": [
         {
             name: "@cname",
-            rank: '@pick(["市代理", "经销商", "爱心天使"])',
+            rank: '区县代理',
+            joinTime: '@now("yyyy-MM-dd")',
+            phone: /^1([34578])\d{9}$/
+        }
+    ]
+});
+
+Mock.mock(/^\/api\/teamList\?rank=all&page=\d{1,100}$/, "get", {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|20": [
+        {
+            name: "@cname",
+            rank: '区县代理',
             joinTime: '@now("yyyy-MM-dd")',
             phone: /^1([34578])\d{9}$/
         }

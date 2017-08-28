@@ -36,11 +36,17 @@ $(function () {
     infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
 
     var listTpl = function (obj) {
-        return '<div class="weui-flex view_team-list">' +
-            '<div class="weui-flex__item text-center">' + obj.name + '</div>' +
-            '<div class="weui-flex__item text-center">' + obj.rank + '</div>' +
-            '<div class="weui-flex__item text-center">' + obj.joinTime + '</div>' +
-            '</div>';
+        return '<div class="weui-cells view-mt-0">\n' +
+            '    <a class="weui-cell weui-cell_access view-team-list_link" href="javascript:;">\n' +
+            '        <div class="weui-cell__bd view-team-list_items">\n' +
+            '            <div class="ellipsis">' + obj.name + '</div>\n' +
+            '            <div class="ellipsis">' + obj.rank + '</div>\n' +
+            '            <div class="ellipsis">' + obj.joinTime + '</div>\n' +
+            '            <div class="ellipsis">' + obj.phone + '</div>\n' +
+            '        </div>\n' +
+            '        <div class="weui-cell__ft"></div>\n' +
+            '    </a>\n' +
+            '</div>'
     };
 
     $('.js-teamItems').each(function () {

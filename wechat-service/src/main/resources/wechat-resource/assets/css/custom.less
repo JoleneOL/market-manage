@@ -930,6 +930,7 @@
     background-color: #fbf9fe;
   }
 }
+
 .view-order-list {
   background-color: #fff;
   .weui-cells__title {
@@ -1011,6 +1012,7 @@
     }
   }
 }
+
 // 重写
 .weui-cells_checkbox .weui-check:checked + .weui-icon-checked:before {
   color: @brand-success;
@@ -1169,6 +1171,9 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    .weui-cells::before {
+      border-top: none;
+    }
   }
 }
 
@@ -1525,10 +1530,12 @@
   color: rgba(0, 0, 0, 0.8);
   text-shadow: 0 1px 0 #fff;
 }
+
 .view-center-box img {
   width: 160px;
   height: 160px;
 }
+
 .view-center-box::before, .view-center-box::after {
   position: absolute;
   content: "";
@@ -1686,4 +1693,39 @@
     -webkit-appearance: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
+}
+
+//我的团队
+.view-team-list_link {
+  padding: 6px 3px;
+  .weui-cell__ft {
+    padding-right: 0;
+  }
+}
+.view-team-list_items {
+  > div {
+    padding: 6px 0;
+    text-align: center;
+    color: #333;
+    display: block;
+    box-sizing: border-box;
+    float: left;
+    white-space: nowrap;
+    &:nth-child(1) {
+      width: 22%;
+    }
+    &:nth-child(2),
+    &:nth-child(3) {
+      width: 23%;
+    }
+    &:nth-child(4) {
+      width: 32%;
+    }
+  }
+  &:after {
+    display: table;
+    content: " ";
+    clear: both;
+  }
+
 }

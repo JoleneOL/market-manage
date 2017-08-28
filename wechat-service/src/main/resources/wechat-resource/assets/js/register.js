@@ -41,6 +41,10 @@ $(function () {
     $('#J_authCode').click(function () {
         var self = $(this);
         var mobile = $mobile.val();
+        if(!mobile) {
+            $.toptip('手机号不能为空');
+            return;
+        }
         if (!/^1([34578])\d{9}$/.test(mobile)) {
             $.toptip('请输入正确的手机号');
             return;
