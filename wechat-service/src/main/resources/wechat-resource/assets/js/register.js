@@ -53,7 +53,7 @@ $(function () {
             },
             dataType: 'json',
             success: function (data) {
-                if (data.resultCode === 400) {
+                if (data.resultCode === 401) {
                     $.toptip(data.resultMsg);
                     return false;
                 }
