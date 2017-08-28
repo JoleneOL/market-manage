@@ -218,5 +218,7 @@ public interface MainOrderService {
     @Transactional(readOnly = true)
     void calculateGoodStock(Collection<MainGood> mainGoodSet);
 
+    LocalDateTime getTodayOffsetTime();
+
 
 }

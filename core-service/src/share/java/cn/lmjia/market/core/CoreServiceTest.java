@@ -29,7 +29,9 @@ import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
 import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
@@ -84,6 +86,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private MainOrderService mainOrderService;
     @Autowired
     private MainGoodRepository mainGoodRepository;
+    @Autowired
+    private StockService stockService;
     @Autowired
     private QuickPayBean quickPayBean;
     @Autowired
@@ -506,5 +510,26 @@ public abstract class CoreServiceTest extends SpringWebTest {
                     depot.setName(RandomStringUtils.randomAlphabetic(5) + "仓库名字");
                     return depotRepository.saveAndFlush(depot);
                 });
+    }
+
+
+    /**
+     * 对某件货品，根据期望限购数量计算需要设置的计划售罄日期
+     * <p>
+     * 限购数量[expectStock] = (当前仓库总数[totalUsageStock] - 冻结库存数[lockedStock] + 今日下单数[todayStock] )/ diffDay
+     * - 今日下单数[todayStock]
+     *
+     * @param product
+     * @param expectStock
+     * @return
+     */
+    protected LocalDate calculatePlanSellOutDate(Product product, int expectStock) {
+
+        int totalUsageStock = stockService.usableStockTotal(product);
+        int lockedStock = mainOrderService.sumProductNum(product);
+        LocalDateTime todayOffsetTime = mainOrderService.getTodayOffsetTime();
+        int todayStock = mainOrderService.sumProductNum(product, todayOffsetTime, null, null);
+        int diffDay = (totalUsageStock - lockedStock + todayStock) / (expectStock + todayStock);
+        return todayOffsetTime.plusDays(diffDay - 1).toLocalDate();
     }
 }

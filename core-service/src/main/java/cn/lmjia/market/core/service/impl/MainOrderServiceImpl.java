@@ -8,13 +8,11 @@ import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
-import cn.lmjia.market.core.aop.MultiBusinessSafe;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.sys.service.SystemStringService;
@@ -100,7 +98,7 @@ public class MainOrderServiceImpl implements MainOrderService {
     private Environment env;
 
     //货品的限购数量及清算时间
-    private Map<String, CleanStock> productStockMap = new HashMap<>();
+    private Map<String, OffsetStock> productStockMap = new HashMap<>();
     private static final int defaultMaxMinuteForPay = 60 * 24 * 3;
     private static final int defaultOffsetHour = 9;
 
@@ -429,11 +427,12 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     /**
      * 获取清算时间配置
+     *
      * @return
      */
     private int getOffsetHour() {
         int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
-        if (offsetHour >= 23 || offsetHour < 0) {
+        if (!env.acceptsProfiles(CoreConfig.ProfileUnitTest) && (offsetHour > 23 || offsetHour < 0)) {
             offsetHour = defaultOffsetHour;
         }
         return offsetHour;
@@ -441,10 +440,22 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     /**
      * 获取今日清算时间
+     *
      * @return
      */
-    private LocalDateTime getOffsetTime(){
-        return LocalDate.now().atTime(getOffsetHour(),0);
+    @Override
+    public LocalDateTime getTodayOffsetTime() {
+        return getOffsetDate().atStartOfDay().plusHours(getOffsetHour());
+    }
+
+    /**
+     * 获取当前时间相对于清算时间的日期
+     * 比如清算时间是9点，现在是8点，那么当前时间相对于清算时间要减1天
+     *
+     * @return
+     */
+    private LocalDate getOffsetDate() {
+        return LocalDateTime.now().minusHours(getOffsetHour()).toLocalDate();
     }
 
     @Override
@@ -452,11 +463,9 @@ public class MainOrderServiceImpl implements MainOrderService {
         //如果已经计算过了，就直接从 map 中获取
         LocalDateTime now = LocalDateTime.now();
         if (productStockMap.containsKey(product.getCode())) {
-            CleanStock cleanStock = productStockMap.get(product.getCode());
-            long diffHour = ChronoUnit.HOURS.between(cleanStock.getCleanTime(), now);
-            //如果清算时间有改动，或者已经超过24小时，那么需要重新计算限购数量
-            if (cleanStock.getCleanTime().getHour() == getOffsetHour() && diffHour < 24) {
-                return cleanStock.getStock();
+            OffsetStock offsetStock = productStockMap.get(product.getCode());
+            if (offsetStock.getOffsetDate().equals(getOffsetDate())) {
+                return offsetStock.getStock();
             }
         }
         long limitDay;
@@ -475,23 +484,26 @@ public class MainOrderServiceImpl implements MainOrderService {
         int totalUsableStock = stockService.usableStockTotal(product);
         //锁定库存包括 代付款，待发货
         int lockedStock = sumProductNum(product);
-        //(UsageStock - sumProductNum) / N，这里计算的不算精确，没有考虑到今日冻结的库存数，但是在可接受范围内
-        int productStock = lockedStock > totalUsableStock ? 0 : (int) ((totalUsableStock - lockedStock) / limitDay);
-        log.debug("Product:" + product.getCode() + "UsableStock:" + totalUsableStock + ";lockStock:" + lockedStock + ";limitDay:" + limitDay);
-        //今日清算时间
-        LocalDateTime cleanTime = getOffsetTime();
-        log.debug("cleanTime:" +cleanTime);
-        productStockMap.put(product.getCode(), new CleanStock(cleanTime, productStock));
+        int todayStock = sumProductNum(product, getTodayOffsetTime(), null, null);
+        //限购数量 = 当前库存总数 - 当前冻结总数 + 今日下单数
+        int totalProductStock = totalUsableStock - lockedStock + todayStock;
+        int productStock = totalProductStock <= 0 ? 0 : (int) (totalProductStock / limitDay);
+        log.debug("Product:" + product.getCode()
+                + ";TotalUsableStock:" + totalUsableStock
+                + ";lockStock:" + lockedStock
+                + ";todayStock:" + todayStock
+                + ";limitDay:" + limitDay);
+        productStockMap.put(product.getCode(), new OffsetStock(getOffsetDate(), productStock));
         return productStock;
     }
 
     @Override
     public int usableStock(Product product) {
         int limitStock = limitStock(product);
-        LocalDateTime orderBeginTime = getOffsetTime();
+        LocalDateTime orderBeginTime = getTodayOffsetTime();
         //计算今日所有未关闭订单的货品数量
         int todayStock = sumProductNum(product, orderBeginTime, null, null);
-        log.debug("todayStock:" + todayStock);
+        log.debug("Product:" + product.getCode() + ";limitStock:" + limitStock + ";lockedStock:" + todayStock);
         return todayStock > limitStock ? 0 : limitStock - todayStock;
     }
 
@@ -509,7 +521,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 lowStockProduct.put(good, usableStock);
             } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
                 lowStockProduct.put(good, usableStock);
-                relieveTime.put(good, getOffsetTime().plusDays(1));
+                relieveTime.put(good, getTodayOffsetTime().plusDays(1));
             }
         }
         if (lowStockProduct.size() > 0) {
@@ -566,9 +578,9 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     @Getter
     @AllArgsConstructor
-    class CleanStock {
-        //清算时间
-        private LocalDateTime cleanTime;
+    class OffsetStock {
+        //清算日期
+        private LocalDate offsetDate;
         private Integer stock;
     }
 
