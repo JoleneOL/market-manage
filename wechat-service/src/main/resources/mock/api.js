@@ -304,7 +304,7 @@ Mock.mock(/\/api\/recommend/, "post", {
 });
 
 Mock.mock(/\/api\/authCode/, "post", {
-    "resultCode": 401,
+    "resultCode": "@pick([200, 401])",
     "resultMsg": "该手机号已经被注册",
     "data": null
 });
