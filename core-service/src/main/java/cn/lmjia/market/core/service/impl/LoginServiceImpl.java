@@ -19,6 +19,7 @@ import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.user.notice.NoticeChannel;
 import me.jiangcai.user.notice.User;
+import me.jiangcai.user.notice.UserNoticeType;
 import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
@@ -43,6 +44,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -388,5 +390,74 @@ public class LoginServiceImpl implements LoginService {
                 return map;
             }
         };
+    }
+
+    /**
+     * 即将删除的通知
+     */
+    private class DeleteLoginWarn implements UserNoticeType {
+
+        @Override
+        public String id() {
+            return "Login.DeleteLoginWarn";
+        }
+
+        @Override
+        public String title() {
+            return "新会员即将被删除";
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) {
+            return null;
+        }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) {
+            return null;
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[0];
+        }
+    }
+
+    private class DeleteLogin implements UserNoticeType {
+
+        @Override
+        public String id() {
+            return "Login.DeleteLogin";
+        }
+
+        @Override
+        public String title() {
+            return "新会员被删除";
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) {
+            return null;
+        }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) {
+            return null;
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[0];
+        }
     }
 }
