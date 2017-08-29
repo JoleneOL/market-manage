@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
 
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
@@ -183,7 +181,7 @@
 </section>
 <aside id="J_goodsList">
     <div class="weui-panel weui-panel_access view-goods_list">
-        <div class="weui-panel__hd">商品列表</div>
+        <div class="weui-panel__hd">商品列表 <div class="view-refresh js-refreshBtn"><i class="fa fa-refresh "></i>刷新</div></div>
         <div class="weui-panel__bd">
             <div class="weui-media-box weui-media-box_appmsg js-goods-list"
                  data-id="1"
@@ -504,14 +502,13 @@
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/city-picker.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
-<script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
-<script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script src="//cdn.lmjia.cn/slideout/1.0.1/slideout.min.js"></script>
-<!--生产环境请移除 Begin-->
+
 <script src="../mock/mock-min.js" th:remove="all"></script>
 <script src="../mock/api.js" th:remove="all"></script>
+
 <script src="../wechat-resource/assets/js/orderPlace.js"
-        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=3)}"></script>
+        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=5)}"></script>
 
 
 <script th:if="${trj}">

@@ -1403,6 +1403,16 @@
   -webkit-flex: 2;
   flex: 2;
 }
+.view-goods_list .view-refresh {
+  position: absolute;
+  right: 15px;
+  top: 14px;
+  color: #009bb6;
+}
+.view-goods_list .view-refresh i {
+  font-size: 20px;
+  margin-right: 5px;
+}
 .view-goods_footer {
   display: none;
   position: fixed;

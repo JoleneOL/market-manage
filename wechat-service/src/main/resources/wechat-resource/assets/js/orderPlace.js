@@ -139,23 +139,42 @@ $(function () {
         }
     });
 
+    // 订单刷新
+    $('.js-refreshBtn').click(function () {
+        $.showLoading('库存刷新中');
+        $.ajax('/refreshStock', {
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $.hideLoading();
+                if (data.resultCode !== 200) {
+                    $.toptip(data.resultMsg);
+                    return false;
+                }
+                $.toptip("库存更新完毕", "success");
+                resetGoodsList(data.data);
+            },
+            error: function () {
+                $.hideLoading();
+                $.toptip("系统错误");
+            }
+        })
+    });
+
     function submitOrder(data) {
         $.showLoading('订单提交中');
-        //TODO 接口请确认
         $.ajax('/wechatOrder', {
             method: 'POST',
             data: data,
             dataType: 'json',
             success: function (data) {
                 $.hideLoading();
-                //401为缺货状态
-                // TODO  data[Array] {id:商品,stock:现在库存}
                 if (data.resultCode === 401) {
                     $.toptip(data.resultMsg);
                     resetGoodsList(data.data);
                     return false;
                 }
-                if (data.resultCode === 402){
+                if (data.resultCode === 402) {
                     $.toptip('按揭码或者身份证号码无效');
                     return false;
                 }
@@ -163,7 +182,6 @@ $(function () {
                     $.toptip("订单提交失败，请重试");
                     return false;
                 }
-                $.toptip("校验成功", "success");
                 var orderPKId = data.data.id;
                 var channelId = data.data.channelId;
                 var installmentHuabai = data.data.installmentHuabai;
@@ -173,13 +191,13 @@ $(function () {
                 var payOrderHref = "wechatOrderPay.html"
                     + "?orderPKId=" + orderPKId
                     + "&installmentHuabai=" + installmentHuabai;
-                if(!!channelId)
+                if (!!channelId)
                     payOrderHref = payOrderHref
                         + "&channelId=" + channelId;
-                if(!!idNumber)
+                if (!!idNumber)
                     payOrderHref = payOrderHref
                         + "&idNumber=" + idNumber;
-                if(!!authorising)
+                if (!!authorising)
                     payOrderHref = payOrderHref
                         + "&authorising=" + authorising;
                 window.location.href = payOrderHref;
@@ -337,6 +355,10 @@ $(function () {
         var dataJSON = getBuyData();
         setBuyData(dataJSON);
         makeBuyList(dataJSON);
+        var nowTotal = Number(goodsTotal.text());
+        $('input[name="orderTotal"]').val(nowTotal);
+        installmentFunc(nowTotal);
+        $('#J_orderTotal').find('strong').text(nowTotal.toFixed(2));
         closeMenu(e);
     });
 
@@ -449,9 +471,6 @@ $(function () {
         else
             nowTotal -= (price * step);
         goodsTotal.text(nowTotal.toFixed(2));
-        $('input[name="orderTotal"]').val(nowTotal);
-        installmentFunc(nowTotal);
-        $('#J_orderTotal').find('strong').text(nowTotal.toFixed(2));
     }
 
     Spinner.init();
