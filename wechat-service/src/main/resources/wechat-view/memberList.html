@@ -7,7 +7,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>Title</title>
+    <!--用户名-->
+    <title>xxxx</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -15,10 +16,35 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body>
+<body class="view-fs-small">
+<div class="weui-cells__title">
+    <a href="myTeam.html" class="text-primary">返回我的团队</a>
+</div>
 
+<div class="weui-cells view_team-list js-extra-h">
+    <div class="view-team-list_items view_team-header">
+        <div class="text-center">用户</div>
+        <div class="text-center">级别</div>
+        <div class="text-center">加入时间</div>
+        <div class="text-center">手机号码</div>
+    </div>
+</div>
+<!--data-url服务端渲染-->
+<div class="view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=3">
+    <div class="view-scroll-list">
+        <div class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">数据加载中...</span>
+        </div>
+    </div>
+</div>
 </body>
-<script>
-   document.write(window.location.search);
-</script>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="../mock/mock-min.js" th:remove="all"></script>
+<script src="../mock/api.js" th:remove="all"></script>
+<!--生产环境请移除 End-->
+<script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
+<script src="../wechat-resource/assets/js/memberList.js" th:src="@{/wechat-resource/assets/js/memberList.js}"></script>
 </html>

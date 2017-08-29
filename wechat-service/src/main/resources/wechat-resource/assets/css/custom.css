@@ -1,3 +1,6 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+}
 .ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;

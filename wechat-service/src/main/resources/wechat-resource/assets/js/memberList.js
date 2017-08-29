@@ -1,32 +1,6 @@
-/**
- * Created by Neo on 2017/7/14.
- */
 $(function () {
-    var teamItem = $('.js-team');
-    var teamSwiper = $('#tabs-teams').swiper({
-        observer: true,
-        observeParents: true,
-        speed: 500,
-        onSlideChangeStart: function () {
-            $(".js-teams .active").removeClass('active');
-            teamItem.eq(teamSwiper.activeIndex).addClass('active');
 
-            $('.view-total .on').removeClass('on');
-            $('.view-total li').eq(teamSwiper.activeIndex).addClass('on');
-        }
-    });
-    teamItem.on('touchstart mousedown', function (e) {
-        e.preventDefault();
-        $(".js-teams .active").removeClass('active');
-        $(this).addClass('active');
-        teamSwiper.slideTo($(this).index())
-    });
-    teamItem.click(function (e) {
-        e.preventDefault();
-    });
-
-    // 我的团队逻辑
-    var infiniteWrap = $('.swiper-slide');
+    var infiniteWrap = $('.view-scroll-wrap');
 
     var extraHeight_team = 0;
     $('.js-extra-h').each(function () {

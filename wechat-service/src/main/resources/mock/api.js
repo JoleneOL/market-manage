@@ -106,7 +106,8 @@ Mock.mock(/^\/api\/teamList\?rank=3&page=\d$/, "get", {
             name: "@cname",
             rank: '经销商',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1([34578])\d{9}$/
+            phone: /^1([34578])\d{9}$/,
+            nextRank:4
         }
     ]
 });
