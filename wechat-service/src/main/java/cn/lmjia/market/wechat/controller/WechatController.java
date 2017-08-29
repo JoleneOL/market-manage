@@ -39,6 +39,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * 几个微信常用控制器
@@ -98,7 +99,7 @@ public class WechatController {
         }
         verificationCodeService.verify(mobile, authCode, loginService.registerVerificationType());
         // 继续
-        login = loginService.password(login, mobile, "123456");
+        login = loginService.password(login, mobile, UUID.randomUUID().toString());
 
         contactWayService.updateMobile(login, mobile);
         contactWayService.updateName(login, name);

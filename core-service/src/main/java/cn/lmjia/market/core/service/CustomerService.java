@@ -8,6 +8,8 @@ import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.lib.thread.ThreadSafe;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 /**
  * 客户相关服务
@@ -44,6 +46,7 @@ public interface CustomerService {
      * @return 是否产生新的事件
      */
     @EventListener(OrderPaySuccess.class)
+    @Order(Ordered.LOWEST_PRECEDENCE)
     @ThreadSafe
     LoginRelationChangedEvent orderPay(OrderPaySuccess event);
 }
