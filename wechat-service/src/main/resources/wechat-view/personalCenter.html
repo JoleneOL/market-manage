@@ -26,17 +26,12 @@
 <div class="weui-tab">
     <div class="weui-navbar">
         <a class="view-navbar_item on" href="#myTeam">我的团队</a>
-        <a class="view-navbar_item" href="#commission">资产明细</a>
+        <a class="view-navbar_item" href="#commission">我的佣金</a>
     </div>
     <div class="view-tab_bd swiper-container" id="navbar-container">
         <div class="swiper-wrapper view-tab_wrap">
             <div id="myTeam" class="swiper-slide view-scroll-wrap">
-                <div class="weui-cells__title text-right js-extra-h">
-                    <a href="chance.html" th:href="@{/wechatShareMore}"
-                       class="weui-btn weui-btn_mini weui-btn_default vertical-middle">成为合伙人</a>
-                    <!--<a href="chance.html" class="weui-btn weui-btn_mini weui-btn_default vertical-middle">升级合伙人</a>-->
-                </div>
-                <div class="weui-cells js-extra-h">
+                <div class="weui-cells js-extra-h view-mt-0">
                     <!--<a href="userInfo.html" class="weui-cell weui-cell_access">-->
                     <a href="javascript:;" class="weui-cell weui-cell_access">
                         <div class="weui-cell__hd view-avatar_normal">
@@ -56,35 +51,25 @@
                     </a>
                 </div>
                 <div class="view-tabs js-teams js-extra-h">
-                    <a href="#" class="view-tabs_item js-team active">全部</a>
-                    <!--<a href="#" class="view-tabs_item js-team">总代理</a>-->
-                    <a href="#" class="view-tabs_item js-team" th:text="${@readService.getLoginTitle(3)}">市代理</a>
-                    <a href="#" class="view-tabs_item js-team" th:text="${@readService.getLoginTitle(4)}">经销商</a>
-                    <a href="#" class="view-tabs_item js-team">爱心天使</a>
-                    <!--<a href="#" class="view-tabs_item js-team">普通用户</a>-->
+                    <a href="#" class="view-tabs_item js-team active">所属</a>
+                    <a href="#" class="view-tabs_item js-team">推荐</a>
                 </div>
                 <ul class="view-total">
-                    <li class="on">您共发展了<span th:text="${{allCount}}">29</span>个人</li>
-                    <!--<li>您共发展了<span th:text="${{count0}}">29</span>个省总代理</li>-->
-                    <li>您共发展了<span th:text="${{count2}}">29</span>个<span
-                            th:text="${@readService.getLoginTitle(3)}">市代理</span></li>
-                    <li>您共发展了<span th:text="${{count2}}">29</span>个<span
-                            th:text="${@readService.getLoginTitle(4)}">经销商</span></li>
-                    <li>您共发展了<span th:text="${{count3}}">29</span>个爱心天使</li>
-                    <!--<li>您共发展了1000个普通用户</li>-->
+                    <li class="on">您共管理了<span>99999</span>个人</li>
+                    <li>您共管理了<span>1999</span>个人</li>
                 </ul>
                 <div class="view_team-list js-extra-h">
-                    <div class="weui-flex view_team-header">
-                        <div class="weui-flex__item text-center">用户</div>
-                        <div class="weui-flex__item text-center">级别</div>
-                        <div class="weui-flex__item text-center">加入时间</div>
+                    <div class="view-team-list_items view_team-header">
+                        <div class="text-center">用户</div>
+                        <div class="text-center">级别</div>
+                        <div class="text-center">加入时间</div>
+                        <div class="text-center">手机号码</div>
                     </div>
                 </div>
                 <div id="tabs-teams" class="swiper-container">
                     <div class="swiper-wrapper">
-
-                        <!--全部-->
-                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=all">
+                        <!--所属-->
+                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/subordinate">
                             <div class="view-scroll-list">
                                 <div class="weui-loadmore">
                                     <i class="weui-loading"></i>
@@ -92,19 +77,8 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!--省代理-->
-                        <!--<div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=1">-->
-                        <!--<div class="view-scroll-list">-->
-                        <!--<div class="weui-loadmore">-->
-                        <!--<i class="weui-loading"></i>-->
-                        <!--<span class="weui-loadmore__tips">数据加载中...</span>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
-
-                        <!--市代理-->
-                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=2">
+                        <!--推荐-->
+                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/directly">
                             <div class="view-scroll-list">
                                 <div class="weui-loadmore">
                                     <i class="weui-loading"></i>
@@ -112,36 +86,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!--经销商-->
-                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=3">
-                            <div class="view-scroll-list">
-                                <div class="weui-loadmore">
-                                    <i class="weui-loading"></i>
-                                    <span class="weui-loadmore__tips">数据加载中...</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--爱心天使-->
-                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=4">
-                            <div class="view-scroll-list">
-                                <div class="weui-loadmore">
-                                    <i class="weui-loading"></i>
-                                    <span class="weui-loadmore__tips">数据加载中...</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--普通用户-->
-                        <!--<div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/teamList?rank=5">-->
-                        <!--<div class="view-scroll-list">-->
-                        <!--<div class="weui-loadmore">-->
-                        <!--<i class="weui-loading"></i>-->
-                        <!--<span class="weui-loadmore__tips">数据加载中...</span>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</div>-->
                     </div>
                 </div>
             </div>
@@ -265,6 +209,6 @@
 <script src="../mock/api.js" th:remove="all"></script>
 <!--生产环境请移除 End-->
 <script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
-<script src="../wechat-resource/assets/js/personCenter.js"
-        th:src="@{/wechat-resource/assets/js/personCenter.js}"></script>
+<script src="../wechat-resource/assets/js/personCenter.js?v=1"
+        th:src="@{/wechat-resource/assets/js/personCenter.js(v=1)}"></script>
 </html>

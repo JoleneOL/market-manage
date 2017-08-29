@@ -29,13 +29,15 @@ Mock.mock(/^\/api\/directly\?page=\d{1,100}$/, "get", {
             name: "@cname",
             rank: '区县代理',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1([34578])\d{9}$/
+            phone: /^1([34578])\d{9}$/,
+            nextRank:3
         },
         {
             name: "@cname",
             rank: '经销商',
             joinTime: '@now("yyyy-MM-dd")',
-            phone: /^1([34578])\d{9}$/
+            phone: /^1([34578])\d{9}$/,
+            nextRank:4
         },
         {
             name: "@cname",

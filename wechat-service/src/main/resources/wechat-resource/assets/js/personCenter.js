@@ -108,11 +108,26 @@ $(function () {
     teamItems.height($(window).height() - Math.ceil(extraHeight_team) -52);
 
     var listTpl = function (obj) {
-        return '<div class="weui-flex view_team-list">' +
-            '<div class="weui-flex__item text-center">' + obj.name + '</div>' +
-            '<div class="weui-flex__item text-center">' + obj.rank + '</div>' +
-            '<div class="weui-flex__item text-center">' + obj.joinTime + '</div>' +
-            '</div>';
+        var link = '',
+            more = '';
+        if (obj.nextRank) {
+            link = 'memberList.html?userId=' + obj.id + '&rank=' + obj.nextRank;
+            more = '<div class="weui-cell__ft"></div>';
+        } else {
+            link = 'javascript:;';
+        }
+
+        return '<div class="weui-cells view-mt-0">\n' +
+            '    <a class="weui-cell weui-cell_access view-team-list_link" href="' + link + '">\n' +
+            '        <div class="weui-cell__bd view-team-list_items">\n' +
+            '            <div class="ellipsis">' + obj.name + '</div>\n' +
+            '            <div class="ellipsis">' + obj.rank + '</div>\n' +
+            '            <div class="ellipsis">' + obj.joinTime + '</div>\n' +
+            '            <div class="ellipsis">' + obj.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + '</div>\n' +
+            '        </div>\n' +
+            more +
+            '    </a>\n' +
+            '</div>'
     };
 
     teamItems.each(function () {

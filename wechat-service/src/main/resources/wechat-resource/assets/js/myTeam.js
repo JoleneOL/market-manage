@@ -51,7 +51,7 @@ $(function () {
             '            <div class="ellipsis">' + obj.name + '</div>\n' +
             '            <div class="ellipsis">' + obj.rank + '</div>\n' +
             '            <div class="ellipsis">' + obj.joinTime + '</div>\n' +
-            '            <div class="ellipsis">' + obj.phone + '</div>\n' +
+            '            <div class="ellipsis">' + obj.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') + '</div>\n' +
             '        </div>\n' +
             more +
             '    </a>\n' +
