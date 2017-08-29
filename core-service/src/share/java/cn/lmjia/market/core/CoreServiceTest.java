@@ -12,6 +12,7 @@ import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;

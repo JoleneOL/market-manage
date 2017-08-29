@@ -132,12 +132,15 @@ $(function () {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
         },
         submitHandler: function (form) {
-            if ($showGoodsList.children().length > 0)
+            if ($showGoodsList.children().length > 0){
                 $.showLoading('订单提交中');
                 submitBtn.prop('disabled', true);
                 submitOrder($('#J_form').serializeObject());
-            else
+            }
+            else{
                 $.toptip('商品列表不能为空', 1000);
+
+            }
         }
     });
 
