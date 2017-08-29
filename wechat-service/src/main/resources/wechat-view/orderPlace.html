@@ -511,7 +511,7 @@
 <script src="../mock/mock-min.js" th:remove="all"></script>
 <script src="../mock/api.js" th:remove="all"></script>
 <script src="../wechat-resource/assets/js/orderPlace.js"
-        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=3)}"></script>
+        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=4)}"></script>
 
 
 <script th:if="${trj}">
@@ -521,4 +521,5 @@
         input.val(1);
     })
 </script>
+<th:block th:include="wechat@fragments/share.html::hideAllShare"/>
 </html>

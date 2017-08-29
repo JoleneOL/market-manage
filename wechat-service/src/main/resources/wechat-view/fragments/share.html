@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:wx="http://weixin.jiangcai.me" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="hideAllShare">
+    <script wx:js=""></script>
+    <script>
+        wx.ready(function () {
+            wx.hideMenuItems({
+                menuList: [
+                    'menuItem:share:appMessage'
+                    , 'menuItem:share:timeline'
+                    , 'menuItem:share:qq'
+                    , 'menuItem:share:QZone'
+                    , 'menuItem:share:weiboApp'
+                    , 'menuItem:share:facebook'
+                    , 'menuItem:share:QZone'
+                ]
+            });
+        });
+    </script>
+</div>
+
+
+</body>
+</html>

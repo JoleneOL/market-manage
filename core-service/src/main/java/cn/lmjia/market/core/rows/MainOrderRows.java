@@ -1,8 +1,10 @@
 package cn.lmjia.market.core.rows;
 
 import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.row.FieldDefinition;
@@ -63,9 +65,8 @@ public abstract class MainOrderRows extends AbstractRows<MainOrder> {
                         -> ReadService.agentLevelForLogin(MainOrder.getOrderByLogin(root)
                         , criteriaBuilder)))
                 , Fields.asBiFunction("orderId", MainOrder::getSerialId)
-                , Fields.asBiFunction("orderUser", ((root, criteriaBuilder)
-                        -> ReadService.nameForLogin(MainOrder.getCustomerLogin(root)
-                        , criteriaBuilder)))
+                , Fields.asFunction("orderUser", ((root)
+                        -> root.get(MainOrder_.customer).get(Customer_.name)))
                 , Fields.asBiFunction("phone", (root, criteriaBuilder)
                         -> Customer.getMobile(MainOrder.getCustomer(root)))
 //                , Fields.asFunction("category", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.mainCategory))

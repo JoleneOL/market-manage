@@ -30,8 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class WechatOrderPage extends AbstractWechatPage {
 
-    @FindBy(id = "J_orderTotal")
-    private WebElement totalPrice;
+    //    @FindBy(id = "J_orderTotal")
+//    private WebElement totalPrice;
     @FindBy(id = "J_addGoods")
     private WebElement buttonToAddGoods;
     @FindBy(id = "J_goodsList")

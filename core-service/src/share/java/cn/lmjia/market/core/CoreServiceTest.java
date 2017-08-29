@@ -2,7 +2,6 @@ package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
-import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
@@ -13,7 +12,6 @@ import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
@@ -271,15 +269,15 @@ public abstract class CoreServiceTest extends SpringWebTest {
         return loginRepository.findAll((root, query, cb)
                 -> cb.isTrue(root.get("enabled"))).stream()
                 .filter(login -> manager || !(login instanceof Manager))
-                .filter(login -> {
-                    if (customer)
-                        return true;
-                    // 排除掉客户
-                    return !customerRepository.findAll().stream()
-                            .map(Customer::getLogin)
-                            .collect(Collectors.toList())
-                            .contains(login);
-                })
+//                .filter(login -> {
+//                    if (customer)
+//                        return true;
+//                    // 排除掉客户
+//                    return !customerRepository.findAll().stream()
+//                            .map(Customer::getLogin)
+//                            .collect(Collectors.toList())
+//                            .contains(login);
+//                })
                 .max(new RandomComparator())
                 .orElseGet(() -> loginService.newLogin(Login.class, randomMobile(), null, randomMobile()));
     }
