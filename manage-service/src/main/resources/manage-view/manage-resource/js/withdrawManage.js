@@ -99,6 +99,16 @@ $(function () {
                             + '<a href="javascript:;" class="js-makeRefuse" data-id="' + item.id + '"><i class="fa fa-times-circle"></i>&nbsp;拒绝</a>';
                     return '';
                 }
+            },
+            {
+                "title": "备注",
+                "data": "comment",
+                "name": "comment"
+            },
+            {
+                "title": "转账单据号",
+                "data": "transactionRecordNumber",
+                "name": "transactionRecordNumber"
             }
         ],
         "displayLength": 15,
