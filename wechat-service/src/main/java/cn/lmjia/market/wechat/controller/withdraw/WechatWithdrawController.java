@@ -10,6 +10,7 @@ import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +45,8 @@ public class WechatWithdrawController {
     private WithdrawRequestRepository withdrawRequestRepository;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
@@ -70,6 +73,21 @@ public class WechatWithdrawController {
         model.addAttribute("rate"
                 , NumberFormat.getPercentInstance(Locale.CHINA)
                         .format(withdrawService.getCostRateForNoInvoice().doubleValue()));
+        model.addAttribute("companyName", systemStringService.getCustomSystemString("withdraw.invoice.companyName"
+                , null, true, String.class, "利每家科技有限公司"));
+        model.addAttribute("companyAddress", systemStringService.getCustomSystemString("withdraw.invoice.companyAddress"
+                , null, true, String.class, "杭州市滨江区滨盛路1508号海亮大厦1803室"));
+        model.addAttribute("companyTelephone", systemStringService.getCustomSystemString("withdraw.invoice.companyTelephone"
+                , null, true, String.class, "0570-88187913"));
+        model.addAttribute("taxpayerCode", systemStringService.getCustomSystemString("withdraw.invoice.taxpayerCode"
+                , null, true, String.class, "91330108MA28MBU173"));
+        model.addAttribute("bankName", systemStringService.getCustomSystemString("withdraw.invoice.bankName"
+                , null, true, String.class, "兴业银行杭州滨江支行"));
+        model.addAttribute("bankAccount", systemStringService.getCustomSystemString("withdraw.invoice.bankAccount"
+                , null, true, String.class, "356940100100162419"));
+        model.addAttribute("content", systemStringService.getCustomSystemString("withdraw.invoice.content"
+                , null, true, String.class, "服务费或劳务费的增值发票"));
+
         return "wechat@withdraw.html";
     }
 
