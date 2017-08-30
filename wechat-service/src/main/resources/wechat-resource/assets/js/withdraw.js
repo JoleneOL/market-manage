@@ -33,7 +33,7 @@ $(function () {
 
     var $invoice = $('#J_extra');
     $('.js-invoice').change(function () {
-        if ($(this).val() === '1') {
+        if ($(this).val() === 'true') {
             $invoice.removeClass('displayNone');
             $('input[name="logisticsCode"]').rules('add', {
                 required: true,
