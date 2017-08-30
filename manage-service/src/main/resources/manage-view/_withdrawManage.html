@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>提现管理</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <!--重置库-->
+    <!--<link rel="stylesheet" href="//cdn.lmjia.cn/bracket/1.5/css/style.default.min.css">-->
+    <link rel="stylesheet" href="manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<!--参考数据/orderData/manageableList-->
+<body data-url="/manage/withdraws"
+      data-reject-url="/manage/withdraws/reject"
+      data-approval-url="/manage/withdraws/approval">
+
+<section>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-md-12 mb10">
+                <div class="form-inline">
+                    <div class="js-selectToolbar">
+                        <input type="search" class="form-control input-sm" placeholder="姓名" name="name"
+                               aria-controls="withdrawTable">
+                        <input type="search" class="form-control input-sm" placeholder="手机号" name="mobile"
+                               aria-controls="withdrawTable">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" placeholder="申请日期" id="J_datePicker"
+                                   name="orderDate">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs nav-dark js-orderStatus">
+                    <li class="active">
+                        <a href="#withdrawDataGrid" data-toggle="tab" data-status="2">
+                            <strong>待审核</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#withdrawDataGrid" data-toggle="tab" data-status="0">
+                            <strong>全部</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#withdrawDataGrid" data-toggle="tab" data-status="3">
+                            <strong>已拒绝</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#withdrawDataGrid" data-toggle="tab" data-status="4">
+                            <strong>已成功</strong>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="withdrawDataGrid">
+                        <div class="table-responsive">
+                            <table id="withdrawTable" class="table table-hover table-success" cellspacing="0"
+                                   width="100%"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<template id="J_makeRefuse">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="J_makeRefuse_comment">备注 <span
+                    class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control input-sm" placeholder="填写备注" id="J_makeRefuse_comment"
+                       name="comment" required/>
+            </div>
+        </div>
+    </form>
+</template>
+<template id="J_makeApproval">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="J_makeApproval_transactionRecordNumber">转账单据编号 <span
+                    class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control input-sm" placeholder="任意转账单据编号都可以"
+                       id="J_makeApproval_transactionRecordNumber"
+                       name="transactionRecordNumber" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="J_makeApproval_comment">备注 <span
+                    class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control input-sm" placeholder="填写备注" id="J_makeApproval_comment"
+                       name="comment" value="OK"/>
+            </div>
+        </div>
+    </form>
+</template>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+
+<script src="./mock/mock-min.js" th:remove="all"></script>
+<script src="./mock/api.js" th:remove="all"></script>
+
+<script src="manage-resource/js/withdrawManage.js"></script>
+
+</html>
