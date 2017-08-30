@@ -8,7 +8,19 @@ import cn.lmjia.market.core.service.request.PromotionRequestService;
  * @author CJ
  */
 public enum MarketNoticeType {
-    PaySuccessToOrder, PaySuccessToJustOrder, NewLoginToLogin, PaySuccessToCS, TRJCheckWarning, PromotionRequestPaySuccess(PromotionRequestService.class.getSimpleName() + ".PaySuccess");
+    PaySuccessToOrder, PaySuccessToJustOrder, NewLoginToLogin, PaySuccessToCS, TRJCheckWarning,
+    /**
+     * 升级支付成功
+     */
+    PromotionRequestPaySuccess(PromotionRequestService.class.getSimpleName() + ".PaySuccess"),
+    /**
+     * 成员删除警告
+     */
+    TeamMemberDeleteWarn,
+    /**
+     * 成员删除通知
+     */
+    TeamMemberDeleteNotify;
 
     private final String targetId;
 

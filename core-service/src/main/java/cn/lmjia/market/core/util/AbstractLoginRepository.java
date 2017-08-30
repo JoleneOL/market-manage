@@ -15,4 +15,6 @@ public interface AbstractLoginRepository<T extends Login> extends JpaRepository<
 
     List<T> findBySuccessOrderTrue();
 
+    long countByGuideUser(Login guide);
+
 }
