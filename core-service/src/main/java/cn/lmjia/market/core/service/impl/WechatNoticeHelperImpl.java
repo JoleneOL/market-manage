@@ -75,6 +75,9 @@ public class WechatNoticeHelperImpl implements WechatNoticeHelper {
                     return "X1gHrZDnxG6x4CHmqZSsEa1MYDfT9y1gSkYXTGy__nU";
                 case TRJCheckWarning:
                     return "sS9rypOSFZO2-aS9v4G5rH3PxbZD8r8g2ZdaOMaiRdg";
+                case TeamMemberDeleteWarn:
+                case TeamMemberDeleteNotify:
+                    return "7I5cMlNFVAB1ku-P8FAmYU2CFCJ3aoWnU_yd-8LTnN0";
                 default:
                     throw new IllegalArgumentException("未知的staging消息类型:" + type);
             }
@@ -94,6 +97,14 @@ public class WechatNoticeHelperImpl implements WechatNoticeHelper {
                 return "F-TTCFAOn9IhDO7a4-1ruwPNg6TjGpkxbVhdsLre0aE";
             case TRJCheckWarning:
                 return "GXQS-UxMQDQD6cCMMNeoZ2fNHOq3Q7l6MXMD2hh_Ass";
+            case TeamMemberDeleteNotify:
+            case TeamMemberDeleteWarn:
+//            {{first.DATA}}
+//            绑定时间：{{keyword1.DATA}}
+//            失败原因：{{keyword2.DATA}}
+//            记录时间：{{keyword3.DATA}}
+//            {{remark.DATA}}
+                return "qmKucHYknwnTL_3wISnRkLjucfeixbIosd83k-1svMo";
             default:
                 throw new IllegalArgumentException("未知的消息类型:" + type);
         }

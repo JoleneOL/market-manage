@@ -1,5 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.define.MarketNoticeType;
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.Login;
@@ -15,13 +17,18 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.user.notice.NoticeChannel;
 import me.jiangcai.user.notice.User;
-import me.jiangcai.user.notice.UserNoticeType;
+import me.jiangcai.user.notice.UserNoticeService;
 import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
 import me.jiangcai.wx.model.WeixinUserDetail;
+import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
+import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
@@ -31,7 +38,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -39,8 +48,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -83,6 +97,14 @@ public class LoginServiceImpl implements LoginService {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private SystemStringService systemStringService;
+    @Autowired
+    private ReadService readService;
+    @Autowired
+    private WechatNoticeHelper wechatNoticeHelper;
+    @Autowired
+    private UserNoticeService userNoticeService;
 
     public LoginServiceImpl() {
         payStatus.add(OrderStatus.forDeliver);
@@ -310,11 +332,16 @@ public class LoginServiceImpl implements LoginService {
         )
                 .getResultList().forEach(login -> {
             // 计划删除的时间
-            LocalDateTime targetDeleteTime = login.getCreatedTime().plusMinutes(30);
+            LocalDateTime targetDeleteTime = login.getCreatedTime().plusMinutes(
+                    systemStringService.getCustomSystemString("market.autoDelete.minutes", null
+                            , true, Long.class, 30L));
             // 计划警告时间
-            LocalDateTime targetWarnTime = targetDeleteTime.minusMinutes(5);
+            LocalDateTime targetWarnTime = targetDeleteTime.minusMinutes(
+                    systemStringService.getCustomSystemString("market.autoDeleteWarn.minutes", null
+                            , true, Long.class, 5L));
             LocalDateTime now = LocalDateTime.now();
             // 调度每10分钟进行，所以有什么事情不是10分之内可以完成的 那就先不做
+            // 这个值必须跟调度它的频率 完全一致！
             LocalDateTime nextRun = now.plusMinutes(10);
 
 
@@ -364,10 +391,31 @@ public class LoginServiceImpl implements LoginService {
     }
 
     private void warnDeleteLogin(Login login) {
-        log.warn(login + "要被警告了哦！");
+        log.debug(login + "要被警告了哦！");
+        if (login.getGuideUser() != null) {
+            String mobile = readService.mobileFor(login);
+            userNoticeService.sendMessage(null, toWechatUser(Collections.singleton(login.getGuideUser())), null
+                    , new DeleteLoginWarn()
+                    , Date.from(ZonedDateTime.of(login.getCreatedTime(), ZoneId.systemDefault()).toInstant())
+                    , StringUtils.isEmpty(mobile) ? "未知" : mobile);
+        }
+    }
+
+    @PostConstruct
+    public void init() {
+        wechatNoticeHelper.registerTemplateMessage(new DeleteLoginWarn(), null);
+        wechatNoticeHelper.registerTemplateMessage(new DeleteLogin(), null);
     }
 
     private void deleteLogin(Login login) {
+        log.debug(login + "要被删除了！");
+        if (login.getGuideUser() != null) {
+            String mobile = readService.mobileFor(login);
+            userNoticeService.sendMessage(null, toWechatUser(Collections.singleton(login.getGuideUser())), null
+                    , new DeleteLogin()
+                    , Date.from(ZonedDateTime.of(login.getCreatedTime(), ZoneId.systemDefault()).toInstant())
+                    , StringUtils.isEmpty(mobile) ? "未知" : mobile);
+        }
         loginRepository.delete(login);
     }
 
@@ -395,11 +443,33 @@ public class LoginServiceImpl implements LoginService {
     /**
      * 即将删除的通知
      */
-    private class DeleteLoginWarn implements UserNoticeType {
+    private class DeleteLoginWarn implements MarketUserNoticeType {
+
 
         @Override
-        public String id() {
-            return "Login.DeleteLoginWarn";
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "您有一位团队成员即将被移除。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0,date,yyyy-MM-dd HH:mm}")
+                    , new SimpleTemplateMessageParameter("keyword2", "没有完成首笔订单")
+                    , new SimpleTemplateMessageParameter("keyword3", "无")
+                    , new SimpleTemplateMessageParameter("remark", "手机号码:{1};加油!")
+            );
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[]{
+                    Date.class,
+                    // 手机号码 没有就写入未知
+                    String.class
+            };
+        }
+
+
+        @Override
+        public MarketNoticeType type() {
+            return MarketNoticeType.TeamMemberDeleteWarn;
         }
 
         @Override
@@ -421,18 +491,31 @@ public class LoginServiceImpl implements LoginService {
         public String defaultToHTML(Locale locale, Object[] parameters) {
             return null;
         }
+    }
+
+    private class DeleteLogin implements MarketUserNoticeType {
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "您有一位团队成员被移除了。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0,date,yyyy-MM-dd HH:mm}")
+                    , new SimpleTemplateMessageParameter("keyword2", "没有完成首笔订单")
+                    , new SimpleTemplateMessageParameter("keyword3", "无")
+                    , new SimpleTemplateMessageParameter("remark", "手机号码:{1}")
+            );
+        }
 
         @Override
         public Class<?>[] expectedParameterTypes() {
-            return new Class<?>[0];
+            return new Class<?>[]{
+                    Date.class, String.class
+            };
         }
-    }
-
-    private class DeleteLogin implements UserNoticeType {
 
         @Override
-        public String id() {
-            return "Login.DeleteLogin";
+        public MarketNoticeType type() {
+            return MarketNoticeType.TeamMemberDeleteNotify;
         }
 
         @Override
@@ -455,9 +538,5 @@ public class LoginServiceImpl implements LoginService {
             return null;
         }
 
-        @Override
-        public Class<?>[] expectedParameterTypes() {
-            return new Class<?>[0];
-        }
     }
 }

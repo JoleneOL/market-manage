@@ -202,7 +202,7 @@ public interface LoginService extends UserDetailsService {
      * 每10分钟尝试自动删除无效身份
      */
     @Scheduled(fixedRate = 10 * 60 * 1000)
-    @Transactional(readOnly = true)
+    @Transactional
     void tryAutoDeleteLogin();
 
     @PreDestroy

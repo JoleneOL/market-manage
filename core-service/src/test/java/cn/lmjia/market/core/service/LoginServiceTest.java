@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author CJ
  */
-@ActiveProfiles("mysql")
+@ActiveProfiles("mysql2")
 public class LoginServiceTest extends CoreServiceTest {
 
     @Autowired
