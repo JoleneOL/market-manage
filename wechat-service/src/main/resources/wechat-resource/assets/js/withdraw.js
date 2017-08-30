@@ -64,7 +64,7 @@ $(function () {
             if(invoiceType === 'true'){
                 amount.text(withdrawAmount);
             }else{
-                amount.text((withdrawAmount * rate).toFixed(2));
+                amount.text((withdrawAmount - withdrawAmount * rate).toFixed(2));
             }
         }
     }
