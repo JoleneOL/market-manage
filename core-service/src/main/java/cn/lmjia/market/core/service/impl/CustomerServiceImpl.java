@@ -8,9 +8,7 @@ import cn.lmjia.market.core.event.LoginRelationChangedEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.CustomerService;
-import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import org.apache.commons.logging.Log;
@@ -30,11 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private LoginRepository loginRepository;
     @Autowired
-    private LoginService loginService;
-    @Autowired
     private LoginRelationCacheService loginRelationCacheService;
-    @Autowired
-    private ContactWayService contactWayService;
 
     @Override
     public Customer getNoNullCustomer(String name, String mobile, AgentLevel agentLevel, Login recommendBy) {
@@ -42,14 +36,14 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer != null)
             return customer;
 
-        Login customerLogin = loginRepository.findByLoginName(mobile);
-        if (customerLogin == null) {
-            customerLogin = loginService.newLogin(Login.class, mobile, recommendBy, "123456");
-            // 默认密码是 123456
-            contactWayService.updateName(customerLogin, name);
-            contactWayService.updateMobile(customerLogin, mobile);
-//            contactWayService.u
-        }
+//        Login customerLogin = loginRepository.findByLoginName(mobile);
+//        if (customerLogin == null) {
+//            customerLogin = loginService.newLogin(Login.class, mobile, recommendBy, "123456");
+//            // 默认密码是 123456
+//            contactWayService.updateName(customerLogin, name);
+//            contactWayService.updateMobile(customerLogin, mobile);
+////            contactWayService.u
+//        }
         customer = new Customer();
 //        customer.setupAgentLevel(agentLevel);
 //        customer.setLogin(customerLogin);

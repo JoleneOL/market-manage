@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
-import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.define.MarketNoticeType;
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
@@ -10,19 +11,16 @@ import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ManagerService;
 import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
 import cn.lmjia.market.core.service.request.PromotionRequestService;
-import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import me.jiangcai.user.notice.UserNoticeService;
-import me.jiangcai.user.notice.UserNoticeType;
-import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -45,11 +43,9 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private SystemService systemService;
     @Autowired
-    private WechatSendSupplier wechatSendSupplier;
+    private WechatNoticeHelper wechatNoticeHelper;
     @Autowired
     private UserNoticeService userNoticeService;
-    @Autowired
-    private Environment environment;
     @Autowired
     private MainOrderService mainOrderService;
     @Autowired
@@ -59,89 +55,18 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private ManagerService managerService;
 
-    @Override
-    public boolean useLocal() {
-        return environment.acceptsProfiles("staging") || environment.acceptsProfiles(CoreConfig.ProfileUnitTest);
-    }
-
     @PostConstruct
     @Override
     public void init() {
-        promotionRequestService.registerNotices(wechatSendSupplier);
+        promotionRequestService.registerNotices(wechatNoticeHelper);
 
-        wechatSendSupplier.registerTemplateMessage(new PaySuccessToOrder(), new AbstractTemplateMessageStyle() {
-            @Override
-            public Collection<? extends TemplateMessageParameter> parameterStyles() {
-                return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "您的订单已成功支付。")
-                        , new SimpleTemplateMessageParameter("keyword1", "{3}")
-                        , new SimpleTemplateMessageParameter("keyword2", "{2}")
-                        , new SimpleTemplateMessageParameter("keyword3", "{4,number,￥,###.##}")
-                        , new SimpleTemplateMessageParameter("remark", "佣金将在订单完成后到账，现在可以在佣金界面选择「即将获佣」中查看。")
-                );
-            }
+        wechatNoticeHelper.registerTemplateMessage(new PaySuccessToOrder(), systemService.toUrl("/wechatOrderDetail?orderId={2}"));
 
-            @Override
-            public String getTemplateId() {
-                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "ieAp4pLGQtEE9DZbbAP0_76xNrnjpoHNpQYe2DT8ID0";
-            }
+        wechatNoticeHelper.registerTemplateMessage(new PaySuccessToJustOrder(), systemService.toUrl("/wechatOrderDetail?orderId={2}"));
 
-        }, systemService.toUrl("/wechatOrderDetail?orderId={2}"));
+        wechatNoticeHelper.registerTemplateMessage(new PaySuccessToCS(), null);
 
-        wechatSendSupplier.registerTemplateMessage(new PaySuccessToJustOrder(), new AbstractTemplateMessageStyle() {
-            @Override
-            public Collection<? extends TemplateMessageParameter> parameterStyles() {
-                return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "您的订单已成功支付。")
-                        , new SimpleTemplateMessageParameter("keyword1", "{3}")
-                        , new SimpleTemplateMessageParameter("keyword2", "{2}")
-                        , new SimpleTemplateMessageParameter("keyword3", "{4,number,￥,###.##}")
-                        , new SimpleTemplateMessageParameter("remark", "谢谢您的惠顾。")
-                );
-            }
-
-            @Override
-            public String getTemplateId() {
-                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "ieAp4pLGQtEE9DZbbAP0_76xNrnjpoHNpQYe2DT8ID0";
-            }
-
-        }, systemService.toUrl("/wechatOrderDetail?orderId={2}"));
-
-        wechatSendSupplier.registerTemplateMessage(new PaySuccessToCS(), new AbstractTemplateMessageStyle() {
-            @Override
-            public Collection<? extends TemplateMessageParameter> parameterStyles() {
-                return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "{5}")
-                        , new SimpleTemplateMessageParameter("keyword1", "{2}")
-                        , new SimpleTemplateMessageParameter("keyword2", "{0,date,yyyy-MM-dd HH:mm}")
-                        , new SimpleTemplateMessageParameter("keyword3", "{3}")
-                        , new SimpleTemplateMessageParameter("keyword4", "{4}")
-                        , new SimpleTemplateMessageParameter("remark", "{6}")
-                );
-            }
-
-            @Override
-            public String getTemplateId() {
-                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "Ibbpm1SUpkPdiVcNSffv75PlbQzjY2753q3951YL2RM";
-            }
-        }, null);
-
-        wechatSendSupplier.registerTemplateMessage(new NewLoginToLogin(), new AbstractTemplateMessageStyle() {
-            @Override
-            public Collection<? extends TemplateMessageParameter> parameterStyles() {
-                return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "恭喜您，您的团队增加了一位新人。")
-                        , new SimpleTemplateMessageParameter("keyword1", "{0}")
-                        , new SimpleTemplateMessageParameter("keyword2", "{1}")
-                        , new SimpleTemplateMessageParameter("remark", "")
-                );
-            }
-
-            @Override
-            public String getTemplateId() {
-                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "XBZMILcxV55ATb5Dkn_BWjfvzUT4ySRvsXskzzOuS14";
-            }
-        }, systemService.toUrl(SystemService.wechatMyURi));
+        wechatNoticeHelper.registerTemplateMessage(new NewLoginToLogin(), systemService.toUrl(SystemService.wechatMyURi));
     }
 
     @Override
@@ -216,11 +141,21 @@ public class NoticeServiceImpl implements NoticeService {
      * String.class// 昵称 0
      * , String.class//手机 1
      */
-    private class NewLoginToLogin implements UserNoticeType {
+    private class NewLoginToLogin implements MarketUserNoticeType {
 
         @Override
-        public String id() {
-            return "NewLoginToLogin";
+        public MarketNoticeType type() {
+            return MarketNoticeType.NewLoginToLogin;
+        }
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "恭喜您，您的团队增加了一位新人。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0}")
+                    , new SimpleTemplateMessageParameter("keyword2", "{1}")
+                    , new SimpleTemplateMessageParameter("remark", "")
+            );
         }
 
         @Override
@@ -261,11 +196,23 @@ public class NoticeServiceImpl implements NoticeService {
      * , String.class//first 5
      * , String.class//first 6
      */
-    private class PaySuccessToCS implements UserNoticeType {
+    private class PaySuccessToCS implements MarketUserNoticeType {
 
         @Override
-        public String id() {
-            return "PaySuccessToCS";
+        public MarketNoticeType type() {
+            return MarketNoticeType.PaySuccessToCS;
+        }
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "{5}")
+                    , new SimpleTemplateMessageParameter("keyword1", "{2}")
+                    , new SimpleTemplateMessageParameter("keyword2", "{0,date,yyyy-MM-dd HH:mm}")
+                    , new SimpleTemplateMessageParameter("keyword3", "{3}")
+                    , new SimpleTemplateMessageParameter("keyword4", "{4}")
+                    , new SimpleTemplateMessageParameter("remark", "{6}")
+            );
         }
 
         @Override
@@ -307,16 +254,43 @@ public class NoticeServiceImpl implements NoticeService {
      */
     private class PaySuccessToJustOrder extends PaySuccessToOrder {
         @Override
+        public MarketNoticeType type() {
+            return MarketNoticeType.PaySuccessToJustOrder;
+        }
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "您的订单已成功支付。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{3}")
+                    , new SimpleTemplateMessageParameter("keyword2", "{2}")
+                    , new SimpleTemplateMessageParameter("keyword3", "{4,number,￥,###.##}")
+                    , new SimpleTemplateMessageParameter("remark", "谢谢您的惠顾。")
+            );
+        }
+
+        @Override
         public String title() {
             return super.title() + "（非收益者）";
         }
     }
 
-    private class PaySuccessToOrder implements UserNoticeType {
+    private class PaySuccessToOrder implements MarketUserNoticeType {
 
         @Override
-        public String id() {
-            return getClass().getSimpleName();
+        public MarketNoticeType type() {
+            return MarketNoticeType.PaySuccessToOrder;
+        }
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "您的订单已成功支付。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{3}")
+                    , new SimpleTemplateMessageParameter("keyword2", "{2}")
+                    , new SimpleTemplateMessageParameter("keyword3", "{4,number,￥,###.##}")
+                    , new SimpleTemplateMessageParameter("remark", "佣金将在订单完成后到账，现在可以在佣金界面选择「即将获佣」中查看。")
+            );
         }
 
         @Override

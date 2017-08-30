@@ -8,6 +8,16 @@ import me.jiangcai.wx.model.message.TemplateMessageStyle;
 public abstract class AbstractTemplateMessageStyle implements TemplateMessageStyle {
 
     @Override
+    public String getTemplateId() {
+        return null;
+    }
+
+    @Override
+    public void setTemplateId(String templateId) {
+
+    }
+
+    @Override
     public String getTemplateIdShort() {
         return null;
     }
@@ -20,10 +30,5 @@ public abstract class AbstractTemplateMessageStyle implements TemplateMessageSty
     @Override
     public String getIndustryId() {
         return null;
-    }
-
-    @Override
-    public void setTemplateId(String templateId) {
-
     }
 }
