@@ -51,17 +51,18 @@ public class WechatWithdrawPage extends AbstractWechatPage {
      *
      * @param amount 特定金额
      */
-    public void randomRequestWithoutInvoice(String amount) {
+    public void randomRequestWithoutInvoice(String amount) throws InterruptedException {
         randomRequestWithAmount(amount);
         noInvoice.click();
         submit.click();
     }
 
-    private void randomRequestWithAmount(String amount) {
+    private void randomRequestWithAmount(String amount) throws InterruptedException {
         payee.clear();
         payee.sendKeys(RandomStringUtils.randomAlphabetic(8));
         account.clear();
         account.sendKeys(RandomStringUtils.randomNumeric(18));
+        Thread.sleep(500);
         bank.clear();
         bank.sendKeys(RandomStringUtils.randomAlphabetic(8));
         mobile.clear();
@@ -75,7 +76,7 @@ public class WechatWithdrawPage extends AbstractWechatPage {
      *
      * @param amount 特定金额
      */
-    public void randomRequestWithInvoice(String amount) {
+    public void randomRequestWithInvoice(String amount) throws InterruptedException {
         randomRequestWithAmount(amount);
         haveInvoice.click();
         logisticsCode.clear();
