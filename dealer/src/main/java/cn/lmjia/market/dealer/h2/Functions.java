@@ -12,6 +12,18 @@ import java.sql.SQLException;
 @SuppressWarnings("unused")
 public class Functions {
 
+    public static int loginBelongs(Connection connection, long id, long superior) throws SQLException {
+        try (PreparedStatement preparedStatement
+                     = connection.prepareStatement("SELECT count(t.`ID`) FROM `loginrelation` AS t WHERE t.`FROM_ID`=? AND t.`TO_ID`=?")) {
+            preparedStatement.setLong(1, superior);
+            preparedStatement.setLong(2, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                return resultSet.getInt(1) > 0 ? 1 : 0;
+            }
+        }
+    }
+
     public static int agentBelongs(Connection connection, long id, long superior) throws SQLException {
         long currentId = id;
         try (PreparedStatement superStatement

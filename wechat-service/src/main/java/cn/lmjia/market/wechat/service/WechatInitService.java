@@ -3,6 +3,7 @@ package cn.lmjia.market.wechat.service;
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.wx.model.Menu;
 import me.jiangcai.wx.model.MenuType;
 import me.jiangcai.wx.model.PublicAccount;
@@ -14,6 +15,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * @author CJ
@@ -29,6 +32,8 @@ public class WechatInitService {
     private PublicAccount publicAccount;
     @Autowired
     private Environment environment;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @PostConstruct
     public void init() {
@@ -44,8 +49,8 @@ public class WechatInitService {
                                     createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
                                     , createMenu("下单"
                                     , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
-                                            , createMenu("花呗分期", systemService.toUrl(SystemService.wechatOrderURiHB))
-                                            , createMenu("投融家分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI))
+                                    , createMenu("花呗分期", systemService.toUrl(SystemService.wechatOrderURiHB))
+                                    , createMenu("投融家分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI))
                             )
 //                                    ,createMenu("下单", systemService.toUrl(SystemService.wechatOrderURi))
                                     , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
@@ -59,14 +64,23 @@ public class WechatInitService {
     }
 
     private Menu createMenu(String name, Menu... menus) {
+        // 把 null 移除掉
         Menu menu = new Menu();
         menu.setType(MenuType.parent);
         menu.setName(name);
-        menu.setSubs(menus);
+        menu.setSubs(Stream.of(menus)
+                .filter(Objects::nonNull)
+                .toArray(Menu[]::new)
+        );
         return menu;
     }
 
     private Menu createMenu(String name, String url) {
+        if ("投融家分期".equals(name)
+                && !systemStringService.getCustomSystemString("market.trj.enable", null
+                , false, Boolean.class, false)) {
+            return null;
+        }
         Menu menu = new Menu();
         menu.setType(MenuType.view);
         menu.setName(name);

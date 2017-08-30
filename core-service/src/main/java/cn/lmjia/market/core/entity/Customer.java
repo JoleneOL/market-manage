@@ -36,6 +36,12 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * 客户不再需要登录！
+     *
+     * @since {@link cn.lmjia.market.core.Version#newLogin}
+     */
+    @Deprecated
     @OneToOne
     private Login login;
     @Column(length = 20)
@@ -44,14 +50,17 @@ public class Customer {
     private String name;
     /**
      * 所属经销商 ,必然处于代理商链的最低端
+     * @since {@link cn.lmjia.market.core.Version#newLogin}
      */
+    @Deprecated
     @ManyToOne(optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private AgentLevel agentLevel;
     /**
+     * @since {@link cn.lmjia.market.core.Version#newLogin}
      * https://github.com/JoleneOL/market-manage/wiki/%E5%AE%9A%E4%B9%89#%E6%9C%89%E6%95%88%E7%94%A8%E6%88%B7
      */
+    @Deprecated
     private boolean successOrder;
-
 
     private int birthYear;
     private Gender gender;
@@ -66,8 +75,9 @@ public class Customer {
      *
      * @param agentLevel 最低端的经销商
      */
+    @Deprecated
     public void setupAgentLevel(AgentLevel agentLevel) {
-        setAgentLevel(agentLevel);
+//        setAgentLevel(agentLevel);
         if (agentLevel != null) {
             if (agentLevel.getCustomers() == null)
                 agentLevel.setCustomers(new ArrayList<>());
@@ -78,7 +88,7 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "login=" + login +
+//                "login=" + login +
                 ", mobile='" + mobile + '\'' +
                 ", name='" + name + '\'' +
                 '}';

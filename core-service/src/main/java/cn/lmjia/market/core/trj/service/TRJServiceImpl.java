@@ -1,5 +1,7 @@
 package cn.lmjia.market.core.trj.service;
 
+import cn.lmjia.market.core.define.MarketNoticeType;
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.ManageLevel;
@@ -12,11 +14,10 @@ import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ManagerService;
-import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.ScriptTaskService;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJService;
-import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.sys.service.SystemStringService;
@@ -30,8 +31,6 @@ import me.jiangcai.payment.event.OrderPaySuccess;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.service.PaymentService;
 import me.jiangcai.user.notice.UserNoticeService;
-import me.jiangcai.user.notice.UserNoticeType;
-import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -113,13 +112,11 @@ public class TRJServiceImpl implements TRJService {
     @Autowired
     private UserNoticeService userNoticeService;
     @Autowired
-    private WechatSendSupplier wechatSendSupplier;
-    @Autowired
-    private NoticeService noticeService;
-    @Autowired
     private ResourceService resourceService;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private WechatNoticeHelper wechatNoticeHelper;
 
     @Autowired
     public TRJServiceImpl(Environment environment) throws IOException {
@@ -343,24 +340,7 @@ public class TRJServiceImpl implements TRJService {
 
     @PostConstruct
     public void init() {
-        wechatSendSupplier.registerTemplateMessage(new TRJCheckWarning(), new AbstractTemplateMessageStyle() {
-            @Override
-            public String getTemplateId() {
-                return noticeService.useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "GXQS-UxMQDQD6cCMMNeoZ2fNHOq3Q7l6MXMD2hh_Ass";
-            }
-
-            @Override
-            public Collection<? extends TemplateMessageParameter> parameterStyles() {
-                return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "{0}")
-                        , new SimpleTemplateMessageParameter("keyword1", "{1}")
-                        , new SimpleTemplateMessageParameter("keyword2", "已安装")
-                        , new SimpleTemplateMessageParameter("keyword3", "{2,date,yyyy-MM-dd HH:mm}")
-                        , new SimpleTemplateMessageParameter("keyword4", "{3}")
-                        , new SimpleTemplateMessageParameter("remark", "请尽快发送或者重新发送信审申请。")
-                );
-            }
-        }, null);
+        wechatNoticeHelper.registerTemplateMessage(new TRJCheckWarning(), null);
     }
 
     private void submitOrderInfo(MainOrder order, AuthorisingInfo info) {
@@ -607,11 +587,23 @@ public class TRJServiceImpl implements TRJService {
                 , autoRecallCode);
     }
 
-    private class TRJCheckWarning implements UserNoticeType {
+    private class TRJCheckWarning implements MarketUserNoticeType {
 
         @Override
-        public String id() {
-            return "TRJCheckWarning";
+        public MarketNoticeType type() {
+            return MarketNoticeType.TRJCheckWarning;
+        }
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "{0}")
+                    , new SimpleTemplateMessageParameter("keyword1", "{1}")
+                    , new SimpleTemplateMessageParameter("keyword2", "已安装")
+                    , new SimpleTemplateMessageParameter("keyword3", "{2,date,yyyy-MM-dd HH:mm}")
+                    , new SimpleTemplateMessageParameter("keyword4", "{3}")
+                    , new SimpleTemplateMessageParameter("remark", "请尽快发送或者重新发送信审申请。")
+            );
         }
 
         @Override

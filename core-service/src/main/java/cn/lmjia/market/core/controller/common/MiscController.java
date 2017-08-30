@@ -37,7 +37,8 @@ public class MiscController {
     public ApiResult sendRegisterCode(String mobile) throws IOException {
         // 必须确保该用户并不存在 否者注册个球
         if (loginService.byLoginName(mobile) != null) {
-            throw new IllegalArgumentException("该手机号码已被人使用");
+            return ApiResult.withCodeAndMessage(401, "该手机号码已被人使用", null);
+//            throw new IllegalArgumentException("该手机号码已被人使用");
         }
         verificationCodeService.sendCode(mobile, loginService.registerVerificationType());
         return ApiResult.withOk();

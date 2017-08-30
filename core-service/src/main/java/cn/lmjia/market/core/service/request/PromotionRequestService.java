@@ -1,10 +1,10 @@
 package cn.lmjia.market.core.service.request;
 
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
 import me.jiangcai.jpa.entity.support.Address;
-import me.jiangcai.user.notice.UserNoticeType;
-import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -39,7 +39,8 @@ public interface PromotionRequestService {
      * @return 申请信息
      */
     @Transactional
-    PromotionRequest initRequest(Login login, String agentName, int type, Address address, String cardBackPath, String cardFrontPath, String businessLicensePath) throws IOException;
+    PromotionRequest initRequest(Login login, String agentName, int type, Address address, String cardBackPath
+            , String cardFrontPath, String businessLicensePath) throws IOException;
 
     /**
      * 提交这个申请，让管理员可见
@@ -49,9 +50,9 @@ public interface PromotionRequestService {
     @Transactional
     void submitRequest(PromotionRequest request);
 
-    UserNoticeType getPaySuccessMessage();
+    MarketUserNoticeType getPaySuccessMessage();
 
-    void registerNotices(WechatSendSupplier wechatSendSupplier);
+    void registerNotices(WechatNoticeHelper wechatNoticeHelper);
 
     /**
      * 升级至经销商的价格

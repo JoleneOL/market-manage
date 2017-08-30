@@ -1,25 +1,70 @@
 package cn.lmjia.market.wechat.page;
 
+import me.jiangcai.lib.test.SpringWebTest;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.http.NameValuePair;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.util.NumberUtils;
 
+import javax.swing.*;
+import java.awt.*;
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * 下单页面
- * <p>
  * orderPlace.html
  *
  * @author CJ
  */
 public class WechatOrderPage extends AbstractWechatPage {
 
-    @FindBy(id = "J_orderTotal")
-    private WebElement totalPrice;
+    //    @FindBy(id = "J_orderTotal")
+//    private WebElement totalPrice;
+    @FindBy(id = "J_addGoods")
+    private WebElement buttonToAddGoods;
+    @FindBy(id = "J_goodsList")
+    private WebElement goodListRegion;
+    @FindBy(name = "name")
+    private WebElement name;
+    @FindBy(name = "mobile")
+    private WebElement mobile;
 
     public WechatOrderPage(WebDriver webDriver) {
         super(webDriver);
+    }
+
+    public static void main(String[] args) {
+        // 弹出框然后让用户选择页面地址 测试类 测试方法
+        if (Desktop.isDesktopSupported()) {
+            JPanel panel = new JPanel();
+            panel.setLayout(new FlowLayout());
+            panel.add(new JLabel("页面地址"));
+            JTextField urlField = new JTextField(60);
+            panel.add(urlField);
+            panel.add(new JLabel("页类全限定名"));
+            JTextField classField = new JTextField(30);
+            panel.add(classField);
+            panel.add(new JLabel("测试代码(javascript, this==instance)"));
+            JTextArea area = new JTextArea(3, 70);
+            panel.add(area);
+//            JOptionPane.showInternalConfirmDialog()
+            JOptionPane.showConfirmDialog(null, panel, "请输入需要测试的页面以及相关方法"
+                    , JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+//            JOptionPane.showMessageDialog(null, null, "请输入需要测试的页面以及相关方法"
+//                    , JOptionPane.QUESTION_MESSAGE);
+        }
     }
 
     @Override
@@ -56,5 +101,153 @@ public class WechatOrderPage extends AbstractWechatPage {
 //                        .startsWith(price.toString());
 //            }
 //        }
+    }
+
+    /**
+     * 提交随机订单请求
+     *
+     * @param goodChooser   可选的商品选择；输入参数为商品名称；默认为都选择
+     * @param amountChooser 可选的数量选择；输入参数为商品名称:限购数量;默认为选择1-1/4。如果界面没有提供限购数量则购买1-9个
+     */
+    public final void submitRandomOrder(Function<String, Boolean> goodChooser
+            , Function<NameValuePair, Integer> amountChooser) {
+        // 如果选择商品窗口没打开 则打开它
+        if (!goodListRegion.isDisplayed()) {
+            buttonToAddGoods.click();
+            new WebDriverWait(webDriver, 2)
+                    .until(ExpectedConditions.visibilityOf(goodListRegion));
+        }
+
+        goodListRegion.findElements(By.className("weui-media-box__bd"))
+                .forEach(good -> {
+                    // 第一个h4为商品名称，第二个为价格
+                    String name = good.findElement(By.tagName("h4")).getText();
+                    boolean choose;
+                    if (goodChooser == null)
+                        choose = true;
+                    else
+                        choose = goodChooser.apply(name);
+                    if (choose) {
+                        // 确定购买
+                        // p.text-error 为限购信息的说明
+                        //
+                        int amount;
+                        try {
+                            WebElement limitInfo = good.findElement(By.cssSelector("p.text-error"));
+                            String limitText = limitInfo.getText();
+                            Matcher matcher = Pattern.compile("限购(\\d+).*").matcher(limitText);
+                            assertThat(matcher.matches())
+                                    .as("限购信息 跟 限购xx单位  的格式不一致:" + limitText)
+                                    .isTrue();
+                            int limitAmount = NumberUtils.parseNumber(matcher.group(1), Integer.class);
+                            if (amountChooser == null) {
+                                int targetMax = limitAmount / 4;
+                                int targetMin = 1;
+                                if (targetMax >= targetMin)
+                                    amount = new Random().nextInt(targetMax - targetMin) + targetMin;
+                                else
+                                    amount = Math.min(targetMin, limitAmount);
+                            } else
+                                amount = amountChooser.apply(new NameValuePair() {
+                                    @Override
+                                    public String getName() {
+                                        return name;
+                                    }
+
+                                    @Override
+                                    public String getValue() {
+                                        return String.valueOf(limitAmount);
+                                    }
+                                });
+                        } catch (NoSuchElementException ignore) {
+                            amount = 1 + new Random().nextInt(9);
+                        }
+
+                        // 数量已确定
+                        if (amount > 0) {
+                            WebElement input = good.findElement(By.cssSelector("input[type=number]"));
+                            input.clear();
+                            input.sendKeys(String.valueOf(amount));
+                        }
+                    }
+                });
+
+        // 点击完成关闭商品选择
+        webDriver.findElement(By.id("J_goodsOK")).click();
+//        new WebDriverWait(webDriver, 2)
+//                .until(ExpectedConditions.invisibilityOf(goodListRegion));
+
+        // 其他信息
+        name.clear();
+        name.sendKeys("W客户" + RandomStringUtils.randomAlphabetic(6));
+
+//        webDriver.findElements(By.name("gender")).stream()
+//                .sorted(new SpringWebTest.RandomComparator())
+//                .findFirst().orElse(null);
+
+        randomAddress(webDriver.findElement(By.id("J_form")), "address", "fullAddress");
+
+        // 手机号码
+        mobile.clear();
+        mobile.sendKeys(SpringWebTest.randomAllMobile());
+
+        typeOtherInformation();
+
+        webDriver.findElement(By.id("J_submitBtn")).click();
+    }
+
+    /**
+     * 填写其他订单信息
+     */
+    protected void typeOtherInformation() {
+
+    }
+
+    /**
+     * city-picker技术的随机地址填写
+     *
+     * @param form            form
+     * @param addressName     address 字段的名称
+     * @param fullAddressName 详细地址字段的名称
+     */
+    private void randomAddress(WebElement form, String addressName, String fullAddressName) {
+        //
+        // 点击地址弹出选择框
+        form.findElement(By.name(addressName)).click();
+        new WebDriverWait(webDriver, 2)
+                .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("col-province")));
+        // col-province
+        // 选择省级
+        webDriver.findElement(By.className("col-province")).findElements(By.className("picker-item")).stream()
+                .filter(WebElement::isDisplayed)
+                .sorted(new SpringWebTest.RandomComparator())
+                .findFirst()
+                .ifPresent(provinceElement -> {
+                    provinceElement.click();
+
+                    webDriver.findElement(By.className("col-city")).findElements(By.className("picker-item")).stream()
+                            .filter(WebElement::isDisplayed)
+                            .sorted(new SpringWebTest.RandomComparator())
+                            .findFirst()
+                            .ifPresent(cityElement -> {
+                                cityElement.click();
+
+                                webDriver.findElement(By.className("col-district")).findElements(By.className("picker-item")).stream()
+                                        .filter(WebElement::isDisplayed)
+                                        .sorted(new SpringWebTest.RandomComparator())
+                                        .findFirst()
+                                        .ifPresent(WebElement::click);
+                            });
+
+                });
+
+        // 点击完成
+        webDriver.findElement(By.className("close-picker")).click();
+//        new WebDriverWait(webDriver, 2)
+//                .until(ExpectedConditions.invisibilityOfElementLocated(By.className("col-province")));
+
+        // 填写其他地址
+        form.findElement(By.name(fullAddressName)).clear();
+        form.findElement(By.name(fullAddressName)).sendKeys("其他地址" + RandomStringUtils.randomAlphabetic(10));
     }
 }

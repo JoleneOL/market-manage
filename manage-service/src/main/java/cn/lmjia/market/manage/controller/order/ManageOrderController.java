@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.controller.order;
 
 import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
@@ -15,7 +16,6 @@ import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.rows.StockShiftUnitRows;
 import cn.lmjia.market.core.service.MainOrderService;
-import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.haier.HaierSupplier;
@@ -87,9 +87,8 @@ public class ManageOrderController {
                                 .addSelect(root -> root.get("installAddress"))
                                 .addFormat((object, type) -> object.toString())
                                 .build()
-                        , Fields.asBiFunction("orderUser", ((root, criteriaBuilder)
-                                -> ReadService.nameForLogin(MainOrder.getCustomerLogin(root)
-                                , criteriaBuilder)))
+                        , Fields.asFunction("orderUser", ((root)
+                                -> root.get(MainOrder_.customer).get(Customer_.name)))
                         , Fields.asBiFunction("mobile", (root, criteriaBuilder)
                                 -> Customer.getMobile(MainOrder.getCustomer(root)))
 
@@ -114,18 +113,19 @@ public class ManageOrderController {
             @Override
             public Specification<MainOrder> specification() {
                 return (root, query, cb) -> {
-                    Predicate predicate = cb.conjunction();
+                    Predicate predicate = cb.isNotNull(root.get(MainOrder_.currentLogistics));
                     if (!StringUtils.isEmpty(mobile))
                         predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root))
                                 , "%" + mobile + "%"));
                     if (depotId != null) {
                         predicate = cb.and(predicate, cb.equal(root.join("currentLogistics").get("origin").get("id"), depotId));
                     }
-                    if (!StringUtils.isEmpty(productCode))
+                    if (!StringUtils.isEmpty(productCode)) {
                         root.fetch(MainOrder_.amounts);
-                    predicate = cb.and(predicate
-                            , cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.product).get(Product_.code)
-                                    , productCode));
+                        predicate = cb.and(predicate
+                                , cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.product).get(Product_.code)
+                                        , productCode));
+                    }
                     if (orderDate != null) {
                         predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate));
                     }

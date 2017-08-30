@@ -7,6 +7,9 @@ import cn.lmjia.market.wechat.service.WechatService;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.protocol.Protocol;
+import me.jiangcai.wx.protocol.exception.BadAccessException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class WechatShareController {
 
+    private static final Log log = LogFactory.getLog(WechatShareController.class);
     @Autowired
     private SystemService systemService;
     @Autowired
@@ -68,10 +72,15 @@ public class WechatShareController {
         // 看看是否已关注
         //  必须关注本公众号才可以 测试环境可以跳过
         final Protocol protocol = Protocol.forAccount(publicAccount);
-        if (!environment.acceptsProfiles("unit_test")
-                && !protocol.userDetail(openId).isSubscribe()) {
-            model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(loginService.get(id)).getImageUrl());
-            return "wechat@subscribe_required.html";
+        try {
+            if (!environment.acceptsProfiles("unit_test")
+                    && !protocol.userDetail(openId).isSubscribe()) {
+                model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(loginService.get(id)).getImageUrl());
+                return "wechat@subscribe_required.html";
+            }
+        } catch (BadAccessException ex) {
+            // 检测是否关注失败
+            log.debug("检测是否关注失败", ex);
         }
 
         wechatService.shareTo(id, openId);
