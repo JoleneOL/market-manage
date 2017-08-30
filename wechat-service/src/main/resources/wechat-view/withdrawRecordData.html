@@ -24,8 +24,12 @@
         </div>
     </div>
     <div class="weui-form-preview__ft" th:if="${currentData.withdrawStatus.failed}">
-        <p class="view-form-ex"><span class="text-gray">原因</span><span
+        <p class="view-form-ex"><span class="text-gray">原因 </span><span
                 th:text="${currentData.comment?:'无'}">发票金额有误</span></p>
+    </div>
+    <div class="weui-form-preview__ft" th:if="${currentData.withdrawStatus.success}">
+        <p class="view-form-ex"><span class="text-gray">转账单据编号 </span><span
+                th:text="${currentData.transactionRecordNumber?:''}">123456</span></p>
     </div>
 </div>
 <div xmlns:th="http://www.thymeleaf.org" th:remove="all" class="weui-form-preview view-mb-20 view-form-card_line">
@@ -48,6 +52,9 @@
                 <a href="withdrawLogistics.html" class="weui-btn_default_custom">发票物流</a>
             </div>
         </div>
+    </div>
+    <div class="weui-form-preview__ft">
+        <p class="view-form-ex"><span class="text-gray">转账单据编号 </span> 123456</p>
     </div>
 </div>
 <div xmlns:th="http://www.thymeleaf.org" th:remove="all" class="weui-form-preview view-mb-20 view-form-card_line">
@@ -72,7 +79,7 @@
         </div>
     </div>
     <div class="weui-form-preview__ft">
-        <p class="view-form-ex"><span class="text-gray">原因</span> 发票金额有误</p>
+        <p class="view-form-ex"><span class="text-gray">原因 </span>发票金额有误</p>
     </div>
 </div>
 <th:block xmlns:th="http://www.thymeleaf.org">

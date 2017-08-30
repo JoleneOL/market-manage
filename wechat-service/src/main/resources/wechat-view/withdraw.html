@@ -80,21 +80,22 @@
 
         <div class="weui-cells__title">发票</div>
         <div class="weui-cells weui-cells_checkbox">
-            <label class="weui-cell weui-check__label" for="J_haveInvoice">
+            <label class="weui-cell weui-check__label" for="J_noInvoice">
                 <div class="weui-cell__hd">
-                    <input type="radio" class="weui-check js-invoice" name="invoice" value="false" id="J_haveInvoice"
+                    <input type="radio" class="weui-check js-invoice" name="invoice" value="false" id="J_noInvoice"
                            checked="checked">
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
                     <p>无发票，代扣税
                         <!--/*@thymesVar id="rate" type="java.lang.String"*/-->
-                        <span th:text="${rate}">20%</span></p>
+                        <!--/*@thymesVar id="ratePercent" type="java.lang.String"*/-->
+                        <span id="J_noInvoiceCost" th:text="${ratePercent}">0.2</span></p>
                 </div>
             </label>
-            <label class="weui-cell weui-check__label" for="J_noInvoice">
+            <label class="weui-cell weui-check__label" for="J_haveInvoice">
                 <div class="weui-cell__hd">
-                    <input type="radio" class="weui-check js-invoice" name="invoice" value="true" id="J_noInvoice">
+                    <input type="radio" class="weui-check js-invoice" name="invoice" value="true" id="J_haveInvoice">
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
@@ -119,6 +120,56 @@
                         <input class="weui-input" type="text" placeholder="输入物流公司" name="logisticsCompany">
                     </div>
                     <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
+                </div>
+                <div class="weui-cell weui-cell_link"><div class="weui-cell__bd text-error">开票信息</div></div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><p class="weui-label">公司名称</p></div>
+                    <div class="weui-cell__bd">
+                        <!--/*@thymesVar id="companyName" type="java.lang.String"*/-->
+                        <p th:text="${companyName}">利每家科技有限公司</p>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><p class="weui-label">公司税号</p></div>
+                    <div class="weui-cell__bd">
+                        <!--/*@thymesVar id="taxpayerCode" type="java.lang.String"*/-->
+                        <p th:text="${taxpayerCode}">91330108MA28MBU173</p>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><p class="weui-label">开户行</p></div>
+                    <div class="weui-cell__bd">
+                        <!--/*@thymesVar id="bankName" type="java.lang.String"*/-->
+                        <p th:text="${bankName}">兴业银行杭州滨江支行</p>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><p class="weui-label">开户账号</p></div>
+                    <div class="weui-cell__bd">
+                        <!--/*@thymesVar id="bankAccount" type="java.lang.String"*/-->
+                        <p th:text="${bankAccount}">356940100100162419</p>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><p class="weui-label">公司地址</p></div>
+                    <div class="weui-cell__bd">
+                        <!--/*@thymesVar id="companyAddress" type="java.lang.String"*/-->
+                        <p th:text="${companyAddress}">杭州市滨江区滨盛路1508号海亮大厦1803室</p>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><p class="weui-label">联系电话</p></div>
+                    <div class="weui-cell__bd">
+                        <!--/*@thymesVar id="companyTelephone" type="java.lang.String"*/-->
+                        <p th:text="${companyTelephone}">0570-88187913</p>
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><p class="weui-label">发票内容</p></div>
+                    <div class="weui-cell__bd">
+                        <!--/*@thymesVar id="content" type="java.lang.String"*/-->
+                        <p th:text="${content}">服务费或劳务费的增值发票</p>
+                    </div>
                 </div>
             </div>
         </div>

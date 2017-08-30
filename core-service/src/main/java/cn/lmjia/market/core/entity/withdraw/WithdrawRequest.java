@@ -91,6 +91,12 @@ public class WithdrawRequest {
     private String logisticsCompany;
 
     /**
+     * 转账单据编号
+     */
+    @Column(length = 50)
+    private String transactionRecordNumber;
+
+    /**
      * 备注信息，最多100个字
      */
     @Column(length = 100)

@@ -36,6 +36,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             , String logisticsCode, String logisticsCompany) {
 
         WithdrawRequest request = new WithdrawRequest();
+        request.setPayee(payee);
         request.setWhose(who);
         request.setRequestTime(LocalDateTime.now());
         request.setAccount(account);
@@ -94,6 +95,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         request.setWithdrawStatus(WithdrawStatus.success);
         request.setManageBy(manager);
         request.setManageTime(LocalDateTime.now());
+        request.setTransactionRecordNumber(transactionRecordNumber);
         request.setComment(comment);
     }
 }
