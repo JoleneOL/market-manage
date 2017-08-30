@@ -6,6 +6,7 @@ $(function () {
     var amount = $('#J_withdrawAmount');
     var allInInput = $('#J_allInVal');
     var allInBtn = $('#J_allInBtn');
+    var rate = /*[[${rate}]]*/ "0.2";
     $('#J_Bank').on('keyup mouseout input', function () {
         var $this = $(this);
         var v = $this.val();
@@ -20,7 +21,7 @@ $(function () {
         } else {
             $this.removeClass('view-input-big');
         }
-        amount.text(v);
+        calculateWithdrawAmount();
     });
 
     allInBtn.click(function () {
@@ -28,12 +29,12 @@ $(function () {
             .val(+$(this).attr('data-all-in'))
             .addClass('view-input-big');
 
-        amount.text(allInInput.val());
+        calculateWithdrawAmount();
     });
 
     var $invoice = $('#J_extra');
     $('.js-invoice').change(function () {
-        if ($(this).val() === '1') {
+        if ($(this).val() === 'true') {
             $invoice.removeClass('displayNone');
             $('input[name="logisticsCode"]').rules('add', {
                 required: true,
@@ -52,7 +53,21 @@ $(function () {
             $('input[name="logisticsCode"]').rules('remove');
             $('input[name="logisticsCompany"]').rules('remove');
         }
+        calculateWithdrawAmount();
     });
+
+    function calculateWithdrawAmount(){
+        var withdrawAmount = allInInput.val();
+        if(!!withdrawAmount){
+            var invoiceType = $('.js-invoice:checked').val();
+            //有发票
+            if(invoiceType === 'true'){
+                amount.text(withdrawAmount);
+            }else{
+                amount.text((withdrawAmount * rate).toFixed(2));
+            }
+        }
+    }
 
     // 安卓按钮高度
     $(window).resize(function () {

@@ -70,9 +70,11 @@ public class WechatWithdrawController {
      */
     @GetMapping("/wechatWithdraw")
     public String index(Model model) {
-        model.addAttribute("rate"
+        double rate = withdrawService.getCostRateForNoInvoice().doubleValue();
+        model.addAttribute("ratePercent"
                 , NumberFormat.getPercentInstance(Locale.CHINA)
-                        .format(withdrawService.getCostRateForNoInvoice().doubleValue()));
+                        .format(rate));
+        model.addAttribute("rate",rate);
         model.addAttribute("companyName", systemStringService.getCustomSystemString("withdraw.invoice.companyName"
                 , null, true, String.class, "利每家科技有限公司"));
         model.addAttribute("companyAddress", systemStringService.getCustomSystemString("withdraw.invoice.companyAddress"
