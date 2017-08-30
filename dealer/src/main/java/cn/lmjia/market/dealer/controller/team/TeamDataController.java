@@ -82,7 +82,7 @@ public class TeamDataController {
                 return Arrays.asList(
                         IndefiniteFieldBuilder.asName("name").build()
                         , IndefiniteFieldBuilder.asName("rank")
-                                .addFormat((o, mediaType) -> agentService.getLoginTitle((Integer) o))
+                                .addFormat((o, mediaType) -> agentService.getLoginTitle(((Number) o).intValue()))
                                 .build()
                         , IndefiniteFieldBuilder.asName("joinTime")
                                 .addFormat((o, mediaType) -> conversionService.convert(o, String.class))

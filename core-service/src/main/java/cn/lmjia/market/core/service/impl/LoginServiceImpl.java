@@ -34,6 +34,7 @@ import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -294,8 +295,15 @@ public class LoginServiceImpl implements LoginService {
                 .collect(Collectors.toList());
     }
 
+    @Scheduled(fixedRate = 10 * 60 * 1000)
     @Override
     public void tryAutoDeleteLogin() {
+        log.debug("准备检测是否需要删除");
+        final Long timeToDelete = systemStringService.getCustomSystemString("market.autoDelete.minutes", null
+                , true, Long.class, 30L);
+        final Long timeToWarn = systemStringService.getCustomSystemString("market.autoDeleteWarn.minutes", null
+                , true, Long.class, 5L);
+
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Login> cq = cb.createQuery(Login.class);
         Root<Login> root = cq.from(Login.class);
@@ -331,14 +339,13 @@ public class LoginServiceImpl implements LoginService {
                 )
         )
                 .getResultList().forEach(login -> {
+            log.trace("检查这个用户是否需要执行删除:" + login);
             // 计划删除的时间
             LocalDateTime targetDeleteTime = login.getCreatedTime().plusMinutes(
-                    systemStringService.getCustomSystemString("market.autoDelete.minutes", null
-                            , true, Long.class, 30L));
+                    timeToDelete);
             // 计划警告时间
             LocalDateTime targetWarnTime = targetDeleteTime.minusMinutes(
-                    systemStringService.getCustomSystemString("market.autoDeleteWarn.minutes", null
-                            , true, Long.class, 5L));
+                    timeToWarn);
             LocalDateTime now = LocalDateTime.now();
             // 调度每10分钟进行，所以有什么事情不是10分之内可以完成的 那就先不做
             // 这个值必须跟调度它的频率 完全一致！
