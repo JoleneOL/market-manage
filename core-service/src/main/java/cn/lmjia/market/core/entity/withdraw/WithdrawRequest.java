@@ -94,7 +94,6 @@ public class WithdrawRequest {
      * 转账单据编号
      */
     @Column(length = 50)
-    // TODO: 2017/8/30 新增字段，不知道since 什么版本号，还要在数据库字段维护的地方加上
     private String transactionRecordNumber;
 
     /**
