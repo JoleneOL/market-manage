@@ -8,8 +8,6 @@ $(function () {
         $.toptip('验证码错误');
     }
 
-    //TODO 是否需要验证手机号是否注册
-
     $('#J_registerForm').validate({
         rules: {
             name: "required",
@@ -57,7 +55,7 @@ $(function () {
             },
             dataType: 'json',
             success: function (data) {
-                if (data.resultCode === 400) {
+                if (Math.floor(data.resultCode / 100) === 4) {
                     $.toptip(data.resultMsg);
                     return false;
                 }

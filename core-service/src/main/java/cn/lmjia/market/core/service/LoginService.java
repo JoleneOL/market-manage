@@ -7,9 +7,13 @@ import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
 import me.jiangcai.user.notice.User;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PreDestroy;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +21,17 @@ import java.util.List;
  * @author CJ
  */
 public interface LoginService extends UserDetailsService {
+
+    /**
+     * @param aIdExpression aIdExpression
+     * @param bIdExpression bIdExpression
+     * @param builder       builder
+     * @return aIdExpression 是否从属于toExpression(包括间接) 只有1是表示肯定的
+     */
+    default Expression<Integer> agentBelongsExpression(Expression<?> aIdExpression, Expression<?> bIdExpression
+            , CriteriaBuilder builder) {
+        return builder.function("mm_loginBelongs", Integer.class, aIdExpression, bIdExpression);
+    }
 
     /**
      * @return 用于登录的验证码
@@ -182,4 +197,14 @@ public interface LoginService extends UserDetailsService {
      * @return 微信模板消息接收者
      */
     Collection<User> toWechatUser(Collection<? extends Login> input);
+
+    /**
+     * 每10分钟尝试自动删除无效身份
+     */
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    @Transactional
+    void tryAutoDeleteLogin();
+
+    @PreDestroy
+    void preDestroy();
 }

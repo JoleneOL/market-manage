@@ -1,23 +1,21 @@
 package cn.lmjia.market.core.service.impl;
 
-import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.define.MarketNoticeType;
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.PaymentStatus;
 import cn.lmjia.market.core.entity.support.PromotionRequestStatus;
 import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
 import cn.lmjia.market.core.service.request.PromotionRequestService;
-import cn.lmjia.market.core.util.AbstractTemplateMessageStyle;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.lib.sys.service.SystemStringService;
-import me.jiangcai.user.notice.UserNoticeType;
-import me.jiangcai.user.notice.wechat.WechatSendSupplier;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
 import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -38,15 +36,9 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
     @Autowired
     private PromotionRequestRepository promotionRequestRepository;
     @Autowired
-    private Environment environment;
-    @Autowired
     private SystemStringService systemStringService;
     @Autowired
     private ResourceService resourceService;
-
-    private boolean useLocal() {
-        return environment.acceptsProfiles("staging") || environment.acceptsProfiles(CoreConfig.ProfileUnitTest);
-    }
 
     @Override
     public PromotionRequest currentRequest(Login login) {
@@ -99,11 +91,23 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
     }
 
     @Override
-    public UserNoticeType getPaySuccessMessage() {
-        return new UserNoticeType() {
+    public MarketUserNoticeType getPaySuccessMessage() {
+        return new MarketUserNoticeType() {
             @Override
-            public String id() {
-                return PromotionRequestService.class.getSimpleName() + ".PaySuccess";
+            public MarketNoticeType type() {
+                return MarketNoticeType.PromotionRequestPaySuccess;
+            }
+
+            @Override
+            public Collection<? extends TemplateMessageParameter> parameterStyles() {
+                return Arrays.asList(
+                        new SimpleTemplateMessageParameter("first", "{0}，您好，您的经销商升级订单已支付。")
+                        , new SimpleTemplateMessageParameter("keyword1", "{1}")
+                        , new SimpleTemplateMessageParameter("keyword2", "{2,number,￥,###.##}")
+                        , new SimpleTemplateMessageParameter("keyword3", "{3}")
+                        , new SimpleTemplateMessageParameter("keyword4", "微信支付")
+                        , new SimpleTemplateMessageParameter("remark", "请耐心等待审核。")
+                );
             }
 
             @Override
@@ -139,25 +143,8 @@ public class PromotionRequestServiceImpl implements PromotionRequestService {
     }
 
     @Override
-    public void registerNotices(WechatSendSupplier wechatSendSupplier) {
-        wechatSendSupplier.registerTemplateMessage(getPaySuccessMessage(), new AbstractTemplateMessageStyle() {
-            @Override
-            public Collection<? extends TemplateMessageParameter> parameterStyles() {
-                return Arrays.asList(
-                        new SimpleTemplateMessageParameter("first", "{0}，您好，您的经销商升级订单已支付。")
-                        , new SimpleTemplateMessageParameter("keyword1", "{1}")
-                        , new SimpleTemplateMessageParameter("keyword2", "{2,number,￥,###.##}")
-                        , new SimpleTemplateMessageParameter("keyword3", "{3}")
-                        , new SimpleTemplateMessageParameter("keyword4", "微信支付")
-                        , new SimpleTemplateMessageParameter("remark", "请耐心等待审核。")
-                );
-            }
-
-            @Override
-            public String getTemplateId() {
-                return useLocal() ? "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY" : "F-TTCFAOn9IhDO7a4-1ruwPNg6TjGpkxbVhdsLre0aE";
-            }
-        }, null);
+    public void registerNotices(WechatNoticeHelper wechatNoticeHelper) {
+        wechatNoticeHelper.registerTemplateMessage(getPaySuccessMessage(), null);
     }
 
     @Override

@@ -8,6 +8,9 @@ import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.entity.support.WithdrawStatus;
+import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
+import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import cn.lmjia.market.core.repository.channel.ChannelRepository;
@@ -59,11 +62,12 @@ public class ReadServiceImpl implements ReadService {
     public String mobileFor(Object principal) {
         if (principal == null)
             return "";
-        ContactWay contactWay = loginRepository.getOne(((Login) principal).getId()).getContactWay();
+        Login login = toLogin(principal);
+        ContactWay contactWay = loginRepository.getOne((login).getId()).getContactWay();
         if (contactWay == null)
-            return "";
+            return login.getLoginName();
         if (StringUtils.isEmpty(contactWay.getMobile()))
-            return "";
+            return login.getLoginName();
         return contactWay.getMobile();
     }
 
@@ -129,12 +133,28 @@ public class ReadServiceImpl implements ReadService {
                 .groupBy()
         ;
 
-        // TODO 还应该减去提现的
+        BigDecimal current;
         try {
-            return new Money(entityManager.createQuery(sumQuery).getSingleResult().add(login.getCommissionBalance()));
+            current = entityManager.createQuery(sumQuery).getSingleResult().add(login.getCommissionBalance());
         } catch (NoResultException | NullPointerException ignored) {
-            return new Money(login.getCommissionBalance());
+            current = login.getCommissionBalance();
         }
+
+        // 减去已提现或者正在提现的
+        sumQuery = criteriaBuilder.createQuery(BigDecimal.class);
+        Root<WithdrawRequest> withdrawRequestRoot = sumQuery.from(WithdrawRequest.class);
+        sumQuery = sumQuery.select(criteriaBuilder.sum(withdrawRequestRoot.get(WithdrawRequest_.amount)))
+                .where(criteriaBuilder.and(
+                        criteriaBuilder.equal(withdrawRequestRoot.get(WithdrawRequest_.whose), login)
+                        , withdrawRequestRoot.get(WithdrawRequest_.withdrawStatus)
+                                .in(WithdrawStatus.checkPending, WithdrawStatus.success)
+                ));
+        try {
+            current = current.subtract(entityManager.createQuery(sumQuery).getSingleResult());
+        } catch (NoResultException | NullPointerException ignored) {
+        }
+
+        return new Money(current);
 
     }
 

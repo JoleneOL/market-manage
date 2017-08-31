@@ -6,6 +6,7 @@ $(function () {
     var amount = $('#J_withdrawAmount');
     var allInInput = $('#J_allInVal');
     var allInBtn = $('#J_allInBtn');
+    var rate = /*[[${rate}]]*/ "0.2";
     $('#J_Bank').on('keyup mouseout input', function () {
         var $this = $(this);
         var v = $this.val();
@@ -20,7 +21,7 @@ $(function () {
         } else {
             $this.removeClass('view-input-big');
         }
-        amount.text(v);
+        calculateWithdrawAmount();
     });
 
     allInBtn.click(function () {
@@ -28,12 +29,12 @@ $(function () {
             .val(+$(this).attr('data-all-in'))
             .addClass('view-input-big');
 
-        amount.text(allInInput.val());
+        calculateWithdrawAmount();
     });
 
     var $invoice = $('#J_extra');
     $('.js-invoice').change(function () {
-        if ($(this).val() === '1') {
+        if ($(this).val() === 'true') {
             $invoice.removeClass('displayNone');
             $('input[name="logisticsCode"]').rules('add', {
                 required: true,
@@ -41,11 +42,32 @@ $(function () {
                     required : "填写物流单号"
                 }
             });
+             $('input[name="logisticsCompany"]').rules('add', {
+                required: true,
+                messages : {
+                    required : "填写物流公司"
+                }
+            });
         } else {
             $invoice.addClass('displayNone');
             $('input[name="logisticsCode"]').rules('remove');
+            $('input[name="logisticsCompany"]').rules('remove');
         }
+        calculateWithdrawAmount();
     });
+
+    function calculateWithdrawAmount(){
+        var withdrawAmount = allInInput.val();
+        if(!!withdrawAmount){
+            var invoiceType = $('.js-invoice:checked').val();
+            //有发票
+            if(invoiceType === 'true'){
+                amount.text(withdrawAmount);
+            }else{
+                amount.text((withdrawAmount - withdrawAmount * rate).toFixed(2));
+            }
+        }
+    }
 
     // 安卓按钮高度
     $(window).resize(function () {
@@ -127,7 +149,7 @@ $(function () {
             }
         },
         errorPlacement: function (error, element) {
-            console.log(error);
+            console.log($(element).attr('name'), ' has error');
         },
         highlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').addClass("weui-cell_warn")

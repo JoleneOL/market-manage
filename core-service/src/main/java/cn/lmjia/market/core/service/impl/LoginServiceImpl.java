@@ -1,10 +1,15 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.define.MarketNoticeType;
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.CustomerRepository;
@@ -12,34 +17,54 @@ import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.user.notice.NoticeChannel;
 import me.jiangcai.user.notice.User;
+import me.jiangcai.user.notice.UserNoticeService;
 import me.jiangcai.user.notice.wechat.WechatNoticeChannel;
 import me.jiangcai.wx.model.WeixinUserDetail;
+import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
+import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +75,10 @@ public class LoginServiceImpl implements LoginService {
 
     private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
     private final Set<OrderStatus> payStatus = new HashSet<>();
+    /**
+     * 负责干这个事儿的，5线程应该是足够了
+     */
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     @Autowired
     private LoginRepository loginRepository;
     @Autowired
@@ -69,6 +98,14 @@ public class LoginServiceImpl implements LoginService {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private SystemStringService systemStringService;
+    @Autowired
+    private ReadService readService;
+    @Autowired
+    private WechatNoticeHelper wechatNoticeHelper;
+    @Autowired
+    private UserNoticeService userNoticeService;
 
     public LoginServiceImpl() {
         payStatus.add(OrderStatus.forDeliver);
@@ -181,10 +218,10 @@ public class LoginServiceImpl implements LoginService {
         List<AgentLevel> allAgent = agentLevelRepository.findByLogin(who);
 
         if (allAgent.isEmpty()) {
-            List<Customer> customers = customerRepository.findByLogin(who);
-            if (customers.isEmpty())
-                return lowestAgentLevel(who.getGuideUser());
-            return customers.get(0).getAgentLevel();
+//            List<Customer> customers = customerRepository.findByLogin(who);
+//            if (customers.isEmpty())
+            return lowestAgentLevel(who.getGuideUser());
+//            return customers.get(0).getAgentLevel();
 //            return lowestAgentLevel(who.getGuideUser());
         }
 
@@ -218,10 +255,15 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public boolean isRegularLogin(Login login) {
+        if (login == null)
+            return false;
         if (agentLevelRepository.countByLogin(login) > 0)
             return true;
         // 看下是否为已支付用户
-        if (customerRepository.countByLoginAndSuccessOrderTrue(login) > 0)
+//        if (customerRepository.countByLoginAndSuccessOrderTrue(login) > 0)
+//            return true;
+
+        if (login.isSuccessOrder())
             return true;
         // 订单是否存在
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -253,6 +295,142 @@ public class LoginServiceImpl implements LoginService {
                 .collect(Collectors.toList());
     }
 
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    @Override
+    public void tryAutoDeleteLogin() {
+        log.debug("准备检测是否需要删除");
+        final Long timeToDelete = systemStringService.getCustomSystemString("market.autoDelete.minutes", null
+                , true, Long.class, 30L);
+        final Long timeToWarn = systemStringService.getCustomSystemString("market.autoDeleteWarn.minutes", null
+                , true, Long.class, 5L);
+
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Login> cq = cb.createQuery(Login.class);
+        Root<Login> root = cq.from(Login.class);
+        // 它也没有推荐给任何人过
+        Subquery<Long> teamNumber = cq.subquery(Long.class);
+        Root<Login> teamRoot = teamNumber.from(Login.class);
+        teamNumber = teamNumber.select(cb.count(teamRoot))
+                .where(cb.equal(teamRoot.get(Login_.guideUser), root));
+        // 代理商所有的身份
+        Subquery<Long> agentLogin = cq.subquery(Long.class);
+        Root<AgentLevel> agentRoot = agentLogin.from(AgentLevel.class);
+        agentLogin = agentLogin.select(agentRoot.get(AgentLevel_.login).get(Login_.id))
+                .distinct(true);
+        // 顺手把客户生成的身份也给过滤掉
+        Subquery<Long> customerLogin = cq.subquery(Long.class);
+        Root<Customer> customerRoot = customerLogin.from(Customer.class);
+        customerLogin = customerLogin.select(customerRoot.get(Customer_.login).get(Login_.id))
+                .distinct(true)
+                .where(cb.isNotNull(customerRoot.get(Customer_.login)));
+        //
+        entityManager.createQuery(cq
+                .where(
+                        // 非管理员
+                        cb.notEqual(root.type(), Manager.class)
+                        // 非代理商
+                        , root.get(Login_.id).in(agentLogin).not()
+                        // 非客户
+                        , root.get(Login_.id).in(customerLogin).not()
+                        // 团队数量等于0
+                        , cb.equal(teamNumber, 0)
+                        // 未曾下单
+                        , cb.isFalse(root.get(Login_.successOrder))
+                )
+        )
+                .getResultList().forEach(login -> {
+            log.trace("检查这个用户是否需要执行删除:" + login);
+            // 计划删除的时间
+            LocalDateTime targetDeleteTime = login.getCreatedTime().plusMinutes(
+                    timeToDelete);
+            // 计划警告时间
+            LocalDateTime targetWarnTime = targetDeleteTime.minusMinutes(
+                    timeToWarn);
+            LocalDateTime now = LocalDateTime.now();
+            // 调度每10分钟进行，所以有什么事情不是10分之内可以完成的 那就先不做
+            // 这个值必须跟调度它的频率 完全一致！
+            LocalDateTime nextRun = now.plusMinutes(10);
+
+
+            if (targetDeleteTime.isBefore(now)) {
+                // 早就应该删除了
+                deleteLogin(login);
+            } else {
+                // 是否需要调度警告？
+                if (targetWarnTime.isBefore(now))
+                    // 需要立刻警告
+                    warnDeleteLogin(login);
+                else if (targetWarnTime.isBefore(nextRun)) {
+                    // 下次调度前就需要了
+                    long ms = now.until(targetWarnTime, ChronoUnit.MILLIS);
+                    log.debug(ms + "后发布警告删除" + login);
+                    scheduledExecutorService.schedule(() -> {
+                        if (needDelete(login))
+                            warnDeleteLogin(login);
+                    }, ms, TimeUnit.MILLISECONDS);
+                }
+
+                // 是否需要调度删除
+                if (targetDeleteTime.isBefore(nextRun)) {
+                    long ms = now.until(targetDeleteTime, ChronoUnit.MILLIS);
+                    log.debug(ms + "后删除" + login);
+                    scheduledExecutorService.schedule(() -> {
+                        if (needDelete(login))
+                            deleteLogin(login);
+                    }, ms, TimeUnit.MILLISECONDS);
+                }
+
+            }
+        });
+    }
+
+    /**
+     * @param login 老的登录
+     * @return 是否有必要删除
+     */
+    private boolean needDelete(Login login) {
+        Login currentLogin = loginRepository.getOne(login.getId());
+
+        return loginRepository.countByGuideUser(currentLogin) == 0
+                && !(currentLogin instanceof Manager)
+                && !currentLogin.isSuccessOrder()
+                && agentLevelRepository.findByLogin(currentLogin).isEmpty();
+    }
+
+    private void warnDeleteLogin(Login login) {
+        log.debug(login + "要被警告了哦！");
+        if (login.getGuideUser() != null) {
+            String mobile = readService.mobileFor(login);
+            userNoticeService.sendMessage(null, toWechatUser(Collections.singleton(login.getGuideUser())), null
+                    , new DeleteLoginWarn()
+                    , Date.from(ZonedDateTime.of(login.getCreatedTime(), ZoneId.systemDefault()).toInstant())
+                    , StringUtils.isEmpty(mobile) ? "未知" : mobile);
+        }
+    }
+
+    @PostConstruct
+    public void init() {
+        wechatNoticeHelper.registerTemplateMessage(new DeleteLoginWarn(), null);
+        wechatNoticeHelper.registerTemplateMessage(new DeleteLogin(), null);
+    }
+
+    private void deleteLogin(Login login) {
+        log.debug(login + "要被删除了！");
+        if (login.getGuideUser() != null) {
+            String mobile = readService.mobileFor(login);
+            userNoticeService.sendMessage(null, toWechatUser(Collections.singleton(login.getGuideUser())), null
+                    , new DeleteLogin()
+                    , Date.from(ZonedDateTime.of(login.getCreatedTime(), ZoneId.systemDefault()).toInstant())
+                    , StringUtils.isEmpty(mobile) ? "未知" : mobile);
+        }
+        loginRepository.delete(login);
+    }
+
+    @Override
+    public void preDestroy() {
+        scheduledExecutorService.shutdown();
+    }
+
     private User toUser(final WeixinUserDetail detail) {
         return new User() {
             @Override
@@ -267,5 +445,105 @@ public class LoginServiceImpl implements LoginService {
                 return map;
             }
         };
+    }
+
+    /**
+     * 即将删除的通知
+     */
+    private class DeleteLoginWarn implements MarketUserNoticeType {
+
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "您有一位团队成员即将被移除。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0,date,yyyy-MM-dd HH:mm}")
+                    , new SimpleTemplateMessageParameter("keyword2", "没有完成首笔订单")
+                    , new SimpleTemplateMessageParameter("keyword3", "无")
+                    , new SimpleTemplateMessageParameter("remark", "手机号码:{1};加油!")
+            );
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[]{
+                    Date.class,
+                    // 手机号码 没有就写入未知
+                    String.class
+            };
+        }
+
+
+        @Override
+        public MarketNoticeType type() {
+            return MarketNoticeType.TeamMemberDeleteWarn;
+        }
+
+        @Override
+        public String title() {
+            return "新会员即将被删除";
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) {
+            return null;
+        }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) {
+            return null;
+        }
+    }
+
+    private class DeleteLogin implements MarketUserNoticeType {
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "您有一位团队成员被移除了。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0,date,yyyy-MM-dd HH:mm}")
+                    , new SimpleTemplateMessageParameter("keyword2", "没有完成首笔订单")
+                    , new SimpleTemplateMessageParameter("keyword3", "无")
+                    , new SimpleTemplateMessageParameter("remark", "手机号码:{1}")
+            );
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[]{
+                    Date.class, String.class
+            };
+        }
+
+        @Override
+        public MarketNoticeType type() {
+            return MarketNoticeType.TeamMemberDeleteNotify;
+        }
+
+        @Override
+        public String title() {
+            return "新会员被删除";
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) {
+            return null;
+        }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) {
+            return null;
+        }
+
     }
 }

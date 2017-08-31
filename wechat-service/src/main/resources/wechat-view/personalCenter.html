@@ -95,14 +95,13 @@
                         <div class="weui-flex">
                             <div class="weui-flex__item view_flex-3">
                                 <div class="weui-cells__title view-mt-0">可提现佣金</div>
-                                <h1 class="view_page-title"
+                                <h1 class="view_page-title" id="WithdrawAbleAmount"
                                     th:text="${{@readService.currentBalance(#authentication.principal)}}">￥886896</h1>
                             </div>
                             <div class="weui-flex__item view-btn-group-md">
-                                <!--<a href="withdraw.html" class="weui-btn weui-btn_custom">我要提现</a>-->
-                                <!--<a href="withdrawRecord.html" class="weui-btn weui-btn_default_custom">提现记录</a>-->
-                                <a href="javascript:;" class="weui-btn weui-btn_custom">我要提现</a>
-                                <a href="javascript:;" class="weui-btn weui-btn_default_custom">提现记录</a>
+                                <a href="withdraw.html" class="weui-btn weui-btn_custom" th:href="@{/wechatWithdraw}">我要提现</a>
+                                <a href="withdrawRecord.html" th:href="@{/wechatWithdrawRecord}"
+                                   class="weui-btn weui-btn_default_custom">提现记录</a>
                             </div>
                         </div>
 
@@ -211,4 +210,5 @@
 <script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
 <script src="../wechat-resource/assets/js/personCenter.js?v=1"
         th:src="@{/wechat-resource/assets/js/personCenter.js(v=1)}"></script>
+<th:block th:include="wechat@fragments/share.html::hideAllShare"/>
 </html>

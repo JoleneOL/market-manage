@@ -8,5 +8,10 @@ public enum Version {
     /**
      * 订单包含多样商品版本
      */
-    muPartOrder
+    muPartOrder,
+    /**
+     * 新的登录体系
+     * 在登录关系中不再存在所谓200的客户关系
+     */
+    newLogin
 }

@@ -361,8 +361,8 @@ Mock.mock(/\/api\/recommend/, "post", {
 });
 
 Mock.mock(/\/api\/authCode/, "post", {
-    "resultCode": Mock.Random.boolean() ? 200 : 400,
-    "resultMsg": "ok",
+    "resultCode": "@pick([200, 401])",
+    "resultMsg": "该手机号已经被注册",
     "data": null
 });
 

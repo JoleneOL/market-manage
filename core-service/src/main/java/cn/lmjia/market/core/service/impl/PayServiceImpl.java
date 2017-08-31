@@ -114,8 +114,11 @@ public class PayServiceImpl implements PayService {
         log.info("处理付款成功事件");
         if (event.getPayableOrder() instanceof MainOrder) {
             MainOrder mainOrder = (MainOrder) event.getPayableOrder();
-            if (mainOrder.isPay())
-                throw new IllegalStateException("订单已支付");
+            if (mainOrder.isPay()) {
+                log.warn("订单已支付，却发起了重复事件。" + mainOrder.getSerialId());
+                return;
+            }
+//                throw new IllegalStateException("订单已支付");
             mainOrder.setPayTime(LocalDateTime.now());
             mainOrder.setOrderStatus(OrderStatus.forDeliver);
             mainOrder.setPayOrder(event.getPayOrder());

@@ -13,11 +13,6 @@ import javax.annotation.PostConstruct;
  */
 public interface NoticeService {
 
-    /**
-     * @return 是否使用测试的公众号
-     */
-    boolean useLocal();
-
     @PostConstruct
     void init();
 

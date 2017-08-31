@@ -65,10 +65,12 @@ public class PromotionServiceImpl implements PromotionService {
             // 是一个客户
             requireCount = promotionCountForAgentLevel(systemService.systemLevel() - 1);
             currentCount = teamService.validCustomers(who);
+            log.trace("普通用户当前数量：" + currentCount);
         } else {
             // 同级别
             requireCount = promotionCountForAgentLevel(agentLevel.getLevel() - 1);
             currentCount = teamService.agents(who, agentLevel.getLevel());
+            log.trace("代理商当前数量：" + currentCount);
         }
 
         if (currentCount >= requireCount) {
