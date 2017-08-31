@@ -9,6 +9,8 @@ import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.model.MemberInfo;
 import cn.lmjia.market.wechat.page.WechatMyPage;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
  */
 public class WechatMyControllerTest extends WechatTestBase {
 
+    private static final Log log = LogFactory.getLog(WechatMyControllerTest.class);
     private Login login;
     @Autowired
     private AgentLevelRepository agentLevelRepository;
@@ -64,8 +67,10 @@ public class WechatMyControllerTest extends WechatTestBase {
             } else {
                 // 可以看到我旗下的代理
                 myPage.assertTeamMembers(subAgents.stream().map(this::fromAgentLevel).collect(Collectors.toList()));
-                currentLogin = subAgents.stream().max(new RandomComparator()).orElse(null).getLogin();
-                myPage.clickMember(fromLogin(currentLogin));
+                log.info("检测通过，点击下一个");
+                AgentLevel nextAgent = subAgents.stream().max(new RandomComparator()).orElse(null);
+                myPage.clickMember(fromAgentLevel(nextAgent));
+                currentLogin = nextAgent.getLogin();
             }
         }
 
@@ -83,7 +88,7 @@ public class WechatMyControllerTest extends WechatTestBase {
     private MemberInfo fromAgentLevel(AgentLevel agent) {
         MemberInfo info = new MemberInfo();
         info.setName(readService.nameForPrincipal(agent.getLogin()));
-        info.setJoinDate(agent.getLogin().getCreatedTime().toLocalDate());
+        info.setJoinDate(agent.getCreatedTime().toLocalDate());
         info.setLevel(readService.getLoginTitle(agent.getLevel()));
         info.setMobile(readService.mobileFor(agent.getLogin()));
         return info;

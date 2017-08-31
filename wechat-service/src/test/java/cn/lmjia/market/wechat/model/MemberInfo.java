@@ -1,11 +1,11 @@
 package cn.lmjia.market.wechat.model;
 
+import cn.lmjia.market.dealer.controller.team.TeamDataController;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,18 +34,13 @@ public class MemberInfo {
         List<WebElement> list = element.findElements(By.tagName("div"));
         info.setName(list.get(0).getText());
         info.setLevel(list.get(1).getText());
-        // 还不知道长什么样子呢
-        info.setMobile(list.get(2).getText());
+        info.setJoinDate(LocalDate.from(TeamDataController.teamDateFormatter.parse(list.get(2).getText())));
+        info.setMobile(list.get(3).getText());
         return info;
     }
 
-    private String[] m() {
-        if (StringUtils.isEmpty(mobile))
-            return new String[2];
-        return new String[]{
-                mobile.substring(0, 3)
-                , mobile.substring(mobile.length() - 4, mobile.length())
-        };
+    private String mosaicMobile() {
+        return TeamDataController.mosaicMobile(mobile);
     }
 
     @Override
@@ -56,14 +51,13 @@ public class MemberInfo {
 
         return Objects.equals(name, info.name) &&
                 Objects.equals(level, info.level) &&
-//                Objects.equals(mobile, info.mobile)
-                Objects.equals(m()[0], info.m()[0]) &&
-                Objects.equals(m()[1], info.m()[1])
+                Objects.equals(joinDate, info.joinDate) &&
+                Objects.equals(mosaicMobile(), info.mosaicMobile())
                 ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, level, m()[0], m()[1]);
+        return Objects.hash(name, level, joinDate, mosaicMobile());
     }
 }

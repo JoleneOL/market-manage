@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.page;
 
 import cn.lmjia.market.wechat.model.MemberInfo;
+import me.jiangcai.lib.test.page.WebDriverUtil;
 import org.assertj.core.api.AbstractBigDecimalAssert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -88,7 +89,30 @@ public class WechatMyPage extends AbstractWechatPage {
     }
 
     private Stream<WebElement> teamMemberStream() {
-        return webDriver.findElements(By.className("view-team-list_items")).stream()
+        WebDriverUtil.waitFor(webDriver, driver -> {
+            if (!driver.findElement(By.id("J_subordinate")).findElements(By.className("view-team-list_items")).isEmpty())
+                return true;
+            String text = driver.findElement(By.id("J_subordinate"))
+                    .findElement(By.className("weui-loadmore__tips"))
+                    .getText();
+            System.out.println(text);
+            return !text.contains("加载");
+        }, 3);
+//
+//        try {
+//            WebDriverUtil.waitFor(webDriver, driver -> {
+//                String text = driver.findElement(By.id("J_subordinate"))
+//                        .findElement(By.className("weui-loadmore__tips"))
+//                        .getText();
+//                return !text.contains("加载");
+//            },2);
+////            new WebDriverWait(webDriver, 2)
+////                    .until(ExpectedConditions.invisibilityOfElementLocated(By.className("weui-loadmore__tips")));
+//        }catch (TimeoutException ignored){
+//        }
+//
+//        printThisPage();
+        return webDriver.findElement(By.id("J_subordinate")).findElements(By.className("view-team-list_items")).stream()
                 .filter(element -> !element.getAttribute("class").contains("view_team-header"));
     }
 
@@ -99,7 +123,9 @@ public class WechatMyPage extends AbstractWechatPage {
      */
     public void assertTeamMembers(List<MemberInfo> list) {
         assertThat(teamMemberStream()
+                .peek(System.out::println)
                 .map(MemberInfo::ofDiv)
+                .peek(System.out::println)
                 .collect(Collectors.toSet()))
                 .as("只包含这些")
                 .containsExactlyElementsOf(list);

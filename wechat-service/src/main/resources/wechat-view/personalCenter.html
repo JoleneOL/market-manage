@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="view-height-100">
 <!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
-<!--/*@thymesVar id="allCount" type="java.lang.Number"*/-->
-<!--/*@thymesVar id="count0" type="java.lang.Number"*/-->
-<!--/*@thymesVar id="count2" type="java.lang.Number"*/-->
-<!--/*@thymesVar id="count3" type="java.lang.Number"*/-->
 <!--/*@thymesVar id="agentLevel" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
@@ -55,7 +51,8 @@
                     <a href="#" class="view-tabs_item js-team">推荐</a>
                 </div>
                 <ul class="view-total">
-                    <li class="on">您共管理了<span>99999</span>个人</li>
+                    <!--for u know,所属管辖了多少人计算过于复杂暂时略过 哈-->
+                    <li class="on" style="visibility: hidden;">您共管理了<span>99999</span>个人</li>
                     <li>您共管理了<span>1999</span>个人</li>
                 </ul>
                 <div class="view_team-list js-extra-h">
@@ -69,7 +66,8 @@
                 <div id="tabs-teams" class="swiper-container">
                     <div class="swiper-wrapper">
                         <!--所属-->
-                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/subordinate">
+                        <div id="J_subordinate" class="swiper-slide view-scroll-wrap js-teamItems"
+                             data-url="/api/subordinate">
                             <div class="view-scroll-list">
                                 <div class="weui-loadmore">
                                     <i class="weui-loading"></i>
@@ -78,7 +76,8 @@
                             </div>
                         </div>
                         <!--推荐-->
-                        <div class="swiper-slide view-scroll-wrap js-teamItems" data-url="/api/directly">
+                        <div id="J_directly" class="swiper-slide view-scroll-wrap js-teamItems"
+                             data-url="/api/directly">
                             <div class="view-scroll-list">
                                 <div class="weui-loadmore">
                                     <i class="weui-loading"></i>

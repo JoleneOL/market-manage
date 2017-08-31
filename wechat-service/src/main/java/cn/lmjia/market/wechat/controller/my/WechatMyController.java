@@ -52,16 +52,16 @@ public class WechatMyController {
         else
             model.addAttribute("agentLevel", "普通用户");
         // 微信头像 名字 等级
-        model.addAttribute("allCount", teamService.all(login));
+//        model.addAttribute("allCount", teamService.all(login));
 
-        int lowestLevel = systemService.systemLevel() - 1;
-        model.addAttribute("count0", teamService.agents(login, lowestLevel - 3));
+//        int lowestLevel = systemService.systemLevel() - 1;
+//        model.addAttribute("count0", teamService.agents(login, lowestLevel - 3));
         // 所谓的省代 其实是区(特殊的title)
 //        model.addAttribute("count1", teamService.agents(login, lowestLevel - 1));
         // 最低等级（经销商）
-        model.addAttribute("count2", teamService.agents(login, lowestLevel));
+//        model.addAttribute("count2", teamService.agents(login, lowestLevel));
         // 客户
-        model.addAttribute("count3", teamService.validCustomers(login));
+//        model.addAttribute("count3", teamService.validCustomers(login));
         return "wechat@myTeam.html";
     }
 }
