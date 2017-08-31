@@ -17,4 +17,6 @@ public interface AbstractLoginRepository<T extends Login> extends JpaRepository<
 
     long countByGuideUser(Login guide);
 
+    List<T> findByGuideUser(Login guide);
+
 }
