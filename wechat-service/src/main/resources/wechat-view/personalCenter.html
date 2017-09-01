@@ -18,7 +18,9 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small view-height-100">
+<body class="view-bg-color view-fs-small view-height-100"
+      data-memberList-url-template="memberList.html?userId={ID}&rank={RANK}"
+      th:attr="data-memberList-url-template=@{/memberList(userId='{ID}',rank='{RANK}')}">
 <div class="weui-tab">
     <div class="weui-navbar">
         <a class="view-navbar_item on" href="#myTeam">我的团队</a>

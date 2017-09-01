@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-fs-small">
+<body class="view-fs-small" data-memberList-url-template="memberList.html?userId={ID}&rank={RANK}"
+      th:attr="data-memberList-url-template=@{/memberList(userId='{ID}',rank='{RANK}')}">
 <div class="weui-cells__title">
     <a href="myTeam.html" class="text-custom">返回我的团队</a>
 </div>
