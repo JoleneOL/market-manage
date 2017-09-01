@@ -347,11 +347,14 @@ public class AgentServiceImpl implements AgentService {
             return recommendAgentLine(login.getGuideUser());
         }
 
-        int count = systemService.systemLevel() - 1;
-        result[count] = current;
+        int count = systemService.systemLevel();
+//        result[count] = current;
         while (count-- > 0) {
             // 下一个平推者
-            result[count] = newParallelRecommend(result[count + 1], count);
+            if (count == systemService.systemLevel() - 1)
+                result[count] = newParallelRecommend(current, count);
+            else
+                result[count] = newParallelRecommend(result[count + 1], count);
         }
 
         return result;
