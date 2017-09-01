@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small" data-memberList-url-template="memberList.html?userId={ID}&rank={RANK}"
-      th:attr="data-memberList-url-template=@{/memberList(userId='{ID}',rank='{RANK}')}">
+<body class="view-bg-color view-fs-small" data-memberList-url-template="memberList.html?userId=ID&rank=RANK"
+      th:attr="data-memberList-url-template=@{/memberList(userId='ID',rank='RANK')}">
 <div id="myTeam" class="view-scroll-wrap">
     <div class="weui-cells js-extra-h view-mt-0">
         <!--<a href="userInfo.html" class="weui-cell weui-cell_access">-->

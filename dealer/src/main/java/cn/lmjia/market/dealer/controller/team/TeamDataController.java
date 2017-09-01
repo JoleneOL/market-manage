@@ -14,6 +14,7 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.IndefiniteFieldBuilder;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.ApiDramatizer;
@@ -26,9 +27,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.EntityManager;
@@ -53,7 +56,7 @@ import java.util.stream.Collectors;
 @Controller
 public class TeamDataController {
 
-    public static final DateTimeFormatter teamDateFormatter = DateTimeFormatter.ofPattern("yy-M-d", Locale.CHINA);
+    public static final DateTimeFormatter teamDateFormatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.CHINA);
     @Autowired
     private SystemService systemService;
     @Autowired
@@ -67,6 +70,8 @@ public class TeamDataController {
     private EntityManager entityManager;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private LoginService loginService;
 
     public static String mosaicMobile(String mobile) {
         if (StringUtils.isEmpty(mobile))
@@ -86,13 +91,44 @@ public class TeamDataController {
         return new String(all);
     }
 
+    @GetMapping("/memberList")
+    @Transactional(readOnly = true)
+    public String memberList(String userId, Model model) {
+        // 可能是展示下级
+        Login targetLogin;
+        if (userId.startsWith("Agent")) {
+            AgentLevel agentLevel = agentService.getAgent(NumberUtils.parseNumber(userId.substring("Agent".length())
+                    , Long.class));
+            targetLogin = agentLevel.getLogin();
+            model.addAttribute("dataUrl", "/api/subordinate/" + agentLevel.getId());
+        } else {
+            targetLogin = loginService.get(NumberUtils.parseNumber(userId, Long.class));
+            model.addAttribute("dataUrl", "/api/directly/" + targetLogin.getId());
+        }
+        model.addAttribute("showName", readService.nameForPrincipal(targetLogin));
+        return "wechat@memberList.html";
+    }
+
+    @GetMapping("/api/subordinate/{id}")
+    @Transactional(readOnly = true)
+    @ResponseBody
+    public ApiResult subordinate(int page, @AuthenticationPrincipal Login login, @PathVariable("id") long id) {
+        AgentLevel agentLevel = agentService.getAgent(id);
+        return subordinate(page, agentLevel.getLogin(), agentLevel);
+    }
+
     @GetMapping("/api/subordinate")
     @Transactional(readOnly = true)
     @ResponseBody
     public ApiResult subordinate(int page, @AuthenticationPrincipal Login login) {
         // 如果我是代理商 渲染旗下代理商，否者渲染推荐的爱心天使
         AgentLevel agentLevel = agentService.highestAgent(login);
-        if (agentLevel == null) {
+        return subordinate(page, login, agentLevel);
+    }
+
+    private ApiResult subordinate(int page, Login login, AgentLevel agentLevel) {
+        if (agentLevel == null || agentLevel.getLevel() == systemService.systemLevel() - 1) {
+            // 不止是null 如果是最低等级的代理商 同样也是如此
             final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<Tuple> cq = cb.createTupleQuery();
             Root<Login> root = cq.from(Login.class);
@@ -105,11 +141,14 @@ public class TeamDataController {
                                             , ReadService.agentLevelForLogin(root, cb)
                                             , root.get(Login_.createdTime)
                                             , ReadService.mobileForLogin(root, cb)
-                                            , cb.literal(null)
+                                            , cb.nullLiteral(Integer.class)
                                     )
                                     .where(
                                             cb.equal(root.get(Login_.guideUser), login)
                                             , cb.isTrue(root.get(Login_.successOrder))
+                                            // 代理商 不要
+                                            , cb.greaterThan(ReadService.agentLevelForLogin(root, cb)
+                                                    , systemService.systemLevel())
                                     )
                                     .orderBy(cb.desc(root.get(Login_.createdTime)))
                     ).setMaxResults(20)
@@ -127,7 +166,7 @@ public class TeamDataController {
         return ApiResult.withOk(
                 entityManager.createQuery(
                         cq.multiselect(
-                                root.get(AgentLevel_.id)
+                                cb.concat("Agent", root.get(AgentLevel_.id).as(String.class))
                                 , ReadService.nameForLogin(root.join(AgentLevel_.login), cb)
                                 , root.get(AgentLevel_.level)
                                 , root.get(AgentLevel_.createdTime)
@@ -144,7 +183,6 @@ public class TeamDataController {
                         .map(this::member)
                         .collect(Collectors.toList())
         );
-
     }
 
     private Object member(Tuple tuple) {

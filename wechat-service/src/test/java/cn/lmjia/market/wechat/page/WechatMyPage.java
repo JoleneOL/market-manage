@@ -1,9 +1,13 @@
 package cn.lmjia.market.wechat.page;
 
 import cn.lmjia.market.wechat.model.MemberInfo;
+import me.jiangcai.lib.test.SpringWebTest;
 import me.jiangcai.lib.test.page.WebDriverUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.assertj.core.api.AbstractBigDecimalAssert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -22,6 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author CJ
  */
 public class WechatMyPage extends AbstractWechatPage {
+    private static final Log log = LogFactory.getLog(WechatMyPage.class);
+
     public WechatMyPage(WebDriver webDriver) {
         super(webDriver);
     }
@@ -62,6 +68,7 @@ public class WechatMyPage extends AbstractWechatPage {
     /**
      * 切换到团队界面
      */
+    @SuppressWarnings("unused")
     private void switchToTeam() {
         webDriver.findElement(By.linkText("我的团队")).click();
         new WebDriverWait(webDriver, 1)
@@ -75,27 +82,52 @@ public class WechatMyPage extends AbstractWechatPage {
         return initPage(WechatWithdrawRecordPage.class);
     }
 
+    public void clickAnyOne() {
+        MemberInfo info = teamMemberStream()
+                .map(MemberInfo::ofDiv)
+                .max(new SpringWebTest.RandomComparator())
+                .orElse(null);
+        log.info("try to click:" + info);
+        clickMember(info);
+    }
+
     /**
      * 点击这个成员
      *
      * @param info
      */
     public void clickMember(MemberInfo info) {
-        teamMemberStream()
+        final WebElement targetLink = teamMemberStream()
                 .filter(element -> info.equals(MemberInfo.ofDiv(element)))
+                // 寻找它的上级
+                .map(element -> (WebElement) ((JavascriptExecutor) webDriver).executeScript(
+                        "return arguments[0].parentNode;", element))
+                .peek(log::info)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("找不到" + info))
-                .click();
+                .orElseThrow(() -> new IllegalStateException("找不到" + info));
+//        targetLink
+//                .click();
+        log.info("clicked on " + info);
+        webDriver.get(targetLink.getAttribute("href"));
+//        Thread.sleep(1000L);
     }
 
     private Stream<WebElement> teamMemberStream() {
+        // 如果找到了 J_memberList 就用J_memberList
+        final String regionId;
+        if (webDriver.findElements(By.id("J_memberList")).isEmpty()) {
+            regionId = "J_subordinate";
+        } else
+            regionId = "J_memberList";
         WebDriverUtil.waitFor(webDriver, driver -> {
-            if (!driver.findElement(By.id("J_subordinate")).findElements(By.className("view-team-list_items")).isEmpty())
+            if (driver.findElement(By.id(regionId)).findElements(By.className("view-team-list_items")).stream()
+                    .filter(element -> !element.getAttribute("class").contains("view_team-header"))
+                    .filter(element -> element.findElement(By.tagName("div")).getText().trim().length() > 0).count() != 0)
                 return true;
-            String text = driver.findElement(By.id("J_subordinate"))
+            String text = driver.findElement(By.id(regionId))
                     .findElement(By.className("weui-loadmore__tips"))
                     .getText();
-            System.out.println(text);
+            log.info("current tip:" + text);
             return !text.contains("加载");
         }, 3);
 //
@@ -112,8 +144,10 @@ public class WechatMyPage extends AbstractWechatPage {
 //        }
 //
 //        printThisPage();
-        return webDriver.findElement(By.id("J_subordinate")).findElements(By.className("view-team-list_items")).stream()
-                .filter(element -> !element.getAttribute("class").contains("view_team-header"));
+        return webDriver.findElement(By.id(regionId)).findElements(By.className("view-team-list_items")).stream()
+                .filter(element -> !element.getAttribute("class").contains("view_team-header"))
+                .filter(element -> element.findElement(By.tagName("div")).getText().trim().length() > 0)
+                ;
     }
 
     /**
@@ -127,8 +161,10 @@ public class WechatMyPage extends AbstractWechatPage {
                 .map(MemberInfo::ofDiv)
                 .peek(System.out::println)
                 .collect(Collectors.toSet()))
-                .as("只包含这些")
-                .containsExactlyElementsOf(list);
+                .as("没有显示其他错误的成员")
+                .containsOnlyElementsOf(list)
+                .as("也没有任何遗漏")
+                .containsAll(list);
 
     }
 }

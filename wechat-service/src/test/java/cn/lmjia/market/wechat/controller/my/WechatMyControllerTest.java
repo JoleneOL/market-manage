@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class WechatMyControllerTest extends WechatTestBase {
     }
 
     @Test
-    public void myTeam() {
+    public void myTeam() throws InterruptedException {
         // 假定我足够的高级 比如是一个顶级代理商 那么他可以看到下一季的
         Login master = newRandomAgent();
 
@@ -54,14 +55,24 @@ public class WechatMyControllerTest extends WechatTestBase {
 
         WechatMyPage myPage = getWechatMyPage();
 
-        Login currentLogin = login;
+        // 已经成为代理商的人
+        Set<Login> agentLogin = agentLevelRepository.findAll().stream()
+                .map(AgentLevel::getLogin)
+                .collect(Collectors.toSet());
+//        Login currentLogin = login;
+        AgentLevel currentAgent = agentService.highestAgent(login);
         while (true) {
-            final List<AgentLevel> subAgents = getSubAgents(currentLogin);
+            final List<AgentLevel> subAgents = getSubAgents(currentAgent);
             if (subAgents.isEmpty()) {
                 // 可以看看到 currentLogin 招募的爱心天使
-                myPage.assertTeamMembers(loginRepository.findByGuideUser(currentLogin).stream()
-                        .map(this::fromLogin)
-                        .collect(Collectors.toList())
+                log.info("最后一个等级，应该可以看到爱心天使了");
+                // 而且应该排除掉那些已经成为代理商的人
+                myPage.assertTeamMembers(
+                        loginRepository.findByGuideUserAndSuccessOrderTrue(currentAgent.getLogin())
+                                .stream()
+                                .filter(login1 -> !agentLogin.contains(login1))
+                                .map(this::fromLogin)
+                                .collect(Collectors.toList())
                 );
                 break;
             } else {
@@ -70,7 +81,7 @@ public class WechatMyControllerTest extends WechatTestBase {
                 log.info("检测通过，点击下一个");
                 AgentLevel nextAgent = subAgents.stream().max(new RandomComparator()).orElse(null);
                 myPage.clickMember(fromAgentLevel(nextAgent));
-                currentLogin = nextAgent.getLogin();
+                currentAgent = nextAgent;
             }
         }
 
@@ -97,11 +108,17 @@ public class WechatMyControllerTest extends WechatTestBase {
     /**
      * @return login旗下的代理
      */
-    private List<AgentLevel> getSubAgents(Login login) {
-        final AgentLevel agentLevel = agentService.highestAgent(login);
+    private List<AgentLevel> getSubAgents(AgentLevel agentLevel) {
         if (agentLevel == null)
             return Collections.emptyList();
         return agentLevelRepository.findBySuperior(agentLevel);
+    }
+
+    /**
+     * @return login旗下的代理
+     */
+    private List<AgentLevel> getSubAgents(Login login) {
+        return getSubAgents(agentService.highestAgent(login));
     }
 
     /**
@@ -133,10 +150,14 @@ public class WechatMyControllerTest extends WechatTestBase {
             subLogin = login;
         }
         // 给subLogin 添加1个爱心天使或者普通用户
-        Login newLogin = loginService.newLogin(Login.class, "新发展的" + RandomStringUtils.randomAlphabetic(10)
-                , subLogin, UUID.randomUUID().toString());
-        if (random.nextBoolean()) {
-            makeSuccessOrder(newLogin);
+        // 至少一个爱心天使
+        while (true) {
+            Login newLogin = loginService.newLogin(Login.class, "新发展的" + RandomStringUtils.randomAlphabetic(10)
+                    , subLogin, UUID.randomUUID().toString());
+            if (random.nextBoolean()) {
+                makeSuccessOrder(newLogin);
+                break;
+            }
         }
     }
 

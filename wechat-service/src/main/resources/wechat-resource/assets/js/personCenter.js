@@ -111,11 +111,12 @@ $(function () {
         var link = '',
             more = '';
         if (obj.nextRank && obj.id) {
-            link = $('body').attr('data-memberList-url-template').replace('{ID}', obj.id).replace('{RANK}', obj.nextRank);
+            link = $('body').attr('data-memberList-url-template').replace('ID', obj.id).replace('RANK', obj.nextRank);
             more = '<div class="weui-cell__ft"></div>';
         } else {
             link = 'javascript:;';
         }
+        console.log($('body').attr('data-memberList-url-template'), obj.nextRank, obj.id, link);
 
         return '<div class="weui-cells view-mt-0">\n' +
             '    <a class="weui-cell weui-cell_access view-team-list_link" href="' + link + '">\n' +

@@ -13,7 +13,7 @@ $(function () {
         var link = '',
             more = '';
         if (obj.nextRank && obj.id) {
-            link = $('body').attr('data-memberList-url-template').replace('{ID}', obj.id).replace('{RANK}', obj.nextRank);
+            link = $('body').attr('data-memberList-url-template').replace('ID', obj.id).replace('RANK', obj.nextRank);
             more = '<div class="weui-cell__ft"></div>';
         } else {
             link = 'javascript:;';
