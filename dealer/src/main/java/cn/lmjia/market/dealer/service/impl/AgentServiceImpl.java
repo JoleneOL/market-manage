@@ -341,36 +341,68 @@ public class AgentServiceImpl implements AgentService {
         // 最多执行n次查询
         // 获取 平行推荐，然后上一级 再找平行推荐
         AgentLevel[] result = new AgentLevel[systemService.systemLevel()];
-        AgentLevel current = highestAgent(login);
+        AgentLevel current = loginService.lowestAgentLevel(login);
         if (current == null) {
             // 如果login是一个客户，那么应该采用它引导者
             return recommendAgentLine(login.getGuideUser());
         }
-        int levelGap = current.getLevel();
-        int startNull = systemService.systemLevel();
-        for (int i = 0; i < result.length; i++) {
-            if (i == 0)
-                result[i] = parallelRecommend(current, levelGap--);
-            else
-                result[i] = parallelRecommend(result[i - 1], levelGap--);
-            if (result[i] == null && startNull == systemService.systemLevel())
-                startNull = i;
+
+        int count = systemService.systemLevel() - 1;
+        result[count] = current;
+        while (count-- > 0) {
+            // 下一个平推者
+            result[count] = newParallelRecommend(result[count + 1], count);
         }
-        // 反过来,并且让null放后头
-        AgentLevel[] result2 = new AgentLevel[systemService.systemLevel()];
-        for (int i = 0; i < result2.length; i++) {
-            if (i < startNull) {
-                // 是否有值？
-                result2[i] = result[startNull - i - 1];
-            }
-        }
-        return result2;
+
+        return result;
+
+//        int levelGap = current.getLevel();
+//        int startNull = systemService.systemLevel();
+//        for (int i = 0; i < result.length; i++) {
+//            if (i == 0)
+//                result[i] = parallelRecommend(current, levelGap--);
+//            else
+//                result[i] = parallelRecommend(result[i - 1], levelGap--);
+//            if (result[i] == null && startNull == systemService.systemLevel())
+//                startNull = i;
+//        }
+//        // 反过来,并且让null放后头
+//        AgentLevel[] result2 = new AgentLevel[systemService.systemLevel()];
+//        for (int i = 0; i < result2.length; i++) {
+//            if (i < startNull) {
+//                // 是否有值？
+//                result2[i] = result[startNull - i - 1];
+//            }
+//        }
+//        return result2;
+    }
+
+    /**
+     * 某人推荐了它，并且某人拥有一个比它高1的代理商
+     * 如果没有，寻找它推荐人 是否拥有一个
+     *
+     * @param agent
+     * @param level
+     * @return 获取agent的特定等级的平级推荐代理商
+     */
+    private AgentLevel newParallelRecommend(AgentLevel agent, int level) {
+        return newParallelRecommend(agent.getLogin().getGuideUser(), level);
+    }
+
+    private AgentLevel newParallelRecommend(Login guideUser, int level) {
+        if (guideUser == null)
+            return agentLevelRepository.findTopByLevelOrderById(level);
+        AgentLevel level1 = agentLevelRepository.findTopByLevelAndLogin(level, guideUser);
+        if (level1 == null)
+            return newParallelRecommend(guideUser.getGuideUser(), level);
+        return level1;
     }
 
     private AgentLevel parallelRecommend(AgentLevel current, int level) {
         if (current == null || level < 0)
             return null;
-        return agentLevelRepository.findByLevelAndLoginAndSystem(level, current.getLogin().getGuideUser(), current.getSystem());
+        return agentLevelRepository.findByLevelAndLoginAndSystem(level, current.getLogin().getGuideUser()
+                , current.getSystem());
     }
 
 

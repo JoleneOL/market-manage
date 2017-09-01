@@ -11,6 +11,7 @@ import cn.lmjia.market.dealer.DealerServiceTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.assertj.core.data.Offset;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author CJ
  */
+@Ignore
 public class CommissionSettlementServiceTest extends DealerServiceTest {
 
     private static final Log log = LogFactory.getLog(CommissionSettlementServiceTest.class);

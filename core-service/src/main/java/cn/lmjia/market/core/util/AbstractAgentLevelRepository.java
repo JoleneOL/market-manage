@@ -37,4 +37,7 @@ public interface AbstractAgentLevelRepository<T extends AgentLevel>
 
     List<T> findBySystemAndSuperiorIn(AgentSystem system, Collection<AgentLevel> levels);
 
+    AgentLevel findTopByLevelOrderById(int level);
+
+    AgentLevel findTopByLevelAndLogin(int level, Login login);
 }

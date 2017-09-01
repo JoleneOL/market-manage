@@ -112,8 +112,8 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             // 以及推荐者的代理体系
             for (int i = 0; i < recommends.length; i++) {
                 AgentLevel level = recommends[i];
-                if (level != null)
-                    saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, i), "推荐");
+//                if (level != null)
+                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, i), "推荐");
             }
 //            for (AgentLevel level : recommends) {
 //                if (level != null)
