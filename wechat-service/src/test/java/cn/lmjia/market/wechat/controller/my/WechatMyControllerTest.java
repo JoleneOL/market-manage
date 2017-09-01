@@ -74,6 +74,8 @@ public class WechatMyControllerTest extends WechatTestBase {
                                 .map(this::fromLogin)
                                 .collect(Collectors.toList())
                 );
+                // 并且确保 他们已经无法可点击
+                myPage.assertTeamMemberNotClick();
                 break;
             } else {
                 // 可以看到我旗下的代理

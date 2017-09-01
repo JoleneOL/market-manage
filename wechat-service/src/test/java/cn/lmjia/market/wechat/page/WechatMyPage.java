@@ -167,4 +167,20 @@ public class WechatMyPage extends AbstractWechatPage {
                 .containsAll(list);
 
     }
+
+    /**
+     * 链接不可用
+     */
+    public void assertTeamMemberNotClick() {
+        WebElement targetLink = teamMemberStream()
+                // 寻找它的上级
+                .map(element -> (WebElement) ((JavascriptExecutor) webDriver).executeScript(
+                        "return arguments[0].parentNode;", element))
+                .max(new SpringWebTest.RandomComparator())
+                .orElseThrow(() -> new IllegalStateException("一个都没有？"));
+
+        assertThat(targetLink.getAttribute("href"))
+                .as("这个链接应该是不可用的")
+                .doesNotContain("id");
+    }
 }
