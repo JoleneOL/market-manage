@@ -171,14 +171,14 @@ $(function () {
         "buttons": [{
             "extend": "excel",
             "text": "导出 Excel",
-            "className": "btn-success btn-xs",
+            "className": "btn-xs",
             "exportOptions": {
                 "columns": ":not(.table-action)"
             }
         }, {
             "extend": 'colvis',
             "text": "筛选列",
-            "className": "btn-success btn-xs"
+            "className": "btn-xs"
         }],
         'fnRowCallback': function (nRow) {
             $(nRow).hover(function () {

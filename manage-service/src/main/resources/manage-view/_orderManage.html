@@ -27,7 +27,8 @@
     <![endif]-->
 </head>
 
-<body data-url="/orderData/manageableList"
+<body class="gray-bg"
+      data-url="/orderData/manageableList"
       th:data-url="@{/orderData/manageableList}"
       data-quick-url="/orderData/quickDone/"
       data-allow-mock-pay="true"
@@ -78,47 +79,56 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <ul class="nav nav-tabs nav-dark js-orderStatus">
-                    <li class="active">
-                        <a href="#orderDatagrid" data-toggle="tab" data-status="0">
-                            <strong>全部</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#orderDatagrid" data-toggle="tab" data-status="6">
-                            <strong>待派单</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#orderDatagrid" data-toggle="tab" data-status="1">
-                            <strong>待付款</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#orderDatagrid" data-toggle="tab" data-status="2">
-                            <strong>待发货</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#orderDatagrid" data-toggle="tab" data-status="4">
-                            <strong>待安装</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#orderDatagrid" data-toggle="tab" data-status="5">
-                            <strong>已安装</strong>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="orderDatagrid">
-                        <div class="table-responsive">
-                            <table id="orderTable" class="table table-hover table-success" cellspacing="0"
-                                   width="100%"></table>
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs js-orderStatus">
+                                <li class="active">
+                                    <a href="#orderDatagrid" data-toggle="tab" data-status="0">
+                                        <strong>全部</strong>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#orderDatagrid" data-toggle="tab" data-status="6">
+                                        <strong>待派单</strong>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#orderDatagrid" data-toggle="tab" data-status="1">
+                                        <strong>待付款</strong>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#orderDatagrid" data-toggle="tab" data-status="2">
+                                        <strong>待发货</strong>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#orderDatagrid" data-toggle="tab" data-status="4">
+                                        <strong>待安装</strong>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#orderDatagrid" data-toggle="tab" data-status="5">
+                                        <strong>已安装</strong>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="orderDatagrid">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table id="orderTable" class="table table-hover table-success" cellspacing="0"
+                                                   width="100%"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -198,6 +208,15 @@
 
 <script src="./mock/mock-min.js" th:remove="all"></script>
 <script src="./mock/api.js" th:remove="all"></script>
+
+<!--额外工具-->
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
 
 <script src="manage-resource/js/orderManage.js?v=2"></script>
 
