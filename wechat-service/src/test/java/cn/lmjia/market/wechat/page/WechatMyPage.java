@@ -119,6 +119,10 @@ public class WechatMyPage extends AbstractWechatPage {
             regionId = "J_subordinate";
         } else
             regionId = "J_memberList";
+        return teamMemberStream(regionId);
+    }
+
+    private Stream<WebElement> teamMemberStream(String regionId) {
         WebDriverUtil.waitFor(webDriver, driver -> {
             if (driver.findElement(By.id(regionId)).findElements(By.className("view-team-list_items")).stream()
                     .filter(element -> !element.getAttribute("class").contains("view_team-header"))
@@ -130,24 +134,10 @@ public class WechatMyPage extends AbstractWechatPage {
             log.info("current tip:" + text);
             return !text.contains("加载");
         }, 3);
-//
-//        try {
-//            WebDriverUtil.waitFor(webDriver, driver -> {
-//                String text = driver.findElement(By.id("J_subordinate"))
-//                        .findElement(By.className("weui-loadmore__tips"))
-//                        .getText();
-//                return !text.contains("加载");
-//            },2);
-////            new WebDriverWait(webDriver, 2)
-////                    .until(ExpectedConditions.invisibilityOfElementLocated(By.className("weui-loadmore__tips")));
-//        }catch (TimeoutException ignored){
-//        }
-//
-//        printThisPage();
+
         return webDriver.findElement(By.id(regionId)).findElements(By.className("view-team-list_items")).stream()
                 .filter(element -> !element.getAttribute("class").contains("view_team-header"))
-                .filter(element -> element.findElement(By.tagName("div")).getText().trim().length() > 0)
-                ;
+                .filter(element -> element.findElement(By.tagName("div")).getText().trim().length() > 0);
     }
 
     /**
@@ -157,15 +147,12 @@ public class WechatMyPage extends AbstractWechatPage {
      */
     public void assertTeamMembers(List<MemberInfo> list) {
         assertThat(teamMemberStream()
-                .peek(System.out::println)
                 .map(MemberInfo::ofDiv)
-                .peek(System.out::println)
                 .collect(Collectors.toSet()))
                 .as("没有显示其他错误的成员")
                 .containsOnlyElementsOf(list)
                 .as("也没有任何遗漏")
                 .containsAll(list);
-
     }
 
     /**
@@ -182,5 +169,33 @@ public class WechatMyPage extends AbstractWechatPage {
         assertThat(targetLink.getAttribute("href"))
                 .as("这个链接应该是不可用的")
                 .doesNotContain("id");
+    }
+
+    /**
+     * 校验看到的推荐团队
+     *
+     * @param list
+     */
+    public void assertGuideTeamMembers(List<MemberInfo> list) {
+        switchGuideTeam();
+
+        assertThat(teamMemberStream("J_directly")
+                .map(MemberInfo::ofDiv)
+                .collect(Collectors.toSet()))
+                .as("没有显示其他错误的成员")
+                .containsOnlyElementsOf(list)
+                .as("也没有任何遗漏")
+                .containsAll(list);
+    }
+
+    /**
+     * 切换到推荐模块
+     */
+    private void switchGuideTeam() {
+        if (!webDriver.findElement(By.id("J_directly")).isDisplayed()) {
+            webDriver.findElement(By.linkText("推荐")).click();
+            new WebDriverWait(webDriver, 2)
+                    .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("J_directly")));
+        }
     }
 }

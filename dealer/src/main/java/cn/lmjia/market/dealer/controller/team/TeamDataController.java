@@ -109,6 +109,40 @@ public class TeamDataController {
         return "wechat@memberList.html";
     }
 
+    /**
+     * @return 直接推荐的成员
+     */
+    @GetMapping("/api/directly")
+    @Transactional(readOnly = true)
+    @ResponseBody
+    public ApiResult directly(int page, @AuthenticationPrincipal Login login) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<Login> root = cq.from(Login.class);
+        return ApiResult.withOk(
+                entityManager.createQuery(
+                        cq
+                                .multiselect(
+                                        root.get(Login_.id)
+                                        , ReadService.nameForLogin(root, cb)
+                                        , ReadService.agentLevelForLogin(root, cb)
+                                        , root.get(Login_.createdTime)
+                                        , ReadService.mobileForLogin(root, cb)
+                                        , cb.nullLiteral(Integer.class)
+                                )
+                                .where(
+                                        cb.equal(root.get(Login_.guideUser), login)
+                                )
+                                .orderBy(cb.desc(root.get(Login_.createdTime)))
+                ).setMaxResults(20)
+                        .setFirstResult(page * 20)
+                        .getResultList()
+                        .stream()
+                        .map(this::member)
+                        .collect(Collectors.toList())
+        );
+    }
+
     @GetMapping("/api/subordinate/{id}")
     @Transactional(readOnly = true)
     @ResponseBody

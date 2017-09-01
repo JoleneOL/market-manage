@@ -87,6 +87,26 @@ public class WechatMyControllerTest extends WechatTestBase {
             }
         }
 
+        // 现在看看我的推荐
+        myPage = getWechatMyPage();
+
+        myPage.assertGuideTeamMembers(
+                loginRepository.findByGuideUser(login)
+                        .stream()
+                        .filter(login1 -> !agentLogin.contains(login1))
+                        .map(this::forGuideMember)
+                        .collect(Collectors.toList())
+        );
+
+    }
+
+    private MemberInfo forGuideMember(Login login) {
+        MemberInfo info = new MemberInfo();
+        info.setName(readService.nameForPrincipal(login));
+        info.setJoinDate(login.getCreatedTime().toLocalDate());
+        info.setLevel(readService.getLoginTitle(readService.agentLevelForPrincipal(login)));
+        info.setMobile(readService.mobileFor(login));
+        return info;
     }
 
     private MemberInfo fromLogin(Login login) {
