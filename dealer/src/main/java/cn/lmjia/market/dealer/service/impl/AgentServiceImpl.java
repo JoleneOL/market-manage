@@ -341,20 +341,21 @@ public class AgentServiceImpl implements AgentService {
         // 最多执行n次查询
         // 获取 平行推荐，然后上一级 再找平行推荐
         AgentLevel[] result = new AgentLevel[systemService.systemLevel()];
-        AgentLevel current = loginService.lowestAgentLevel(login);
-        if (current == null) {
-            // 如果login是一个客户，那么应该采用它引导者
-            return recommendAgentLine(login.getGuideUser());
-        }
+//        AgentLevel current = loginService.lowestAgentLevel(login);
+//        if (current == null) {
+//            // 如果login是一个客户，那么应该采用它引导者
+//            return recommendAgentLine(login.getGuideUser());
+//        }
 
         int count = systemService.systemLevel();
 //        result[count] = current;
         while (count-- > 0) {
             // 下一个平推者
-            if (count == systemService.systemLevel() - 1)
-                result[count] = newParallelRecommend(current, count);
-            else
-                result[count] = newParallelRecommend(result[count + 1], count);
+            result[count] = newParallelRecommend(login.getGuideUser(), count);
+//            if (count == systemService.systemLevel() - 1)
+//                result[count] = newParallelRecommend(current, count);
+//            else
+//                result[count] = newParallelRecommend(result[count + 1], count);
         }
 
         return result;
