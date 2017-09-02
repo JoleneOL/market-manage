@@ -889,6 +889,10 @@
 .view-bg-color-f2 {
   background-color: #f2f2f2;
 }
+.weui-popup__container,
+.weui-popup__overlay {
+  z-index: 9999;
+}
 #equipment {
   height: 100% !important;
 }
@@ -1135,9 +1139,6 @@
 }
 #myTeam {
   height: 100% !important;
-}
-#J_upgradeRules {
-  z-index: 501;
 }
 .view-order-wrap {
   padding-top: 8px;
