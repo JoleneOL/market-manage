@@ -44,6 +44,11 @@ public interface LoginService extends UserDetailsService {
             }
 
             @Override
+            public boolean allowMultiple() {
+                return true;
+            }
+
+            @Override
             public String message(String code) {
                 return "登录短信验证码为：" + code + "；请勿泄露。";
             }
@@ -58,6 +63,11 @@ public interface LoginService extends UserDetailsService {
             @Override
             public int id() {
                 return 2;
+            }
+
+            @Override
+            public boolean allowMultiple() {
+                return true;
             }
 
             @Override
