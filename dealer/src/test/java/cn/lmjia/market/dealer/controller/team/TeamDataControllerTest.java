@@ -72,6 +72,7 @@ public class TeamDataControllerTest extends DealerServiceTest {
         teamListRequestBuilder(null, 1);
         // 新增一个订单
         MainOrder order1 = newRandomOrderFor(als[random.nextInt(systemService.systemLevel())], userLogin);
+        log.info(order1);
         assertThat(teamService.all(userLogin))
                 .as("无效客户是不会增加的")
                 .isEqualTo(1);

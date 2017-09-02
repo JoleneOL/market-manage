@@ -12,7 +12,6 @@ import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentLevel_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
-import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
@@ -93,8 +92,6 @@ public class LoginServiceImpl implements LoginService {
     private VerificationCodeService verificationCodeService;
     @Autowired
     private AgentLevelRepository agentLevelRepository;
-    @Autowired
-    private CustomerRepository customerRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
