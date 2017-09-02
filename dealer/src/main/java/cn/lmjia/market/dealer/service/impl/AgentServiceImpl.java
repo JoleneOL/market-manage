@@ -340,20 +340,22 @@ public class AgentServiceImpl implements AgentService {
         // 获得一个完整的推荐链，第一个必然是 level 0 然后是 1,2,3,etc...
         // 最多执行n次查询
         // 获取 平行推荐，然后上一级 再找平行推荐
+        AgentLevel[] line = agentLine(login);
         AgentLevel[] result = new AgentLevel[systemService.systemLevel()];
 //        AgentLevel current = loginService.lowestAgentLevel(login);
 //        if (current == null) {
 //            // 如果login是一个客户，那么应该采用它引导者
 //            return recommendAgentLine(login.getGuideUser());
 //        }
-
-        int count = systemService.systemLevel();
-//        result[count] = current;
-        while (count-- > 0) {
-            // 下一个平推者
-            result[count] = newParallelRecommend(login.getGuideUser(), count);
+        for (int i = 0; i < line.length; i++) {
+            result[i] = newParallelRecommend(line[i].getLogin().getGuideUser(), i);
         }
-
+//        int count = systemService.systemLevel();
+////        result[count] = current;
+//        while (count-- > 0) {
+//            // 下一个平推者
+//            result[count] = newParallelRecommend(login.getGuideUser(), count);
+//        }
         return result;
     }
 
