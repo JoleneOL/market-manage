@@ -70,7 +70,8 @@ public class CommissionController {
             @Override
             public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<Commission> root) {
                 return Collections.singletonList(
-                        criteriaBuilder.asc(root.join("orderCommission").get("generateTime")));
+                        criteriaBuilder.desc(root.join(Commission_.orderCommission).get(OrderCommission_.source)
+                                .get(MainOrder_.orderTime)));
             }
 
             @Override
