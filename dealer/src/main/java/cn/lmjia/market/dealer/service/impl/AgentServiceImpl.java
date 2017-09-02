@@ -352,47 +352,19 @@ public class AgentServiceImpl implements AgentService {
         while (count-- > 0) {
             // 下一个平推者
             result[count] = newParallelRecommend(login.getGuideUser(), count);
-//            if (count == systemService.systemLevel() - 1)
-//                result[count] = newParallelRecommend(current, count);
-//            else
-//                result[count] = newParallelRecommend(result[count + 1], count);
         }
 
         return result;
-
-//        int levelGap = current.getLevel();
-//        int startNull = systemService.systemLevel();
-//        for (int i = 0; i < result.length; i++) {
-//            if (i == 0)
-//                result[i] = parallelRecommend(current, levelGap--);
-//            else
-//                result[i] = parallelRecommend(result[i - 1], levelGap--);
-//            if (result[i] == null && startNull == systemService.systemLevel())
-//                startNull = i;
-//        }
-//        // 反过来,并且让null放后头
-//        AgentLevel[] result2 = new AgentLevel[systemService.systemLevel()];
-//        for (int i = 0; i < result2.length; i++) {
-//            if (i < startNull) {
-//                // 是否有值？
-//                result2[i] = result[startNull - i - 1];
-//            }
-//        }
-//        return result2;
     }
 
     /**
      * 某人推荐了它，并且某人拥有一个比它高1的代理商
      * 如果没有，寻找它推荐人 是否拥有一个
      *
-     * @param agent
+     * @param guideUser 某人的第一个选择
      * @param level
      * @return 获取agent的特定等级的平级推荐代理商
      */
-    private AgentLevel newParallelRecommend(AgentLevel agent, int level) {
-        return newParallelRecommend(agent.getLogin().getGuideUser(), level);
-    }
-
     private AgentLevel newParallelRecommend(Login guideUser, int level) {
         if (guideUser == null)
             return agentLevelRepository.findTopByLevelOrderById(level);
@@ -400,13 +372,6 @@ public class AgentServiceImpl implements AgentService {
         if (level1 == null)
             return newParallelRecommend(guideUser.getGuideUser(), level);
         return level1;
-    }
-
-    private AgentLevel parallelRecommend(AgentLevel current, int level) {
-        if (current == null || level < 0)
-            return null;
-        return agentLevelRepository.findByLevelAndLoginAndSystem(level, current.getLogin().getGuideUser()
-                , current.getSystem());
     }
 
 
