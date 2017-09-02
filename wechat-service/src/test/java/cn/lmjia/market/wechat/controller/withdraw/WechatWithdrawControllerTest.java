@@ -141,17 +141,17 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
                 .forEach(verificationCode -> verificationCodeRepository.delete(verificationCode));
     }
 
-    /**
-     * 可以看到这个login提交的有发票的申请
-     *
-     * @param login
-     */
-    private void managerSawInvoice(Login login) {
-        updateAllRunWith(newRandomManager(ManageLevel.root));
-        ManageWithdrawPage.of(this, driver)
-                .assertInvoice(readService.nameForPrincipal(login))
-                .isTrue();
-    }
+//    /**
+//     * 可以看到这个login提交的有发票的申请
+//     *
+//     * @param login
+//     */
+//    private void managerSawInvoice(Login login) {
+//        updateAllRunWith(newRandomManager(ManageLevel.root));
+//        ManageWithdrawPage.of(this, driver)
+//                .assertInvoice(readService.nameForPrincipal(login))
+//                .isTrue();
+//    }
 
     /**
      * 同意这个login最近的申请

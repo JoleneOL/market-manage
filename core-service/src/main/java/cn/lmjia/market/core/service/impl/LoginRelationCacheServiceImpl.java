@@ -5,8 +5,6 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.cache.LoginRelation;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
-import cn.lmjia.market.core.repository.CustomerRepository;
-import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.cache.LoginRelationRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.repository.deal.AgentSystemRepository;
@@ -35,8 +33,6 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
     @Autowired
     private LoginRelationRepository loginRelationRepository;
     @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
     private AgentLevelRepository agentLevelRepository;
     @Autowired
     private SystemService systemService;
@@ -45,8 +41,6 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
-    @Autowired
-    private LoginRepository loginRepository;
 
     /**
      * 将新关系添加到关系库中去
@@ -253,15 +247,6 @@ public class LoginRelationCacheServiceImpl implements LoginRelationCacheService 
 //        addExistingRelation(system, relations
 //                , Stream.of(createRelationFromLevel(system, from, login, Customer.LEVEL)));
 //        saveValidRelations(relations);
-    }
-
-    private AgentLevel agentLevelFor(Login login) {
-        if (login == null)
-            return null;
-        List<AgentLevel> list = agentLevelRepository.findByLogin(login);
-        if (!list.isEmpty())
-            return list.get(0);
-        return agentLevelFor(login.getGuideUser());
     }
 
     private void deleteThisId(LoginRelation id) {
