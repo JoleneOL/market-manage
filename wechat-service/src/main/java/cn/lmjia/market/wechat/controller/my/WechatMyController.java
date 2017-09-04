@@ -4,7 +4,6 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
-import cn.lmjia.market.dealer.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,10 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WechatMyController {
 
-    @Autowired
-    private TeamService teamService;
-    @Autowired
-    private SystemService systemService;
     @Autowired
     private AgentService agentService;
     @Autowired
