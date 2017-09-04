@@ -77,7 +77,8 @@
                     <label class="weui-label">安装地址</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" id="J_cityPicker" value="浙江省 杭州市 滨江区" name="address">
+                    <input class="weui-input" type="text" id="J_cityPicker"
+                           th:value="${@environment.acceptsProfiles('staging')?'浙江省 杭州市 滨江区':''}" name="address">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -101,20 +102,20 @@
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
             <!--<div class="weui-cell weui-cell_select weui-cell_select-after">-->
-                <!--<div class="weui-cell__hd">-->
-                    <!--<label class="weui-label">发票</label>-->
-                <!--</div>-->
-                <!--<div class="weui-cell__bd">-->
-                    <!--<p class="weui-select" id="J_needInvoice">不需要发票</p>-->
-                <!--</div>-->
+            <!--<div class="weui-cell__hd">-->
+            <!--<label class="weui-label">发票</label>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<p class="weui-select" id="J_needInvoice">不需要发票</p>-->
+            <!--</div>-->
             <!--</div>-->
             <!--发票相关-->
             <!--<div id="J_invoiceArea">-->
-                <!--<input type="hidden" title="公司抬头" name="company" disabled>-->
-                <!--<input type="hidden" title="收件人" name="invoiceAddressee" disabled>-->
-                <!--<input type="hidden" title="收件地址" name="invoiceAddress" disabled>-->
-                <!--<input type="hidden" title="详细地址" name="invoiceFullAddress" disabled>-->
-                <!--<input type="hidden" title="联系电话" name="invoiceMobile" disabled>-->
+            <!--<input type="hidden" title="公司抬头" name="company" disabled>-->
+            <!--<input type="hidden" title="收件人" name="invoiceAddressee" disabled>-->
+            <!--<input type="hidden" title="收件地址" name="invoiceAddress" disabled>-->
+            <!--<input type="hidden" title="详细地址" name="invoiceFullAddress" disabled>-->
+            <!--<input type="hidden" title="联系电话" name="invoiceMobile" disabled>-->
             <!--</div>-->
             <div id="J_goodsListArea"></div>
             <div class="weui-cell">
