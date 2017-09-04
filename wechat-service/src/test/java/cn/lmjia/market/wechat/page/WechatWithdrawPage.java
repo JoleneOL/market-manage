@@ -61,8 +61,12 @@ public class WechatWithdrawPage extends AbstractWechatPage {
         payee.clear();
         payee.sendKeys(RandomStringUtils.randomAlphabetic(8));
         account.clear();
-        account.sendKeys(RandomStringUtils.randomNumeric(18));
-        Thread.sleep(500);
+        final char[] accountChars = RandomStringUtils.randomNumeric(18).toCharArray();
+        for (char accountChar : accountChars) {
+            account.sendKeys(new String(new char[]{accountChar}));
+        }
+//        account.sendKeys(RandomStringUtils.randomNumeric(18));
+//        Thread.sleep(500);
         bank.clear();
         bank.sendKeys(RandomStringUtils.randomAlphabetic(8));
         mobile.clear();
