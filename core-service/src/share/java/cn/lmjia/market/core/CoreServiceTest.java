@@ -529,6 +529,13 @@ public abstract class CoreServiceTest extends SpringWebTest {
         LocalDateTime todayOffsetTime = mainOrderService.getTodayOffsetTime();
         int todayStock = mainOrderService.sumProductNum(product, todayOffsetTime, null, null);
         int diffDay = (totalUsageStock - lockedStock + todayStock) / (expectStock + todayStock);
-        return todayOffsetTime.plusDays(diffDay - 1).toLocalDate();
+
+        //校验一遍，如果和预期不一致，就返回空
+        int realStock = (totalUsageStock - lockedStock + todayStock) / diffDay - todayStock;
+        if (realStock == expectStock) {
+            return todayOffsetTime.plusDays(diffDay - 1).toLocalDate();
+        } else {
+            return null;
+        }
     }
 }

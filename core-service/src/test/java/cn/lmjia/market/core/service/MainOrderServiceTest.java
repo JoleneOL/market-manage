@@ -146,15 +146,14 @@ public class MainOrderServiceTest extends CoreServiceTest {
         List<MainGood> saleGoodList = mainGoodService.forSale();
         MainGood orderGood = saleGoodList.get(0);
         //初始库存N
-        int initStock = stockService.usableStockTotal(orderGood.getProduct())
-                ,initLockedStock = initStock - orderGood.getProduct().getStock();
+        int initStock = stockService.usableStockTotal(orderGood.getProduct()), initLockedStock = initStock - orderGood.getProduct().getStock();
         mainOrderService.cleanProductStock(orderGood.getProduct());
         //对这个订单下单超过货品库存
         Map<MainGood, Integer> amounts = new HashMap<>();
-        amounts.put(orderGood, orderGood.getProduct().getStock() + 1+ random.nextInt(10));
+        amounts.put(orderGood, orderGood.getProduct().getStock() + 1 + random.nextInt(10));
         MainOrder mainOrder = null;
         try {
-            newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
+            mainOrder = newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (Exception e) {
             assertTrue(e instanceof MainGoodLowStockException);
         }
@@ -162,29 +161,39 @@ public class MainOrderServiceTest extends CoreServiceTest {
         //对货品设置一个预计售罄时间，货品剩几件就加N-1天，这样今天理论上只能下一个数量为1的订单
         //但是要考虑到其他单元测试也会下单，
         //可售库存 = （仓库总库存 - 冻结库存 + 今日订单总数）/ N - 冻结库存
-        //为了保证可售库存 = 1，做了一个算法
-        log.debug("------*****-----");
+        //但是这样计算有可能算出来的N也达不到期望库存，那我们的期望可用货品从1开始加知道能计算出这个N，如果实在没有（加到当前可用库存）那就算了呗
         //先取到一个商品可用库存大于0
-        orderGood = saleGoodList.stream().filter(p->p.getProduct().getStock() > 0).findAny().get();
+        orderGood = saleGoodList.stream().filter(p -> p.getProduct().getStock() > 0).findAny().get();
         Long goodId = orderGood.getId();
-        LocalDate planSellOutDate = calculatePlanSellOutDate(orderGood.getProduct(),1);
+        LocalDate planSellOutDate = null;
+        int expectStock = 0;
+        //循环找到一组合适的 计划售罄时间 和 可售库存
+        while (planSellOutDate == null && expectStock <= orderGood.getProduct().getStock()) {
+            expectStock++;
+            planSellOutDate = calculatePlanSellOutDate(orderGood.getProduct(), expectStock);
+        }
+        if (planSellOutDate == null) {
+            //没有
+            log.debug("calculate planSellOutDate error");
+            return;
+        }
         orderGood.getProduct().setPlanSellOutDate(planSellOutDate);
         mainProductRepository.save(orderGood.getProduct());
         mainOrderService.cleanProductStock(orderGood.getProduct());
-        orderGood = mainGoodService.forSale().stream().filter(p->p.getId().equals(goodId)).findFirst().get();
-        assertEquals(1, orderGood.getProduct().getStock());
-        //数量超过1，下单失败
+        orderGood = mainGoodService.forSale().stream().filter(p -> p.getId().equals(goodId)).findFirst().get();
+        assertEquals(expectStock, orderGood.getProduct().getStock());
+        //数量超过 expectStock，下单失败
         amounts.clear();
-        amounts.put(orderGood, 2);
+        amounts.put(orderGood, expectStock + 1);
         try {
             newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (Exception e) {
             assertTrue(e instanceof MainGoodLimitStockException);
             log.debug(((MainGoodLimitStockException) e).toData());
         }
-        //如果数量是1，是能下单成功的
+        //如果数量是 expectStock，是能下单成功的
         amounts.clear();
-        amounts.put(orderGood, 1);
+        amounts.put(orderGood, expectStock);
         try {
             mainOrder = newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         } catch (MainGoodLowStockException ignored) {
@@ -208,8 +217,11 @@ public class MainOrderServiceTest extends CoreServiceTest {
             assertTrue(e instanceof MainGoodLimitStockException);
         }
         mainOrderService.cleanProductStock(orderGood.getProduct());
-        orderGood = mainGoodService.forSale().stream().filter(p->p.getId().equals(goodId)).findFirst().get();
-        int limitBuyNum = initStock / 2 - (initLockedStock +1);
+        orderGood = mainGoodService.forSale().stream().filter(p -> p.getId().equals(goodId)).findFirst().get();
+        int limitBuyNum = initStock / 2 - (initLockedStock + expectStock);
+        if (limitBuyNum == 0) {
+            return;
+        }
         log.info("limitBuyNum:" + limitBuyNum);
         assertEquals(limitBuyNum, orderGood.getProduct().getStock());
         //试一试(N-1)/2的订单应该是限购的
@@ -239,15 +251,15 @@ public class MainOrderServiceTest extends CoreServiceTest {
     public void testSumStock() throws MainGoodLowStockException {
         //先看看初始时候的可用库存
         List<MainGood> saleGoodList = mainGoodService.forSale();
-        MainGood orderGood = saleGoodList.stream().filter(p->p.getProduct().getStock() > 0).findAny().get();
+        MainGood orderGood = saleGoodList.stream().filter(p -> p.getProduct().getStock() > 0).findAny().get();
         Long goodId = orderGood.getId();
         //下个单
         Map<MainGood, Integer> amounts = new HashMap<>();
-        amounts.put(orderGood, 1+random.nextInt(10));
+        amounts.put(orderGood, 1 + random.nextInt(10));
         MainOrder order = newRandomOrderFor(testLogin, testLogin, randomMobile(), amounts);
         assertNotNull(order);
         //再次获取商品的可用库存
-        MainGood afterOrderGood = mainGoodService.forSale().stream().filter(p->p.getId().equals(goodId)).findFirst().get();
+        MainGood afterOrderGood = mainGoodService.forSale().stream().filter(p -> p.getId().equals(goodId)).findFirst().get();
         assertEquals(orderGood.getProduct().getStock() - amounts.get(orderGood), afterOrderGood.getProduct().getStock());
 
     }

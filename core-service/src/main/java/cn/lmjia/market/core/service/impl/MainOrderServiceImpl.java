@@ -146,8 +146,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             //创建成功，建立 Executor 在指定时间内关闭订单
             ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             //如果是跑单元测试，就把单位设置为秒
-            executor.scheduleAtFixedRate(new OrderPayStatusCheckThread(order.getId(), executor), maxMinuteForPay
-                    , maxMinuteForPay
+            executor.schedule(new OrderPayStatusCheckThread(order.getId()), maxMinuteForPay
                     , !env.acceptsProfiles(CoreConfig.ProfileUnitTest) ? TimeUnit.MINUTES : TimeUnit.SECONDS);
         }
         return order;
@@ -176,7 +175,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                     .forEach(order -> {
                         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
                         long waitMinute = ChronoUnit.MINUTES.between(now, order.getOrderTime().plusMinutes(maxMinuteForPay));
-                        executor.scheduleWithFixedDelay(new OrderPayStatusCheckThread(order.getId(), executor), waitMinute, waitMinute, TimeUnit.MINUTES);
+                        executor.schedule(new OrderPayStatusCheckThread(order.getId()), waitMinute, TimeUnit.MINUTES);
                     });
         }
     }
@@ -589,11 +588,9 @@ public class MainOrderServiceImpl implements MainOrderService {
      */
     class OrderPayStatusCheckThread implements Runnable {
         private Long orderId;
-        private ExecutorService executor;
 
-        OrderPayStatusCheckThread(Long orderId, ExecutorService executor) {
+        OrderPayStatusCheckThread(Long orderId) {
             this.orderId = orderId;
-            this.executor = executor;
         }
 
         @Override
@@ -605,7 +602,6 @@ public class MainOrderServiceImpl implements MainOrderService {
                 order.setOrderStatus(OrderStatus.close);
                 mainOrderRepository.save(order);
             }
-            executor.shutdown();
         }
     }
 }
