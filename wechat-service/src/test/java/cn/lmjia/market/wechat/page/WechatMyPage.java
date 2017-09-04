@@ -59,9 +59,9 @@ public class WechatMyPage extends AbstractWechatPage {
      * 切换到资产界面
      */
     private void switchToCommission() {
-        webDriver.findElement(By.linkText("资产明细")).click();
+        webDriver.findElement(By.linkText("我的佣金")).click();
         new WebDriverWait(webDriver, 1)
-                .withMessage("等待资产明细界面出现超时")
+                .withMessage("等待我的佣金界面出现超时")
                 .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("commission")));
     }
 

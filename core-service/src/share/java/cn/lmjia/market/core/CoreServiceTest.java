@@ -145,6 +145,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
     }
 
     /**
+     * 将以target为当前身份运行之后所有的程序
      * @param target
      * @see #allRunWith()
      */
