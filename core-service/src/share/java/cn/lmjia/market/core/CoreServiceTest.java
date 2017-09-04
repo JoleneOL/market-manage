@@ -146,6 +146,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
 
     /**
      * 将以target为当前身份运行之后所有的程序
+     *
      * @param target
      * @see #allRunWith()
      */
@@ -315,10 +316,11 @@ public abstract class CoreServiceTest extends SpringWebTest {
         Map<MainGood, Integer> data = new HashMap<>();
         int count = 2 + random.nextInt(2);
         while (count-- > 0) {
-            data.put(mainGoodService.forSale().stream()
+            final MainGood nextGood = mainGoodService.forSale().stream()
                     .filter(good -> !data.keySet().contains(good))
-                    .max(new RandomComparator()).orElse(null), 1 + random.nextInt(10)
-            );
+                    .max(new RandomComparator()).orElse(null);
+            if (nextGood != null)
+                data.put(nextGood, 1 + random.nextInt(10));
         }
         return data;
     }
