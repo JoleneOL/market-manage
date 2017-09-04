@@ -11,8 +11,11 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.thread.ThreadLocker;
 import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -22,6 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -37,6 +41,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -57,6 +63,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      * 最长长度
      */
     private static final int MaxDailySerialIdBit = 6;
+    private static final Log log = LogFactory.getLog(MainOrder.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -86,9 +93,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      */
     @ManyToOne
     private Login recommendBy;
-
     private Address installAddress;
-
     /**
      * 具体的产品
      */
@@ -172,16 +177,40 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     private boolean disableSettlement;
     /**
      * 物流信息
+     * 正在进行中或者已完成的物流
      */
     @OneToMany
     @OrderBy("createTime desc")
     private List<StockShiftUnit> logisticsSet;
+//    /**
+//     * 所有物流信息
+//     * 包括已被拒绝接单的物流
+//     *
+//     * @since {@link cn.lmjia.market.core.Version#muPartShift}
+//     */
+//    @OneToMany
+//    private List<StockShiftUnit> allLogisticsSet;
+    /**
+     * 冗余设计，是否允许发货；它会在物流状态发生变化之后改变；
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartShift}
+     */
+    private boolean ableShip;
+    /**
+     * 已完成安装的物流
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartShift}
+     */
+    @SuppressWarnings("JpaDataSourceORMInspection")
+    @OneToMany
+    @JoinTable(name = "MAINORDER_INSTALLED_STOCKSHIFTUNIT")
+    private List<StockShiftUnit> installedLogisticsSet;
+    /**
+     * 从{@link cn.lmjia.market.core.Version#muPartShift}开始放弃
+     */
+    @Deprecated
     @ManyToOne
     private StockShiftUnit currentLogistics;
-    /**
-     * 是否使用花呗支付
-     */
-    private boolean huabei;
 
 //    /**
 //     * @param from order表
@@ -191,6 +220,10 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 //    public static Join<Customer, Login> getCustomerLogin(From<?, MainOrder> from) {
 //        return getCustomer(from).join(Customer_.login);
 //    }
+    /**
+     * 是否使用花呗支付
+     */
+    private boolean huabei;
 
     /**
      * @param from order表
@@ -407,5 +440,96 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Override
     public String getConsigneeMobile() {
         return customer.getMobile();
+    }
+
+    /**
+     * @return 需要物流的信息
+     */
+    public Map<MainProduct, Integer> getRequireShip() {
+        final Map<MainProduct, Integer> require = new HashMap<>();
+        amounts.forEach((good, integer) -> {
+            if (require.putIfAbsent(good.getProduct(), integer) != null) {
+                require.computeIfPresent(good.getProduct(), ((product, integer1) -> integer1 + integer));
+            }
+        });
+        logisticsSet.stream().filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
+                .forEach(stockShiftUnit
+                        -> stockShiftUnit.getAmounts().forEach(((product, productBatch) -> {
+                    // 减去 require
+                    MainProduct mainProduct = (MainProduct) product;
+                    require.computeIfPresent(mainProduct, ((product1, integer) -> {
+                        int now = integer - productBatch.getAmount();
+                        if (now > 0)
+                            return now;
+                        if (now < 0)
+                            log.error(getSerialId() + "诡异了，已物流的总量大于总的需物流量:" + mainProduct.getCode());
+                        return null;
+                    }));
+                })));
+
+        return require;
+    }
+
+    /**
+     * 更新物流冗余信息并且切换当前状态
+     * 可能切换为forInstall,forDeliver
+     *
+     * @return 是否都已完成物流（不包括安装）
+     */
+    public boolean updateLogisticsStatus() {
+        // 是否所有订单都已失败
+        if (logisticsSet.stream().allMatch(stockShiftUnit -> stockShiftUnit.getCurrentStatus() == ShiftStatus.reject)) {
+            log.debug("所有物流订单都已被拒绝接单，重新进入待发货状态:" + getSerialId());
+            setAbleShip(true);
+            setOrderStatus(OrderStatus.forDeliver);
+            return false;
+        } else if (getRequireShip().isEmpty()) {
+            log.debug("已物流所有所需货品:" + getSerialId());
+            setAbleShip(false);
+            // 已经无货需发了；如果还有货可发状态就无需关注了。
+            // 现在确定是否都已经发完了
+            if (logisticsSet.stream()
+                    .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
+                    .allMatch(stockShiftUnit -> stockShiftUnit.getCurrentStatus() == ShiftStatus.success)) {
+                setOrderStatus(OrderStatus.forInstall);
+                log.debug("同时所有物流已抵达");
+                return true;
+            } else
+                log.debug("但是并非所有物流已抵达");
+        } else {
+            log.debug("还有部分物流未发:" + getSerialId());
+            setAbleShip(true);
+        }
+        return false;
+    }
+
+    /**
+     * 增加已安装的物流信息
+     * 可能切换为afterSale
+     *
+     * @param unit 已完成安装的物流;可能为null
+     * @return 是否都已完成物流（包括安装）
+     */
+    public boolean updateInstallationStatus(StockShiftUnit unit) {
+        if (getInstalledLogisticsSet() == null)
+            setInstalledLogisticsSet(new ArrayList<>());
+
+        if (unit != null) {
+            getInstalledLogisticsSet().add(unit);
+        }
+        if (getRequireShip().isEmpty()) {
+            log.debug("已物流所有所需货品:" + getSerialId());
+            // 要么无需安装 要么已安装
+            if (getLogisticsSet().stream()
+                    .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
+                    .allMatch(stockShiftUnit ->
+                            !stockShiftUnit.isInstallation() || getInstalledLogisticsSet().contains(stockShiftUnit))) {
+                setOrderStatus(OrderStatus.afterSale);
+                log.debug("并且所有物流都已完成安装或者无需安装");
+                return true;
+            } else if (log.isDebugEnabled())
+                log.debug("但是并非所有物流订单都已完成安装或者无需安装");
+        }
+        return false;
     }
 }

@@ -13,6 +13,8 @@ import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,9 +132,11 @@ public interface MainOrderService {
 
     @EventListener(ShiftEvent.class)
     @Transactional
+    @Order(Ordered.LOWEST_PRECEDENCE)
     void forShiftEvent(ShiftEvent event);
 
     @EventListener(InstallationEvent.class)
     @Transactional
+    @Order(Ordered.LOWEST_PRECEDENCE)
     void forInstallationEvent(InstallationEvent event);
 }

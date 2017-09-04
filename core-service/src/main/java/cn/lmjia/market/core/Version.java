@@ -13,5 +13,9 @@ public enum Version {
      * 新的登录体系
      * 在登录关系中不再存在所谓200的客户关系
      */
-    newLogin
+    newLogin,
+    /**
+     * 一个订单支持多个物流
+     */
+    muPartShift
 }

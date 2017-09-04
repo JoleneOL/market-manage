@@ -321,11 +321,7 @@ public class MainOrderServiceImpl implements MainOrderService {
     public void forInstallationEvent(InstallationEvent event) {
         logisticsToMainOrder(event.getUnit(), order -> {
             final OrderStatus currentOrderStatus = order.getOrderStatus();
-            order.setOrderStatus(OrderStatus.afterSale);
-            if (currentOrderStatus != OrderStatus.forInstall) {
-                log.error(order.getSerialId() + "尚未收货就安装完成了。");
-            }
-            applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
+            logisticsInstalled(event, order, currentOrderStatus);
         });
     }
 
@@ -341,24 +337,38 @@ public class MainOrderServiceImpl implements MainOrderService {
             final OrderStatus currentOrderStatus = order.getOrderStatus();
             switch (toStatus) {
                 case reject:
-                    if (currentOrderStatus == OrderStatus.forDeliverConfirm
-                            || currentOrderStatus == OrderStatus.forInstall
-                            || currentOrderStatus == OrderStatus.afterSale
-                            )
-                        order.setOrderStatus(OrderStatus.forDeliver);
-                    else {
-                        log.error("错误逻辑，应该是未进入物流状态的订单 收到了物流失败的事件。" + order.getSerialId());
-                    }
+                    logisticsReject(order, currentOrderStatus);
                     break;
                 case success:
-                    if (currentOrderStatus == OrderStatus.forDeliverConfirm)
-                        order.setOrderStatus(OrderStatus.forInstall);
-                    applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
+                    logisticsSuccess(event, order, currentOrderStatus);
                     break;
                 default:
             }
         });
 
+    }
+
+    private void logisticsInstalled(InstallationEvent event, MainOrder order, OrderStatus currentOrderStatus) {
+        // 怎么支持多个安装的物流信息呢？
+        if (order.updateInstallationStatus(event.getUnit())) {
+            applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
+        }
+    }
+
+    private void logisticsSuccess(ShiftEvent event, MainOrder order, OrderStatus currentOrderStatus) {
+        if (order.updateLogisticsStatus()) {
+            applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
+            if (order.updateInstallationStatus(null)) {
+                applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, null));
+            }
+        }
+    }
+
+    /**
+     * 如果所有物流都已失败，则切换为forDeliver；否者保留原有状态
+     */
+    private void logisticsReject(MainOrder order, OrderStatus currentOrderStatus) {
+        order.updateLogisticsStatus();
     }
 
     private void logisticsToMainOrder(final StockShiftUnit unit, Consumer<MainOrder> consumer) {

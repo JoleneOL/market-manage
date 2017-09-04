@@ -5,6 +5,8 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.UsageStock;
 import me.jiangcai.logistics.event.ShiftEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -78,6 +80,7 @@ public interface StockService {
 
     @EventListener(ShiftEvent.class)
     @Transactional
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     void shiftEventUp(ShiftEvent event);
 
     /**
