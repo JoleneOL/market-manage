@@ -4,6 +4,7 @@ import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
+import cn.lmjia.market.core.model.TimeLineUnit;
 import cn.lmjia.market.core.util.CommissionSource;
 import lombok.Getter;
 import lombok.Setter;
@@ -347,6 +348,10 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return new Money(getOrderDueAmount());
     }
 
+    public Money getCommissioningAmountMoney() {
+        return new Money(getCommissioningAmount());
+    }
+
     @Override
     public String getOrderProductName() {
         return goodName;
@@ -532,4 +537,27 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         }
         return false;
     }
+
+    /**
+     * @return 关于订单流水的简单生命线
+     */
+    public List<TimeLineUnit> getSimpleTimeLines() {
+        // 大致定义是  支付，物流发货，物流完成，结算完成
+        List<TimeLineUnit> list = new ArrayList<>();
+        list.add(new TimeLineUnit("支付订单", payTime, isPay(), false));
+        final LocalDateTime firstShipTime = logisticsSet.stream()
+                .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
+                .map(StockShiftUnit::getCreateTime)
+                .min(LocalDateTime::compareTo).orElse(null);
+        list.add(new TimeLineUnit("物流发货", firstShipTime, firstShipTime != null, !isPay()));
+        final LocalDateTime lastShipDoneTime = logisticsSet.stream()
+                .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() == ShiftStatus.success)
+                .map(StockShiftUnit::getCreateTime)
+                .max(LocalDateTime::compareTo).orElse(null);
+        list.add(new TimeLineUnit("物流交付", lastShipDoneTime, lastShipDoneTime != null, firstShipTime == null));
+        list.add(new TimeLineUnit("佣金结算", lastShipDoneTime, lastShipDoneTime != null, firstShipTime == null));
+
+        return list;
+    }
+
 }

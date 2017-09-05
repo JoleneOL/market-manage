@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
-
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainOrder"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -31,8 +31,8 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_orderManage.html">订单管理</a></li>
-                <li><strong>订单详情</strong></li>
+                <li><a href="_orderManage.html" th:href="@{/orderManage}">订单管理</a></li>
+                <li><strong>订单详情:<span th:text="${currentData.serialId}">20170910000210</span></strong></li>
             </ol>
         </div>
     </div>
@@ -52,24 +52,53 @@
                         <table class="table table-hover table-bordered">
                             <tbody>
                             <tr>
-                                <td width="120px">收件人</td>
-                                <td>李菲菲</td>
+                                <td width="120px">下单时间</td>
+                                <td th:text="${{currentData.orderTime}}">2017-10-1 10:10</td>
                             </tr>
                             <tr>
-                                <td>手机号</td>
-                                <td>18958044532</td>
+                                <td>订单状态</td>
+                                <td th:text="${{currentData.orderStatus}}">待付款</td>
+                            </tr>
+                            <tr>
+                                <td>订单总金额</td>
+                                <td th:text="${{currentData.orderDueAmountMoney}}">100.10</td>
+                            </tr>
+                            <tr>
+                                <td>订单可分佣金额</td>
+                                <td th:text="${{currentData.commissioningAmountMoney}}">10.1</td>
+                            </tr>
+                            <tr>
+                                <td>下单人</td>
+                                <td th:text="${@readService.nameForPrincipal(currentData.orderBy)}">李菲菲</td>
+                            </tr>
+                            <tr>
+                                <td>下单人手机</td>
+                                <td th:text="${@readService.mobileFor(currentData.orderBy)}">18958044532</td>
+                            </tr>
+                            <tr>
+                                <td>收货人</td>
+                                <td th:text="${currentData.customer.name}">都督</td>
+                            </tr>
+                            <tr>
+                                <td>收货手机</td>
+                                <td th:text="${currentData.customer.mobile}">18812340987</td>
                             </tr>
                             <tr>
                                 <td>收货地址</td>
-                                <td>浙江杭州西湖大西湖国际</td>
+                                <td th:text="${{currentData.installAddress}}">浙江杭州西湖大西湖国际</td>
                             </tr>
-                            <tr>
-                                <td>订单时间</td>
-                                <td>2017-09-09</td>
+                            <tr th:each="product:${currentData.amounts.entrySet()}">
+                                <td rowspan="2" th:rowspan="${currentData.amounts.size()}" th:if="${productStat.first}">
+                                    货品
+                                    / 数量
+                                </td>
+                                <td><span th:text="${product.key.product.name}">量子立式净水机</span>&nbsp;/&nbsp;<span
+                                        th:text="${product.value}">300</span>（<span
+                                        th:text="${product.key.product.unit}">台</span>）
+                                </td>
                             </tr>
-                            <tr>
-                                <td>订单号</td>
-                                <td>20213XSD234</td>
+                            <tr th:remove="all">
+                                <td>量子水宝 / 300（盒）</td>
                             </tr>
                             </tbody>
                         </table>
@@ -84,20 +113,23 @@
                 <div class="ibox-title">
                     <div class="col-md-12">
                         <div class="ivu-steps ivu-steps-horizontal ivu-item4">
-                            <div class="ivu-steps-item ivu-steps-status-finish">
+                            <div th:each="timeLine:${currentData.simpleTimeLines}"
+                                 class="ivu-steps-item"
+                                 th:classappend="${timeLine.success?'ivu-steps-status-finish':(timeLine.wait?'ivu-steps-status-wait':'ivu-steps-status-process')}">
                                 <div class="ivu-steps-tail"><i></i></div>
                                 <div class="ivu-steps-head">
                                     <div class="ivu-steps-head-inner">
-                                        <!--<span>1</span>-->
-                                        <span class="fa fa-check"></span>
+                                        <span th:if="${timeLine.success}" class="fa fa-check"></span>
+                                        <span th:if="${!timeLine.success}" th:text="${timeLineStat.count}">1</span>
                                     </div>
                                 </div>
                                 <div class="ivu-steps-main">
-                                    <div class="ivu-steps-title">初审核准码校验成功</div>
-                                    <p class="ivu-steps-time">2107-09-17 19:45</p>
+                                    <div class="ivu-steps-title" th:text="${timeLine.topic}">初审核准码校验成功</div>
+                                    <p th:if="${timeLine.temporal!=null}" class="ivu-steps-time"
+                                       th:text="${{timeLine.temporal}}">2107-09-17 19:45</p>
                                 </div>
                             </div>
-                            <div class="ivu-steps-item ivu-steps-status-finish">
+                            <div th:remove="all" class="ivu-steps-item ivu-steps-status-finish">
                                 <div class="ivu-steps-tail"><i></i></div>
                                 <div class="ivu-steps-head">
                                     <div class="ivu-steps-head-inner">
@@ -110,7 +142,7 @@
                                     <p class="ivu-steps-time">2107-09-17 19:45</p>
                                 </div>
                             </div>
-                            <div class="ivu-steps-item ivu-steps-status-process">
+                            <div th:remove="all" class="ivu-steps-item ivu-steps-status-process">
                                 <div class="ivu-steps-tail"><i></i></div>
                                 <div class="ivu-steps-head">
                                     <div class="ivu-steps-head-inner"><span>3</span></div>
@@ -120,7 +152,7 @@
                                     <p class="ivu-steps-time">2107-09-17 19:45</p>
                                 </div>
                             </div>
-                            <div class="ivu-steps-item ivu-steps-status-wait">
+                            <div th:remove="all" class="ivu-steps-item ivu-steps-status-wait">
                                 <div class="ivu-steps-tail"><i></i></div>
                                 <div class="ivu-steps-head">
                                     <div class="ivu-steps-head-inner"><span>4</span></div>
@@ -244,19 +276,23 @@
 <script src="mock/api.js" th:remove="all"></script>
 
 <script src="manage-resource/js/orderDetail.js"></script>
-<script th:remove="all">
-    if (window.document.location.search.indexOf('from=0') >= 0) {
-        console.info('不是TRJ页面');
-        $('.js-condition').hide();
-    }
-    if (window.document.location.search.indexOf('from=3') >= 0) {
-        console.info('不是TRJ页面');
-        $('.js-condition').hide();
-    }
-    if (!(window.document.location.search.indexOf('status=4') >= 0)) {
-        console.info('TRJ正常页面');
+<script>
+    //    if (window.document.location.search.indexOf('from=0') >= 0) {
+    //        console.info('不是TRJ页面');
+    //        $('.js-condition').hide();
+    //    }
+    //    if (window.document.location.search.indexOf('from=3') >= 0) {
+    //        console.info('不是TRJ页面');
+    //        $('.js-condition').hide();
+    //    }
+    //    if (!(window.document.location.search.indexOf('status=4') >= 0)) {
+    //        console.info('TRJ正常页面');
+    //
+    //    }
+    $(function () {
         $('.js-condition').eq(1).hide();
-    }
+    });
+
 </script>
 
 </html>
