@@ -28,6 +28,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,7 @@ import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +164,18 @@ public class ManageOrderController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void makeLogistics(@PathVariable("orderId") long orderId, @RequestBody String depotId) {
         mainOrderService.makeLogistics(HaierSupplier.class, orderId, NumberUtils.parseNumber(depotId, Long.class));
+    }
+
+    @GetMapping("/mainOrderDetail{id}")
+    @Transactional(readOnly = true)
+    public String orderDetail(@PathVariable("id") long id, Model model) {
+        final MainOrder order = mainOrderService.getOrder(id);
+        model.addAttribute("currentData", order);
+        model.addAttribute("shipList", order.getLogisticsSet()
+                .stream()
+                .sorted(Comparator.comparing(StockShiftUnit::getCreateTime))
+                .collect(Collectors.toList()));
+        return "_orderDetail.html";
     }
 
     @GetMapping("/manageShiftDetailForMainOrder")

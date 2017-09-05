@@ -544,7 +544,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     public List<TimeLineUnit> getSimpleTimeLines() {
         // 大致定义是  支付，物流发货，物流完成，结算完成
         List<TimeLineUnit> list = new ArrayList<>();
-        list.add(new TimeLineUnit("支付订单", payTime, isPay(), false));
+        list.add(new TimeLineUnit("支付订单", payTime, isPay(), true));
         final LocalDateTime firstShipTime = logisticsSet.stream()
                 .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
                 .map(StockShiftUnit::getCreateTime)

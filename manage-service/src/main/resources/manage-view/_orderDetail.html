@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td>订单状态</td>
-                                <td th:text="${{currentData.orderStatus}}">待付款</td>
+                                <td th:text="${currentData.orderStatus.toString()}">待付款</td>
                             </tr>
                             <tr>
                                 <td>订单总金额</td>
@@ -94,7 +94,7 @@
                                 </td>
                                 <td><span th:text="${product.key.product.name}">量子立式净水机</span>&nbsp;/&nbsp;<span
                                         th:text="${product.value}">300</span>（<span
-                                        th:text="${product.key.product.unit}">台</span>）
+                                        th:text="${product.key.product.unit?:'个'}">台</span>）
                                 </td>
                             </tr>
                             <tr th:remove="all">
@@ -103,6 +103,52 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--/*@thymesVar id="shipList" type="java.util.List<me.jiangcai.logistics.entity.StockShiftUnit>"*/-->
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    物流信息
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <ul>
+                        <li th:each="ship:${shipList}">
+                            <a href="_logisticsDetail.html" th:href="@{/manageShiftDetail(id=${ship.id})}">
+                                <article>
+                                    <span th:text="${{ship.createTime}}">2017-10-1 11:11</span>
+                                    <p>发货列表:</p>
+                                    <ul>
+                                        <li th:each="item:${ship.amounts}">
+                                            <span th:text="${item.value.amount}">1</span><span
+                                                th:text="${item.key.unit?:'个'}">瓶</span><span
+                                                th:text="${item.key.name}">黑方</span></li>
+                                        <li th:remove="all">1打喜力</li>
+                                    </ul>
+                                    <span>状态:</span><span th:text="${ship.currentStatus.toString()}">已拒单</span>
+                                </article>
+                            </a>
+                        </li>
+                        <li th:remove="all">
+                            <article>
+                                <span>2017-10-2 11:11</span>
+                                <p>发货列表:</p>
+                                <ul>
+                                    <li>1瓶黑方</li>
+                                    <li>1打喜力</li>
+                                </ul>
+                                <span>状态:</span><span>运递中</span>
+                            </article>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

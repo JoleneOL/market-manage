@@ -62,7 +62,10 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 
 //        stockService.enabledUsableStockInfo(((productPath, criteriaBuilder) -> criteriaBuilder.equal(productPath, order.getGood().getProduct())), null);
 
+        printOrderDetail(order);
         makeOrderPay(order);
+        printOrderDetail(order);
+
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .as("刚付款好，应该是待发货状态")
                 .isEqualByComparingTo(OrderStatus.forDeliver);
@@ -110,6 +113,8 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         )
                 .andExpect(status().is2xxSuccessful());
 
+        printOrderDetail(order);
+
         assertThat(stockService.usableStockTotal(good.getProduct()))
                 .as("执行发货之后，可用库存应该减少")
                 .isEqualTo(originStock - costTargetGoodProduct);
@@ -125,6 +130,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         // 那么物流订单失败之后呢？
         StockShiftUnit rejectUnit = mainOrderService.getOrder(order.getId()).getLogisticsSet().iterator().next();
         logisticsService.mockToStatus(rejectUnit.getId(), ShiftStatus.reject);
+        printOrderDetail(order);
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .as("物流最终被退回 那么状态应该恢复至待发货")
@@ -141,7 +147,9 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .filter(unit -> !Objects.equals(unit.getId(), rejectUnit.getId()))
                 .findFirst().orElse(null);
         log.debug(goSuccess);
-        logisticsService.mockToStatus(rejectUnit.getId(), ShiftStatus.success);
+        logisticsService.mockToStatus(goSuccess.getId(), ShiftStatus.success);
+
+        printOrderDetail(order);
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .as("物流完成之后 订单也应该完成")
@@ -150,6 +158,11 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 
         mockMvc.perform(get("/manage/orderData/logistics"))
                 .andDo(print());
+    }
+
+    private void printOrderDetail(MainOrder order) throws Exception {
+        mockMvc.perform(get("/mainOrderDetail" + order.getId()))
+                .andExpect(status().isOk());
     }
 
 }
