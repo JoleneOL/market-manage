@@ -6,9 +6,11 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
+import cn.lmjia.market.core.exception.UnnecessaryShipException;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.CustomerService;
@@ -27,6 +29,7 @@ import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.exception.StockOverrideException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import me.jiangcai.logistics.repository.DepotRepository;
@@ -275,6 +278,65 @@ public class MainOrderServiceImpl implements MainOrderService {
 //        return stockService.enabledUsableStockInfo(((productPath, criteriaBuilder)
 //                -> criteriaBuilder.equal(productPath, product)), null)
 //                .forProduct(product);
+    }
+
+    @Override
+    public StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId
+            , Map<MainProduct, Integer> amounts, boolean installation) throws StockOverrideException, UnnecessaryShipException {
+        MainOrder order = getOrder(orderId);
+
+        // 如果要发的 比需要发的多
+        Map<MainProduct, Integer> require = order.getRequireShip();
+        Map<MainProduct, Integer> toShip;
+        if (amounts == null) {
+            toShip = require;
+        } else {
+            for (MainProduct product : amounts.keySet()) {
+                if (!require.containsKey(product))
+                    throw new UnnecessaryShipException(product);
+                if (require.get(product) - amounts.get(product) < 0)
+                    throw new UnnecessaryShipException(product);
+            }
+            toShip = amounts;
+        }
+
+
+        Depot depot = depotRepository.getOne(depotId);
+
+        LogisticsSupplier supplier;
+        if (supplierType == HaierSupplier.class)
+            supplier = haierSupplier;
+        else
+            supplier = applicationContext.getBean(supplierType);
+
+        StockShiftUnit unit = logisticsService.makeShift(supplier, toShip.entrySet().stream()
+                        .map((Function<Map.Entry<MainProduct, Integer>, Thing>) entry -> new Thing() {
+                            @Override
+                            public Product getProduct() {
+                                return entry.getKey();
+                            }
+
+                            @Override
+                            public ProductStatus getProductStatus() {
+                                return ProductStatus.normal;
+                            }
+
+                            @Override
+                            public int getAmount() {
+                                return entry.getValue();
+                            }
+                        })
+                        .collect(Collectors.toSet())
+                , depot, order, installation ? LogisticsOptions.Installation : 0);
+
+        if (order.getLogisticsSet() == null)
+            order.setLogisticsSet(new ArrayList<>());
+
+        order.getLogisticsSet().add(unit);
+//        order.setCurrentLogistics(unit);
+        if (order.getOrderStatus() == OrderStatus.forDeliver)
+            order.setOrderStatus(OrderStatus.forDeliverConfirm);
+        return unit;
     }
 
     @Override

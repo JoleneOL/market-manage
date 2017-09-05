@@ -12,6 +12,7 @@ import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.option.LogisticsOptions;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -63,6 +64,7 @@ public class LogisticsServiceImpl implements LogisticsService {
         } else
             supplier = supplier1;
         Consumer<StockShiftUnit> consumer = stockShiftUnit -> {
+            stockShiftUnit.setInstallation((options & LogisticsOptions.Installation) == LogisticsOptions.Installation);
             stockShiftUnit.setShiftType(ShiftType.logistics);
             stockShiftUnit.setCreateTime(LocalDateTime.now());
             stockShiftUnit.setCurrentStatus(ShiftStatus.init);

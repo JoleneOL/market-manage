@@ -4,13 +4,16 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.exception.UnnecessaryShipException;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.exception.StockOverrideException;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
@@ -120,7 +123,7 @@ public interface MainOrderService {
     List<Depot> depotsForOrder(long orderId);
 
     /**
-     * 物流开动
+     * 一次性物流开动，并且不进行安装
      *
      * @param supplierType 物流类型
      * @param orderId      订单号
@@ -128,7 +131,25 @@ public interface MainOrderService {
      * @return 相关信息
      */
     @Transactional
+    @Deprecated
     StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId);
+
+    /**
+     * 物流开动
+     *
+     * @param supplierType 物流类型
+     * @param orderId      订单号
+     * @param depotId      仓库号
+     * @param amounts      物流货品；默认为全部货品
+     * @param installation 是否进行安装
+     * @return 相关信息
+     * @throws StockOverrideException   库存不足
+     * @throws UnnecessaryShipException 没必要的物流
+     */
+    @Transactional
+    StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId
+            , Map<MainProduct, Integer> amounts, boolean installation) throws StockOverrideException
+            , UnnecessaryShipException;
 
     @EventListener(ShiftEvent.class)
     @Transactional

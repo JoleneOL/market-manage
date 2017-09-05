@@ -5,9 +5,11 @@ import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.exception.UnnecessaryShipException;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ChannelService;
@@ -27,6 +29,7 @@ import me.jiangcai.lib.test.SpringWebTest;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.exception.StockOverrideException;
 import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.lang.RandomStringUtils;
@@ -446,16 +449,19 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @param order         order
      * @param depotSupplier 新仓库构造器 可选
      * @param supplierType  物流供应商 可选
+     * @param amounts       需要物流的数量 可选；默认就是全部都走
+     * @param installation  是否需要安装
      * @return 物流订单
      */
     protected StockShiftUnit logisticsForMainOrderFromAnyDepot(MainOrder order, Supplier<Depot> depotSupplier
-            , Class<? extends LogisticsSupplier> supplierType) {
+            , Class<? extends LogisticsSupplier> supplierType, Map<MainProduct, Integer> amounts, boolean installation)
+            throws StockOverrideException, UnnecessaryShipException {
         // 先找仓库呗
         Depot depot = findOrCreateEnableDepot(depotSupplier);
 
         // MarketBuildInLogisticsSupplier
         return mainOrderService.makeLogistics(supplierType == null ? MarketBuildInLogisticsSupplier.class : supplierType
-                , order.getId(), depot.getId());
+                , order.getId(), depot.getId(), amounts, installation);
     }
 
     /**
