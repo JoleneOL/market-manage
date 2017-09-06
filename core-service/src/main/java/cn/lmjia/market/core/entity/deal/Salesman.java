@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.math.BigDecimal;
@@ -39,10 +40,9 @@ import java.math.BigDecimal;
  *
  * @author CJ
  */
-//@Entity
+@Entity
 @Setter
 @Getter
-@SuppressWarnings("unused")
 public class Salesman {
     @OneToOne
     @Id
@@ -53,5 +53,8 @@ public class Salesman {
      */
     @Column(scale = 8, precision = 10)
     private BigDecimal salesRate;
+
+    @Column(length = 100)
+    private String rank;
 
 }

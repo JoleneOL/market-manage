@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.service.impl;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.Salesman;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.wechat.entity.LimitQRCode;
 import cn.lmjia.market.wechat.repository.LimitQRCodeRepository;
@@ -31,27 +32,37 @@ public class WechatServiceImpl implements WechatService {
     private StandardWeixinUserRepository standardWeixinUserRepository;
 
     @Override
-    public LimitQRCode qrCodeForLogin(Login login) {
-        LimitQRCode code = limitQRCodeRepository.findByLogin(login);
-        if (code != null)
-            return code;
-        //最多才 100000看着办吧
-//        LimitQRCode maxId = limitQRCodeRepository.findTopByOrderByIdDesc();
-//        if (maxId != null && maxId.getId() >= 100000) {
-//            // 释放掉一个最长时间没用的了
-//            LimitQRCode newOne = limitQRCodeRepository.findTopByOrderByLastUseTimeAsc();
-//            return forLogin(newOne, login);
-//        }
-        LimitQRCode newOne = new LimitQRCode();
-        newOne = limitQRCodeRepository.saveAndFlush(newOne);
-        SceneCode sceneCode = Protocol.forAccount(publicAccount).createQRCode("SF_" + login.getId(), null);
-        newOne.setImageUrl(sceneCode.getImageURL());
-        newOne.setUrl(sceneCode.getUrl());
-        return forLogin(newOne, login);
+    public String qrCodeForLogin(Login login) {
+//        LimitQRCode code = limitQRCodeRepository.findByLogin(login);
+//        if (code != null)
+//            return code;
+//        //最多才 100000看着办吧
+////        LimitQRCode maxId = limitQRCodeRepository.findTopByOrderByIdDesc();
+////        if (maxId != null && maxId.getId() >= 100000) {
+////            // 释放掉一个最长时间没用的了
+////            LimitQRCode newOne = limitQRCodeRepository.findTopByOrderByLastUseTimeAsc();
+////            return forLogin(newOne, login);
+////        }
+//        LimitQRCode newOne = new LimitQRCode();
+//        newOne = limitQRCodeRepository.saveAndFlush(newOne);
+//        SceneCode sceneCode = Protocol.forAccount(publicAccount).createQRCode("SF_" + login.getId(), null);
+//        newOne.setImageUrl(sceneCode.getImageURL());
+//        newOne.setUrl(sceneCode.getUrl());
+//        return forLogin(newOne, login);
+        SceneCode sceneCode = Protocol.forAccount(publicAccount).createQRCode("SF_" + login.getId()
+                , 2592000);
+        return sceneCode.getImageURL();
     }
 
     @Override
-    public void shareTo(long loginId, String openId) {
+    public String qrCodeFor(Salesman salesman) {
+        SceneCode sceneCode = Protocol.forAccount(publicAccount)
+                .createQRCode("SFS_" + salesman.getLogin().getId(), 2592000);
+        return sceneCode.getImageURL();
+    }
+
+    @Override
+    public Login shareTo(long loginId, String openId) {
         // 其实应该是这个openId 根本不应该存在！
         // 现在简单点 只要它没有绑定帐号即可
         Login login = loginService.asWechat(openId);
@@ -65,8 +76,9 @@ public class WechatServiceImpl implements WechatService {
                 weixinUser = standardWeixinUserRepository.save(weixinUser);
             }
             // 创建帐号
-            loginService.newLogin(Login.class, loginService.get(loginId), weixinUser);
+            return loginService.newLogin(Login.class, loginService.get(loginId), weixinUser);
         }
+        return login;
     }
 
     private LimitQRCode forLogin(LimitQRCode code, Login login) {
