@@ -219,7 +219,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         mainOrderService.cleanProductStock(orderGood.getProduct());
         orderGood = mainGoodService.forSale().stream().filter(p -> p.getId().equals(goodId)).findFirst().get();
         int limitBuyNum = initStock / 2 - (initLockedStock + expectStock);
-        if (limitBuyNum == 0) {
+        if (limitBuyNum <= 0) {
             return;
         }
         log.info("limitBuyNum:" + limitBuyNum);

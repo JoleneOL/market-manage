@@ -45,6 +45,7 @@ import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
@@ -101,11 +102,18 @@ public class MainOrderServiceImpl implements MainOrderService {
     private Map<String, OffsetStock> productStockMap = new HashMap<>();
     private static final int defaultMaxMinuteForPay = 60 * 24 * 3;
     private static final int defaultOffsetHour = 9;
+    //用于关闭超时未支付订单
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(50);
 
     @PostConstruct
     @Transactional
     public void initExecutor() {
         createExecutorToForPayOrder();
+    }
+
+    @PreDestroy
+    public void beforeClose() {
+        executor.shutdown();
     }
 
     @Override
@@ -144,7 +152,6 @@ public class MainOrderServiceImpl implements MainOrderService {
         //如果开启了 关闭订单 这个功能
         if (maxMinuteForPay != null) {
             //创建成功，建立 Executor 在指定时间内关闭订单
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
             //如果是跑单元测试，就把单位设置为秒
             executor.schedule(new OrderPayStatusCheckThread(order.getId()), maxMinuteForPay
                     , !env.acceptsProfiles(CoreConfig.ProfileUnitTest) ? TimeUnit.MINUTES : TimeUnit.SECONDS);
@@ -173,7 +180,6 @@ public class MainOrderServiceImpl implements MainOrderService {
             //还没超过时间的，定义ExecutorService
             forPayOrderList.stream().filter(order -> order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now))
                     .forEach(order -> {
-                        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
                         long waitMinute = ChronoUnit.MINUTES.between(now, order.getOrderTime().plusMinutes(maxMinuteForPay));
                         executor.schedule(new OrderPayStatusCheckThread(order.getId()), waitMinute, TimeUnit.MINUTES);
                     });
