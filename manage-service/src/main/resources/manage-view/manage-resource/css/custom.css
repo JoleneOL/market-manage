@@ -1,3 +1,6 @@
+.display-inline {
+    display: inline-block;
+}
 .input-sm {
     font-size: 12px;
 }
@@ -438,9 +441,11 @@ textarea {
     list-style: none;
     text-align: left;
 }
+
 .eventEntity {
     padding: 0;
 }
+
 .propertyName {
     margin-right: 6px;
     font-weight: 700;
@@ -449,6 +454,7 @@ textarea {
 .table-show-list {
     position: relative;
 }
+
 .table-show-hide {
     padding: 10px;
     display: none;
@@ -460,5 +466,5 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 3px;
     z-index: 999;
-    box-shadow: 0 12px 24px 0 rgba(7,17,27,.2);
+    box-shadow: 0 12px 24px 0 rgba(7, 17, 27, .2);
 }
