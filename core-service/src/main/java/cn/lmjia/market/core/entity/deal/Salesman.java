@@ -3,12 +3,15 @@ package cn.lmjia.market.core.entity.deal;
 import cn.lmjia.market.core.entity.Login;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 推销人员，同时也是一个身份；
@@ -43,10 +46,15 @@ import java.math.BigDecimal;
 @Entity
 @Setter
 @Getter
+@ToString
 public class Salesman {
-    @OneToOne
     @Id
+    private Long id;
+    @OneToOne
+    @MapsId
     private Login login;
+
+    private boolean enable;
 
     /**
      * 销售奖励提成，必须小于1
@@ -57,4 +65,16 @@ public class Salesman {
     @Column(length = 100)
     private String rank;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Salesman)) return false;
+        Salesman salesman = (Salesman) o;
+        return Objects.equals(login, salesman.login);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(login);
+    }
 }

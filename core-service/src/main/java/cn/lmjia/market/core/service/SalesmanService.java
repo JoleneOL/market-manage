@@ -1,8 +1,12 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.deal.Salesman;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 销售人员计划
@@ -19,6 +23,25 @@ public interface SalesmanService {
     @Transactional
     void salesmanShareTo(long salesmanId, Login login);
 
+    /**
+     * 用户试图下单，获取一个业绩
+     *
+     * @param login 用户
+     * @return 如果并不存在则返回null
+     */
+    @Transactional
+    SalesAchievement pick(Login login);
+
+    /**
+     * @param salesman 销售
+     * @return 该销售所有的绩效
+     */
+    @Transactional(readOnly = true)
+    List<SalesAchievement> all(Salesman salesman);
+
     @Transactional(readOnly = true)
     Salesman get(long id);
+
+    @Transactional
+    Salesman newSalesman(Login login, BigDecimal rate, String rank);
 }

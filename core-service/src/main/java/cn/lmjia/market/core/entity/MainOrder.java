@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.define.Money;
+import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
@@ -60,6 +61,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
+    private SalesAchievement salesAchievement;
     /**
      * 每日序列号
      * 业务量每天不会超过1000000
