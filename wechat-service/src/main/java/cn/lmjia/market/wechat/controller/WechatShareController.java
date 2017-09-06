@@ -1,5 +1,6 @@
 package cn.lmjia.market.wechat.controller;
 
+import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
@@ -35,6 +36,8 @@ public class WechatShareController {
     private PublicAccount publicAccount;
     @Autowired
     private Environment environment;
+    @Autowired
+    private QRController qrController;
 
     // 二维码扫码将是一个永久场景(欢迎加入)二维码
     // 扫码需要关注，并且在关注后自动引导事件
@@ -53,8 +56,9 @@ public class WechatShareController {
         if (!loginService.isRegularLogin(login))
             return "redirect:" + SystemService.wechatShareMoreUri;
         model.addAttribute("login", login);
-        model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(login).getImageUrl());
-        model.addAttribute("url", systemService.toUrl("/wechatJoin" + login.getId()));
+        final String targetUrl = systemService.toUrl("/wechatJoin" + login.getId());
+        model.addAttribute("qrCodeUrl", qrController.urlForText(targetUrl).toString());
+        model.addAttribute("url", targetUrl);
         return "wechat@shareQC.html";
     }
 
