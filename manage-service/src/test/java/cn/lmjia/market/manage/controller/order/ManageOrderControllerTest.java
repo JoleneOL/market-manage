@@ -161,7 +161,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     }
 
     private void printOrderDetail(MainOrder order) throws Exception {
-        mockMvc.perform(get("/mainOrderDetail" + order.getId()))
+        mockMvc.perform(get("/mainOrderDetail").param("id", String.valueOf(order.getId())))
                 .andExpect(status().isOk());
     }
 

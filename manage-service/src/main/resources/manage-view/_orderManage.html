@@ -38,7 +38,7 @@
       th:data-logistics-detail-url="@{/manageShiftDetailForMainOrder}"
 >
 
-<form id="detailForm" action="_orderDetail.html" method="get">
+<form id="detailForm" action="_orderDetail.html" th:action="@{/mainOrderDetail}" method="get">
     <input type="hidden" name="id" value=""/>
     <input type="hidden" name="from" value=""/>
 </form>
@@ -223,6 +223,6 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
 
-<script src="manage-resource/js/orderManage.js?v=2"></script>
+<script src="manage-resource/js/orderManage.js?v=3"></script>
 
 </html>

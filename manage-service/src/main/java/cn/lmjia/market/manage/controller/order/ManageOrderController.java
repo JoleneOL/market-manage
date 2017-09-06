@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -68,22 +69,25 @@ public class ManageOrderController {
             , @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-M-d") LocalDate orderDate) {
         return new MainOrderRows(login, time -> conversionService.convert(time, String.class)) {
 
+            private ListJoin<MainOrder, StockShiftUnit> unitJoin;
+
             @Override
             public List<FieldDefinition<MainOrder>> fields() {
                 return Arrays.asList(
-                        Fields.asBasic("id")
-                        , FieldBuilder.asName(MainOrder.class, "unitId")
-                                .addSelect(root -> root.get("currentLogistics").get("id"))
+                        FieldBuilder.asName(MainOrder.class, "mainOrderId")
+                                .addSelect(root -> root.get("id"))
+                                .build()
+                        , FieldBuilder.asName(MainOrder.class, "id")
+                                .addSelect(root -> {
+                                    unitJoin = root.join(MainOrder_.logisticsSet);
+                                    return unitJoin.get("id");
+                                })
                                 .build()
                         , FieldBuilder.asName(MainOrder.class, "supplierId")
                                 .addBiSelect((root, criteriaBuilder)
-                                        -> StockShiftUnitRows.getSupplierId(root.join("currentLogistics"), criteriaBuilder))
+                                        -> StockShiftUnitRows.getSupplierId(unitJoin, criteriaBuilder))
                                 .build()
                         , Fields.asBiFunction("orderId", MainOrder::getSerialId)
-//                        , Fields.asFunction("goods", root -> root.get(MainOrder_.good).get(MainGood_.product).get(Product_.name))
-//                        , FieldBuilder.asName(MainOrder.class, "amount")
-//                                .addSelect(root -> root.get(MainOrder_.amount))
-//                                .build()
                         , getOrderTime()
                         , FieldBuilder.asName(MainOrder.class, "address")
                                 .addSelect(root -> root.get("installAddress"))
@@ -95,18 +99,18 @@ public class ManageOrderController {
                                 -> Customer.getMobile(MainOrder.getCustomer(root)))
 
                         , FieldBuilder.asName(MainOrder.class, "storage")
-                                .addSelect(root -> StockShiftUnit.originJoin(root.join("currentLogistics")).get("name"))
+                                .addSelect(root -> StockShiftUnit.originJoin(unitJoin).get("name"))
                                 .build()
                         , FieldBuilder.asName(MainOrder.class, "deliverTime")
-                                .addSelect(stockShiftUnitRoot -> stockShiftUnitRoot.get("currentLogistics").get("createTime"))
+                                .addSelect(stockShiftUnitRoot -> unitJoin.get("createTime"))
                                 .addFormat((data, type) -> localDateTimeFormatter.apply((LocalDateTime) data))
                                 .build()
                         , FieldBuilder.asName(MainOrder.class, "status")
-                                .addBiSelect((root, criteriaBuilder) -> root.get("currentLogistics").get("currentStatus"))
+                                .addBiSelect((root, criteriaBuilder) -> unitJoin.get("currentStatus"))
                                 .addFormat((obj, type) -> obj.toString())
                                 .build()
                         , FieldBuilder.asName(MainOrder.class, "stateCode")
-                                .addBiSelect((root, criteriaBuilder) -> root.get("currentLogistics").get("currentStatus"))
+                                .addBiSelect((root, criteriaBuilder) -> unitJoin.get("currentStatus"))
                                 .addFormat((obj, type) -> ((Enum) obj).ordinal())
                                 .build()
                 );
@@ -115,12 +119,12 @@ public class ManageOrderController {
             @Override
             public Specification<MainOrder> specification() {
                 return (root, query, cb) -> {
-                    Predicate predicate = cb.isNotNull(root.get(MainOrder_.currentLogistics));
+                    Predicate predicate = cb.conjunction();
                     if (!StringUtils.isEmpty(mobile))
                         predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root))
                                 , "%" + mobile + "%"));
                     if (depotId != null) {
-                        predicate = cb.and(predicate, cb.equal(root.join("currentLogistics").get("origin").get("id"), depotId));
+                        predicate = cb.and(predicate, cb.equal(unitJoin.get("origin").get("id"), depotId));
                     }
                     if (!StringUtils.isEmpty(productCode)) {
                         root.fetch(MainOrder_.amounts);
@@ -166,9 +170,9 @@ public class ManageOrderController {
         mainOrderService.makeLogistics(HaierSupplier.class, orderId, NumberUtils.parseNumber(depotId, Long.class));
     }
 
-    @GetMapping("/mainOrderDetail{id}")
+    @GetMapping("/mainOrderDetail")
     @Transactional(readOnly = true)
-    public String orderDetail(@PathVariable("id") long id, Model model) {
+    public String orderDetail(long id, Model model) {
         final MainOrder order = mainOrderService.getOrder(id);
         model.addAttribute("currentData", order);
         model.addAttribute("shipList", order.getLogisticsSet()

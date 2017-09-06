@@ -110,7 +110,7 @@ $(function () {
                 data: function (item) {
                     var makeLogistics = '<a href="javascript:;" class="js-makeLogistics" data-id="' + item.id + '"><i class="fa fa-truck"></i>&nbsp;物流发货</a>';
 
-                    var viewLogistics = '<a href="javascript:;" class="js-viewLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
+                    // var viewLogistics = '<a href="javascript:;" class="js-viewLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
 
                     var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '" data-from="' + item.methodCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
                     var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;修改</a>';
@@ -135,7 +135,7 @@ $(function () {
                         // 物流发货
                         a = a + makeLogistics;
                     } else if (item.statusCode >= 3) {
-                        a = a + viewLogistics;
+                        // a = a + viewLogistics;
                     }
 
                     if (item.methodCode !== 2) {
