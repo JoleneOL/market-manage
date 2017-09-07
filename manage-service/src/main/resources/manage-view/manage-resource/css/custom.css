@@ -468,3 +468,36 @@ textarea {
     z-index: 999;
     box-shadow: 0 12px 24px 0 rgba(7, 17, 27, .2);
 }
+
+.view-ship-list {
+    padding: 0;
+}
+
+.view-ship-list .card-item {
+    list-style: none;
+}
+
+.view-ship-list .card-item a {
+    display: block;
+    padding: 20px;
+    color: #676a6c;
+    border-bottom: 1px solid #e7eaec;
+}
+.view-ship-list .card-item a:hover {
+    box-shadow: 0 6px 24px rgba(7, 17, 27, .2);
+}
+.view-ship-list .card-item .ship-item {
+    float: left;
+}
+
+.view-ship-list .card-item .hd {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.view-ship-list .card-item .bd {
+    padding: 2px 10px;
+    text-align: center;
+    font-size: 14px;
+}
