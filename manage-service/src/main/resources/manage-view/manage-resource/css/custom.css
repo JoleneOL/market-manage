@@ -498,3 +498,7 @@ textarea {
     text-align: center;
     font-size: 14px;
 }
+
+.text-left {
+    text-align: left !important;
+}

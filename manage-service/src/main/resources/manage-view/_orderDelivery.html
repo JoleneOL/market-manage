@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>订单发货</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="gray-bg">
+<div class="wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_orderManage.html" th:href="@{/orderManage}">订单管理</a></li>
+                <li><strong>订单发货</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    待发货列表
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content" id="J_undelivered">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>待发货数量</th>
+                            <th>需要安装</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-goods-id="1">
+                            <td>量子立式净水机（白色）</td>
+                            <td><span class="js-stock">999</span>台</td>
+                            <td>需要</td>
+                        </tr>
+                        <tr data-goods-id="2">
+                            <td>量子立式净水机（黑色）</td>
+                            <td><span class="js-stock">100</span>台</td>
+                            <td>不需要</td>
+                        </tr>
+                        <tr data-goods-id="3">
+                            <td>量子空气净化器</td>
+                            <td><span class="js-stock">99</span>台</td>
+                            <td>不需要</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="ibox">
+                <div class="ibox-title">
+                    发货操作
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal" id="J_form">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单用户</label>
+                            <div class="col-sm-6">
+                                <input type="text" placeholder="订单用户" class="form-control"
+                                       name="orderUser" value="前面的名字" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单手机号</label>
+                            <div class="col-sm-6">
+                                <input type="text" placeholder="订单手机号" class="form-control"
+                                       name="phone" value="18898886888" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单地址</label>
+                            <div class="col-sm-6">
+                                <input type="text" placeholder="订单地址" class="form-control"
+                                       name="address" value="浙江省-杭州市-滨江区海亮大厦" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">物流公司</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="company">
+                                    <option value="日日顺">日日顺</option>
+                                    <option value="苏宁">苏宁</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">发货仓库</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" name="depot" id="J_selectDepot" required>
+                                    <option value="" disabled selected class="hidden">选择仓库</option>
+                                    <option value="1">华东仓库</option>
+                                    <option value="2">华南仓库</option>
+                                    <option value="3">西北仓库</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否安装</label>
+                            <div class="col-sm-6">
+                                <label class="checkbox-inline i-checks">
+                                    <input type="checkbox" name="installation" value="true"></label>
+                            </div>
+                        </div>
+                        <div id="J_goodsLists">
+                            <div class="form-group" data-goods-id="1">
+                                <label class="col-sm-5 control-label">量子立式净水机（白色）</label>
+                                <div class="col-sm-2">
+                                    <input type="number" placeholder="输入数量" class="form-control js-goods"
+                                           name="goods" min="0">
+                                </div>
+                                <label class="col-sm-4 control-label text-danger text-left"></label>
+                            </div>
+                            <div class="form-group" data-goods-id="2">
+                                <label class="col-sm-5 control-label">量子立式净水机（黑色）</label>
+                                <div class="col-sm-2">
+                                    <input type="number" placeholder="输入数量" class="form-control js-goods"
+                                           name="goods" min="0">
+                                </div>
+                                <label class="col-sm-4 control-label text-danger text-left"></label>
+                            </div>
+                            <div class="form-group" data-goods-id="2">
+                                <label class="col-sm-5 control-label">量子空气净化器</label>
+                                <div class="col-sm-2">
+                                    <input type="number" placeholder="输入数量" class="form-control js-goods"
+                                           name="goods" min="0">
+                                </div>
+                                <label class="col-sm-4 control-label text-danger text-left"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6 col-sm-offset-3 control-label">
+                                <button type="button" class="btn btn-primary btn-block btn-lg" id="J_delivery">
+                                    发&nbsp;货
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox">
+                <div class="ibox-title">
+                    库存列表
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content" id="J_depot">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>仓库名称</th>
+                            <th>库存剩余量</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-depot-id="1">
+                            <td>华东仓库</td>
+                            <td>
+                                <p data-goods-id="1" data-stock="5000">量子立式净水机（白色）/ <span class="text-danger">5000</span></p>
+                                <p data-goods-id="2" data-stock="2000">量子立式净水机（黑色）/ <span class="text-danger">2000</span></p>
+                                <p data-goods-id="3" data-stock="300">量子空气净化器/ <span class="text-danger">300</span></p>
+                            </td>
+                        </tr>
+                        <tr data-depot-id="2">
+                            <td>华南仓库</td>
+                            <td>
+                                <p data-goods-id="1" data-stock="2000">量子立式净水机（白色）/ <span class="text-danger">2000</span></p>
+                                <p data-goods-id="2" data-stock="5000">量子立式净水机（黑色）/ <span class="text-danger">5000</span></p>
+                                <p data-goods-id="3" data-stock="1300">量子空气净化器/ <span class="text-danger">1300</span></p>
+                            </td>
+                        </tr>
+                        <tr data-depot-id="3">
+                            <td>西北仓库</td>
+                            <td>
+                                <p data-goods-id="1" data-stock="500">量子立式净水机（白色）/ <span class="text-danger">500</span></p>
+                                <p data-goods-id="2" data-stock="600">量子立式净水机（黑色）/ <span class="text-danger">600</span></p>
+                                <p data-goods-id="3" data-stock="800">量子空气净化器/ <span class="text-danger">800</span></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/icheck.min.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
+<script src="./manage-resource/js/orderDelivery.js"></script>
+</html>
