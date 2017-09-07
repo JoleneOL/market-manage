@@ -359,10 +359,12 @@ $(function () {
             success: function () {
                 $('#J_shipmentTime').flatpickr({
                     maxDate: new Date(),
-                    locale: 'zh'
+                    locale: 'zh',
+                    onChange: function(dateObj, dateStr, instance) {
+                        deliverTime.set("minDate", dateStr);
+                    }
                 });
-                $('#J_deliverTime').flatpickr({
-                    minDate: new Date(),
+                var deliverTime = $('#J_deliverTime').flatpickr({
                     locale: 'zh'
                 });
             },
