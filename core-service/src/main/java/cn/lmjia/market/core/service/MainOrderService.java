@@ -135,4 +135,11 @@ public interface MainOrderService {
     @EventListener(InstallationEvent.class)
     @Transactional
     void forInstallationEvent(InstallationEvent event);
+
+    /**
+     * @param login 身份
+     * @return 该身份下过的所有订单
+     */
+    @Transactional(readOnly = true)
+    List<MainOrder> byOrderBy(Login login);
 }

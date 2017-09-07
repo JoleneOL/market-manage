@@ -375,4 +375,13 @@ public class MainOrderServiceImpl implements MainOrderService {
             log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
         }
     }
+
+    @Override
+    public List<MainOrder> byOrderBy(Login login) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        return entityManager.createQuery(cq.where(cb.equal(root.get(MainOrder_.orderBy), login)))
+                .getResultList();
+    }
 }
