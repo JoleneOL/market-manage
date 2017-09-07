@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -55,6 +56,12 @@ public class Salesman {
     private Login login;
 
     private boolean enable;
+
+    /**
+     * 成为销售员的时间
+     */
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime createdTime;
 
     /**
      * 销售奖励提成，必须小于1
