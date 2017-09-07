@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
             <div class="ibox">
                 <div class="ibox-title">
                     订单信息
@@ -106,10 +106,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <!--/*@thymesVar id="shipList" type="java.util.List<me.jiangcai.logistics.entity.StockShiftUnit>"*/-->
-        <div class="col-sm-12">
+        <div class="col-sm-6">
             <div class="ibox">
                 <div class="ibox-title">
                     物流信息
@@ -120,33 +118,49 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <ul>
-                        <li th:each="ship:${shipList}">
-                            <a href="_logisticsDetail.html" th:href="@{/manageShiftDetail(id=${ship.id})}">
-                                <article>
-                                    <span th:text="${{ship.createTime}}">2017-10-1 11:11</span>
-                                    <p>发货列表:</p>
-                                    <ul>
-                                        <li th:each="item:${ship.amounts}">
-                                            <span th:text="${item.value.amount}">1</span><span
-                                                th:text="${item.key.unit?:'个'}">瓶</span><span
-                                                th:text="${item.key.name}">黑方</span></li>
-                                        <li th:remove="all">1打喜力</li>
-                                    </ul>
-                                    <span>状态:</span><span th:text="${ship.currentStatus.toString()}">已拒单</span>
-                                </article>
+
+                    <ul class="view-ship-list">
+                        <li class="card-item" th:each="ship:${shipList}">
+                            <a class="clearfix" href="_logisticsDetail.html" th:href="@{/manageShiftDetail(id=${ship.id})}">
+                                <div class="ship-item ship-time">
+                                    <div class="hd">发货时间</div>
+                                    <div class="bd" th:text="${{ship.createTime}}">2017-10-2 11:11</div>
+                                </div>
+                                <div class="ship-item ship-goods">
+                                    <div class="hd">发货列表</div>
+                                    <div class="bd">
+                                        <div th:each="item:${ship.amounts}">
+                                            <span th:text="${item.value.amount}">1</span>
+                                            <span th:text="${item.key.unit?:'个'}">台</span>
+                                            <span th:text="${item.key.name}">量子立式净水机</span>
+                                        </div>
+                                        <div th:remove="all"><span>1瓶量子立式净水机 </span></div>
+                                    </div>
+                                </div>
+                                <div class="ship-item ship-status">
+                                    <div class="hd">状态</div>
+                                    <div class="bd" th:text="${ship.currentStatus.toString()}">已拒单</div>
+                                </div>
                             </a>
                         </li>
-                        <li th:remove="all">
-                            <article>
-                                <span>2017-10-2 11:11</span>
-                                <p>发货列表:</p>
-                                <ul>
-                                    <li>1瓶黑方</li>
-                                    <li>1打喜力</li>
-                                </ul>
-                                <span>状态:</span><span>运递中</span>
-                            </article>
+                        <li class="card-item" th:remove="all">
+                            <a class="clearfix" href="javascript:;">
+                                <div class="ship-item ship-time">
+                                    <div class="hd">发货时间</div>
+                                    <div class="bd">2017-10-2 11:11</div>
+                                </div>
+                                <div class="ship-item ship-goods">
+                                    <div class="hd">发货列表</div>
+                                    <div class="bd">
+                                        <div><span>1瓶量子立式净水机 </span></div>
+                                        <div><span>1瓶量子立式净水机 </span></div>
+                                    </div>
+                                </div>
+                                <div class="ship-item ship-status">
+                                    <div class="hd">状态</div>
+                                    <div class="bd">运递中</div>
+                                </div>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -323,18 +337,6 @@
 
 <script src="manage-resource/js/orderDetail.js"></script>
 <script>
-    //    if (window.document.location.search.indexOf('from=0') >= 0) {
-    //        console.info('不是TRJ页面');
-    //        $('.js-condition').hide();
-    //    }
-    //    if (window.document.location.search.indexOf('from=3') >= 0) {
-    //        console.info('不是TRJ页面');
-    //        $('.js-condition').hide();
-    //    }
-    //    if (!(window.document.location.search.indexOf('status=4') >= 0)) {
-    //        console.info('TRJ正常页面');
-    //
-    //    }
     $(function () {
         $('.js-condition').eq(1).hide();
     });
