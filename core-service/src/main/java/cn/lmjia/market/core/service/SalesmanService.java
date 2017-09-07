@@ -44,4 +44,7 @@ public interface SalesmanService {
 
     @Transactional
     Salesman newSalesman(Login login, BigDecimal rate, String rank);
+
+    @Transactional(readOnly = true)
+    SalesAchievement getAchievement(long id);
 }

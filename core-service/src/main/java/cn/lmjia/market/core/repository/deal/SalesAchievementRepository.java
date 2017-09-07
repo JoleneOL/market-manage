@@ -14,7 +14,7 @@ import java.util.List;
 public interface SalesAchievementRepository extends JpaRepository<SalesAchievement, Long>
         , JpaSpecificationExecutor<SalesAchievement> {
 
-    SalesAchievement findTop1ByTargetLoginAndPickedFalseOrderByTargetTimeDesc(Login login);
+    SalesAchievement findTop1ByTargetLoginAndPickedFalseAndWhose_EnableTrueOrderByTargetTimeDesc(Login login);
 
     List<SalesAchievement> findByTargetLoginAndPickedFalse(Login login);
 

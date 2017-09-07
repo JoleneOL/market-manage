@@ -37,7 +37,7 @@ public class SalesmanServiceImpl implements SalesmanService {
     @Override
     public SalesAchievement pick(Login login) {
         SalesAchievement achievement = salesAchievementRepository
-                .findTop1ByTargetLoginAndPickedFalseOrderByTargetTimeDesc(login);
+                .findTop1ByTargetLoginAndPickedFalseAndWhose_EnableTrueOrderByTargetTimeDesc(login);
         if (achievement == null) {
             return null;
         }
@@ -64,10 +64,16 @@ public class SalesmanServiceImpl implements SalesmanService {
     @Override
     public Salesman newSalesman(Login login, BigDecimal rate, String rank) {
         Salesman salesman = new Salesman();
+        salesman.setEnable(true);
         salesman.setLogin(login);
         salesman.setSalesRate(rate);
         salesman.setRank(rank);
         entityManager.persist(salesman);
         return salesman;
+    }
+
+    @Override
+    public SalesAchievement getAchievement(long id) {
+        return salesAchievementRepository.getOne(id);
     }
 }

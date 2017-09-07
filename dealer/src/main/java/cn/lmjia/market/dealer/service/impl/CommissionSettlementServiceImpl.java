@@ -6,7 +6,9 @@ import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentSystem;
 import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.entity.deal.OrderCommission;
+import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.deal.pk.OrderCommissionPK;
+import cn.lmjia.market.core.entity.support.CommissionType;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.deal.CommissionRepository;
@@ -95,14 +97,14 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         // 谁可以获得？
         {
             // 销售者
-            saveCommission(orderCommission, null, orderBy, commissionRateService.saleRate(system), "直销");
+            saveCommission(orderCommission, null, orderBy, commissionRateService.saleRate(system), CommissionType.directMarketing);
         }
 
         AgentLevel[] sales = agentService.agentLine(orderBy);
         {
             // 以及销售者的代理体系
             for (AgentLevel level : sales) {
-                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.directRate(system, level), "销售");
+                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.directRate(system, level), CommissionType.marketing);
             }
         }
 
@@ -113,7 +115,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             for (int i = 0; i < recommends.length; i++) {
                 AgentLevel level = recommends[i];
 //                if (level != null)
-                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, i), "推荐");
+                saveCommission(orderCommission, level, level.getLogin(), commissionRateService.indirectRate(system, i), CommissionType.guideMarketing);
             }
 //            for (AgentLevel level : recommends) {
 //                if (level != null)
@@ -126,7 +128,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             if (addressLevel != null) {
                 // 以及地域奖励，这个跟系统设定的地址等级有关
                 saveCommission(orderCommission, addressLevel, addressLevel.getLogin()
-                        , commissionRateService.addressRate(addressLevel), "地域");
+                        , commissionRateService.addressRate(addressLevel), CommissionType.regionService);
             }
         }
     }
@@ -146,7 +148,7 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     }
 
     private void saveCommission(OrderCommission orderCommission, AgentLevel level, Login login, BigDecimal rate
-            , String message) {
+            , CommissionType type) {
         if (rate.equals(BigDecimal.ZERO)) {
             // 0 没有处理的必要
             return;
@@ -158,8 +160,29 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         commission.setRate(rate);
         commission.setAmount(orderCommission.getSource().getCommissioningAmount().multiply(rate)
                 .setScale(2, BigDecimal.ROUND_HALF_UP));
+        commission.setType(type);
 //        login.setCommissionBalance(login.getCommissionBalance().add(commission.getAmount()));
         commissionRepository.save(commission);
-        log.debug("因" + message + " login:" + login.getId() + "获得 提成比:" + rate + "，提成:" + commission.getAmount());
+        log.debug("因" + type + " login:" + login.getId() + "获得 提成比:" + rate + "，提成:" + commission.getAmount());
+        final SalesAchievement salesAchievement = orderCommission.getSource().getSalesAchievement();
+        if (salesAchievement != null) {
+            BigDecimal achievementRate = rate.multiply(salesAchievement.getCurrentRate())
+                    .setScale(7, BigDecimal.ROUND_DOWN);
+            BigDecimal achievementAmount = orderCommission.getSource().getCommissioningAmount().multiply(achievementRate)
+                    .setScale(2, BigDecimal.ROUND_HALF_UP);
+            final Login salesmanLogin = salesAchievement.getWhose().getLogin();
+            log.debug("但因该订单源自" + salesmanLogin + "的促销，所以分配给TA:" + achievementAmount);
+            commission.setRate(rate.subtract(achievementRate));
+            commission.setAmount(commission.getAmount().subtract(achievementAmount));
+            //
+            Commission achievementCommission = new Commission();
+            achievementCommission.setOrderCommission(orderCommission);
+            achievementCommission.setAgent(level);
+            achievementCommission.setWho(salesmanLogin);
+            achievementCommission.setRate(achievementRate);
+            achievementCommission.setAmount(achievementAmount);
+            achievementCommission.setType(CommissionType.sales);
+            commissionRepository.save(achievementCommission);
+        }
     }
 }

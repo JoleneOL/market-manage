@@ -5,11 +5,13 @@ import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
+import cn.lmjia.market.core.service.SalesmanService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
@@ -53,6 +55,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     private PayService payService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private SalesmanService salesmanService;
 
     /**
      * @return 展示下单页面
@@ -76,6 +80,12 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "wechat@orderPlace.html";
     }
 
+//    @GetMapping("/_pay/{id}")
+//    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
+//            throws SystemMaintainException {
+//        return payOrder(openId, request, from(null, id));
+//    }
+
     /**
      * @return 展示下单页面
      */
@@ -89,12 +99,6 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         orderIndex(login, model, channel);
         return "wechat@orderPlace.html";
     }
-
-//    @GetMapping("/_pay/{id}")
-//    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
-//            throws SystemMaintainException {
-//        return payOrder(openId, request, from(null, id));
-//    }
 
     @GetMapping("/wechatOrderPay")
     public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId)
@@ -114,7 +118,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     // &fullAddress=%E6%B1%9F%E7%95%94%E6%99%95%E5%95%A6&mobile=18606509616&goodId=2&leasedType=hzts02&amount=0&activityCode=xzs&recommend=2
     @PostMapping("/wechatOrder")
     @Transactional
-    public ModelAndView newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender
+    public ModelAndView newOrder(Long salesAchievementId, @OpenId String openId, HttpServletRequest request
+            , String name, Gender gender
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
             , String authorising, String idNumber, boolean installmentHuabai, String[] goods)
@@ -123,6 +128,12 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         MainGoodsAndAmounts amounts = MainGoodsAndAmounts.ofArray(goods);
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,
                 activityCode, channelId, amounts);
+        if (salesAchievementId != null) {
+            SalesAchievement achievement = salesmanService.getAchievement(salesAchievementId);
+            achievement.setCurrentRate(achievement.getWhose().getSalesRate());
+            order.setSalesAchievement(achievement);
+            achievement.setMainOrder(order);
+        }
         if (channelId != null) {
             Channel channel = channelService.get(channelId);
             //        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))
