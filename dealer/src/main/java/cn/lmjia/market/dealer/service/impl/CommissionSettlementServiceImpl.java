@@ -165,7 +165,8 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
         commissionRepository.save(commission);
         log.debug("因" + type + " login:" + login.getId() + "获得 提成比:" + rate + "，提成:" + commission.getAmount());
         final SalesAchievement salesAchievement = orderCommission.getSource().getSalesAchievement();
-        if (salesAchievement != null) {
+        if (salesAchievement != null && salesAchievement.getCurrentRate() != null
+                && !salesAchievement.getCurrentRate().equals(BigDecimal.ZERO)) {
             BigDecimal achievementRate = rate.multiply(salesAchievement.getCurrentRate())
                     .setScale(7, BigDecimal.ROUND_DOWN);
             BigDecimal achievementAmount = orderCommission.getSource().getCommissioningAmount().multiply(achievementRate)
