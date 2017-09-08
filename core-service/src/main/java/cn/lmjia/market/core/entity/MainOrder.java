@@ -450,13 +450,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     /**
      * @return 需要物流的信息
      */
-    public Map<MainProduct, Integer> getRequireShip() {
-        final Map<MainProduct, Integer> require = new HashMap<>();
-        amounts.forEach((good, integer) -> {
-            if (require.putIfAbsent(good.getProduct(), integer) != null) {
-                require.computeIfPresent(good.getProduct(), ((product, integer1) -> integer1 + integer));
-            }
-        });
+    public Map<MainProduct, Integer> getWantShipProduct() {
+        final Map<MainProduct, Integer> require = getTotalShipProduct();
         logisticsSet.stream().filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
                 .forEach(stockShiftUnit
                         -> stockShiftUnit.getAmounts().forEach(((product, productBatch) -> {
@@ -475,6 +470,34 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return require;
     }
 
+    private Map<MainProduct, Integer> getTotalShipProduct() {
+        final Map<MainProduct, Integer> require = new HashMap<>();
+        amounts.forEach((good, integer) -> {
+            if (require.putIfAbsent(good.getProduct(), integer) != null) {
+                require.computeIfPresent(good.getProduct(), ((product, integer1) -> integer1 + integer));
+            }
+        });
+        return require;
+    }
+
+    public void addInstallStockShiftUnit(StockShiftUnit unit) {
+        if (installedLogisticsSet == null)
+            setInstalledLogisticsSet(new ArrayList<>());
+        getInstalledLogisticsSet().add(unit);
+    }
+
+    public void switchToLogisticsFinishStatus() {
+        setOrderStatus(OrderStatus.afterSale);
+    }
+
+    public void switchToForInstallStatus() {
+        setOrderStatus(OrderStatus.forInstall);
+    }
+
+    public void switchToForDeliverStatus() {
+        setOrderStatus(OrderStatus.forDeliver);
+    }
+
     /**
      * 更新物流冗余信息并且切换当前状态
      * 可能切换为forInstall,forDeliver
@@ -488,7 +511,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
             setAbleShip(true);
             setOrderStatus(OrderStatus.forDeliver);
             return false;
-        } else if (getRequireShip().isEmpty()) {
+        } else if (getWantShipProduct().isEmpty()) {
             log.debug("已物流所有所需货品:" + getSerialId());
             setAbleShip(false);
             // 已经无货需发了；如果还有货可发状态就无需关注了。
@@ -522,7 +545,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         if (unit != null) {
             getInstalledLogisticsSet().add(unit);
         }
-        if (getRequireShip().isEmpty()) {
+        if (getWantShipProduct().isEmpty()) {
             log.debug("已物流所有所需货品:" + getSerialId());
             // 要么无需安装 要么已安装
             if (getLogisticsSet().stream()
@@ -560,4 +583,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return list;
     }
 
+    @Override
+    public String toString() {
+        return "MainOrder(" + getSerialId() + ":" + getId() + ")";
+    }
 }

@@ -286,7 +286,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         MainOrder order = getOrder(orderId);
 
         // 如果要发的 比需要发的多
-        Map<MainProduct, Integer> require = order.getRequireShip();
+        Map<MainProduct, Integer> require = order.getWantShipProduct();
         Map<MainProduct, Integer> toShip;
         if (amounts == null) {
             toShip = require;

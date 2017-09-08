@@ -2,7 +2,12 @@ package me.jiangcai.logistics;
 
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.event.InstallationEvent;
+import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.option.LogisticsOptions;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
@@ -56,4 +61,14 @@ public interface LogisticsService {
      */
     @Transactional
     void mockInstallationEvent(long unitId);
+
+    @EventListener(ShiftEvent.class)
+    @Transactional
+    @Order(Ordered.LOWEST_PRECEDENCE)
+    void forShiftEvent(ShiftEvent event);
+
+    @EventListener(InstallationEvent.class)
+    @Transactional
+    @Order(Ordered.LOWEST_PRECEDENCE)
+    void forInstallationEvent(InstallationEvent event);
 }
