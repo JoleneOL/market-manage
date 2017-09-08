@@ -10,8 +10,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,14 +32,64 @@ public class LogisticsServiceTest extends LogisticsTestBase {
     private DemoProject demoProject;
 
     @Test
-    public void order() {
+    public void order1() {
+        order(false);
+    }
+
+    @Test
+    public void order2() {
+        order(true);
+    }
+
+    private void order(boolean testInstall) {
         Map<Product, Integer> amounts = randomProductAmount();
         // 综合订单测试
         // 创建一个需要物流多个货品的订单
-        DemoOrder order = null;
+        DemoOrder order = demoProject.createOrder(amounts);
+
         // 逐个货品的创建物流订单（都无需安装）
+        demoProject.cleanEvents();
+        final List<StockShiftUnit> unitList = new ArrayList<>();
+        amounts.forEach(((product, integer) -> {
+//            logisticsService.make
+            StockShiftUnit unit = demoProject.makeShift(order, product, integer, testInstall);
+            unitList.add(unit);
+        }));
         // 只有在所有货物抵达之后收到 OrderDeliveredEvent 事件
-        // 因无需安装同时也可以接受到 OrderInstalledEvent
+        for (int i = 1; i < unitList.size(); i++) {
+            logisticsService.mockToStatus(unitList.get(i).getId(), ShiftStatus.success);
+            assertThat(demoProject.lastOrderDeliveredEvent())
+                    .as("只有在所有货物抵达之后收到 OrderDeliveredEvent 事件")
+                    .isNull();
+        }
+        logisticsService.mockToStatus(unitList.get(0).getId(), ShiftStatus.success);
+        assertThat(demoProject.lastOrderDeliveredEvent())
+                .as("只有在所有货物抵达之后收到 OrderDeliveredEvent 事件")
+                .isNotNull();
+        assertThat(demoProject.lastOrderDeliveredEvent().getOrder())
+                .as("只有在所有货物抵达之后收到 OrderDeliveredEvent 事件")
+                .isEqualTo(order);
+        if (!testInstall)
+            // 因无需安装同时也可以接受到 OrderInstalledEvent
+            assertThat(demoProject.lastOrderInstalledEvent())
+                    .as("因无需安装同时也可以接受到 OrderInstalledEvent")
+                    .isNotNull();
+        else {
+            assertThat(demoProject.lastOrderInstalledEvent())
+                    .as("安装尚未完成")
+                    .isNull();
+            for (int i = 1; i < unitList.size(); i++) {
+                logisticsService.mockInstallationEvent(unitList.get(i).getId());
+                assertThat(demoProject.lastOrderInstalledEvent())
+                        .as("所有安装都完成 才算完成")
+                        .isNull();
+            }
+
+            logisticsService.mockInstallationEvent(unitList.get(0).getId());
+            assertThat(demoProject.lastOrderInstalledEvent())
+                    .as("都完成了！")
+                    .isNotNull();
+        }
 
         // 同样的测试 区别仅仅是物流订单是需要安装的
         // 那么只有在所有货物抵达之后收到 OrderDeliveredEvent 事件

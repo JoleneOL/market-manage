@@ -13,7 +13,7 @@ public class OrderDeliveredEvent {
     /**
      * 事务内订单
      */
-    private final DeliverableOrder mainOrder;
+    private final DeliverableOrder order;
     /**
      * 可选物流事件
      */

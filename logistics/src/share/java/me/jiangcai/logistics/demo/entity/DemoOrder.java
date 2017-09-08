@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author CJ
@@ -24,11 +25,9 @@ import java.util.Map;
 @Getter
 @Entity
 public class DemoOrder implements DeliverableOrder {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ElementCollection
     private Map<Product, Integer> amounts;
     @OneToMany
@@ -38,6 +37,19 @@ public class DemoOrder implements DeliverableOrder {
     private List<StockShiftUnit> installedStockShiftUnits;
     private String lastStatus;
     private boolean ableShip;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DemoOrder)) return false;
+        DemoOrder order = (DemoOrder) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Override
     public Map<? extends Product, Integer> getTotalShipProduct() {
