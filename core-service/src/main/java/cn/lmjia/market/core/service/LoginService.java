@@ -3,8 +3,10 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.util.Utils;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
+import me.jiangcai.lib.notice.Content;
 import me.jiangcai.user.notice.User;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -52,6 +54,11 @@ public interface LoginService extends UserDetailsService {
             public String message(String code) {
                 return "登录短信验证码为：" + code + "；请勿泄露。";
             }
+
+            @Override
+            public Content generateContent(String code) {
+                return Utils.generateCodeContent(this, code, "SMS_94310019");
+            }
         };
     }
 
@@ -73,6 +80,11 @@ public interface LoginService extends UserDetailsService {
             @Override
             public String message(String code) {
                 return "注册短信验证码为：" + code + "；请勿泄露。";
+            }
+
+            @Override
+            public Content generateContent(String code) {
+                return Utils.generateCodeContent(this, code, "SMS_94310017");
             }
         };
     }
