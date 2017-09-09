@@ -7,6 +7,8 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +29,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = SecurityConfig.class)
 public class OrderDataControllerTest extends DealerServiceTest {
 
+    private static final Log log = LogFactory.getLog(OrderDataControllerTest.class);
     @Autowired
     private MainOrderService mainOrderService;
     @Autowired
     private LocalDateConverter localDateConverter;
-
     private Login testLogin;
 
     @Before
     public void startTest() {
-        testLogin = randomLogin(false);
+        testLogin = newRandomLogin();
     }
 
     @Override
@@ -77,12 +79,21 @@ public class OrderDataControllerTest extends DealerServiceTest {
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 0);
         newRandomOrderFor(order, order);
         assertCurrentCount(builder -> builder.param("orderDate", localDateConverter.print(LocalDate.now(), null)), 1);
+        //新的日期测试
+
+        log.info("beginDate 今天只有一单");
+        assertCurrentCount(builder -> builder.param("beginDate", localDateConverter.print(LocalDate.now(), null)), 1);
+        log.info("beginDate 今天+1 没有");
+        assertCurrentCount(builder -> builder.param("beginDate", localDateConverter.print(LocalDate.now().plusDays(1), null)), 0);
+        log.info("endDate 32天前为0");
+        assertCurrentCount(builder -> builder.param("endDate", localDateConverter.print(LocalDate.now().minusDays(32), null)), 0);
         //状态 略过测试
         //商品 略过测试
     }
 
     private ResultActions assertCurrentCount(Function<MockHttpServletRequestBuilder, MockHttpServletRequestBuilder> addParam, int count) throws Exception {
         return orderDataList(addParam, count > 0)
+//                .andDo(print())
                 .andExpect(jsonPath("$.recordsTotal").value(count));
     }
 
