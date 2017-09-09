@@ -185,7 +185,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         while (!loginService.isRegularLogin(login)) {
             // 最终都没有找到收益人 则给 管理员。。
             if (login == null)
-                return loginService.byLoginName("root");
+                return loginService.byLoginName("master");
             login = login.getGuideUser();
         }
         return login;
