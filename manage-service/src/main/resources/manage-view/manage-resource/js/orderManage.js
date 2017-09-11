@@ -1,9 +1,20 @@
 $(function () {
     "use strict";
 
-    $('#J_datePicker').flatpickr({
+    var beginTime = $('#J_beginDate').flatpickr({
         maxDate: new Date(),
-        locale: 'zh'
+        locale: 'zh',
+        onChange: function(dateObj, dateStr, instance) {
+            endTime.set("minDate", dateStr);
+        }
+    });
+
+    var endTime = $('#J_endDate').flatpickr({
+        maxDate: new Date(),
+        locale: 'zh',
+        onChange: function(dateObj, dateStr, instance) {
+            beginTime.set("maxDate", dateStr);
+        }
     });
 
     var _body = $('body');
@@ -24,7 +35,7 @@ $(function () {
             }
         },
         "ordering": true,
-        "lengthChange": false,
+        "lengthChange": true,
         "searching": false,
         "colReorder": true,
         "columns": [
@@ -94,6 +105,7 @@ $(function () {
             {
                 "title": "状态",
                 "name": "status",
+                className: 'table-status',
                 "data": function (item) {
                     if (item.methodCode !== 2 && item.statusCode === 7) return '<span class="text-danger">' + item.status + '</span>';
                     if (item.methodCode === 2 && item.statusCode === 4) return '<span class="text-danger">' + item.status + '</span>';
@@ -162,11 +174,13 @@ $(function () {
                 }
             }
         ],
+        "lengthMenu": [[15, 30, 50, -1], [15, 30, 50, "全部"]],
         "displayLength": 15,
         "drawCallback": function () {
             clearSearchValue();
         },
-        "dom": "<'row'<'col-sm-12'B>>" +
+        "dom": "<'row'<'col-sm-12 m-b-sm'B>>" +
+        "<'row'<'col-sm-12'l>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         "buttons": [{
@@ -174,7 +188,26 @@ $(function () {
             "text": "导出 Excel",
             "className": "btn-xs",
             "exportOptions": {
-                "columns": ":not(.table-action)"
+                "columns": ":not(.table-action)",
+                "modifier": {
+                    "page": "all"
+                },
+                "format": {
+                    body: function (data, row, column, node) {
+                        if ($.trim(node.className) === 'table-show-box') {
+                            var _arr = [];
+                            $(node).find('.table-show-hide').remove();
+                            $(node).find('span').each(function () {
+                                _arr.push($(this).text())
+                            });
+                            return _arr.join('，');
+                        }
+                        if ($.trim(node.className) === 'table-status') {
+                            return $(node).text();
+                        }
+                        return data;
+                    }
+                }
             }
         }, {
             "extend": 'colvis',
@@ -328,10 +361,12 @@ $(function () {
             success: function () {
                 $('#J_shipmentTime').flatpickr({
                     maxDate: new Date(),
-                    locale: 'zh'
+                    locale: 'zh',
+                    onChange: function(dateObj, dateStr, instance) {
+                        deliverTime.set("minDate", dateStr);
+                    }
                 });
-                $('#J_deliverTime').flatpickr({
-                    minDate: new Date(),
+                var deliverTime = $('#J_deliverTime').flatpickr({
                     locale: 'zh'
                 });
             },

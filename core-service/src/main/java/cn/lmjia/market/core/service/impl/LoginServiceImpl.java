@@ -322,6 +322,7 @@ public class LoginServiceImpl implements LoginService {
                 .where(cb.isNotNull(customerRoot.get(Customer_.login)));
         //
         entityManager.createQuery(cq
+                .distinct(true)
                 .where(
                         // 非管理员
                         cb.notEqual(root.type(), Manager.class)
@@ -356,7 +357,8 @@ public class LoginServiceImpl implements LoginService {
                 // 是否需要调度警告？
                 if (targetWarnTime.isBefore(now))
                     // 需要立刻警告
-                    warnDeleteLogin(login);
+                    log.trace("需要立刻警告，但timeToWarn设置过长可能导致重复，所以这不再发送我们觉得已经超过的警告");
+//                    warnDeleteLogin(login);
                 else if (targetWarnTime.isBefore(nextRun)) {
                     // 下次调度前就需要了
                     long ms = now.until(targetWarnTime, ChronoUnit.MILLIS);

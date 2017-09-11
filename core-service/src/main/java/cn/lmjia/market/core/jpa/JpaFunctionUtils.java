@@ -189,7 +189,7 @@ public class JpaFunctionUtils {
     /**
      * ym 定义为Y*12+M
      *
-     * @param ymPredicateGenerator 条件生成器
+     * @param ymPredicateGenerator 条件生成器；expression1 为 arg 所产生的ym,expression2 为 date 所产生的ym
      * @return YM符合'条件生成器'的谓语
      */
     public static Predicate ym(CriteriaBuilder cb, Expression arg, LocalDate date
@@ -200,7 +200,7 @@ public class JpaFunctionUtils {
     /**
      * ym 定义为Y*12+M
      *
-     * @param ymPredicateGenerator 条件生成器
+     * @param ymPredicateGenerator 条件生成器；expression1 为 arg 所产生的ym,expression2 为 date 所产生的ym
      * @return YM符合'条件生成器'的谓语
      */
     public static Predicate ym(CriteriaBuilder cb, Expression arg, String date
@@ -211,7 +211,7 @@ public class JpaFunctionUtils {
     /**
      * ym 定义为Y*12+M
      *
-     * @param ymPredicateGenerator 条件生成器
+     * @param ymPredicateGenerator 条件生成器；expression1 为 arg 所产生的ym,expression2 为 date 所产生的ym,
      * @return YM符合'条件生成器'的谓语
      */
     public static <T> Predicate ym(CriteriaBuilder cb, Expression arg, Expression<T> date
@@ -226,6 +226,68 @@ public class JpaFunctionUtils {
                 cb.prod(cb.function("year", Integer.class, arg), 12)
                 , cb.function("month", Integer.class, arg));
     }
+    // ymd
+
+    /**
+     * ymd 定义为Y*12*31+M*31+D
+     *
+     * @return YMD一致的谓语
+     */
+    public static Predicate ymdEqual(CriteriaBuilder cb, Expression arg, String date) {
+        return ymdEqual(cb, arg, cb.literal(date));
+    }
+
+    /**
+     * ymd 定义为Y*12*31+M*31+D
+     *
+     * @return YMD一致的谓语
+     */
+    public static <T> Predicate ymdEqual(CriteriaBuilder cb, Expression arg, Expression<T> date) {
+        return ymd(cb, arg, date, CriteriaBuilder::equal);
+    }
+
+    /**
+     * ymd 定义为Y*12*31+M*31+D
+     *
+     * @param predicateGenerator 条件生成器；expression1 为 arg 所产生的ymd,expression2 为 date 所产生的ymd,
+     * @return YMD符合'条件生成器'的谓语
+     */
+    public static Predicate ymd(CriteriaBuilder cb, Expression arg, LocalDate date
+            , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> predicateGenerator) {
+        return ymd(cb, arg, date.format(databaseFriendLyDateFormatter), predicateGenerator);
+    }
+
+    /**
+     * ymd 定义为Y*12*31+M*31+D
+     *
+     * @param predicateGenerator 条件生成器；expression1 为 arg 所产生的ymd,expression2 为 date 所产生的ymd,
+     * @return YMD符合'条件生成器'的谓语
+     */
+    public static Predicate ymd(CriteriaBuilder cb, Expression arg, String date
+            , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> predicateGenerator) {
+        return ymd(cb, arg, cb.literal(date), predicateGenerator);
+    }
+
+    /**
+     * ymd 定义为Y*12*31+M*31+D
+     *
+     * @param predicateGenerator 条件生成器；expression1 为 arg 所产生的ymd,expression2 为 date 所产生的ymd,
+     * @return YMD符合'条件生成器'的谓语
+     */
+    public static <T> Predicate ymd(CriteriaBuilder cb, Expression arg, Expression<T> date
+            , TriFunction<CriteriaBuilder, Expression<Integer>, Expression<Integer>, Predicate> predicateGenerator) {
+        return predicateGenerator.apply(cb, getYMD(cb, arg)
+                , getYMD(cb, date)
+        );
+    }
+
+    private static Expression<Integer> getYMD(CriteriaBuilder cb, Expression arg) {
+        return cb.sum(
+                cb.prod(cb.function("year", Integer.class, arg), 12 * 31)
+                , cb.sum(cb.prod(cb.function("month", Integer.class, arg), 31)
+                        , cb.function("day", Integer.class, arg)));
+    }
+    // ymd end
 
     /**
      * @param date                    如果某参数为传入值则推荐使用字符串，可以避免因为数据库的异常而导致类型异常；通常各个数据库对于字符串都是比较友好的

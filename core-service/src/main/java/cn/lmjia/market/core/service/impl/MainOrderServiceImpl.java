@@ -188,7 +188,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         while (!loginService.isRegularLogin(login)) {
             // 最终都没有找到收益人 则给 管理员。。
             if (login == null)
-                return loginService.byLoginName("root");
+                return loginService.byLoginName("master");
             login = login.getGuideUser();
         }
         return login;
@@ -196,9 +196,9 @@ public class MainOrderServiceImpl implements MainOrderService {
 
     @Override
     public Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate
-            , OrderStatus status) {
+            , LocalDate beginDate, LocalDate endDate, OrderStatus status) {
         return (root, query, cb) -> {
-            Predicate predicate = cb.isTrue(cb.literal(true));
+            Predicate predicate = cb.conjunction();
             if (!StringUtils.isEmpty(orderId)) {
                 log.debug("search order with orderId:" + orderId);
                 //前面8位是 时间
@@ -206,6 +206,15 @@ public class MainOrderServiceImpl implements MainOrderService {
             } else if (orderDate != null) {
                 log.debug("search order with orderDate:" + orderDate);
                 predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate.toString()));
+            } else {
+                // 日期过滤
+                if (beginDate != null) {
+                    predicate = cb.and(predicate, JpaFunctionUtils.ymd(cb, root.get(MainOrder_.orderTime), beginDate
+                            , CriteriaBuilder::greaterThanOrEqualTo));
+                }
+                if (endDate != null)
+                    predicate = cb.and(predicate, JpaFunctionUtils.ymd(cb, root.get(MainOrder_.orderTime), endDate
+                            , CriteriaBuilder::lessThanOrEqualTo));
             }
             if (!StringUtils.isEmpty(mobile)) {
                 log.debug("search order with mobile:" + mobile);

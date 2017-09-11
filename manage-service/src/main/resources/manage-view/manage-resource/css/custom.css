@@ -1,3 +1,6 @@
+.display-inline {
+    display: inline-block;
+}
 .input-sm {
     font-size: 12px;
 }
@@ -478,7 +481,7 @@ textarea {
     display: block;
     padding: 20px;
     color: #676a6c;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #e7eaec;
 }
 .view-ship-list .card-item a:hover {
     box-shadow: 0 6px 24px rgba(7, 17, 27, .2);

@@ -4,8 +4,10 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
+import cn.lmjia.market.core.util.Utils;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.VerificationType;
+import me.jiangcai.lib.notice.Content;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -42,6 +44,11 @@ public interface WithdrawService {
             @Override
             public String message(String code) {
                 return "提现校验短信验证码为：" + code + "；请勿泄露。";
+            }
+
+            @Override
+            public Content generateContent(String code) {
+                return Utils.generateCodeContent(this, code, "SMS_94675070");
             }
         };
     }
