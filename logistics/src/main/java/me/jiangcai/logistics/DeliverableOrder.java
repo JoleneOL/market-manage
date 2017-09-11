@@ -26,6 +26,11 @@ public interface DeliverableOrder {
     void addInstallStockShiftUnit(StockShiftUnit unit);
 
     /**
+     * @param unit 新增库存转移信息
+     */
+    void addStockShiftUnit(StockShiftUnit unit);
+
+    /**
      * @return 用以安装的库存转移信息
      */
     List<? extends StockShiftUnit> getInstallStockShiftUnit();

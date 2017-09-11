@@ -108,13 +108,7 @@ public class LogisticsServiceImpl implements LogisticsService {
     }
 
     @Override
-    public StockShiftUnit makeShift(LogisticsSupplier supplier, Collection<Thing> things, LogisticsSource source
-            , LogisticsDestination destination) {
-        return makeShift(supplier, things, source, destination, 0);
-    }
-
-    @Override
-    public StockShiftUnit makeShift(LogisticsSupplier supplier1, Collection<Thing> things, LogisticsSource source
+    public StockShiftUnit makeShift(LogisticsSupplier supplier1, DeliverableOrder order, Collection<Thing> things, LogisticsSource source
             , LogisticsDestination destination, int options) {
         LogisticsSupplier supplier;
         if (supplier1 == null) {
@@ -140,7 +134,11 @@ public class LogisticsServiceImpl implements LogisticsService {
                     .collect(Collectors.toMap(Thing::getProduct
                             , thing -> new ProductBatch(thing.getProductStatus(), thing.getAmount()))));
         };
-        return stockShiftUnitRepository.save(supplier.makeShift(source, destination, consumer, options));
+        final StockShiftUnit shiftUnit = stockShiftUnitRepository.save(supplier.makeShift(source, destination, consumer, options));
+        if (order != null) {
+            order.addStockShiftUnit(shiftUnit);
+        }
+        return shiftUnit;
     }
 
 }

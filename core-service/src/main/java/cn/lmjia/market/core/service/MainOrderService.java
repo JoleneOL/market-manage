@@ -6,18 +6,16 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.UnnecessaryShipException;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
-import me.jiangcai.logistics.event.InstallationEvent;
-import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.event.OrderInstalledEvent;
 import me.jiangcai.logistics.exception.StockOverrideException;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -152,13 +150,7 @@ public interface MainOrderService {
             , Map<MainProduct, Integer> amounts, boolean installation) throws StockOverrideException
             , UnnecessaryShipException;
 
-    @EventListener(ShiftEvent.class)
+    @EventListener(OrderInstalledEvent.class)
     @Transactional
-    @Order(Ordered.LOWEST_PRECEDENCE)
-    void forShiftEvent(ShiftEvent event);
-
-    @EventListener(InstallationEvent.class)
-    @Transactional
-    @Order(Ordered.LOWEST_PRECEDENCE)
-    void forInstallationEvent(InstallationEvent event);
+    MainOrderFinishEvent forOrderInstalledEvent(OrderInstalledEvent event);
 }

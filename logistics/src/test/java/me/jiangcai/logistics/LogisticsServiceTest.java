@@ -51,8 +51,7 @@ public class LogisticsServiceTest extends LogisticsTestBase {
         demoProject.cleanEvents();
         final List<StockShiftUnit> unitList = new ArrayList<>();
         amounts.forEach(((product, integer) -> {
-//            logisticsService.make
-            StockShiftUnit unit = demoProject.makeShift(order, product, integer, testInstall);
+            StockShiftUnit unit = demoProject.work(order, product, integer, testInstall, randomSource(), randomDestination());
             unitList.add(unit);
         }));
         // 只有在所有货物抵达之后收到 OrderDeliveredEvent 事件
@@ -120,7 +119,7 @@ public class LogisticsServiceTest extends LogisticsTestBase {
         int stock = stockService.usableStock(depot, thing.getProduct());
 
         // 演示一次简单发货
-        logisticsService.makeShift(null, Collections.singleton(thing), depot, randomDestination());
+        logisticsService.makeShift(null, null, Collections.singleton(thing), depot, randomDestination());
 
         // 此时
         // 发货好了 库存会下降
@@ -128,7 +127,7 @@ public class LogisticsServiceTest extends LogisticsTestBase {
                 .isEqualTo(stock - thing.getAmount());
 
         // 再来比入库
-        StockShiftUnit unit = logisticsService.makeShift(null, Collections.singleton(thing), randomSource(), depot);
+        StockShiftUnit unit = logisticsService.makeShift(null, null, Collections.singleton(thing), randomSource(), depot);
 
         // 虽然发起了入库 但因为没有成功入库，所以数量没有变化
         assertThat(stockService.usableStock(depot, thing.getProduct()))

@@ -8,7 +8,6 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
-import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.UnnecessaryShipException;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
@@ -26,9 +25,7 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.UsageStock_;
 import me.jiangcai.logistics.entity.support.ProductStatus;
-import me.jiangcai.logistics.entity.support.ShiftStatus;
-import me.jiangcai.logistics.event.InstallationEvent;
-import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.event.OrderInstalledEvent;
 import me.jiangcai.logistics.exception.StockOverrideException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.option.LogisticsOptions;
@@ -38,7 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.NumberUtils;
@@ -46,7 +42,6 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -54,13 +49,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -93,8 +86,6 @@ public class MainOrderServiceImpl implements MainOrderService {
     private LogisticsService logisticsService;
     @Autowired
     private DepotRepository depotRepository;
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -318,7 +309,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         else
             supplier = applicationContext.getBean(supplierType);
 
-        StockShiftUnit unit = logisticsService.makeShift(supplier, toShip.entrySet().stream()
+        StockShiftUnit unit = logisticsService.makeShift(supplier, order, toShip.entrySet().stream()
                         .map((Function<Map.Entry<MainProduct, Integer>, Thing>) entry -> new Thing() {
                             @Override
                             public Product getProduct() {
@@ -338,11 +329,6 @@ public class MainOrderServiceImpl implements MainOrderService {
                         .collect(Collectors.toSet())
                 , depot, order, installation ? LogisticsOptions.Installation : 0);
 
-        if (order.getLogisticsSet() == null)
-            order.setLogisticsSet(new ArrayList<>());
-
-        order.getLogisticsSet().add(unit);
-//        order.setCurrentLogistics(unit);
         if (order.getOrderStatus() == OrderStatus.forDeliver)
             order.setOrderStatus(OrderStatus.forDeliverConfirm);
         return unit;
@@ -359,7 +345,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         else
             supplier = applicationContext.getBean(supplierType);
 
-        StockShiftUnit unit = logisticsService.makeShift(supplier, order.getAmounts().entrySet().stream()
+        StockShiftUnit unit = logisticsService.makeShift(supplier, order, order.getAmounts().entrySet().stream()
                         .map((Function<Map.Entry<MainGood, Integer>, Thing>) entry -> new Thing() {
                             @Override
                             public Product getProduct() {
@@ -379,81 +365,16 @@ public class MainOrderServiceImpl implements MainOrderService {
                         .collect(Collectors.toSet())
                 , depot, order, LogisticsOptions.Installation);
 
-        if (order.getLogisticsSet() == null)
-            order.setLogisticsSet(new ArrayList<>());
-
-        order.getLogisticsSet().add(unit);
-        order.setCurrentLogistics(unit);
         order.setOrderStatus(OrderStatus.forDeliverConfirm);
         return unit;
     }
 
     @Override
-    public void forInstallationEvent(InstallationEvent event) {
-        logisticsToMainOrder(event.getUnit(), order -> {
-            final OrderStatus currentOrderStatus = order.getOrderStatus();
-            logisticsInstalled(event, order, currentOrderStatus);
-        });
-    }
-
-    @Override
-    public void forShiftEvent(ShiftEvent event) {
-        // 基于物流的变化，需要对订单进行状态更新
-        // 只关注 拒绝事件
-        final ShiftStatus toStatus = event.getStatus();
-        if (toStatus != ShiftStatus.reject
-                && toStatus != ShiftStatus.success)
-            return;
-        logisticsToMainOrder(event.getUnit(), order -> {
-            final OrderStatus currentOrderStatus = order.getOrderStatus();
-            switch (toStatus) {
-                case reject:
-                    logisticsReject(order, currentOrderStatus);
-                    break;
-                case success:
-                    logisticsSuccess(event, order, currentOrderStatus);
-                    break;
-                default:
-            }
-        });
-
-    }
-
-    private void logisticsInstalled(InstallationEvent event, MainOrder order, OrderStatus currentOrderStatus) {
-        // 怎么支持多个安装的物流信息呢？
-        if (order.updateInstallationStatus(event.getUnit())) {
-            applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
+    public MainOrderFinishEvent forOrderInstalledEvent(OrderInstalledEvent event) {
+        if (event.getOrder() instanceof MainOrder) {
+            return new MainOrderFinishEvent((MainOrder) event.getOrder(), event.getSource());
         }
+        return null;
     }
 
-    private void logisticsSuccess(ShiftEvent event, MainOrder order, OrderStatus currentOrderStatus) {
-        if (order.updateLogisticsStatus()) {
-            applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
-            if (order.updateInstallationStatus(null)) {
-                applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, null));
-            }
-        }
-    }
-
-    /**
-     * 如果所有物流都已失败，则切换为forDeliver；否者保留原有状态
-     */
-    private void logisticsReject(MainOrder order, OrderStatus currentOrderStatus) {
-        order.updateLogisticsStatus();
-    }
-
-    private void logisticsToMainOrder(final StockShiftUnit unit, Consumer<MainOrder> consumer) {
-        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
-        Root<MainOrder> root = cq.from(MainOrder.class);
-        try {
-            MainOrder order = entityManager.createQuery(cq
-                    .where(cb.isMember(unit, root.get("logisticsSet")))
-            )
-                    .getSingleResult();
-            consumer.accept(order);
-        } catch (NoResultException ignored) {
-            log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
-        }
-    }
 }

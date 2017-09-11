@@ -67,7 +67,7 @@ public class HaierSupplierTest extends LogisticsTestBase {
     public void tempIn() {
         if (!haierApiTestSupport())
             return;
-        logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomSource(), randomDepot());
+        logisticsService.makeShift(haierSupplier, null, Collections.singleton(randomThing()), randomSource(), randomDepot());
 //        Set<Thing> goods = new HashSet<>();
 //        // uXkelZ和KWkLZc
 //        goods.add(newTempThing("KWkLZc"));
@@ -83,7 +83,7 @@ public class HaierSupplierTest extends LogisticsTestBase {
     public void go() {
         if (!haierApiTestSupport())
             return;
-        logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomDepot(), randomDestination());
+        logisticsService.makeShift(haierSupplier, null, Collections.singleton(randomThing()), randomDepot(), randomDestination());
 //        Set<Thing> goods = new HashSet<>();
 //        // uXkelZ和KWkLZc
 //        goods.add(newTempThing("KWkLZc"));

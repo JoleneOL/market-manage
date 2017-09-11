@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.thread.ThreadLocker;
+import me.jiangcai.logistics.DeliverableOrder;
 import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
@@ -58,7 +59,7 @@ import java.util.stream.Collectors;
 @Entity
 @Setter
 @Getter
-public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, LogisticsDestination {
+public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, LogisticsDestination, DeliverableOrder {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
@@ -447,6 +448,24 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return customer.getMobile();
     }
 
+    @Override
+    public void addStockShiftUnit(StockShiftUnit unit) {
+        if (getLogisticsSet() == null) {
+            setLogisticsSet(new ArrayList<>());
+        }
+        getLogisticsSet().add(unit);
+    }
+
+    @Override
+    public List<? extends StockShiftUnit> getInstallStockShiftUnit() {
+        return getInstalledLogisticsSet();
+    }
+
+    @Override
+    public List<StockShiftUnit> getShipStockShiftUnit() {
+        return getLogisticsSet();
+    }
+
     /**
      * @return 需要物流的信息
      */
@@ -470,7 +489,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return require;
     }
 
-    private Map<MainProduct, Integer> getTotalShipProduct() {
+    @Override
+    public Map<MainProduct, Integer> getTotalShipProduct() {
         final Map<MainProduct, Integer> require = new HashMap<>();
         amounts.forEach((good, integer) -> {
             if (require.putIfAbsent(good.getProduct(), integer) != null) {
@@ -480,85 +500,26 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return require;
     }
 
+    @Override
     public void addInstallStockShiftUnit(StockShiftUnit unit) {
-        if (installedLogisticsSet == null)
+        if (getInstalledLogisticsSet() == null)
             setInstalledLogisticsSet(new ArrayList<>());
         getInstalledLogisticsSet().add(unit);
     }
 
+    @Override
     public void switchToLogisticsFinishStatus() {
         setOrderStatus(OrderStatus.afterSale);
     }
 
+    @Override
     public void switchToForInstallStatus() {
         setOrderStatus(OrderStatus.forInstall);
     }
 
+    @Override
     public void switchToForDeliverStatus() {
         setOrderStatus(OrderStatus.forDeliver);
-    }
-
-    /**
-     * 更新物流冗余信息并且切换当前状态
-     * 可能切换为forInstall,forDeliver
-     *
-     * @return 是否都已完成物流（不包括安装）
-     */
-    public boolean updateLogisticsStatus() {
-        // 是否所有订单都已失败
-        if (logisticsSet.stream().allMatch(stockShiftUnit -> stockShiftUnit.getCurrentStatus() == ShiftStatus.reject)) {
-            log.debug("所有物流订单都已被拒绝接单，重新进入待发货状态:" + getSerialId());
-            setAbleShip(true);
-            setOrderStatus(OrderStatus.forDeliver);
-            return false;
-        } else if (getWantShipProduct().isEmpty()) {
-            log.debug("已物流所有所需货品:" + getSerialId());
-            setAbleShip(false);
-            // 已经无货需发了；如果还有货可发状态就无需关注了。
-            // 现在确定是否都已经发完了
-            if (logisticsSet.stream()
-                    .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
-                    .allMatch(stockShiftUnit -> stockShiftUnit.getCurrentStatus() == ShiftStatus.success)) {
-                setOrderStatus(OrderStatus.forInstall);
-                log.debug("同时所有物流已抵达");
-                return true;
-            } else
-                log.debug("但是并非所有物流已抵达");
-        } else {
-            log.debug("还有部分物流未发:" + getSerialId());
-            setAbleShip(true);
-        }
-        return false;
-    }
-
-    /**
-     * 增加已安装的物流信息
-     * 可能切换为afterSale
-     *
-     * @param unit 已完成安装的物流;可能为null
-     * @return 是否都已完成物流（包括安装）
-     */
-    public boolean updateInstallationStatus(StockShiftUnit unit) {
-        if (getInstalledLogisticsSet() == null)
-            setInstalledLogisticsSet(new ArrayList<>());
-
-        if (unit != null) {
-            getInstalledLogisticsSet().add(unit);
-        }
-        if (getWantShipProduct().isEmpty()) {
-            log.debug("已物流所有所需货品:" + getSerialId());
-            // 要么无需安装 要么已安装
-            if (getLogisticsSet().stream()
-                    .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
-                    .allMatch(stockShiftUnit ->
-                            !stockShiftUnit.isInstallation() || getInstalledLogisticsSet().contains(stockShiftUnit))) {
-                setOrderStatus(OrderStatus.afterSale);
-                log.debug("并且所有物流都已完成安装或者无需安装");
-                return true;
-            } else if (log.isDebugEnabled())
-                log.debug("但是并非所有物流订单都已完成安装或者无需安装");
-        }
-        return false;
     }
 
     /**

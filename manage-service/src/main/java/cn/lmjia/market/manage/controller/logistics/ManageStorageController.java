@@ -211,7 +211,7 @@ public class ManageStorageController {
         Factory factoryInfo = factoryRepository.getOne(factory);
         Product productInfo = productRepository.getOne(product);
         //
-        logisticsService.makeShift(haierSupplier, Collections.singleton(new Thing() {
+        logisticsService.makeShift(haierSupplier, null, Collections.singleton(new Thing() {
             @Override
             public Product getProduct() {
                 return productInfo;

@@ -1,5 +1,8 @@
 package me.jiangcai.logistics.demo;
 
+import me.jiangcai.logistics.LogisticsDestination;
+import me.jiangcai.logistics.LogisticsHostService;
+import me.jiangcai.logistics.LogisticsSource;
 import me.jiangcai.logistics.demo.entity.DemoOrder;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
@@ -13,13 +16,10 @@ import java.util.Map;
 /**
  * @author CJ
  */
-public interface DemoProject {
+public interface DemoProject extends LogisticsHostService {
 
     @Transactional
     DemoOrder createOrder(Map<Product, Integer> amounts);
-
-    @Transactional
-    StockShiftUnit makeShift(DemoOrder order, Product product, int amount, boolean install);
 
     void cleanEvents();
 
@@ -32,4 +32,8 @@ public interface DemoProject {
 
     @EventListener(OrderInstalledEvent.class)
     void forOrderInstalledEvent(OrderInstalledEvent event);
+
+    @Transactional
+    StockShiftUnit work(DemoOrder order, Product product, int integer, boolean testInstall, LogisticsSource source
+            , LogisticsDestination destination);
 }

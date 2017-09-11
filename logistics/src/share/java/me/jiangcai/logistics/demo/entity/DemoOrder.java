@@ -89,6 +89,14 @@ public class DemoOrder implements DeliverableOrder {
     }
 
     @Override
+    public void addStockShiftUnit(StockShiftUnit unit) {
+        if (getStockShiftUnits() == null) {
+            setStockShiftUnits(new ArrayList<>());
+        }
+        getStockShiftUnits().add(unit);
+    }
+
+    @Override
     public List<? extends StockShiftUnit> getInstallStockShiftUnit() {
         return installedStockShiftUnits;
     }
