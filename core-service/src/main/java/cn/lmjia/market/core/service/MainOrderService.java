@@ -9,6 +9,7 @@ import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.UnnecessaryShipException;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.LogisticsHostService;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
@@ -29,7 +30,7 @@ import java.util.Map;
 /**
  * @author CJ
  */
-public interface MainOrderService {
+public interface MainOrderService extends LogisticsHostService {
 
     /**
      * 新创建订单

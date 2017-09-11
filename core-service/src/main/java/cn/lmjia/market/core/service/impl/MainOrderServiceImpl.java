@@ -16,6 +16,7 @@ import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.logistics.DeliverableOrder;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.StockService;
@@ -42,6 +43,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -377,4 +379,19 @@ public class MainOrderServiceImpl implements MainOrderService {
         return null;
     }
 
+    @Override
+    public DeliverableOrder orderFor(StockShiftUnit unit) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        try {
+            return entityManager.createQuery(cq
+                    .where(cb.isMember(unit, root.get("logisticsSet")))
+            )
+                    .getSingleResult();
+        } catch (NoResultException ignored) {
+            log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
+            return null;
+        }
+    }
 }
