@@ -99,6 +99,9 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .filter(entry -> entry.getKey().getProduct().equals(good.getProduct()))
                 .mapToInt(Map.Entry::getValue)
                 .sum();
+
+        // TODO:点击物流打开物流界面
+        // TODO:点击发送 支持海尔 也支持手动仓库
         String responseString = mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.depots.length()").value(NumberMatcher.numberGreatThanOrEquals(1)))
@@ -136,7 +139,8 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .as("物流最终被退回 那么状态应该恢复至待发货")
                 .isEqualByComparingTo(OrderStatus.forDeliver);
 
-        // 重新发货
+        // TODO:点击物流打开物流界面
+        // TODO:点击发送 支持海尔 也支持手动仓库
         mockMvc.perform(put("/orderData/logistics/" + String.valueOf(order.getId()))
                 .contentType(MediaType.TEXT_PLAIN)
                 .content(String.valueOf(depots.get(0).get("id")))
@@ -154,7 +158,6 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .as("物流完成之后 订单也应该完成")
                 .isEqualByComparingTo(OrderStatus.forInstall);
-
 
         mockMvc.perform(get("/manage/orderData/logistics"))
                 .andDo(print());

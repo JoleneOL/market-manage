@@ -8,6 +8,7 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.OrderDeliveredEvent;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,5 +36,5 @@ public interface DemoProject extends LogisticsHostService {
 
     @Transactional
     StockShiftUnit work(DemoOrder order, Product product, int integer, boolean testInstall, LogisticsSource source
-            , LogisticsDestination destination);
+            , LogisticsDestination destination) throws UnnecessaryShipException;
 }

@@ -16,8 +16,10 @@ import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.rows.StockShiftUnitRows;
 import cn.lmjia.market.core.service.MainOrderService;
+import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -61,6 +63,8 @@ public class ManageOrderController {
     private MainOrderService mainOrderService;
     @Autowired
     private ConversionService conversionService;
+    @Autowired
+    private LogisticsService logisticsService;
 
     @GetMapping("/manage/orderData/logistics")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
@@ -166,8 +170,19 @@ public class ManageOrderController {
 
     @PutMapping("/orderData/logistics/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void makeLogistics(@PathVariable("orderId") long orderId, @RequestBody String depotId) {
+    public void makeLogistics(@PathVariable("orderId") long orderId, @RequestBody String depotId) throws UnnecessaryShipException {
         mainOrderService.makeLogistics(HaierSupplier.class, orderId, NumberUtils.parseNumber(depotId, Long.class));
+    }
+
+    @GetMapping("/mainOrderDelivery")
+    @Transactional(readOnly = true)
+    public String mainOrderDelivery(long id, Model model) {
+        // 物流模块提供数据，视图层依然由客户端项目，期待将来更高级视图解决方案的设计
+        MainOrder order = mainOrderService.getOrder(id);
+        logisticsService.viewModelForDelivery(order, model);
+        model.addAttribute("parentPageUri", "/orderManage");
+        model.addAttribute("parentPageName", "订单管理");
+        return "_orderDelivery.html";
     }
 
     @GetMapping("/mainOrderDetail")
@@ -180,15 +195,6 @@ public class ManageOrderController {
                 .sorted(Comparator.comparing(StockShiftUnit::getCreateTime))
                 .collect(Collectors.toList()));
         return "_orderDetail.html";
-    }
-
-    @GetMapping("/manageShiftDetailForMainOrder")
-    @Transactional(readOnly = true)
-    public String shiftDetail(long id) {
-        MainOrder order = mainOrderService.getOrder(id);
-        if (order.getCurrentLogistics() == null)
-            return "redirect:/orderManage";
-        return "redirect:/manageShiftDetail?id=" + order.getCurrentLogistics().getId();
     }
 
 }

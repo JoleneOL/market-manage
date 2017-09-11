@@ -19,6 +19,7 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.UsageStock;
 import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.StockInfo;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
 import me.jiangcai.logistics.repository.DepotRepository;
@@ -203,7 +204,7 @@ public class ManageStorageController {
 
     @PostMapping("/manageStorageDelivery")
     @Transactional
-    public String sendToDepot(long factory, String product, long depot, int deliverQuantity) {
+    public String sendToDepot(long factory, String product, long depot, int deliverQuantity) throws UnnecessaryShipException {
         // 目前只支持日日顺
         Depot depotInfo = depotRepository.getOne(depot);
         if (!(depotInfo instanceof HaierDepot))

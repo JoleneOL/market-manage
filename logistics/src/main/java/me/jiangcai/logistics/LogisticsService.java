@@ -6,11 +6,13 @@ import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,10 +41,11 @@ public interface LogisticsService {
      * @param source      来源地址，可能是供应商，仓库
      * @param destination 目的地
      * @return 配送
+     * @throws UnnecessaryShipException 没必要的物流
      */
     @Transactional
     default StockShiftUnit makeShift(LogisticsSupplier supplier, DeliverableOrder order, Collection<Thing> things
-            , LogisticsSource source, LogisticsDestination destination) {
+            , LogisticsSource source, LogisticsDestination destination) throws UnnecessaryShipException {
         return makeShift(supplier, order, things, source, destination, 0);
     }
 
@@ -56,11 +59,12 @@ public interface LogisticsService {
      * @param product     货品
      * @param amount      数量
      * @return 配送
+     * @throws UnnecessaryShipException 没必要的物流
      */
     @Transactional
     default StockShiftUnit makeShiftForNormal(LogisticsSupplier supplier, DeliverableOrder order, Product product
             , int amount
-            , LogisticsSource source, LogisticsDestination destination) {
+            , LogisticsSource source, LogisticsDestination destination) throws UnnecessaryShipException {
         return makeShiftForNormal(supplier, order, product, amount, source, destination, 0);
     }
 
@@ -75,11 +79,12 @@ public interface LogisticsService {
      * @param amount      数量
      * @param options     选项;{@link LogisticsOptions}
      * @return 配送
+     * @throws UnnecessaryShipException 没必要的物流
      */
     @Transactional
     default StockShiftUnit makeShiftForNormal(LogisticsSupplier supplier, DeliverableOrder order, Product product
             , int amount
-            , LogisticsSource source, LogisticsDestination destination, int options) {
+            , LogisticsSource source, LogisticsDestination destination, int options) throws UnnecessaryShipException {
         return makeShift(supplier, order, Collections.singleton(new Thing() {
             @Override
             public Product getProduct() {
@@ -108,10 +113,11 @@ public interface LogisticsService {
      * @param destination 目的地
      * @param options     选项;{@link LogisticsOptions}
      * @return 配送
+     * @throws UnnecessaryShipException 没必要的物流
      */
     @Transactional
     StockShiftUnit makeShift(LogisticsSupplier supplier, DeliverableOrder order, Collection<Thing> things
-            , LogisticsSource source, LogisticsDestination destination, int options);
+            , LogisticsSource source, LogisticsDestination destination, int options) throws UnnecessaryShipException;
 
     /**
      * 模拟生成一个安装时间
@@ -130,4 +136,28 @@ public interface LogisticsService {
     @Transactional
     @Order(Ordered.LOWEST_PRECEDENCE)
     void forInstallationEvent(InstallationEvent event);
+
+    /**
+     * 通过渲染model意图展示发货时所需的数据，可获得数据
+     * <ul>
+     * <li>currentData order</li>
+     * <li>requiredList 发货所需货品列表</li>
+     * <li>depotInfo 相关库存信息，应该是一个Map key为{@link me.jiangcai.logistics.entity.Depot}而value 为一个Map,{@link Product}和数量</li>
+     * <li>orderPK {@link me.jiangcai.logistics.model.DeliverableOrderId},它的toString经过Spring MVC也会还原成一致的实例</li>
+     * </ul>
+     *
+     * @param order 需发货的订单
+     * @param model 渲染目标model
+     */
+    @Transactional(readOnly = true)
+    void viewModelForDelivery(DeliverableOrder order, Model model);
+//    orderPK:MyClass:1
+//    orderUser:前面的名字
+//    phone:18898886888
+//    address:浙江省-杭州市-滨江区海亮大厦
+//    installation:false
+//    depot:3
+//    goods[]:1,1
+//    goods[]:2,0
+//    goods[]:3,0
 }

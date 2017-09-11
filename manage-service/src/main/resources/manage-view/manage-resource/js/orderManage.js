@@ -4,7 +4,7 @@ $(function () {
     var beginTime = $('#J_beginDate').flatpickr({
         maxDate: new Date(),
         locale: 'zh',
-        onChange: function(dateObj, dateStr, instance) {
+        onChange: function (dateObj, dateStr, instance) {
             endTime.set("minDate", dateStr);
         }
     });
@@ -12,14 +12,13 @@ $(function () {
     var endTime = $('#J_endDate').flatpickr({
         maxDate: new Date(),
         locale: 'zh',
-        onChange: function(dateObj, dateStr, instance) {
+        onChange: function (dateObj, dateStr, instance) {
             beginTime.set("maxDate", dateStr);
         }
     });
 
     var _body = $('body');
 
-    var logisticsDetailUrl = _body.attr('data-logistics-detail-url');
     var orderDeliveryUrl = _body.attr('data-order-delivery-url');
     var quickUrl = _body.attr('data-quick-url');
     var allowMockPay = _body.attr('data-allow-mock-pay') === 'true';
@@ -144,12 +143,15 @@ $(function () {
                         // 已付款及其以上（排除待付款）
                         a = a + e;
                     }
-                    if (item.statusCode === 2) {
-                        // 物流发货
-                        a = a + makeLogistics;
-                    } else if (item.statusCode >= 3) {
-                        // a = a + viewLogistics;
-                    }
+                    // if (item.statusCode === 2) {
+                    //     // 物流发货
+                    //     a = a + makeLogistics;
+                    // } else if (item.statusCode >= 3) {
+                    //     // a = a + viewLogistics;
+                    // }
+
+                    if (item.statusCode !== 1)
+                        a = a + makeLogistics;// 只要不是未支付即可发货 若支持订单关闭状态 则可将其也纳入规范
 
                     if (item.methodCode !== 2) {
                         //其他
@@ -263,8 +265,8 @@ $(function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
         $('input[name=from]', detailForm).val($(this).attr('data-from'));
         detailForm.submit();
-    }).on('click', '.js-viewLogistics', function () {
-        window.location.href = logisticsDetailUrl + '?id=' + $(this).data('id');
+        // }).on('click', '.js-viewLogistics', function () {
+        //     window.location.href = logisticsDetailUrl + '?id=' + $(this).data('id');
     }).on('click', '.js-makeLogistics', function () {
         var orderId = $(this).attr('data-id');
         window.location.href = orderDeliveryUrl + '?id=' + orderId;
@@ -362,7 +364,7 @@ $(function () {
                 $('#J_shipmentTime').flatpickr({
                     maxDate: new Date(),
                     locale: 'zh',
-                    onChange: function(dateObj, dateStr, instance) {
+                    onChange: function (dateObj, dateStr, instance) {
                         deliverTime.set("minDate", dateStr);
                     }
                 });

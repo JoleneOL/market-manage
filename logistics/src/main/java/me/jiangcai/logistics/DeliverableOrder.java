@@ -3,9 +3,11 @@ package me.jiangcai.logistics;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.model.DeliverableOrderId;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -150,5 +152,21 @@ public interface DeliverableOrder {
      * @param b 是否允许继续发起物流
      */
     void setAbleShip(boolean b);
+
+    /**
+     * 可选实现
+     *
+     * @return 订单发货的目的地, 默认为null
+     */
+    LogisticsDestination getLogisticsDestination();
+
+    default DeliverableOrderId getDeliverableOrderId() {
+        return new DeliverableOrderId(getClass(), getRepresentationalId());
+    }
+
+    /**
+     * @return 实体主键的输出描述
+     */
+    Serializable getRepresentationalId();
 
 }

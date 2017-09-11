@@ -114,6 +114,9 @@ $(function () {
         $('#J_form').find('input').not('.js-goods').each(function () {
             data[$(this).attr('name')] = $(this).val();
         });
+        $('#J_form').find('select').not('.js-goods').each(function () {
+            data[$(this).attr('name')] = $(this).val();
+        });
         var cleckbox = $('.i-checks').find('input');
         data[cleckbox.attr('name')] = cleckbox.is(':checked');
         var goods = [];
@@ -134,6 +137,7 @@ $(function () {
             return '';
         }
         data['goods'] = goods;
+
         return data;
     }
 

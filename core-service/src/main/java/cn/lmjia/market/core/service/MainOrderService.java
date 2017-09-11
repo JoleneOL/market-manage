@@ -7,7 +7,6 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
-import cn.lmjia.market.core.exception.UnnecessaryShipException;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsHostService;
 import me.jiangcai.logistics.LogisticsSupplier;
@@ -15,6 +14,7 @@ import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
 import me.jiangcai.logistics.exception.StockOverrideException;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.domain.Specification;
@@ -132,7 +132,7 @@ public interface MainOrderService extends LogisticsHostService {
      */
     @Transactional
     @Deprecated
-    StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId);
+    StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId) throws UnnecessaryShipException;
 
     /**
      * 物流开动

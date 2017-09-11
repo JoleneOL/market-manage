@@ -6,6 +6,7 @@ import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -51,7 +52,12 @@ public class LogisticsServiceTest extends LogisticsTestBase {
         demoProject.cleanEvents();
         final List<StockShiftUnit> unitList = new ArrayList<>();
         amounts.forEach(((product, integer) -> {
-            StockShiftUnit unit = demoProject.work(order, product, integer, testInstall, randomSource(), randomDestination());
+            StockShiftUnit unit;
+            try {
+                unit = demoProject.work(order, product, integer, testInstall, randomSource(), randomDestination());
+            } catch (UnnecessaryShipException e) {
+                throw new IllegalStateException(e);
+            }
             unitList.add(unit);
         }));
         // 只有在所有货物抵达之后收到 OrderDeliveredEvent 事件

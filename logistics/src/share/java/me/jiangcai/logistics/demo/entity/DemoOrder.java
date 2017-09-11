@@ -3,6 +3,7 @@ package me.jiangcai.logistics.demo.entity;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.logistics.DeliverableOrder;
+import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +76,16 @@ public class DemoOrder implements DeliverableOrder {
     @Override
     public void setAbleShip(boolean b) {
         ableShip = b;
+    }
+
+    @Override
+    public LogisticsDestination getLogisticsDestination() {
+        return null;
+    }
+
+    @Override
+    public Serializable getRepresentationalId() {
+        return getId();
     }
 
     @Override

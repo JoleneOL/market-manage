@@ -1,4 +1,4 @@
-package cn.lmjia.market.core.exception;
+package me.jiangcai.logistics.exception;
 
 import me.jiangcai.logistics.entity.Product;
 

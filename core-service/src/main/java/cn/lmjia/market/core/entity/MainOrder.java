@@ -466,29 +466,6 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return getLogisticsSet();
     }
 
-    /**
-     * @return 需要物流的信息
-     */
-    public Map<MainProduct, Integer> getWantShipProduct() {
-        final Map<MainProduct, Integer> require = getTotalShipProduct();
-        logisticsSet.stream().filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
-                .forEach(stockShiftUnit
-                        -> stockShiftUnit.getAmounts().forEach(((product, productBatch) -> {
-                    // 减去 require
-                    MainProduct mainProduct = (MainProduct) product;
-                    require.computeIfPresent(mainProduct, ((product1, integer) -> {
-                        int now = integer - productBatch.getAmount();
-                        if (now > 0)
-                            return now;
-                        if (now < 0)
-                            log.error(getSerialId() + "诡异了，已物流的总量大于总的需物流量:" + mainProduct.getCode());
-                        return null;
-                    }));
-                })));
-
-        return require;
-    }
-
     @Override
     public Map<MainProduct, Integer> getTotalShipProduct() {
         final Map<MainProduct, Integer> require = new HashMap<>();
@@ -510,6 +487,16 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Override
     public void switchToLogisticsFinishStatus() {
         setOrderStatus(OrderStatus.afterSale);
+    }
+
+    @Override
+    public LogisticsDestination getLogisticsDestination() {
+        return this;
+    }
+
+    @Override
+    public Serializable getRepresentationalId() {
+        return getId();
     }
 
     @Override

@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="parentPageName" type="java.lang.String"*/-->
+<!--/*@thymesVar id="parentPageUri" type="java.lang.String"*/-->
+<!--/*@thymesVar id="orderPK" type="java.lang.String"*/-->
+<!--/*@thymesVar id="currentData" type="me.jiangcai.logistics.DeliverableOrder"*/-->
+<!--/*@thymesVar id="requiredList" type="java.util.Map<me.jiangcai.logistics.entity.Product,java.lang.Integer>"*/-->
+<!--/*@thymesVar id="depotInfo" type="java.util.Map<me.jiangcai.logistics.entity.Depot,java.util.Map<me.jiangcai.logistics.entity.Product,java.lang.Integer>> "*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -26,7 +32,8 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_orderManage.html" th:href="@{/orderManage}">订单管理</a></li>
+                <li><a href="_orderManage.html" th:href="@{''+${parentPageUri}}" th:text="${parentPageName}">订单管理</a>
+                </li>
                 <li><strong>订单发货</strong></li>
             </ol>
         </div>
@@ -48,21 +55,22 @@
                         <tr>
                             <th>商品名称</th>
                             <th>待发货数量</th>
-                            <th>需要安装</th>
+                            <th>可安装</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr data-goods-id="1">
-                            <td>量子立式净水机（白色）</td>
-                            <td><span class="js-stock">999</span>台</td>
+                        <tr data-goods-id="1" th:each="p:${requiredList}" th:data-goods-id="${p.key.code}">
+                            <td th:text="${p.key.name}">量子立式净水机（白色）</td>
+                            <td><span class="js-stock" th:text="${p.value}">999</span><span
+                                    th:text="${p.key.unit?:'个'}">台</span></td>
                             <td>需要</td>
                         </tr>
-                        <tr data-goods-id="2">
+                        <tr data-goods-id="2" th:remove="all">
                             <td>量子立式净水机（黑色）</td>
                             <td><span class="js-stock">100</span>台</td>
                             <td>不需要</td>
                         </tr>
-                        <tr data-goods-id="3">
+                        <tr data-goods-id="3" th:remove="all">
                             <td>量子空气净化器</td>
                             <td><span class="js-stock">99</span>台</td>
                             <td>不需要</td>
@@ -82,44 +90,51 @@
                 </div>
                 <div class="ibox-content">
                     <form class="form-horizontal" id="J_form">
+                        <input type="hidden" name="orderPK" value="MyClass:1" th:value="${orderPK.toString()}"/>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">订单用户</label>
                             <div class="col-sm-6">
                                 <input type="text" placeholder="订单用户" class="form-control"
-                                       name="orderUser" value="前面的名字" readonly>
+                                       name="orderUser" value="前面的名字"
+                                       th:value="${currentData.logisticsDestination.consigneeName}" readonly>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">订单手机号</label>
                             <div class="col-sm-6">
                                 <input type="text" placeholder="订单手机号" class="form-control"
-                                       name="phone" value="18898886888" readonly>
+                                       name="phone" value="18898886888"
+                                       th:value="${currentData.logisticsDestination.consigneeMobile}" readonly>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">订单地址</label>
                             <div class="col-sm-6">
                                 <input type="text" placeholder="订单地址" class="form-control"
-                                       name="address" value="浙江省-杭州市-滨江区海亮大厦" readonly>
+                                       name="address" value="浙江省-杭州市-滨江区海亮大厦"
+                                       th:value="${currentData.logisticsDestination.province+'-'+currentData.logisticsDestination.city+'-'+currentData.logisticsDestination.country}"
+                                       readonly>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">物流公司</label>
-                            <div class="col-sm-6">
-                                <select class="form-control" name="company">
-                                    <option value="日日顺">日日顺</option>
-                                    <option value="苏宁">苏宁</option>
-                                </select>
-                            </div>
-                        </div>
+                        <!--<div class="form-group">-->
+                        <!--<label class="col-sm-3 control-label">物流公司</label>-->
+                        <!--<div class="col-sm-6">-->
+                        <!--<select class="form-control" name="company">-->
+                        <!--<option value="日日顺">日日顺</option>-->
+                        <!--<option value="苏宁">苏宁</option>-->
+                        <!--</select>-->
+                        <!--</div>-->
+                        <!--</div>-->
                         <div class="form-group">
                             <label class="col-sm-3 control-label">发货仓库</label>
                             <div class="col-sm-6">
                                 <select class="form-control" name="depot" id="J_selectDepot" required>
                                     <option value="" disabled selected class="hidden">选择仓库</option>
-                                    <option value="1">华东仓库</option>
-                                    <option value="2">华南仓库</option>
-                                    <option value="3">西北仓库</option>
+                                    <option th:each="depot:${depotInfo}" value="1" th:value="${depot.key.id}"
+                                            th:text="${depot.key.name}">华东仓库
+                                    </option>
+                                    <option th:remove="all" value="2">华南仓库</option>
+                                    <option th:remove="all" value="3">西北仓库</option>
                                 </select>
                             </div>
                         </div>
@@ -131,15 +146,16 @@
                             </div>
                         </div>
                         <div id="J_goodsLists">
-                            <div class="form-group" data-goods-id="1">
-                                <label class="col-sm-5 control-label">量子立式净水机（白色）</label>
+                            <div class="form-group" data-goods-id="1" th:each="p:${requiredList}"
+                                 th:data-goods-id="${p.key.code}">
+                                <label class="col-sm-5 control-label" th:text="${p.key.name}">量子立式净水机（白色）</label>
                                 <div class="col-sm-2">
                                     <input type="number" placeholder="输入数量" class="form-control js-goods"
-                                           name="goods" min="0">
+                                           name="goods" min="0" th:max="${p.value}" th:value="${p.value}">
                                 </div>
                                 <label class="col-sm-4 control-label text-danger text-left"></label>
                             </div>
-                            <div class="form-group" data-goods-id="2">
+                            <div th:remove="all" class="form-group" data-goods-id="2">
                                 <label class="col-sm-5 control-label">量子立式净水机（黑色）</label>
                                 <div class="col-sm-2">
                                     <input type="number" placeholder="输入数量" class="form-control js-goods"
@@ -147,7 +163,7 @@
                                 </div>
                                 <label class="col-sm-4 control-label text-danger text-left"></label>
                             </div>
-                            <div class="form-group" data-goods-id="3">
+                            <div th:remove="all" class="form-group" data-goods-id="3">
                                 <label class="col-sm-5 control-label">量子空气净化器</label>
                                 <div class="col-sm-2">
                                     <input type="number" placeholder="输入数量" class="form-control js-goods"
@@ -186,27 +202,37 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr data-depot-id="1">
-                            <td>华东仓库</td>
+                        <tr data-depot-id="1" th:each="depot:${depotInfo}" th:data-depot-id="${depot.key.id}">
+                            <td th:text="${depot.key.name}">华东仓库</td>
                             <td>
-                                <p data-goods-id="1" data-stock="5000">量子立式净水机（白色）/ <span class="text-danger">5000</span></p>
-                                <p data-goods-id="2" data-stock="2000">量子立式净水机（黑色）/ <span class="text-danger">2000</span></p>
-                                <p data-goods-id="3" data-stock="300">量子空气净化器/ <span class="text-danger">300</span></p>
+                                <p data-goods-id="1" data-stock="5000" th:each="p:${depot.value}"
+                                   th:data-goods-id="${p.key.code}" th:data-stock="${p.value}">
+                                    <span th:text="${p.key.name}">量子立式净水机（白色）</span>/
+                                    <span class="text-danger" th:text="${p.value}">5000</span></p>
+                                <p th:remove="all" data-goods-id="2" data-stock="2000">量子立式净水机（黑色）/ <span
+                                        class="text-danger">2000</span></p>
+                                <p th:remove="all" data-goods-id="3" data-stock="300">量子空气净化器/ <span
+                                        class="text-danger">300</span></p>
                             </td>
                         </tr>
-                        <tr data-depot-id="2">
+                        <tr th:remove="all" data-depot-id="2">
                             <td>华南仓库</td>
                             <td>
-                                <p data-goods-id="1" data-stock="2000">量子立式净水机（白色）/ <span class="text-danger">2000</span></p>
-                                <p data-goods-id="2" data-stock="5000">量子立式净水机（黑色）/ <span class="text-danger">5000</span></p>
-                                <p data-goods-id="3" data-stock="1300">量子空气净化器/ <span class="text-danger">1300</span></p>
+                                <p data-goods-id="1" data-stock="2000">量子立式净水机（白色）/ <span
+                                        class="text-danger">2000</span></p>
+                                <p data-goods-id="2" data-stock="5000">量子立式净水机（黑色）/ <span
+                                        class="text-danger">5000</span></p>
+                                <p data-goods-id="3" data-stock="1300">量子空气净化器/ <span class="text-danger">1300</span>
+                                </p>
                             </td>
                         </tr>
-                        <tr data-depot-id="3">
+                        <tr th:remove="all" data-depot-id="3">
                             <td>西北仓库</td>
                             <td>
-                                <p data-goods-id="1" data-stock="500">量子立式净水机（白色）/ <span class="text-danger">500</span></p>
-                                <p data-goods-id="2" data-stock="600">量子立式净水机（黑色）/ <span class="text-danger">600</span></p>
+                                <p data-goods-id="1" data-stock="500">量子立式净水机（白色）/ <span class="text-danger">500</span>
+                                </p>
+                                <p data-goods-id="2" data-stock="600">量子立式净水机（黑色）/ <span class="text-danger">600</span>
+                                </p>
                                 <p data-goods-id="3" data-stock="800">量子空气净化器/ <span class="text-danger">800</span></p>
                             </td>
                         </tr>
@@ -225,7 +251,7 @@
 <script src="manage-resource/js/content.min.js"></script>
 
 <script src="mock/mock-min.js" th:remove="all"></script>
-<script src="mock/api.js" th:remove="all"></script>
+<!--<script src="mock/api.js" th:remove="all"></script>-->
 
 <script src="./manage-resource/js/orderDelivery.js"></script>
 </html>

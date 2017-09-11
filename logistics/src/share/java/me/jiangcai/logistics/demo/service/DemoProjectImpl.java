@@ -10,6 +10,7 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.OrderDeliveredEvent;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,7 +78,7 @@ public class DemoProjectImpl implements DemoProject {
 
     @Override
     public StockShiftUnit work(DemoOrder order, Product product, int integer, boolean testInstall, LogisticsSource source
-            , LogisticsDestination destination) {
+            , LogisticsDestination destination) throws UnnecessaryShipException {
         DemoOrder demoOrder = entityManager.getReference(DemoOrder.class, order.getId());
         return logisticsService.makeShiftForNormal(null, demoOrder, product, integer, source, destination
                 , testInstall ? LogisticsOptions.Installation : 0);
