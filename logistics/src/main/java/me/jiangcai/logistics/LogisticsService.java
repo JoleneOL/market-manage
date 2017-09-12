@@ -1,5 +1,6 @@
 package me.jiangcai.logistics;
 
+import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductStatus;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author CJ
@@ -104,6 +106,13 @@ public interface LogisticsService {
     }
 
     /**
+     * @param order 订单
+     * @return 这个订单相关的库存信息
+     */
+    @Transactional(readOnly = true)
+    Map<Depot, Map<Product, Integer>> getDepotInfo(DeliverableOrder order);
+
+    /**
      * 开启配送
      *
      * @param supplier    物流供应商
@@ -151,13 +160,4 @@ public interface LogisticsService {
      */
     @Transactional(readOnly = true)
     void viewModelForDelivery(DeliverableOrder order, Model model);
-//    orderPK:MyClass:1
-//    orderUser:前面的名字
-//    phone:18898886888
-//    address:浙江省-杭州市-滨江区海亮大厦
-//    installation:false
-//    depot:3
-//    goods[]:1,1
-//    goods[]:2,0
-//    goods[]:3,0
 }

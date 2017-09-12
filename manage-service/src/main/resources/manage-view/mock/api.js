@@ -625,7 +625,8 @@ Mock.mock(/\/manage\/withdraws/, "get", {
     ]
 });
 
-Mock.mock(/\/api\/orderDelivery/, {
+// 剩余库存
+Mock.mock(/\/api\/logisticsShip/, {
     "resultCode": 200,
     "resultMsg": "ok",
     "data": {

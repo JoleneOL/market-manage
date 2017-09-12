@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="parentPageName" type="java.lang.String"*/-->
 <!--/*@thymesVar id="parentPageUri" type="java.lang.String"*/-->
-<!--/*@thymesVar id="orderPK" type="java.lang.String"*/-->
+<!--/*@thymesVar id="orderPK" type="me.jiangcai.logistics.model.DeliverableOrderId"*/-->
 <!--/*@thymesVar id="currentData" type="me.jiangcai.logistics.DeliverableOrder"*/-->
 <!--/*@thymesVar id="requiredList" type="java.util.Map<me.jiangcai.logistics.entity.Product,java.lang.Integer>"*/-->
 <!--/*@thymesVar id="depotInfo" type="java.util.Map<me.jiangcai.logistics.entity.Depot,java.util.Map<me.jiangcai.logistics.entity.Product,java.lang.Integer>> "*/-->
@@ -90,7 +90,9 @@
                 </div>
                 <div class="ibox-content">
                     <form class="form-horizontal" id="J_form">
-                        <input type="hidden" name="orderPK" value="MyClass:1" th:value="${orderPK.toString()}"/>
+                        <!--<input type="hidden" name="orderPK" value="MyClass:1" th:value="${orderPK.toString()}"/>-->
+                        <input type="hidden" name="type" value="MyClass" th:value="${orderPK.type.name}"/>
+                        <input type="hidden" name="id" value="1" th:value="${orderPK.id}"/>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">订单用户</label>
                             <div class="col-sm-6">
@@ -251,7 +253,7 @@
 <script src="manage-resource/js/content.min.js"></script>
 
 <script src="mock/mock-min.js" th:remove="all"></script>
-<!--<script src="mock/api.js" th:remove="all"></script>-->
+<script src="mock/api.js" th:remove="all"></script>
 
 <script src="./manage-resource/js/orderDelivery.js"></script>
 </html>

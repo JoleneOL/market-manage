@@ -144,6 +144,11 @@ public interface DeliverableOrder {
     void switchToForDeliverStatus();
 
     /**
+     * 切换到开始物流之后的状态；即接受了物流指令
+     */
+    void switchToStartDeliverStatus();
+
+    /**
      * 切换到物流以及安装完成状态
      */
     void switchToLogisticsFinishStatus();

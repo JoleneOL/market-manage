@@ -509,6 +509,12 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         setOrderStatus(OrderStatus.forDeliver);
     }
 
+    @Override
+    public void switchToStartDeliverStatus() {
+        if (getOrderStatus() == OrderStatus.forDeliver)
+            setOrderStatus(OrderStatus.forDeliverConfirm);
+    }
+
     /**
      * @return 关于订单流水的简单生命线
      */

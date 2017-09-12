@@ -74,6 +74,11 @@ public class DemoOrder implements DeliverableOrder {
     }
 
     @Override
+    public void switchToStartDeliverStatus() {
+        lastStatus = "switchToStartDeliverStatus";
+    }
+
+    @Override
     public void setAbleShip(boolean b) {
         ableShip = b;
     }

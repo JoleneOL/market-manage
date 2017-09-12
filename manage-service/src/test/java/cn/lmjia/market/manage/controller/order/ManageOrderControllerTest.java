@@ -6,8 +6,7 @@ import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.manage.ManageServiceTest;
-import com.jayway.jsonpath.JsonPath;
-import me.jiangcai.lib.test.matcher.NumberMatcher;
+import cn.lmjia.market.manage.page.ManageOrderPage;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.Depot;
@@ -19,18 +18,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
+ * Failed tests:   go(cn.lmjia.market.manage.controller.order.ManageOrderControllerTest): [执行发货之后，可用库存应该减少] expected:<[-9]> but was:<[0]>
+ * Tests in error:
+ * go(cn.lmjia.market.manage.controller.logistics.ManageStorageControllerTest): 找不到符合要求的Label
+ *
  * @author CJ
  */
 @ActiveProfiles("mysql2")
@@ -93,28 +93,29 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         // 记录原来的库存总量
         int originStock = stockService.usableStockTotal(good.getProduct());
 
-        log.info("原库存:" + originStock);
+        log.info("原库存:" + originStock + " for:" + good.getProduct().getCode());
         // 同货品的数量
         int costTargetGoodProduct = order.getAmounts().entrySet().stream()
                 .filter(entry -> entry.getKey().getProduct().equals(good.getProduct()))
                 .mapToInt(Map.Entry::getValue)
                 .sum();
 
-        // TODO:点击物流打开物流界面
-        // TODO:点击发送 支持海尔 也支持手动仓库
-        String responseString = mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.depots.length()").value(NumberMatcher.numberGreatThanOrEquals(1)))
-                .andReturn().getResponse().getContentAsString();
+        ManageOrderPage manageOrderPage = ManageOrderPage.of(this, driver);
+        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot);
 
-        List<Map<String, Object>> depots = JsonPath.read(responseString, "$.depots");
-
-        // 获得了仓库 现在执行发货
-        mockMvc.perform(put("/orderData/logistics/" + String.valueOf(order.getId()))
-                .contentType(MediaType.TEXT_PLAIN)
-                .content(String.valueOf(depots.get(0).get("id")))
-        )
-                .andExpect(status().is2xxSuccessful());
+//        String responseString = mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.depots.length()").value(NumberMatcher.numberGreatThanOrEquals(1)))
+//                .andReturn().getResponse().getContentAsString();
+//
+//        List<Map<String, Object>> depots = JsonPath.read(responseString, "$.depots");
+//
+//        // 获得了仓库 现在执行发货
+//        mockMvc.perform(put("/orderData/logistics/" + String.valueOf(order.getId()))
+//                .contentType(MediaType.TEXT_PLAIN)
+//                .content(String.valueOf(depots.get(0).get("id")))
+//        )
+//                .andExpect(status().is2xxSuccessful());
 
         printOrderDetail(order);
 
@@ -139,13 +140,14 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .as("物流最终被退回 那么状态应该恢复至待发货")
                 .isEqualByComparingTo(OrderStatus.forDeliver);
 
-        // TODO:点击物流打开物流界面
-        // TODO:点击发送 支持海尔 也支持手动仓库
-        mockMvc.perform(put("/orderData/logistics/" + String.valueOf(order.getId()))
-                .contentType(MediaType.TEXT_PLAIN)
-                .content(String.valueOf(depots.get(0).get("id")))
-        )
-                .andExpect(status().is2xxSuccessful());
+        manageOrderPage = ManageOrderPage.of(this, driver);
+        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot);
+
+//        mockMvc.perform(put("/orderData/logistics/" + String.valueOf(order.getId()))
+//                .contentType(MediaType.TEXT_PLAIN)
+//                .content(String.valueOf(depots.get(0).get("id")))
+//        )
+//                .andExpect(status().is2xxSuccessful());
 // 我们让这个物流订单成功！
         StockShiftUnit goSuccess = mainOrderService.getOrder(order.getId()).getLogisticsSet().stream()
                 .filter(unit -> !Objects.equals(unit.getId(), rejectUnit.getId()))

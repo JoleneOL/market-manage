@@ -128,6 +128,16 @@ public class LogisticsServiceImpl implements LogisticsService {
         final Map<? extends Product, Integer> wantShipProduct = order.getWantShipProduct();
         model.addAttribute("requiredList", wantShipProduct);
         // 库存
+        Map<Depot, Map<Product, Integer>> depotInfo = getDepotInfo(wantShipProduct);
+        model.addAttribute("depotInfo", depotInfo);
+    }
+
+    @Override
+    public Map<Depot, Map<Product, Integer>> getDepotInfo(DeliverableOrder order) {
+        return getDepotInfo(order.getWantShipProduct());
+    }
+
+    private Map<Depot, Map<Product, Integer>> getDepotInfo(Map<? extends Product, Integer> wantShipProduct) {
         Map<Depot, Map<Product, Integer>> depotInfo = new HashMap<>();
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<UsageStock> cq = cb.createQuery(UsageStock.class);
@@ -148,7 +158,7 @@ public class LogisticsServiceImpl implements LogisticsService {
                 }));
             }
         });
-        model.addAttribute("depotInfo", depotInfo);
+        return depotInfo;
     }
 
     @Override
@@ -199,6 +209,7 @@ public class LogisticsServiceImpl implements LogisticsService {
                 , consumer, options));
         if (order != null) {
             order.addStockShiftUnit(shiftUnit);
+            order.switchToStartDeliverStatus();
         }
         return shiftUnit;
     }

@@ -69,9 +69,9 @@ $(function () {
         complete: function () {
             var complete = true;
             $.each(undeliveredObj, function (i, v) {
-              if(v > 0)  complete = false;
+                if (v > 0) complete = false;
             });
-            if(complete) $('#J_delivery').addClass('disabled').prop('disabled', true);
+            if (complete) $('#J_delivery').addClass('disabled').prop('disabled', true);
         },
         resetGoodsList: function (value) {
             this.goodsList(depotObj[value]);
@@ -84,7 +84,7 @@ $(function () {
         var formData = getData();
         if (formData) {
             var loading = layer.load();
-            $.ajax('/api/orderDelivery', {
+            $.ajax('/api/logisticsShip', {
                 method: 'POST',
                 data: formData,
                 dataType: 'json',
