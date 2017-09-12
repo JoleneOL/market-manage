@@ -44,6 +44,7 @@ public class MainGood {
     private Channel channel;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime = LocalDateTime.now();
+    private String tags;
 
     public static Expression<BigDecimal> getTotalPrice(From<?, MainGood> path, CriteriaBuilder criteriaBuilder) {
         final Path<MainProduct> product = path.get(MainGood_.product);
