@@ -68,7 +68,8 @@ public class LogisticsController {
     @Transactional
     @ResponseBody
     public Map<String, Object> logisticsShip(DeliverableOrderId orderPK, boolean installation, long depot
-            , HttpServletRequest request, @RequestParam(required = false) String orderNumber, Locale locale) {
+            , HttpServletRequest request, @RequestParam(required = false) String orderNumber
+            , @RequestParam(required = false) String company, Locale locale) {
         // 获取订单
         Class<? extends Serializable> idClass = JpaUtils.idClassForEntity(orderPK.getType());
         Serializable id;
@@ -85,7 +86,7 @@ public class LogisticsController {
         LogisticsSupplier supplier = applicationContext.getBean(depotEntity.getSupplierClass());
 
         String msg = supplier.orderNumberRequireMessage(locale);
-        if (!StringUtils.isEmpty(msg) && StringUtils.isEmpty(orderNumber)) {
+        if (!StringUtils.isEmpty(msg) && (StringUtils.isEmpty(orderNumber) || StringUtils.isEmpty(company))) {
             return with(302, msg);
         }
 
@@ -126,6 +127,7 @@ public class LogisticsController {
                     , order.getLogisticsDestination(), installation ? LogisticsOptions.Installation : 0);
             if (unit instanceof ManuallyOrder) {
                 ((ManuallyOrder) unit).setOrderNumber(orderNumber);
+                ((ManuallyOrder) unit).setSupplierCompany(company);
             }
         } catch (UnnecessaryShipException e) {
             log.debug("", e);

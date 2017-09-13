@@ -86,6 +86,12 @@ $(function () {
         Render.resetGoodsList($selectDepot.val());
     }
 
+    function readLocalStorage(key) {
+        if (!localStorage)
+            return '';
+        return localStorage.getItem(key) || '';
+    }
+
     $('#J_delivery').click(function () {
         if (!$selectDepot.val()) return layer.msg('请选择仓库');
         var formData = getData();
@@ -99,21 +105,27 @@ $(function () {
                     layer.close(loading);
                     if (res.resultCode === 302) {
                         // 需要 orderNumber
-                        layer.prompt({
+                        layer.open({
                             title: res.resultMsg,
-                            formType: 0
-                        }, function (orderNumber, index) {
-                            // 再次提交
-                            formData.orderNumber = orderNumber;
-                            $.ajax('/api/logisticsShip', {
-                                method: 'POST',
-                                data: formData,
-                                dataType: 'json',
-                                success: function (res2) {
-                                    layer.close(index);
-                                    return handleShipResult(res2, formData);
-                                }
-                            });
+                            content: $('#ManuallyOrderInputs').html(),
+                            area: ['400px', '230px'],
+                            zIndex: 9999,
+                            success: function (ui) {
+                                $('input[name=company]', ui).val(readLocalStorage('LastManuallyOrderCompany'));
+                            }, yes: function (index, ui) {
+                                // 再次提交
+                                formData.company = $('input[name=company]', ui).val();
+                                formData.orderNumber = $('input[name=orderNumber]', ui).val();
+                                $.ajax('/api/logisticsShip', {
+                                    method: 'POST',
+                                    data: formData,
+                                    dataType: 'json',
+                                    success: function (res2) {
+                                        layer.close(index);
+                                        return handleShipResult(res2, formData);
+                                    }
+                                });
+                            }
                         });
                         return;
                     }

@@ -4,14 +4,9 @@ import cn.lmjia.market.core.pages.AbstractContentPage;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.function.BiFunction;
 
 /**
  * 发货页面
@@ -51,37 +46,17 @@ public class ManageDeliveryPage extends AbstractContentPage {
                     .ifPresent(element -> element.sendKeys("1"));
         }
         submit.click();
-        layerPrompt((s, element) -> {
-            WebElement input = element.findElement(By.tagName("input"));
-            input.clear();
-            input.sendKeys("号:" + RandomStringUtils.randomAlphabetic(7));
+        layerDialog((s, element) -> {
+            WebElement orderNumber = element.findElement(By.name("orderNumber"));
+            orderNumber.clear();
+            orderNumber.sendKeys("号:" + RandomStringUtils.randomAlphabetic(7));
+            WebElement company = element.findElement(By.name("company"));
+            company.clear();
+            company.sendKeys(RandomStringUtils.randomAlphabetic(3) + "公司");
             return true;
         });
         // 不应该再有弹出框
         assertInfo().isNull();
     }
 
-    /**
-     * 检查下是否有弹出框，有的话function就会被执行
-     *
-     * @param function 参数分别为弹出窗标题，整个弹出界面的div；如果返回true则表示输入，返回false就直接关闭
-     */
-    private void layerPrompt(BiFunction<String, WebElement, Boolean> function) {
-        //
-        try {
-            final By locator = By.className("layui-layer-prompt");
-            new WebDriverWait(webDriver, 1)
-                    .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
-            WebElement div = webDriver.findElements(locator).stream()
-                    .filter(WebElement::isDisplayed)
-                    .findFirst()
-                    .orElse(null);
-            if (function.apply(div.findElement(By.className("layui-layer-title")).getText(), div)) {
-                div.findElement(By.className("layui-layer-btn0")).click();
-            } else {
-                div.findElement(By.className("layui-layer-btn1")).click();
-            }
-        } catch (TimeoutException ignored) {
-        }
-    }
 }

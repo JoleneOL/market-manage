@@ -250,6 +250,24 @@
         </div>
     </div>
 </div>
+<template id="ManuallyOrderInputs">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">物流公司</label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入物流公司名称" class="form-control"
+                       name="company"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">快递单号</label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入快递单号" class="form-control"
+                       name="orderNumber"/>
+            </div>
+        </div>
+    </div>
+</template>
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -257,7 +275,7 @@
 <script src="manage-resource/js/content.min.js"></script>
 
 <script src="mock/mock-min.js" th:remove="all"></script>
-<!--<script src="mock/orderDelivery.js" th:remove="all"></script>-->
+<script src="mock/orderDelivery.js" th:remove="all"></script>
 
 <script src="./manage-resource/js/orderDelivery.js"></script>
 </html>
