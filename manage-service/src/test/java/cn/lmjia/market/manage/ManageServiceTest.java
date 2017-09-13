@@ -38,6 +38,26 @@ public abstract class ManageServiceTest extends DealerServiceTest {
                 .andExpect(header().string("location", "/manageDepot"));
     }
 
+    /**
+     * 增加一个手动仓库
+     *
+     * @throws Exception
+     */
+    protected void addNewManuallyDepot() throws Exception {
+        Address address = randomAddress();
+        mockMvc.perform(
+                post("/manage/depotList")
+                        .param("type", "Depot")
+                        .param("name", RandomStringUtils.randomAlphabetic(10) + "手动仓库")
+                        .param("address", address.getStandardWithoutOther())
+                        .param("fullAddress", address.getOtherAddress())
+                        .param("chargePeopleName", RandomStringUtils.randomAlphabetic(3) + "人")
+                        .param("chargePeopleMobile", randomMobile())
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("location", "/manageDepot"));
+    }
+
     protected void addNewFactory() throws Exception {
         Address address = randomAddress();
         mockMvc.perform(

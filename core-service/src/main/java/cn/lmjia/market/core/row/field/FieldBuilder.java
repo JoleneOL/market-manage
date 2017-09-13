@@ -21,12 +21,12 @@ public class FieldBuilder<T> {
 
     private final String name;
     private BiFunction<Root<T>, CriteriaBuilder, Expression<?>> biSelect;
+    private OwnExpression<T> ownSelect;
     private Function<Root<T>, Expression<?>> select;
     private BiFunction<Object, MediaType, Object> format;
     private Function<Root<T>, Expression<?>> order;
     private BiFunction<Root<T>, CriteriaBuilder, Expression<?>> biOrder;
     private boolean noOrder = false;
-
     private FieldBuilder(String name) {
         this.name = name;
     }
@@ -54,6 +54,11 @@ public class FieldBuilder<T> {
 
     public FieldBuilder<T> addBiSelect(BiFunction<Root<T>, CriteriaBuilder, Expression<?>> function) {
         this.biSelect = function;
+        return this;
+    }
+
+    public FieldBuilder<T> addOwnSelect(OwnExpression<T> ownSelect) {
+        this.ownSelect = ownSelect;
         return this;
     }
 
@@ -86,6 +91,8 @@ public class FieldBuilder<T> {
         return new FieldDefinition<T>() {
             @Override
             public Selection<?> select(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, Root<T> root) {
+                if (ownSelect != null)
+                    return ownSelect.toExpression(root, criteriaBuilder, query);
                 if (biSelect != null)
                     return biSelect.apply(root, criteriaBuilder);
                 if (select != null)
@@ -120,6 +127,11 @@ public class FieldBuilder<T> {
                 return root.get(name);
             }
         };
+    }
+
+    @FunctionalInterface
+    public interface OwnExpression<T> {
+        Expression<?> toExpression(Root<T> root, CriteriaBuilder cb, CriteriaQuery<?> query);
     }
 
 
