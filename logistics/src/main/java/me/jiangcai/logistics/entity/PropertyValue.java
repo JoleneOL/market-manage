@@ -3,10 +3,7 @@ package me.jiangcai.logistics.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * 描述货品性质、规格的参数
@@ -24,15 +21,20 @@ public class PropertyValue {
      */
     private String value;
     /**
+     * 属性
+     */
+    @ManyToOne
+    private PropertyName propertyName;
+    /**
      * 默认图标
      */
     private String icon;
     /**
      * 排序
      */
-    private int order;
+    private int weight;
     /**
-     * 是否有效
+     * 是否无效
      */
     private boolean disabled;
 }

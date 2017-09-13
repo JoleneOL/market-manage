@@ -25,6 +25,12 @@ import me.jiangcai.lib.jdbc.ConnectionProvider;
 import me.jiangcai.lib.jdbc.JdbcService;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
+import me.jiangcai.logistics.entity.PropertyName;
+import me.jiangcai.logistics.entity.PropertyValue;
+import me.jiangcai.logistics.entity.support.PropertyType;
+import me.jiangcai.logistics.repository.ProductTypeRepository;
+import me.jiangcai.logistics.repository.PropertyNameRepository;
+import me.jiangcai.logistics.repository.PropertyValueRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +54,7 @@ import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * 初始化服务
@@ -83,6 +86,12 @@ public class InitService {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private PropertyNameRepository propertyNameRepository;
+    @Autowired
+    private PropertyValueRepository propertyValueRepository;
 
     @PostConstruct
     @Transactional
@@ -91,6 +100,7 @@ public class InitService {
         database();
         upgrade();
         managers();
+        productTypes();
         products();
         others();
     }
@@ -143,6 +153,40 @@ public class InitService {
 
     private void commons() throws SQLException {
         jdbcService.runJdbcWork(JpaFunctionUtils::enhance);
+    }
+
+    private void productTypes() throws IOException {
+        if (productTypeRepository.count() > 0) {
+            return;
+        }
+        //先上属性及属性值
+        Properties properties = new Properties();
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new ClassPathResource("/defaultPropertyNameValues").getInputStream(), "UTF-8"))) {
+            properties.load(reader);
+            properties.stringPropertyNames().forEach(propertyNameId -> {
+                //属性
+                final String values[] = properties.getProperty(propertyNameId).split(",");
+                PropertyName propertyName = propertyNameRepository.findOne(Long.valueOf(propertyNameId));
+                if (propertyName == null) {
+                    propertyName = new PropertyName();
+                    propertyName.setName(values[0]);
+                    propertyName.setType(PropertyType.values()[Integer.parseInt(values[1])]);
+                    propertyName.setSpec(Boolean.parseBoolean(values[2]));
+                    //属性值
+                    final String propertyValueNames[] = values[3].split("|");
+                    List<PropertyValue> propertyValueList = new ArrayList<>(propertyValueNames.length);
+                    for (int i = 0; i < propertyValueNames.length; i++) {
+                        PropertyValue propertyValue = new PropertyValue();
+                        propertyValue.setValue(propertyValueNames[i]);
+                        propertyValue.setPropertyName(propertyName);
+                        propertyValueList.add(propertyValue);
+                    }
+                    propertyName.setPropertyValueList(propertyValueList);
+                    propertyNameRepository.save(propertyName);
+                }
+            });
+        }
     }
 
     private void products() throws IOException {

@@ -29,29 +29,29 @@ public class PropertyName {
      */
     private PropertyType type;
     /**
-     * 是否作为一个规格
+     * 是否作为一个规格,默认为是
      */
-    private boolean isSpec;
+    private boolean spec;
     /**
-     * 是否是必填项
+     * 是否是必填项，默认为是
      */
-    private boolean isRequired;
+    private boolean required = true;
     /**
      * 是否是数字
      */
-    private boolean isNumber;
+    private boolean number;
     /**
      * 排序
      */
-    private int order;
+    private int weight;
     /**
-     * 是否有效
+     * 是否无效
      */
     private boolean disabled;
     /**
      * 规格值
      */
     @ElementCollection
-    private List<PropertyName> propertyNameList;
+    private List<PropertyValue> propertyValueList;
 
 }

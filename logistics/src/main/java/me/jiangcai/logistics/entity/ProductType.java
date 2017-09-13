@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 货品分类
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class ProductType {
 
     @Id
@@ -26,7 +29,7 @@ public class ProductType {
     /**
      * 是否有子类目
      */
-    private boolean isParent;
+    private boolean parent;
     /**
      * 上级类目
      */
@@ -41,6 +44,21 @@ public class ProductType {
      * 是否有效
      */
     private boolean disabled;
+    /**
+     * 类目下的属性值
+     */
+    @ElementCollection
+    private List<PropertyValue> propertyValueList;
+
+    /**
+     * 类目下的属性
+     */
+    private List<PropertyName> getPropertyNameList(){
+        if(propertyValueList != null){
+            return propertyValueList.stream().map(PropertyValue::getPropertyName).distinct().collect(Collectors.toList());
+        }
+        return null;
+    }
 
 
 

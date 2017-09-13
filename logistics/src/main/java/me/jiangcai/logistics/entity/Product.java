@@ -12,6 +12,7 @@ import javax.persistence.Lob;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 货品
@@ -93,6 +94,14 @@ public class Product {
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal weight;
+    /**
+     * 货品类型
+     */
+    private ProductType productType;
+    /**
+     * 属性值
+     */
+    private Set<PropertyValue> propertyValues;
 
     @Override
     public boolean equals(Object o) {
