@@ -2,8 +2,12 @@
  * 发货相关互动
  * Created by CJ on 13/09/2017.
  */
-
-// 剩余库存
+// 如果要输入什么信息的话
+// Mock.mock(/\/api\/logisticsShip/, {
+//     "resultCode": 302,
+//     "resultMsg": "把快递单号给我呀"
+// });
+// 成功->剩余库存
 Mock.mock(/\/api\/logisticsShip/, {
     "resultCode": 200,
     "resultMsg": "ok",
