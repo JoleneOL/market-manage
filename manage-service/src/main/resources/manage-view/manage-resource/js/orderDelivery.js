@@ -172,14 +172,12 @@ $(function () {
         var goods = $('input[name=goods]').filter(function (_, ele) {
             var ele$ = $(ele);
             var number = +ele$.val();
-            return (number > 0 && ele$.data('goods-installation') === 'true');
+            return (number > 0 && ele$.data('goods-installation'));
         });
         //
         if (goods.size() > 0) {
-            console.log('存在可安装的货品!');
             installation.prop('disabled', false);
         } else {
-            console.log('不存在可安装的货品!');
             installation.prop('disabled', true);
             installation.prop('checked', false);
         }
