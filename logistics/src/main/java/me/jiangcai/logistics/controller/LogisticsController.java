@@ -11,6 +11,7 @@ import me.jiangcai.logistics.entity.ManuallyOrder;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductStatus;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.model.DeliverableOrderId;
 import me.jiangcai.logistics.option.LogisticsOptions;
@@ -20,14 +21,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +68,37 @@ public class LogisticsController {
     @Autowired
     private ApplicationContext applicationContext;
 
+
+    private String message(Object user) {
+        if (user == null)
+            return "online changes.";
+        if (user instanceof UserDetails) {
+            return ((UserDetails) user).getUsername() + " made change.";
+        }
+        return user.toString() + " made change.";
+    }
+
+    @PutMapping("/api/logisticsEventReject/{id}")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void reject(@PathVariable("id") long id, @AuthenticationPrincipal Object user) {
+        logisticsService.mockToStatus(id, ShiftStatus.reject, message(user));
+    }
+
+    @PutMapping("/api/logisticsEventSuccess/{id}")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void success(@PathVariable("id") long id, @AuthenticationPrincipal Object user) {
+        logisticsService.mockToStatus(id, ShiftStatus.success, message(user));
+    }
+
+    @PutMapping("/api/logisticsEventInstall/{id}")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void install(@PathVariable("id") long id, String installer, String installCompany, String mobile) {
+        logisticsService.mockInstallationEvent(id, installer, installCompany, mobile);
+    }
+
     /**
      * @return 发货，并且返回发货之后的库存
      */
@@ -91,7 +129,7 @@ public class LogisticsController {
         }
 
         // 手动获取货品
-        Collection<Thing> collection = new ArrayList<>();
+        final Collection<Thing> collection = new ArrayList<>();
         String[] gArray = request.getParameterValues("goods[]");
         if (gArray == null || gArray.length == 0) {
             gArray = request.getParameterValues("goods");
@@ -122,6 +160,17 @@ public class LogisticsController {
             }
         }));
 
+        // 获取原来的库存信息
+        final Map<Depot, Map<Product, Integer>> depotInfo = logisticsService.getDepotInfo(order);
+        // 调整被选择仓库的库存
+        depotInfo.computeIfPresent(depotEntity, (depot1, productIntegerMap) -> {
+            collection.forEach(thing
+                    -> productIntegerMap.computeIfPresent(thing.getProduct()
+                    // 将特定货品数量降低
+                    , (product, integer) -> integer - thing.getAmount()));
+            return productIntegerMap;
+        });
+
         try {
             StockShiftUnit unit = logisticsService.makeShift(supplier, order, collection, depotEntity
                     , order.getLogisticsDestination(), installation ? LogisticsOptions.Installation : 0);
@@ -135,7 +184,8 @@ public class LogisticsController {
         }
 
         // ok 了 计算新的库存表
-        return withOk(toData(logisticsService.getDepotInfo(order)));
+
+        return withOk(toData(depotInfo));
     }
 
     private Object toData(Map<Depot, Map<Product, Integer>> info) {

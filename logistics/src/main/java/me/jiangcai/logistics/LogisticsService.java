@@ -32,6 +32,16 @@ public interface LogisticsService {
      */
     @Transactional
     void mockToStatus(long unitId, ShiftStatus status);
+
+    /**
+     * 尝试模拟一个状态的变化
+     *
+     * @param unitId  物流订单pk
+     * @param status  改变至状态
+     * @param message 留言
+     */
+    @Transactional
+    void mockToStatus(long unitId, ShiftStatus status, String message);
     //Distribution resource planning
 
     /**
@@ -129,12 +139,23 @@ public interface LogisticsService {
             , LogisticsSource source, LogisticsDestination destination, int options) throws UnnecessaryShipException;
 
     /**
-     * 模拟生成一个安装时间
+     * 模拟生成一个安装事件
      *
      * @param unitId 物流id
      */
     @Transactional
     void mockInstallationEvent(long unitId);
+
+    /**
+     * 模拟生成一个安装事件
+     *
+     * @param unitId         物流id
+     * @param installer      安装人员
+     * @param installCompany 安装公司
+     * @param mobile         安装人员手机
+     */
+    @Transactional
+    void mockInstallationEvent(long unitId, String installer, String installCompany, String mobile);
 
     @EventListener(ShiftEvent.class)
     @Transactional

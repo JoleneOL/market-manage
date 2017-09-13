@@ -6,7 +6,6 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
-import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
@@ -16,26 +15,15 @@ import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.DeliverableOrder;
-import me.jiangcai.logistics.LogisticsService;
-import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.StockService;
-import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
-import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.UsageStock_;
-import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
-import me.jiangcai.logistics.exception.StockOverrideException;
-import me.jiangcai.logistics.exception.UnnecessaryShipException;
-import me.jiangcai.logistics.haier.HaierSupplier;
-import me.jiangcai.logistics.option.LogisticsOptions;
-import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.NumberUtils;
@@ -56,8 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -82,14 +68,6 @@ public class MainOrderServiceImpl implements MainOrderService {
     private Map<LocalDate, AtomicInteger> dailySerials = Collections.synchronizedMap(new HashMap<>());
     @Autowired
     private StockService stockService;
-    @Autowired
-    private HaierSupplier haierSupplier;
-    @Autowired
-    private LogisticsService logisticsService;
-    @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -280,84 +258,6 @@ public class MainOrderServiceImpl implements MainOrderService {
 //        return stockService.enabledUsableStockInfo(((productPath, criteriaBuilder)
 //                -> criteriaBuilder.equal(productPath, product)), null)
 //                .forProduct(product);
-    }
-
-    @Override
-    public StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId
-            , Map<MainProduct, Integer> amounts, boolean installation) throws StockOverrideException, UnnecessaryShipException {
-        MainOrder order = getOrder(orderId);
-        Depot depot = depotRepository.getOne(depotId);
-
-        LogisticsSupplier supplier;
-        if (supplierType == HaierSupplier.class)
-            supplier = haierSupplier;
-        else
-            supplier = applicationContext.getBean(supplierType);
-
-        Map<? extends Product, Integer> toShip;
-        if (amounts != null)
-            toShip = amounts;
-        else
-            toShip = order.getWantShipProduct();
-
-        StockShiftUnit unit = logisticsService.makeShift(supplier, order, toShip.entrySet().stream()
-                        .map((Function<Map.Entry<? extends Product, Integer>, Thing>) entry -> new Thing() {
-                            @Override
-                            public Product getProduct() {
-                                return entry.getKey();
-                            }
-
-                            @Override
-                            public ProductStatus getProductStatus() {
-                                return ProductStatus.normal;
-                            }
-
-                            @Override
-                            public int getAmount() {
-                                return entry.getValue();
-                            }
-                        })
-                        .collect(Collectors.toSet())
-                , depot, order, installation ? LogisticsOptions.Installation : 0);
-
-        if (order.getOrderStatus() == OrderStatus.forDeliver)
-            order.setOrderStatus(OrderStatus.forDeliverConfirm);
-        return unit;
-    }
-
-    @Override
-    public StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId) throws UnnecessaryShipException {
-        MainOrder order = getOrder(orderId);
-        Depot depot = depotRepository.getOne(depotId);
-
-        LogisticsSupplier supplier;
-        if (supplierType == HaierSupplier.class)
-            supplier = haierSupplier;
-        else
-            supplier = applicationContext.getBean(supplierType);
-
-        StockShiftUnit unit = logisticsService.makeShift(supplier, order, order.getAmounts().entrySet().stream()
-                        .map((Function<Map.Entry<MainGood, Integer>, Thing>) entry -> new Thing() {
-                            @Override
-                            public Product getProduct() {
-                                return entry.getKey().getProduct();
-                            }
-
-                            @Override
-                            public ProductStatus getProductStatus() {
-                                return ProductStatus.normal;
-                            }
-
-                            @Override
-                            public int getAmount() {
-                                return entry.getValue();
-                            }
-                        })
-                        .collect(Collectors.toSet())
-                , depot, order, LogisticsOptions.Installation);
-
-        order.setOrderStatus(OrderStatus.forDeliverConfirm);
-        return unit;
     }
 
     @Override

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
 <!--/*@thymesVar id="currentData" type="me.jiangcai.logistics.entity.StockShiftUnit"*/-->
+<!--/*@thymesVar id="allowEvent" type="boolean"*/-->
+<!--/*@thymesVar id="allowInstallEvent" type="boolean"*/-->
 <!--/*@thymesVar id="events" type="java.util.List<me.jiangcai.logistics.entity.StockShiftUnitEvent>"*/-->
 <head>
     <meta charset="UTF-8">
@@ -26,7 +28,7 @@
 </head>
 
 <body class="gray-bg"
-      data-url="/storage/detail">
+      data-url="/storage/detail" data-id="1" th:data-id="${currentData.id}">
 <div class="wrapper wrapper-content gray-bg">
     <div class="ibox">
         <div class="ibox-content">
@@ -439,10 +441,10 @@
         <!--</div>-->
         <!--</div>-->
     </div>
-    <div class="row">
+    <div class="row" th:if="${allowEvent||allowInstallEvent}">
         <div class="col-sm-12">
             <div class="ibox">
-                <div class="ibox-title">
+                <div class="ibox-title" style="color:darkred">
                     强行操作区
                     <div class="ibox-tools">
                         <a class="collapse-link">
@@ -451,15 +453,54 @@
                     </div>
                 </div>
                 <div class="ibox-content">
+                    <div th:if="${manuallyOrder!=null}" style="color:red" id="warningMessage">
+                        <strong>请谨慎在此区域操作！</strong>
+                        <strong>请确保物流订单「真实」地处于其他状态，而本系统未曾受理！</strong>
+                    </div>
+                    <ul>
+                        <li th:if="${allowEvent}"><a href="javascript:" id="mockReject">本物流订单已被取消</a></li>
+                        <li th:if="${allowEvent}"><a href="javascript:" id="mockSuccess">本物流订单已成功送达</a></li>
+                        <li th:if="${allowInstallEvent}"><a href="javascript:" id="mockInstall">本物流订单成功安装</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<template id="InstallEventRegion">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">安装人员 <span
+                    class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入安装人员" class="form-control"
+                       name="installer"
+                       required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">安装公司 <span
+                    class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" placeholder="请输入安装公司" class="form-control"
+                       name="installCompany" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">安装人员手机 <span
+                    class="asterisk">*</span></label>
+            <div class="col-sm-6">
+                <input type="tel" placeholder="请输入安装人员手机" class="form-control" name="mobile"
+                       required>
+            </div>
+        </div>
+    </div>
+</template>
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
 <script src="manage-resource/js/content.min.js"></script>
-<script src="manage-resource/js/logisticDetail.js"></script>
+<script src="manage-resource/js/logisticDetail.js?v=1"></script>
 </html>

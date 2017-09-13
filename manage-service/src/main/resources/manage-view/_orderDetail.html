@@ -121,7 +121,8 @@
 
                     <ul class="view-ship-list">
                         <li class="card-item" th:each="ship:${shipList}">
-                            <a class="clearfix" href="_logisticsDetail.html" th:href="@{/manageShiftDetail(id=${ship.id})}">
+                            <a class="clearfix logisticsDetailLink" href="_logisticsDetail.html" th:data-id="${ship.id}"
+                               th:href="@{/manageShiftDetail(id=${ship.id})}">
                                 <div class="ship-item ship-time">
                                     <div class="hd">发货时间</div>
                                     <div class="bd" th:text="${{ship.createTime}}">2017-10-2 11:11</div>

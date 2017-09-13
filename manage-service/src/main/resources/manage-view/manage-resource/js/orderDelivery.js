@@ -23,6 +23,7 @@ $(function () {
     $selectDepot.change(function () {
         var value = $(this).val();
         Render.goodsList(depotObj[value]);
+        checkAllGoods();
     });
     var Render = {
         goodsList: function (obj) {
@@ -92,6 +93,12 @@ $(function () {
         return localStorage.getItem(key) || '';
     }
 
+    function updateLocalStorage(key, value) {
+        if (!localStorage)
+            return '';
+        localStorage.setItem(key, value);
+    }
+
     $('#J_delivery').click(function () {
         if (!$selectDepot.val()) return layer.msg('请选择仓库');
         var formData = getData();
@@ -115,6 +122,7 @@ $(function () {
                             }, yes: function (index, ui) {
                                 // 再次提交
                                 formData.company = $('input[name=company]', ui).val();
+                                updateLocalStorage('LastManuallyOrderCompany', formData.company);
                                 formData.orderNumber = $('input[name=orderNumber]', ui).val();
                                 $.ajax('/api/logisticsShip', {
                                     method: 'POST',
@@ -186,8 +194,15 @@ $(function () {
             var number = +ele$.val();
             return (number > 0 && ele$.data('goods-installation'));
         });
+        var currentDepotId = $selectDepot.val();
+        var depotAllow;
+        if (!currentDepotId) {
+            depotAllow = false;
+        } else {
+            depotAllow = $('option[value=' + currentDepotId + ']', $selectDepot).data('installation-support');
+        }
         //
-        if (goods.size() > 0) {
+        if (goods.size() > 0 && depotAllow) {
             installation.prop('disabled', false);
         } else {
             installation.prop('disabled', true);

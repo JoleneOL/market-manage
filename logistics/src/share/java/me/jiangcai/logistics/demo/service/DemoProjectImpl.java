@@ -5,6 +5,7 @@ import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSource;
 import me.jiangcai.logistics.demo.DemoProject;
+import me.jiangcai.logistics.demo.DemoSupplier;
 import me.jiangcai.logistics.demo.entity.DemoOrder;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
@@ -37,6 +38,8 @@ public class DemoProjectImpl implements DemoProject {
     private EntityManager entityManager;
     @Autowired
     private LogisticsService logisticsService;
+    @Autowired
+    private DemoSupplier demoSupplier;
 
     @Override
     public DemoOrder createOrder(Map<Product, Integer> amounts) {
@@ -80,7 +83,7 @@ public class DemoProjectImpl implements DemoProject {
     public StockShiftUnit work(DemoOrder order, Product product, int integer, boolean testInstall, LogisticsSource source
             , LogisticsDestination destination) throws UnnecessaryShipException {
         DemoOrder demoOrder = entityManager.getReference(DemoOrder.class, order.getId());
-        return logisticsService.makeShiftForNormal(null, demoOrder, product, integer, source, destination
+        return logisticsService.makeShiftForNormal(demoSupplier, demoOrder, product, integer, source, destination
                 , testInstall ? LogisticsOptions.Installation : 0);
     }
 

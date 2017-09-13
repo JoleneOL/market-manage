@@ -19,27 +19,20 @@ import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
-import me.jiangcai.logistics.exception.UnnecessaryShipException;
-import me.jiangcai.logistics.haier.HaierSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
@@ -166,12 +159,6 @@ public class ManageOrderController {
                         .collect(Collectors.toSet())
         );
         return data;
-    }
-
-    @PutMapping("/orderData/logistics/{orderId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void makeLogistics(@PathVariable("orderId") long orderId, @RequestBody String depotId) throws UnnecessaryShipException {
-        mainOrderService.makeLogistics(HaierSupplier.class, orderId, NumberUtils.parseNumber(depotId, Long.class));
     }
 
     @GetMapping("/mainOrderDelivery")

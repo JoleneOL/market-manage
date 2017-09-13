@@ -28,6 +28,7 @@
         <logger name="org.springframework.web.servlet.resource.ResourceUrlProvider" level="info"/>
 
         <logger name="com.gargoylesoftware.htmlunit.DefaultCssErrorHandler" level="error"/>
+        <logger name="com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl" level="error"/>
 
         <!--建立一个默认的root的logger-->
         <root level="info">

@@ -10,6 +10,7 @@ import me.jiangcai.logistics.entity.ManuallyOrder;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductBatch;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,17 @@ public class ManageLogisticsController {
     public String detail(Model model, long id) {
         final StockShiftUnit shiftUnit = stockShiftUnitRepository.getOne(id);
         model.addAttribute("currentData", shiftUnit);
+        if (shiftUnit.getCurrentStatus() != ShiftStatus.success
+                && shiftUnit.getCurrentStatus() != ShiftStatus.reject) {
+            model.addAttribute("allowEvent", true);
+        } else
+            model.addAttribute("allowEvent", false);
+        // && shiftUnit.isInstallation()  为了便于管理员发起安装事件 这里不再计较是否是一个安装订单
+        if (shiftUnit.getCurrentStatus() == ShiftStatus.success) {
+            model.addAttribute("allowInstallEvent", true);
+        } else
+            model.addAttribute("allowInstallEvent", false);
+
         if (shiftUnit instanceof HaierOrder)
             model.addAttribute("haierOrder", shiftUnit);
         if (shiftUnit instanceof ManuallyOrder)

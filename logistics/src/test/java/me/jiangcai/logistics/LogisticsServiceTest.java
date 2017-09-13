@@ -1,6 +1,7 @@
 package me.jiangcai.logistics;
 
 import me.jiangcai.logistics.demo.DemoProject;
+import me.jiangcai.logistics.demo.DemoSupplier;
 import me.jiangcai.logistics.demo.entity.DemoOrder;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
@@ -31,6 +32,8 @@ public class LogisticsServiceTest extends LogisticsTestBase {
     private StockService stockService;
     @Autowired
     private DemoProject demoProject;
+    @Autowired
+    private DemoSupplier demoSupplier;
 
     @Test
     public void order1() {
@@ -125,7 +128,7 @@ public class LogisticsServiceTest extends LogisticsTestBase {
         int stock = stockService.usableStock(depot, thing.getProduct());
 
         // 演示一次简单发货
-        logisticsService.makeShift(null, null, Collections.singleton(thing), depot, randomDestination());
+        logisticsService.makeShift(demoSupplier, null, Collections.singleton(thing), depot, randomDestination());
 
         // 此时
         // 发货好了 库存会下降
@@ -133,7 +136,7 @@ public class LogisticsServiceTest extends LogisticsTestBase {
                 .isEqualTo(stock - thing.getAmount());
 
         // 再来比入库
-        StockShiftUnit unit = logisticsService.makeShift(null, null, Collections.singleton(thing), randomSource(), depot);
+        StockShiftUnit unit = logisticsService.makeShift(demoSupplier, null, Collections.singleton(thing), randomSource(), depot);
 
         // 虽然发起了入库 但因为没有成功入库，所以数量没有变化
         assertThat(stockService.usableStock(depot, thing.getProduct()))

@@ -270,51 +270,6 @@ $(function () {
     }).on('click', '.js-makeLogistics', function () {
         var orderId = $(this).attr('data-id');
         window.location.href = orderDeliveryUrl + '?id=' + orderId;
-        // $.ajax('/orderData/logistics/' + orderId, {
-        //     dataType: 'json',
-        //     method: 'get',
-        //     success: function (response) {
-        //         // 获取可用仓库
-        //         var depots = response.depots;
-        //         if (depots.length === 0)
-        //             layer.msg('没有该货品可用的库存，请尽快补充库存。');
-        //         else {
-        //             layer.open({
-        //                 content: makeLogisticsRegion.html(),
-        //                 area: ['500px', 'auto'],
-        //                 btn: ['确认', '取消'],
-        //                 zIndex: 9999,
-        //                 success: function (layerd) {
-        //                     makeLogisticsRegionDepotId = $('[name=depotId]', layerd);
-        //                     $('[name=depotId]', layerd).change(function () {
-        //                         depotSelectChange(layerd);
-        //                     });
-        //                     $('[name=depotId]', layerd).blur(function () {
-        //                         depotSelectChange(layerd);
-        //                     });
-        //                     depotsUpdate(depots);
-        //                 },
-        //                 yes: function (index) {
-        //                     var value = makeLogisticsRegionDepotId.val();
-        //                     if (value) {
-        //                         $.ajax('/orderData/logistics/' + orderId, {
-        //                             method: 'put',
-        //                             contentType: 'text/plain',
-        //                             data: value,
-        //                             success: function () {
-        //                                 table.ajax.reload();
-        //                                 layer.close(index);
-        //                             }
-        //                         });
-        //                     }
-        //                 }
-        //             });
-        //         }
-        //
-        //     }, error: function () {
-        //         layer.msg('服务异常，请稍候重试');
-        //     }
-        // });
     }).on('click', '.js-settlement', function () {
         // 重新接收端
         $.ajax('/orderData/settlement/' + $(this).attr('data-id'), {

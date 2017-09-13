@@ -61,14 +61,24 @@ public class LogisticsServiceImpl implements LogisticsService {
 
     @Override
     public void mockToStatus(long unitId, ShiftStatus status) {
+        mockToStatus(unitId, status, null);
+    }
+
+    @Override
+    public void mockToStatus(long unitId, ShiftStatus status, String message) {
         StockShiftUnit unit = stockShiftUnitRepository.getOne(unitId);
-        applicationEventPublisher.publishEvent(new ShiftEvent(unit, status, LocalDateTime.now(), null, null));
+        applicationEventPublisher.publishEvent(new ShiftEvent(unit, status, LocalDateTime.now(), message, null));
     }
 
     @Override
     public void mockInstallationEvent(long unitId) {
+        mockInstallationEvent(unitId, null, null, null);
+    }
+
+    @Override
+    public void mockInstallationEvent(long unitId, String installer, String installCompany, String mobile) {
         StockShiftUnit unit = stockShiftUnitRepository.getOne(unitId);
-        applicationEventPublisher.publishEvent(new InstallationEvent(unit, null, null, null, LocalDateTime.now()));
+        applicationEventPublisher.publishEvent(new InstallationEvent(unit, installer, installCompany, mobile, LocalDateTime.now()));
     }
 
     @Override
@@ -181,11 +191,15 @@ public class LogisticsServiceImpl implements LogisticsService {
         } else
             supplier = supplier1;
         final LogisticsDestination destination2;
-        if (destination != null)
+        if (order == null) {
             destination2 = destination;
-        else {
-            destination2 = order.getLogisticsDestination();
+        } else {
+            if (destination != null)
+                destination2 = destination;
+            else
+                destination2 = order.getLogisticsDestination();
         }
+
         Consumer<StockShiftUnit> consumer = stockShiftUnit -> {
             stockShiftUnit.setInstallation((options & LogisticsOptions.Installation) == LogisticsOptions.Installation);
             stockShiftUnit.setShiftType(ShiftType.logistics);

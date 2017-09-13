@@ -132,10 +132,11 @@
                                 <select class="form-control" name="depot" id="J_selectDepot" required>
                                     <option value="" disabled selected class="hidden">选择仓库</option>
                                     <option th:each="depot:${depotInfo}" value="1" th:value="${depot.key.id}"
-                                            th:text="${depot.key.name}">华东仓库
+                                            th:text="${depot.key.name}" data-installation-support="false"
+                                            th:data-installation-support="${depot.key.installationSupport}">华东仓库
                                     </option>
-                                    <option th:remove="all" value="2">华南仓库</option>
-                                    <option th:remove="all" value="3">西北仓库</option>
+                                    <option th:remove="all" value="2" data-installation-support="true">华南仓库</option>
+                                    <option th:remove="all" value="3" data-installation-support="false">西北仓库</option>
                                 </select>
                             </div>
                         </div>
