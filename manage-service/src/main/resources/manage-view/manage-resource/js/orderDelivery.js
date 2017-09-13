@@ -137,7 +137,7 @@ $(function () {
         $('#J_form').find('select').not('.js-goods').each(function () {
             data[$(this).attr('name')] = $(this).val();
         });
-        var cleckbox = $('.i-checks').find('input');
+        var cleckbox = $('#J_installation');
         data[cleckbox.attr('name')] = cleckbox.is(':checked');
         var goods = [];
         $('.js-goods').each(function () {
