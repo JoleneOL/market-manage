@@ -121,7 +121,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .sum();
 
         ManageOrderPage manageOrderPage = ManageOrderPage.of(this, driver);
-        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot);
+        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot.getName());
         // 看一下？
 
         assertThat(stockService.usableStockTotal(good.getProduct()))
@@ -145,7 +145,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .isEqualByComparingTo(OrderStatus.forDeliver);
 
         manageOrderPage = ManageOrderPage.of(this, driver);
-        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot);
+        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot.getName());
         // 我们让这个物流订单成功！
         StockShiftUnit goSuccess = mainOrderService.getOrder(order.getId()).getLogisticsSet().stream()
                 .filter(unit -> !Objects.equals(unit.getId(), rejectUnit.getId()))
@@ -206,7 +206,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .sum();
 
         ManageOrderPage manageOrderPage = ManageOrderPage.of(this, driver);
-        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot);
+        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot.getName());
 
 //        String responseString = mockMvc.perform(get("/orderData/logistics/" + String.valueOf(order.getId())))
 //                .andExpect(status().isOk())
@@ -246,7 +246,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .isEqualByComparingTo(OrderStatus.forDeliver);
 
         manageOrderPage = ManageOrderPage.of(this, driver);
-        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot);
+        manageOrderPage.deliveryFor(order.getId()).sendAllBy(targetDepot.getName());
 
 //        mockMvc.perform(put("/orderData/logistics/" + String.valueOf(order.getId()))
 //                .contentType(MediaType.TEXT_PLAIN)

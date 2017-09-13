@@ -18,4 +18,14 @@ public class ManuallyOrder extends StockShiftUnit {
      */
     @Column(length = 40)
     private String orderNumber;
+    /**
+     * 物流公司名称
+     */
+    @Column(length = 30)
+    private String supplierCompany;
+
+    @Override
+    public String getSupplierOrganizationName() {
+        return getSupplierCompany();
+    }
 }

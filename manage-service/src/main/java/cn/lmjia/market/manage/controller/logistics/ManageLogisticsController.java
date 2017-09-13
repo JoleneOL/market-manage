@@ -6,6 +6,7 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.StockShiftUnitRows;
 import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.ManuallyOrder;
 import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ProductBatch;
@@ -52,6 +53,8 @@ public class ManageLogisticsController {
         model.addAttribute("currentData", shiftUnit);
         if (shiftUnit instanceof HaierOrder)
             model.addAttribute("haierOrder", shiftUnit);
+        if (shiftUnit instanceof ManuallyOrder)
+            model.addAttribute("manuallyOrder", shiftUnit);
         model.addAttribute("events", shiftUnit.getEvents().values().stream()
                 .sorted((o1, o2) -> o2.getTime().compareTo(o1.getTime()))
                 .collect(Collectors.toList()));
