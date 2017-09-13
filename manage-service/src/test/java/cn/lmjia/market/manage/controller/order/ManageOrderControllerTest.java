@@ -159,7 +159,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
 
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .as("物流完成之后 订单也应该完成")
-                .isEqualByComparingTo(OrderStatus.forInstall);
+                .isEqualByComparingTo(OrderStatus.afterSale);
 
         mockMvc.perform(get("/manage/orderData/logistics"))
                 .andDo(print());
