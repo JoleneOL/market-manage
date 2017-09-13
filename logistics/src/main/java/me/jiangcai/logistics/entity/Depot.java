@@ -113,4 +113,11 @@ public class Depot implements LogisticsDestination, LogisticsSource {
         return ManuallySupplier.class;
     }
 
+    /**
+     * @return 支持该仓库的物流供应商是否支持安装
+     */
+    public boolean isInstallationSupport() {
+        return false;
+    }
+
 }

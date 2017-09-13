@@ -26,4 +26,9 @@ public class HaierDepot extends Depot {
     public Class<? extends LogisticsSupplier> getSupplierClass() {
         return HaierSupplier.class;
     }
+
+    @Override
+    public boolean isInstallationSupport() {
+        return true;
+    }
 }

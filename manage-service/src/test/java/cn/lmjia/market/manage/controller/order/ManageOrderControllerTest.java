@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Failed tests:   go(cn.lmjia.market.manage.controller.order.ManageOrderControllerTest): [执行发货之后，可用库存应该减少] expected:<[-9]> but was:<[0]>
  * Tests in error:
  * go(cn.lmjia.market.manage.controller.logistics.ManageStorageControllerTest): 找不到符合要求的Label
  *
@@ -51,6 +50,22 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         updateAllRunWith(newRandomManager(ManageLevel.root));
         mockMvc.perform(get("/manage/orderData/logistics"))
                 .andDo(print());
+    }
+
+    /**
+     * 基于海尔物流的测试，成功和失败都是基于事件的
+     */
+    @Test
+    public void goWithHR() {
+
+    }
+
+    /**
+     * 基于手动物流的测试，成功和失败都是基于操作的
+     */
+    @Test
+    public void goWithM() {
+
     }
 
     @Test

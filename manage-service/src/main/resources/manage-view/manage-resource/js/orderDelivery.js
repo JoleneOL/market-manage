@@ -143,5 +143,30 @@ $(function () {
 
     $('.js-goods').on('input', function () {
         $(this).val($(this).val().replace(/\D/g, ''));
-    })
+    });
+
+    // goods
+    function checkAllGoods() {
+        var installation = $('input[name=installation]');
+        var goods = $('input[name=goods]').filter(function (_, ele) {
+            var ele$ = $(ele);
+            var number = +ele$.val();
+            return (number > 0 && ele$.data('goods-installation') === 'true');
+        });
+        //
+        if (goods.size() > 0) {
+            console.log('存在可安装的货品!');
+            installation.prop('readonly', false);
+        } else {
+            console.log('不存在可安装的货品!');
+            installation.attr('readonly', 'readonly');
+            // installation.prop('checked', false);
+        }
+    }
+
+    checkAllGoods();
+    var goodsInputs = $('input[name=goods]');
+    goodsInputs.change(checkAllGoods);
+    goodsInputs.blur(checkAllGoods);
+
 });

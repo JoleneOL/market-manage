@@ -153,7 +153,9 @@
                                 <label class="col-sm-5 control-label" th:text="${p.key.name}">量子立式净水机（白色）</label>
                                 <div class="col-sm-2">
                                     <input type="number" placeholder="输入数量" class="form-control js-goods"
-                                           name="goods" min="0" th:max="${p.value}" th:value="${p.value}">
+                                           name="goods" min="0" th:max="${p.value}" th:value="${p.value}"
+                                           data-goods-installation="true"
+                                           th:data-goods-installation="${p.key.installation}">
                                 </div>
                                 <label class="col-sm-4 control-label text-danger text-left"></label>
                             </div>
@@ -161,7 +163,7 @@
                                 <label class="col-sm-5 control-label">量子立式净水机（黑色）</label>
                                 <div class="col-sm-2">
                                     <input type="number" placeholder="输入数量" class="form-control js-goods"
-                                           name="goods" min="0">
+                                           name="goods" min="0" data-goods-installation="true">
                                 </div>
                                 <label class="col-sm-4 control-label text-danger text-left"></label>
                             </div>
@@ -169,7 +171,7 @@
                                 <label class="col-sm-5 control-label">量子空气净化器</label>
                                 <div class="col-sm-2">
                                     <input type="number" placeholder="输入数量" class="form-control js-goods"
-                                           name="goods" min="0">
+                                           name="goods" min="0" data-goods-installation="false">
                                 </div>
                                 <label class="col-sm-4 control-label text-danger text-left"></label>
                             </div>
