@@ -1,8 +1,4 @@
 $(function () {
-    $(".i-checks").iCheck({
-        checkboxClass: "icheckbox_square-green",
-        radioClass: "iradio_square-green"
-    });
 
     var undeliveredObj = {};
     var depotObj = {};
@@ -148,6 +144,7 @@ $(function () {
     // goods
     function checkAllGoods() {
         var installation = $('input[name=installation]');
+
         var goods = $('input[name=goods]').filter(function (_, ele) {
             var ele$ = $(ele);
             var number = +ele$.val();
@@ -156,11 +153,11 @@ $(function () {
         //
         if (goods.size() > 0) {
             console.log('存在可安装的货品!');
-            installation.prop('readonly', false);
+            installation.prop('disabled', false);
         } else {
             console.log('不存在可安装的货品!');
-            installation.attr('readonly', 'readonly');
-            // installation.prop('checked', false);
+            installation.prop('disabled', true);
+            installation.prop('checked', false);
         }
     }
 
