@@ -79,6 +79,17 @@ $(function () {
         }
     };
 
+    function handleShipResult(res, formData) {
+        if (res.resultCode !== 200) {
+            layer.msg(res.resultMsg);
+            return false;
+        }
+        Render.resetUndelivered(formData['goods']);
+        depotObj = res.data;
+        Render.depotList(res.data);
+        Render.resetGoodsList($selectDepot.val());
+    }
+
     $('#J_delivery').click(function () {
         if (!$selectDepot.val()) return layer.msg('请选择仓库');
         var formData = getData();
@@ -90,14 +101,27 @@ $(function () {
                 dataType: 'json',
                 success: function (res) {
                     layer.close(loading);
-                    if (res.resultCode !== 200) {
-                        layer.msg(res.resultMsg);
-                        return false;
+                    if (res.resultCode === 302) {
+                        // 需要 orderNumber
+                        layer.prompt({
+                            title: res.resultMsg,
+                            formType: 0
+                        }, function (orderNumber, index) {
+                            // 再次提交
+                            formData.orderNumber = orderNumber;
+                            $.ajax('/api/logisticsShip', {
+                                method: 'POST',
+                                data: formData,
+                                dataType: 'json',
+                                success: function (res2) {
+                                    layer.close(index);
+                                    return handleShipResult(res2, formData);
+                                }
+                            });
+                        });
+                        return;
                     }
-                    Render.resetUndelivered(formData['goods']);
-                    depotObj = res.data;
-                    Render.depotList(res.data);
-                    Render.resetGoodsList($selectDepot.val());
+                    return handleShipResult(res, formData);
                 },
                 error: function () {
                     layer.close(loading);
