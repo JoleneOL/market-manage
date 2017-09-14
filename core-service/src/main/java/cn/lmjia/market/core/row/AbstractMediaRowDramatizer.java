@@ -43,7 +43,10 @@ public abstract class AbstractMediaRowDramatizer implements RowDramatizer {
 
     @Override
     public int querySize(NativeWebRequest webRequest) {
-        return readAsInt(webRequest, getSizeParameterName(), getDefaultSize());
+        int size = readAsInt(webRequest, getSizeParameterName(), getDefaultSize());
+        if (size <= 0)
+            size = 10000;
+        return size;
     }
 
     @Override

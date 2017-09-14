@@ -31,7 +31,11 @@ public class AutoShare extends TempSceneReply {
     }
 
     @Override
+<<<<<<< HEAD
     public void happen(PublicAccount publicAccount, Message message, String s) {
+=======
+    public void happen(PublicAccount account, Message message, String sceneStr) {
+>>>>>>> de436bb3f150dfc49e33ed3c23e159b0b4ca8c91
 
     }
 }

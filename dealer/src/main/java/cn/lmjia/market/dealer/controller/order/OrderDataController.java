@@ -91,13 +91,15 @@ public class OrderDataController {
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition manageableList(@AuthenticationPrincipal Login login, String orderId
             , @RequestParam(value = "phone", required = false) String mobile, Long goodId
+            , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate beginDate
+            , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate endDate
             , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate orderDate
             , OrderStatus status) {
         return new MainOrderRows(login, t -> conversionService.convert(t, String.class)) {
             @Override
             public Specification<MainOrder> specification() {
                 return new AndSpecification<>(
-                        mainOrderService.search(orderId, mobile, goodId, orderDate, status)
+                        mainOrderService.search(orderId, mobile, goodId, orderDate, beginDate, endDate, status)
                         , agentService.manageableOrder(login)
                 );
             }

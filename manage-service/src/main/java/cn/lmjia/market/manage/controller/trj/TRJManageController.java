@@ -164,7 +164,7 @@ public class TRJManageController {
             @Override
             public Specification<MainOrder> specification() {
                 return new AndSpecification<>(
-                        mainOrderService.search(orderId, mobile, goodId, orderDate, status)
+                        mainOrderService.search(orderId, mobile, goodId, orderDate, null, null, status)
                         , (root, query, cb) -> {
                     final Join<MainOrder, PayOrder> payOrder = root.join("payOrder");
                     Predicate predicate = cb.and(

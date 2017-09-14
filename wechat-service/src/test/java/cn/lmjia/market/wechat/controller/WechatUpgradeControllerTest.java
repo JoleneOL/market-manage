@@ -89,13 +89,13 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatUpgradeApplySuccess");
 
         // 这个时候业务算是完成了；我们可以看到后端请求了
-        //assertExistingRequest(user);
+        assertExistingRequest(user);
         // 我们批准它
-        //approvedOnlyRequest(user, "我的省代理");
+        approvedOnlyRequest(user, "我的省代理");
         //拒绝他
-        goReject(user, "代理人升级申请");
+        //goReject(user, "代理人升级申请");
         // 断言等级
-        //assertThat(readService.agentLevelForPrincipal(user)).isEqualTo(targetLevel);
+        assertThat(readService.agentLevelForPrincipal(user)).isEqualTo(targetLevel);
 
         // 然后继续升级
         // 断言申请

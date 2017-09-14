@@ -40,4 +40,8 @@ public class ManageController {
         paymaxPaymentForm.orderMaintain();
     }
 
+    @GetMapping("/_joke.html")
+    public String joke() {
+        return "_joke.html";
+    }
 }

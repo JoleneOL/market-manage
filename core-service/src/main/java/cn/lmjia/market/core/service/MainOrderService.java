@@ -93,10 +93,11 @@ public interface MainOrderService {
      * @param mobile    可选购买者手机号码
      * @param goodId    可选商品
      * @param orderDate 可选下单日期
-     * @param status    可选状态；如果为{@link OrderStatus#EMPTY}表示所有
-     * @return 获取数据规格
+     * @param beginDate 可选的下单起始日期；若orderDate已提供则该值无效
+     * @param endDate   可选的下单结束日期；若orderDate已提供则该值无效
+     * @param status    可选状态；如果为{@link OrderStatus#EMPTY}表示所有  @return 获取数据规格
      */
-    Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate, OrderStatus status);
+    Specification<MainOrder> search(String orderId, String mobile, Long goodId, LocalDate orderDate, LocalDate beginDate, LocalDate endDate, OrderStatus status);
 
     /**
      * 全文搜索
