@@ -17,7 +17,8 @@ import java.util.Collection;
  * @author CJ
  */
 @Service
-public class WechatNoticeHelperImpl implements WechatNoticeHelper {
+public class
+WechatNoticeHelperImpl implements WechatNoticeHelper {
 
     @Autowired
     private Environment environment;
@@ -55,6 +56,8 @@ public class WechatNoticeHelperImpl implements WechatNoticeHelper {
                 case PromotionRequestPaySuccess:
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
                 case TRJCheckWarning:
+                    return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
+                case PromotionRequestRejected:
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
                 default:
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";

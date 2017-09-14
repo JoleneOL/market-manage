@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.define.PromotionRequestRejected;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
@@ -9,13 +10,12 @@ import cn.lmjia.market.core.repository.request.PromotionRequestRepository;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
-import cn.lmjia.market.core.service.AgentFinancingService;
-import cn.lmjia.market.core.service.ContactWayService;
-import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.*;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.PromotionService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
+import me.jiangcai.user.notice.UserNoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -24,15 +24,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -56,10 +54,17 @@ public class ManagePromotionRequestController {
     private ReadService readService;
     @Autowired
     private PromotionService promotionService;
+
     @Autowired
     private PromotionRequestRepository promotionRequestRepository;
     @Autowired
     private ContactWayService contactWayService;
+    @Autowired
+    private WechatNoticeHelper wechatNoticeHelper;
+    @Autowired
+    private UserNoticeService userNoticeService;
+    @Autowired
+    private LoginService loginService;
 
     @GetMapping("/managePromotionRequest")
     public String index() {
@@ -88,16 +93,21 @@ public class ManagePromotionRequestController {
                 });
     }
 
-
     @PutMapping("/manage/promotionRequests/{id}/rejected")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void rejected(@AuthenticationPrincipal Manager manager, @PathVariable("id") long id) {
+    public void rejected(@AuthenticationPrincipal Manager manager, @PathVariable("id") long id,@RequestBody String message) {
         PromotionRequest request = promotionRequestRepository.getOne(id);
-
         request.setRequestStatus(PromotionRequestStatus.rejected);
         request.setChanger(manager);
         request.setChangeTime(LocalDateTime.now());
+        //模版信息类
+        PromotionRequestRejected promotionRequestRejected = new PromotionRequestRejected();
+        //注册模版信息
+        wechatNoticeHelper.registerTemplateMessage(promotionRequestRejected,null);
+
+        userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(request.getWhose())),
+                null,promotionRequestRejected,"代理商升级申请",new Date(),"未通过.原因:"+message);
     }
 
     @PutMapping("/manage/promotionRequests/{id}/approved")

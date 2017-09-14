@@ -116,10 +116,10 @@ public abstract class WechatTestBase extends DealerServiceTest {
      * @param loginInput 登录
      */
     protected void bindDeveloperWechat(Login loginInput) {
-        StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId("oiKvNt0neOAB8ddS0OzM_7QXQDZw");
+        StandardWeixinUser weixinUser = standardWeixinUserRepository.findByOpenId("oiKvNt7rJ8W0mXt5y9bRorGzfBIo");
         if (weixinUser == null) {
             weixinUser = new StandardWeixinUser();
-            weixinUser.setOpenId("oiKvNt0neOAB8ddS0OzM_7QXQDZw");
+            weixinUser.setOpenId("oiKvNt7rJ8W0mXt5y9bRorGzfBIo");
             weixinUser.setAppId(publicAccount.getAppID());
             weixinUser = standardWeixinUserRepository.save(weixinUser);
         }

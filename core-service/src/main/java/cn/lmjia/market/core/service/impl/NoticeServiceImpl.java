@@ -67,6 +67,7 @@ public class NoticeServiceImpl implements NoticeService {
         wechatNoticeHelper.registerTemplateMessage(new PaySuccessToCS(), null);
 
         wechatNoticeHelper.registerTemplateMessage(new NewLoginToLogin(), systemService.toUrl(SystemService.wechatMyURi));
+
     }
 
     @Override
@@ -124,9 +125,8 @@ public class NoticeServiceImpl implements NoticeService {
                 log.trace("", ex);
             }
         }
-
-
     }
+
 
     @Override
     public void newLogin(Login login, String mobile) {
@@ -295,7 +295,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         @Override
         public String title() {
-            return "订单支付成功-发送给下单者";
+            return null;
         }
 
         @Override
@@ -324,4 +324,5 @@ public class NoticeServiceImpl implements NoticeService {
             };
         }
     }
+
 }

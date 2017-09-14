@@ -112,7 +112,27 @@ $(function () {
         window.location.href = '_agentUpdateEdit.html' + '?id=' + $(this).data('id');
     }).on('click', '.js-rejected', function () {
         var id = $(this).data('id');
-        layer.confirm('拒绝申请？', {
+        layer.prompt({
+            formType: 2,
+            value: '请填写拒绝原因',
+            title: '拒绝申请？',
+            area: ['300px', '100px'], //自定义文本域宽高,
+            //btn: ['拒绝', '取消'] //按钮
+        },function(value, index, elem){
+            $.ajax('/manage/promotionRequests/' + id +'/rejected',{
+                method: 'put',
+                "message" : value,
+                success: function (res) {
+                    table.ajax.reload();
+                    layer.close(index);
+                },
+                error: function () {
+                    layer.msg('服务器异常');
+                }
+            });
+        });
+        /*layer.confirm('拒绝申请？', {
+
             btn: ['拒绝', '取消'] //按钮
         }, function (index) {
             $.ajax('/manage/promotionRequests/' + id + '/rejected', {
@@ -125,7 +145,7 @@ $(function () {
                     layer.msg('服务器异常');
                 }
             });
-        });
+        });*/
     }).on('click', '.js-agree', function () {
         var id = $(this).data('id');
         layer.confirm('通过申请？', {

@@ -29,4 +29,9 @@ public class AutoShare extends TempSceneReply {
 
         wechatService.shareTo(code.getLogin().getId(), message.getFrom());
     }
+
+    @Override
+    public void happen(PublicAccount publicAccount, Message message, String s) {
+
+    }
 }
