@@ -81,6 +81,8 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
                 case TeamMemberDeleteWarn:
                 case TeamMemberDeleteNotify:
                     return "7I5cMlNFVAB1ku-P8FAmYU2CFCJ3aoWnU_yd-8LTnN0";
+                case PromotionRequestRejected:
+                    return "eA6yIFHBqkPvvm73VKfjNWwkBjOWor_8HbgZmbAsXS0";
                 default:
                     throw new IllegalArgumentException("未知的staging消息类型:" + type);
             }
