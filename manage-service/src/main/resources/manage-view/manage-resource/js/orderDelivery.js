@@ -24,8 +24,12 @@ $(function () {
 
     function afterDepotChanged() {
         var value = $selectDepot.val();
+        // goodsInputs.attr('max', '0');
+        goodsInputs.attr({
+            'max': '0'
+            , 'min': '0'
+        });
         if (value) {
-            goodsInputs.attr('max', '0');
             var productAmounts = depotObj[value];
             Render.goodsList(productAmounts);
             var home = $('#J_goodsLists');
@@ -34,9 +38,7 @@ $(function () {
                 var div = $('div[data-goods-id=' + code + ']', home);
                 var input = $('input', div);
                 input.attr('max', Math.min(input.data('max'), value));
-            })
-        } else {
-            goodsInputs.attr('max', '0');
+            });
         }
         checkAllGoods();
     }
@@ -49,10 +51,10 @@ $(function () {
             var parent = $('#J_goodsLists');
             parent.find('.form-group').each(function () {
                 var goodId = $(this).attr('data-goods-id');
-                var max = +undeliveredObj[goodId] > +obj[goodId] ? obj[goodId] : undeliveredObj[goodId];
-                $(this).find('input').attr('max', max);
-                $(this).find('.text-danger').text('库存：' + obj[goodId] + '，待发货：' + undeliveredObj[goodId]);
-                if (max === 0) $(this).remove();
+                // var max = +undeliveredObj[goodId] > +obj[goodId] ? obj[goodId] : undeliveredObj[goodId];
+                // $(this).find('input').attr('max', max);
+                $(this).find('.text-danger').text('库存：' + (obj[goodId] || 0) + '，待发货：' + undeliveredObj[goodId]);
+                // if (max === 0) $(this).remove();
             })
         },
         depotList: function (obj) {
