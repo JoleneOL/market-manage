@@ -18,13 +18,32 @@ $(function () {
             depotObj[depotId][$(this).attr('data-goods-id')] = $(this).attr('data-stock');
         });
     });
+    var goodsInputs = $('input[name=goods]');
 
     var $selectDepot = $('#J_selectDepot');
-    $selectDepot.change(function () {
-        var value = $(this).val();
-        Render.goodsList(depotObj[value]);
+
+    function afterDepotChanged() {
+        var value = $selectDepot.val();
+        if (value) {
+            goodsInputs.attr('max', '0');
+            var productAmounts = depotObj[value];
+            Render.goodsList(productAmounts);
+            var home = $('#J_goodsLists');
+            $.each(productAmounts, function (code, value) {
+                // console.log(code, value);
+                var div = $('div[data-goods-id=' + code + ']', home);
+                var input = $('input', div);
+                input.attr('max', Math.min(input.data('max'), value));
+            })
+        } else {
+            goodsInputs.attr('max', '0');
+        }
         checkAllGoods();
-    });
+    }
+
+    $selectDepot.change(afterDepotChanged);
+    afterDepotChanged();
+
     var Render = {
         goodsList: function (obj) {
             var parent = $('#J_goodsLists');
@@ -211,7 +230,7 @@ $(function () {
     }
 
     checkAllGoods();
-    var goodsInputs = $('input[name=goods]');
+
     goodsInputs.change(checkAllGoods);
     goodsInputs.blur(checkAllGoods);
 
