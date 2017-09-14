@@ -62,17 +62,17 @@
                             <td th:text="${p.key.name}">量子立式净水机（白色）</td>
                             <td><span class="js-stock" th:text="${p.value}">999</span><span
                                     th:text="${p.key.unit?:'个'}">台</span></td>
-                            <td>需要</td>
+                            <td th:text="${p.key.installation?'是':'否'}">是</td>
                         </tr>
                         <tr data-goods-id="2" th:remove="all">
                             <td>量子立式净水机（黑色）</td>
                             <td><span class="js-stock">100</span>台</td>
-                            <td>不需要</td>
+                            <td>否</td>
                         </tr>
                         <tr data-goods-id="3" th:remove="all">
                             <td>量子空气净化器</td>
                             <td><span class="js-stock">99</span>台</td>
-                            <td>不需要</td>
+                            <td>否</td>
                         </tr>
                         </tbody>
                     </table>

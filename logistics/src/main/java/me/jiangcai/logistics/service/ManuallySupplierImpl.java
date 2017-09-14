@@ -7,6 +7,7 @@ import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.supplier.ManuallySupplier;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 /**
@@ -20,5 +21,10 @@ public class ManuallySupplierImpl implements ManuallySupplier {
         ManuallyOrder manuallyOrder = new ManuallyOrder();
         forUnit.accept(manuallyOrder);
         return manuallyOrder;
+    }
+
+    @Override
+    public String orderNumberRequireMessage(Locale locale) {
+        return "手动订单需要手动录入物流信息";
     }
 }
