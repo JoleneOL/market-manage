@@ -14,6 +14,7 @@ import me.jiangcai.logistics.haier.http.ResponseHandler;
 import me.jiangcai.logistics.haier.model.OrderStatusSync;
 import me.jiangcai.logistics.haier.model.OutInStore;
 import me.jiangcai.logistics.haier.model.RejectInfo;
+import me.jiangcai.logistics.option.LogisticsOptions;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -118,7 +119,8 @@ public class HaierSupplierImpl implements HaierSupplier {
         boolean installation;
         if ((source instanceof HaierDepot) && !(destination instanceof HaierDepot)) {
             // 销售出库
-            installation = order.checkInstallation();
+            installation = (options & LogisticsOptions.Installation) == LogisticsOptions.Installation;
+            order.setInstallation(installation);
             parameters.put("ordertype", "2");
 //            parameters.put("bustype", installation ? "2" : "70");
             parameters.put("bustype", "2");

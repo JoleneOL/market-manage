@@ -23,6 +23,8 @@
                 <value>me.jiangcai.user.notice.differentiation.entity</value>
                 <value>me.jiangcai.logistics.entity</value>
                 <value>me.jiangcai.logistics.haier.entity</value>
+                <!--物流测试所用的实体-->
+                <value>me.jiangcai.logistics.demo.entity</value>
                 <!--测试专用的模拟支付系统-->
                 <value>me.jiangcai.demo.pay.entity</value>
                 <value>cn.lmjia.market.dealer.entity</value>

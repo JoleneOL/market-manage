@@ -279,7 +279,7 @@ Mock.mock(/\/manage\/orderData\/logistics/, "get", {
     "data|10": [
         {
             'id': '@id',
-            'unitId': '@id',
+            'mainOrderId': '@id',
             'supplierId': '@id',
             'orderId': '@id',
             'goods': '量子立式净水机',

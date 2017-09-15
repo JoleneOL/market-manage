@@ -5,6 +5,8 @@ import lombok.Setter;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogisticsSource;
+import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.supplier.ManuallySupplier;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -103,4 +105,19 @@ public class Depot implements LogisticsDestination, LogisticsSource {
     public String getConsigneeMobile() {
         return chargePeopleMobile;
     }
+
+    /**
+     * @return 支持这个仓库的供应商声明类
+     */
+    public Class<? extends LogisticsSupplier> getSupplierClass() {
+        return ManuallySupplier.class;
+    }
+
+    /**
+     * @return 支持该仓库的物流供应商是否支持安装
+     */
+    public boolean isInstallationSupport() {
+        return false;
+    }
+
 }

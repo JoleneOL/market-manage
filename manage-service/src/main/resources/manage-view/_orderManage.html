@@ -34,11 +34,11 @@
       data-allow-mock-pay="true"
       th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}"
       data-allow-settlement="true"
-      data-logistics-detail-url="_logisticsDetail.html"
-      th:data-logistics-detail-url="@{/manageShiftDetailForMainOrder}"
+      data-order-delivery-url="_orderDelivery.html"
+      th:data-order-delivery-url="@{/mainOrderDelivery}"
 >
 
-<form id="detailForm" action="_orderDetail.html" method="get">
+<form id="detailForm" action="_orderDetail.html" th:action="@{/mainOrderDetail}" method="get">
     <input type="hidden" name="id" value=""/>
     <input type="hidden" name="from" value=""/>
 </form>
@@ -228,6 +228,6 @@
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
 <script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
 
-<script src="manage-resource/js/orderManage.js?v=2"></script>
+<script src="manage-resource/js/orderManage.js?v=6"></script>
 
 </html>

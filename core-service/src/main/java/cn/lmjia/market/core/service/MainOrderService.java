@@ -5,12 +5,11 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import me.jiangcai.jpa.entity.support.Address;
-import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.LogisticsHostService;
 import me.jiangcai.logistics.entity.Depot;
-import me.jiangcai.logistics.entity.StockShiftUnit;
-import me.jiangcai.logistics.event.InstallationEvent;
-import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.event.OrderInstalledEvent;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,7 +25,7 @@ import java.util.Map;
 /**
  * @author CJ
  */
-public interface MainOrderService {
+public interface MainOrderService extends LogisticsHostService {
 
     /**
      * 新创建订单
@@ -118,22 +117,7 @@ public interface MainOrderService {
     @Transactional(readOnly = true)
     List<Depot> depotsForOrder(long orderId);
 
-    /**
-     * 物流开动
-     *
-     * @param supplierType 物流类型
-     * @param orderId      订单号
-     * @param depotId      仓库号
-     * @return 相关信息
-     */
+    @EventListener(OrderInstalledEvent.class)
     @Transactional
-    StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId);
-
-    @EventListener(ShiftEvent.class)
-    @Transactional
-    void forShiftEvent(ShiftEvent event);
-
-    @EventListener(InstallationEvent.class)
-    @Transactional
-    void forInstallationEvent(InstallationEvent event);
+    MainOrderFinishEvent forOrderInstalledEvent(OrderInstalledEvent event);
 }

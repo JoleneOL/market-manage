@@ -117,7 +117,7 @@ public class WechatMainOrderControllerTest2 extends WechatTestBase {
                 HaierDepot depot = new HaierDepot();
                 depot.setHaierCode("XXXXX1");
                 return depot;
-            }, HaierSupplier.class);
+            }, HaierSupplier.class, null, false);
 
             logisticsService.mockToStatus(unit.getId(), ShiftStatus.success);
             logisticsService.mockInstallationEvent(unit.getId());
