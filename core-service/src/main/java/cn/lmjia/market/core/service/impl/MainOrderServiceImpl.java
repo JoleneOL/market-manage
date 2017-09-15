@@ -176,7 +176,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, orderIdPredicate(orderId, root, cb));
             } else if (orderDate != null) {
                 log.debug("search order with orderDate:" + orderDate);
-                predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate.toString()));
+                predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get(MainOrder_.orderTime), orderDate.toString()));
             } else {
                 // 日期过滤
                 if (beginDate != null) {
@@ -197,7 +197,16 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.id), goodId));
             }
             if (status != null && status != OrderStatus.EMPTY) {
-                predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));
+                if (status == OrderStatus.forDeliver) {
+                    predicate = cb.and(predicate, cb.or(
+                            cb.equal(root.get(MainOrder_.orderStatus), status)
+                            , cb.and(
+                                    cb.equal(root.get(MainOrder_.orderStatus), OrderStatus.forDeliverConfirm)
+                                    , cb.equal(root.get(MainOrder_.ableShip), true)
+                            )
+                    ));
+                } else
+                    predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.orderStatus), status));
             }
 
             return predicate;

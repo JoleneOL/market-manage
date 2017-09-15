@@ -197,7 +197,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      *
      * @since {@link cn.lmjia.market.core.Version#muPartShift}
      */
-    private boolean ableShip;
+    private boolean ableShip = true;
     /**
      * 已完成安装的物流
      *
