@@ -101,7 +101,7 @@ $(function () {
         var currentLabel = $(this).data('rate-label');
         layer.open({
             content: targetRegion.html(),
-            area: ['170px', '180px'],
+            area: ['200px', '210px'],
             // btn: ['确认', '取消'],
             zIndex: 9999,
             success: function (layerUi) {
@@ -132,7 +132,7 @@ $(function () {
         var current = $(this).data('value');
         layer.open({
             content: targetRegion.html(),
-            area: ['170px', '180px'],
+            area: ['200px', '180px'],
             // btn: ['确认', '取消'],
             zIndex: 9999,
             success: function (layerUi) {

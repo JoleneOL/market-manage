@@ -29,7 +29,7 @@
       th:data-search-login-url="@{/loginData/select2}">
 <div class="wrapper wrapper-content">
     <div class="row m-b-sm">
-        <div class="col-md-6">
+        <div class="col-md-2">
             <select class="form-control select2-single" name="login"
                     id="loginInput"
                     title="请选择用户作为销售人员">
@@ -64,15 +64,20 @@
 </div>
 
 <template id="J_Rate">
-    <label>
-        比例:<span id="rateLabel">&nbsp;</span>
-        <input type="range" min="1" max="99"/>
-    </label>
+    <div class="form-group">
+        <label > 比例:<span id="rateLabel">&nbsp;</span></label>
+        <input type="range" class="form-control" min="1" max="99"/>
+    </div>
 </template>
 <template id="J_Rank">
-    <label>等级
-        <input type="text" name="rank"/>
-    </label>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">等级 </label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" name="rank"/>
+            </div>
+        </div>
+    </div>
 </template>
 
 </body>
