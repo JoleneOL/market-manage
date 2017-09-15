@@ -34,6 +34,8 @@ $(function () {
             }
         },
         "ordering": true,
+        // 默认排序为时间并且倒序
+        "order": [[10, "desc"]],
         "lengthChange": true,
         "searching": false,
         "colReorder": true,

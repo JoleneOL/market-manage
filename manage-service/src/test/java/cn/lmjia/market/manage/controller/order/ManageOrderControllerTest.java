@@ -2,6 +2,7 @@ package cn.lmjia.market.manage.controller.order;
 
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.service.MainOrderService;
@@ -20,7 +21,12 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -47,11 +53,25 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     @Autowired
     private LogisticsService logisticsService;
 
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
+
     @Test
+    @Transactional
     public void upgradeIssue() throws Exception {
-        updateAllRunWith(newRandomManager(ManageLevel.root));
-        mockMvc.perform(get("/manage/orderData/logistics"))
-                .andDo(print());
+//        updateAllRunWith(newRandomManager(ManageLevel.root));
+//        mockMvc.perform(get("/manage/orderData/logistics"))
+//                .andDo(print());
+        // 所有订单里，具备当前物流的 肯定具备>0的那啥
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        entityManager.createQuery(cq
+                .where(root.get(MainOrder_.currentLogistics).isNotNull())
+        ).getResultList().forEach(mainOrder
+                -> assertThat(mainOrder.getLogisticsSet()).isNotEmpty()
+        );
     }
 
     /**
