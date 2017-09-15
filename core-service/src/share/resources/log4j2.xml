@@ -9,6 +9,7 @@
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
         <logger name="cn.lmjia.market" level="debug"/>
+        <logger name="me.jiangcai.logistics" level="debug"/>
         <logger name="cn.lmjia.market.dealer.service.impl.PromotionServiceImpl" level="trace"/>
 
         <logger name="me.jiangcai.lib.jdbc.impl" level="debug"/>

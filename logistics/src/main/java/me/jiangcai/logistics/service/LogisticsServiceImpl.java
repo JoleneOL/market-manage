@@ -224,6 +224,7 @@ public class LogisticsServiceImpl implements LogisticsService {
         if (order != null) {
             order.addStockShiftUnit(shiftUnit);
             order.switchToStartDeliverStatus();
+            order.updateLogisticsStatus();
         }
         return shiftUnit;
     }
