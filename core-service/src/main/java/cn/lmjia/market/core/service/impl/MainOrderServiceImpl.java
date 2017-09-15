@@ -7,7 +7,6 @@ import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
-import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainOrderRepository;
@@ -15,27 +14,16 @@ import cn.lmjia.market.core.service.CustomerService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.jpa.entity.support.Address;
-import me.jiangcai.logistics.LogisticsService;
-import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.DeliverableOrder;
 import me.jiangcai.logistics.StockService;
-import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
-import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.UsageStock_;
-import me.jiangcai.logistics.entity.support.ProductStatus;
-import me.jiangcai.logistics.entity.support.ShiftStatus;
-import me.jiangcai.logistics.event.InstallationEvent;
-import me.jiangcai.logistics.event.ShiftEvent;
-import me.jiangcai.logistics.haier.HaierSupplier;
-import me.jiangcai.logistics.option.LogisticsOptions;
-import me.jiangcai.logistics.repository.DepotRepository;
+import me.jiangcai.logistics.event.OrderInstalledEvent;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.NumberUtils;
@@ -51,15 +39,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -84,16 +68,6 @@ public class MainOrderServiceImpl implements MainOrderService {
     private Map<LocalDate, AtomicInteger> dailySerials = Collections.synchronizedMap(new HashMap<>());
     @Autowired
     private StockService stockService;
-    @Autowired
-    private HaierSupplier haierSupplier;
-    @Autowired
-    private LogisticsService logisticsService;
-    @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Override
     public MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
@@ -202,7 +176,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, orderIdPredicate(orderId, root, cb));
             } else if (orderDate != null) {
                 log.debug("search order with orderDate:" + orderDate);
-                predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate.toString()));
+                predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get(MainOrder_.orderTime), orderDate.toString()));
             } else {
                 // 日期过滤
                 if (beginDate != null) {
@@ -223,7 +197,16 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.id), goodId));
             }
             if (status != null && status != OrderStatus.EMPTY) {
-                predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));
+                if (status == OrderStatus.forDeliver) {
+                    predicate = cb.and(predicate, cb.or(
+                            cb.equal(root.get(MainOrder_.orderStatus), status)
+                            , cb.and(
+                                    cb.equal(root.get(MainOrder_.orderStatus), OrderStatus.forDeliverConfirm)
+                                    , cb.equal(root.get(MainOrder_.ableShip), true)
+                            )
+                    ));
+                } else
+                    predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.orderStatus), status));
             }
 
             return predicate;
@@ -287,101 +270,26 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
-    public StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId) {
-        MainOrder order = getOrder(orderId);
-        Depot depot = depotRepository.getOne(depotId);
-
-        LogisticsSupplier supplier;
-        if (supplierType == HaierSupplier.class)
-            supplier = haierSupplier;
-        else
-            supplier = applicationContext.getBean(supplierType);
-
-        StockShiftUnit unit = logisticsService.makeShift(supplier, order.getAmounts().entrySet().stream()
-                        .map((Function<Map.Entry<MainGood, Integer>, Thing>) entry -> new Thing() {
-                            @Override
-                            public Product getProduct() {
-                                return entry.getKey().getProduct();
-                            }
-
-                            @Override
-                            public ProductStatus getProductStatus() {
-                                return ProductStatus.normal;
-                            }
-
-                            @Override
-                            public int getAmount() {
-                                return entry.getValue();
-                            }
-                        })
-                        .collect(Collectors.toSet())
-                , depot, order, LogisticsOptions.Installation);
-
-        if (order.getLogisticsSet() == null)
-            order.setLogisticsSet(new ArrayList<>());
-
-        order.getLogisticsSet().add(unit);
-        order.setCurrentLogistics(unit);
-        order.setOrderStatus(OrderStatus.forDeliverConfirm);
-        return unit;
+    public MainOrderFinishEvent forOrderInstalledEvent(OrderInstalledEvent event) {
+        if (event.getOrder() instanceof MainOrder) {
+            return new MainOrderFinishEvent((MainOrder) event.getOrder(), event.getSource());
+        }
+        return null;
     }
 
     @Override
-    public void forInstallationEvent(InstallationEvent event) {
-        logisticsToMainOrder(event.getUnit(), order -> {
-            final OrderStatus currentOrderStatus = order.getOrderStatus();
-            order.setOrderStatus(OrderStatus.afterSale);
-            if (currentOrderStatus != OrderStatus.forInstall) {
-                log.error(order.getSerialId() + "尚未收货就安装完成了。");
-            }
-            applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
-        });
-    }
-
-    @Override
-    public void forShiftEvent(ShiftEvent event) {
-        // 基于物流的变化，需要对订单进行状态更新
-        // 只关注 拒绝事件
-        final ShiftStatus toStatus = event.getStatus();
-        if (toStatus != ShiftStatus.reject
-                && toStatus != ShiftStatus.success)
-            return;
-        logisticsToMainOrder(event.getUnit(), order -> {
-            final OrderStatus currentOrderStatus = order.getOrderStatus();
-            switch (toStatus) {
-                case reject:
-                    if (currentOrderStatus == OrderStatus.forDeliverConfirm
-                            || currentOrderStatus == OrderStatus.forInstall
-                            || currentOrderStatus == OrderStatus.afterSale
-                            )
-                        order.setOrderStatus(OrderStatus.forDeliver);
-                    else {
-                        log.error("错误逻辑，应该是未进入物流状态的订单 收到了物流失败的事件。" + order.getSerialId());
-                    }
-                    break;
-                case success:
-                    if (currentOrderStatus == OrderStatus.forDeliverConfirm)
-                        order.setOrderStatus(OrderStatus.forInstall);
-                    applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
-                    break;
-                default:
-            }
-        });
-
-    }
-
-    private void logisticsToMainOrder(final StockShiftUnit unit, Consumer<MainOrder> consumer) {
+    public DeliverableOrder orderFor(StockShiftUnit unit) {
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
         Root<MainOrder> root = cq.from(MainOrder.class);
         try {
-            MainOrder order = entityManager.createQuery(cq
+            return entityManager.createQuery(cq
                     .where(cb.isMember(unit, root.get("logisticsSet")))
             )
                     .getSingleResult();
-            consumer.accept(order);
         } catch (NoResultException ignored) {
             log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
+            return null;
         }
     }
 }

@@ -29,6 +29,7 @@ import java.util.Objects;
  *
  * @author CJ
  */
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Setter
 @Getter

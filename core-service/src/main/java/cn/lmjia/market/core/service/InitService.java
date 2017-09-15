@@ -25,6 +25,7 @@ import me.jiangcai.lib.jdbc.ConnectionProvider;
 import me.jiangcai.lib.jdbc.JdbcService;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
+import me.jiangcai.logistics.entity.StockShiftUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -270,6 +271,10 @@ public class InitService {
                             login.setLoginName("!" + login.getLoginName() + " ");
                         });
                         // 对login缓存的关系呢？ 这个不管了
+                        break;
+                    case muPartShift:
+                        jdbcService.tableAlterAddColumn(MainOrder.class, "ableShip", "1");
+                        jdbcService.tableAlterAddColumn(StockShiftUnit.class, "installation", "0");
                         break;
                     default:
                 }

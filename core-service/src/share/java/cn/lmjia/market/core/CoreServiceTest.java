@@ -5,6 +5,7 @@ import cn.lmjia.market.core.converter.LocalDateConverter;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
@@ -24,15 +25,23 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
+import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
+import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ProductStatus;
+import me.jiangcai.logistics.exception.StockOverrideException;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
+import me.jiangcai.logistics.option.LogisticsOptions;
 import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -97,6 +106,11 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private MainGoodService mainGoodService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private LogisticsService logisticsService;
+    //</editor-fold>
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -106,7 +120,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected Manager newRandomManager() {
         return newRandomManager(ManageLevel.values());
     }
-    //</editor-fold>
 
     /**
      * 新增并且保存一个随机的管理员
@@ -446,16 +459,39 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @param order         order
      * @param depotSupplier 新仓库构造器 可选
      * @param supplierType  物流供应商 可选
+     * @param amounts       需要物流的数量 可选；默认就是全部都走
+     * @param installation  是否需要安装
      * @return 物流订单
      */
     protected StockShiftUnit logisticsForMainOrderFromAnyDepot(MainOrder order, Supplier<Depot> depotSupplier
-            , Class<? extends LogisticsSupplier> supplierType) {
+            , Class<? extends LogisticsSupplier> supplierType, Map<MainProduct, Integer> amounts, boolean installation)
+            throws StockOverrideException, UnnecessaryShipException {
         // 先找仓库呗
         Depot depot = findOrCreateEnableDepot(depotSupplier);
 
-        // MarketBuildInLogisticsSupplier
-        return mainOrderService.makeLogistics(supplierType == null ? MarketBuildInLogisticsSupplier.class : supplierType
-                , order.getId(), depot.getId());
+        Map<? extends Product, Integer> a;
+        if (amounts != null) {
+            a = amounts;
+        } else
+            a = order.getWantShipProduct();
+        return logisticsService.makeShift(applicationContext.getBean(supplierType), order, a.entrySet().stream()
+                .map((Function<Map.Entry<? extends Product, Integer>, Thing>) integerEntry -> new Thing() {
+                    @Override
+                    public Product getProduct() {
+                        return integerEntry.getKey();
+                    }
+
+                    @Override
+                    public ProductStatus getProductStatus() {
+                        return ProductStatus.normal;
+                    }
+
+                    @Override
+                    public int getAmount() {
+                        return integerEntry.getValue();
+                    }
+                })
+                .collect(Collectors.toSet()), depot, order, installation ? LogisticsOptions.Installation : 0);
     }
 
     /**
