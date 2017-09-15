@@ -110,6 +110,8 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
 //            记录时间：{{keyword3.DATA}}
 //            {{remark.DATA}}
                 return "qmKucHYknwnTL_3wISnRkLjucfeixbIosd83k-1svMo";
+            case PromotionRequestRejected:
+                return "NN7SBN3h-Z7WRnZjWmSHtV9R8MCsDtoIpIHsX8f--Tc";
             default:
                 throw new IllegalArgumentException("未知的消息类型:" + type);
         }
