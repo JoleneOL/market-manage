@@ -2,6 +2,7 @@ package me.jiangcai.logistics;
 
 import me.jiangcai.logistics.entity.StockShiftUnit;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 /**
@@ -21,4 +22,12 @@ public interface LogisticsSupplier {
      */
     StockShiftUnit makeShift(LogisticsSource source,
                              LogisticsDestination destination, Consumer<StockShiftUnit> forUnit, int options);
+
+    /**
+     * @param locale 用户语言偏好
+     * @return 是否需要输入订单号，null表示不需要；返回信息是提示输入订单号的描述
+     */
+    default String orderNumberRequireMessage(Locale locale) {
+        return null;
+    }
 }

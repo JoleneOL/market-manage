@@ -60,6 +60,7 @@
                                             <select id="J_Type" class="form-control"
                                                     name="type" required>
                                                 <option value="HaierDepot">日日顺</option>
+                                                <option value="Depot">手动</option>
                                             </select>
                                         </div>
                                     </div>
@@ -91,15 +92,13 @@
                                                    name="chargePeopleMobile" required>
                                         </div>
                                     </div>
-                                    <!--HaierDepot Only-->
-                                    <div class="form-group">
+                                    <div class="form-group depot-for-HaierDepot depot-peculiarly">
                                         <label class="col-sm-3 control-label">日日顺仓库编号</label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入仓库编号" class="form-control"
                                                    name="haierCode" required maxlength="32">
                                         </div>
                                     </div>
-                                    <!--HaierDepot Only End-->
                                     <div class="form-group">
                                         <div class="col-sm-6 col-sm-offset-3 control-label">
                                             <button type="submit" class="btn btn-primary btn-block btn-lg">
@@ -123,5 +122,5 @@
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.m.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
-<script src="manage-resource/js/depotAdd.js"></script>
+<script src="manage-resource/js/depotAdd.js?v=1"></script>
 </html>

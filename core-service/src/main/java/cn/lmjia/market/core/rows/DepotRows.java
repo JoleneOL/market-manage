@@ -5,12 +5,14 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
+import me.jiangcai.logistics.haier.entity.HaierDepot_;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +50,8 @@ public abstract class DepotRows extends AbstractRows<Depot> {
                             Class clazz = (Class) data;
                             if (clazz == HaierDepot.class)
                                 return "日日顺";
+                            if (clazz == Depot.class)
+                                return "手动";
                             return "普通";
                         })
                         .build()
@@ -59,16 +63,21 @@ public abstract class DepotRows extends AbstractRows<Depot> {
                 , Fields.asBasic("chargePeopleName")
                 , Fields.asBasic("chargePeopleMobile")
                 , FieldBuilder.asName(Depot.class, "supplierInfo")
-                        .addBiSelect(((depotRoot, criteriaBuilder) -> {
-                            Expression<String> other = criteriaBuilder.literal("无");
-                            Expression<String> haier = criteriaBuilder.concat("编码："
+                        .addOwnSelect((root, cb, query) -> {
+                            Expression<String> other = cb.literal("无");
+                            Subquery<String> haierCodeQ = query.subquery(String.class);
+                            Root<HaierDepot> haierDepotRoot = haierCodeQ.from(HaierDepot.class);
+                            Expression<String> haier = cb.concat("编码："
 //                                    , criteriaBuilder.literal("1")
-                                    , criteriaBuilder.treat(depotRoot, HaierDepot.class).get("haierCode")
+                                    , haierCodeQ
+                                            .select(haierDepotRoot.get(HaierDepot_.haierCode))
+                                            .where(cb.equal(haierDepotRoot, root))
                             );
-                            return criteriaBuilder.selectCase(depotRoot.get("classType").as(String.class))
+
+                            return cb.selectCase(root.get("classType").as(String.class))
                                     .when("HaierDepot", haier)
                                     .otherwise(other);
-                        }))
+                        })
                         .build()
                 , FieldBuilder.asName(Depot.class, "createTime")
                         .addFormat((data, type)

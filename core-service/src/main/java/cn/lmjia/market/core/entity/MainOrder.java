@@ -5,15 +5,20 @@ import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
+import cn.lmjia.market.core.model.TimeLineUnit;
 import cn.lmjia.market.core.util.CommissionSource;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.thread.ThreadLocker;
+import me.jiangcai.logistics.DeliverableOrder;
 import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -23,6 +28,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -38,6 +44,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -52,12 +60,13 @@ import java.util.stream.Collectors;
 @Entity
 @Setter
 @Getter
-public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, LogisticsDestination {
+public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, LogisticsDestination, DeliverableOrder {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
      */
     private static final int MaxDailySerialIdBit = 6;
+    private static final Log log = LogFactory.getLog(MainOrder.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -89,9 +98,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
      */
     @ManyToOne
     private Login recommendBy;
-
     private Address installAddress;
-
     /**
      * 具体的产品
      */
@@ -175,16 +182,40 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     private boolean disableSettlement;
     /**
      * 物流信息
+     * 正在进行中或者已完成的物流
      */
     @OneToMany
     @OrderBy("createTime desc")
     private List<StockShiftUnit> logisticsSet;
+//    /**
+//     * 所有物流信息
+//     * 包括已被拒绝接单的物流
+//     *
+//     * @since {@link cn.lmjia.market.core.Version#muPartShift}
+//     */
+//    @OneToMany
+//    private List<StockShiftUnit> allLogisticsSet;
+    /**
+     * 冗余设计，是否允许发货；它会在物流状态发生变化之后改变；
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartShift}
+     */
+    private boolean ableShip = true;
+    /**
+     * 已完成安装的物流
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartShift}
+     */
+    @SuppressWarnings("JpaDataSourceORMInspection")
+    @OneToMany
+    @JoinTable(name = "MAINORDER_INSTALLED_STOCKSHIFTUNIT")
+    private List<StockShiftUnit> installedLogisticsSet;
+    /**
+     * 从{@link cn.lmjia.market.core.Version#muPartShift}开始放弃
+     */
+    @Deprecated
     @ManyToOne
     private StockShiftUnit currentLogistics;
-    /**
-     * 是否使用花呗支付
-     */
-    private boolean huabei;
 
 //    /**
 //     * @param from order表
@@ -194,6 +225,10 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 //    public static Join<Customer, Login> getCustomerLogin(From<?, MainOrder> from) {
 //        return getCustomer(from).join(Customer_.login);
 //    }
+    /**
+     * 是否使用花呗支付
+     */
+    private boolean huabei;
 
     /**
      * @param from order表
@@ -317,6 +352,10 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return new Money(getOrderDueAmount());
     }
 
+    public Money getCommissioningAmountMoney() {
+        return new Money(getCommissioningAmount());
+    }
+
     @Override
     public String getOrderProductName() {
         return goodName;
@@ -410,5 +449,99 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Override
     public String getConsigneeMobile() {
         return customer.getMobile();
+    }
+
+    @Override
+    public void addStockShiftUnit(StockShiftUnit unit) {
+        if (getLogisticsSet() == null) {
+            setLogisticsSet(new ArrayList<>());
+        }
+        getLogisticsSet().add(unit);
+    }
+
+    @Override
+    public List<? extends StockShiftUnit> getInstallStockShiftUnit() {
+        return getInstalledLogisticsSet();
+    }
+
+    @Override
+    public List<StockShiftUnit> getShipStockShiftUnit() {
+        return getLogisticsSet();
+    }
+
+    @Override
+    public Map<MainProduct, Integer> getTotalShipProduct() {
+        final Map<MainProduct, Integer> require = new HashMap<>();
+        amounts.forEach((good, integer) -> {
+            if (require.putIfAbsent(good.getProduct(), integer) != null) {
+                require.computeIfPresent(good.getProduct(), ((product, integer1) -> integer1 + integer));
+            }
+        });
+        return require;
+    }
+
+    @Override
+    public void addInstallStockShiftUnit(StockShiftUnit unit) {
+        if (getInstalledLogisticsSet() == null)
+            setInstalledLogisticsSet(new ArrayList<>());
+        getInstalledLogisticsSet().add(unit);
+    }
+
+    @Override
+    public void switchToLogisticsFinishStatus() {
+        setOrderStatus(OrderStatus.afterSale);
+    }
+
+    @Override
+    public LogisticsDestination getLogisticsDestination() {
+        return this;
+    }
+
+    @Override
+    public Serializable getRepresentationalId() {
+        return getId();
+    }
+
+    @Override
+    public void switchToForInstallStatus() {
+        setOrderStatus(OrderStatus.forInstall);
+    }
+
+    @Override
+    public void switchToForDeliverStatus() {
+        setOrderStatus(OrderStatus.forDeliver);
+    }
+
+    @Override
+    public void switchToStartDeliverStatus() {
+        if (getOrderStatus() == OrderStatus.forDeliver)
+            setOrderStatus(OrderStatus.forDeliverConfirm);
+    }
+
+    /**
+     * @return 关于订单流水的简单生命线
+     */
+    public List<TimeLineUnit> getSimpleTimeLines() {
+        // 大致定义是  支付，物流发货，物流完成，结算完成
+        List<TimeLineUnit> list = new ArrayList<>();
+        list.add(new TimeLineUnit("支付订单", payTime, isPay(), true));
+        final LocalDateTime firstShipTime = logisticsSet.stream()
+                .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() != ShiftStatus.reject)
+                .map(StockShiftUnit::getCreateTime)
+                .min(LocalDateTime::compareTo).orElse(null);
+        list.add(new TimeLineUnit("物流发货", firstShipTime, firstShipTime != null, !isPay()));
+        final LocalDateTime lastShipDoneTime = logisticsSet.stream()
+                .filter(stockShiftUnit -> stockShiftUnit.getCurrentStatus() == ShiftStatus.success)
+                .map(StockShiftUnit::getCreateTime)
+                .max(LocalDateTime::compareTo).orElse(null);
+        list.add(new TimeLineUnit("物流交付", lastShipDoneTime, lastShipDoneTime != null, firstShipTime == null));
+        list.add(new TimeLineUnit("佣金结算", lastShipDoneTime, lastShipDoneTime != null, firstShipTime == null));
+
+        return list;
+    }
+
+    @Override
+    public String toString() {
+        return "MainOrder(" + getSerialId() + ":" + getId() + ")";
     }
 }

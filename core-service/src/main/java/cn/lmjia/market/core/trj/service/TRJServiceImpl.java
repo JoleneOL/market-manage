@@ -8,7 +8,6 @@ import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.entity.trj.AuthorisingStatus;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
-import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.repository.trj.AuthorisingInfoRepository;
@@ -23,6 +22,7 @@ import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.InstallationEvent;
+import me.jiangcai.logistics.event.OrderDeliveredEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.haier.entity.HaierOrder;
 import me.jiangcai.payment.PayableOrder;
@@ -285,17 +285,19 @@ public class TRJServiceImpl implements TRJService {
     }
 
     @Override
-    public void forMainOrderDeliveredEvent(MainOrderDeliveredEvent event) {
-        final MainOrder mainOrder = event.getMainOrder();
-        if (mainOrder.getPayOrder() instanceof TRJPayOrder) {
-            final ShiftEvent source = event.getSource();
-            if (source != null) {
-                final StockShiftUnit unit = source.getUnit();
-                // 不想跟它说具体库存……
-                //
-                deliverUpdate(mainOrder.getId(), unit.getSupplierOrganizationName(), unit.getOrigin().getName()
-                        , 100, unit.getCreateTime().toLocalDate()
-                        , source.getTime() == null ? LocalDate.now() : source.getTime().toLocalDate());
+    public void forMainOrderDeliveredEvent(OrderDeliveredEvent event) {
+        if (event.getOrder() instanceof MainOrder) {
+            final MainOrder mainOrder = (MainOrder) event.getOrder();
+            if (mainOrder.getPayOrder() instanceof TRJPayOrder) {
+                final ShiftEvent source = event.getSource();
+                if (source != null) {
+                    final StockShiftUnit unit = source.getUnit();
+                    // 不想跟它说具体库存……
+                    //
+                    deliverUpdate(mainOrder.getId(), unit.getSupplierOrganizationName(), unit.getOrigin().getName()
+                            , 100, unit.getCreateTime().toLocalDate()
+                            , source.getTime() == null ? LocalDate.now() : source.getTime().toLocalDate());
+                }
             }
         }
     }

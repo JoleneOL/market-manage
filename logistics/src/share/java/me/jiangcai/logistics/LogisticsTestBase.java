@@ -15,6 +15,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.assertj.core.api.AbstractObjectAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author CJ
  */
 @ContextConfiguration(classes = {LogisticsTestBaseConfig.class})
+@WebAppConfiguration
 public abstract class LogisticsTestBase extends SpringWebTest {
 
     @Autowired
