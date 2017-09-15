@@ -107,7 +107,7 @@ public class ManagePromotionRequestController {
         wechatNoticeHelper.registerTemplateMessage(promotionRequestRejected,null);
 
         userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(request.getWhose())),
-                null,promotionRequestRejected,"代理商升级申请",new Date(),"未通过.原因:"+message);
+                null,promotionRequestRejected,"代理商升级申请",new Date(),"未通过.\r\n原因:"+message);
     }
 
     @PutMapping("/manage/promotionRequests/{id}/approved")
