@@ -121,7 +121,8 @@ $(function () {
         },function(value, index, elem){
             $.ajax('/manage/promotionRequests/' + id +'/rejected',{
                 method: 'put',
-                "message" : value,
+                contentType : 'text/plain; charset=UTF-8',
+                data : value,
                 success: function (res) {
                     table.ajax.reload();
                     layer.close(index);

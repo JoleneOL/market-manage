@@ -93,7 +93,7 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         // 我们批准它
         approvedOnlyRequest(user, "我的省代理");
         //拒绝他
-        //goReject(user, "代理人升级申请");
+        //goReject(user, "你是个好人);
         // 断言等级
         assertThat(readService.agentLevelForPrincipal(user)).isEqualTo(targetLevel);
 
@@ -149,8 +149,8 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
                     .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), "$.data[0].id");
             mockMvc.perform(MockMvcRequestBuilders.put("/manage/promotionRequests/" + id + "/rejected")
                     .contentType(MediaType.parseMediaType("text/plain; charset=UTF-8"))
-                    .content(title)
-                    .param("message", "你是个好人"));
+                    .content(title))
+            .andExpect(status().is2xxSuccessful());
             return null;
         });
     }
