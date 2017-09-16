@@ -116,7 +116,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
     }
 
-    @GetMapping("/wechatPayForMainOrder${id}")
+    @GetMapping("/wechatPayForMainOrder{id}")
     public ModelAndView payForMainOrder(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
             throws SystemMaintainException {
         final MainOrder order = mainOrderService.getOrder(id);
