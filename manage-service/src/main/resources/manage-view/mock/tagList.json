@@ -1,0 +1,39 @@
+{
+  "draw": 1,
+  "recordsTotal": 23,
+  "recordsFiltered": 23,
+  "data": [
+    {
+      "id": 1,
+      "name": "净水器",
+      "type": "商城分类",
+      "icon": "",
+      "weight": 0,
+      "disabled": false
+    },
+    {
+      "id": 1,
+      "name": "食品优化宝",
+      "type": "商城分类",
+      "icon": "",
+      "weight": 0,
+      "disabled": false
+    },
+    {
+      "id": 1,
+      "name": "空气净化器",
+      "type": "商城分类",
+      "icon": "",
+      "weight": 0,
+      "disabled": false
+    },
+    {
+      "id": 1,
+      "name": "热销",
+      "type": "首页列表显示",
+      "icon": "",
+      "weight": 0,
+      "disabled": false
+    }
+  ]
+}

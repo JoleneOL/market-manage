@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity;
 
+import cn.lmjia.market.core.entity.support.TagType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 /**
  * 商品标签，商品与标签为多对多的关系，只可新增和删除，不可添加
@@ -24,11 +26,15 @@ public class Tag {
      */
     private String name;
     /**
-     * 是否有子类目
+     * 标签展示方式
+     */
+    private TagType type;
+    /**
+     * 是否有子类目（用于业务拓展，暂时用不到）
      */
     private boolean isParent;
     /**
-     * 上级类目
+     * 上级类目（用于业务拓展，暂时用不到）
      */
     private Tag parentTag;
     /**
@@ -38,11 +44,17 @@ public class Tag {
     /**
      * 排序
      */
-    private int order;
+    private int weight;
     /**
      * 是否有效
      */
     private boolean disabled;
 
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag)) return false;
+        Tag depot = (Tag) o;
+        return Objects.equals(id, depot.id);
+    }
 }
