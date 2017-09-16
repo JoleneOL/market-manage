@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -115,8 +116,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
     }
 
-    @GetMapping("/wechatPayForMainOrder")
-    public ModelAndView payForMainOrder(@OpenId String openId, HttpServletRequest request, long id)
+    @GetMapping("/wechatPayForMainOrder${id}")
+    public ModelAndView payForMainOrder(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
             throws SystemMaintainException {
         final MainOrder order = mainOrderService.getOrder(id);
         return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
@@ -220,7 +221,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                     name, order.getOrderBody()
             }));
             // URL 你懂的
-            model.addAttribute("shareUrl", systemService.toUrl("/wechatPayForMainOrder?id=" + order.getId()));
+            model.addAttribute("shareUrl", systemService.toUrl("/wechatPayForMainOrder" + order.getId()));
             // 图标LOG 固定的
         }
 
