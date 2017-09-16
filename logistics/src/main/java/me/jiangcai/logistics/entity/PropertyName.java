@@ -2,6 +2,7 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import me.jiangcai.logistics.entity.support.PropertyType;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@ToString
 public class PropertyName {
 
     @Id
@@ -51,7 +53,7 @@ public class PropertyName {
     /**
      * 规格值
      */
-    @ElementCollection
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<PropertyValue> propertyValueList;
 
 }

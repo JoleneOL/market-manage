@@ -25,6 +25,7 @@ import me.jiangcai.lib.jdbc.ConnectionProvider;
 import me.jiangcai.lib.jdbc.JdbcService;
 import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
+import me.jiangcai.logistics.entity.ProductType;
 import me.jiangcai.logistics.entity.PropertyName;
 import me.jiangcai.logistics.entity.PropertyValue;
 import me.jiangcai.logistics.entity.support.PropertyType;
@@ -162,29 +163,52 @@ public class InitService {
         //先上属性及属性值
         Properties properties = new Properties();
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new ClassPathResource("/defaultPropertyNameValues").getInputStream(), "UTF-8"))) {
+                new ClassPathResource("/defaultPropertyNameValues.properties").getInputStream(), "UTF-8"))) {
             properties.load(reader);
-            properties.stringPropertyNames().forEach(propertyNameId -> {
+            properties.stringPropertyNames().forEach(property -> {
                 //属性
-                final String values[] = properties.getProperty(propertyNameId).split(",");
-                PropertyName propertyName = propertyNameRepository.findOne(Long.valueOf(propertyNameId));
-                if (propertyName == null) {
-                    propertyName = new PropertyName();
-                    propertyName.setName(values[0]);
-                    propertyName.setType(PropertyType.values()[Integer.parseInt(values[1])]);
-                    propertyName.setSpec(Boolean.parseBoolean(values[2]));
-                    //属性值
-                    final String propertyValueNames[] = values[3].split("|");
-                    List<PropertyValue> propertyValueList = new ArrayList<>(propertyValueNames.length);
-                    for (int i = 0; i < propertyValueNames.length; i++) {
-                        PropertyValue propertyValue = new PropertyValue();
-                        propertyValue.setValue(propertyValueNames[i]);
-                        propertyValue.setPropertyName(propertyName);
-                        propertyValueList.add(propertyValue);
-                    }
-                    propertyName.setPropertyValueList(propertyValueList);
-                    propertyNameRepository.save(propertyName);
+                final String values[] = properties.getProperty(property).split(",");
+                PropertyName propertyName = new PropertyName();
+                propertyName.setName(property);
+                propertyName.setType(PropertyType.values()[Integer.parseInt(values[0])]);
+                propertyName.setSpec(Boolean.parseBoolean(values[1]));
+                //属性值
+                final String propertyValueNames[] = values[2].split("\\|");
+                List<PropertyValue> propertyValueList = new ArrayList<>(propertyValueNames.length);
+                for (int i = 0; i < propertyValueNames.length; i++) {
+                    PropertyValue propertyValue = new PropertyValue();
+                    propertyValue.setValue(propertyValueNames[i]);
+                    propertyValue.setPropertyName(propertyName);
+                    propertyValueList.add(propertyValue);
                 }
+                propertyName.setPropertyValueList(propertyValueList);
+                propertyNameRepository.saveAndFlush(propertyName);
+            });
+        }
+        properties.clear();
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new ClassPathResource("/defaultProductTypes.properties").getInputStream(), "UTF-8"))) {
+            properties.load(reader);
+            properties.stringPropertyNames().forEach(type -> {
+                final String values[] = properties.getProperty(type).split(",");
+                ProductType productType = new ProductType();
+                productType.setName(type);
+                productType.setPath("|0|");
+                if(values.length > 1){
+                    String name = values[0];
+                    String[] propertyValues = values[1].split("\\|");
+                    PropertyName propertyName = propertyNameRepository.findTop1ByName(name);
+                    List<PropertyValue> propertyValueList = new ArrayList<>();
+                    if (propertyName != null) {
+                        for (int i = 0; i < propertyValues.length; i++) {
+                            PropertyValue propertyValue = propertyValueRepository.findTop1ByPropertyNameAndValue(propertyName, propertyValues[i]);
+                            if(propertyValue != null)
+                                propertyValueList.add(propertyValue);
+                        }
+                        productType.setPropertyValueList(propertyValueList);
+                    }
+                }
+                productTypeRepository.save(productType);
             });
         }
     }

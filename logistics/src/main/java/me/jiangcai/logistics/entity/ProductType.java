@@ -2,6 +2,7 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @Getter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@ToString
 public class ProductType {
 
     @Id
@@ -47,7 +49,7 @@ public class ProductType {
     /**
      * 类目下的属性值
      */
-    @ElementCollection
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REFRESH})
     private List<PropertyValue> propertyValueList;
 
     /**

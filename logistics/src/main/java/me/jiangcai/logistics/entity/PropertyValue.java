@@ -2,6 +2,7 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
+@ToString
 public class PropertyValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
