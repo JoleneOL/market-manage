@@ -45,10 +45,10 @@
 <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" th:remove="all"></script>
 <script wx:js=""></script>
 <script th:utext="${scriptCode}"></script>
-<!--<script wx:share="${#share.title(order)}|${#share.desc(order)}|${#share.link(order,#request)}|${#share.imageUrl(order)}"></script>-->
 <script src="../wechat-resource/assets/js/pay.js" th:src="@{/wechat-resource/assets/js/pay.js}"></script>
 <th:block th:if="${shareUrl==null}" th:include="wechat@fragments/share.html::hideAllShare"/>
-<script th:if="${shareUrl!=null}"
-        wx:share="利每家|${shareContent}|${shareUrl}|https://cdn.lmjia.cn/lmjia_logo_1.png"></script>
+<th:block th:if="${shareUrl!=null}">
+    <script wx:share="利每家|${shareContent}|${shareUrl}|https://cdn.lmjia.cn/lmjia_logo_1.png"></script>
+</th:block>
 </body>
 </html>
