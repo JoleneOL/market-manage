@@ -3,12 +3,7 @@ package me.jiangcai.logistics.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -101,6 +96,7 @@ public class Product {
     /**
      * 属性值
      */
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<PropertyValue> propertyValues;
 
     @Override

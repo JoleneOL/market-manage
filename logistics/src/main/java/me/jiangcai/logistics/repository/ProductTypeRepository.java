@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 /**
  * Created by helloztt on 2017/9/13.
  */
-public interface ProductTypeRepository extends JpaRepository<ProductType,Long>,JpaSpecificationExecutor<PropertyType> {
+public interface ProductTypeRepository extends JpaRepository<ProductType, Long>, JpaSpecificationExecutor<PropertyType> {
+    ProductType findTop1ByName(String name);
 }

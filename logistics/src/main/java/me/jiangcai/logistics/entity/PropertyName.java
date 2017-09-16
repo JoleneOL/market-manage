@@ -2,11 +2,11 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import me.jiangcai.logistics.entity.support.PropertyType;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 描述货品性质、规格的参数
@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@ToString
 public class PropertyName {
 
     @Id
@@ -56,4 +55,11 @@ public class PropertyName {
     @OneToMany(cascade = {CascadeType.ALL})
     private List<PropertyValue> propertyValueList;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PropertyName)) return false;
+        PropertyName propertyName = (PropertyName) o;
+        return Objects.equals(id, propertyName.getId());
+    }
 }

@@ -40,6 +40,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
 
 import javax.annotation.PostConstruct;
@@ -56,6 +57,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 初始化服务
@@ -194,19 +196,24 @@ public class InitService {
                 ProductType productType = new ProductType();
                 productType.setName(type);
                 productType.setPath("|0|");
-                if(values.length > 1){
-                    String name = values[0];
-                    String[] propertyValues = values[1].split("\\|");
+                List<PropertyValue> propertyValueList = new ArrayList<>();
+                for (String value : values) {
+                    if (!value.contains(":")) {
+                        continue;
+                    }
+                    String name = value.split(":")[0];
+                    String[] propertyValues = value.split(":")[1].split("\\|");
                     PropertyName propertyName = propertyNameRepository.findTop1ByName(name);
-                    List<PropertyValue> propertyValueList = new ArrayList<>();
                     if (propertyName != null) {
                         for (int i = 0; i < propertyValues.length; i++) {
                             PropertyValue propertyValue = propertyValueRepository.findTop1ByPropertyNameAndValue(propertyName, propertyValues[i]);
-                            if(propertyValue != null)
+                            if (propertyValue != null)
                                 propertyValueList.add(propertyValue);
                         }
-                        productType.setPropertyValueList(propertyValueList);
                     }
+                }
+                if (!CollectionUtils.isEmpty(propertyValueList)) {
+                    productType.setPropertyValueList(propertyValueList);
                 }
                 productTypeRepository.save(productType);
             });
@@ -226,6 +233,7 @@ public class InitService {
                 final String productName = value[0];
 
                 MainProduct mainProduct = mainProductRepository.findOne(type);
+                ProductType productType = productTypeRepository.findTop1ByName(productName);
                 if (mainProduct == null) {
                     mainProduct = new MainProduct();
                     mainProduct.setEnable(true);
@@ -234,6 +242,15 @@ public class InitService {
                     mainProduct.setDeposit(new BigDecimal(value[1]));
                     mainProduct.setServiceCharge(new BigDecimal(value[2]));
                     mainProduct.setInstall(new BigDecimal(value[3]));
+                    if (productType != null) {
+                        mainProduct.setProductType(productType);
+                        if (value.length > 4) {
+                            List<String> propertyValues = Arrays.asList(value[4].split("\\|"));
+                            Set<PropertyValue> propertyValueList = productType.getPropertyValueList().stream()
+                                    .filter(p -> propertyValues.contains(p.getValue())).collect(Collectors.toSet());
+                            mainProduct.setPropertyValues(propertyValueList);
+                        }
+                    }
                     mainProduct = mainProductRepository.save(mainProduct);
                 }
 
