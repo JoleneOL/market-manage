@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
@@ -59,9 +60,14 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
     }
 
     @Override
-    public ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, boolean huabei) throws SystemMaintainException {
-        if (payService.isPaySuccess(order.getPayableOrderId().toString()))
-            throw new IllegalStateException("订单并不在待支付状态");
+    public ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, boolean huabei)
+            throws SystemMaintainException {
+        if (payService.isPaySuccess(order.getPayableOrderId().toString())) {
+            if (order instanceof MainOrder)
+                return new ModelAndView("redirect:"
+                        + payService.mainOrderPaySuccessUri(request, (MainOrder) order, null));
+            throw new IllegalStateException("订单并不在待支付状态: for:" + order);
+        }
 
         if (!huabei && environment.acceptsProfiles("autoPay")) {
             // 3 秒之后自动付款

@@ -45,14 +45,22 @@ public class PayServiceImpl implements PayService {
     private PromotionRequestService promotionRequestService;
 
     @Override
+    public String mainOrderPaySuccessUri(HttpServletRequest request, MainOrder order, PayOrder payOrder) {
+        if (!WeixinWebSpringConfig.isWeixinRequest(request)) {
+            if (payOrder == null)
+                return "/agentPaySuccess?mainOrderId=" + order.getId();
+            return "/agentPaySuccess?mainOrderId=" + order.getId() + "&payOrderId=" + payOrder.getId();
+        }
+        if (payOrder == null)
+            return "/wechatPaySuccess?mainOrderId=" + order.getId();
+        return "/wechatPaySuccess?mainOrderId=" + order.getId() + "&payOrderId=" + payOrder.getId();
+    }
+
+    @Override
     public ModelAndView paySuccess(HttpServletRequest request, PayableOrder payableOrder, PayOrder payOrder) {
         if (payableOrder instanceof MainOrder) {
             MainOrder mainOrder = (MainOrder) payableOrder;
-            if (!WeixinWebSpringConfig.isWeixinRequest(request)) {
-                // 非
-                return new ModelAndView("redirect:/agentPaySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
-            }
-            return new ModelAndView("redirect:/wechatPaySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
+            return new ModelAndView("redirect:" + mainOrderPaySuccessUri(request, mainOrder, payOrder));
         } else if (payableOrder instanceof PromotionRequest) {
             return new ModelAndView("redirect:/wechatUpgradeApplySuccess");
         } else

@@ -159,14 +159,15 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     @Transactional(readOnly = true)
     public String paying(@RequestHeader(required = false, value = "User-Agent") String agent, String payableOrderId
             , long payOrderId, String checkUri
-            , String successUri, Model model) {
+            , String successUri, Model model, HttpServletRequest request) {
         final PayOrder payOrder = paymentService.payOrder(payOrderId);
         String qrCodeUrl;
         String scriptCode;
         // 微信环境下是否友好支付
         boolean wechatFriendly;
         if (payOrder instanceof TRJPayOrder) {
-            return "redirect:/wechatPaySuccess";
+            MainOrder order = (MainOrder) payService.getOrder(payableOrderId);
+            return "redirect:" + payService.mainOrderPaySuccessUri(request, order, payOrder);
         } else if (payOrder instanceof HuaHuabeiPayOrder) {
             // 这个url 应该开放权限；在微信场景渲染pay.html；在非微信场景下 直接跳转这个支付地址。
             // MicroMessenger
@@ -231,7 +232,16 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     }
 
     @GetMapping("/wechatPaySuccess")
-    public String paySuccess() {
+    @Transactional(readOnly = true)
+    public String paySuccess(@AuthenticationPrincipal Object login, Long mainOrderId, Model model) {
+        boolean yours;
+        if (mainOrderId == null)
+            yours = true;
+        else {
+            MainOrder order = mainOrderService.getOrder(mainOrderId);
+            yours = order.getOrderBy().equals(login);
+        }
+        model.addAttribute("yours", yours);
         return "wechat@orderSuccess.html";
     }
 
