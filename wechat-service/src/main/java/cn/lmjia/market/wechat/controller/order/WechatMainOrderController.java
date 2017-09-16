@@ -8,13 +8,16 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.service.ChannelService;
+import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.core.trj.TRJService;
 import me.jiangcai.jpa.entity.support.Address;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.payment.exception.SystemMaintainException;
@@ -36,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
 
 /**
  * @author CJ
@@ -53,6 +57,20 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     private PayService payService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private MainOrderService mainOrderService;
+    @Autowired
+    private SystemStringService systemStringService;
+    @Autowired
+    private SystemService systemService;
+
+    //    @GetMapping("/_pay/{id}")
+//    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
+//            throws SystemMaintainException {
+//        return payOrder(openId, request, from(null, id));
+//    }
+    @Autowired
+    private ReadService readService;
 
     /**
      * @return 展示下单页面
@@ -90,16 +108,17 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "wechat@orderPlace.html";
     }
 
-//    @GetMapping("/_pay/{id}")
-//    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
-//            throws SystemMaintainException {
-//        return payOrder(openId, request, from(null, id));
-//    }
-
     @GetMapping("/wechatOrderPay")
     public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId)
             throws SystemMaintainException {
         final MainOrder order = from(orderId, null);
+        return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
+    }
+
+    @GetMapping("/wechatPayForMainOrder")
+    public ModelAndView payForMainOrder(@OpenId String openId, HttpServletRequest request, long id)
+            throws SystemMaintainException {
+        final MainOrder order = mainOrderService.getOrder(id);
         return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
     }
 
@@ -186,6 +205,25 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         model.addAttribute("checkUri", checkUri);
         model.addAttribute("successUri", successUri);
         model.addAttribute("wechatFriendly", wechatFriendly);
+
+        // 如果是个主订单的支付页面，还可以分享让他人支付
+        if (MainOrder.payableOrderIdToId(payableOrderId) != null) {
+            MainOrder order = (MainOrder) payService.getOrder(payableOrderId);
+            // 分享标题  利每家
+            // 内容可定制
+            MessageFormat mainOrderSharePayContentTemplate = new MessageFormat(systemStringService.getCustomSystemString(
+                    "market.mainOrder.sharePay.contentFormat"
+                    , "market.mainOrder.sharePay.contentFormat.comment", true, String.class
+                    , "{0}请您支付订单:{1}"));
+            String name = readService.nameForPrincipal(order.getOrderBy());
+            model.addAttribute("shareContent", mainOrderSharePayContentTemplate.format(new Object[]{
+                    name, order.getOrderBody()
+            }));
+            // URL 你懂的
+            model.addAttribute("shareUrl", systemService.toUrl("/wechatPayForMainOrder?id=" + order.getId()));
+            // 图标LOG 固定的
+        }
+
         if (scriptCode != null)
             return "wechat@payWithJS.html";
         return "wechat@pay.html";

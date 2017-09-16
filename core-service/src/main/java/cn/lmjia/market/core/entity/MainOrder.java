@@ -18,6 +18,7 @@ import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -274,6 +275,18 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
                 criteriaBuilder.concat(year, month)
                 , criteriaBuilder.concat(day, daily)
         );
+    }
+
+    /**
+     * @param str {@link #getPayableOrderId()}
+     * @return 将该str转换为订单id；null表示无法解释或者非本类订单
+     */
+    public static Long payableOrderIdToId(String str) {
+        if (StringUtils.isEmpty(str))
+            return null;
+        if (!str.startsWith("main-"))
+            return null;
+        return NumberUtils.parseNumber(str.substring("main-".length()), Long.class);
     }
 
     /**

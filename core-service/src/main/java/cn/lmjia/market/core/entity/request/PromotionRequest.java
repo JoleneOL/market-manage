@@ -17,6 +17,7 @@ import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
@@ -239,6 +240,18 @@ public class PromotionRequest implements PayableOrder {
                 };
             }
         };
+    }
+
+    /**
+     * @param str {@link #getPayableOrderId()}
+     * @return 将该str转换为订单id；null表示无法解释或者非本类订单
+     */
+    public static Long payableOrderIdToId(String str) {
+        if (StringUtils.isEmpty(str))
+            return null;
+        if (!str.startsWith("PromotionRequest-"))
+            return null;
+        return NumberUtils.parseNumber(str.substring("PromotionRequest-".length()), Long.class);
     }
 
     @Override

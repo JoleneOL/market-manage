@@ -87,6 +87,8 @@ public class SecurityConfig {
             registry
                     // misc
                     .antMatchers("/misc/sendLoginCode", "/misc/sendRegisterCode").permitAll()
+                    // 分享支付
+                    .antMatchers("/wechatPayForMainOrder").permitAll()
                     // 登录跳转页面
                     .antMatchers("/wechatJoin**", "/wechatRegister").permitAll()
                     .antMatchers("/toLoginWechat", "/wechatLogin").permitAll()

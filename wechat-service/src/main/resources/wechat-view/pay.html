@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" class="pay-page">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:wx="http://wx.jiangcai.me" lang="en" class="pay-page">
 <!--/*@thymesVar id="order" type="me.jiangcai.payment.PayableOrder"*/-->
 <!--/*@thymesVar id="qrCodeUrl" type="java.lang.String"*/-->
+<!--/*@thymesVar id="shareUrl" type="java.lang.String"*/-->
 <!--/*@thymesVar id="wechatFriendly" type="boolean"*/-->
 <head>
     <meta charset="UTF-8">
@@ -48,9 +49,12 @@
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" th:remove="all"></script>
-<!--<script wx:js=""></script>-->
+<script wx:js=""></script>
 <!--<script wx:share="${#share.title(order)}|${#share.desc(order)}|${#share.link(order,#request)}|${#share.imageUrl(order)}"></script>-->
 <script src="../wechat-resource/assets/js/pay.js" th:src="@{/wechat-resource/assets/js/pay.js}"></script>
 <script th:if="${!wechatFriendly}" src="../wechat-resource/assets/js/isWechat.js?v=1"></script>
+<th:block th:if="${shareUrl==null}" th:include="wechat@fragments/share.html::hideAllShare"/>
+<script th:if="${shareUrl!=null}"
+        wx:share="利每家|${shareContent}|${shareUrl}|https://cdn.lmjia.cn/lmjia_logo_1.png"></script>
 </body>
 </html>
