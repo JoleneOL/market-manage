@@ -8,11 +8,13 @@ import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.manage.ManageServiceTest;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -146,6 +148,25 @@ public class ManageTagControllerTest extends ManageServiceTest {
     @Test
     public void enable() throws Exception {
         changeDisable("/enable", false);
+    }
+
+    @Test
+    public void check() throws Exception{
+        toAdd();
+        //随机找一个标签
+        Tag tag = tagRepository.findAll().stream().max(new RandomComparator()).orElse(null);
+        if (tag == null) {
+            return;
+        }
+        MvcResult result = mockMvc.perform(put(TAG_LIST_URL + "/" + tag.getName() + "/check"))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        assertThat(result.getResponse().getContentAsString()).isEqualToIgnoringCase("false");
+
+        result = mockMvc.perform(put(TAG_LIST_URL + "/" + RandomStringUtils.randomAlphabetic(10) + "/check"))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        assertThat(result.getResponse().getContentAsString()).isEqualToIgnoringCase("true");
     }
 
     private void changeDisable(String path, boolean targetDisable) throws Exception {

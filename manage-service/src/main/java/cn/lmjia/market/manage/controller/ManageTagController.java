@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -88,6 +89,12 @@ public class ManageTagController {
             mainGoodRepository.save(goodList);
         }
         tagRepository.delete(name);
+    }
+
+    @PutMapping("/manage/tagList/{name}/check")
+    @ResponseBody
+    public String checkName(@PathVariable("name") String name) {
+        return (StringUtils.isEmpty(name) || tagRepository.findOne(name) != null) ? "false" : "true";
     }
 
     @PutMapping("/manage/tagList/{name}/disable")

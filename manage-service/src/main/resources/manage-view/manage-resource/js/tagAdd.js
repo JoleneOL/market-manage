@@ -2,14 +2,31 @@
  * Created by Neo on 2017/6/30.
  */
 $(function () {
-
+    var dataUrl = $("#J_tagForm").attr('action');
+    // 标签名称唯一性校验
+    $.validator.addMethod("nameUnique", function (value, element) {
+        if(this.optional(element))
+            return false;
+        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/check", {
+            method: 'put',
+            success: function (result) {
+                return result == "true";
+            }
+        });
+    }, "标签名称已存在");
     $('#J_tagForm').validate({
         rules: {
-            name: "required",
+            name: {
+                "required":true,
+                "nameUnique":true,
+            },
             J_Type: "required"
         },
         messages: {
-            name: "请填写标签名称",
+            name: {
+                "required":"请填写标签名称",
+                "nameUnique":"标签名称已存在"
+            },
             J_Type: "请选择标签类型"
         },
         errorElement: "span",
