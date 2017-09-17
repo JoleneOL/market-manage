@@ -18,12 +18,10 @@ import java.util.Objects;
 @Setter
 @Getter
 public class Tag {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     /**
      * 标签名称
      */
+    @Id
     private String name;
     /**
      * 标签展示方式
@@ -53,8 +51,14 @@ public class Tag {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Tag)) return false;
-        Tag depot = (Tag) o;
-        return Objects.equals(id, depot.id);
+        if (o instanceof Tag) {
+            Tag tag = (Tag) o;
+            return Objects.equals(name, tag.name);
+        } else if (o instanceof String) {
+            String oStr = (String) o;
+            return Objects.equals(name, oStr);
+        } else {
+            return false;
+        }
     }
 }

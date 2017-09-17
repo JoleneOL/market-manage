@@ -11,12 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,6 +46,28 @@ public class MainGoodServiceImpl implements MainGoodService {
                 , cb.isTrue(root.get(MainGood_.product).get(Product_.enable))
                 , cb.equal(root.get(MainGood_.channel), channel)
         ));
+    }
+
+    @Override
+    public List<MainGood> forSearch(String tag) {
+        return mainGoodRepository.findAll((root, query, cb) -> cb.and(
+                cb.isTrue(root.get(MainGood_.enable))
+                , cb.like(root.get(MainGood_.tags.getName()), "%|" + tag + "|%")
+        ));
+    }
+
+    @Override
+    public List<MainGood> forSearch(String[] tags) {
+        return mainGoodRepository.findAll((root, query, cb) -> {
+            List<Predicate> predicateList = new ArrayList<>();
+            for (String tag : tags) {
+                predicateList.add(cb.like(root.get("tags"), "%|" + tag + "|%"));
+            }
+            return cb.and(
+                    cb.isTrue(root.get(MainGood_.enable))
+                    , cb.or(predicateList.toArray(new Predicate[predicateList.size()]))
+            );
+        });
     }
 
     @Override

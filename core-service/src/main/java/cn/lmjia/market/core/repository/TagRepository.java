@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 /**
  * Created by helloztt on 2017-09-16.
  */
-public interface TagRepository extends JpaRepository<Tag,Long>,JpaSpecificationExecutor<Tag> {
+public interface TagRepository extends JpaRepository<Tag, String>, JpaSpecificationExecutor<Tag> {
 }

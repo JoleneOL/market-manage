@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>新标签</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<!--可以展示-->
+<!--可以添加 新页面去POST?-->
+<!--可以禁用|启用-->
+<body class="gray-bg">
+<div class="wrapper wrapper-content gray-bg">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_tagManage.html" th:href="@{/manageTag}">标签管理</a></li>
+                <li><strong>添加标签</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    添加标签
+                </div>
+                <div class="ibox-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-7 col-lg-6">
+                                <form class="form-horizontal" id="J_tagForm" method="post"
+                                      action="_tagManage.html" th:action="@{/manage/tagList}">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">名称</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="请输入标签名称" class="form-control"
+                                                   name="name" required maxlength="100">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label" for="J_Type">类型</label>
+                                        <div class="col-sm-6">
+                                            <select id="J_Type" class="form-control"
+                                                    name="type" required>
+                                                <option value="0">商城分类</option>
+                                                <option value="1">首页显示</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">权重</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" placeholder="权重越大排列余越前" class="form-control"
+                                                   name="weight" value="0" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6 col-sm-offset-3 control-label">
+                                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                                提&nbsp;交
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
+<script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.m.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="manage-resource/js/tagAdd.js"></script>
+</html>

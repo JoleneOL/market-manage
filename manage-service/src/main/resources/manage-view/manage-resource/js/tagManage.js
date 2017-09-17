@@ -3,8 +3,6 @@
  * Created by CJ on 29/06/2017.
  */
 $(function () {
-    "use strict";
-
     var _body = $('body');
 
     var dataUrl = _body.attr('data-url');
@@ -29,9 +27,9 @@ $(function () {
             {
                 "title": "类型", "data": "type", "name": "type"
             },
-            {
-                "title": "图标", "data": "icon", "name": "icon"
-            },
+            // {
+            //     "title": "图标", "data": "icon", "name": "icon"
+            // },
             {
                 "title": "权重", "data": "weight", "name": "weight"
             },
@@ -42,9 +40,13 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
+                    var a;
                     if (!item.disabled)
-                        return '<a href="javascript:;" class="js-disableTag" data-id="' + item.id + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
-                    return '<a href="javascript:;" class="js-enableTag" data-id="' + item.id + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
+                        a = '<a href="javascript:;" class="js-disableTag" data-id="' + item.name + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
+                    else
+                        a = '<a href="javascript:;" class="js-enableTag" data-id="' + item.name + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
+                    var b = '<a href="javascript:;" class="js-deleteTag" data-id="' + item.name + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
+                    return a + b;
                 }
             }
         ],
@@ -78,6 +80,13 @@ $(function () {
         });
     }).on('click', '.js-enableTag', function () {
         $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/enable", {
+            method: 'put',
+            success: function () {
+                table.ajax.reload();
+            }
+        });
+    }).on('click', '.js-deleteTag', function () {
+        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/delete", {
             method: 'put',
             success: function () {
                 table.ajax.reload();

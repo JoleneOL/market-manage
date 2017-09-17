@@ -20,6 +20,11 @@ public interface MainGoodService {
     @Transactional(readOnly = true)
     List<MainGood> forSale(Channel channel);
 
+    //    @Transactional(readOnly = true)
+    List<MainGood> forSearch(String tag);
+
+//    @Transactional(readOnly = true)
+    List<MainGood> forSearch(String[] tags);
 
     /**
      * 默认渠道
