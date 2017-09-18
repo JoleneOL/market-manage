@@ -34,6 +34,9 @@ $(function () {
                 "title": "手机号", "data": "mobile", "name": "mobile"
             },
             {
+                "title": "公司名称", "data": "agentName", "name": "agentName"
+            },
+            {
                 "title": "身份证",
                 // "name": "IDCard",
                 "orderable": false,
