@@ -20,8 +20,10 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.seext.NumberUtils;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.ProductType;
 import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.logistics.repository.ProductRepository;
+import me.jiangcai.logistics.repository.ProductTypeRepository;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,8 @@ public class ReadServiceImpl implements ReadService {
     private ProductRepository productRepository;
     @Autowired
     private ChannelRepository channelRepository;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
 
     @Override
     public String mobileFor(Object principal) {
@@ -212,6 +216,11 @@ public class ReadServiceImpl implements ReadService {
             titles[i] = getLoginTitle(i);
         }
         return titles;
+    }
+
+    @Override
+    public List<ProductType> allProductType() {
+        return productTypeRepository.findAll();
     }
 
 }

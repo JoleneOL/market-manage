@@ -9,6 +9,7 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.repository.ProductTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,6 +52,8 @@ public class ManageProductController {
     private MainProductRepository mainProductRepository;
     @Autowired
     private HaierSupplier haierSupplier;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
 
     // 禁用和恢复
     @DeleteMapping("/products")
@@ -98,7 +101,8 @@ public class ManageProductController {
     }
 
     @GetMapping("/manageProductAdd")
-    public String indexForCreate() {
+    public String indexForCreate(@RequestParam Long productTypeId,Model model) {
+        model.addAttribute("productType",productTypeRepository.findOne(productTypeId));
         return "_productOperate.html";
     }
 

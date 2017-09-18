@@ -57,7 +57,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 初始化服务
@@ -245,10 +244,16 @@ public class InitService {
                     if (productType != null) {
                         mainProduct.setProductType(productType);
                         if (value.length > 4) {
-                            List<String> propertyValues = Arrays.asList(value[4].split("\\|"));
-                            Set<PropertyValue> propertyValueList = productType.getPropertyValueList().stream()
-                                    .filter(p -> propertyValues.contains(p.getValue())).collect(Collectors.toSet());
-                            mainProduct.setPropertyValues(propertyValueList);
+                            String[] propertyValues = value[4].split("\\|");
+                            Map<PropertyName,String> propertyNameValue = new HashMap<>();
+                            for(String propertyNameValueStr : propertyValues){
+                                PropertyName propertyName = productType.getPropertyNameList().stream()
+                                        .filter(p->p.getName().equals(propertyNameValueStr.split(":")[0])).findFirst().orElse(null);
+                                if(propertyName != null){
+                                    propertyNameValue.put(propertyName,propertyNameValueStr.split(":")[1]);
+                                }
+                            }
+                            mainProduct.setPropertyNameValues(propertyNameValue);
                         }
                     }
                     mainProduct = mainProductRepository.save(mainProduct);

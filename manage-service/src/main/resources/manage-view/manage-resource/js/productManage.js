@@ -128,6 +128,15 @@ $(function () {
         });
     });
 
+    $("#J_AddProduct").click(function(){
+        var productTypeId = $("#J-productType option:selected").val();
+        if(productTypeId == undefined){
+            layer.msg('请选择新增的货品类型');
+            return;
+        }
+        window.location.href = "/manageProductAdd?productTypeId=" + productTypeId;
+    })
+
     // 添加额外的参数
     function extendData() {
         var formItem = $('.js-selectToolbar').find('.form-control');

@@ -63,4 +63,8 @@ $(function () {
             });
         });
     });
+
+    $("#J-productType").change(function(){
+
+    })
 });
