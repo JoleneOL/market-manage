@@ -96,7 +96,7 @@ public class ManagePromotionRequestController {
     @PutMapping("/manage/promotionRequests/{id}/rejected")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void rejected(@AuthenticationPrincipal Manager manager, @PathVariable("id") long id,@RequestBody String message) {
+    public void rejected(@AuthenticationPrincipal Manager manager, @PathVariable("id") long id, @RequestBody String message) {
         PromotionRequest request = promotionRequestRepository.getOne(id);
         request.setRequestStatus(PromotionRequestStatus.rejected);
         request.setChanger(manager);
@@ -104,10 +104,10 @@ public class ManagePromotionRequestController {
         //模版信息类
         PromotionRequestRejected promotionRequestRejected = new PromotionRequestRejected();
         //注册模版信息
-        wechatNoticeHelper.registerTemplateMessage(promotionRequestRejected,null);
+        wechatNoticeHelper.registerTemplateMessage(promotionRequestRejected, null);
 
         userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(request.getWhose())),
-                null,promotionRequestRejected,"代理商升级申请",new Date(),"未通过.\r\n原因:"+message);
+                null, promotionRequestRejected, "代理商升级申请", new Date(), "未通过.\r\n原因:" + message);
     }
 
     @PutMapping("/manage/promotionRequests/{id}/approved")

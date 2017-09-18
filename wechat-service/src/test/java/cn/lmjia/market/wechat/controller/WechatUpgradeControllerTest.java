@@ -93,7 +93,7 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         // 我们批准它
         approvedOnlyRequest(user, "我的省代理");
         //拒绝他
-        //goReject(user, "你是个好人);
+        //goReject(user, "你是个好人");
         // 断言等级
         assertThat(readService.agentLevelForPrincipal(user)).isEqualTo(targetLevel);
 
