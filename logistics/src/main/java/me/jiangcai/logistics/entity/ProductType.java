@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +51,14 @@ public class ProductType {
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     private List<PropertyValue> propertyValueList;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProductType)) return false;
+        ProductType productType = (ProductType) o;
+        return Objects.equals(id, productType.getId());
+    }
+
     /**
      * 类目下的属性
      */
@@ -58,6 +67,22 @@ public class ProductType {
             return propertyValueList.stream().map(PropertyValue::getPropertyName).distinct().collect(Collectors.toList());
         }
         return null;
+    }
+
+    private List<PropertyName> getPropertyNameListBySpec(boolean spec){
+        if(propertyValueList != null){
+            return propertyValueList.stream().filter(p->p.getPropertyName().isSpec() == spec)
+                    .map(PropertyValue::getPropertyName).distinct().collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    public List<PropertyName> getSpecPropertyNameList(){
+        return getPropertyNameListBySpec(true);
+    }
+
+    public List<PropertyName> getNoSpecPropertyNameList(){
+        return getPropertyNameListBySpec(false);
     }
 
     /**

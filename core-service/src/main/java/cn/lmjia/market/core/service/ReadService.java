@@ -10,6 +10,7 @@ import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.entity.ProductType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -185,4 +186,7 @@ public interface ReadService {
      */
     @SuppressWarnings("unused")
     String[] titles();
+
+    @Transactional(readOnly = true)
+    List<ProductType> allProductType();
 }

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
 <!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainProduct"*/-->
+<!--/*@thymesVar id="productType" type="me.jiangcai.logistics.entity.ProductType"*/-->
+<!--/*@thymesVar id="propertyName" type="me.jiangcai.logistics.entity.PropertyName"*/-->
+<!--/*@thymesVar id="propertyValue" type="me.jiangcai.logistics.entity.PropertyValue"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -55,6 +58,19 @@
                                 <div class="col-sm-8">
                                     <div class="form-horizontal">
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">货品类型 </label>
+                                            <div class="col-sm-6">
+                                                <select id="J-productType" class="form-control" name="productType" required th:disabled="${currentData != null}">
+                                                    <option value="1"
+                                                            th:each="productType:${@readService.allProductType()}"
+                                                            th:selected="${currentData != null && productType.equals(currentData.productType)}"
+                                                            th:value="${productType.id}" th:text="${productType.name}">
+                                                        净水器
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-sm-3 control-label">货品名称 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
@@ -67,10 +83,11 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">是否需要安装 </label>
                                             <div class="col-sm-6">
-                                                <input type="checkbox" class="form-control"
-                                                       name="installation" value="true"
-                                                       th:checked="${currentData!=null?currentData.installation:false}"
-                                                >
+                                                <label class="checkbox-inline i-checks">
+                                                    <input type="checkbox"
+                                                           name="installation"
+                                                           value="true"
+                                                           th:checked="${currentData!=null?currentData.installation:false}"></label>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -152,13 +169,13 @@
             <div class="col-sm-12">
                 <div class="ibox">
                     <div class="ibox-title">
-                        货品规格
+                        货品属性
                     </div>
                     <div class="ibox-content">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-8">
-                                    <div class="form-horizontal">
+                                    <div class="form-horizontal J-property">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">SKU </label>
                                             <div class="col-sm-6">
@@ -223,6 +240,38 @@
                                                        min="0" required>
                                             </div>
                                         </div>
+                                        <div class="form-group J-property-more"
+                                             th:each="propertyName:${currentData != null ? currentData.getNoSpecPropertyNameValues().keySet() : productType.getNoSpecPropertyNameList()}">
+                                            <label class="col-sm-3 control-label"><th:block th:text="${propertyName.name}">保质期</th:block>
+                                                <span th:if="${propertyName.required}" class="asterisk">*</span>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <th:block th:if="${propertyName.type == 'input'}">
+                                                    <input name="propertyName" placeholder="请输入保质期" th:placeholder="'请输入' + ${propertyName.name}" class="form-control"
+                                                           th:name="'propertyName[' + ${propertyName.id} + ']'"
+                                                           th:value="${currentData != null ? currentData.propertyNameValues.get(propertyName) :''}"
+                                                           th:required="${propertyName.required}"/>
+                                                </th:block>
+                                                <th:block th:if="${propertyName.type == 'select'}">
+                                                    <select  class="form-control" name="propertyName" th:required="${propertyName.required}"
+                                                            th:name="'propertyName[' + ${propertyName.id} + ']'">
+                                                        <option value="1年"
+                                                                th:each="propertyValue:${currentData != null ? currentData.productType.getPropertyValueByPropertyName(propertyName) : productType.getPropertyValueByPropertyName(propertyName)}"
+                                                                th:selected="${currentData != null ? currentData.propertyNameValues.get(propertyName).equals(propertyValue.value) : 'false'}"
+                                                                th:value="${propertyValue.value}" th:text="${propertyValue.value}">1年</option>
+                                                    </select>
+                                                </th:block>
+                                                <th:block th:if="${propertyName.type == 'radio'}"
+                                                          th:each="propertyValue:${currentData != null ? currentData.productType.getPropertyValueByPropertyName(propertyName) : productType.getPropertyValueByPropertyName(propertyName)}">
+                                                    <!--todo 样式等待老常修改-->
+                                                    <label><input  type="radio" name="propertyName" text="1年" th:name="'propertyName[' + ${propertyName.id} + ']'"
+                                                                   th:checked="${currentData != null ? currentData.propertyNameValues.get(propertyName).equals(propertyValue.value) : false}"
+                                                                   th:text="${propertyValue.value}" th:value="${propertyValue.value}">
+                                                    <th:block th:text="${propertyValue.value}">1年</th:block></label>
+
+                                                </th:block>
+                                            </div>
+                                        </div>
                                         <!--<div class="form-group">-->
                                         <!--<label class="col-sm-3 control-label">安装费（元）</label>-->
                                         <!--<div class="col-sm-6">-->
@@ -251,6 +300,38 @@
                                         <!--<input type="checkbox" name="productColor[]" value="gray">灰色</label>-->
                                         <!--</div>-->
                                         <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        货品规格
+                    </div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-horizontal J-spec">
+                                        <div class="form-group J-spec-more" th:each="propertyName:${currentData != null ? currentData.productType.getPropertyValueByPropertyName(propertyName) : productType.getPropertyValueByPropertyName(propertyName)}">
+                                            <label class="col-sm-3 control-label"><th:block th:text="${propertyName.name}">保质期</th:block>
+                                                <span th:if="${propertyName.required}" class="asterisk">*</span>
+                                            </label>
+                                            <div class="col-sm-6">
+                                                <th:block th:each="propertyValue:${currentData != null ? currentData.productType.getPropertyValueByPropertyName(propertyName) : productType.getPropertyValueByPropertyName(propertyName)}">
+                                                    <!--todo 样式等待老常修改-->
+                                                    <label><input  type="radio" name="propertyName" text="1年" th:name="'propertyName[' + ${propertyName.id} + ']'"
+                                                                   th:checked="${currentData != null ? currentData.propertyNameValues.get(propertyName).equals(propertyValue.value) : 'false'}"
+                                                                   th:text="${propertyValue.value}" th:value="${propertyValue.value}">
+                                                        <th:block th:法律色投入text="${propertyValue.value}">1年</th:block></label>
+
+                                                </th:block>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

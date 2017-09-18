@@ -6,8 +6,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * 货品
@@ -96,8 +97,8 @@ public class Product {
     /**
      * 属性值
      */
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    private Set<PropertyValue> propertyValues;
+    @ElementCollection
+    private Map<PropertyName,String> propertyNameValues;
 
     @Override
     public boolean equals(Object o) {
@@ -117,5 +118,21 @@ public class Product {
      */
     public BigDecimal getVolume() {
         return getVolumeLength().multiply(getVolumeWidth()).multiply(getVolumeHeight());
+    }
+
+    private Map<PropertyName,String> getPropertyNameValuesBySpec(boolean spec){
+        Map<PropertyName,String> propertyNameStringMap = new TreeMap<>(
+                (o1, o2) -> o2.getWeight() - o1.getWeight());
+        propertyNameValues.keySet().stream().filter(p->p.isSpec() == spec)
+                .forEach(p->propertyNameStringMap.put(p,propertyNameValues.get(p)));
+        return propertyNameStringMap;
+    }
+
+    public Map<PropertyName,String> getSpecPropertyNameValues(){
+        return getPropertyNameValuesBySpec(true);
+    }
+
+    public Map<PropertyName,String> getNoSpecPropertyNameValues(){
+        return getPropertyNameValuesBySpec(false);
     }
 }
