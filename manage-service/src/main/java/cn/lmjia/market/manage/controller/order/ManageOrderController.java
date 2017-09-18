@@ -19,6 +19,7 @@ import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.haier.entity.HaierOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,8 +35,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -67,6 +72,11 @@ public class ManageOrderController {
         return new MainOrderRows(login, time -> conversionService.convert(time, String.class)) {
 
             private ListJoin<MainOrder, StockShiftUnit> unitJoin;
+
+            @Override
+            public Expression<?> count(CriteriaQuery<Long> countQuery, CriteriaBuilder criteriaBuilder, Root<MainOrder> root) {
+                return unitJoin;
+            }
 
             @Override
             public List<FieldDefinition<MainOrder>> fields() {
@@ -116,7 +126,7 @@ public class ManageOrderController {
             @Override
             public Specification<MainOrder> specification() {
                 return (root, query, cb) -> {
-                    Predicate predicate = cb.conjunction();
+                    Predicate predicate = cb.equal(unitJoin.type(), HaierOrder.class);
                     if (!StringUtils.isEmpty(mobile))
                         predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root))
                                 , "%" + mobile + "%"));

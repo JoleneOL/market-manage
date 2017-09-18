@@ -61,8 +61,6 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     @Transactional
     public void upgradeIssue() throws Exception {
 //        updateAllRunWith(newRandomManager(ManageLevel.root));
-//        mockMvc.perform(get("/manage/orderData/logistics"))
-//                .andDo(print());
         // 所有订单里，具备当前物流的 肯定具备>0的那啥
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
@@ -106,7 +104,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     }
 
     private void aroundTheOrder(Predicate<Depot> depotFilter, BiConsumer<StockShiftUnit, MainOrder> rejectWork
-            , BiConsumer<StockShiftUnit, MainOrder> successWork) {
+            , BiConsumer<StockShiftUnit, MainOrder> successWork) throws Exception {
 
         // 新建用户，该用户付费下单
         MainOrder order = newRandomOrderFor(randomLogin(false), randomLogin(false));
@@ -177,6 +175,8 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         assertThat(mainOrderService.getOrder(order.getId()).getOrderStatus())
                 .as("物流完成之后 订单也应该完成")
                 .isEqualByComparingTo(OrderStatus.afterSale);
+        mockMvc.perform(get("/manage/orderData/logistics"))
+                .andDo(print());
     }
 
 }
