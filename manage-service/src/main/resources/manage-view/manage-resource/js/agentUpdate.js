@@ -28,14 +28,15 @@ $(function () {
                 "title": "申请代理级别", "data": "applicationLevel", "name": "applicationLevel"
             },
             {
+                "title": "公司名称", "data": "agentName", "name": "agentName"
+            },
+            {
                 "title": "地址", "data": "address", "name": "address"
             },
             {
                 "title": "手机号", "data": "mobile", "name": "mobile"
             },
-            {
-                "title": "公司名称", "data": "agentName", "name": "agentName"
-            },
+
             {
                 "title": "身份证",
                 // "name": "IDCard",
