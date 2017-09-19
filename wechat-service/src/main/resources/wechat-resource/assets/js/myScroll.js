@@ -31,7 +31,8 @@
         var myScroll = new IScroll(self, {
             mouseWheel: true,
             probeType: 3,
-            click: true
+            disableMouse: true,
+            disablePointer: true
         });
 
         function isPassive() {
