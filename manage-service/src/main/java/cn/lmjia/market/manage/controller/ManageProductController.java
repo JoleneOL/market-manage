@@ -30,6 +30,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -124,6 +125,7 @@ public class ManageProductController {
             , @RequestParam("type") String code, String SKU, BigDecimal productPrice, String unit, BigDecimal length
             , BigDecimal width, BigDecimal height, BigDecimal weight, BigDecimal serviceCharge, String productSummary
             , String productDetail, boolean installation
+            , Long productType, String[] productValues, HttpServletRequest request
             , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) {
         MainProduct product;
         if (createNew) {
@@ -133,7 +135,10 @@ public class ManageProductController {
                 throw new IllegalArgumentException("");
             if (mainProductRepository.findOne(code) != null)
                 throw new IllegalArgumentException("");
+            if (productTypeRepository.findOne(productType) == null)
+                throw new IllegalArgumentException("");
             product = new MainProduct();
+            product.setProductType(productTypeRepository.findOne(productType));
             product.setCode(code);
         } else {
             product = mainProductRepository.getOne(code);
@@ -154,7 +159,7 @@ public class ManageProductController {
         product.setPlanSellOutDate(planSellOutDate);
         product.setDescription(StringUtils.isEmpty(productSummary) ? null : productSummary);
         product.setRichDescription(StringUtils.isEmpty(productDetail) ? null : productDetail);
-
+        // TODO: 2017/9/20 设置货品规格及规格值
         mainProductRepository.save(product);
         return "redirect:/manageProduct";
     }

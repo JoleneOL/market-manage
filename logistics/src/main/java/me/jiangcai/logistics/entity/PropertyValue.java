@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * 描述货品性质、规格的参数
@@ -39,4 +40,12 @@ public class PropertyValue {
      * 是否无效
      */
     private boolean disabled;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PropertyValue)) return false;
+        PropertyValue propertyValue = (PropertyValue) o;
+        return Objects.equals(id, propertyValue.getId());
+    }
 }

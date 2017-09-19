@@ -17,14 +17,18 @@ public interface MainGoodService {
      * @param channel 可选的特定渠道
      * @return 在售商品列表
      */
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     List<MainGood> forSale(Channel channel);
 
+    /**
+     * 特定渠道中符合标签的在售商品列表
+     *
+     * @param channel 可选的特定渠道
+     * @param tags    标签数组
+     * @return
+     */
     //    @Transactional(readOnly = true)
-    List<MainGood> forSearch(String tag);
-
-//    @Transactional(readOnly = true)
-    List<MainGood> forSearch(String[] tags);
+    List<MainGood> forSale(Channel channel, String... tags);
 
     /**
      * 默认渠道

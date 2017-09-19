@@ -3,7 +3,6 @@ package cn.lmjia.market.manage.controller;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.support.TagType;
-import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -47,8 +46,6 @@ public class ManageTagController {
     private MainGoodService mainGoodService;
     @Autowired
     private ConversionService conversionService;
-    @Autowired
-    private MainGoodRepository mainGoodRepository;
 
     @GetMapping("/manageTag")
     public String index() {
@@ -88,7 +85,7 @@ public class ManageTagController {
     @Transactional
     public void delete(@PathVariable("name") String name) {
         //找到所有用到这个标签的商品，删除它
-        List<MainGood> goodList = mainGoodService.forSearch(name);
+        List<MainGood> goodList = mainGoodService.forSale(null,name);
         if (!CollectionUtils.isEmpty(goodList)) {
             goodList.forEach(good ->
                     good.getTags().removeIf(tag

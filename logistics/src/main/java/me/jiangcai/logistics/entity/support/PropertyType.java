@@ -6,6 +6,5 @@ package me.jiangcai.logistics.entity.support;
  */
 public enum PropertyType {
     input,
-    select,
-    radio
+    select
 }

@@ -119,9 +119,9 @@ public class ManageTagControllerTest extends ManageServiceTest {
         mainGoodRepository.save(mainGood);
         //确保现在是有这个标签的
         assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).contains(tag);
-        assertThat(mainGoodService.forSearch(tag.getName())).contains(mainGood);
+        assertThat(mainGoodService.forSale(null,tag.getName())).contains(mainGood);
         //删除有这个标签的商品的标签
-        List<MainGood> tagMainGood = mainGoodService.forSearch(tag.getName());
+        List<MainGood> tagMainGood = mainGoodService.forSale(null,tag.getName());
         tagMainGood.forEach(good -> good.getTags().remove(tag));
         mainGoodRepository.save(tagMainGood);
         //确保现在没有标签
@@ -129,7 +129,7 @@ public class ManageTagControllerTest extends ManageServiceTest {
             assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).doesNotContain(tag);
         else
             assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).isNull();
-        assertThat(mainGoodService.forSearch(tag.getName())).doesNotContain(mainGood);
+        assertThat(mainGoodService.forSale(null,tag.getName())).doesNotContain(mainGood);
 
     }
 

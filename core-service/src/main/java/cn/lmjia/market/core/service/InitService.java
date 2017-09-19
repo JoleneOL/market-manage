@@ -171,7 +171,7 @@ public class InitService {
                 final String values[] = properties.getProperty(property).split(",");
                 PropertyName propertyName = new PropertyName();
                 propertyName.setName(property);
-                propertyName.setType(PropertyType.values()[Integer.parseInt(values[0])]);
+                propertyName.setType(PropertyType.valueOf(PropertyType.class,values[0]));
                 propertyName.setSpec(Boolean.parseBoolean(values[1]));
                 //属性值
                 final String propertyValueNames[] = values[2].split("\\|");

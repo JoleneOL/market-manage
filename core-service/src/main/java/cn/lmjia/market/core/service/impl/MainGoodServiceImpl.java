@@ -10,6 +10,7 @@ import cn.lmjia.market.core.service.MainGoodService;
 import me.jiangcai.logistics.entity.Product_;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -35,51 +36,38 @@ public class MainGoodServiceImpl implements MainGoodService {
 
     @Override
     public List<MainGood> forSale(Channel channel) {
-        if (channel == null)
-            return mainGoodRepository.findAll((root, query, cb) -> {
-                Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
-                return cb.and(
-                        cb.isTrue(root.get(MainGood_.enable))
-                        , cb.isTrue(root.get(MainGood_.product).get(Product_.enable))
-                        , cb.or(
-                                channelJoin.isNull()
-                                , cb.isFalse(channelJoin.get(Channel_.extra))
-                        )
-                );
-            });
-        return mainGoodRepository.findAll((root, query, cb) -> cb.and(
-                cb.isTrue(root.get(MainGood_.enable))
-                , cb.isTrue(root.get(MainGood_.product).get(Product_.enable))
-                , cb.equal(root.get(MainGood_.channel), channel)
-        ));
+        return forSale(channel,null);
     }
 
     @Override
-    public List<MainGood> forSearch(String tag) {
-        return mainGoodRepository.findAll((root, query, cb) -> cb.and(
-                cb.isTrue(root.get(MainGood_.enable))
-                , cb.like(root.join(MainGood_.tags).get(Tag_.name), tag)
-//                , cb.like(root.get(MainGood_.tags.getName()), "%|" + tag + "|%")
-        ));
-    }
-
-    @Override
-    public List<MainGood> forSearch(String[] tags) {
+    public List<MainGood> forSale(Channel channel, String... tags) {
         return mainGoodRepository.findAll((root, query, cb) -> {
+            Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
             List<Predicate> predicateList = new ArrayList<>();
-            for (String tag : tags) {
-                predicateList.add(cb.like(root.join(MainGood_.tags).get(Tag_.name), tag));
+            predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
+            predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
+            if(channel == null){
+                predicateList.add(cb.or(
+                        channelJoin.isNull()
+                        , cb.isFalse(channelJoin.get(Channel_.extra))
+                ));
+            }else{
+                predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
             }
-            return cb.and(
-                    cb.isTrue(root.get(MainGood_.enable))
-                    , cb.or(predicateList.toArray(new Predicate[predicateList.size()]))
-            );
+            if(tags != null && tags.length > 0){
+                List<Predicate> tagSearchPredicateList = new ArrayList<>();
+                for (String tag : tags) {
+                    tagSearchPredicateList.add(cb.equal(root.join(MainGood_.tags).get(Tag_.name), tag));
+                }
+                predicateList.add(cb.or(tagSearchPredicateList.toArray(new Predicate[tagSearchPredicateList.size()])));
+            }
+            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         });
     }
 
     @Override
     public List<MainGood> forSale() {
-        return forSale(null);
+        return forSale(null,null);
     }
 
     @Override
