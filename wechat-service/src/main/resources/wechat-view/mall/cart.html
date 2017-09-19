@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>购物车</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
+
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+</head>
+<body class="bg-gray cart-body">
+<div class="mall-toolbar clearfix">
+    <h3>利美家</h3>
+    <div class="mall-toolbar-items">
+        <a href="../orderList.html" class="toolbar-item">我的订单</a>
+        <a href="search.html" class="toolbar-item"><i class="fa fa-search"></i></a>
+    </div>
+</div>
+<div class="mall-extra-toolbar ">
+    <div class="toolbar-wrap clearfix">
+        <div class="toolbar-checkbox">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>全选
+            </label>
+        </div>
+        <div class="toolbar-edit">
+            <button type="button">编辑</button>
+        </div>
+    </div>
+</div>
+<div class="mall-cart-list">
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+    <div class="cart-group">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥3000</div>
+                <div class="goods-bought">x5</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button">删除</button>
+        </div>
+    </div>
+</div>
+<div class="cart-footer">
+    <div class="cart-total"><span class="cart-total_title">合计：</span><span class="cart-total_number">￥3000.00</span></div>
+    <div class="settlement"><button type="button">结算</button></div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="../../mock/mock-min.js" th:remove="all"></script>
+<script src="../../mock/mall.js" th:remove="all"></script>
+<script src="../../wechat-resource/assets/js/mall/cart.js"></script>
+</html>

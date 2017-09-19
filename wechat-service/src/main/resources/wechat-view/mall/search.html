@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>搜索</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
+
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+
+</head>
+<body class="bg-gray search-body">
+<div class="search-wrap">
+    <div class="search-bar">
+        <div class="search-bar_form">
+            <div class="search-bar_box">
+                <i class="weui-icon-search"></i>
+                <input type="search" class="search-bar_input" placeholder="请输入关键字搜索商品" name="search" id="J_searchInput">
+                <a href="javascript:" class="weui-icon-clear js-clearBtn"></a>
+            </div>
+        </div>
+        <!--<a href="javascript:" class="search-bar_search-btn" id="J_searchBtn">搜索</a>-->
+    </div>
+</div>
+<div class="search-result" id="J_resultContainer"></div>
+</body>
+<template id="J_resultTpl">
+    {{if data.length}}
+    {{each data}}
+    <div class="search-result_item">
+        <img src="{{$value.goodsImage}}">
+        <div class="search-result_item-bd">
+            <h4 class="goods-name">{{$value.goodsName}}</h4>
+            <p class="goods-describe">{{$value.goodsDescribe}}</p>
+            <div class="goods-info">
+                <div class="goods-price">￥{{$value.price}}</div>
+                <div class="goods-bought">{{$value.salesVolume}}人付款</div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="no-result">
+        <div class="icons-noresult"></div>
+        <p class="detail">没搜索到相关商品</p>
+    </div>
+    {{/if}}
+</template>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/invite/template-web.js"></script>
+<script src="../../mock/mock-min.js" th:remove="all"></script>
+<script src="../../mock/mall.js" th:remove="all"></script>
+<script src="../../wechat-resource/assets/js/mall/search.js"></script>
+</html>
