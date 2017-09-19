@@ -238,6 +238,16 @@ body {
     }
   }
 }
+.search-body {
+  padding-top: 44px;
+}
+.search-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
 .search-bar {
   position: relative;
   padding: 8px 10px;
@@ -296,5 +306,90 @@ body {
     line-height: 28px;
     color: $LMJ;
     white-space: nowrap;
+  }
+}
+.search-result {
+  padding: 15px 10px;
+  .search-result_item {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    background: #fff;
+    border-radius: 5px;
+    > img {
+      display: block;
+      width: 100px;
+      height: 100px;
+      margin-right: 15px;
+    }
+  }
+
+  .search-result_item-bd {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    .goods-name {
+      color: #232326;
+      font-size: 15px;
+      line-height: 20px;
+      height: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      word-break: break-all;
+      font-weight: normal;
+    }
+    .goods-describe {
+      min-height: 20px;
+      color: #686868;
+      font-size: 12px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+    .goods-info {
+      font-size: 0;
+      .goods-price, .goods-bought{
+        display: inline-block;
+        width: 50%;
+      }
+      .goods-price {
+        font-size: 16px;
+        color: #f50;
+      }
+      .goods-bought {
+        font-size: 12px;
+        text-align: right;
+        color: #d4d4d4;
+      }
+    }
+  }
+}
+.no-result {
+  position: relative;
+  text-align: center;
+  top: 50px;
+  .icons-noresult {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    background: url("../img/empty.png") no-repeat;
+    background-size: cover;
+  }
+  .detail {
+    text-align: center;
+    color: #bcbcbc;
+    line-height: 23px;
+    font-size: 18px;
+    margin-top: 17px;
   }
 }
