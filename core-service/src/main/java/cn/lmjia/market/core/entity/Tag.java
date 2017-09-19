@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 /**
@@ -34,6 +33,7 @@ public class Tag {
     /**
      * 上级类目（用于业务拓展，暂时用不到）
      */
+    @ManyToOne
     private Tag parentTag;
     /**
      * 标签图标
@@ -51,14 +51,13 @@ public class Tag {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof Tag) {
-            Tag tag = (Tag) o;
-            return Objects.equals(name, tag.name);
-        } else if (o instanceof String) {
-            String oStr = (String) o;
-            return Objects.equals(name, oStr);
-        } else {
-            return false;
-        }
+        if (!(o instanceof Tag)) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(name, tag.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

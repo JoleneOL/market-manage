@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainGood_;
+import cn.lmjia.market.core.entity.Tag_;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
@@ -11,7 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +58,8 @@ public class MainGoodServiceImpl implements MainGoodService {
     public List<MainGood> forSearch(String tag) {
         return mainGoodRepository.findAll((root, query, cb) -> cb.and(
                 cb.isTrue(root.get(MainGood_.enable))
-                , cb.like(root.get(MainGood_.tags.getName()), "%|" + tag + "|%")
+                , cb.like(root.join(MainGood_.tags).get(Tag_.name), tag)
+//                , cb.like(root.get(MainGood_.tags.getName()), "%|" + tag + "|%")
         ));
     }
 
@@ -61,7 +68,7 @@ public class MainGoodServiceImpl implements MainGoodService {
         return mainGoodRepository.findAll((root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             for (String tag : tags) {
-                predicateList.add(cb.like(root.get("tags"), "%|" + tag + "|%"));
+                predicateList.add(cb.like(root.join(MainGood_.tags).get(Tag_.name), tag));
             }
             return cb.and(
                     cb.isTrue(root.get(MainGood_.enable))

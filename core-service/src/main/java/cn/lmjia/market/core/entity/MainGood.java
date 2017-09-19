@@ -2,11 +2,17 @@ package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.InstallmentChannel;
-import cn.lmjia.market.core.entity.support.GoodTagConverter;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
@@ -41,8 +47,12 @@ public class MainGood {
     private Channel channel;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime = LocalDateTime.now();
-    @Convert(converter = GoodTagConverter.class)
-    private Set<String> tags;
+    /**
+     * 标签，它应该是一个多对多的关联
+     */
+//    @Convert(converter = GoodTagConverter.class)
+    @ManyToMany(cascade = {CascadeType.REFRESH})
+    private Set<Tag> tags;
 
     public static Expression<BigDecimal> getTotalPrice(From<?, MainGood> path, CriteriaBuilder criteriaBuilder) {
         final Path<MainProduct> product = path.get(MainGood_.product);

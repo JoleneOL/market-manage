@@ -21,7 +21,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -76,16 +83,16 @@ public class ManageTagController {
     }
 
 
-    @PutMapping("/manage/tagList/{name}/delete")
+    @DeleteMapping("/manage/tagList/{name}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @Transactional
-    // TODO: 2017/9/17 这里有个疑问等待解决
+    @Transactional
     public void delete(@PathVariable("name") String name) {
         //找到所有用到这个标签的商品，删除它
         List<MainGood> goodList = mainGoodService.forSearch(name);
         if (!CollectionUtils.isEmpty(goodList)) {
-            goodList.forEach(good -> good.getTags().remove(name));
-//            mainGoodRepository.save(goodList);
+            goodList.forEach(good ->
+                    good.getTags().removeIf(tag
+                            -> tag.getName().equals(name)));
         }
         tagRepository.delete(name);
     }

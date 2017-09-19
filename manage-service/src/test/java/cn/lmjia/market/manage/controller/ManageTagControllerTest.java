@@ -17,10 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -81,17 +79,15 @@ public class ManageTagControllerTest extends ManageServiceTest {
         }
         //随机找一个商品，添加标签
         MainGood mainGood = mainGoodService.forSale().stream().max(new RandomComparator()).orElse(null);
-        if (mainGood.getTags() == null) {
-            mainGood.setTags(new HashSet<>(Arrays.asList(tag.getName())));
-        } else {
-            mainGood.getTags().add(tag.getName());
-        }
+        if (mainGood.getTags() == null)
+            mainGood.setTags(new HashSet<>());
+        mainGood.getTags().add(tag);
         mainGoodRepository.saveAndFlush(mainGood);
         log.debug("set good tag success");
         //确保现在是有这个标签的
-        assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).contains(tag.getName());
+        assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).contains(tag);
 
-        mockMvc.perform(put(TAG_LIST_URL + "/" + tag.getName() + "/delete"))
+        mockMvc.perform(delete(TAG_LIST_URL + "/" + tag.getName()))
                 .andExpect(status().is2xxSuccessful());
 
         assertThat(tagRepository.findOne(tag.getName()))
@@ -100,7 +96,7 @@ public class ManageTagControllerTest extends ManageServiceTest {
         //商品的标签消失了
         mainGood = mainGoodRepository.findOne(mainGood.getId());
         if (mainGood.getTags() != null) {
-            assertThat(mainGood.getTags()).doesNotContain(tag.getName());
+            assertThat(mainGood.getTags()).doesNotContain(tag);
         }
     }
 
@@ -117,22 +113,20 @@ public class ManageTagControllerTest extends ManageServiceTest {
         }
         //随机找一个商品，添加标签
         MainGood mainGood = mainGoodService.forSale().stream().max(new RandomComparator()).orElse(null);
-        if (mainGood.getTags() == null) {
-            mainGood.setTags(tagRepository.findAll().stream().map(Tag::getName).collect(Collectors.toSet()));
-        } else {
-            mainGood.getTags().add(tag.getName());
-        }
+        if (mainGood.getTags() == null)
+            mainGood.setTags(new HashSet<>());
+        mainGood.getTags().add(tag);
         mainGoodRepository.save(mainGood);
         //确保现在是有这个标签的
-        assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).contains(tag.getName());
+        assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).contains(tag);
         assertThat(mainGoodService.forSearch(tag.getName())).contains(mainGood);
         //删除有这个标签的商品的标签
         List<MainGood> tagMainGood = mainGoodService.forSearch(tag.getName());
-        tagMainGood.forEach(good -> good.getTags().remove(tag.getName()));
+        tagMainGood.forEach(good -> good.getTags().remove(tag));
         mainGoodRepository.save(tagMainGood);
         //确保现在没有标签
         if (!CollectionUtils.isEmpty(mainGood.getTags()))
-            assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).doesNotContain(tag.getName());
+            assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).doesNotContain(tag);
         else
             assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).isNull();
         assertThat(mainGoodService.forSearch(tag.getName())).doesNotContain(mainGood);
