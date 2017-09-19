@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller.logistics;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "')")
 public class ManageLogisticsController {
 
     @Autowired

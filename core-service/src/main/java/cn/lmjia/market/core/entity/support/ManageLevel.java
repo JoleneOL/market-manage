@@ -21,9 +21,16 @@ public enum ManageLevel {
      * 但是管理员工的范围是管辖范围之类的
      */
     manager("经理", Login.ROLE_PROMOTION, Login.ROLE_AllAgent, Login.ROLE_GRANT),
+    /**
+     * 代理商佣金管理
+     */
+    finance("财务", Login.ROLE_FINANCE),
     agentManager("代理商管理员", Login.ROLE_AllAgent),
     promotion("升级专员", Login.ROLE_PROMOTION),
-    customerService("客服", Login.ROLE_ALL_ORDER);
+    /**
+     * 订单管理，物流管理，查看经销商
+     */
+    customerService("客服", Login.ROLE_ALL_ORDER,Login.ROLE_LOGISTICS);
 
     private final String[] roles;
     private final String title;

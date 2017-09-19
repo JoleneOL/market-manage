@@ -116,7 +116,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li sec:authorize="hasAnyRole('ROOT','FINANCE')">
                     <a href="#">
                         <i class="fa fa-rmb"></i>
                         <span class="nav-label">代理商佣金管理</span>
@@ -126,7 +126,7 @@
                         <li th:remove="all">
                             <a class="J_menuItem" href="_commDetail.html">代理商佣金明细</a>
                         </li>
-                        <li>
+                        <li sec:authorize="hasAnyRole('ROOT','FINANCE')">
                             <a class="J_menuItem" href="_withdrawManage.html" th:href="@{/withdrawManage}">提现管理</a>
                         </li>
                     </ul>
@@ -194,7 +194,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li sec:authorize="hasAnyRole('ROOT','LOGISTICS')">
                     <a href="#">
                         <i class="fa fa-truck"></i>
                         <span class="nav-label">供应链管理</span>
@@ -207,7 +207,7 @@
                         <li sec:authorize="hasAnyRole('ROOT')">
                             <a class="J_menuItem" href="_factoryManage.html" th:href="@{/manageFactory}">工厂管理</a>
                         </li>
-                        <li sec:authorize="hasAnyRole('ROOT')">
+                        <li sec:authorize="hasAnyRole('ROOT','LOGISTICS')">
                             <a class="J_menuItem" href="_logisticsManage.html#factory"
                                th:href="@{/manageLogistics#factory}">物流管理</a>
                         </li>

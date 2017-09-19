@@ -57,6 +57,15 @@ public class Login implements UserDetails {
      * 可以管理订单
      */
     public static final String ROLE_ALL_ORDER = "ALL_ORDER";
+    /**
+     * 财务代理商佣金管理提现管理
+     */
+    public static final String ROLE_FINANCE = "FINANCE";
+    /**
+     * 物流管理权限
+     */
+    public static final String ROLE_LOGISTICS = "LOGISTICS";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

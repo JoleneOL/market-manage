@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
@@ -34,11 +35,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 管理提现
+ * 管理提现,拥有root权限和财务权限的人可以管理
  *
  * @author CJ
  */
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_FINANCE + "')")
 @Controller
 public class ManageWithdrawController {
 
