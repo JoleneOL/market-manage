@@ -15,8 +15,8 @@ body {
   background: #f2f2f2; }
 
 .mall-toolbar {
-  padding-top: .6em;
-  padding-bottom: .6em;
+  padding-top: 9px;
+  padding-bottom: 9px;
   padding-left: 10px;
   padding-right: 10px;
   color: #fff;
@@ -307,5 +307,172 @@ body {
     line-height: 23px;
     font-size: 18px;
     margin-top: 17px; }
+
+.cart-body {
+  padding-top: 92px;
+  padding-bottom: 58px; }
+  .cart-body .mall-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0; }
+  .cart-body .mall-extra-toolbar {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0; }
+
+.mall-extra-toolbar {
+  padding-top: 14px;
+  background: #f2f2f2; }
+  .mall-extra-toolbar .toolbar-wrap {
+    padding-left: 6px;
+    padding-right: 6px;
+    height: 38px;
+    line-height: 38px;
+    background: #fff; }
+  .mall-extra-toolbar .toolbar-checkbox {
+    float: left; }
+    .mall-extra-toolbar .toolbar-checkbox label {
+      display: block; }
+    .mall-extra-toolbar .toolbar-checkbox .weui-icon-checked:before {
+      content: "\EA01";
+      color: #c9c9c9;
+      font-size: 23px;
+      display: block; }
+    .mall-extra-toolbar .toolbar-checkbox .weui-check:checked + .weui-icon-checked:before {
+      content: "\EA06";
+      color: #f50; }
+  .mall-extra-toolbar .toolbar-edit {
+    float: right; }
+    .mall-extra-toolbar .toolbar-edit button {
+      padding: 0 10px;
+      display: block;
+      background: #fff;
+      border: none;
+      height: 100%;
+      line-height: 38px; }
+
+.mall-cart-list {
+  background: #f5f5f5; }
+  .mall-cart-list .cart-group {
+    border-bottom: 6px solid #fff;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center; }
+    .mall-cart-list .cart-group:last-of-type {
+      border-bottom: 1px solid #d9d9d9; }
+    .mall-cart-list .cart-group .checked-box {
+      width: 44px; }
+      .mall-cart-list .cart-group .checked-box label {
+        display: block;
+        text-align: center; }
+      .mall-cart-list .cart-group .checked-box .weui-icon-checked:before {
+        content: "\EA01";
+        color: #c9c9c9;
+        font-size: 23px;
+        display: block; }
+      .mall-cart-list .cart-group .checked-box .weui-check:checked + .weui-icon-checked:before {
+        content: "\EA06";
+        color: #f50; }
+    .mall-cart-list .cart-group .goods-image {
+      width: 100px; }
+      .mall-cart-list .cart-group .goods-image img {
+        display: block;
+        width: 100%; }
+    .mall-cart-list .cart-group .goods-box {
+      -webkit-box-flex: 1;
+      -webkit-flex: 1;
+      flex: 1;
+      padding: 6px 12px; }
+      .mall-cart-list .cart-group .goods-box .goods-name {
+        color: #051b28;
+        font-size: 13px;
+        line-height: 20px;
+        height: 40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        word-break: break-all;
+        font-weight: normal; }
+      .mall-cart-list .cart-group .goods-box .goods-describe {
+        color: #999;
+        font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        word-break: break-all; }
+      .mall-cart-list .cart-group .goods-box .goods-stock {
+        color: #051b28;
+        font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        word-break: break-all; }
+      .mall-cart-list .cart-group .goods-box .goods-info {
+        font-size: 0; }
+        .mall-cart-list .cart-group .goods-box .goods-info .goods-price {
+          display: inline-block;
+          width: 50%;
+          font-size: 16px;
+          color: #f50; }
+        .mall-cart-list .cart-group .goods-box .goods-info .goods-bought {
+          display: inline-block;
+          width: 50%;
+          font-size: 14px;
+          text-align: right;
+          color: #051b28; }
+    .mall-cart-list .cart-group .delete-btn {
+      width: 0;
+      background: #f50;
+      overflow: hidden; }
+      .mall-cart-list .cart-group .delete-btn button {
+        width: 100%;
+        display: block;
+        background: transparent;
+        border: none;
+        height: 100%;
+        color: #fff; }
+
+.cart-footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  background: #fff;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex; }
+  .cart-footer .cart-total {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: right; }
+    .cart-footer .cart-total .cart-total_number {
+      font-size: 16px;
+      color: #f50; }
+  .cart-footer .settlement {
+    margin-left: 12px; }
+    .cart-footer .settlement button {
+      display: block;
+      width: 104px;
+      color: #fff;
+      background: #f50;
+      border: none;
+      height: 100%; }
 
 /*# sourceMappingURL=mall.css.map */
