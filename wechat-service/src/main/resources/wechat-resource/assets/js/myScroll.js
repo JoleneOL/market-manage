@@ -31,6 +31,7 @@
         var myScroll = new IScroll(self, {
             mouseWheel: true,
             probeType: 3,
+            tap: true,
             disableMouse: true,
             disablePointer: true
         });
