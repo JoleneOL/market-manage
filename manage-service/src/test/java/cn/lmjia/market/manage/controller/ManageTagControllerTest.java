@@ -31,15 +31,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class ManageTagControllerTest extends ManageServiceTest {
     private static final Log log = LogFactory.getLog(ManageTagControllerTest.class);
-
+    private static final String TAG_LIST_URL = "/manage/tagList";
     @Autowired
     private TagRepository tagRepository;
     @Autowired
     private MainGoodService mainGoodService;
     @Autowired
     private MainGoodRepository mainGoodRepository;
-
-    private static final String TAG_LIST_URL = "/manage/tagList";
 
     @Override
     protected Login allRunWith() {
@@ -97,6 +95,7 @@ public class ManageTagControllerTest extends ManageServiceTest {
                 .andExpect(status().is2xxSuccessful());
 
         assertThat(tagRepository.findOne(tag.getName()))
+                .as("特定标签" + tag.getName() + "已被成功删除")
                 .isNull();
         //商品的标签消失了
         mainGood = mainGoodRepository.findOne(mainGood.getId());
