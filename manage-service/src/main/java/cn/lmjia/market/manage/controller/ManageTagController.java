@@ -84,9 +84,8 @@ public class ManageTagController {
         //找到所有用到这个标签的商品，删除它
         List<MainGood> goodList = mainGoodService.forSearch(name);
         if (!CollectionUtils.isEmpty(goodList)) {
-            log.debug("find good by tag success:" + goodList.get(0).getId());
             goodList.forEach(good -> good.getTags().remove(name));
-            mainGoodRepository.save(goodList);
+//            mainGoodRepository.save(goodList);
         }
         tagRepository.delete(name);
     }
