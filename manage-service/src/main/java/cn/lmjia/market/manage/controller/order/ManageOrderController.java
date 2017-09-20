@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','"+Login.ROLE_SUPPLY_CHAIN+"')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "')")
 public class ManageOrderController {
 
     @Autowired
@@ -50,6 +50,7 @@ public class ManageOrderController {
     @Autowired
     private LogisticsService logisticsService;
 
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/manage/orderData/logistics")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<MainOrder> logisticsData(@AuthenticationPrincipal Login login, String mobile, Long depotId

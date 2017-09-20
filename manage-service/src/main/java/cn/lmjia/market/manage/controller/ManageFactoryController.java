@@ -55,6 +55,7 @@ public class ManageFactoryController {
         return "_factoryAdd.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/factoryList")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition data() {

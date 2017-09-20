@@ -48,6 +48,7 @@ public class ManageDepotController {
         return "_depotAdd.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/depotList")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition data() {

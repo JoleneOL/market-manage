@@ -68,6 +68,7 @@ public class ManageGoodController {
         mainGoodRepository.getOne(id).setEnable(true);
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageGood")
     public String index() {
         return "_goodsManage.html";

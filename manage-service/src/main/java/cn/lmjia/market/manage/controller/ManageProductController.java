@@ -92,7 +92,7 @@ public class ManageProductController {
             throw new IllegalArgumentException("");
         haierSupplier.updateProduct(product);
     }
-
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageProduct")
     public String index() {
         return "_productManage.html";

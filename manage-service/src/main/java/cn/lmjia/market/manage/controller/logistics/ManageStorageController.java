@@ -50,7 +50,7 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
- *仓库管理, 具有root权限和供应链管理权限可以操作.
+ *仓库管理, 具有root权限和供应链管理权限可以操作.具有look可以查看
  * @author CJ
  */
 @Controller
@@ -81,6 +81,7 @@ public class ManageStorageController {
         return "redirect:/manageStorage";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/storage")
     @Transactional(readOnly = true)
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
