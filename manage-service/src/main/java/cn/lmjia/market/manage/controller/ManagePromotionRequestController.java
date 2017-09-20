@@ -39,7 +39,7 @@ import java.util.UUID;
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_PROMOTION + "')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "')")
 public class ManagePromotionRequestController {
 
     @Autowired
@@ -66,7 +66,7 @@ public class ManagePromotionRequestController {
     @Autowired
     private LoginService loginService;
 
-    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_PROMOTION + "'+'"+Login.ROLE_PROMOTION+"')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "')")
     @GetMapping("/managePromotionRequest")
     public String index() {
         return "_agentUpdate.html";
@@ -76,7 +76,7 @@ public class ManagePromotionRequestController {
      * @param applicationDate quarter,month,all(一年)
      * @return
      */
-    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_PROMOTION + "'+'"+Login.ROLE_PROMOTION+"')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "')")
     @GetMapping("/manage/promotionRequests")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition<PromotionRequest> data(String applicationDate, String mobile) {

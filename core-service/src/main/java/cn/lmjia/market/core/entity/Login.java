@@ -41,10 +41,10 @@ public class Login implements UserDetails {
      * 可以管理所有关于代理的项目
      */
     public static final String ROLE_AllAgent = "ALL_AGENT";
-    /**
-     * 代理商升级管理权限
-     */
-    public static final String ROLE_PROMOTION = "PROMOTION";
+//    /**
+//     * 代理商升级管理权限
+//     */
+//    public static final String ROLE_PROMOTION = "PROMOTION";
     /**
      * 公司内部管理员
      */
@@ -56,7 +56,7 @@ public class Login implements UserDetails {
     /**
      * 后台数据查看权限, 可以查看所有后台数据,但是无法操作.
      */
-    public static final String ROlE_LOOK = "LOOK";
+    public static final String ROLE_LOOK = "LOOK";
     /**
      * 订单管理权限
      */

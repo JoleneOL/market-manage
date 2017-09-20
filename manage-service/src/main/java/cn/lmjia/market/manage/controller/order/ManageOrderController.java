@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','"+Login.ROLE_SUPPLY_CHAIN+"')")
 public class ManageOrderController {
 
     @Autowired

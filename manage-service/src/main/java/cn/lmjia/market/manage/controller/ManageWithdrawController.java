@@ -48,6 +48,7 @@ public class ManageWithdrawController {
     @Autowired
     private WithdrawService withdrawService;
 
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_FINANCE + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/withdrawManage")
     public String index() {
         return "_withdrawManage.html";
@@ -67,6 +68,7 @@ public class ManageWithdrawController {
         withdrawService.approval(manager, id, comment, transactionRecordNumber);
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_FINANCE + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/manage/withdraws")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<WithdrawRequest> data(String name, String mobile
