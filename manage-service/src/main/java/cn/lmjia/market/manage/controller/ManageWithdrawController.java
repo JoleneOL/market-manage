@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 管理提现,拥有root权限和财务权限的人可以管理
+ * 管理提现,拥有root权限和财务权限的人可以管理.
  *
  * @author CJ
  */

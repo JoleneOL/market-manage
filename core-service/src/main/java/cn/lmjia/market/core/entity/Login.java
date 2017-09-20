@@ -42,7 +42,7 @@ public class Login implements UserDetails {
      */
     public static final String ROLE_AllAgent = "ALL_AGENT";
     /**
-     * 升级代理
+     * 代理商升级管理权限
      */
     public static final String ROLE_PROMOTION = "PROMOTION";
     /**
@@ -54,7 +54,11 @@ public class Login implements UserDetails {
      */
     public static final String ROLE_GRANT = "GRANT";
     /**
-     * 可以管理订单
+     * 后台数据查看权限, 可以查看所有后台数据,但是无法操作.
+     */
+    public static final String ROlE_LOOK = "LOOK";
+    /**
+     * 订单管理权限
      */
     public static final String ROLE_ALL_ORDER = "ALL_ORDER";
     /**
@@ -62,10 +66,21 @@ public class Login implements UserDetails {
      */
     public static final String ROLE_FINANCE = "FINANCE";
     /**
+     * 产品中心管理权限
+     */
+    public static final String ROLE_PRODUCT_CENTER = "PRODUCT_CENTER";
+    /**
+     * 供应链管理权限(包含物流管理权限)
+     */
+    public static final String ROLE_SUPPLY_CHAIN = "SUPPLY_CHAIN";
+    /**
      * 物流管理权限
      */
     public static final String ROLE_LOGISTICS = "LOGISTICS";
-
+//    /**
+//     * 商城后台管理权限(目前没有用)
+//     */
+//    public static final String ROLE_MALL = "MALL";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

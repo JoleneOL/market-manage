@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
@@ -44,7 +45,7 @@ import java.util.List;
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_PRODUCT_CENTER + "')")
 public class ManageProductController {
 
     @Autowired

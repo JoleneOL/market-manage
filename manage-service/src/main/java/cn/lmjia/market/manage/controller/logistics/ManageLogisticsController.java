@@ -33,10 +33,11 @@ import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 /**
+ * 管理物流,只有root权限,供应链管理权限,物流管理权限可以操作.
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "')")
 public class ManageLogisticsController {
 
     @Autowired

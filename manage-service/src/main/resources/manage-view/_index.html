@@ -76,7 +76,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','PROMOTION','LOOK')">
                     <a href="#">
                         <i class="fa fa-users"></i>
                         <span class="nav-label">经销商管理</span>
@@ -86,7 +86,7 @@
                         <li>
                             <a class="J_menuItem" href="_agentManage.html" th:href="@{/agentManage}">查看经销商</a>
                         </li>
-                        <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','PROMOTION')">
+                        <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','PROMOTION','LOOK')">
                             <a class="J_menuItem" href="_agentUpdate.html"
                                th:href="@{/managePromotionRequest}">升级合伙人申请</a>
                         </li>
@@ -95,7 +95,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li sec:authorize="hasAnyRole('ROOT','ALL_ORDER')">
                     <a href="#">
                         <i class="fa fa-address-card-o"></i>
                         <span class="nav-label">订单管理</span>
@@ -176,7 +176,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <li sec:authorize="hasAnyRole('ROOT','PRODUCT_CENTER')">
                     <a href="#">
                         <i class="fa fa-product-hunt"></i>
                         <span class="nav-label">产品中心</span>
@@ -194,24 +194,24 @@
                         </li>
                     </ul>
                 </li>
-                <li sec:authorize="hasAnyRole('ROOT','LOGISTICS')">
+                <li sec:authorize="hasAnyRole('ROOT','LOGISTICS','SUPPLY_CHAIN')">
                     <a href="#">
                         <i class="fa fa-truck"></i>
                         <span class="nav-label">供应链管理</span>
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li sec:authorize="hasAnyRole('ROOT')">
+                        <li sec:authorize="hasAnyRole('ROOT','SUPPLY_CHAIN')">
                             <a class="J_menuItem" href="_depotManage.html" th:href="@{/manageDepot}">仓库管理</a>
                         </li>
-                        <li sec:authorize="hasAnyRole('ROOT')">
+                        <li sec:authorize="hasAnyRole('ROOT','SUPPLY_CHAIN')">
                             <a class="J_menuItem" href="_factoryManage.html" th:href="@{/manageFactory}">工厂管理</a>
                         </li>
-                        <li sec:authorize="hasAnyRole('ROOT','LOGISTICS')">
+                        <li sec:authorize="hasAnyRole('ROOT','LOGISTICS','SUPPLY_CHAIN')">
                             <a class="J_menuItem" href="_logisticsManage.html#factory"
                                th:href="@{/manageLogistics#factory}">物流管理</a>
                         </li>
-                        <li sec:authorize="hasAnyRole('ROOT')">
+                        <li sec:authorize="hasAnyRole('ROOT','SUPPLY_CHAIN')">
                             <a class="J_menuItem" href="_storageManage.html" th:href="@{/manageStorage}">仓储管理</a>
                         </li>
                     </ul>
