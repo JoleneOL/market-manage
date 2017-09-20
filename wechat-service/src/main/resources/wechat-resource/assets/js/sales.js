@@ -57,7 +57,6 @@ $(function () {
         } else {
             domStr = '<div class="view-list-item view-no-res"><p class="text-center">暂无数据</p></div>'
         }
-        console.log(domStr);
         infiniteWrap
             .find('.view-sales-item').remove()
             .end()
@@ -88,7 +87,7 @@ $(function () {
     infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
 
     var myScroll = infiniteWrap.myScroll({
-        debug: true,
+        // debug: true,
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             date: $('input[name="date"]').val(),
