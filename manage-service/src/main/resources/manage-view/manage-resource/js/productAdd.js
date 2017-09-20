@@ -28,6 +28,19 @@ $(function () {
             }
         },
         submitHandler: function (form) {
+            //拼接属性及属性值
+            var propertyNameValue = "";
+            $("input[name^=propertyName],select[name^=propertyName]").each(function(){
+                var propertyNameId = $(this).attr('data-propertyNameId');
+                var propertyValue = $(this).val();
+                if(propertyNameId != undefined){
+                    if(propertyNameValue.length > 0){
+                        propertyNameValue += ",";
+                    }
+                    propertyNameValue += (propertyNameId + ":" + propertyValue);
+                }
+            })
+            $("input[name=propertyNameValue]").val(propertyNameValue);
             form.submit();
         }
     });

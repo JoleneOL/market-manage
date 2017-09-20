@@ -54,7 +54,6 @@ public class ManageProductControllerTest extends ManageServiceTest {
         createPage.clickBreadcrumb();
         manageProductPage = initPage(ManageProductPage.class);
         createPage = manageProductPage.clickNew();
-        manageProductPage.printHtml();
 
         // 提交一份并不算完整的数据
         manageProductPage = createPage.submitWithout(randomArray(ProductOperatePage.FieldForOnceLock, 3));

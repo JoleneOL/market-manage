@@ -241,6 +241,7 @@
                                                        min="0" required>
                                             </div>
                                         </div>
+                                        <input type="hidden" name="propertyNameValue"/>
                                         <div class="form-group J-property-more"
                                              th:each="propertyName:${currentData != null ? currentData.getNoSpecPropertyNameValues().keySet() : productType.getNoSpecPropertyNameList()}">
                                             <label class="col-sm-3 control-label"><th:block th:text="${propertyName.name}">保质期</th:block>
@@ -249,13 +250,13 @@
                                             <div class="col-sm-6">
                                                 <th:block th:if="${propertyName.type.name() == 'input'}">
                                                     <input name="propertyName" placeholder="请输入保质期" th:placeholder="'请输入' + ${propertyName.name}" class="form-control"
-                                                           th:name="'propertyName[' + ${propertyName.id} + ']'"
+                                                           th:attr="data-propertyNameId=${propertyName.id}" data-propertyNameId="1" th:name="'propertyName[' + ${propertyName.id} + ']'"
                                                            th:value="${currentData != null && currentData.propertyNameValues != null ? currentData.propertyNameValues.get(propertyName) :''}"
                                                            th:required="${propertyName.required}"/>
                                                 </th:block>
                                                     <th:block th:if="${propertyName.type.name() == 'select'}">
-                                                    <select  class="form-control" name="propertyName" th:required="${propertyName.required}"
-                                                            th:name="'propertyName[' + ${propertyName.id} + ']'">
+                                                    <select  class="form-control" name="propertyName" th:required="${propertyName.required}" th:name="'propertyName[' + ${propertyName.id} + ']'"
+                                                            th:attr="data-propertyNameId=${propertyName.id}" data-propertyNameId="2">
                                                         <option value="1年"
                                                                 th:each="propertyValue:${currentData != null ? currentData.productType.getPropertyValueByPropertyName(propertyName) : productType.getPropertyValueByPropertyName(propertyName)}"
                                                                 th:selected="${currentData != null && currentData.propertyNameValues != null  ? propertyValue.equals(currentData.propertyNameValues.get(propertyName)) : 'false'}"
@@ -314,8 +315,8 @@
                                                 <span th:if="${propertyName.required}" class="asterisk">*</span>
                                             </label>
                                             <div class="col-sm-6">
-                                                <select  class="form-control" name="propertyName" th:required="${propertyName.required}"
-                                                         th:name="'propertyName[' + ${propertyName.id} + ']'">
+                                                <select  class="form-control" name="propertyName" th:required="${propertyName.required}" th:name="'propertyName[' + ${propertyName.id} + ']'"
+                                                         th:attr="data-propertyNameId=${propertyName.id}" data-propertyNameId="3">
                                                     <option value="1年"
                                                             th:each="propertyValue:${currentData != null ? currentData.productType.getPropertyValueByPropertyName(propertyName) : productType.getPropertyValueByPropertyName(propertyName)}"
                                                             th:selected="${currentData != null && currentData.propertyNameValues != null ? propertyValue.equals(currentData.propertyNameValues.get(propertyName)) : 'false'}"

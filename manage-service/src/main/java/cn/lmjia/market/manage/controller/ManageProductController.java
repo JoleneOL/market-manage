@@ -8,8 +8,10 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import me.jiangcai.logistics.entity.PropertyName;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.repository.ProductTypeRepository;
+import me.jiangcai.logistics.repository.PropertyNameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,11 +32,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 货品管理
@@ -55,6 +58,8 @@ public class ManageProductController {
     private HaierSupplier haierSupplier;
     @Autowired
     private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private PropertyNameRepository propertyNameRepository;
 
     // 禁用和恢复
     @DeleteMapping("/products")
@@ -102,8 +107,8 @@ public class ManageProductController {
     }
 
     @GetMapping("/manageProductAdd")
-    public String indexForCreate(@RequestParam Long productTypeId,Model model) {
-        model.addAttribute("productType",productTypeRepository.findOne(productTypeId));
+    public String indexForCreate(@RequestParam Long productTypeId, Model model) {
+        model.addAttribute("productType", productTypeRepository.findOne(productTypeId));
         return "_productOperate.html";
     }
 
@@ -125,7 +130,7 @@ public class ManageProductController {
             , @RequestParam("type") String code, String SKU, BigDecimal productPrice, String unit, BigDecimal length
             , BigDecimal width, BigDecimal height, BigDecimal weight, BigDecimal serviceCharge, String productSummary
             , String productDetail, boolean installation
-            , Long productType, String[] productValues, HttpServletRequest request
+            , Long productType, String propertyNameValue
             , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) {
         MainProduct product;
         if (createNew) {
@@ -159,7 +164,17 @@ public class ManageProductController {
         product.setPlanSellOutDate(planSellOutDate);
         product.setDescription(StringUtils.isEmpty(productSummary) ? null : productSummary);
         product.setRichDescription(StringUtils.isEmpty(productDetail) ? null : productDetail);
-        // TODO: 2017/9/20 设置货品规格及规格值
+        // 设置货品规格及规格值
+        Map<PropertyName, String> propertyNameValues = null;
+        if (!StringUtils.isEmpty(propertyNameValue)) {
+            propertyNameValues = new HashMap<>();
+            for (String nameValue : propertyNameValue.split(",")) {
+                PropertyName propertyName = propertyNameRepository.findOne(Long.valueOf(nameValue.split(":")[0]));
+                String propertyValue = nameValue.split(":")[1];
+                propertyNameValues.put(propertyName, propertyValue);
+            }
+        }
+        product.setPropertyNameValues(propertyNameValues);
         mainProductRepository.save(product);
         return "redirect:/manageProduct";
     }

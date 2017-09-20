@@ -101,6 +101,11 @@ public abstract class ProductOperatePage extends AbstractContentPage {
             // TODO: 2017/8/20 这里应该如何模拟时间控件点击事件？
         }
 
+        //如果是输入框类型的属性，就写
+        webDriver.findElement(By.className("J-property-more"))
+                .findElements(By.tagName("input"))
+                .forEach(valueInput -> tryInput(valueInput,RandomStringUtils.randomAlphabetic(5)));
+
         webDriver.findElement(By.cssSelector("[type=submit]")).click();
         return initPage(ManageProductPage.class);
     }
