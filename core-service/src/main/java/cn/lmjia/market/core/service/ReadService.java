@@ -1,10 +1,7 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.define.Money;
-import cn.lmjia.market.core.entity.ContactWay;
-import cn.lmjia.market.core.entity.Customer;
-import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
@@ -187,6 +184,17 @@ public interface ReadService {
     @SuppressWarnings("unused")
     String[] titles();
 
+    /**
+     * 所有货品类型
+     * @return
+     */
     @Transactional(readOnly = true)
     List<ProductType> allProductType();
+
+    /**
+     * 所有可用标签
+     * @return
+     */
+    @Transactional(readOnly = true)
+    List<Tag> allEnabledTag();
 }

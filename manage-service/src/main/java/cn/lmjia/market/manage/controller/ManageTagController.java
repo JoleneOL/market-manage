@@ -9,6 +9,7 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.TagRows;
 import cn.lmjia.market.core.service.MainGoodService;
+import cn.lmjia.market.core.service.TagService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class ManageTagController {
     private MainGoodService mainGoodService;
     @Autowired
     private ConversionService conversionService;
+    @Autowired
+    private TagService tagService;
 
     @GetMapping("/manageTag")
     public String index() {
@@ -77,6 +80,16 @@ public class ManageTagController {
         tag.setWeight(weight);
         tagRepository.save(tag);
         return "redirect:/manageTag";
+    }
+
+    @PostMapping("/manage/addTag")
+    @ResponseBody
+    public String add(@RequestParam String name){
+        if("false".equals(checkName(name))){
+            return "false";
+        }
+        tagService.save(name);
+        return "true";
     }
 
 

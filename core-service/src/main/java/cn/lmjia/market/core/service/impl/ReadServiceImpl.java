@@ -1,10 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.define.Money;
-import cn.lmjia.market.core.entity.ContactWay;
-import cn.lmjia.market.core.entity.Customer;
-import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
@@ -13,6 +10,7 @@ import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
+import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.repository.channel.ChannelRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
@@ -61,6 +59,8 @@ public class ReadServiceImpl implements ReadService {
     private ChannelRepository channelRepository;
     @Autowired
     private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     @Override
     public String mobileFor(Object principal) {
@@ -221,6 +221,11 @@ public class ReadServiceImpl implements ReadService {
     @Override
     public List<ProductType> allProductType() {
         return productTypeRepository.findAll();
+    }
+
+    @Override
+    public List<Tag> allEnabledTag() {
+        return tagRepository.findByDisabledFalse();
     }
 
 }
