@@ -76,12 +76,17 @@
                 return '';
             }
             s.ajaxData.page = s.page;
-            if (s.debug) console.info(s.ajaxData);
             $.ajax(s.ajaxUrl, {
                 method: s.ajaxMethod,
                 data: s.ajaxData,
                 dataType: 'json',
                 success: function (res) {
+                    if (s.debug) {
+                        console.group('请求数据：');
+                        console.log(s.ajaxData);
+                        console.log(res);
+                        console.groupEnd();
+                    }
                     if (res.resultCode !== 200) {
                         $.toast('请求失败', 'cancel');
                         s.loading = false;

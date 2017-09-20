@@ -27,12 +27,12 @@
     <div class="weui-cell">
         <div class="weui-cell__hd"><label class="weui-label">查询日期</label></div>
         <div class="weui-cell__bd">
-            <input class="weui-input" type="text" id="J_date" placeholder="查询日期">
+            <input class="weui-input" type="text" id="J_date" name="date" placeholder="查询日期">
         </div>
     </div>
     <label class="weui-cell weui-check__label">
         <div class="weui-cell__hd">
-            <input type="checkbox" class="weui-check" name="checkbox1">
+            <input type="checkbox" class="weui-check" name="remark">
             <i class="weui-icon-checked"></i>
         </div>
         <div class="weui-cell__bd">
@@ -41,7 +41,7 @@
     </label>
     <label class="weui-cell weui-check__label">
         <div class="weui-cell__hd">
-            <input type="checkbox" class="weui-check" name="checkbox1">
+            <input type="checkbox" class="weui-check" name="deal">
             <i class="weui-icon-checked"></i>
         </div>
         <div class="weui-cell__bd">
@@ -50,148 +50,78 @@
     </label>
 </div>
 <div class="weui-btn-area js-extra-h">
-    <a class="weui-btn weui-btn_custom" href="javascript:">筛&nbsp;&nbsp;选</a>
+    <a class="weui-btn weui-btn_custom" href="javascript:" id="J_filter">筛&nbsp;&nbsp;选</a>
 </div>
-<div class="view-scroll-wrap" data-url="/api/orderList">
+<div class="view-scroll-wrap" data-url="/api/salesList">
     <div class="view-scroll-list">
-        <div class="weui-cell weui-cell_access view-sales-item">
-            <div class="weui-cell__bd">
-                <p>常鸿飞</p>
-                <p class="view-sales-time">2018-03-24 11:33</p>
-            </div>
-            <div class="view-sales-remark">
-                一个靠谱的碰哟发生大幅是大朋友
-            </div>
-            <div class="weui-cell__ft">
-                <a href="javascript:;" class="open-popup" data-target="#J_popup"><span>已完成</span></a>
-            </div>
-        </div>
-        <div class="weui-cell weui-cell_access view-sales-item">
-            <div class="weui-cell__bd">
-                <p>老常</p>
-                <p class="view-sales-time">2010-03-24 11:33</p>
-            </div>
-            <div class="view-sales-remark">
-                一个穷人
-            </div>
-            <div class="weui-cell__ft">
-                <a href="javascript:;" class="open-popup" data-target="#J_popup"><span class="text-error">未成交</span></a>
-            </div>
-        </div>
-        <!--<div class="weui-form-preview view-mb-20">-->
-        <!--<div class="weui-form-preview__bd">-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">状态</label>-->
-        <!--<span class="weui-form-preview__value text-error">未成交</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">时间</label>-->
-        <!--<span class="weui-form-preview__value">2010-03-24 11:33</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">用户</label>-->
-        <!--<span class="weui-form-preview__value">电动打蛋机</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">手机号</label>-->
-        <!--<span class="weui-form-preview__value"><a href="tel:18898889888">18898889888</a></span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">备注</label>-->
-        <!--<span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview">-->
-        <!--<div class="weui-form-preview__bd">-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">状态</label>-->
-        <!--<span class="weui-form-preview__value text-custom">已成交</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">时间</label>-->
-        <!--<span class="weui-form-preview__value">2018-03-24 11:33</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">用户</label>-->
-        <!--<span class="weui-form-preview__value">电动打蛋机</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">手机号</label>-->
-        <!--<span class="weui-form-preview__value"><a href="tel:18898889888">18898889888</a></span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">订单金额</label>-->
-        <!--<span class="weui-form-preview__value">￥8888</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">获取绩效</label>-->
-        <!--<span class="weui-form-preview__value">￥4444</span>-->
-        <!--</div>-->
-        <!--<div class="weui-form-preview__item">-->
-        <!--<label class="weui-form-preview__label">备注</label>-->
-        <!--<span class="weui-form-preview__value">-->
-        <!--<a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default_custom weui-btn_xs">编辑</a>-->
-        <!--</span>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
         <div class="weui-loadmore">
             <i class="weui-loading"></i>
             <span class="weui-loadmore__tips">数据加载中...</span>
         </div>
     </div>
 </div>
-<div id="J_popup" class="weui-popup__container popup-bottom">
+<div id="J_popup" class="weui-popup__container popup-bottom view-sales-popup">
     <div class="weui-popup__overlay"></div>
     <div class="weui-popup__modal">
         <div class="toolbar">
             <div class="toolbar-inner">
                 <a href="javascript:;" class="picker-button close-popup">关闭</a>
-                <h1 class="title">标题</h1>
+                <h1 class="title">用户详情</h1>
             </div>
         </div>
-        <div class="modal-content">
-            <div class="weui-grids">
-                <a href="javascript:;" class="weui-grid js_grid" data-id="dialog">
-                    <p class="weui-grid__label">
-                        发布
-                    </p>
-                </a>
-                <a href="javascript:;" class="weui-grid js_grid" data-id="progress">
-                    <p class="weui-grid__label">
-                        编辑
-                    </p>
-                </a>
-                <a href="javascript:;" class="weui-grid js_grid" data-id="msg">
-                    <p class="weui-grid__label">
-                        保存
-                    </p>
-                </a>
-                <a href="javascript:;" class="weui-grid js_grid" data-id="dialog">
-                    <p class="weui-grid__label">
-                        发布
-                    </p>
-                </a>
-                <a href="javascript:;" class="weui-grid js_grid" data-id="progress">
-                    <p class="weui-grid__label">
-                        编辑
-                    </p>
-                </a>
-                <a href="javascript:;" class="weui-grid js_grid" data-id="msg">
-                    <p class="weui-grid__label">
-                        保存
-                    </p>
-                </a>
-            </div>
+        <div class="modal-content" id="J_popupContainer">
         </div>
     </div>
 </div>
 </body>
+<template id="J_popupTpl">
+    <div class="weui-form-preview">
+        <div class="weui-form-preview__bd">
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">状态</label>
+                {{if statusCode == 1}}
+                <span class="weui-form-preview__value text-custom">已成交</span>
+                {{else}}
+                <span class="weui-form-preview__value text-error">未成交</span>
+                {{/if}}
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">时间</label>
+                <span class="weui-form-preview__value">{{time}}</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">用户</label>
+                <span class="weui-form-preview__value">{{name}}</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">手机号</label>
+                <span class="weui-form-preview__value"><a href="tel:{{tel}}">{{tel}}</a></span>
+            </div>
+            {{if statusCode == 1}}
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">订单金额</label>
+                <span class="weui-form-preview__value">￥{{sum}}</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">获取绩效</label>
+                <span class="weui-form-preview__value">￥{{comm}}</span>
+            </div>
+            {{/if}}
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">备注</label>
+                <span class="weui-form-preview__value">
+                    <span class="js-remark">{{remark}}</span>
+                    <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default_custom weui-btn_xs"
+                       id="J_editRemark" data-id="{{id}}">编辑</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
-
+<script src="//cdn.lmjia.cn/invite/template-web.js"></script>
 <script src="../mock/mock-min.js" th:remove="all"></script>
 <script src="../mock/api.js" th:remove="all"></script>
 

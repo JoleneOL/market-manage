@@ -16,7 +16,7 @@ Mock.mock(/^\/api\/subordinate\?page=\d{1,100}$/, "get", {
             rank: '区县代理',
             joinTime: '@now("yyyy-MM-dd")',
             phone: /^1([34578])\d{9}$/,
-            nextRank:3
+            nextRank: 3
         }
     ]
 });
@@ -30,14 +30,14 @@ Mock.mock(/^\/api\/directly\?page=\d{1,100}$/, "get", {
             rank: '区县代理',
             joinTime: '@now("yyyy-MM-dd")',
             phone: /^1([34578])\d{9}$/,
-            nextRank:3
+            nextRank: 3
         },
         {
             name: "@cname",
             rank: '经销商',
             joinTime: '@now("yyyy-MM-dd")',
             phone: /^1([34578])\d{9}$/,
-            nextRank:4
+            nextRank: 4
         },
         {
             name: "@cname",
@@ -109,7 +109,7 @@ Mock.mock(/^\/api\/teamList\?rank=3&page=\d$/, "get", {
             rank: '经销商',
             joinTime: '@now("yyyy-MM-dd")',
             phone: /^1([34578])\d{9}$/,
-            nextRank:4
+            nextRank: 4
         }
     ]
 });
@@ -149,10 +149,10 @@ Mock.mock(/\/api\/orderList\?page=\d/, "get", {
             status: '成功',
             statusCode: 5,
             orderUser: "@cname",
-            "goods":[
-                {name:'量子立式净水机（黑色）', amount: '@integer(1, 100)'},
-                {name:'食品优化宝（金色）', amount: '@integer(1, 100)'},
-                {name:'立式净水机（白色）', amount: '@integer(1, 100)'}
+            "goods": [
+                {name: '量子立式净水机（黑色）', amount: '@integer(1, 100)'},
+                {name: '食品优化宝（金色）', amount: '@integer(1, 100)'},
+                {name: '立式净水机（白色）', amount: '@integer(1, 100)'}
             ],
             total: '@integer(3000, 9999999)',
             "hasInvoice|1-2": Mock.Random.boolean(),
@@ -171,9 +171,9 @@ Mock.mock(/\/api\/orderList\?status=\d&page=\d/, "get", {
             status: '待收货',
             statusCode: 1,
             orderUser: "@cname",
-            goods:[
-                {name:'量子立式净水机（黑色）', amount: '@integer(1, 100)'},
-                {name:'量子立式净水机（金色）', amount: '@integer(1, 100)'}
+            goods: [
+                {name: '量子立式净水机（黑色）', amount: '@integer(1, 100)'},
+                {name: '量子立式净水机（金色）', amount: '@integer(1, 100)'}
             ],
             total: '@integer(3000, 9999999)',
             "hasInvoice|1-2": Mock.Random.boolean(),
@@ -192,8 +192,8 @@ Mock.mock(/\/api\/orderList\?search=(.*)&page=\d/, "get", {
             status: '成功',
             statusCode: 5,
             orderUser: "@cname",
-            goods:[
-                {name:'量子立式净水机（黑色）', amount: '@integer(1, 100)'}
+            goods: [
+                {name: '量子立式净水机（黑色）', amount: '@integer(1, 100)'}
             ],
             total: '@integer(3000, 9999999)',
             "hasInvoice|1-2": Mock.Random.boolean(),
@@ -377,4 +377,27 @@ var uploaderImg = Mock.Random.image('228x178', '#50B347', '#FFF', 'Mock.js');
 Mock.mock(/\/resourceUpload\/webUploader/, {
     "id": "filePath",
     "url": uploaderImg
+});
+
+Mock.mock(/\/api\/salesList\?page=\d/, {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data|5": [
+        {
+            id: '@id',
+            name: '@cname',
+            time: '@datetime("yyyy-MM-dd HH:mm")',
+            tel: /^1([34578])\d{9}$/,
+            statusCode: '@pick([0,1])',
+            sum: '@integer(3000,20000)',
+            comm: '@integer(300,5000)',
+            "remark|0-1": '@ctitle'
+        }
+    ]
+});
+
+Mock.mock(/\/remark\/(.*)/, {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data": null
 });
