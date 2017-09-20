@@ -20,7 +20,7 @@ public enum ManageLevel {
     /**
      * 管理员, 能查看所有后台数据,但是无法操作. (添加了一部分员工控制功能)
      */
-    manager("管理员", Login.ROLE_LOOK , Login.ROLE_GRANT),
+    manager("管理员", Login.ROLE_LOOK , Login.ROLE_GRANT,Login.ROLE_MANAGER),
     /**
      * 客服经理,  订单管理(发货权限),经销商管理(代理商升级处理)，产品中心，供应链管理.
      */
@@ -43,7 +43,7 @@ public enum ManageLevel {
     /**
      * 客服,订单管理(发货权限)，物流管理，查看经销商
      */
-    customerService("客服", Login.ROLE_ALL_ORDER, Login.ROLE_LOGISTICS, LogisticsConfig.ROLE_SHIP);
+    customerService("客服", Login.ROLE_ALL_ORDER, Login.ROLE_LOGISTICS, LogisticsConfig.ROLE_SHIP,Login.ROLE_SERVICE);
 
     private final String[] roles;
     private final String title;

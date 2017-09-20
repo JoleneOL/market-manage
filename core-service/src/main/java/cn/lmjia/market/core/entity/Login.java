@@ -41,16 +41,20 @@ public class Login implements UserDetails {
      * 可以管理所有关于代理的项目
      */
     public static final String ROLE_AllAgent = "ALL_AGENT";
+    /**
+     * 仅仅查看经销商
+     */
+    public static final String ROLE_SERVICE = "SERVICE";
 //    /**
 //     * 代理商升级管理权限
 //     */
 //    public static final String ROLE_PROMOTION = "PROMOTION";
     /**
-     * 公司内部管理员
+     * 公司内部管理员???
      */
     public static final String ROLE_MANAGER = "MANAGER";
     /**
-     * 可以管理员工列表；没有这个权限则只可以查看
+     * 可以管理员工列表；没有这个权限则只可以查看???
      */
     public static final String ROLE_GRANT = "GRANT";
     /**

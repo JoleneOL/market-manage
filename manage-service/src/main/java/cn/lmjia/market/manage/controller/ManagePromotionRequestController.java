@@ -66,7 +66,7 @@ public class ManagePromotionRequestController {
     @Autowired
     private LoginService loginService;
 
-    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_LOOK + "','"+Login.ROLE_SERVICE+"')")
     @GetMapping("/managePromotionRequest")
     public String index() {
         return "_agentUpdate.html";
@@ -76,7 +76,7 @@ public class ManagePromotionRequestController {
      * @param applicationDate quarter,month,all(一年)
      * @return
      */
-    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_LOOK + "','"+Login.ROLE_SERVICE+"')")
     @GetMapping("/manage/promotionRequests")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition<PromotionRequest> data(String applicationDate, String mobile) {

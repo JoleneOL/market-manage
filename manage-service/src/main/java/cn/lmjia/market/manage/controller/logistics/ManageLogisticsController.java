@@ -45,6 +45,7 @@ public class ManageLogisticsController {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"','" + Login.ROLE_LOGISTICS + "')")
     @GetMapping("/manageLogistics")
     public String index() {
         return "_logisticsManage.html";

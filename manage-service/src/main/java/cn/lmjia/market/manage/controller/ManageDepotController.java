@@ -37,6 +37,7 @@ public class ManageDepotController {
     @Autowired
     private ConversionService conversionService;
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageDepot")
     public String index() {
         return "_depotManage.html";

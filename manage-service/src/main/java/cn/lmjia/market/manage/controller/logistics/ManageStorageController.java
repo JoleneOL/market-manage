@@ -169,6 +169,7 @@ public class ManageStorageController {
         return data;
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageStorage")
     @Transactional(readOnly = true)
     public String index(Model model) {

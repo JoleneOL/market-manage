@@ -44,6 +44,7 @@ public class ManageFactoryController {
     @Autowired
     private ConversionService conversionService;
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageFactory")
     public String index() {
         return "_factoryManage.html";
