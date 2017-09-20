@@ -4,14 +4,65 @@ $(function () {
         maxDate: new Date(),
         onChange: function (p, values, displayValues) {
             console.log(values, displayValues);
+            $('#J_clear').show();
         }
     });
 
     $('#J_filter').click(function () {
-        console.log($('input[name="date"]').val());
-        console.log($('input[name="remark"]').is(':checked'));
-        console.log($('input[name="deal"]').is(':checked'));
+        var _date = $('input[name="date"]').val();
+        var _remark = $('input[name="remark"]').is(':checked');
+        var _deal = $('input[name="deal"]').is(':checked');
+
+        var url = infiniteWrap.attr('data-url');
+        $.showLoading();
+        $.ajax(url, {
+            method: "GET",
+            data: {
+                date: _date,
+                remark: _remark,
+                deal: _deal,
+                page: 0
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.resultCode !== 200) {
+                    $.toast('请求失败', 'cancel');
+                    return '';
+                }
+                setRankList(res.data);
+                $.hideLoading();
+                myScroll.reset({
+                    ajaxData: {
+                        date: _date,
+                        remark: _remark,
+                        deal: _deal
+                    },
+                    page: 1
+                });
+                $.myScrollRefresh(true);
+            },
+            error: function () {
+                $.toast('服务器异常', 'cancel');
+            }
+        });
+
     });
+
+    function setRankList(obj) {
+        var domStr = '';
+        if (obj.length > 0) {
+            obj.forEach(function (v) {
+                domStr += salesTpl(v);
+            });
+        } else {
+            domStr = '<div class="view-list-item view-no-res"><p class="text-center">暂无数据</p></div>'
+        }
+        console.log(domStr);
+        infiniteWrap
+            .find('.view-sales-item').remove()
+            .end()
+            .find('.weui-loadmore').before(domStr);
+    }
 
     var infiniteWrap = $('.view-scroll-wrap');
 
@@ -36,9 +87,14 @@ $(function () {
 
     infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
 
-    infiniteWrap.myScroll({
+    var myScroll = infiniteWrap.myScroll({
         debug: true,
         ajaxUrl: infiniteWrap.attr('data-url'),
+        ajaxData: {
+            date: $('input[name="date"]').val(),
+            remark: $('input[name="remark"]').is(':checked'),
+            deal: $('input[name="deal"]').is(':checked')
+        },
         template: salesTpl
     });
 
@@ -72,7 +128,6 @@ $(function () {
             },
             dataType: 'json',
             success: function (res) {
-                console.log(res);
                 $.hideLoading();
                 if (res.resultCode !== 200) {
                     return $.toptip(res.resultMsg);
@@ -97,4 +152,9 @@ $(function () {
         var new_json = JSON.stringify(json).replace(/"/g, "'");
         $ele.attr('data-json', new_json);
     }
+
+    $('#J_clear').click(function () {
+        $(this).closest('.weui-cell').find('input[name="date"]').val('');
+        $(this).hide();
+    })
 });

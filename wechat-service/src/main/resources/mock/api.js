@@ -379,7 +379,7 @@ Mock.mock(/\/resourceUpload\/webUploader/, {
     "url": uploaderImg
 });
 
-Mock.mock(/\/api\/salesList\?page=\d/, {
+Mock.mock(/\/api\/salesList\?date=(.*)&remark=(.*)&deal=(.*)&page=\d/, {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|5": [
@@ -395,7 +395,6 @@ Mock.mock(/\/api\/salesList\?page=\d/, {
         }
     ]
 });
-
 Mock.mock(/\/remark\/(.*)/, {
     "resultCode": 200,
     "resultMsg": "ok",
