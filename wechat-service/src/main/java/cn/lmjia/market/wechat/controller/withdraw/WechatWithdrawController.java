@@ -184,7 +184,7 @@ public class WechatWithdrawController {
         wechatNoticeHelper.registerTemplateMessage(withdrawSuccessRemindFinancial, null);
 
         userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
-                null, withdrawSuccessRemindFinancial, login.getLoginName(), "提现金额" + withdraw);
+                null, withdrawSuccessRemindFinancial, login.getUsername(), "提现金额" + withdraw);
     }
 
     private class WithdrawSuccessRemindFinancial implements MarketUserNoticeType {
@@ -193,8 +193,8 @@ public class WechatWithdrawController {
         public Collection<? extends TemplateMessageParameter> parameterStyles() {
             return Arrays.asList(
                     new SimpleTemplateMessageParameter("first", "客户申请提现。")
-                    , new SimpleTemplateMessageParameter("keyword1", "{3}")
-                    , new SimpleTemplateMessageParameter("keyword2", "{2}")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0}")
+                    , new SimpleTemplateMessageParameter("keyword2", "{1}")
                     , new SimpleTemplateMessageParameter("remark", "请尽快处理。")
             );
         }
