@@ -11,15 +11,17 @@ $(function () {
             title: '添加标签',
             formType: 0
         }, function (pass, index) {
+            console.log("name:" + pass);
             $.ajax('/manage/addTag', {
                 method: 'post',
-                contentType: 'text/plain;charset=UTF-8',
-                data: pass,
+                data: {name:pass},
                 success: function (result) {
+                    console.log("result:" + result);
                     if(result == "true"){
-                        layer.msg('添加成功');
                         $('#J_selectTag').append('<option value="' + pass + '">' + pass + '</option>')
                             .trigger("chosen:updated");
+                        console.log($("#J_selectTag").html());
+                        layer.msg('添加成功');
                     }else{
                         layer.msg("标签已存在");
                     }

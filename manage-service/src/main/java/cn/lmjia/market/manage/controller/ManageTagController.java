@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -84,7 +85,7 @@ public class ManageTagController {
 
     @PostMapping("/manage/addTag")
     @ResponseBody
-    public String add(@RequestParam String name){
+    public String add(String name){
         if("false".equals(checkName(name))){
             return "false";
         }

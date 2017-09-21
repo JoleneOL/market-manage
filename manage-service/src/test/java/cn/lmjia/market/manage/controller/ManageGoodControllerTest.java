@@ -39,7 +39,7 @@ public class ManageGoodControllerTest extends ManageServiceTest {
     }
 
     @Test
-    public void go() throws InterruptedException {
+    public void go() throws Exception {
         driver.get("http://localhost/manageGood");
         ManageGoodPage manageGoodPage = initPage(ManageGoodPage.class);
 
@@ -69,6 +69,8 @@ public class ManageGoodControllerTest extends ManageServiceTest {
 
         assertThat(createdGood.getChannel())
                 .isNull();
+        assertThat(createdGood.getTags())
+                .isEmpty();
 
         GoodEditPage editPage = manageGoodPage.clickEditForFirstRow();
         editPage.clickBreadcrumb();
@@ -80,6 +82,20 @@ public class ManageGoodControllerTest extends ManageServiceTest {
         editPage.submitWithChannel();
 //        assertThat(mainGoodRepository.getOne(createdGood.getId()).getChannel())
 //                .isNotNull();
+
+        // TODO: 2017-09-21  
+        //先加一个标签
+        /*addNewTag();
+        editPage = manageGoodPage.clickEditForFirstRow();
+        editPage.clickBreadcrumb();
+
+        manageGoodPage = initPage(ManageGoodPage.class);
+
+        editPage = manageGoodPage.clickEditForFirstRow();
+        // 添加商品标签
+        editPage.submitWithTag();
+        assertThat(mainGoodRepository.getOne(createdGood.getId()).getTags())
+                .isNotEmpty();*/
     }
 
 }

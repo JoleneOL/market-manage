@@ -93,21 +93,23 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">货品品类 <span
+                                            <label class="col-sm-3 control-label">商品标签 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
                                                 <select data-placeholder="请选择商品标签" id="J_selectTag"
-                                                        class="chosen-select form-control" multiple tabindex="4"
-                                                        name="tag[]">
-                                                    <option value="净水机">净水机</option>
-                                                    <option value="净化器">净化器</option>
-                                                    <option value="优化宝">优化宝</option>
-                                                    <option value="量子">量子</option>
+                                                        class="chosen-select form-control" multiple
+                                                        name="tag">
+                                                    <option value="净化器"
+                                                            th:each="tag:${@readService.allEnabledTag()}"
+                                                            th:selected="${currentData != null && currentData.tags.contains(tag)}"
+                                                            th:value="${tag.name}" th:text="${tag.name}">净化器</option>
+                                                    <option th:remove="all" value="量子">量子</option>
+                                                    <option  th:remove="all" value="优化宝">优化宝</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-3">
                                                 <a class="btn btn-default btn-xs btn-outline" id="J_addTag"
-                                                   href="javascript:;">添加类目</a>
+                                                   href="javascript:;">添加标签</a>
                                             </div>
                                         </div>
                                         <div class="form-group">
