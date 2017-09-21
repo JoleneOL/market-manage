@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.controller;
 
-import cn.lmjia.market.core.define.PromotionRequestRejected;
+import cn.lmjia.market.core.define.MarketNoticeType;
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
@@ -16,6 +17,9 @@ import cn.lmjia.market.dealer.service.PromotionService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.user.notice.UserNoticeService;
+import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
+import me.jiangcai.wx.model.message.TemplateMessageParameter;
+import org.slf4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -29,9 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 代理商管理员可进行
@@ -112,6 +114,8 @@ public class ManagePromotionRequestController {
                 null, promotionRequestRejected, "代理商升级申请", new Date(), "未通过.\r\n原因:" + message);
     }
 
+
+
     @PutMapping("/manage/promotionRequests/{id}/approved")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
@@ -179,5 +183,48 @@ public class ManagePromotionRequestController {
         }
     }
 
+    /**
+     * 拒绝合伙人升级申请
+     */
+    private class PromotionRequestRejected implements MarketUserNoticeType {
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "您的升级申请已被拒绝。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0}")
+                    , new SimpleTemplateMessageParameter("keyword2", "{1}")
+                    , new SimpleTemplateMessageParameter("keyword3", "{2}")
+                    , new SimpleTemplateMessageParameter("remark", "欢迎满足条件后再次申请。")
+            );
+        }
+        @Override
+        public MarketNoticeType type() { return MarketNoticeType.PromotionRequestRejected; }
+
+        @Override
+        public String title() {
+            return null;
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) { return "您的申请已经被拒绝"; }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) { return "您的申请已经被拒绝"; }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[]{
+                    String.class,//审核项目 0
+                    Date.class, //下单时间 1
+                    String.class //审核结果 2
+            };
+        }
+    }
 
 }
