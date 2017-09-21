@@ -2,6 +2,7 @@ package me.jiangcai.logistics.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -90,6 +91,11 @@ public class Product {
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal weight;
+    /**
+     * todo 这里应该将主图压缩成小图和中图
+     * 货品主图
+     */
+    private String mainImg;
     /**
      * 货品类型
      */

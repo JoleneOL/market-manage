@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
     <link rel="stylesheet" href="./manage-resource/css/custom.css">
@@ -58,10 +59,26 @@
                                         <label class="col-sm-3 control-label" for="J_Type">类型</label>
                                         <div class="col-sm-6">
                                             <select id="J_Type" class="form-control"
-                                                    name="type" required>
-                                                <option value="0">商城分类</option>
+                                                    name="type" required th:remove="all-but-first">
+                                                <option value="0"
+                                                        th:each="tagType:${@readService.allTagType()}"
+                                                        th:value="${tagType.ordinal()}"
+                                                        th:text="${tagType.toString()}">商城分类</option>
                                                 <option value="1">首页显示</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">图片</label>
+                                        <div class="col-sm-9 col-sm-offset-3">
+                                            <div class="upload-container clearfix">
+                                                <div class="js-uploadShow view-upload-show pull-left">
+                                                    <!--没有图片就没有-->
+                                                    <!--<img src="http://iph.href.lu/416x312?text=img3" alt="标签图片">-->
+                                                </div>
+                                                <div id="J_uploadTagImg" class="view-upload-btn pull-left"></div>
+                                                <input type="hidden" name="icon"/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -94,5 +111,6 @@
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.m.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
+<script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
 <script src="manage-resource/js/tagAdd.js"></script>
 </html>

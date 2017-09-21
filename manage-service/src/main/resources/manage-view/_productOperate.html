@@ -33,7 +33,7 @@
     <![endif]-->
 </head>
 
-<body class="gray-bg">
+<body class="gray-bg" data-upload-url="/resourceUpload/webUploader" th:attr="data-upload-url=@{/resourceUpload/webUploader}">
 <div class="wrapper wrapper-content gray-bg">
     <div class="ibox">
         <div class="ibox-content">
@@ -100,42 +100,15 @@
                                                 >
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">类目 </label>
-                                            <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入货品类目" class="form-control"
-                                                       name="mainCategory"
-                                                       th:value="${currentData!=null?currentData.mainCategory:''}"
-                                                >
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                        <label class="col-sm-3 control-label">货品品类 <span
-                                        class="asterisk">*</span></label>
-                                        <div class="col-sm-6">
-                                        <select data-placeholder="请选择货品品类" id="J_selectCat"
-                                        class="chosen-select form-control" multiple tabindex="4"
-                                        name="category[]">
-                                        <option value="净水机">净水机</option>
-                                        <option value="净化器">净化器</option>
-                                        <option value="优化宝">优化宝</option>
-                                        <option value="量子">量子</option>
-                                        </select>
-                                        </div>
-                                        <div class="col-sm-3">
-                                        <a class="btn btn-default btn-xs btn-outline" id="J_addCategory"
-                                        href="javascript:;">添加类目</a>
-                                        </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">型号 <span
-                                                    class="asterisk">*</span></label>
-                                            <div class="col-sm-6">
-                                                <input type="text" placeholder="请输入型号" class="form-control"
-                                                       name="type" th:value="${currentData!=null?currentData.code:''}"
-                                                       th:readonly="${currentData!=null}" required maxlength="10">
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group">-->
+                                            <!--<label class="col-sm-3 control-label">类目 </label>-->
+                                            <!--<div class="col-sm-6">-->
+                                                <!--<input type="text" placeholder="请输入货品类目" class="form-control"-->
+                                                       <!--name="mainCategory"-->
+                                                       <!--th:value="${currentData!=null?currentData.mainCategory:''}"-->
+                                                <!--&gt;-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                         <!--<div class="form-group">-->
                                         <!--<label class="col-sm-3 control-label">厂家 <span-->
                                         <!--class="asterisk">*</span></label>-->
@@ -158,6 +131,36 @@
                                                 <input type="text" placeholder="日期" class="form-control"
                                                        name="planSellOutDate" id="J_datePicker" value="2017-08-20"
                                                        th:value="${currentData!=null && currentData.planSellOutDate != null ?#temporals.format(currentData.planSellOutDate,'yyyy-MM-dd'):''}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        货品图片
+                    </div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-horizontal J-property">
+                                        <div class="form-group">
+                                            <div class="col-sm-9 col-sm-offset-3">
+                                                <div class="upload-container clearfix">
+                                                    <div class="js-uploadShow view-upload-show pull-left">
+                                                        <!--没有图片就没有-->
+                                                        <img th:if="${currentData.mainImg != null}" res:src="${currentData.mainImg}"
+                                                             src="http://iph.href.lu/416x312?text=img3" alt="货品图片">
+                                                    </div>
+                                                    <div id="J_uploadProductImg" class="view-upload-btn pull-left"></div>
+                                                    <input type="hidden" name="productImgPath"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -254,9 +257,9 @@
                                                            th:value="${currentData != null && currentData.propertyNameValues != null ? currentData.propertyNameValues.get(propertyName) :''}"
                                                            th:required="${propertyName.required}"/>
                                                 </th:block>
-                                                    <th:block th:if="${propertyName.type.name() == 'select'}">
+                                                <th:block th:if="${propertyName.type.name() == 'select'}">
                                                     <select  class="form-control" name="propertyName" th:required="${propertyName.required}" th:name="'propertyName[' + ${propertyName.id} + ']'"
-                                                            th:attr="data-propertyNameId=${propertyName.id}" data-propertyNameId="2">
+                                                             th:attr="data-propertyNameId=${propertyName.id}" data-propertyNameId="2">
                                                         <option value="1年"
                                                                 th:each="propertyValue:${currentData != null ? currentData.productType.getPropertyValueByPropertyName(propertyName) : productType.getPropertyValueByPropertyName(propertyName)}"
                                                                 th:selected="${currentData != null && currentData.propertyNameValues != null  ? propertyValue.equals(currentData.propertyNameValues.get(propertyName)) : 'false'}"

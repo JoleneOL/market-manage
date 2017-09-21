@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.repository;
 
 import cn.lmjia.market.core.entity.Tag;
+import cn.lmjia.market.core.entity.support.TagType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -11,4 +12,7 @@ import java.util.List;
  */
 public interface TagRepository extends JpaRepository<Tag, String>, JpaSpecificationExecutor<Tag> {
     List<Tag> findByDisabledFalse();
+
+    List<Tag> findByTypeAndDisabledFalse(TagType tagType);
+
 }

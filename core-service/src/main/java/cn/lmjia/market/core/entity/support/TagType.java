@@ -6,7 +6,8 @@ package cn.lmjia.market.core.entity.support;
  */
 public enum TagType {
     SEARCH("商城分类"),
-    LIST("首页列表显示");
+    LIST("首页列表显示"),
+    IMG("首页滚图");
 
 
     private final String message;

@@ -3,6 +3,7 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.entity.Depot;
@@ -192,9 +193,18 @@ public interface ReadService {
     List<ProductType> allProductType();
 
     /**
+     * 所有标签类型
+     * @return
+     */
+    TagType[] allTagType();
+
+    /**
      * 所有可用标签
      * @return
      */
     @Transactional(readOnly = true)
     List<Tag> allEnabledTag();
+
+    @Transactional(readOnly = true)
+    List<Tag> allTagByType(int tagType);
 }

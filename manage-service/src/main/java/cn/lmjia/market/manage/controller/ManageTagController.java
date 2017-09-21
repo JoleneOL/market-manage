@@ -10,6 +10,8 @@ import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.TagRows;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.TagService;
+import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.seext.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -50,6 +53,8 @@ public class ManageTagController {
     private ConversionService conversionService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private ResourceService resourceService;
 
     @GetMapping("/manageTag")
     public String index() {
@@ -74,12 +79,19 @@ public class ManageTagController {
 
     @PostMapping("/manage/tagList")
     public String add(@RequestParam String name, @RequestParam Integer type
-            , @RequestParam(required = false, defaultValue = "0") Integer weight) {
+            , @RequestParam(required = false, defaultValue = "0") Integer weight, String icon) throws IOException {
         Tag tag = new Tag();
         tag.setName(name);
         tag.setType(TagType.values()[type]);
         tag.setWeight(weight);
-        tagRepository.save(tag);
+        tag = tagRepository.saveAndFlush(tag);
+
+        //转存资源
+        if(!StringUtils.isEmpty(icon)){
+            String tagImgResource = "tag/" + tag.getName() + "/" + FileUtils.fileExtensionName(icon);
+            resourceService.moveResource(tagImgResource,icon);
+            tag.setIcon(tagImgResource);
+        }
         return "redirect:/manageTag";
     }
 

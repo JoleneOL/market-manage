@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
@@ -224,8 +225,18 @@ public class ReadServiceImpl implements ReadService {
     }
 
     @Override
+    public TagType[] allTagType() {
+        return TagType.values();
+    }
+
+    @Override
     public List<Tag> allEnabledTag() {
         return tagRepository.findByDisabledFalse();
+    }
+
+    @Override
+    public List<Tag> allTagByType(int tagType) {
+        return tagRepository.findByTypeAndDisabledFalse(TagType.values()[tagType]);
     }
 
 }

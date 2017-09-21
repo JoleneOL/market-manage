@@ -83,7 +83,7 @@ public class ManageGoodControllerTest extends ManageServiceTest {
 //        assertThat(mainGoodRepository.getOne(createdGood.getId()).getChannel())
 //                .isNotNull();
 
-        // TODO: 2017-09-21  
+        // TODO: 2017-09-21  多选框应该怎么模拟操作？需要再花时间研究一下
         //先加一个标签
         /*addNewTag();
         editPage = manageGoodPage.clickEditForFirstRow();

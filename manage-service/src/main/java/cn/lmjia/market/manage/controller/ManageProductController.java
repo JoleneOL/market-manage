@@ -8,6 +8,8 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.logistics.entity.PropertyName;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.repository.ProductTypeRepository;
@@ -32,6 +34,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -60,6 +63,8 @@ public class ManageProductController {
     private ProductTypeRepository productTypeRepository;
     @Autowired
     private PropertyNameRepository propertyNameRepository;
+    @Autowired
+    private ResourceService resourceService;
 
     // 禁用和恢复
     @DeleteMapping("/products")
@@ -130,8 +135,8 @@ public class ManageProductController {
             , @RequestParam("type") String code, String SKU, BigDecimal productPrice, String unit, BigDecimal length
             , BigDecimal width, BigDecimal height, BigDecimal weight, BigDecimal serviceCharge, String productSummary
             , String productDetail, boolean installation
-            , Long productType, String propertyNameValue
-            , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) {
+            , Long productType, String propertyNameValue, String productImgPath
+            , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) throws IOException {
         MainProduct product;
         if (createNew) {
             if (StringUtils.isEmpty(code))
@@ -175,7 +180,14 @@ public class ManageProductController {
             }
         }
         product.setPropertyNameValues(propertyNameValues);
-        mainProductRepository.save(product);
+        product = mainProductRepository.saveAndFlush(product);
+
+        //转存资源
+        if(productImgPath != null){
+            String productImgResource = "product/" + product.getCode() + "/" + FileUtils.fileExtensionName(productImgPath);
+            resourceService.moveResource(productImgResource,productImgPath);
+            product.setMainImg(productImgResource);
+        }
         return "redirect:/manageProduct";
     }
 
