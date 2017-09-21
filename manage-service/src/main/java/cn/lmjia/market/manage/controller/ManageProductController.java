@@ -157,6 +157,7 @@ public class ManageProductController {
     }
 
     @GetMapping("/products/list")
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<MainProduct> data(final String productName, final String type) {
         return new RowDefinition<MainProduct>() {
