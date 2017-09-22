@@ -54,6 +54,12 @@ public class MainGood {
     @ManyToMany(cascade = {CascadeType.REFRESH})
     private Set<Tag> tags;
 
+    /**
+     * @param path
+     * @param criteriaBuilder
+     * @return
+     * @see {@link MainGood#getTotalPrice()}
+     */
     public static Expression<BigDecimal> getTotalPrice(From<?, MainGood> path, CriteriaBuilder criteriaBuilder) {
         final Path<MainProduct> product = path.get(MainGood_.product);
         Join<MainGood, Channel> channel = path.join(MainGood_.channel, JoinType.LEFT);
@@ -101,6 +107,7 @@ public class MainGood {
 
     /**
      * @return 总价
+     * @see {@link MainGood#getTotalPrice(From, CriteriaBuilder)}
      */
     public BigDecimal getTotalPrice() {
         BigDecimal price = product.getDeposit();

@@ -131,7 +131,7 @@ $(function () {
         }
     };
 
-    var uploadProductImg = createUploader('#J_uploadProductImg', 'productImgPath');
+    var uploadProductImg = createUploader('#J_uploadProductImg', 'productImg');
     Uploader.init(uploadProductImg, '#J_uploadProductImg');
 
     function createUploader(id, fileName) {

@@ -3,11 +3,11 @@ $(function () {
         var self = $(this);
         var keyCode = e.keyCode;
         var input = $(this).val();
-        if (!input) return '';
+        // if (!input) return '';
         if (keyCode === 13) {
             e.preventDefault();
             $.showLoading();
-            $.ajax('/api/goodsList', {
+            $.ajax($('body').attr('data-goodsSearch-url'), {
                 method: 'GET',
                 data: {
                     search: input

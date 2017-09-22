@@ -183,9 +183,9 @@ public class ManageProductController {
         product = mainProductRepository.saveAndFlush(product);
 
         //转存资源
-        if(productImgPath != null){
+        if (!StringUtils.isEmpty(productImgPath) && productImgPath.length() > 1) {
             String productImgResource = "product/" + product.getCode() + "/" + FileUtils.fileExtensionName(productImgPath);
-            resourceService.moveResource(productImgResource,productImgPath);
+            resourceService.moveResource(productImgResource, productImgPath);
             product.setMainImg(productImgResource);
         }
         return "redirect:/manageProduct";

@@ -2,10 +2,7 @@ package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.service.ContactWayService;
-import cn.lmjia.market.core.service.LoginService;
-import cn.lmjia.market.core.service.NoticeService;
-import cn.lmjia.market.core.service.SystemService;
+import cn.lmjia.market.core.service.*;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
@@ -30,10 +27,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -161,8 +155,13 @@ public class WechatController {
 
     @GetMapping("/wechatIndex")
     public String index() {
-//        return "wechat@index.html";
-        return "redirect:" + SystemService.wechatMyURi;
+        return "wechat@mall/index.html";
+//        return "redirect:" + SystemService.wechatMyURi;
+    }
+
+    @GetMapping("/wechatSearch")
+    public String search(){
+        return "wechat@mall/search.html";
     }
 
     @GetMapping("/wechatLogin")

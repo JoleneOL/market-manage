@@ -3,6 +3,7 @@ package cn.lmjia.market.manage.page;
 import cn.lmjia.market.core.pages.AbstractContentPage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -102,9 +103,13 @@ public abstract class ProductOperatePage extends AbstractContentPage {
         }
 
         //如果是输入框类型的属性，就写
-        webDriver.findElement(By.className("J-property-more"))
-                .findElements(By.tagName("input"))
-                .forEach(valueInput -> tryInput(valueInput,RandomStringUtils.randomAlphabetic(5)));
+        try{
+            webDriver.findElement(By.className("J-property-more"))
+                    .findElements(By.tagName("input"))
+                    .forEach(valueInput -> tryInput(valueInput,RandomStringUtils.randomAlphabetic(5)));
+        }catch (NoSuchElementException e){
+            //说明没有输入框类型的属性
+        }
 
         webDriver.findElement(By.cssSelector("[type=submit]")).click();
         return initPage(ManageProductPage.class);

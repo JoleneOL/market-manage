@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -76,12 +77,15 @@ public class ManageOrderControllerTest extends ManageServiceTest {
         final Depot targetDepot = depotRepository.findAll().stream()
                 .filter(depot -> depot instanceof HaierDepot)
                 .max(new RandomComparator()).orElse(null);
-
+        assertThat(targetDepot).isNotNull();
         order.getAmounts().forEach((good, integer) -> stockService.addStock(
                 targetDepot
                 , good.getProduct()
                 , 100000, null
         ));
+        order.getAmounts().keySet().stream().forEach(good->{
+            assertThat(stockService.usableStockTotal(good.getProduct())).isGreaterThanOrEqualTo(100000);
+        });
 
 //        设定一样商品为我们的检测数据
         MainGood good = order.getAmounts().keySet().stream().max(new RandomComparator()).orElse(null);
