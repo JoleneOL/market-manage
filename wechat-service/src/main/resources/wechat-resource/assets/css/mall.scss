@@ -548,9 +548,10 @@ body {
       }
     }
     .delete-btn {
-      width: 0;
+      width: 60px;
       background: #f50;
       overflow: hidden;
+      height: 122px;
       button {
         width: 100%;
         display: block;
@@ -591,5 +592,27 @@ body {
       border: none;
       height: 100%;
     }
+  }
+}
+.edit-quantity {
+  @include flex;
+  height: 40px;
+  border: 1px solid #fff;
+  .btn {
+    width: 38px;
+    border: none;
+    background-color: transparent;
+    font-size: 24px;
+  }
+  .btn-value {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    width: 100%;
+    border: none;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    text-align: center;
+    background-color: transparent;
   }
 }
