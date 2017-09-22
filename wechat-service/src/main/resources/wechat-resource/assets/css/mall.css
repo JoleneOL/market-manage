@@ -498,4 +498,50 @@ body {
     text-align: center;
     background-color: transparent; }
 
+.mall-filter-toolbar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 40px;
+  background-color: #fff; }
+  .mall-filter-toolbar .filter-item {
+    text-align: center;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1; }
+    .mall-filter-toolbar .filter-item span:after {
+      display: block;
+      background: url("../img/mall/jd-sprites.png") no-repeat;
+      background-size: 200px 200px; }
+  .mall-filter-toolbar .filter-drop-down span:after {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 7px;
+    background-position: -10px -109px;
+    margin-left: 4px; }
+  .mall-filter-toolbar .filter-drop-down.active span {
+    color: #f15353; }
+    .mall-filter-toolbar .filter-drop-down.active span:after {
+      background-position: 0 -109px; }
+  .mall-filter-toolbar .filter-sort-price span:after {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 10px;
+    background-position: -170px -30px;
+    margin-left: 4px; }
+  .mall-filter-toolbar .filter-sort-price.arrow-down span {
+    color: #f15353; }
+    .mall-filter-toolbar .filter-sort-price.arrow-down span:after {
+      background-position: -170px -15px; }
+  .mall-filter-toolbar .filter-sort-price.arrow-up span {
+    color: #f15353; }
+    .mall-filter-toolbar .filter-sort-price.arrow-up span:after {
+      background-position: -170px 0; }
+
 /*# sourceMappingURL=mall.css.map */

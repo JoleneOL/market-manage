@@ -616,3 +616,75 @@ body {
     background-color: transparent;
   }
 }
+
+//标签详情页面
+.mall-filter-toolbar {
+  @include flex;
+  -webkit-justify-content: center;
+  justify-content:center;
+  -webkit-align-items: center;
+  align-items: center;
+  height: 40px;
+  background-color: #fff;
+  .filter-item {
+    text-align: center;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    span{
+      &:after {
+        display: block;
+        background: url('../img/mall/jd-sprites.png') no-repeat;
+        background-size: 200px 200px;
+      }
+    }
+  }
+  .filter-drop-down {
+    span {
+      &:after {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 7px;
+        background-position: -10px -109px;
+        margin-left: 4px;
+      }
+    }
+  }
+  .filter-drop-down.active {
+    span {
+      color: #f15353;
+      &:after {
+        background-position: 0 -109px;
+      }
+    }
+  }
+  .filter-sort-price {
+    span {
+      &:after {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 10px;
+        background-position: -170px -30px;
+        margin-left: 4px;
+      }
+    }
+  }
+  .filter-sort-price.arrow-down {
+    span {
+      color: #f15353;
+      &:after {
+        background-position: -170px -15px;
+      }
+    }
+  }
+  .filter-sort-price.arrow-up {
+    span {
+      color: #f15353;
+      &:after {
+        background-position: -170px 0;
+      }
+    }
+  }
+}
