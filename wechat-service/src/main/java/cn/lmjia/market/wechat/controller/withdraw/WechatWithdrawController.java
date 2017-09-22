@@ -195,7 +195,7 @@ public class WechatWithdrawController {
         ContactWay contactWay = contactWayService.findByMobile(login.getLoginName());
 
         userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
-                null, withdrawSuccessRemindFinancial, contactWay.getName(), "提现金额" + withdraw);
+                null, withdrawSuccessRemindFinancial, contactWay.getName(), "提现金额:￥" + withdraw + "元");
     }
 
     private class WithdrawSuccessRemindFinancial implements MarketUserNoticeType {
