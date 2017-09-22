@@ -10,5 +10,5 @@ import java.util.List;
  * @author CJ
  */
 public interface ContactWayRepository extends JpaRepository<ContactWay, Long>, JpaSpecificationExecutor<ContactWay> {
-    List<ContactWay> findbyMobile(String mobile);
+    ContactWay findByMobile(String mobile);
 }

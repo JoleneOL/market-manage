@@ -65,7 +65,7 @@ public class WechatWithdrawController {
     @Autowired
     private UserNoticeService userNoticeService;
     @Autowired
-    private ContactWayRepository contactWayRepository;
+    private ContactWayService contactWayService;
 
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
@@ -192,8 +192,7 @@ public class WechatWithdrawController {
 //        withdrawRequest.getWhose();
 //        List<Customer> byLogin = customerRepository.findByLogin(login);
 //        Customer customer = byLogin.get(0);
-        List<ContactWay> contactWays = contactWayRepository.findbyMobile(login.getLoginName());
-        ContactWay contactWay = contactWays.get(0);
+        ContactWay contactWay = contactWayService.findByMobile(login.getLoginName());
 
         userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
                 null, withdrawSuccessRemindFinancial, contactWay.getName(), "提现金额" + withdraw);

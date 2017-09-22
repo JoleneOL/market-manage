@@ -2,6 +2,7 @@ package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ContactWayService;
 import me.jiangcai.jpa.entity.support.Address;
@@ -28,6 +29,8 @@ public class ContactWayServiceImpl implements ContactWayService {
     private LoginRepository loginRepository;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private ContactWayRepository contactWayRepository;
 
     @Override
     public ContactWay updateMobile(Login login, String mobile) {
@@ -88,6 +91,11 @@ public class ContactWayServiceImpl implements ContactWayService {
             if (businessLicensePath != null)
                 contactWay.setBusinessLicensePath(businessLicensePath);
         });
+    }
+
+    @Override
+    public ContactWay findByMobile(String loginMobile) {
+        return contactWayRepository.findByMobile(loginMobile);
     }
 
 }
