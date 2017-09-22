@@ -435,9 +435,10 @@ body {
           text-align: right;
           color: #051b28; }
     .mall-cart-list .cart-group .delete-btn {
-      width: 0;
+      width: 60px;
       background: #f50;
-      overflow: hidden; }
+      overflow: hidden;
+      height: 122px; }
       .mall-cart-list .cart-group .delete-btn button {
         width: 100%;
         display: block;
@@ -474,5 +475,27 @@ body {
       background: #f50;
       border: none;
       height: 100%; }
+
+.edit-quantity {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  height: 40px;
+  border: 1px solid #fff; }
+  .edit-quantity .btn {
+    width: 38px;
+    border: none;
+    background-color: transparent;
+    font-size: 24px; }
+  .edit-quantity .btn-value {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    width: 100%;
+    border: none;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    text-align: center;
+    background-color: transparent; }
 
 /*# sourceMappingURL=mall.css.map */
