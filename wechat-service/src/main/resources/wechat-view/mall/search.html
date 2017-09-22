@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 
 </head>
-<body class="bg-gray search-body">
+<body class="bg-gray search-body" data-goodsSearch-url="/api/goodsList" th:attr="data-goodsSearch-url=@{/goods/list}">
 <div class="search-wrap">
     <div class="search-bar">
         <div class="search-bar_form">
@@ -37,11 +37,10 @@
     <div class="search-result_item">
         <img src="{{$value.goodsImage}}">
         <div class="search-result_item-bd">
-            <h4 class="goods-name">{{$value.goodsName}}</h4>
-            <p class="goods-describe">{{$value.goodsDescribe}}</p>
+            <h4 class="goods-name">{{$value.productName}}</h4>
+            <p class="goods-describe">{{$value.tags}}</p>
             <div class="goods-info">
                 <div class="goods-price">￥{{$value.price}}</div>
-                <div class="goods-bought">{{$value.salesVolume}}人付款</div>
             </div>
         </div>
     </div>

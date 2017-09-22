@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.IndexPage;
 import cn.lmjia.market.wechat.page.LoginPage;
+import cn.lmjia.market.wechat.page.MallIndexPage;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class WechatControllerTest extends WechatTestBase {
         loginPage.login(login.getLoginName(), rawPassword);
 
         // 如何去公众号？
-        initPage(IndexPage.class);
+        initPage(MallIndexPage.class);
         assertThat(loginService.asWechat(detail.getOpenId()))
                 .isNotNull();
     }
@@ -79,7 +80,7 @@ public class WechatControllerTest extends WechatTestBase {
         loginPage.loginWithAuthCode("1234");
 //        loginPage.assertHaveTooltip();
         // 如何去公众号？
-        initPage(IndexPage.class);
+        initPage(MallIndexPage.class);
         assertThat(loginService.asWechat(detail.getOpenId()))
                 .isNotNull();
     }

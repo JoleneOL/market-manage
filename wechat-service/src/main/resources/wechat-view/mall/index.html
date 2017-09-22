@@ -34,7 +34,7 @@
     <!--</div>-->
     <div class="swiper-container">
         <div class="swiper-wrapper" th:remove="all-but-first">
-            <div class="swiper-slide" th:each="imgTag:${@readService.allTagByType(3)}">
+            <div class="swiper-slide" th:each="imgTag:${@readService.allTagByType(2)}">
                 <img th:scr="${imgTag.icon}"
                      src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t7531/122/3206157162/41027/aa9c92f1/59bba3d8N58945bc1.jpg!q70.jpg">
             </div>
@@ -94,11 +94,15 @@
         <div class="tag-list-bd" th:remove="all-but-first">
             <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,listTag.getName())}">
                 <a href="#" class="tag-content">
-                    <img th:if="${goods.product.mainImg != null}" res:src="${goods.product.mainImg}"
+                    <img res:src="${goods.product.mainImg != null ? goods.product.mainImg : '../../wechat-resource/assets/img/none.png'}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5137/80/1620258323/3817/d2ca0058/5912cf51N20cf199b.jpg!q70.jpg"
                          class="tag-image">
                     <p class="tag-title" th:text="${goods.product.name}">帅风橱下净水器</p>
-                    <p class="tag-subTitle" th:text="''">【京东配送】航向者 高频酷睿i3升i5/GTX750独显游戏办公台式电脑主机/DIY组装机 套餐一/ 酷睿i3/GTX650独显</p>
+                    <div th:remove="all-but-first" class="tag-subTitle">
+                        <span th:each="tag:${goods.tags}" th:text="tag.name">净水器</span>
+                        <span>热销</span>
+                        <span>热销</span>
+                    </div>
                     <div class="tag-detail">
                         <div class="goods-price" th:text="'￥' + ${goods.totalPrice}">￥3000</div>
                         <!--<div class="goods-bought">9999人付款</div>-->

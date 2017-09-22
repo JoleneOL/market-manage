@@ -100,15 +100,24 @@
                                                 >
                                             </div>
                                         </div>
-                                        <!--<div class="form-group">-->
-                                            <!--<label class="col-sm-3 control-label">类目 </label>-->
-                                            <!--<div class="col-sm-6">-->
-                                                <!--<input type="text" placeholder="请输入货品类目" class="form-control"-->
-                                                       <!--name="mainCategory"-->
-                                                       <!--th:value="${currentData!=null?currentData.mainCategory:''}"-->
-                                                <!--&gt;-->
-                                            <!--</div>-->
-                                        <!--</div>-->
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">型号 <span
+                                                    class="asterisk">*</span></label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入型号" class="form-control"
+                                                       name="type" th:value="${currentData!=null?currentData.code:''}"
+                                                       th:readonly="${currentData!=null}" required maxlength="10">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">类目 </label>
+                                            <div class="col-sm-6">
+                                                <input type="text" placeholder="请输入货品类目" class="form-control"
+                                                       name="mainCategory"
+                                                       th:value="${currentData!=null?currentData.mainCategory:''}"
+                                                >
+                                            </div>
+                                        </div>
                                         <!--<div class="form-group">-->
                                         <!--<label class="col-sm-3 control-label">厂家 <span-->
                                         <!--class="asterisk">*</span></label>-->
@@ -155,7 +164,7 @@
                                                 <div class="upload-container clearfix">
                                                     <div class="js-uploadShow view-upload-show pull-left">
                                                         <!--没有图片就没有-->
-                                                        <img th:if="${currentData.mainImg != null}" res:src="${currentData.mainImg}"
+                                                        <img th:if="${currentData != null && currentData.mainImg != null}" res:src="${currentData.mainImg}"
                                                              src="http://iph.href.lu/416x312?text=img3" alt="货品图片">
                                                     </div>
                                                     <div id="J_uploadProductImg" class="view-upload-btn pull-left"></div>
