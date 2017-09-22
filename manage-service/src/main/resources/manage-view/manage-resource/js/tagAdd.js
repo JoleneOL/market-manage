@@ -3,22 +3,15 @@
  */
 $(function () {
     var dataUrl = $("#J_tagForm").attr('action');
-    // 标签名称唯一性校验
-    $.validator.addMethod("nameUnique", function (value, element) {
-        if(this.optional(element))
-            return false;
-        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/check", {
-            method: 'put',
-            success: function (result) {
-                return result == "true";
-            }
-        });
-    }, "标签名称已存在");
+
     $('#J_tagForm').validate({
         rules: {
             name: {
                 "required":true,
-                "nameUnique":true,
+                remote: {
+                    url: body.attr('data-id') + "/check",
+                    method: 'put'
+                }
             },
             J_Type: "required"
         },
