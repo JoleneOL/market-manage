@@ -24,7 +24,11 @@ public enum MarketNoticeType {
     /**
      * 拒绝升级申请
      */
-    PromotionRequestRejected;
+    PromotionRequestRejected,
+    /**
+     * 通知财务客户佣金提现申请
+     */
+    WithdrawSuccessRemindFinancial;
 
 
     private final String targetId;

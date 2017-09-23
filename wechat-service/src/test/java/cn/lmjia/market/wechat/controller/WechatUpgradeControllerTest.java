@@ -91,11 +91,11 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         // 这个时候业务算是完成了；我们可以看到后端请求了
         assertExistingRequest(user);
         // 我们批准它
-        approvedOnlyRequest(user, "我的省代理");
+        //approvedOnlyRequest(user, "我的省代理");
         //拒绝他
-        //goReject(user, "你是个好人");
+        goReject(user, "你是个好人");
         // 断言等级
-        assertThat(readService.agentLevelForPrincipal(user)).isEqualTo(targetLevel);
+        //assertThat(readService.agentLevelForPrincipal(user)).isEqualTo(targetLevel);
 
         // 然后继续升级
         // 断言申请

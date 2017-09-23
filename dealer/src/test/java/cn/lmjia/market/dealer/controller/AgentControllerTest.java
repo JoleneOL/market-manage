@@ -27,7 +27,7 @@ public class AgentControllerTest extends DealerServiceTest {
     public void indexForAdd() throws Exception {
         // 此处分2种情况
 
-        Manager manager = newRandomManager("", ManageLevel.agentManager);
+        Manager manager = newRandomManager("", ManageLevel.customerManager);
         runWith(manager, () -> {
             mockMvc.perform(get("/addAgent"))
                     .andExpect(status().isOk())

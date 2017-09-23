@@ -33,22 +33,12 @@ public class ManagePromotionRequestControllerTest extends ManageServiceTest {
 
     @Test
     public void go() {
-        current = newRandomManager(ManageLevel.agentManager);
+        current = newRandomManager(ManageLevel.customerManager);
 
         driver.get("http://localhost/managePromotionRequest");
 
         assertThat(driver.getTitle())
                 .isEqualTo("升级合伙人申请");
-
-    }
-    @Test
-    public void goReject() throws Exception {
-        current = newRandomManager(ManageLevel.agentManager);
-       // driver.get("http://localhost/manage/promotionRequests/1/rejected?message='你是个好人'");
-        /*mockMvc.perform(put("/manage/promotionRequests/1/rejected").param("message", "你是个好人")
-                .accept(MediaType.parseMediaType("application/html;charset=UTF-8")));*/
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/manage/promotionRequests/1/rejected").param("message","你是个好人")).andDo(print());
 
     }
 

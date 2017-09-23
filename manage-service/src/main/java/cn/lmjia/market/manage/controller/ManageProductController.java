@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
@@ -44,7 +45,7 @@ import java.util.List;
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_PRODUCT_CENTER + "')")
 public class ManageProductController {
 
     @Autowired
@@ -91,7 +92,7 @@ public class ManageProductController {
             throw new IllegalArgumentException("");
         haierSupplier.updateProduct(product);
     }
-
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageProduct")
     public String index() {
         return "_productManage.html";
@@ -156,6 +157,7 @@ public class ManageProductController {
     }
 
     @GetMapping("/products/list")
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<MainProduct> data(final String productName, final String type) {
         return new RowDefinition<MainProduct>() {

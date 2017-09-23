@@ -63,4 +63,13 @@ public interface ContactWayService {
     @Transactional
     ContactWay updateIDCardImages(Login login, String frontResourcePath, String backResourcePath
             , String businessLicenseResourcePath) throws IOException;
+
+    /**
+     * 查询联系人用户名.
+     * 根据手机号查询
+     *
+     * @param loginMobile 手机号
+     * @return 联系人
+     */
+    ContactWay findByMobile(String loginMobile);
 }
