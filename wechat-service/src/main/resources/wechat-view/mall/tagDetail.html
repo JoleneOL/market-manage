@@ -10,12 +10,13 @@
     <title>分类详情</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 </head>
 <body class="bg-gray">
-<div class="mall-toolbar clearfix">
+<div class="mall-toolbar clearfix js-extra-h">
     <h3>利美家</h3>
     <div class="mall-toolbar-items">
         <a href="../orderList.html" class="toolbar-item">我的订单</a>
@@ -26,50 +27,43 @@
         </a>
     </div>
 </div>
-<div class="mall-filter-toolbar">
+<div class="mall-filter-toolbar js-extra-h">
     <!-- active -->
     <div class="filter-item filter-drop-down"><span>全部</span></div>
     <div class="filter-item filter-drop-down"><span>全部</span></div>
-    <div class="filter-item"><span>销量优先</span></div>
+    <!--<div class="filter-item"><span>销量优先</span></div>-->
     <!-- arrow-down / arrow-up -->
-    <div class="filter-item filter-sort-price arrow-down"><span>价格</span></div>
+    <div class="filter-item filter-sort-price"><span>价格</span></div>
 </div>
-<div class="search-result" id="J_resultContainer">
+<!--<div class="drop-down">-->
+    <!--<ul class="js-tagDrop">-->
+        <!--<li>全部</li>-->
+        <!--<li>热销</li>-->
+        <!--<li>饮水机</li>-->
+        <!--<li>洗衣机</li>-->
+        <!--<li>热销</li>-->
+        <!--<li>饮水机</li>-->
+        <!--<li>洗衣机</li>-->
+        <!--<li>热销</li>-->
+        <!--<li>饮水机</li>-->
+        <!--<li>洗衣机</li>-->
+        <!--<li>热销</li>-->
+        <!--<li>饮水机</li>-->
+        <!--<li>洗衣机</li>-->
+    <!--</ul>-->
+    <!--&lt;!&ndash;<ul class="js-tagType">&ndash;&gt;-->
+        <!--&lt;!&ndash;<li>全部</li>&ndash;&gt;-->
+    <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+<!--</div>-->
+<div class="data-area">
+    <input type="hidden" name="tag" value="all">
+    <input type="hidden" name="property" value="all">
+    <!--<input type="hidden" name="sales">-->
+    <input type="hidden" name="price">
+</div>
+<div class="search-result">
     <div class="view-scroll-wrap" data-url="/api/goodsList">
         <div class="view-scroll-list">
-            <div class="search-result_item">
-                <img src="http://dummyimage.com/357x357">
-                <div class="search-result_item-bd">
-                    <h4 class="goods-name">应许二识连系引世做许气成组院回按应真图看要统美前共消质两江其可党众器想给治研一育矿习型发元正完九电党。</h4>
-                    <p class="goods-describe">响红这之周时人学装们热面间价手。</p>
-                    <div class="goods-info">
-                        <div class="goods-price">￥6625</div>
-                        <div class="goods-bought">19642人付款</div>
-                    </div>
-                </div>
-            </div>
-            <div class="search-result_item">
-                <img src="http://dummyimage.com/357x357">
-                <div class="search-result_item-bd">
-                    <h4 class="goods-name">化道上眼能进京定见委米己织这连际好影知老导必百精音加市方日参都家强观定说度层系去争全阶先工百增光活各。</h4>
-                    <p class="goods-describe">具所论过张许不物包什构率本太打。</p>
-                    <div class="goods-info">
-                        <div class="goods-price">￥3718</div>
-                        <div class="goods-bought">30685人付款</div>
-                    </div>
-                </div>
-            </div>
-            <div class="search-result_item">
-                <img src="http://dummyimage.com/357x357">
-                <div class="search-result_item-bd">
-                    <h4 class="goods-name">照做它细水结和立根置号想海八书资品你离题五龙感素利向周心高张名决按文应放备议那少四金县水代被安目发专。</h4>
-                    <p class="goods-describe">水则上共道权认其月色非基话划厂经。</p>
-                    <div class="goods-info">
-                        <div class="goods-price">￥6411</div>
-                        <div class="goods-bought">10989人付款</div>
-                    </div>
-                </div>
-            </div>
             <div class="weui-loadmore">
                 <i class="weui-loading"></i>
                 <span class="weui-loadmore__tips">数据加载中...</span>
@@ -80,10 +74,11 @@
 </body>
 
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
 
 <script src="../../mock/mock-min.js" th:remove="all"></script>
-<script src="../../mock/api.js" th:remove="all"></script>
+<script src="../../mock/mall.js" th:remove="all"></script>
 
 <script src="../../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
 <script src="../../wechat-resource/assets/js/mall/tag.js"></script>
