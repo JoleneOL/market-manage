@@ -8,10 +8,20 @@ $(function () {
         }
     });
 
+    $('input[type=checkbox][data-group]').change(function () {
+        // 如果当前被选中，那么另一个必须不被选中
+        var self = $(this);
+        if (self.is(':checked')) {
+            var group = self.data('group');
+            var theOther = $('input[type=checkbox][data-group=' + group + ']').not('[name=' + self.attr('name') + ']');
+            theOther.prop('checked', false);
+        }
+    });
+
     $('#J_filter').click(function () {
         var _date = $('input[name="date"]').val();
-        var _remark = $('input[name="remark"]').is(':checked');
-        var _deal = $('input[name="deal"]').is(':checked');
+        var _remark = toCheckBoxValue('remark');
+        var _deal = toCheckBoxValue('deal');
 
         var url = infiniteWrap.attr('data-url');
         $.showLoading();
@@ -86,14 +96,27 @@ $(function () {
 
     infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team));
 
+    /**
+     * 如果未曾抉择则返回空字符串；如果选择肯定则返回true反之false
+     * @param group data-group的名字
+     */
+    function toCheckBoxValue(group) {
+        // is(':checked')
+        if ($('input[type=checkbox][data-group=' + group + '][name*=True]').is(':checked'))
+            return 'true';
+        if ($('input[type=checkbox][data-group=' + group + '][name*=False]').is(':checked'))
+            return 'false';
+        return '';
+    }
+
     var myScroll = infiniteWrap.myScroll({
         // debug: true,
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             date: $('input[name="date"]').val(),
             //
-            remark: $('input[name="remark"]').is(':checked'),
-            deal: $('input[name="deal"]').is(':checked')
+            remark: toCheckBoxValue('remark'),
+            deal: toCheckBoxValue('deal')
         },
         template: salesTpl
     });
