@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
@@ -24,10 +25,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.LocalDateTime;
 
 /**
+ * 仓库管理, 具有Root权限和供应链权限可以操作
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"')")
 public class ManageDepotController {
 
     @Autowired
@@ -35,6 +37,7 @@ public class ManageDepotController {
     @Autowired
     private ConversionService conversionService;
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageDepot")
     public String index() {
         return "_depotManage.html";
@@ -45,6 +48,7 @@ public class ManageDepotController {
         return "_depotAdd.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/depotList")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition data() {

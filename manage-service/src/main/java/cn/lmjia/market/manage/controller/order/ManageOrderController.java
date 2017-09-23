@@ -1,11 +1,6 @@
 package cn.lmjia.market.manage.controller.order;
 
-import cn.lmjia.market.core.entity.Customer;
-import cn.lmjia.market.core.entity.Customer_;
-import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood_;
-import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.MainOrder_;
+import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -19,6 +14,7 @@ import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.haier.entity.HaierOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,22 +30,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.criteria.ListJoin;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "')")
 public class ManageOrderController {
 
     @Autowired
@@ -59,6 +50,7 @@ public class ManageOrderController {
     @Autowired
     private LogisticsService logisticsService;
 
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/manage/orderData/logistics")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<MainOrder> logisticsData(@AuthenticationPrincipal Login login, String mobile, Long depotId
@@ -67,6 +59,11 @@ public class ManageOrderController {
         return new MainOrderRows(login, time -> conversionService.convert(time, String.class)) {
 
             private ListJoin<MainOrder, StockShiftUnit> unitJoin;
+
+            @Override
+            public Expression<?> count(CriteriaQuery<Long> countQuery, CriteriaBuilder criteriaBuilder, Root<MainOrder> root) {
+                return unitJoin;
+            }
 
             @Override
             public List<FieldDefinition<MainOrder>> fields() {
@@ -116,7 +113,7 @@ public class ManageOrderController {
             @Override
             public Specification<MainOrder> specification() {
                 return (root, query, cb) -> {
-                    Predicate predicate = cb.conjunction();
+                    Predicate predicate = cb.equal(unitJoin.type(), HaierOrder.class);
                     if (!StringUtils.isEmpty(mobile))
                         predicate = cb.and(predicate, cb.like(Customer.getMobile(MainOrder.getCustomer(root))
                                 , "%" + mobile + "%"));

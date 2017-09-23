@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller.logistics;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -32,10 +33,11 @@ import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 /**
+ * 管理物流,只有root权限,供应链管理权限,物流管理权限可以操作.
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "')")
 public class ManageLogisticsController {
 
     @Autowired
@@ -43,6 +45,7 @@ public class ManageLogisticsController {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"','" + Login.ROLE_LOGISTICS + "')")
     @GetMapping("/manageLogistics")
     public String index() {
         return "_logisticsManage.html";
@@ -73,6 +76,7 @@ public class ManageLogisticsController {
         return "_logisticsDetail.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/factoryOut")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition<StockShiftUnit> factoryOut(String mobile, Long depotId, String productCode

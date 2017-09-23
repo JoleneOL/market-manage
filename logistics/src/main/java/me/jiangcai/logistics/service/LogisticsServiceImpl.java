@@ -216,6 +216,7 @@ public class LogisticsServiceImpl implements LogisticsService {
             stockShiftUnit.setDestinationData(destination2.toDeliverableData());
 
             stockShiftUnit.setAmounts(things.stream()
+                    .filter(thing -> thing.getAmount() > 0)
                     .collect(Collectors.toMap(Thing::getProduct
                             , thing -> new ProductBatch(thing.getProductStatus(), thing.getAmount()))));
         };

@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
@@ -34,6 +35,19 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         // 尝试提现 会看到可以可提现金额为0
         // 强行输入提现 比如 1元 会看到错误信息
         //
+        //设置一个财务
+        //Manager manager = new Manager();
+       // manager.setId(1234657l);
+        Manager manager = newRandomManager(ManageLevel.finance);
+        //String[] role= {"finance"};
+        //设置角色为财务
+//        Set<ManageLevel> levelSet = Stream.of(role)
+//                .map(ManageLevel::valueOf)
+//                .collect(Collectors.toSet());
+//        manager.setLevelSet(levelSet);
+        //绑定微信号
+        bindDeveloperWechat(manager);
+
         Login login = newRandomLogin();
         updateAllRunWith(login);
 
@@ -41,6 +55,8 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         myPage.assertWithdrawAble()
                 .as("这个时候没有可提现余额")
                 .isCloseTo(BigDecimal.ZERO, Offset.offset(new BigDecimal("0.000000000001")));
+
+
 
         // JS前端依然限制了
 //        WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
@@ -141,17 +157,17 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
                 .forEach(verificationCode -> verificationCodeRepository.delete(verificationCode));
     }
 
-//    /**
-//     * 可以看到这个login提交的有发票的申请
-//     *
-//     * @param login
-//     */
-//    private void managerSawInvoice(Login login) {
-//        updateAllRunWith(newRandomManager(ManageLevel.root));
-//        ManageWithdrawPage.of(this, driver)
-//                .assertInvoice(readService.nameForPrincipal(login))
-//                .isTrue();
-//    }
+    /**
+     * 可以看到这个login提交的有发票的申请
+     *
+     * @param login
+     */
+    private void managerSawInvoice(Login login) {
+        updateAllRunWith(newRandomManager(ManageLevel.root));
+        ManageWithdrawPage.of(this, driver)
+                .assertInvoice(readService.nameForPrincipal(login))
+                .isTrue();
+    }
 
     /**
      * 同意这个login最近的申请

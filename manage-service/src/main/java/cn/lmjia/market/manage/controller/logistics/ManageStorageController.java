@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.controller.logistics;
 
 import cn.lmjia.market.core.entity.Factory;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.FactoryRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -49,10 +50,11 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
+ *仓库管理, 具有root权限和供应链管理权限可以操作.具有look可以查看
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"')")
 public class ManageStorageController {
 
     @Autowired
@@ -79,6 +81,7 @@ public class ManageStorageController {
         return "redirect:/manageStorage";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/storage")
     @Transactional(readOnly = true)
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
@@ -167,6 +170,7 @@ public class ManageStorageController {
         return data;
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageStorage")
     @Transactional(readOnly = true)
     public String index(Model model) {

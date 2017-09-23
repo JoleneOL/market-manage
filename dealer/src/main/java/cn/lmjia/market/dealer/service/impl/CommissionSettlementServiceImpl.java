@@ -69,8 +69,13 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     @EventListener(OrderPaySuccess.class)
     public void orderPaySuccess(OrderPaySuccess event) {
         final PayableOrder payableOrder = event.getPayableOrder();
-        if (payableOrder instanceof MainOrder)
-            doSettlement((MainOrder) payableOrder);
+        if (payableOrder instanceof MainOrder) {
+            MainOrder order = (MainOrder) payableOrder;
+            OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));
+            if (orderCommission == null) {
+                doSettlement(order);
+            }
+        }
     }
 
     /**

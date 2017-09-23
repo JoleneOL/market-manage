@@ -20,8 +20,10 @@
 <div class="weui-msg">
     <p>我们已经发送了验证码到你的手机：</p>
     <!--/*@thymesVar id="mosaicMobile" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="withdraw" type="java.math.BigDecimal"*/-->
     <h3 class="text-big" id="J_mobile" th:text="${mosaicMobile}">189*****3070</h3>
     <form method="post" action="withdrawSuccess.html" th:action="@{/withdrawVerify}" id="J_messageForm">
+        <input type="hidden" name="withdraw" th:value="${withdraw}">
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell weui-cell_vcode">
                 <div class="weui-cell__hd">

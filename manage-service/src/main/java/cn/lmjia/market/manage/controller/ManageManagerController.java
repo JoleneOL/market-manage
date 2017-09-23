@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 管理员工的控制器，除了root之外拥有grant权限的人 也可以管理，但是无法管理
+ * 管理员工的控制器，除了root之外拥有grant权限的人 也可以管理，但是无法管理.
  *
  * @author CJ
  */

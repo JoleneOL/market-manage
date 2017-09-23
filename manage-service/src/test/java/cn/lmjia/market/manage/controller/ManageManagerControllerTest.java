@@ -103,7 +103,7 @@ public class ManageManagerControllerTest extends ManageServiceTest {
     private Collection<ManageLevel> randomLevel() {
 //        return Collections.singleton(EnumUtils.randomEnum(ManageLevel.class));
         return Arrays.asList(
-                ManageLevel.manager, ManageLevel.agentManager
+                ManageLevel.customerManager, ManageLevel.customerManager
         );
     }
 

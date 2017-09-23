@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Factory;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.FactoryRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -30,12 +31,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 工厂管理
+ * 工厂管理,具有Root权限和供应链管理可以操作
  *
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"')")
 public class ManageFactoryController {
 
     @Autowired
@@ -43,6 +44,7 @@ public class ManageFactoryController {
     @Autowired
     private ConversionService conversionService;
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageFactory")
     public String index() {
         return "_factoryManage.html";
@@ -53,6 +55,7 @@ public class ManageFactoryController {
         return "_factoryAdd.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/factoryList")
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
     public RowDefinition data() {
