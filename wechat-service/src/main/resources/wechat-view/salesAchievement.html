@@ -42,6 +42,13 @@
         <div class="weui-cell__bd">
             <p>已备注</p>
         </div>
+        <div class="weui-cell__hd">
+            <input type="checkbox" class="weui-check" name="remark">
+            <i class="weui-icon-checked"></i>
+        </div>
+        <div class="weui-cell__bd">
+            <p>未备注</p>
+        </div>
     </label>
     <label class="weui-cell weui-check__label">
         <div class="weui-cell__hd">
@@ -50,6 +57,13 @@
         </div>
         <div class="weui-cell__bd">
             <p>已成交</p>
+        </div>
+        <div class="weui-cell__hd">
+            <input type="checkbox" class="weui-check" name="deal">
+            <i class="weui-icon-checked"></i>
+        </div>
+        <div class="weui-cell__bd">
+            <p>未成交</p>
         </div>
     </label>
 </div>
@@ -128,7 +142,7 @@
 <script src="//cdn.lmjia.cn/invite/template-web.js"></script>
 
 <script src="../mock/mock-min.js" th:remove="all"></script>
-<script src="../mock/api.js" th:remove="all"></script>
+<!--<script src="../mock/api.js" th:remove="all"></script>-->
 
 <script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
 <script src="../wechat-resource/assets/js/sales.js"

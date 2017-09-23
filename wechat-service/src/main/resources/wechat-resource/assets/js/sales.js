@@ -91,6 +91,7 @@ $(function () {
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             date: $('input[name="date"]').val(),
+            //
             remark: $('input[name="remark"]').is(':checked'),
             deal: $('input[name="deal"]').is(':checked')
         },
