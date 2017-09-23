@@ -39,7 +39,7 @@ $(function () {
                     $.toast('请求失败', 'cancel');
                     return '';
                 }
-                setRankList(res.data);
+                setSalesList(res.data);
                 $.hideLoading();
                 myScroll.reset({
                     ajaxData: {
@@ -58,19 +58,23 @@ $(function () {
 
     });
 
-    function setRankList(obj) {
+    function setSalesList(obj) {
         var domStr = '';
         if (obj.length > 0) {
             obj.forEach(function (v) {
                 domStr += salesTpl(v);
             });
+            infiniteWrap
+                .find('.view-sales-item').remove()
+                .end()
+                .find('.weui-loadmore').before(domStr);
         } else {
-            domStr = '<div class="view-list-item view-no-res"><p class="text-center">暂无数据</p></div>'
+            infiniteWrap
+                .find('.view-sales-item').remove()
+                .end()
+                .find('.weui-loadmore').text('没有更多内容了');
         }
-        infiniteWrap
-            .find('.view-sales-item').remove()
-            .end()
-            .find('.weui-loadmore').before(domStr);
+
     }
 
     var infiniteWrap = $('.view-scroll-wrap');

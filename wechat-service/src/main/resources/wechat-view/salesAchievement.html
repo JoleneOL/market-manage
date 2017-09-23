@@ -34,42 +34,56 @@
                id="J_clear">清空</a>
         </div>
     </div>
-    <label class="weui-cell weui-check__label">
+    <div class="weui-cell">
         <div class="weui-cell__hd">
-            <input type="checkbox" class="weui-check" name="remarkTrue" data-group="remark">
-            <i class="weui-icon-checked"></i>
+            <label class="weui-label">备注</label>
         </div>
-        <div class="weui-cell__bd">
-            <p>已备注</p>
+        <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="remarkTrue" data-group="remark">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>已备注</p>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="remarkFalse" data-group="remark">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>未备注</p>
+                </div>
+            </label>
         </div>
-    </label>
-    <label class="weui-cell weui-check__label">
+    </div>
+    <div class="weui-cell">
         <div class="weui-cell__hd">
-            <input type="checkbox" class="weui-check" name="remarkFalse" data-group="remark">
-            <i class="weui-icon-checked"></i>
+            <label class="weui-label">成交</label>
         </div>
-        <div class="weui-cell__bd">
-            <p>未备注</p>
+        <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="dealTrue" data-group="deal">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>已成交</p>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="dealFalse" data-group="deal">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>未成交</p>
+                </div>
+            </label>
         </div>
-    </label>
-    <label class="weui-cell weui-check__label">
-        <div class="weui-cell__hd">
-            <input type="checkbox" class="weui-check" name="dealTrue" data-group="deal">
-            <i class="weui-icon-checked"></i>
-        </div>
-        <div class="weui-cell__bd">
-            <p>已成交</p>
-        </div>
-    </label>
-    <label class="weui-cell weui-check__label">
-        <div class="weui-cell__hd">
-            <input type="checkbox" class="weui-check" name="dealFalse" data-group="deal">
-            <i class="weui-icon-checked"></i>
-        </div>
-        <div class="weui-cell__bd">
-            <p>未成交</p>
-        </div>
-    </label>
+    </div>
 </div>
 <div class="weui-btn-area js-extra-h">
     <a class="weui-btn weui-btn_custom" href="javascript:" id="J_filter">筛&nbsp;&nbsp;选</a>
