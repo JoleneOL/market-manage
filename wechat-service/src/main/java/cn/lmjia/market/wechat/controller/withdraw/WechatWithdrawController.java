@@ -3,17 +3,16 @@ package cn.lmjia.market.wechat.controller.withdraw;
 
 import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
-import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
-import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.model.ApiResult;
-import cn.lmjia.market.core.repository.ContactWayRepository;
-import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.WithdrawRequestRepository;
-import cn.lmjia.market.core.service.*;
+import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
+import cn.lmjia.market.core.service.WithdrawService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.lib.sys.service.SystemStringService;
@@ -31,9 +30,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -64,8 +66,6 @@ public class WechatWithdrawController {
     private WechatNoticeHelper wechatNoticeHelper;
     @Autowired
     private UserNoticeService userNoticeService;
-    @Autowired
-    private ContactWayService contactWayService;
 
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
@@ -160,7 +160,7 @@ public class WechatWithdrawController {
         try {
             withdrawService.submitRequest(login, authCode);
             //向财务发送短信提醒
-            RemindFinancial(login, withdraw);
+            remindFinancial(login, withdraw);
         } catch (IllegalVerificationCodeException ex) {
             model.addAttribute("badCode", true);
             return toVerify(login, model, withdraw);
@@ -173,7 +173,7 @@ public class WechatWithdrawController {
      *
      * @param login 提现的用户
      */
-    private void RemindFinancial(Login login, BigDecimal withdraw) {
+    private void remindFinancial(Login login, BigDecimal withdraw) {
         //获取所有的管理者
         List<Manager> managerList = loginService.managers();
 
@@ -187,15 +187,8 @@ public class WechatWithdrawController {
         //注册模版信息
         wechatNoticeHelper.registerTemplateMessage(withdrawSuccessRemindFinancial, null);
 
-//        List<WithdrawRequest> byWhose = withdrawRequestRepository.findByWhose();
-//        WithdrawRequest withdrawRequest = byWhose.get(0);
-//        withdrawRequest.getWhose();
-//        List<Customer> byLogin = customerRepository.findByLogin(login);
-//        Customer customer = byLogin.get(0);
-        ContactWay contactWay = contactWayService.findByMobile(login.getLoginName());
-
         userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
-                null, withdrawSuccessRemindFinancial, contactWay.getName(), "提现金额:￥" + withdraw + "元");
+                null, withdrawSuccessRemindFinancial, readService.nameForPrincipal(login), "提现金额:￥" + withdraw + "元");
     }
 
     private class WithdrawSuccessRemindFinancial implements MarketUserNoticeType {

@@ -12,15 +12,11 @@ import cn.lmjia.market.wechat.page.WechatWithdrawPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawRecordPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawVerifyPage;
 import com.huotu.verification.repository.VerificationCodeRepository;
-import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class WechatWithdrawControllerTest extends WechatTestBase {
 
@@ -32,10 +28,6 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
     private VerificationCodeRepository verificationCodeRepository;
 
     @Test
-    public void go() {
-
-    }
-    /*@Test
     public void go() throws InterruptedException {
         // 测试就是校验我们的工作成功
         // 就提现这个功能而言 我们要做的测试很简单
@@ -157,47 +149,47 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         }
         // 管理员可以看到一个发票的申请
 //        managerSawInvoice(login);
-    }*/
+    }
 
-   /* private void deleteVC() {
+    private void deleteVC() {
         verificationCodeRepository.findAll().stream()
                 .filter(verificationCode -> verificationCode.getType() == withdrawService.withdrawVerificationType().id())
                 .forEach(verificationCode -> verificationCodeRepository.delete(verificationCode));
-    }*/
+    }
 
-//    /**
-//     * 可以看到这个login提交的有发票的申请
-//     *
-//     * @param login
-//     */
-//    private void managerSawInvoice(Login login) {
-//        updateAllRunWith(newRandomManager(ManageLevel.root));
-//        ManageWithdrawPage.of(this, driver)
-//                .assertInvoice(readService.nameForPrincipal(login))
-//                .isTrue();
-//    }
+    /**
+     * 可以看到这个login提交的有发票的申请
+     *
+     * @param login
+     */
+    private void managerSawInvoice(Login login) {
+        updateAllRunWith(newRandomManager(ManageLevel.root));
+        ManageWithdrawPage.of(this, driver)
+                .assertInvoice(readService.nameForPrincipal(login))
+                .isTrue();
+    }
 
     /**
      * 同意这个login最近的申请
      *
      * @param login
      */
-    /*private void managerApproval(Login login) throws InterruptedException {
+    private void managerApproval(Login login) throws InterruptedException {
         updateAllRunWith(newRandomManager(ManageLevel.root));
         ManageWithdrawPage.of(this, driver)
                 .approval(readService.nameForPrincipal(login));
-    }*/
+    }
 
     /**
      * 拒绝这个login最近的申请
      *
      * @param login
      */
-    /*private void managerReject(Login login) throws InterruptedException {
+    private void managerReject(Login login) throws InterruptedException {
         updateAllRunWith(newRandomManager(ManageLevel.root));
         ManageWithdrawPage.of(this, driver)
                 .reject(readService.nameForPrincipal(login));
-    }*/
+    }
 
 
 }
