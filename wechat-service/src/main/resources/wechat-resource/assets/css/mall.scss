@@ -626,6 +626,7 @@ body {
   align-items: center;
   height: 40px;
   background-color: #fff;
+  border-bottom: 1px solid #f2f2f2;
   .filter-item {
     text-align: center;
     -webkit-box-flex: 1;
@@ -685,6 +686,58 @@ body {
       &:after {
         background-position: -170px 0;
       }
+    }
+  }
+}
+.drop-down {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 999;
+  ul {
+    &::after {
+      @include clearfix;
+    }
+    width: 100%;
+    list-style: none;
+    max-height: 225px;
+    overflow-y: auto;
+    border-bottom: 1px solid #c1c1c1;
+    li {
+      padding-left: 12px;
+      float: left;
+      width: 50%;
+      height: 44px;
+      line-height: 44px;
+    }
+  }
+}
+
+.view-scroll-wrap {
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+  .weui-loadmore {
+    margin: 0 auto;
+    padding: 1.5em 0;
+  }
+  .view-scroll-list {
+    z-index: 1;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    width: 100%;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    .weui-cells::before {
+      border-top: none;
     }
   }
 }

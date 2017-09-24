@@ -33,7 +33,7 @@
 <template id="J_resultTpl">
     {{if data.length}}
     {{each data}}
-    <div class="search-result_item">
+    <a href="javascript:;" class="search-result_item">
         <img src="{{$value.goodsImage}}">
         <div class="search-result_item-bd">
             <h4 class="goods-name">{{$value.productName}}</h4>
@@ -42,7 +42,7 @@
                 <div class="goods-price">￥{{$value.price}}</div>
             </div>
         </div>
-    </div>
+    </a>
     {{/each}}
     {{else}}
     <div class="no-result">
