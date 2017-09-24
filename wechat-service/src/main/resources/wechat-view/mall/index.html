@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -19,8 +19,8 @@
 <div class="mall-toolbar clearfix">
     <h3>利美家</h3>
     <div class="mall-toolbar-items">
-        <a href="../orderList.html" class="toolbar-item">我的订单</a>
-        <a href="search.html" class="toolbar-item"><i class="fa fa-search"></i></a>
+        <a href="../orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item"><i class="fa fa-search"></i></a>
         <a href="#" class="toolbar-item m-cart">
             <i class="fa fa-shopping-cart"></i>
             <span class="cart-badge">0</span>
@@ -35,7 +35,7 @@
     <div class="swiper-container">
         <div class="swiper-wrapper" th:remove="all-but-first">
             <div class="swiper-slide" th:each="imgTag:${@readService.allTagByType(2)}">
-                <img th:scr="${imgTag.icon}"
+                <img res:src="${imgTag.icon}"
                      src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t7531/122/3206157162/41027/aa9c92f1/59bba3d8N58945bc1.jpg!q70.jpg">
             </div>
             <div class="swiper-slide">
@@ -62,7 +62,7 @@
         <div class="tag-list-bd" th:remove="all-but-first">
             <div class="tag-list-item" th:each="seachTag:${@readService.allTagByType(0)}">
                 <a href="#" class="tag-content">
-                    <img th:src="${seachTag.icon}"
+                    <img res:src="${seachTag.icon}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5668/159/160398199/14046/acfe1fa3/591d9424N068a7ad0.png"
                          class="tag-image">
                     <p class="tag-title" th:text="${seachTag.name}">净水器</p>
@@ -92,17 +92,18 @@
             <a href="#" class="more-list">更多 <i class="fa fa-angle-right"></i></a>
         </div>
         <div class="tag-list-bd" th:remove="all-but-first">
-            <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,listTag.getName())}">
+            <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,listTag.name)}">
                 <a href="#" class="tag-content">
                     <img res:src="${goods.product.mainImg != null ? goods.product.mainImg : '../../wechat-resource/assets/img/none.png'}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5137/80/1620258323/3817/d2ca0058/5912cf51N20cf199b.jpg!q70.jpg"
                          class="tag-image">
                     <p class="tag-title" th:text="${goods.product.name}">帅风橱下净水器</p>
-                    <div th:remove="all-but-first" class="tag-subTitle">
+                    <p class="tag-subTitle" th:text="${goods.product.description}"></p>
+                    <!--<div th:remove="all-but-first" class="tag-subTitle">
                         <span th:each="tag:${goods.tags}" th:text="tag.name">净水器</span>
                         <span>热销</span>
                         <span>热销</span>
-                    </div>
+                    </div>-->
                     <div class="tag-detail">
                         <div class="goods-price" th:text="'￥' + ${goods.totalPrice}">￥3000</div>
                         <!--<div class="goods-bought">9999人付款</div>-->

@@ -87,7 +87,8 @@ public class ManageTagControllerTest extends ManageServiceTest {
         //确保现在是有这个标签的
         assertThat(mainGoodRepository.findOne(mainGood.getId()).getTags()).contains(tag);
 
-        mockMvc.perform(delete(TAG_LIST_URL + "/" + tag.getName()))
+        mockMvc.perform(delete(TAG_LIST_URL)
+                .param("name",tag.getName()))
                 .andExpect(status().is2xxSuccessful());
 
         assertThat(tagRepository.findOne(tag.getName()))
@@ -151,12 +152,14 @@ public class ManageTagControllerTest extends ManageServiceTest {
         if (tag == null) {
             return;
         }
-        MvcResult result = mockMvc.perform(put(TAG_LIST_URL + "/" + tag.getName() + "/check"))
+        MvcResult result = mockMvc.perform(get(TAG_LIST_URL + "/check")
+                .param("name",tag.getName()))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         assertThat(result.getResponse().getContentAsString()).isEqualToIgnoringCase("false");
 
-        result = mockMvc.perform(put(TAG_LIST_URL + "/" + RandomStringUtils.randomAlphabetic(10) + "/check"))
+        result = mockMvc.perform(get(TAG_LIST_URL+ "/check")
+                .param("name", RandomStringUtils.randomAlphabetic(10)))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         assertThat(result.getResponse().getContentAsString()).isEqualToIgnoringCase("true");
@@ -172,7 +175,8 @@ public class ManageTagControllerTest extends ManageServiceTest {
         tag.setDisabled(!targetDisable);
         tagRepository.save(tag);
 
-        mockMvc.perform(put(TAG_LIST_URL + "/" + tag.getName() + path))
+        mockMvc.perform(put(TAG_LIST_URL + "/"  + path)
+                .param("name" ,tag.getName()))
                 .andExpect(status().is2xxSuccessful());
 
         assertThat(tagRepository.findOne(tag.getName()).isDisabled())

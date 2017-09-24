@@ -122,9 +122,9 @@ public class ManageGoodController {
         }
 
         Set<Tag> tags = null;
-        if(tag != null && tag.length > 0){
+        if (tag != null && tag.length > 0) {
             tags = new HashSet<>();
-            for(String tagName : tag){
+            for (String tagName : tag) {
                 tags.add(tagService.save(tagName));
             }
         }
@@ -167,22 +167,19 @@ public class ManageGoodController {
                         , FieldBuilder.asName(MainGood.class, "createTime")
                                 .addFormat((data, type) -> conversionService.convert(data, String.class))
                                 .build()
-                        , FieldBuilder.asName(MainGood.class, "tags")
-                                .addSelect(mainGoodRoot -> mainGoodRoot.join("tags", JoinType.LEFT))
-                                .addFormat((data,type) -> {
-                                    Set<Tag> tags = (Set<Tag>) data;
-                                    if(!CollectionUtils.isEmpty(tags)){
-                                        return tags.stream().map(Tag::getName).collect(Collectors.joining(" "));
-                                    }
-                                    return "";
-                                }).build()
-                        , FieldBuilder.asName(MainGood.class,"price")
+//                        , FieldBuilder.asName(MainGood.class, "tags")
+//                                .addBiSelect((mainGoodRoot, criteriaBuilder) -> mainGoodRoot.join("tags", JoinType.LEFT).get("name"))
+//                                .build()
+                        , FieldBuilder.asName(MainGood.class, "description")
+                                .addSelect(mainGoodRoot -> mainGoodRoot.get("product").get("description"))
+                                .build()
+                        , FieldBuilder.asName(MainGood.class, "price")
                                 .addBiSelect(MainGood::getTotalPrice)
                                 .build()
-                        ,FieldBuilder.asName(MainGood.class,"goodsImage")
+                        , FieldBuilder.asName(MainGood.class, "goodsImage")
                                 .addSelect(mainGoodRoot -> mainGoodRoot.join("product").get("mainImg"))
-                                .addFormat((data,type)->{
-                                    if(data == null){
+                                .addFormat((data, type) -> {
+                                    if (data == null) {
                                         return "../../wechat-resource/assets/img/none.png";
                                     }
                                     try {

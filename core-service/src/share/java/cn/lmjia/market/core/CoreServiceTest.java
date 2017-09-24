@@ -2,14 +2,13 @@ package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
-import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood;
-import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
@@ -97,6 +96,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private MainGoodService mainGoodService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private TagRepository tagRepository;
 
     /**
      * 新增并且保存一个随机的管理员
@@ -476,5 +477,22 @@ public abstract class CoreServiceTest extends SpringWebTest {
                     depot.setName(RandomStringUtils.randomAlphabetic(5) + "仓库名字");
                     return depotRepository.saveAndFlush(depot);
                 });
+    }
+
+    protected Tag newRandomTag() throws IOException {
+        return newRandomTag(TagType.SEARCH);
+    }
+
+    /**
+     * 使用MVC方式
+     * @param tagType
+     * @return
+     */
+    protected Tag newRandomTag(TagType tagType) throws IOException {
+        Tag tag = new Tag();
+        tag.setName(RandomStringUtils.randomAlphabetic(10) + "标签");
+        tag.setIcon(newRandomImagePath());
+        tag.setType(tagType);
+        return tagRepository.saveAndFlush(tag);
     }
 }

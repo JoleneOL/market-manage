@@ -7,6 +7,8 @@ import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
 import cn.lmjia.market.core.row.IndefiniteRowDefinitionHandler;
 import cn.lmjia.market.core.row.RowDefinitionHandler;
 import cn.lmjia.market.core.util.ImageResolver;
+import me.jiangcai.lib.resource.ResourceSpringConfig;
+import me.jiangcai.lib.resource.thymeleaf.ResourceDialect;
 import me.jiangcai.wx.model.Gender;
 import me.jiangcai.wx.web.WeixinWebSpringConfig;
 import me.jiangcai.wx.web.thymeleaf.WeixinDialect;
@@ -310,7 +312,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
         }
 
         @ComponentScan("cn.lmjia.market.core.row")
-        @Import(WeixinWebSpringConfig.class)
+        @Import({WeixinWebSpringConfig.class, ResourceSpringConfig.class})
         @Configuration
 //        @ComponentScan("me.jiangcai.wx.web.thymeleaf")
 //        @ComponentScan("me.jiangcai.wx.couple")
@@ -318,14 +320,16 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             private final ApplicationContext applicationContext;
             private final Environment environment;
             private final WeixinDialect weixinDialect;
+            private final ResourceDialect resourceDialect;
             private final Set<WebModule> webModules;
 
             @Autowired
             public EngineLoader(ApplicationContext applicationContext, Environment environment
-                    , WeixinDialect weixinDialect, Set<WebModule> webModules) {
+                    , WeixinDialect weixinDialect, ResourceDialect resourceDialect, Set<WebModule> webModules) {
                 this.applicationContext = applicationContext;
                 this.environment = environment;
                 this.weixinDialect = weixinDialect;
+                this.resourceDialect = resourceDialect;
                 this.webModules = webModules;
             }
 
@@ -335,6 +339,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
                 engine.addDialect(new Java8TimeDialect());
                 engine.addDialect(new SpringSecurityDialect());
                 engine.addDialect(weixinDialect);
+                engine.addDialect(resourceDialect);
                 return engine;
             }
 

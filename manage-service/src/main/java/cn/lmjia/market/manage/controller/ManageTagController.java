@@ -106,10 +106,10 @@ public class ManageTagController {
     }
 
 
-    @DeleteMapping("/manage/tagList/{name}")
+    @DeleteMapping("/manage/tagList")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void delete(@PathVariable("name") String name) {
+    public void delete(@RequestParam String name) {
         //找到所有用到这个标签的商品，删除它
         List<MainGood> goodList = mainGoodService.forSale(null,name);
         if (!CollectionUtils.isEmpty(goodList)) {
@@ -120,23 +120,23 @@ public class ManageTagController {
         tagRepository.delete(name);
     }
 
-    @PutMapping("/manage/tagList/{name}/check")
+    @GetMapping("/manage/tagList/check")
     @ResponseBody
-    public String checkName(@PathVariable("name") String name) {
+    public String checkName(@RequestParam String name) {
         return (StringUtils.isEmpty(name) || tagRepository.findOne(name) != null) ? "false" : "true";
     }
 
-    @PutMapping("/manage/tagList/{name}/disable")
+    @PutMapping("/manage/tagList/disable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void disable(@PathVariable("name") String name) {
+    public void disable(@RequestParam String name) {
         tagRepository.getOne(name).setDisabled(true);
     }
 
-    @PutMapping("/manage/tagList/{name}/enable")
+    @PutMapping("/manage/tagList/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void enable(@PathVariable("name") String name) {
+    public void enable(@RequestParam String name) {
         //删除所有用到这个标签的商品的标签
         tagRepository.getOne(name).setDisabled(false);
     }

@@ -2,8 +2,10 @@ package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.repository.MainGoodRepository;
+import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.manage.ManageServiceTest;
 import cn.lmjia.market.manage.page.GoodCreatePage;
 import cn.lmjia.market.manage.page.GoodEditPage;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Comparator;
+import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,6 +35,8 @@ public class ManageGoodControllerTest extends ManageServiceTest {
 
     @Autowired
     private MainGoodRepository mainGoodRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     @Override
     protected Login allRunWith() {
@@ -71,6 +76,12 @@ public class ManageGoodControllerTest extends ManageServiceTest {
                 .isNull();
         assertThat(createdGood.getTags())
                 .isEmpty();
+        //暂时先手动加标签
+        addNewTag();
+        addNewTag();
+        createdGood = mainGoodRepository.findOne(createdGood.getId());
+        createdGood.setTags(new HashSet<>(tagRepository.findAll()));
+        mainGoodRepository.save(createdGood);
 
         GoodEditPage editPage = manageGoodPage.clickEditForFirstRow();
         editPage.clickBreadcrumb();
@@ -84,6 +95,7 @@ public class ManageGoodControllerTest extends ManageServiceTest {
 //                .isNotNull();
 
         // TODO: 2017-09-21  多选框应该怎么模拟操作？需要再花时间研究一下
+
         //先加一个标签
         /*addNewTag();
         editPage = manageGoodPage.clickEditForFirstRow();

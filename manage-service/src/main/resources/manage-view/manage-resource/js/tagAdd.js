@@ -9,8 +9,8 @@ $(function () {
             name: {
                 "required":true,
                 remote: {
-                    url: body.attr('data-id') + "/check",
-                    method: 'put'
+                    url: dataUrl + "/check",
+                    method: 'get'
                 }
             },
             J_Type: "required"
@@ -100,7 +100,7 @@ $(function () {
         }
     };
 
-    var uploadTagImg = createUploader('#J_uploadTagImg', 'icon');
+    var uploadTagImg = createUploader('#J_uploadTagImg', 'iconImg');
     Uploader.init(uploadTagImg, '#J_uploadTagImg');
 
     function createUploader(id, fileName) {

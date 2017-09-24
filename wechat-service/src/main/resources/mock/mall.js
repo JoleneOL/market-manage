@@ -10,7 +10,7 @@ Mock.mock(/\/api\/goodsList\?search=(.*)/, "get", {
             id: '@id',
             productName: '@csentence(50)',
             goodsImage: Mock.Random.image('357x357'),
-            tags: '@csentence @csentence',
+            description: '@csentence',
             price: '@integer(3000, 10000)',
             salesVolume:'@integer(1000, 99999)'
         }
