@@ -76,6 +76,7 @@ public class WechatMainOrderControllerTest extends AbstractWechatMainOrderContro
         // 去查看下我的记录
         updateAllRunWith(salesmanLogin);
         driver.get("http://localhost/wechatSales");
+        Thread.sleep(2000L);
         System.out.println(driver.getPageSource());
     }
 

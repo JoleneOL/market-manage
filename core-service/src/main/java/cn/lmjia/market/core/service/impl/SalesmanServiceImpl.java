@@ -3,13 +3,9 @@ package cn.lmjia.market.core.service.impl;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
-import cn.lmjia.market.core.entity.deal.Commission;
-import cn.lmjia.market.core.entity.deal.Commission_;
-import cn.lmjia.market.core.entity.deal.OrderCommission_;
 import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.deal.SalesAchievement_;
 import cn.lmjia.market.core.entity.deal.Salesman;
-import cn.lmjia.market.core.entity.support.CommissionType;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.deal.SalesAchievementRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
@@ -18,18 +14,18 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SalesmanService;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -49,6 +45,8 @@ public class SalesmanServiceImpl implements SalesmanService {
     private SalesAchievementRepository salesAchievementRepository;
     @Autowired
     private ConversionService conversionService;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @Override
     public void salesmanShareTo(long salesmanId, Login login) {
@@ -116,8 +114,14 @@ public class SalesmanServiceImpl implements SalesmanService {
 
             @Override
             public List<FieldDefinition<SalesAchievement>> fields() {
+                final BigDecimal rate = systemStringService.getCustomSystemString("market.default.all.rates"
+                        , null, true, BigDecimal.class, new BigDecimal("0.18"));
                 return Arrays.asList(
                         Fields.asBasic("id")
+                        , FieldBuilder.asName(SalesAchievement.class, "remark")
+                                .addFormat((data, type)
+                                        -> StringUtils.isEmpty(data) ? "无" : data)
+                                .build()
                         , FieldBuilder.asName(SalesAchievement.class, "name")
                                 .addBiSelect((salesAchievementRoot, criteriaBuilder)
                                         -> {
@@ -137,12 +141,15 @@ public class SalesmanServiceImpl implements SalesmanService {
                         , FieldBuilder.asName(SalesAchievement.class, "statusCode")
                                 .addBiSelect((salesAchievementRoot, criteriaBuilder) -> {
                                     orderPath = salesAchievementRoot.join(SalesAchievement_.mainOrder, JoinType.LEFT);
-                                    return criteriaBuilder.or(orderPath.isNull(), MainOrder.getOrderPaySuccess(orderPath, criteriaBuilder).not());
+                                    final Predicate result = criteriaBuilder.or(orderPath.isNull(), MainOrder.getOrderPaySuccess(orderPath, criteriaBuilder).not());
+                                    return criteriaBuilder.selectCase(result)
+                                            .when(true, 0)
+                                            .otherwise(1);
                                 })
-                                .addFormat((data, type) -> {
-                                    boolean success = !(boolean) data;
-                                    return success ? 1 : 0;
-                                })
+//                                .addFormat((data, type) -> {
+//                                    boolean success = !(boolean) data;
+//                                    return success ? 1 : 0;
+//                                })
                                 .build()
                         , FieldBuilder.asName(SalesAchievement.class, "sum")
                                 .addSelect(salesAchievementRoot -> orderPath.get(MainOrder_.goodCommissioningPriceAmountIndependent))
@@ -150,17 +157,22 @@ public class SalesmanServiceImpl implements SalesmanService {
                         // 佣金  这个就很难了……
                         // 应该用子查询的方式
                         , FieldBuilder.asName(SalesAchievement.class, "comm")
-                                .addOwnSelect((root, cb, query) -> {
-                                    Subquery<BigDecimal> comm = query.subquery(BigDecimal.class);
-                                    Root<Commission> root1 = comm.from(Commission.class);
-                                    return comm
-                                            .select(cb.sum(root1.get(Commission_.amount)))
-                                            .where(cb.equal(root1.get(Commission_.type), CommissionType.sales)
-                                                    , cb.equal(root1.get(Commission_.orderCommission).get(OrderCommission_.source), orderPath)
-                                                    , cb.equal(root1.get(Commission_.who), login)
-                                            )
-                                            .groupBy(root1.get(Commission_.orderCommission))
-                                            ;
+//                                .addOwnSelect((root, cb, query) -> {
+//                                    Subquery<BigDecimal> comm = query.subquery(BigDecimal.class);
+//                                    Root<Commission> root1 = comm.from(Commission.class);
+//                                    return comm
+//                                            .select(cb.sum(root1.get(Commission_.amount)))
+//                                            .where(cb.equal(root1.get(Commission_.type), CommissionType.sales)
+//                                                    , cb.equal(root1.get(Commission_.orderCommission).get(OrderCommission_.source), orderPath)
+//                                                    , cb.equal(root1.get(Commission_.who), login)
+//                                            )
+//                                            .groupBy(root1.get(Commission_.orderCommission))
+//                                            ;
+//                                })
+                                .addSelect(salesAchievementRoot -> orderPath.get(MainOrder_.goodCommissioningPriceAmountIndependent))
+                                .addFormat((data, type) -> {
+                                    BigDecimal money = (BigDecimal) data;
+                                    return money.multiply(rate).setScale(2, BigDecimal.ROUND_HALF_UP);
                                 })
                                 .build()
                 );
