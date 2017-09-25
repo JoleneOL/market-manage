@@ -80,7 +80,7 @@ $(function () {
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             tag: $('input[name="tag"]').val(),
-            propertyValue: $('input[name="property"]').val(),
+            propertyValue: $('input[name="propertyValue"]').val(),
             price: $('input[name="price"]').val()
         },
         template: goodsTpl
@@ -122,7 +122,7 @@ $(function () {
         $(this).addClass('active').siblings().removeClass('active');
         $(this).closest('.drop-down').hide();
         $('.filter-prop').find('span').text($(this).text());
-        $('input[name="property"]').val($(this).data('id'));
+        $('input[name="propertyValue"]').val($(this).data('id'));
         filterFunc();
     });
 });

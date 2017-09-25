@@ -38,7 +38,7 @@
 </div>
 <div class="drop-down">
     <ul class="drop-down-wrap js-tagDrop">
-        <li class="active" th:class="${tag == null ? 'active' : 'active'}">全部</li>
+        <li class="active" th:class="${tag == null || tag.equalsIgnoreCase('all') ? 'active' : ''}">全部</li>
         <li th:each="searchTag:${@readService.allTagByType(0)}"
             th:attr="data-id=${searchTag.name}"
             th:text="${searchTag.name}"
@@ -56,13 +56,13 @@
     </ul>
 </div>
 <div class="data-area">
-    <input type="hidden" name="tag" value="all">
-    <input type="hidden" name="property" value="all">
+    <input type="hidden" name="tag" value="all" th:value="${tag != null ? tag : 'all'}">
+    <input type="hidden" name="propertyValue" value="all">
     <!--<input type="hidden" name="sales">-->
     <input type="hidden" name="price" value="asc">
 </div>
 <div class="search-result">
-    <div class="view-scroll-wrap" data-url="/api/goodsList" th:attr="data-url=@{/wechatSearch/goodsList(tag=${tag})}">
+    <div class="view-scroll-wrap" data-url="/api/goodsList" th:attr="data-url=@{/wechatSearch/goodsList}">
         <div class="view-scroll-list">
             <div class="weui-loadmore">
                 <i class="weui-loading"></i>

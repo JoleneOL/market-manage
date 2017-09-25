@@ -9,7 +9,7 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
-import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.util.ApiDramatizer;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.logistics.entity.Product_;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class WecharSearchController {
     }
 
     @GetMapping("/wechatSearch/goodsList")
-    @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
+    @RowCustom(dramatizer = ApiDramatizer.class, distinct = true)
     public RowDefinition<MainGood> data(final String channel
             , final String productName
             , final String tag
@@ -80,6 +80,7 @@ public class WecharSearchController {
 //                                .build()
                         , FieldBuilder.asName(MainGood.class, "description")
                                 .addSelect(mainGoodRoot -> mainGoodRoot.get("product").get("description"))
+                                .addFormat((data, type) -> data != null ? data : "")
                                 .build()
                         , FieldBuilder.asName(MainGood.class, "price")
                                 .addBiSelect(MainGood::getTotalPrice)
