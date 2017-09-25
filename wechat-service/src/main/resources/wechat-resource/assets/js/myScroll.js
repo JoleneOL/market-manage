@@ -133,6 +133,7 @@
             myScrollRefresh: function (goTop) {
                 if (goTop === true) myScroll.scrollTo(0, 0);
                 myScroll.refresh();
+                s.loading = false;
             }
         });
 
