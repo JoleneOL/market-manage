@@ -20,7 +20,7 @@ Mock.mock(/\/api\/goodsList\?search=(.*)/, "get", {
 Mock.mock(/\/api\/goodsList\?tag=(.*)&property=(.*)&price=(.*)/, {
     "resultCode": 200,
     "resultMsg": "ok",
-    "data|0-5": [
+    "data|0-2": [
         {
             id: '@id',
             productName: '@csentence(50)',

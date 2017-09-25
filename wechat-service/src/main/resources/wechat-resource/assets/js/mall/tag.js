@@ -1,18 +1,18 @@
 $(function () {
 
-    $('#J_filter').click(function () {
-        var _date = $('input[name="tag"]').val();
-        var _remark = $('input[name="property"]').val();
-        var _deal = $('input[name="price"]').val();
+    function filterFunc() {
+        var _tag = $('input[name="tag"]').val();
+        var _property = $('input[name="property"]').val();
+        var _price = $('input[name="price"]').val();
 
         var url = infiniteWrap.attr('data-url');
         $.showLoading();
         $.ajax(url, {
             method: "GET",
             data: {
-                date: _date,
-                remark: _remark,
-                deal: _deal,
+                tag: _tag,
+                property: _property,
+                price: _price,
                 page: 0
             },
             dataType: 'json',
@@ -25,9 +25,9 @@ $(function () {
                 $.hideLoading();
                 myScroll.reset({
                     ajaxData: {
-                        date: _date,
-                        remark: _remark,
-                        deal: _deal
+                        tag: _tag,
+                        property: _property,
+                        price: _price
                     },
                     page: 1
                 });
@@ -37,24 +37,23 @@ $(function () {
                 $.toast('服务器异常', 'cancel');
             }
         });
-
-    });
+    }
 
     function setGoodsList(obj) {
         var domStr = '';
         if (obj.length > 0) {
             obj.forEach(function (v) {
-                domStr += salesTpl(v);
+                domStr += goodsTpl(v);
             });
             infiniteWrap
-                .find('.view-sales-item').remove()
+                .find('.search-result_item').remove()
                 .end()
-                .find('.weui-loadmore').before(domStr);
+                .find('.weui-loadmore').html('<i class="weui-loading"></i><span class="weui-loadmore__tips">数据加载中...</span>').before(domStr);
         } else {
             infiniteWrap
-                .find('.view-sales-item').remove()
+                .find('.search-result_item').remove()
                 .end()
-                .find('.weui-loadmore').text('没有更多内容了');
+                .find('.weui-loadmore').html('没有更多内容了');
         }
     }
 
@@ -91,4 +90,43 @@ $(function () {
         template: goodsTpl
     });
 
+
+    $('.filter-tag').click(function () {
+        $('.js-tagDrop').show()
+            .siblings().hide()
+            .closest('.drop-down').show();
+    });
+
+    $('.filter-prop').click(function () {
+        $('.js-propDrop').show()
+            .siblings().hide()
+            .closest('.drop-down').show();
+    });
+
+    $('.filter-sort-price').click(function () {
+        $('.drop-down-wrap').hide().closest('.drop-down').hide();
+        $(this).toggleClass('arrow-down').toggleClass('arrow-up');
+        if ($(this).hasClass('arrow-down')) {
+            $('input[name="price"]').val('asc');
+        } else {
+            $('input[name="price"]').val('desc');
+        }
+        filterFunc();
+    });
+
+    $('.js-tagDrop').find('li').click(function () {
+        $(this).addClass('active').siblings().removeClass('active');
+        $(this).closest('.drop-down').hide();
+        $('.filter-tag').find('span').text($(this).text());
+        $('input[name="tag"]').val($(this).data('id'));
+        filterFunc();
+    });
+
+    $('.js-propDrop').find('li').click(function () {
+        $(this).addClass('active').siblings().removeClass('active');
+        $(this).closest('.drop-down').hide();
+        $('.filter-prop').find('span').text($(this).text());
+        $('input[name="property"]').val($(this).data('id'));
+        filterFunc();
+    });
 });

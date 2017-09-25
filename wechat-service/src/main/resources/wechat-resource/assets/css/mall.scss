@@ -398,6 +398,7 @@ body {
     margin-top: 17px;
   }
 }
+
 .cart-body {
   padding-top: 92px;
   padding-bottom: 58px;
@@ -563,6 +564,7 @@ body {
     }
   }
 }
+
 .cart-footer {
   position: fixed;
   left: 0;
@@ -594,6 +596,7 @@ body {
     }
   }
 }
+
 .edit-quantity {
   @include flex;
   height: 40px;
@@ -621,7 +624,7 @@ body {
 .mall-filter-toolbar {
   @include flex;
   -webkit-justify-content: center;
-  justify-content:center;
+  justify-content: center;
   -webkit-align-items: center;
   align-items: center;
   height: 40px;
@@ -632,7 +635,7 @@ body {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     flex: 1;
-    span{
+    span {
       &:after {
         display: block;
         background: url('../img/mall/jd-sprites.png') no-repeat;
@@ -641,6 +644,7 @@ body {
     }
   }
   .filter-drop-down {
+    padding: 9px 0;
     span {
       &:after {
         content: "";
@@ -689,21 +693,26 @@ body {
     }
   }
 }
+
 .drop-down {
+  display: none;
   position: absolute;
   top: 80px;
+  height: calc(100% - 80px);
   left: 0;
   width: 100%;
-  background-color: #fff;
+  background-color: rgba(0,0,0,.5);
   z-index: 999;
   ul {
+    padding-bottom: 10px;
+    background-color: #fff;
+    max-height: 225px;
+    overflow-y: auto;
     &::after {
       @include clearfix;
     }
     width: 100%;
     list-style: none;
-    max-height: 225px;
-    overflow-y: auto;
     border-bottom: 1px solid #c1c1c1;
     li {
       padding-left: 12px;
@@ -711,6 +720,13 @@ body {
       width: 50%;
       height: 44px;
       line-height: 44px;
+    }
+  }
+  .drop-down-wrap {
+    display: none;
+    li.active {
+      color: #f15353;
+      border-bottom: 1px solid #f15353;
     }
   }
 }

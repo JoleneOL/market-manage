@@ -624,6 +624,9 @@ body {
   background: url("../img/mall/jd-sprites.png") no-repeat;
   background-size: 200px 200px;
 }
+.mall-filter-toolbar .filter-drop-down {
+  padding: 9px 0;
+}
 .mall-filter-toolbar .filter-drop-down span:after {
   content: "";
   display: inline-block;
@@ -660,18 +663,22 @@ body {
 }
 
 .drop-down {
+  display: none;
   position: absolute;
   top: 80px;
+  height: calc(100% - 80px);
   left: 0;
   width: 100%;
-  background-color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
 .drop-down ul {
-  width: 100%;
-  list-style: none;
+  padding-bottom: 10px;
+  background-color: #fff;
   max-height: 225px;
   overflow-y: auto;
+  width: 100%;
+  list-style: none;
   border-bottom: 1px solid #c1c1c1;
 }
 .drop-down ul::after {
@@ -685,6 +692,13 @@ body {
   width: 50%;
   height: 44px;
   line-height: 44px;
+}
+.drop-down .drop-down-wrap {
+  display: none;
+}
+.drop-down .drop-down-wrap li.active {
+  color: #f15353;
+  border-bottom: 1px solid #f15353;
 }
 
 .view-scroll-wrap {

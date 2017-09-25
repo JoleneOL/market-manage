@@ -29,37 +29,42 @@
 </div>
 <div class="mall-filter-toolbar js-extra-h">
     <!-- active -->
-    <div class="filter-item filter-drop-down"><span>全部</span></div>
-    <div class="filter-item filter-drop-down"><span>全部</span></div>
+    <div class="filter-item filter-drop-down filter-tag"><span>全部</span></div>
+    <div class="filter-item filter-drop-down filter-prop"><span>全部</span></div>
     <!--<div class="filter-item"><span>销量优先</span></div>-->
     <!-- arrow-down / arrow-up -->
-    <div class="filter-item filter-sort-price"><span>价格</span></div>
+    <div class="filter-item filter-sort-price arrow-down"><span>价格</span></div>
 </div>
-<!--<div class="drop-down">-->
-    <!--<ul class="js-tagDrop">-->
-        <!--<li>全部</li>-->
-        <!--<li>热销</li>-->
-        <!--<li>饮水机</li>-->
-        <!--<li>洗衣机</li>-->
-        <!--<li>热销</li>-->
-        <!--<li>饮水机</li>-->
-        <!--<li>洗衣机</li>-->
-        <!--<li>热销</li>-->
-        <!--<li>饮水机</li>-->
-        <!--<li>洗衣机</li>-->
-        <!--<li>热销</li>-->
-        <!--<li>饮水机</li>-->
-        <!--<li>洗衣机</li>-->
-    <!--</ul>-->
-    <!--&lt;!&ndash;<ul class="js-tagType">&ndash;&gt;-->
-        <!--&lt;!&ndash;<li>全部</li>&ndash;&gt;-->
-    <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-<!--</div>-->
+<div class="drop-down">
+    <ul class="drop-down-wrap js-tagDrop">
+        <li class="active" data-id="all">全部</li>
+        <li data-id="1">热销</li>
+        <li data-id="2">饮水机</li>
+        <li data-id="3">洗衣机</li>
+        <li data-id="4">热销</li>
+        <li data-id="5">饮水机</li>
+        <li data-id="6">洗衣机</li>
+        <li data-id="7">热销</li>
+        <li data-id="8">饮水机</li>
+        <li data-id="9">洗衣机</li>
+        <li data-id="10">热销</li>
+        <li data-id="11">饮水机</li>
+        <li data-id="12">洗衣机</li>
+    </ul>
+    <ul class="drop-down-wrap js-propDrop">
+        <li class="active" data-id="all">全部</li>
+        <li data-id="1">黑色</li>
+        <li data-id="2">白色</li>
+        <li data-id="3">立式</li>
+        <li data-id="4">橱下式</li>
+        <li data-id="5">量子</li>
+    </ul>
+</div>
 <div class="data-area">
     <input type="hidden" name="tag" value="all">
     <input type="hidden" name="property" value="all">
     <!--<input type="hidden" name="sales">-->
-    <input type="hidden" name="price">
+    <input type="hidden" name="price" value="asc">
 </div>
 <div class="search-result">
     <div class="view-scroll-wrap" data-url="/api/goodsList">
