@@ -3,48 +3,49 @@
  */
 $(function () {
     var dataUrl = $("#J_tagForm").attr('action');
-
-    $('#J_tagForm').validate({
-        rules: {
-            name: {
-                "required":true,
-                remote: {
-                    url: dataUrl + "/check",
-                    method: 'get'
+    if($('title').html().indexOf('新增') > -1){
+        $('#J_tagForm').validate({
+            rules: {
+                name: {
+                    "required":true,
+                    remote: {
+                        url: dataUrl + "/check",
+                        method: 'get'
+                    }
+                },
+                J_Type: "required"
+            },
+            messages: {
+                name: {
+                    "required":"请填写标签名称",
+                    "nameUnique":"标签名称已存在"
+                },
+                J_Type: "请选择标签类型"
+            },
+            errorElement: "span",
+            errorPlacement: function (error, element) {
+                error.addClass("help-block");
+                if (element.prop("type") === "checkbox") {
+                    element.siblings('label').addClass('error');
+                } else {
+                    error.insertAfter(element);
                 }
             },
-            J_Type: "required"
-        },
-        messages: {
-            name: {
-                "required":"请填写标签名称",
-                "nameUnique":"标签名称已存在"
+            highlight: function (element, errorClass, validClass) {
+                $(element).parent().addClass("has-error").removeClass("has-success");
             },
-            J_Type: "请选择标签类型"
-        },
-        errorElement: "span",
-        errorPlacement: function (error, element) {
-            error.addClass("help-block");
-            if (element.prop("type") === "checkbox") {
-                element.siblings('label').addClass('error');
-            } else {
-                error.insertAfter(element);
+            unhighlight: function (element, errorClass, validClass) {
+                if ($(element).prop("type") === "checkbox") {
+                    $(element).siblings('label').removeClass('error');
+                } else {
+                    $(element).parent().addClass("has-success").removeClass("has-error");
+                }
+            },
+            submitHandler: function (form) {
+                form.submit();
             }
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).parent().addClass("has-error").removeClass("has-success");
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            if ($(element).prop("type") === "checkbox") {
-                $(element).siblings('label').removeClass('error');
-            } else {
-                $(element).parent().addClass("has-success").removeClass("has-error");
-            }
-        },
-        submitHandler: function (form) {
-            form.submit();
-        }
-    });
+        });
+    }
 
     var Uploader = {
         fileQueued: function (uploader, target) {

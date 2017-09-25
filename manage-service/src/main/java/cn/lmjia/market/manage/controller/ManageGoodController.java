@@ -12,7 +12,6 @@ import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.TagService;
-import me.jiangcai.lib.resource.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,7 +20,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,14 +32,11 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 商品管理
@@ -62,8 +57,6 @@ public class ManageGoodController {
     private ChannelService channelService;
     @Autowired
     private TagService tagService;
-    @Autowired
-    private ResourceService resourceService;
 
     // 禁用和恢复
     @PutMapping("/goods/{id}/off")
@@ -167,27 +160,6 @@ public class ManageGoodController {
                         , FieldBuilder.asName(MainGood.class, "createTime")
                                 .addFormat((data, type) -> conversionService.convert(data, String.class))
                                 .build()
-//                        , FieldBuilder.asName(MainGood.class, "tags")
-//                                .addBiSelect((mainGoodRoot, criteriaBuilder) -> mainGoodRoot.join("tags", JoinType.LEFT).get("name"))
-//                                .build()
-                        , FieldBuilder.asName(MainGood.class, "description")
-                                .addSelect(mainGoodRoot -> mainGoodRoot.get("product").get("description"))
-                                .build()
-                        , FieldBuilder.asName(MainGood.class, "price")
-                                .addBiSelect(MainGood::getTotalPrice)
-                                .build()
-                        , FieldBuilder.asName(MainGood.class, "goodsImage")
-                                .addSelect(mainGoodRoot -> mainGoodRoot.join("product").get("mainImg"))
-                                .addFormat((data, type) -> {
-                                    if (data == null) {
-                                        return "../../wechat-resource/assets/img/none.png";
-                                    }
-                                    try {
-                                        return resourceService.getResource((String) data).httpUrl().toString();
-                                    } catch (IOException e) {
-                                        return "../../wechat-resource/assets/img/none.png";
-                                    }
-                                }).build()
                 );
             }
 

@@ -10,6 +10,7 @@ import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.IndexPage;
 import cn.lmjia.market.wechat.page.LoginPage;
 import cn.lmjia.market.wechat.page.MallIndexPage;
+import cn.lmjia.market.wechat.page.MallSearchPage;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,7 @@ public class WechatControllerTest extends WechatTestBase {
     }
 
     @Test
-    public void testMallIndex() throws IOException {
+    public void testMallIndex() throws IOException, InterruptedException {
         LoginPage loginPage = getLoginPageForBrowseIndex();
 
         // 弄一个登录过来
@@ -126,9 +127,23 @@ public class WechatControllerTest extends WechatTestBase {
         // 尝试使用正确的密码登录吧
         loginPage.login(login.getLoginName(), rawPassword);
 
-        // 如何去公众号？
-        initPage(MallIndexPage.class);
-        loginPage.printThisPage();
+
+        MallIndexPage indexPage = initPage(MallIndexPage.class);
+        indexPage.printThisPage();
+
+        //校验滚图标签
+        indexPage.validatePageWithImgTag(tagRepository.findByTypeAndDisabledFalse(TagType.IMG));
+        //校验分类
+        indexPage.validatePageWithSearch(tagRepository.findByTypeAndDisabledFalse(TagType.SEARCH));
+        //校验列表
+        indexPage.validatePageWithList(tagRepository.findByTypeAndDisabledFalse(TagType.LIST),good);
+
+        //到搜索页面去
+        indexPage.clickSearch();
+        //搜索一下这个商品
+        MallSearchPage mallSearchPage = initPage(MallSearchPage.class);
+        mallSearchPage.searchGoods(good);
+
     }
 
 }

@@ -34,7 +34,7 @@
     <!--</div>-->
     <div class="swiper-container">
         <div class="swiper-wrapper" th:remove="all-but-first">
-            <div class="swiper-slide" th:each="imgTag:${@readService.allTagByType(2)}">
+            <div class="swiper-slide" th:each="imgTag:${@readService.allTagByType(2)}" th:attr="tagName=${imgTag.name}">
                 <img res:src="${imgTag.icon}"
                      src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t7531/122/3206157162/41027/aa9c92f1/59bba3d8N58945bc1.jpg!q70.jpg">
             </div>
@@ -60,12 +60,12 @@
 <div class="mall-tagBanner">
     <div class="tag-list tag-list-middle">
         <div class="tag-list-bd" th:remove="all-but-first">
-            <div class="tag-list-item" th:each="seachTag:${@readService.allTagByType(0)}">
+            <div class="tag-list-item" th:each="searchTag:${@readService.allTagByType(0)}">
                 <a href="#" class="tag-content">
-                    <img res:src="${seachTag.icon}"
+                    <img th:attr="icon=${searchTag.icon}" res:src="${searchTag.icon}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5668/159/160398199/14046/acfe1fa3/591d9424N068a7ad0.png"
                          class="tag-image">
-                    <p class="tag-title" th:text="${seachTag.name}">净水器</p>
+                    <p class="tag-title" th:text="${searchTag.name}">净水器</p>
                 </a>
             </div>
             <div class="tag-list-item">
@@ -92,9 +92,9 @@
             <a href="#" class="more-list">更多 <i class="fa fa-angle-right"></i></a>
         </div>
         <div class="tag-list-bd" th:remove="all-but-first">
-            <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,listTag.name)}">
+            <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,listTag.name)}" th:attr="goodsId=${goods.id}">
                 <a href="#" class="tag-content">
-                    <img res:src="${goods.product.mainImg != null ? goods.product.mainImg : '../../wechat-resource/assets/img/none.png'}"
+                    <img th:if="${goods.product.mainImg != null}" res:src="${goods.product.mainImg}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5137/80/1620258323/3817/d2ca0058/5912cf51N20cf199b.jpg!q70.jpg"
                          class="tag-image">
                     <p class="tag-title" th:text="${goods.product.name}">帅风橱下净水器</p>

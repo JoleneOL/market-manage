@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 
 </head>
-<body class="bg-gray search-body" data-goodsSearch-url="/api/goodsList" th:attr="data-goodsSearch-url=@{/goods/list}">
+<body class="bg-gray search-body" data-goodsSearch-url="/api/goodsList" th:attr="data-goodsSearch-url=@{/wechatSearch/goodsList}">
 <div class="search-wrap">
     <div class="search-bar">
         <div class="search-bar_form">
@@ -33,7 +33,7 @@
 <template id="J_resultTpl">
     {{if data.length}}
     {{each data}}
-    <a href="javascript:;" class="search-result_item">
+    <a href="javascript:;" class="search-result_item" goods-id="{{$value.id}}">
         <img src="{{$value.goodsImage}}">
         <div class="search-result_item-bd">
             <h4 class="goods-name">{{$value.productName}}</h4>

@@ -45,8 +45,9 @@ $(function () {
                         a = '<a href="javascript:;" class="js-disableTag" data-id="' + item.name + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
                     else
                         a = '<a href="javascript:;" class="js-enableTag" data-id="' + item.name + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
-                    var b = '<a href="javascript:;" class="js-deleteTag" data-id="' + item.name + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
-                    return a + b;
+                    var b = '<a href="javascript:;" class="js-editTag" data-id="' + item.name + '"><i class="fa fa-trash-o"></i>&nbsp;编辑</a>';
+                    var c = '<a href="javascript:;" class="js-deleteTag" data-id="' + item.name + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
+                    return a + b + c;
                 }
             }
         ],
@@ -86,6 +87,8 @@ $(function () {
                 table.ajax.reload();
             }
         });
+    }).on('click', '.js-editTag', function () {
+        window.location.href = _body.attr('data-edit-url') + "?name=" + $(this).attr('data-id');
     }).on('click', '.js-deleteTag', function () {
         $.ajax(dataUrl + "?name=" + $(this).attr('data-id'), {
             method: 'delete',

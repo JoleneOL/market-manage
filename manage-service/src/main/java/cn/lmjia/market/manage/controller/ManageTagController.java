@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,7 +64,19 @@ public class ManageTagController {
 
     @GetMapping("/manageTagAdd")
     public String toAdd() {
-        return "_tagAdd.html";
+        return "_tagOperator.html";
+    }
+
+    @GetMapping("/manage/tagDetail")
+    public String detail(@RequestParam String name, Model model) {
+        model.addAttribute("currentData", tagRepository.findOne(name));
+        return "_tagDetail.html";
+    }
+
+    @GetMapping("/manage/tagEdit")
+    public String edit(@RequestParam String name, Model model) {
+        model.addAttribute("currentData", tagRepository.findOne(name));
+        return "_tagOperator.html";
     }
 
     @GetMapping("/manage/tagList")
@@ -78,18 +91,23 @@ public class ManageTagController {
     }
 
     @PostMapping("/manage/tagList")
+    @Transactional
     public String add(@RequestParam String name, @RequestParam Integer type
             , @RequestParam(required = false, defaultValue = "0") Integer weight, String icon) throws IOException {
-        Tag tag = new Tag();
-        tag.setName(name);
-        tag.setType(TagType.values()[type]);
+
+        Tag tag = tagRepository.findOne(name);
+        if (tag == null) {
+            tag = new Tag();
+            tag.setName(name);
+            tag.setType(TagType.values()[type]);
+        }
         tag.setWeight(weight);
         tag = tagRepository.saveAndFlush(tag);
 
         //转存资源
-        if(!StringUtils.isEmpty(icon)){
-            String tagImgResource = "tag/" + tag.getName() + "/" + FileUtils.fileExtensionName(icon);
-            resourceService.moveResource(tagImgResource,icon);
+        if (!StringUtils.isEmpty(icon) && !icon.equalsIgnoreCase(tag.getIcon())) {
+            String tagImgResource = "tag/" + tag.getName() + "." + FileUtils.fileExtensionName(icon);
+            resourceService.moveResource(tagImgResource, icon);
             tag.setIcon(tagImgResource);
         }
         return "redirect:/manageTag";
@@ -97,8 +115,8 @@ public class ManageTagController {
 
     @PostMapping("/manage/addTag")
     @ResponseBody
-    public String add(String name){
-        if("false".equals(checkName(name))){
+    public String add(String name) {
+        if ("false".equals(checkName(name))) {
             return "false";
         }
         tagService.save(name);
@@ -111,7 +129,7 @@ public class ManageTagController {
     @Transactional
     public void delete(@RequestParam String name) {
         //找到所有用到这个标签的商品，删除它
-        List<MainGood> goodList = mainGoodService.forSale(null,name);
+        List<MainGood> goodList = mainGoodService.forSale(null, name);
         if (!CollectionUtils.isEmpty(goodList)) {
             goodList.forEach(good ->
                     good.getTags().removeIf(tag
