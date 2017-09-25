@@ -8,6 +8,8 @@ import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import me.jiangcai.logistics.entity.Product_;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -28,6 +30,7 @@ import java.util.List;
  */
 @Service("mainGoodService")
 public class MainGoodServiceImpl implements MainGoodService {
+    private static final Log log = LogFactory.getLog(MainGoodServiceImpl.class);
     @Autowired
     private MainGoodRepository mainGoodRepository;
     @SuppressWarnings("SpringJavaAutowiringInspection")

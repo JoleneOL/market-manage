@@ -41,12 +41,13 @@ $(function () {
                 className: 'table-action',
                 data: function (item) {
                     var a;
-                    if (!item.disabled)
+                    if (item.disabled.indexOf('启用') > -1)
                         a = '<a href="javascript:;" class="js-disableTag" data-id="' + item.name + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';
                     else
                         a = '<a href="javascript:;" class="js-enableTag" data-id="' + item.name + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;启用</a>';
-                    var b = '<a href="javascript:;" class="js-deleteTag" data-id="' + item.name + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
-                    return a + b;
+                    var b = '<a href="javascript:;" class="js-editTag" data-id="' + item.name + '"><i class="fa fa-trash-o"></i>&nbsp;编辑</a>';
+                    var c = '<a href="javascript:;" class="js-deleteTag" data-id="' + item.name + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
+                    return a + b + c;
                 }
             }
         ],
@@ -72,22 +73,25 @@ $(function () {
     });
 
     $(document).on('click', '.js-disableTag', function () {
-        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/disable", {
+        $.ajax(dataUrl + "/disable?name=" + $(this).attr('data-id'), {
             method: 'put',
+            data: {name: $(this).attr('data-id')},
             success: function () {
                 table.ajax.reload();
             }
         });
     }).on('click', '.js-enableTag', function () {
-        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/enable", {
+        $.ajax(dataUrl + "/enable?name=" + $(this).attr('data-id'), {
             method: 'put',
             success: function () {
                 table.ajax.reload();
             }
         });
+    }).on('click', '.js-editTag', function () {
+        window.location.href = _body.attr('data-edit-url') + "?name=" + $(this).attr('data-id');
     }).on('click', '.js-deleteTag', function () {
-        $.ajax(dataUrl + '/' + $(this).attr('data-id') + "/delete", {
-            method: 'put',
+        $.ajax(dataUrl + "?name=" + $(this).attr('data-id'), {
+            method: 'delete',
             success: function () {
                 table.ajax.reload();
             }

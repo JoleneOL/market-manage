@@ -184,7 +184,7 @@ public class ManageProductController {
 
         //转存资源
         if (!StringUtils.isEmpty(productImgPath) && productImgPath.length() > 1) {
-            String productImgResource = "product/" + product.getCode() + "/" + FileUtils.fileExtensionName(productImgPath);
+            String productImgResource = "product/" + product.getCode() + "." + FileUtils.fileExtensionName(productImgPath);
             resourceService.moveResource(productImgResource, productImgPath);
             product.setMainImg(productImgResource);
         }

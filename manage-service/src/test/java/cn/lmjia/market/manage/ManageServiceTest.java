@@ -58,7 +58,7 @@ public abstract class ManageServiceTest extends DealerServiceTest {
                         .param("name", RandomStringUtils.randomAlphabetic(10) + "标签")
                         .param("type", String.valueOf(random.nextInt(1)))
                         .param("weight", String.valueOf(random.nextInt(100)))
-        )
+                        .param("icon", newRandomImagePath()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(header().string("location", "/manageTag"));
     }

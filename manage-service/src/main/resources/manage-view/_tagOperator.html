@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en" class="main-html">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.Tag"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -8,31 +9,29 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>新标签</title>
+    <title th:text="${currentData != null ? '编辑标签' : '新增标签'}">新增标签</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
     <!--重置库-->
-    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
-    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css" th:href="@{/manage-resource/css/style.min.css}">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css" th:href="@{/manage-resource/css/custom.css}">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<!--可以展示-->
-<!--可以添加 新页面去POST?-->
-<!--可以禁用|启用-->
-<body class="gray-bg">
+<body class="gray-bg" data-upload-url="/resourceUpload/webUploader"
+      th:attr="data-upload-url=@{/resourceUpload/webUploader}">
 <div class="wrapper wrapper-content gray-bg">
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
                 <li><a href="_tagManage.html" th:href="@{/manageTag}">标签管理</a></li>
-                <li><strong>添加标签</strong></li>
+                <li><strong th:text="${currentData== null ? '添加标签' : '编辑标签'}">添加标签</strong></li>
             </ol>
         </div>
     </div>
@@ -52,18 +51,23 @@
                                         <label class="col-sm-3 control-label">名称</label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="请输入标签名称" class="form-control"
-                                                   name="name" required maxlength="100">
+                                                   th:value="${currentData != null ? currentData.name : ''}"
+                                                   th:readonly="${currentData != null}"
+                                                   name="name">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label" for="J_Type">类型</label>
                                         <div class="col-sm-6">
-                                            <select id="J_Type" class="form-control"
-                                                    name="type" required th:remove="all-but-first">
+                                            <select id="J_Type" class="form-control" th:disabled="${currentData != null}"
+                                                    th:readonly="${currentData != null}"
+                                                    name="type" th:remove="all-but-first">
                                                 <option value="0"
                                                         th:each="tagType:${@readService.allTagType()}"
                                                         th:value="${tagType.ordinal()}"
-                                                        th:text="${tagType.toString()}">商城分类</option>
+                                                        th:selected="${currentData != null && currentData.type == tagType}"
+                                                        th:text="${tagType.toString()}">商城分类
+                                                </option>
                                                 <option value="1">首页显示</option>
                                             </select>
                                         </div>
@@ -74,10 +78,12 @@
                                             <div class="upload-container clearfix">
                                                 <div class="js-uploadShow view-upload-show pull-left">
                                                     <!--没有图片就没有-->
-                                                    <!--<img src="http://iph.href.lu/416x312?text=img3" alt="标签图片">-->
+                                                    <img th:if="${currentData != null && currentData.icon != null}"
+                                                         res:src="${currentData.icon}"
+                                                         src="http://iph.href.lu/416x312?text=img3" alt="标签图片">
                                                 </div>
                                                 <div id="J_uploadTagImg" class="view-upload-btn pull-left"></div>
-                                                <input type="hidden" name="icon"/>
+                                                <input type="hidden" name="icon" th:value="${currentData != null ? currentData.icon : ''}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -85,6 +91,7 @@
                                         <label class="col-sm-3 control-label">权重</label>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="权重越大排列余越前" class="form-control"
+                                                   th:value="${currentData != null ? currentData.weight : '0'}"
                                                    name="weight" value="0" required>
                                         </div>
                                     </div>
@@ -106,11 +113,12 @@
 </div>
 </body>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.data.min.js"></script>
 <script src="//cdn.lmjia.cn/city-picker/1.1.0/js/city-picker.m.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
-<script src="manage-resource/js/tagAdd.js"></script>
+<script src="manage-resource/js/tagAdd.js" th:src="@{/manage-resource/js/tagAdd.js}"></script>
 </html>

@@ -26,7 +26,8 @@
 <!--可以展示-->
 <!--可以添加 新页面去POST?-->
 <!--可以禁用|启用-->
-<body class="gray-bg" data-url="mock/tagList.json" th:attr="data-url=@{/manage/tagList}">
+<body class="gray-bg" data-url="mock/tagList.json"
+      th:attr="data-url=@{/manage/tagList},data-edit-url=@{/manage/tagEdit}" data-edit-url="_tagOperator.html">
 
 <section>
     <div class="wrapper wrapper-content">
@@ -34,7 +35,7 @@
             <div class="col-md-12 mb10">
                 <div class="form-inline">
                     <div>
-                        <a class="btn btn-primary btn-sm" href="_tagAdd.html"
+                        <a class="btn btn-primary btn-sm" href="_tagOperator.html"
                            th:href="@{/manageTagAdd}">新增标签</a>
                     </div>
                 </div>

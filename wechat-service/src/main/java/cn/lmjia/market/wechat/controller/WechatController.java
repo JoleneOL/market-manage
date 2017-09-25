@@ -159,11 +159,6 @@ public class WechatController {
 //        return "redirect:" + SystemService.wechatMyURi;
     }
 
-    @GetMapping("/wechatSearch")
-    public String search(){
-        return "wechat@mall/search.html";
-    }
-
     @GetMapping("/wechatLogin")
     public String wechatLogin() {
         return "wechat@login.html";

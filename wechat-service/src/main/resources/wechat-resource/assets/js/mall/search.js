@@ -10,14 +10,14 @@ $(function () {
             $.ajax($('body').attr('data-goodsSearch-url'), {
                 method: 'GET',
                 data: {
-                    search: input
+                    productName: input
                 },
                 dataType: 'json',
                 success: function (res) {
                     $.hideLoading();
-                    if (res.resultCode !== 200) {
-                        return $.toptip(res.resultMsg);
-                    }
+                    // if (res.resultCode !== 200) {
+                    //     return $.toptip(res.resultMsg);
+                    // }
                     var _html = template('J_resultTpl', res);
                     $('#J_resultContainer').html(_html);
                     self.blur();
