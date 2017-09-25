@@ -64,7 +64,7 @@ $(function () {
             '    <img src="' + obj.goodsImage + '">' +
             '    <div class="search-result_item-bd">' +
             '        <h4 class="goods-name">' + obj.productName + '</h4>' +
-            '        <p class="goods-describe">' + obj.tags + '</p>' +
+            '        <p class="goods-describe">' + obj.description + '</p>' +
             '        <div class="goods-info">' +
             '            <div class="goods-price">￥' + obj.price + '</div>' +
             '        </div>' +
