@@ -73,6 +73,10 @@ public class WechatMainOrderControllerTest extends AbstractWechatMainOrderContro
                 .as("关系不会一直持续的")
                 .isNull();
 
+        // 去查看下我的记录
+        updateAllRunWith(salesmanLogin);
+        driver.get("http://localhost/wechatSales");
+        System.out.println(driver.getPageSource());
     }
 
     private BigDecimal randomRate() {

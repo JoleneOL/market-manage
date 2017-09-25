@@ -1,11 +1,18 @@
 package cn.lmjia.market.wechat.controller;
 
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.SalesAchievement;
+import cn.lmjia.market.core.row.RowCustom;
+import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.service.SalesmanService;
+import cn.lmjia.market.core.util.ApiDramatizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 
@@ -19,13 +26,22 @@ public class WechatSalesAchievementController {
 
     private static final Log log = LogFactory.getLog(WechatSalesAchievementController.class);
 
+    @Autowired
+    private SalesmanService salesmanService;
+
     @GetMapping("/api/salesList")
-    @ResponseBody
-    public Object list(@RequestParam(required = false) LocalDate date, Boolean remark, Boolean deal) {
+    @RowCustom(dramatizer = ApiDramatizer.class, distinct = true)
+    public RowDefinition<SalesAchievement> list(@AuthenticationPrincipal Login login
+            , @RequestParam(required = false) LocalDate date, Boolean remark, Boolean deal) {
         if (log.isTraceEnabled()) {
             log.trace("date:" + date + ", remark:" + remark + ", deal:" + deal);
         }
-        return null;
+        return salesmanService.data(login, date, remark, deal);
+    }
+
+    @GetMapping("/wechatSales")
+    public String index() {
+        return "wechat@salesAchievement.html";
     }
 
 }

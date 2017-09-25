@@ -23,6 +23,8 @@ public interface RowDefinition<T> {
     Class<T> entityClass();
 
     /**
+     * 该方法是除了{@link #entityClass()}外最早运行的方法
+     *
      * @return 所有字段定义
      */
     List<FieldDefinition<T>> fields();
