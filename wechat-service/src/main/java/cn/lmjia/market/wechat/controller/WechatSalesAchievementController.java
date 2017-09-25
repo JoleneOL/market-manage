@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.SalesmanService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +56,7 @@ public class WechatSalesAchievementController {
         }
     }
 
-    @GetMapping("/wechatSales")
+    @GetMapping(SystemService.wechatSales)
     public String index() {
         return "wechat@salesAchievement.html";
     }

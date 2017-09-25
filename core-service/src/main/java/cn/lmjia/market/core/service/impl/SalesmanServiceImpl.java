@@ -14,7 +14,11 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SalesmanService;
+import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.lib.sys.service.SystemStringService;
+import me.jiangcai.wx.message.Message;
+import me.jiangcai.wx.message.TextMessage;
+import me.jiangcai.wx.model.PublicAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -47,6 +51,8 @@ public class SalesmanServiceImpl implements SalesmanService {
     private ConversionService conversionService;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private SystemService systemService;
 
     @Override
     public void salesmanShareTo(long salesmanId, Login login) {
@@ -202,5 +208,17 @@ public class SalesmanServiceImpl implements SalesmanService {
                 };
             }
         };
+    }
+
+    @Override
+    public boolean focus(PublicAccount account, Message message) {
+        return message != null && message instanceof TextMessage && ((TextMessage) message).getContent().trim().equals("#业绩");
+    }
+
+    @Override
+    public Message reply(PublicAccount account, Message message) {
+        TextMessage reply = new TextMessage();
+        reply.setContent(systemService.toUrl(SystemService.wechatSales));
+        return reply;
     }
 }

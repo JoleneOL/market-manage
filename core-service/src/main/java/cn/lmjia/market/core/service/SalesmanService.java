@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.deal.Salesman;
 import cn.lmjia.market.core.row.RowDefinition;
+import me.jiangcai.wx.MessageReply;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @author CJ
  */
-public interface SalesmanService {
+public interface SalesmanService extends MessageReply {
     /**
      * 销售人员salesmanId刚刚推荐了login
      *
