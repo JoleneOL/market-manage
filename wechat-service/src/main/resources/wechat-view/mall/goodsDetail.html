@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>商品详情</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
+
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+</head>
+<body class="bg-gray">
+<div class="mall-toolbar clearfix">
+    <h3>利美家</h3>
+    <div class="mall-toolbar-items">
+        <a href="../orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item"><i class="fa fa-search"></i></a>
+        <a href="#" class="toolbar-item m-cart">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="cart-badge">0</span>
+        </a>
+    </div>
+</div>
+<div class="mall-carousel">
+    <!--一个广告图的情况下-->
+    <!--<div class="alone-image">-->
+    <!--<img src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t7531/122/3206157162/41027/aa9c92f1/59bba3d8N58945bc1.jpg!q70.jpg">-->
+    <!--</div>-->
+    <div class="swiper-container">
+        <div class="swiper-wrapper" th:remove="all-but-first">
+            <div class="swiper-slide" th:each="imgTag:${@readService.allTagByType(2)}" th:attr="tagName=${imgTag.name}">
+                <img res:src="${imgTag.icon}"
+                     src="https://m.360buyimg.com/n12/jfs/t3034/299/2060854617/119711/577e85cb/57d11b6cN1fd1194d.jpg!q70.jpg">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://gw.alicdn.com/imgextra/i4/62871920/TB2j5JHzhtmpuFjSZFqXXbHFpXa_!!62871920.jpg_760x760q50s150.jpg_.webp">
+            </div>
+            <div class="swiper-slide">
+                <img src="https://m.360buyimg.com/n12/jfs/t3223/185/1656650225/45118/27b7bd1d/57d11b6dN7b535984.jpg!q70.jpg">
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+<div class="goods-info-wrap">
+    <h4 class="goods-name">现货! 国行正品 Ricoh/理光 GR II GRII 理光GR2代数码相机卡片机</h4>
+    <div class="goods-price">
+        <span>1314</span>
+    </div>
+    <div class="goods-tab">
+        <p>安装：免安装费</p>
+        <p>快递：免运费</p>
+        <p>销量：1314台</p>
+    </div>
+</div>
+<div class="goods-detail-wrap">
+    <div class="good-detail-hd">
+        <p>图文详情</p>
+    </div>
+    <div class="goods-detail-bd">
+        <p><img alt="" src="https://gw.alicdn.com/imgextra/i2/62871920/TB2AdeOaEQIL1JjSZFhXXaDZFXa_!!62871920.jpg_970x970q50s150.jpg_.webp"></p>
+        <p><img src="https://gw.alicdn.com/imgextra/i1/62871920/TB2KPqPaA.HL1JjSZFuXXX8dXXa_!!62871920.jpg_970x970q50s150.jpg_.webp" alt=""></p>
+        <p><img src="https://gw.alicdn.com/imgextra/i1/62871920/TB2buCFawkLL1JjSZFpXXa7nFXa_!!62871920.jpg_970x970q50s150.jpg_.webp" alt=""></p>
+    </div>
+</div>
+<div class="goods-detail-ft">
+    <div class="goods-action">
+        <a href="javascript:;" class="add-btn yellow-color">加入购物车</a>
+        <a href="javascript:;" class="add-btn red-color">立即购买</a>
+    </div>
+</div>
+<div class="mask"></div>
+<div class="bottom-menu"></div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
+<script src="../../wechat-resource/assets/js/mall/index.js"></script>
+</html>
