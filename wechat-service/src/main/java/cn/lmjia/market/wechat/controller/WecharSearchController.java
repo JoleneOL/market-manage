@@ -15,6 +15,7 @@ import me.jiangcai.logistics.entity.Product_;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -37,9 +38,21 @@ public class WecharSearchController {
         return "wechat@mall/search.html";
     }
 
+    @GetMapping("/wechatSearch/tagSearch")
+    public String tagSearch(String tagName, Model model) {
+        if (!StringUtils.isEmpty(tagName)) {
+            model.addAttribute("tag", tagName);
+        }
+        return "wechat@mall/tagDetail.html";
+    }
+
     @GetMapping("/wechatSearch/goodsList")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
-    public RowDefinition<MainGood> data(final String channel, final String productName, final String tagName, final String propertyValue) {
+    public RowDefinition<MainGood> data(final String channel
+            , final String productName
+            , final String tag
+            , final String priceOrder
+            , final String propertyValue) {
         return new RowDefinition<MainGood>() {
             @Override
             public Class<MainGood> entityClass() {
@@ -48,8 +61,11 @@ public class WecharSearchController {
 
             @Override
             public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<MainGood> root) {
-                return Arrays.asList(criteriaBuilder.desc(root.get("createTime"))
-                );
+                if (StringUtils.isEmpty(priceOrder))
+                    return Arrays.asList(criteriaBuilder.desc(root.get("createTime")));
+                return Arrays.asList("asc".equalsIgnoreCase(priceOrder)
+                        ? (criteriaBuilder.asc(MainGood.getTotalPrice(root, criteriaBuilder)))
+                        : (criteriaBuilder.desc(MainGood.getTotalPrice(root, criteriaBuilder))));
             }
 
             @Override
@@ -98,11 +114,11 @@ public class WecharSearchController {
                     } else {
                         predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
                     }
-                    if (!StringUtils.isEmpty(productName))
+                    if (!StringUtils.isEmpty(productName) && !"all".equalsIgnoreCase(productName))
                         predicateList.add(cb.like(root.get("product").get("name"), "%" + productName + "%"));
-                    if (!StringUtils.isEmpty(tagName))
-                        predicateList.add(cb.equal(root.get("tags").get("name"), tagName));
-                    if (!StringUtils.isEmpty(propertyValue)) {
+                    if (!StringUtils.isEmpty(tag) && !"all".equalsIgnoreCase(tag))
+                        predicateList.add(cb.equal(root.get("tags").get("name"), tag));
+                    if (!StringUtils.isEmpty(propertyValue) && !"all".equalsIgnoreCase(propertyValue)) {
                         predicateList.add(cb.equal(root.join("product", JoinType.LEFT).joinMap("propertyNameValues").value(), propertyValue));
                     }
                     return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));

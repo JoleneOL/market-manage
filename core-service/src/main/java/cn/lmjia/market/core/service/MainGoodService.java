@@ -2,9 +2,11 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.channel.Channel;
+import me.jiangcai.logistics.entity.PropertyValue;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 主要商品服务
@@ -29,6 +31,14 @@ public interface MainGoodService {
      */
     //    @Transactional(readOnly = true)
     List<MainGood> forSale(Channel channel, String... tags);
+
+    /**
+     * 特定渠道中某标签下在上商品列表所用到的属性值
+     * @param channel
+     * @param tag
+     * @return
+     */
+    Set<String> forSalePropertyValue(Channel channel,String tag);
 
     /**
      * 默认渠道

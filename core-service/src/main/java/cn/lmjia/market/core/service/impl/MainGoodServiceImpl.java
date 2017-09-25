@@ -8,6 +8,7 @@ import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import me.jiangcai.logistics.entity.Product_;
+import me.jiangcai.logistics.entity.PropertyValue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author CJ
@@ -66,6 +69,22 @@ public class MainGoodServiceImpl implements MainGoodService {
             }
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         });
+    }
+
+    @Override
+    public Set<String> forSalePropertyValue(Channel channel, String tag) {
+        List<MainGood> forSaleList = forSale(channel,tag);
+        if(forSaleList != null){
+            Set<String> propertyValues = new HashSet<>();
+            forSaleList.forEach(mainGood -> {
+                mainGood.getProduct().getSpecPropertyNameValues().values().forEach(value->{
+                    if(!propertyValues.contains(value))
+                        propertyValues.add(value);
+                });
+            });
+            return propertyValues;
+        }
+        return null;
     }
 
     @Override

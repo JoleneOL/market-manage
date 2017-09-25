@@ -61,7 +61,7 @@
     <div class="tag-list tag-list-middle">
         <div class="tag-list-bd" th:remove="all-but-first">
             <div class="tag-list-item" th:each="searchTag:${@readService.allTagByType(0)}">
-                <a href="#" class="tag-content">
+                <a th:href="@{/wechatSearch/tagSearch(tagName=${searchTag.name})}" href="#" class="tag-content">
                     <img th:attr="icon=${searchTag.icon}" res:src="${searchTag.icon}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5668/159/160398199/14046/acfe1fa3/591d9424N068a7ad0.png"
                          class="tag-image">

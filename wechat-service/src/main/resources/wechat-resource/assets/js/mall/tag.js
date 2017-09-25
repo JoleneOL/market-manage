@@ -11,22 +11,18 @@ $(function () {
             method: "GET",
             data: {
                 tag: _tag,
-                property: _property,
+                propertyValue: _property,
                 price: _price,
                 page: 0
             },
             dataType: 'json',
             success: function (res) {
-                if (res.resultCode !== 200) {
-                    $.toast('请求失败', 'cancel');
-                    return '';
-                }
                 setGoodsList(res.data);
                 $.hideLoading();
                 myScroll.reset({
                     ajaxData: {
                         tag: _tag,
-                        property: _property,
+                        propertyValue: _property,
                         price: _price
                     },
                     page: 1
@@ -84,7 +80,7 @@ $(function () {
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             tag: $('input[name="tag"]').val(),
-            property: $('input[name="property"]').val(),
+            propertyValue: $('input[name="property"]').val(),
             price: $('input[name="price"]').val()
         },
         template: goodsTpl
