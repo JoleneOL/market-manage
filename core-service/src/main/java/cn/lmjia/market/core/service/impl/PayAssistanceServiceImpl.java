@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.trj.AuthorisingInfo;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
@@ -25,6 +26,7 @@ import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -58,16 +60,24 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
     }
 
     @Override
-    public ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, boolean huabei) throws SystemMaintainException {
-        if (payService.isPaySuccess(order.getPayableOrderId().toString()))
-            throw new IllegalStateException("订单并不在待支付状态");
+    public ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, boolean huabei)
+            throws SystemMaintainException {
+        if (payService.isPaySuccess(order.getPayableOrderId().toString())) {
+            if (order instanceof MainOrder)
+                return new ModelAndView("redirect:"
+                        + payService.mainOrderPaySuccessUri(request, (MainOrder) order, null));
+            throw new IllegalStateException("订单并不在待支付状态: for:" + order);
+        }
 
         if (!huabei && environment.acceptsProfiles("autoPay")) {
             // 3 秒之后自动付款
-            log.warn("3秒之后自动付款:" + order);
-            executorService.schedule(()
-                            -> paymentService.mockPay(order)
-                    , 3, TimeUnit.SECONDS);
+            if (new Random().nextBoolean()) {
+                log.warn("3秒之后自动付款:" + order);
+                executorService.schedule(()
+                                -> paymentService.mockPay(order)
+                        , 3, TimeUnit.SECONDS);
+            } else
+                log.warn("任性了，就是不付款。");
         }
 
         if (environment.acceptsProfiles("wechatChanpay"))

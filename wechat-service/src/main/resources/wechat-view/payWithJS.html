@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:wx="http://wx.jiangcai.me" lang="en" class="pay-page">
 <!--/*@thymesVar id="order" type="me.jiangcai.payment.PayableOrder"*/-->
 <!--/*@thymesVar id="scriptCode" type="java.lang.String"*/-->
+<!--/*@thymesVar id="shareUrl" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -44,7 +45,10 @@
 <script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" th:remove="all"></script>
 <script wx:js=""></script>
 <script th:utext="${scriptCode}"></script>
-<!--<script wx:share="${#share.title(order)}|${#share.desc(order)}|${#share.link(order,#request)}|${#share.imageUrl(order)}"></script>-->
 <script src="../wechat-resource/assets/js/pay.js" th:src="@{/wechat-resource/assets/js/pay.js}"></script>
+<th:block th:if="${shareUrl==null}" th:include="wechat@fragments/share.html::hideAllShare"/>
+<th:block th:if="${shareUrl!=null}">
+    <script wx:share="利每家|${shareContent}|${shareUrl}|https://cdn.lmjia.cn/lmjia_logo_1.png"></script>
+</th:block>
 </body>
 </html>
