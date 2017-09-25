@@ -9,10 +9,16 @@ import cn.lmjia.market.core.util.ApiDramatizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 
@@ -37,6 +43,16 @@ public class WechatSalesAchievementController {
             log.trace("date:" + date + ", remark:" + remark + ", deal:" + deal);
         }
         return salesmanService.data(login, date, remark, deal);
+    }
+
+    @PutMapping("/salesAchievement/{id}/remark")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateRemark(@AuthenticationPrincipal Login login, @RequestBody String text, @PathVariable("id") long id) {
+        SalesAchievement salesAchievement = salesmanService.getAchievement(id);
+        if (salesAchievement.getWhose().getLogin().equals(login)) {
+            salesAchievement.setRemark(text);
+        }
     }
 
     @GetMapping("/wechatSales")

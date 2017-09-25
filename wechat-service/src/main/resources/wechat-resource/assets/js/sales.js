@@ -148,17 +148,16 @@ $(function () {
 
     function updateRemark(id, text, ele) {
         $.showLoading();
-        $.ajax('/remark/' + id, {
+        $.ajax('/salesAchievement/' + id + '/remark', {
             method: 'PUT',
-            data: {
-                remark: text
-            },
+            data: text,
+            contentType: 'text/plain; charset=UTF-8',
             dataType: 'json',
-            success: function (res) {
+            success: function () {
                 $.hideLoading();
-                if (res.resultCode !== 200) {
-                    return $.toptip(res.resultMsg);
-                }
+                // if (res.resultCode !== 200) {
+                //     return $.toptip(res.resultMsg);
+                // }
                 renderDOM(ele, text);
                 $.alert("绩效备注是:" + text, "设定成功");
             },

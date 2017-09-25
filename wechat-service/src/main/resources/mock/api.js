@@ -395,7 +395,7 @@ Mock.mock(/\/api\/salesList\?date=(.*)&remark=(.*)&deal=(.*)&page=\d/, {
         }
     ]
 });
-Mock.mock(/\/remark\/(.*)/, {
+Mock.mock(/\/salesAchievement\/(.*)\/remark/, {
     "resultCode": 200,
     "resultMsg": "ok",
     "data": null
