@@ -67,12 +67,12 @@ $(function () {
             infiniteWrap
                 .find('.view-sales-item').remove()
                 .end()
-                .find('.weui-loadmore').before(domStr);
+                .find('.weui-loadmore').html('<i class="weui-loading"></i><span class="weui-loadmore__tips">数据加载中...</span>').before(domStr);
         } else {
             infiniteWrap
                 .find('.view-sales-item').remove()
                 .end()
-                .find('.weui-loadmore').text('没有更多内容了');
+                .find('.weui-loadmore').html('没有更多内容了');
         }
 
     }
