@@ -49,7 +49,7 @@ public class ManageTagControllerTest extends ManageServiceTest {
                 .isEqualTo("标签管理");
         driver.get("http://localhost/manageTagAdd");
         assertThat(driver.getTitle())
-                .isEqualTo("新标签");
+                .isEqualTo("新增标签");
     }
 
     @Test
