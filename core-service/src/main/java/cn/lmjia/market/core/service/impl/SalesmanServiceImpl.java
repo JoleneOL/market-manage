@@ -121,7 +121,7 @@ public class SalesmanServiceImpl implements SalesmanService {
             @Override
             public List<FieldDefinition<SalesAchievement>> fields() {
                 final BigDecimal rate = systemStringService.getCustomSystemString("market.default.all.rates"
-                        , null, true, BigDecimal.class, new BigDecimal("0.18"));
+                        , null, true, BigDecimal.class, new BigDecimal("0.36"));
                 return Arrays.asList(
                         Fields.asBasic("id")
                         , FieldBuilder.asName(SalesAchievement.class, "remark")
@@ -175,7 +175,10 @@ public class SalesmanServiceImpl implements SalesmanService {
 //                                            .groupBy(root1.get(Commission_.orderCommission))
 //                                            ;
 //                                })
-                                .addSelect(salesAchievementRoot -> orderPath.get(MainOrder_.goodCommissioningPriceAmountIndependent))
+                                .addBiSelect((salesAchievementRoot, criteriaBuilder)
+                                        -> criteriaBuilder
+                                        .prod(orderPath.get(MainOrder_.goodCommissioningPriceAmountIndependent)
+                                                , salesAchievementRoot.get(SalesAchievement_.currentRate)))
                                 .addFormat((data, type) -> {
                                     BigDecimal money = (BigDecimal) data;
                                     return money.multiply(rate).setScale(2, BigDecimal.ROUND_HALF_UP);
