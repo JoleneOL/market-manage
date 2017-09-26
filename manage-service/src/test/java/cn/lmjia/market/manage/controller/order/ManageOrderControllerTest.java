@@ -26,6 +26,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -78,6 +79,7 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .filter(depot -> depot instanceof HaierDepot)
                 .max(new RandomComparator()).orElse(null);
         assertThat(targetDepot).isNotNull();
+        log.debug(order.getAmounts().keySet().stream().map(good->good.getProduct().getCode()).collect(Collectors.joining(",")));
         order.getAmounts().forEach((good, integer) -> stockService.addStock(
                 targetDepot
                 , good.getProduct()

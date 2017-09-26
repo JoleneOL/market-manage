@@ -2,23 +2,19 @@ package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.wechat.WechatTestBase;
-import cn.lmjia.market.wechat.page.IndexPage;
-import cn.lmjia.market.wechat.page.LoginPage;
-import cn.lmjia.market.wechat.page.MallIndexPage;
-import cn.lmjia.market.wechat.page.MallSearchPage;
+import cn.lmjia.market.wechat.page.*;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -113,36 +109,60 @@ public class WechatControllerTest extends WechatTestBase {
 
 
         //每种标签都加3-5个
-        for(TagType tagType : TagType.values()){
-            for(int i = 0 ; i < 3 + random.nextInt(2) ; i++){
+        for (TagType tagType : TagType.values()) {
+            for (int i = 0; i < 3 + random.nextInt(2); i++) {
                 newRandomTag(tagType);
             }
         }
         //设置一件商品有所有的 列表 类型的标签
         MainGood good = mainGoodService.forSale().stream().max(Comparator.comparing(MainGood::getId)).orElse(null);
-        if(good == null)
+        if (good == null)
             return;
-        good.setTags(new HashSet<>(tagRepository.findByTypeAndDisabledFalse(TagType.LIST)));
+        Set<Tag> tagTypeSet = new HashSet<>();
+        tagTypeSet.addAll(tagRepository.findByTypeAndDisabledFalse(TagType.LIST));
+        tagTypeSet.addAll(tagRepository.findByTypeAndDisabledFalse(TagType.SEARCH));
+        good.setTags(tagTypeSet);
         mainGoodRepository.save(good);
         // 尝试使用正确的密码登录吧
         loginPage.login(login.getLoginName(), rawPassword);
 
 
         MallIndexPage indexPage = initPage(MallIndexPage.class);
-        indexPage.printThisPage();
 
         //校验滚图标签
         indexPage.validatePageWithImgTag(tagRepository.findByTypeAndDisabledFalse(TagType.IMG));
         //校验分类
         indexPage.validatePageWithSearch(tagRepository.findByTypeAndDisabledFalse(TagType.SEARCH));
         //校验列表
-        indexPage.validatePageWithList(tagRepository.findByTypeAndDisabledFalse(TagType.LIST),good);
+        indexPage.validatePageWithList(tagRepository.findByTypeAndDisabledFalse(TagType.LIST), good);
 
         //到搜索页面去
         indexPage.clickSearch();
         //搜索一下这个商品
         MallSearchPage mallSearchPage = initPage(MallSearchPage.class);
         mallSearchPage.searchGoods(good);
+
+        //重新回到首页
+        driver.get("http://localhost/wechatIndex");
+        indexPage = initPage(MallIndexPage.class);
+        //随便点一个分类标签
+        Tag searchTag = tagRepository.findByTypeAndDisabledFalse(TagType.SEARCH).stream()
+                .max(Comparator.comparing(Tag::getName)).orElse(null);
+        assertThat(searchTag).isNotNull();
+        indexPage.clickTagSearch(searchTag);
+
+        MallTagDetailPage tagDetailPage = initPage(MallTagDetailPage.class);
+        //校验一下搜索结果中是有这个商品的
+        tagDetailPage.validateGoods(Arrays.asList(good));
+        //查询 tag & propertyValue
+        String propertyValue = good.getProduct().getSpecPropertyNameValues().values().stream().findAny().get();
+        tagDetailPage.clickTagOrPropertyValue(propertyValue);
+        tagDetailPage.validateGoods(Arrays.asList(good));
+
+        //搜索全部
+        tagDetailPage.clickTagOrPropertyValue(null);
+        tagDetailPage.validateGoods(mainGoodService.forSale());
+
 
     }
 

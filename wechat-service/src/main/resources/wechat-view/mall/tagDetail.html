@@ -16,7 +16,7 @@
 
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 </head>
-<body class="bg-gray">
+<body class="bg-gray" data-detail-url="goodsDetail.html" th:attr="data-detail-url=@{/wechatSearch/goodsDetail/}">
 <div class="mall-toolbar clearfix js-extra-h">
     <h3>利美家</h3>
     <div class="mall-toolbar-items">
@@ -30,7 +30,8 @@
 </div>
 <div class="mall-filter-toolbar js-extra-h">
     <!-- active -->
-    <div class="filter-item filter-drop-down filter-tag"><span>全部</span></div>
+    <div class="filter-item filter-drop-down filter-tag"><span
+            th:text="${(tag == null || tag.equalsIgnoreCase('all')) ? '全部' : tag}">全部</span></div>
     <div class="filter-item filter-drop-down filter-prop"><span>全部</span></div>
     <!--<div class="filter-item"><span>销量优先</span></div>-->
     <!-- arrow-down / arrow-up -->
@@ -38,7 +39,7 @@
 </div>
 <div class="drop-down">
     <ul class="drop-down-wrap js-tagDrop">
-        <li class="active" th:class="${tag == null || tag.equalsIgnoreCase('all') ? 'active' : ''}">全部</li>
+        <li class="active" th:class="${(tag == null || tag.equalsIgnoreCase('all')) ? 'active' : ''}">全部</li>
         <li th:each="searchTag:${@readService.allTagByType(0)}"
             th:attr="data-id=${searchTag.name}"
             th:text="${searchTag.name}"

@@ -33,7 +33,7 @@
 <template id="J_resultTpl">
     {{if data.length}}
     {{each data}}
-    <a href="javascript:;" class="search-result_item" goods-id="{{$value.id}}">
+    <a href="/wechatSearch/goodsDetail/{{$value.id}}" class="search-result_item" goods-id="{{$value.id}}">
         <img src="{{$value.goodsImage}}">
         <div class="search-result_item-bd">
             <h4 class="goods-name">{{$value.productName}}</h4>

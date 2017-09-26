@@ -118,11 +118,6 @@
             <name>JiangCai Repository</name>
             <url>http://repo.jiangcai.me:8082/content/groups/public/</url>
         </pluginRepository>
-        <pluginRepository>
-            <id>repo-huotu</id>
-            <name>Huotu Repository</name>
-            <url>http://repo.51flashmall.com:8081/nexus/content/groups/public/</url>
-        </pluginRepository>
     </pluginRepositories>
 
     <build>
@@ -150,9 +145,9 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>com.huotu.hibernate</groupId>
+                        <groupId>org.hibernate</groupId>
                         <artifactId>hibernate-jpamodelgen</artifactId>
-                        <version>5.2.11-SNAPSHOT</version>
+                        <version>5.2.10.Final</version>
                     </dependency>
                 </dependencies>
             </plugin>

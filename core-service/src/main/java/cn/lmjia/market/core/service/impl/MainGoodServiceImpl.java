@@ -7,13 +7,13 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.MainGoodService;
-import me.jiangcai.logistics.entity.Product_;
-import me.jiangcai.logistics.entity.PropertyValue;
+import me.jiangcai.logistics.entity.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -42,7 +42,7 @@ public class MainGoodServiceImpl implements MainGoodService {
 
     @Override
     public List<MainGood> forSale(Channel channel) {
-        return forSale(channel,null);
+        return forSale(channel, null);
     }
 
     @Override
@@ -52,36 +52,82 @@ public class MainGoodServiceImpl implements MainGoodService {
             List<Predicate> predicateList = new ArrayList<>();
             predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
             predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
-            if(channel == null){
+            if (channel == null) {
                 predicateList.add(cb.or(
                         channelJoin.isNull()
                         , cb.isFalse(channelJoin.get(Channel_.extra))
                 ));
-            }else{
+            } else {
                 predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
             }
-            if(tags != null && tags.length > 0){
+            if (tags != null && tags.length > 0) {
                 List<Predicate> tagSearchPredicateList = new ArrayList<>();
                 for (String tag : tags) {
-                    tagSearchPredicateList.add(cb.equal(root.join(MainGood_.tags).get(Tag_.name), tag));
+                    if (!StringUtils.isEmpty(tag))
+                        tagSearchPredicateList.add(cb.equal(root.join(MainGood_.tags).get(Tag_.name), tag));
                 }
-                predicateList.add(cb.or(tagSearchPredicateList.toArray(new Predicate[tagSearchPredicateList.size()])));
+                if (tagSearchPredicateList.size() > 0)
+                    predicateList.add(cb.or(tagSearchPredicateList.toArray(new Predicate[tagSearchPredicateList.size()])));
             }
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         });
     }
 
     @Override
+    public List<MainGood> forSaleByProductType(Channel channel, ProductType productType) {
+        return mainGoodRepository.findAll((root, query, cb) -> {
+            Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
+            List<Predicate> predicateList = new ArrayList<>();
+            predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
+            predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
+            if (channel == null) {
+                predicateList.add(cb.or(
+                        channelJoin.isNull()
+                        , cb.isFalse(channelJoin.get(Channel_.extra))
+                ));
+            } else {
+                predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
+            }
+            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType), productType));
+            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+        });
+    }
+
+    @Override
+    public MainGood forSaleByPropertyValue(Channel channel, ProductType productType, PropertyName propertyName, PropertyValue propertyValue) {
+        List<MainGood> goodList = mainGoodRepository.findAll((root, query, cb) -> {
+            Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
+            List<Predicate> predicateList = new ArrayList<>();
+            predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
+            predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
+            if (channel == null) {
+                predicateList.add(cb.or(
+                        channelJoin.isNull()
+                        , cb.isFalse(channelJoin.get(Channel_.extra))
+                ));
+            } else {
+                predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
+            }
+            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType), productType));
+            predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).key(), propertyName));
+            predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).value(), propertyValue.getValue()));
+            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+        });
+        if (CollectionUtils.isEmpty(goodList)) {
+            return null;
+        }
+        return goodList.get(0);
+    }
+
+    @Override
     public Set<String> forSalePropertyValue(Channel channel, String tag) {
-        List<MainGood> forSaleList = forSale(channel,tag);
-        if(forSaleList != null){
+        List<MainGood> forSaleList = forSale(channel, tag);
+        if (forSaleList != null) {
             Set<String> propertyValues = new HashSet<>();
-            forSaleList.forEach(mainGood -> {
-                mainGood.getProduct().getSpecPropertyNameValues().values().forEach(value->{
-                    if(!propertyValues.contains(value))
-                        propertyValues.add(value);
-                });
-            });
+            forSaleList.forEach(mainGood -> mainGood.getProduct().getSpecPropertyNameValues().values().forEach(value -> {
+                if (!propertyValues.contains(value))
+                    propertyValues.add(value);
+            }));
             return propertyValues;
         }
         return null;
@@ -89,7 +135,7 @@ public class MainGoodServiceImpl implements MainGoodService {
 
     @Override
     public List<MainGood> forSale() {
-        return forSale(null,null);
+        return forSale(null, null);
     }
 
     @Override

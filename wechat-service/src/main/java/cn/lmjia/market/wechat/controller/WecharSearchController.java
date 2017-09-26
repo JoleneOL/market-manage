@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
+import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.persistence.criteria.*;
 import java.io.IOException;
@@ -32,6 +34,8 @@ import java.util.List;
 public class WecharSearchController {
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private MainGoodRepository mainGoodRepository;
 
     @GetMapping("/wechatSearch")
     public String search() {
@@ -44,6 +48,12 @@ public class WecharSearchController {
             model.addAttribute("tag", tagName);
         }
         return "wechat@mall/tagDetail.html";
+    }
+
+    @GetMapping("/wechatSearch/goodsDetail/{goodsId}")
+    public String goodsDetail(@PathVariable Long goodsId, Model model) {
+        model.addAttribute("currentData", mainGoodRepository.findOne(goodsId));
+        return "wechat@mall/goodsDetail.html";
     }
 
     @GetMapping("/wechatSearch/goodsList")
@@ -63,7 +73,7 @@ public class WecharSearchController {
             public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<MainGood> root) {
                 if (StringUtils.isEmpty(priceOrder))
                     return Arrays.asList(criteriaBuilder.desc(root.get("createTime")));
-                return Arrays.asList("asc".equalsIgnoreCase(priceOrder)
+                return Arrays.asList("asc" .equalsIgnoreCase(priceOrder)
                         ? (criteriaBuilder.asc(MainGood.getTotalPrice(root, criteriaBuilder)))
                         : (criteriaBuilder.desc(MainGood.getTotalPrice(root, criteriaBuilder))));
             }
@@ -115,11 +125,11 @@ public class WecharSearchController {
                     } else {
                         predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
                     }
-                    if (!StringUtils.isEmpty(productName) && !"all".equalsIgnoreCase(productName))
+                    if (!StringUtils.isEmpty(productName) && !"all" .equalsIgnoreCase(productName))
                         predicateList.add(cb.like(root.get("product").get("name"), "%" + productName + "%"));
-                    if (!StringUtils.isEmpty(tag) && !"all".equalsIgnoreCase(tag))
+                    if (!StringUtils.isEmpty(tag) && !"all" .equalsIgnoreCase(tag))
                         predicateList.add(cb.equal(root.get("tags").get("name"), tag));
-                    if (!StringUtils.isEmpty(propertyValue) && !"all".equalsIgnoreCase(propertyValue)) {
+                    if (!StringUtils.isEmpty(propertyValue) && !"all" .equalsIgnoreCase(propertyValue)) {
                         predicateList.add(cb.equal(root.join("product", JoinType.LEFT).joinMap("propertyNameValues").value(), propertyValue));
                     }
                     return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));

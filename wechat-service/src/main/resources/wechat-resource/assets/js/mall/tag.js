@@ -2,7 +2,7 @@ $(function () {
 
     function filterFunc() {
         var _tag = $('input[name="tag"]').val();
-        var _property = $('input[name="property"]').val();
+        var _property = $('input[name="propertyValue"]').val();
         var _price = $('input[name="price"]').val();
 
         var url = infiniteWrap.attr('data-url');
@@ -17,6 +17,10 @@ $(function () {
             },
             dataType: 'json',
             success: function (res) {
+                console.log(res);
+                if (res.resultCode !== 200) {
+                    return $.toptip(res.resultMsg);
+                }
                 setGoodsList(res.data);
                 $.hideLoading();
                 myScroll.reset({
@@ -56,7 +60,11 @@ $(function () {
     var infiniteWrap = $('.view-scroll-wrap');
 
     var goodsTpl = function (obj) {
-        return '<a href="javascript:;" class="search-result_item">' +
+        var detailUrl = $('body').attr('data-detail-url');
+        if(detailUrl.indexOf('goodsDetail.html') <= -1 ){
+            detailUrl += obj.id;
+        }
+        return '<a href="' +  detailUrl + '" class="search-result_item" goods-id="' + obj.id + '">' +
             '    <img src="' + obj.goodsImage + '">' +
             '    <div class="search-result_item-bd">' +
             '        <h4 class="goods-name">' + obj.productName + '</h4>' +

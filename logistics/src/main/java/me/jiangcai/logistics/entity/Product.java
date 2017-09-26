@@ -99,6 +99,7 @@ public class Product {
     /**
      * 货品类型
      */
+    @ManyToOne
     private ProductType productType;
     /**
      * 属性值
