@@ -84,7 +84,7 @@ $(function () {
     infiniteWrap.height($(window).height() - Math.ceil(extraHeight_team) - 30);
 
     var myScroll = infiniteWrap.myScroll({
-        debug: true,
+        // debug: true,
         ajaxUrl: infiniteWrap.attr('data-url'),
         ajaxData: {
             tag: $('input[name="tag"]').val(),

@@ -17,16 +17,19 @@
 </head>
 <body class="bg-gray">
 <div class="mall-toolbar clearfix">
-    <h3>利美家</h3>
+    <h3><a href="index.html">利美家</a></h3>
     <div class="mall-toolbar-items">
         <a href="../orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item"><i class="fa fa-search"></i></a>
-        <a href="cart.html" class="toolbar-item m-cart">
+        <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
             <i class="fa fa-shopping-cart"></i>
             <span class="cart-badge">0</span>
         </a>
     </div>
 </div>
+<form action="cart.html" method="post" id="J_cartForm">
+    <input type="hidden" name="order">
+</form>
 <div class="mall-carousel">
     <!--一个广告图的情况下-->
     <!--<div class="alone-image">-->
@@ -184,5 +187,6 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
 <script src="../../wechat-resource/assets/js/mall/index.js"></script>
 </html>

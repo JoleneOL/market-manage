@@ -18,16 +18,19 @@
 </head>
 <body class="bg-gray" data-detail-url="goodsDetail.html" th:attr="data-detail-url=@{/wechatSearch/goodsDetail/}">
 <div class="mall-toolbar clearfix js-extra-h">
-    <h3>利美家</h3>
+    <h3><a href="index.html">利美家</a></h3>
     <div class="mall-toolbar-items">
         <a href="../orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item"><i class="fa fa-search"></i></a>
-        <a href="#" class="toolbar-item m-cart">
+        <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
             <i class="fa fa-shopping-cart"></i>
             <span class="cart-badge">0</span>
         </a>
     </div>
 </div>
+<form action="cart.html" method="post" id="J_cartForm">
+    <input type="hidden" name="order">
+</form>
 <div class="mall-filter-toolbar js-extra-h">
     <!-- active -->
     <div class="filter-item filter-drop-down filter-tag"><span
@@ -82,5 +85,6 @@
 <script src="../../mock/mall.js" th:remove="all"></script>
 
 <script src="../../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
 <script src="../../wechat-resource/assets/js/mall/tag.js"></script>
 </html>

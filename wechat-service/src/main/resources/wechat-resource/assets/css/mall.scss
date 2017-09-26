@@ -50,6 +50,9 @@ body {
     float: left;
     font-size: 14px;
     font-weight: normal;
+    a {
+      color: #fff;
+    }
   }
   .mall-toolbar-items {
     float: right;
@@ -957,7 +960,7 @@ body {
   left: 0;
   right: 0;
   overflow: auto;
-  .sku-info {
+  .sku-info, .quantity-info {
     padding: 12px 0;
     margin: 0 12px;
     border-bottom: 1px solid #e7e7e7;
@@ -988,6 +991,87 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+    }
+    .property-list {
+      .active {
+        color: #f15353;
+        border: 1px solid #f15353;
+      }
+      .disabled {
+        color: #ccc;
+        background-color: #f7f7f7;
+        border: 1px solid #f7f7f7;
+      }
+    }
+  }
+  .quantity-info {
+    .sku-quantity {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      padding-right: 9px;
+      h2 {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        width: 100%;
+        padding: 0;
+        font-weight: 400;
+        font-size: 14px;
+        color: #051b28;
+      }
+      .btn-minus, .btn-plus {
+        background: #f1f1f1;
+        width: 33px;
+      }
+      .btn-input {
+        width: 39px;
+        background: #f1f1f1;
+        border-left: 3px solid #fff;
+        border-right: 3px solid #fff;
+      }
+      .off {
+        background-color: #f9f9f9;
+        .btn {
+          &::before,
+          &::after {
+            border-color: #ccc;
+          }
+        }
+      }
+      .btn {
+        display: block;
+        height: 30px;
+        position: relative;
+        &::before,
+        &::after {
+          position: absolute;
+          top: 13px;
+          left: 10.5px;
+          border-bottom: 2px solid #878787;
+          width: 12px;
+          height: 2px;
+          content: ' ';
+          box-sizing: border-box;
+        }
+      }
+      .plus {
+        &::before {
+          -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+        }
+      }
+      input {
+        width: 100%;
+        height: 30px;
+        text-align: center;
+        border: none;
+        background-color: transparent;
       }
     }
   }
