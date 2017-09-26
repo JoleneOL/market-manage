@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author CJ
  */
@@ -32,7 +34,6 @@ public class SystemServiceImpl implements SystemService {
         if(login == null){
             return false;
         }
-        return agentLevelRepository.findByLogin(login)!=null;
-
+        return agentLevelRepository.findByLogin(login).size()!=0;
     }
 }

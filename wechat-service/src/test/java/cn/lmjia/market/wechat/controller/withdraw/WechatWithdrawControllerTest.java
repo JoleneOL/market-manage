@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.WithdrawService;
 import cn.lmjia.market.manage.page.ManageWithdrawPage;
 import cn.lmjia.market.wechat.WechatTestBase;
@@ -26,6 +27,8 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
     private WithdrawService withdrawService;
     @Autowired
     private VerificationCodeRepository verificationCodeRepository;
+    @Autowired
+    private SystemService systemService;
 
     @Test
     public void go() throws InterruptedException {
