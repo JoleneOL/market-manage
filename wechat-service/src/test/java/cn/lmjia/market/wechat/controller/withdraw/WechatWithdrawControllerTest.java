@@ -37,7 +37,6 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         //
         //设置一个财务
         //Manager manager = new Manager();
-       // manager.setId(1234657l);
         Manager manager = newRandomManager(ManageLevel.finance);
         //String[] role= {"finance"};
         //设置角色为财务

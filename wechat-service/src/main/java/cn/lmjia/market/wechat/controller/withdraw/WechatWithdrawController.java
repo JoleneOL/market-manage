@@ -13,8 +13,10 @@ import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WechatNoticeHelper;
 import cn.lmjia.market.core.service.WithdrawService;
+import cn.lmjia.market.core.util.TimeUtil;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
+import me.jiangcai.lib.seext.TimeUtils;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.user.notice.UserNoticeService;
@@ -23,6 +25,7 @@ import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,10 +42,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Controller
@@ -66,6 +71,8 @@ public class WechatWithdrawController {
     private WechatNoticeHelper wechatNoticeHelper;
     @Autowired
     private UserNoticeService userNoticeService;
+    @Autowired
+    private Environment environment;
 
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
@@ -89,6 +96,15 @@ public class WechatWithdrawController {
      */
     @GetMapping("/wechatWithdraw")
     public String index(Model model) {
+        //获取当前日期
+        LocalDate localDate = LocalDate.now();
+        //判断日期是否是1-5号,或者16-20日,只要不满足跳转友好界面
+        if(!environment.acceptsProfiles("unit_test")){
+            if(!TimeUtil.beforeTheDate(localDate,6)||TimeUtil.timeFrame(localDate,15,20)){
+                return "wechat@error/incorrectDateVisit.html";
+            }
+        }
+
         double rate = withdrawService.getCostRateForNoInvoice().doubleValue();
         model.addAttribute("ratePercent"
                 , NumberFormat.getPercentInstance(Locale.CHINA)
