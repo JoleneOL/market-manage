@@ -81,7 +81,7 @@ body {
         padding: .15em .4em;
         min-width: 8px;
         border-radius: 18px;
-        background-color: #f50;
+        background-color: #f15353;
         color: #FFFFFF;
         line-height: 1.2;
         text-align: center;
@@ -200,7 +200,7 @@ body {
         }
         .goods-price {
           font-size: 16px;
-          color: #f50;
+          color: #f15353;
         }
         .goods-bought {
           font-size: 12px;
@@ -371,7 +371,7 @@ body {
       }
       .goods-price {
         font-size: 16px;
-        color: #f50;
+        color: #f15353;
       }
       .goods-bought {
         font-size: 12px;
@@ -442,7 +442,7 @@ body {
     }
     .weui-check:checked + .weui-icon-checked:before {
       content: "\EA06";
-      color: #f50;
+      color: #f15353;
     }
   }
   .toolbar-edit {
@@ -482,7 +482,7 @@ body {
       }
       .weui-check:checked + .weui-icon-checked:before {
         content: "\EA06";
-        color: #f50;
+        color: #f15353;
       }
     }
     .goods-image {
@@ -540,7 +540,7 @@ body {
           display: inline-block;
           width: 50%;
           font-size: 16px;
-          color: #f50;
+          color: #f15353;
         }
         .goods-bought {
           display: inline-block;
@@ -552,10 +552,12 @@ body {
       }
     }
     .delete-btn {
-      width: 60px;
-      background: #f50;
+      width: 0;
+      background: #f15353;
       overflow: hidden;
       height: 122px;
+      -webkit-transition: all .2s ease-in-out;
+      transition: all .2s ease-in-out;
       button {
         width: 100%;
         display: block;
@@ -563,6 +565,9 @@ body {
         border: none;
         height: 100%;
         color: #fff;
+      }
+      &.open {
+        width: 60px;
       }
     }
   }
@@ -584,7 +589,7 @@ body {
     text-align: right;
     .cart-total_number {
       font-size: 16px;
-      color: #f50;
+      color: #f15353;
     }
   }
   .settlement {
@@ -593,7 +598,7 @@ body {
       display: block;
       width: 104px;
       color: #fff;
-      background: #f50;
+      background: #f15353;
       border: none;
       height: 100%;
     }
