@@ -87,7 +87,9 @@ $(function () {
 
     $('.js-deleteCart').click(function () {
         var $this = $(this);
+        var id = $(this).closest('.cart-group').data('goods-id');
         $.confirm("您确定要移除该商品？", function () {
+            Storage.clear(id);
             $this.closest('.cart-group').remove();
             countTotal();
         });

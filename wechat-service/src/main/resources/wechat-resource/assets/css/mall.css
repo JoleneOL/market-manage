@@ -54,12 +54,22 @@ body {
 .mall-toolbar .mall-toolbar-items .toolbar-item:last-of-type {
   margin-right: 10px;
 }
-.mall-toolbar .mall-toolbar-items .toolbar-item i {
-  font-size: 18px;
+.mall-toolbar .mall-toolbar-items .m-search {
+  vertical-align: middle;
+  width: 22px;
+  height: 22px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAABeElEQVR42u2WaYGrMBRGIwEJSEBCHLw6KA5eHQwOBgfUQXGQOKAOwAE4OLNkemcfbu7sy/nbkG/J0rg/vj7845xAAGAk0LGleJupSzpmnuZA9brJC84eTD4RuU9nTkLFwImemuLeby0TidmUAy/e9895pL4RmfH57hPHNXfsSfi8hU3uo6Zf6uyiGJJ7l9BKDBQ5w5f7w1VFNbrBY16nCSZgVphil9p3WUjuVtl/8m/IMK6fXYDFGaAFoNIE3ZsEvGKhaQConQkAek1MbxRYVrcH0SogX8/vLTApTqRZYATiey9yfL9tWinOMiWsnMe19Ju1YccH5zH3ki91Pg7Gc9xrXhKL6boO6q9oVP9P9kteMnSZ9UCV+6bolKNnuUe1UCvfbTIyHU+LxPj8zsYTAKwSGxYSgf+UD9Zpy4ETjdjxuYc/gjAQCHQEBhAmvPH5JTVEnmOSUqwSCUp2D2SOtLI2Kgm9lDe/U+3YJf4kevd+sCPi3R9fhguCJMeZByb3+gAAAABJRU5ErkJggg==");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .mall-toolbar .mall-toolbar-items .m-cart {
   position: relative;
-  color: #ccc;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQAAAAAYLlVAAABaklEQVR42u2Y0XGDQAxEVQIlUAIdhBIowR3YHZgS6MB0EHcA/9JFdGB3EDogM57LBOcHIcvI47mnX8beAdjdE7wYiUSCM9pT9zfhCNuCNU33E3awJdT+F0AtbAnndL4XgD14gf1NAIMXv/cCZri8kJyBD+EQ3wKmzmxOXIAULGl6wpy9BTQg5ykCKmcBnK92AtO5AvgKaPXRZDLh4CwguoDfhwjgKECRrJwZC6hhLcYCyvUCBksBMVfdnGCA9VBjb0IeTqDv11RZm5CfE4zamm7ahBT4xNAMutoWMa0TXMALal/leJKDD2EXn+L+60M/sxTwcQJktQQurKPYJ5JHzh7ZG1VUYfnIcAaJt+C2Q5yQw1GQop9xuVGBFXSaf9cLf/+tKeOCbiT7WeoER3JFKIlPOYouoCjoo6BFWT4EauQVi0b5WkadCVguL/jiDHbBPM5vqvB+DVyAFVxgjT3WWAqvrZcPI4lEIvEDBvt+wfcaQFcAAAAASUVORK5CYII=");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .mall-toolbar .mall-toolbar-items .m-cart .cart-badge {
   position: absolute;

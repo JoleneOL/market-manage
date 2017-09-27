@@ -119,6 +119,7 @@ $(function () {
         local[$li.data('goods-id')] = $('.btn-input').find('input').val();
         Storage.setData(local);
         $.toast("添加成功", "text");
+        updateCartLength();
         $('.js-closed-menu').trigger('click');
     });
 });
