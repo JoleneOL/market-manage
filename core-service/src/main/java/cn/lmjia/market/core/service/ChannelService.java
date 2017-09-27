@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ChannelService {
     /**
      * @param name 渠道名称
-     * @return null 或者特定的渠道
+     * @return null 或者特定的渠道下的商品信息及其可售库存
      */
     @Transactional(readOnly = true)
     Channel findByName(String name);

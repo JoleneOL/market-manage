@@ -50,6 +50,7 @@ $(function () {
 
     $('#J_datePicker').flatpickr({
         minDate: new Date(),
+        wrap: true,
         locale: 'zh'
     });
 

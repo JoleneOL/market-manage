@@ -1142,6 +1142,9 @@
 #myTeam {
   height: 100% !important;
 }
+#J_upgradeRules {
+  z-index: 501;
+}
 .view-order-wrap {
   padding-top: 8px;
   background: #efeff4;
@@ -1412,6 +1415,16 @@
   -webkit-flex: 2;
   flex: 2;
 }
+.view-goods_list .view-refresh {
+  position: absolute;
+  right: 15px;
+  top: 14px;
+  color: #009bb6;
+}
+.view-goods_list .view-refresh i {
+  font-size: 20px;
+  margin-right: 5px;
+}
 .view-goods_footer {
   display: none;
   position: fixed;
@@ -1475,6 +1488,19 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   -webkit-appearance: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.sold-out ::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  background-image: url("../img/sold-out.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 50%;
 }
 .view-team-list_link {
   padding: 6px 3px;

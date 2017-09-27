@@ -10,6 +10,8 @@ import cn.lmjia.market.core.service.MainGoodService;
 import me.jiangcai.logistics.entity.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import cn.lmjia.market.core.service.MainOrderService;
+import me.jiangcai.logistics.entity.Product_;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -33,6 +35,8 @@ public class MainGoodServiceImpl implements MainGoodService {
     private static final Log log = LogFactory.getLog(MainGoodServiceImpl.class);
     @Autowired
     private MainGoodRepository mainGoodRepository;
+    @Autowired
+    private MainOrderService mainOrderService;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;

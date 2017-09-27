@@ -137,9 +137,16 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">计划售罄日期</label>
                                             <div class="col-sm-6">
-                                                <input type="text" placeholder="日期" class="form-control"
-                                                       name="planSellOutDate" id="J_datePicker" value="2017-08-20"
-                                                       th:value="${currentData!=null && currentData.planSellOutDate != null ?#temporals.format(currentData.planSellOutDate,'yyyy-MM-dd'):''}">
+                                                <div class="input-group" id="J_datePicker">
+                                                    <input type="text" placeholder="日期"
+                                                           class="form-control flatpickr-input"
+                                                           data-input
+                                                           name="planSellOutDate" value="2017-08-20"
+                                                           th:value="${currentData!=null && currentData.planSellOutDate != null ?#temporals.format(currentData.planSellOutDate,'yyyy-MM-dd'):''}">
+                                                    <a class="input-group-addon input-button " title="clear" data-clear>
+                                                        <i class="glyphicon glyphicon-remove"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

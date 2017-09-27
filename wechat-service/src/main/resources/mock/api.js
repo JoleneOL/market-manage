@@ -378,3 +378,21 @@ Mock.mock(/\/resourceUpload\/webUploader/, {
     "id": "filePath",
     "url": uploaderImg
 });
+
+Mock.mock(/\/wechatOrder/, {
+    "resultCode": 401,
+    "resultMsg": "部分产品缺货，请重新选择商品",
+    "data": [
+        {id:1,stock:2},
+        {id:2,stock:0}
+    ]
+});
+
+Mock.mock(/\/refreshStock/, {
+    "resultCode": 200,
+    "resultMsg": "OK",
+    "data": [
+        {id:1,stock:2},
+        {id:2,stock:0}
+    ]
+});

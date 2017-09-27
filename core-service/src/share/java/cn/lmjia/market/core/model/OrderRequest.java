@@ -30,9 +30,14 @@ public class OrderRequest {
 
     public MockHttpServletRequestBuilder forGoods(MockHttpServletRequestBuilder builder) {
         MockHttpServletRequestBuilder instance = builder;
-        for (MainGood good : goods.keySet()) {
-            instance = instance.param("goods", good.getId() + "," + goods.get(good));
-        }
+        if (goods.size() == 1) {
+            for (MainGood good : goods.keySet()) {
+                instance = instance.param("goods", good.getId() + "," + goods.get(good));
+            }
+        } else
+            for (MainGood good : goods.keySet()) {
+                instance = instance.param("goods[]", good.getId() + "," + goods.get(good));
+            }
         return instance;
     }
 }

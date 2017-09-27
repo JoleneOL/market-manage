@@ -38,4 +38,13 @@ public interface PayAssistanceService {
      */
     ModelAndView payOrder(String openId, HttpServletRequest request, PayableOrder order, String authorising
             , String idNumber) throws SystemMaintainException, InvalidAuthorisingException;
+
+    /**
+     * 校验按揭码
+     *
+     * @param authorising 按揭码
+     * @param idNumber    身份证
+     * @throws InvalidAuthorisingException 如果按揭码无效
+     */
+    void checkAuthorising(String authorising, String idNumber) throws InvalidAuthorisingException;
 }

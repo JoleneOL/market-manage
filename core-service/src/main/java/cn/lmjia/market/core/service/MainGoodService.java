@@ -19,8 +19,9 @@ import java.util.Set;
 public interface MainGoodService {
 
     /**
+     *
      * @param channel 可选的特定渠道
-     * @return 在售商品列表
+     * @return 在售商品列表及其可售库存
      */
 //    @Transactional(readOnly = true)
     List<MainGood> forSale(Channel channel);

@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.InstallmentChannel;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -25,7 +26,7 @@ public abstract class AbstractMainOrderController {
     @Autowired
     private MainGoodRepository mainGoodRepository;
     @Autowired
-    private MainOrderService mainOrderService;
+    protected MainOrderService mainOrderService;
     @Autowired
     private LoginService loginService;
     @Autowired
@@ -55,7 +56,7 @@ public abstract class AbstractMainOrderController {
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
             , Address address, String mobile, String mortgageIdentifier, Long channelId
-            , MainGoodsAndAmounts amounts) {
+            , MainGoodsAndAmounts amounts) throws MainGoodLowStockException {
         Map<MainGood, Integer> realAmounts = amounts.toReal(mainGoodRepository);
         realAmounts.keySet().forEach(good -> {
             if ((channelId != null) && (good.getChannel() == null || !good.getChannel().getId().equals(channelId))) {

@@ -33,6 +33,10 @@ public interface SystemService {
      */
     String wechatOrderURi = "/wechatOrder";
     /**
+     * 支付URI
+     */
+    String wechatPayOrderURi = "/wechatOrderPay";
+    /**
      * 下单URI
      */
     String wechatOrderURiHB = "/wechatOrderHB";

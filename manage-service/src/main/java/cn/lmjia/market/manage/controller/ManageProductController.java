@@ -11,6 +11,7 @@ import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.logistics.entity.PropertyName;
+import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.repository.ProductTypeRepository;
 import me.jiangcai.logistics.repository.PropertyNameRepository;
@@ -59,6 +60,8 @@ public class ManageProductController {
     private MainProductRepository mainProductRepository;
     @Autowired
     private HaierSupplier haierSupplier;
+    @Autowired
+    private MainOrderService mainOrderService;
     @Autowired
     private ProductTypeRepository productTypeRepository;
     @Autowired
@@ -166,6 +169,9 @@ public class ManageProductController {
         product.setVolumeHeight(height);
         product.setWeight(weight);
         product.setInstall(serviceCharge);
+        //如果计划售罄时间有改动，就要重新计算今日限购数量
+        boolean isCleanProductStock = (planSellOutDate != null && !planSellOutDate.equals(product.getPlanSellOutDate()))
+                || (product.getPlanSellOutDate() != null && !product.getPlanSellOutDate().equals(planSellOutDate));
         product.setPlanSellOutDate(planSellOutDate);
         product.setDescription(StringUtils.isEmpty(productSummary) ? null : productSummary);
         product.setRichDescription(StringUtils.isEmpty(productDetail) ? null : productDetail);
@@ -182,6 +188,10 @@ public class ManageProductController {
         product.setPropertyNameValues(propertyNameValues);
         product = mainProductRepository.saveAndFlush(product);
 
+        mainProductRepository.save(product);
+        if(isCleanProductStock){
+            mainOrderService.cleanProductStock(product);
+        }
         //转存资源
         if (!StringUtils.isEmpty(productImgPath) && productImgPath.length() > 1) {
             String productImgResource = "product/" + product.getCode() + "." + FileUtils.fileExtensionName(productImgPath);
