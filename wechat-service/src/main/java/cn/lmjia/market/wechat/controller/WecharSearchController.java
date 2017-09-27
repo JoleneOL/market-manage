@@ -11,6 +11,7 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.util.ApiDramatizer;
+import com.alibaba.fastjson.JSONObject;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.logistics.entity.ProductType_;
 import me.jiangcai.logistics.entity.Product_;
@@ -23,13 +24,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.criteria.*;
+import javax.ws.rs.POST;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by helloztt on 2017-09-25.
@@ -171,5 +172,18 @@ public class WecharSearchController {
         };
     }
 
+    @PostMapping("/wechatSearch/goodsList")
+    public String cartGoodsList(@RequestParam String order,Model model) {
+        Map<MainGood, Long> cartGoodsMap = new HashMap<>();
+        JSONObject object = JSONObject.parseObject(order);
+        object.keySet().forEach(key -> {
+            MainGood mainGood = mainGoodService.findOne(Long.valueOf(key));
+            if (mainGood != null) {
+                cartGoodsMap.put(mainGood, object.getLong(key));
+            }
+        });
+        model.addAttribute("goodsMap", cartGoodsMap);
+        return "wechat@mall/cart.html";
+    }
 
 }

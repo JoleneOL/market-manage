@@ -24,14 +24,14 @@
       th:data-detail-url="@{/wechatOrderDetail}"
       th:data-pay-url="@{/wechatOrderPay}">
 <div class="mall-toolbar clearfix js-extra-h-c">
-    <h3><a href="index.html">利美家</a></h3>
+    <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
     <div class="mall-toolbar-items">
         <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
             <span class="cart-badge">0</span>
         </a>
     </div>
 </div>
-<form action="cart.html" method="post" id="J_cartForm">
+<form action="cart.html" th:action="@{/wechatSearch/goodsList}" method="post" id="J_cartForm">
     <input type="hidden" name="order">
 </form>
 <section class="view_body view_pb-more">

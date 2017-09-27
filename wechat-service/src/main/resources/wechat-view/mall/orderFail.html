@@ -19,7 +19,7 @@
 </head>
 <body class="view-fs-small">
 <div class="mall-toolbar clearfix">
-    <h3><a href="index.html">利美家</a></h3>
+    <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
     <div class="mall-toolbar-items">
         <a href="orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
@@ -28,7 +28,7 @@
         </a>
     </div>
 </div>
-<form action="cart.html" method="post" id="J_cartForm">
+<form action="cart.html" th:action="@{/wechatSearch/goodsList}" method="post" id="J_cartForm">
     <input type="hidden" name="order">
 </form>
 <div class="weui-msg">

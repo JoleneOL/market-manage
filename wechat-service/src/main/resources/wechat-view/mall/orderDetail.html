@@ -19,7 +19,7 @@
 </head>
 <body class="view-bg-color view-fs-small">
 <div class="mall-toolbar clearfix js-extra-h-c">
-    <h3><a href="index.html">利美家</a></h3>
+    <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
     <div class="mall-toolbar-items">
         <a href="orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
@@ -28,7 +28,7 @@
         </a>
     </div>
 </div>
-<form action="cart.html" method="post" id="J_cartForm">
+<form action="cart.html" th:action="@{/wechatSearch/goodsList}" method="post" id="J_cartForm">
     <input type="hidden" name="order">
 </form>
 <section class="view_body">
@@ -113,6 +113,9 @@
         </div>
     </div>
 </section>
+<form action="orderPlace.html" th:action="@{/wechatSearch/goodsList}" method="post" id="J_orderPlace">
+    <input type="hidden" name="order">
+</form>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="../../wechat-resource/assets/js/mall/storage.js"></script>
