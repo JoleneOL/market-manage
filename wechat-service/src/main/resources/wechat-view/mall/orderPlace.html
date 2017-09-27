@@ -1,10 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" class="infinite">
-<!--/*@thymesVar id="goodList" type="java.util.Collection<cn.lmjia.market.core.entity.MainGood>"*/-->
-<!--/*@thymesVar id="trj" type="boolean"*/-->
-<!--/*@thymesVar id="huabeiEnable" type="boolean"*/-->
-<!--/*@thymesVar id="installmentSupported" type="boolean"*/-->
-<!--/*@thymesVar id="channel" type="cn.lmjia.market.core.entity.channel.Channel"*/-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,25 +11,43 @@
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
-
     <link rel="stylesheet" href="../../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 </head>
 <body class="view-bg-color view-fs-small">
+<div class="mall-toolbar clearfix">
+    <h3><a href="index.html">利美家</a></h3>
+    <div class="mall-toolbar-items">
+        <a href="../orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
+            <span class="cart-badge">0</span>
+        </a>
+    </div>
+</div>
+<form action="cart.html" method="post" id="J_cartForm">
+    <input type="hidden" name="order">
+</form>
 <section class="view_body view-bg-color panel" id="J_main">
-    <form action="orderSuccess.html" method="post" th:action="@{/wechatOrder}" th:method="post" id="J_form">
-        <div class="weui-cells__title">我要下单 <a href="orderList.html" th:href="@{/wechatOrderList}"
-                                               class="weui-cell_link">订单列表</a></div>
+    <form action="../orderSuccess.html" method="post" th:action="@{/wechatOrder}" th:method="post" id="J_form">
         <div class="weui-cells">
-            <div class="weui-cell weui-cell_access" id="J_addGoods">
-                <div class="weui-cell__bd"><i class="fa fa-plus-circle text-big text-custom view-add-icon"></i>添加商品
+            <div class="weui-cells view-mt-0" id="J_showGoodsList">
+                <!--TODO 这里循环-->
+                <div class="weui-cell">
+                    <div class="weui-cell__hd">
+                        <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp"
+                             width="60" height="60">
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p>量子立式净水机（黑色）</p>
+                        <p class="weui-media-box__desc">SCRO-200QL/A</p>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p class="text-error text-right">￥<span>3000.00</span></p>
+                        <p class="text-error text-right">x<span>1</span></p>
+                    </div>
                 </div>
-                <div class="weui-cell__ft"></div>
             </div>
-            <div class="weui-cells view-mt-0" id="J_showGoodsList"></div>
         </div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -78,7 +91,8 @@
                 </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="text" id="J_cityPicker"
-                           th:value="${@environment.acceptsProfiles('staging')?'浙江省 杭州市 滨江区':''}" name="address">
+                           th:value="${@environment.acceptsProfiles('staging')?'浙江省 杭州市 滨江区':''}" name="address"
+                           placeholder="请选择地址">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
@@ -117,7 +131,10 @@
             <!--<input type="hidden" title="详细地址" name="invoiceFullAddress" disabled>-->
             <!--<input type="hidden" title="联系电话" name="invoiceMobile" disabled>-->
             <!--</div>-->
-            <div id="J_goodsListArea"></div>
+            <div id="J_goodsListArea">
+                <!--TODO 商品数据这里循环-->
+                <input type="hidden" name="goods" value="0,5">
+            </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">订单总金额</label>
@@ -125,155 +142,22 @@
                 <div class="weui-cell__bd">
                     <input type="hidden" name="orderTotal" value="0">
                     <p class="weui-input text-big" id="J_orderTotal">
-                        <strong>0</strong>
+                        <strong>3000</strong>
                         <span class="unit-txt">元</span>
                     </p>
                 </div>
             </div>
-        </div>
-        <th:block th:if="${channel!=null}">
-            <input type="hidden" name="channelId" th:value="${channel.id}"/>
-        </th:block>
-        <div th:if="${trj}" class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">按揭码</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入投融家按揭码" name="authorising">
-                </div>
-                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label class="weui-label">申请身份证</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入申请按揭的身份证号码" maxlength="18" minlength="18"
-                           name="idNumber">
-                </div>
-                <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
-            </div>
-        </div>
-        <div th:if="${!installmentSupported && huabeiEnable}" class="weui-cells weui-cells_checkbox">
-            <label class="weui-cell weui-check__label" for="J_installment">
-                <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check" name="installmentHuabai" id="J_installment" value="1">
-                    <i class="weui-icon-checked"></i>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>花呗分期</p>
-                </div>
-            </label>
-        </div>
-        <div class="weui-cells__tips text-right displayNone" id="J_installmentInfo">
-            分期金额￥<span class="js-total">**</span>&nbsp;&nbsp;分24期&nbsp;
-            ￥<span class="js-installment">**</span>/期
         </div>
         <div class="weui-btn-area">
             <button type="submit" class="weui-btn weui-btn_custom" id="J_submitBtn">下&nbsp;&nbsp;单</button>
         </div>
         <label for="weuiAgree" class="weui-agree view-agress_inline">
             <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">
-            <span class="weui-agree__text">
-                同意<a href="javascript:;">《用户协议》</a>
-            </span>
+            <span class="weui-agree__text">同意</span>
         </label>
-        <a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules">查看</a>
+        <a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules">《用户协议》</a>
     </form>
 </section>
-<aside id="J_goodsList">
-    <div class="weui-panel weui-panel_access view-goods_list">
-        <div class="weui-panel__hd">商品列表</div>
-        <div class="weui-panel__bd">
-            <div class="weui-media-box weui-media-box_appmsg js-goods-list"
-                 data-id="1"
-                 data-model="SCRO-200QL/A"
-                 data-goods="量子立式净水机（黑色）"
-                 data-price="1000.00"
-                 data-price-channel="0"
-                 data-amount="0"
-                 th:each="good:${goodList}"
-                 th:data-id="${good.id}"
-                 th:data-price="${good.product.deposit}"
-                 th:data-price-channel="${good.channelChangeAsAdd}"
-                 th:data-service-charge="${good.product.install}"
-                 th:data-model="${good.product.code}"
-                 th:data-goods="${good.product.name}">
-                <!--暂时无缩略图-->
-                <!--<div class="weui-media-box__hd">-->
-                <!--<img class="weui-media-box__thumb" src="http://iph.href.lu/120x120?text=Goods">-->
-                <!--</div>-->
-                <div class="weui-media-box__bd">
-                    <div class="weui-flex view-mb-4">
-                        <h4 class="view_flex-2 weui-media-box__title" th:text="${good.product.name}">量子立式净水机（黑色）</h4>
-                        <h4 class="view_flex-1 weui-media-box__title text-error">￥<span
-                                th:text="${#numbers.formatDecimal(good.totalPrice,1,2)}">1000.00</span></h4>
-                    </div>
-                    <div class="weui-flex">
-                        <div class="view_flex-1">
-                            <p class="weui-media-box__desc view-mb-4" th:text="${good.product.code}">SCRO-200QL/A</p>
-                            <!--限购显示，不限购隐藏 可以嘛，给婷姐都考虑到了-->
-                            <p class="weui-media-box__desc text-error">限购<span>100</span><span>台</span></p>
-                        </div>
-                        <div class="view_flex-1 view_flex-right text-right">
-                            <div class="spinner view-mt-4">
-                                <!--如果数量为0，class有 disabled，参数有disabled-->
-                                <button class="decrease disabled" disabled>&minus;</button>
-                                <!--max为限购的最大值-->
-                                <input type="number" class="value" max="100" min="0" value="0">
-                                <!--如果数量为最大值，class有 disabled，参数有disabled-->
-                                <button class="increase">&plus;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="weui-media-box weui-media-box_appmsg js-goods-list"
-                 data-id="2"
-                 data-model="SP70"
-                 data-goods="量子食品优化宝"
-                 data-price="9800.00"
-                 data-price-channel="-800"
-                 data-amount="0"
-                 th:remove="all">
-                <div class="weui-media-box__bd">
-                    <div class="weui-flex view-mb-4">
-                        <h4 class="view_flex-2 weui-media-box__title">量子食品优化宝</h4>
-                        <h4 class="view_flex-1 weui-media-box__title text-error">￥<span>9800.00</span></h4>
-                    </div>
-                    <div class="weui-flex">
-                        <div class="view_flex-1">
-                            <p class="weui-media-box__desc view-mb-4">SCRO-200QL/A</p>
-                            <p class="weui-media-box__desc text-error">限购<span>100</span><span>台</span></p>
-                        </div>
-                        <div class="view_flex-1 view_flex-right text-right">
-                            <div class="spinner view-mt-4">
-                                <button class="decrease disabled" disabled>&minus;</button>
-                                <input type="number" class="value" min="0" max="20" value="0">
-                                <button class="increase">&plus;</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <div class=" weui-form-preview view-goods_footer">
-        <div class="weui-form-preview__hd">
-            <label class="weui-form-preview__label">合计</label>
-            <em class="weui-form-preview__value text-error">￥<span id="J_goodsTotal">0.00</span></em>
-        </div>
-        <div class="weui-form-preview__ft">
-            <a class="weui-form-preview__btn weui-form-preview__btn_default close-button" href="javascript:"
-               id="J_goodsCancel">取消</a>
-            <button type="submit" class="weui-form-preview__btn view-form-preview__btn_primary" id="J_goodsOK">确定
-            </button>
-        </div>
-    </div>
-</aside>
 <div id="J_upgradeRules" class="weui-popup__container">
     <div class="weui-popup__overlay"></div>
     <div class="weui-popup__modal">
@@ -505,20 +389,8 @@
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/city-picker.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
-<script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
-<script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
-<script src="//cdn.lmjia.cn/slideout/1.0.1/slideout.min.js"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
+<script src="../../wechat-resource/assets/js/mall/orderPlace.js"></script>
 
-<script src="../../wechat-resource/assets/js/orderPlace.js"
-        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=4)}"></script>
-
-
-<script th:if="${trj}">
-    $(function () {
-        var input = $('#J_goodsAmount');
-        input.prop('readonly', true);
-        input.val(1);
-    })
-</script>
 <th:block th:include="wechat@fragments/share.html::hideAllShare"/>
 </html>

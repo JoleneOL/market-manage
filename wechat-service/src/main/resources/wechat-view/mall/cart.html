@@ -11,7 +11,6 @@
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
 
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
@@ -20,15 +19,15 @@
 <div class="mall-toolbar clearfix">
     <h3><a href="index.html">利美家</a></h3>
     <div class="mall-toolbar-items">
-        <a href="../orderList.html" class="toolbar-item">我的订单</a>
-        <a href="search.html" class="toolbar-item"><i class="fa fa-search"></i></a>
+        <a href="../orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
     </div>
 </div>
 <div class="mall-extra-toolbar ">
     <div class="toolbar-wrap clearfix">
         <div class="toolbar-checkbox">
             <label>
-                <input type="checkbox" name="checkbox" class="weui-check">
+                <input type="checkbox" name="checkbox" class="weui-check" id="J_allCheck">
                 <i class="weui-icon-checked"></i>全选
             </label>
         </div>
@@ -38,10 +37,11 @@
     </div>
 </div>
 <div class="mall-cart-list">
-    <div class="cart-group">
+    <!--TODO 这里循环-->
+    <div class="cart-group" data-goods-id="0" data-goods-price="3000">
         <div class="checked-box">
             <label>
-                <input type="checkbox" name="checkbox" class="weui-check">
+                <input type="checkbox" name="checkbox" class="weui-check js-checkGoods">
                 <i class="weui-icon-checked"></i>
             </label>
         </div>
@@ -51,20 +51,27 @@
         <div class="goods-box">
             <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
             <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
-            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <!--TODO 这里处理，数量等于min，btn-minus 添加 class disabled，属性disabled -->
+            <!--TODO 这里处理，数量等于max，btn-plus 添加 class disabled，属性disabled -->
+            <div class="edit-quantity">
+                <button class="btn btn-minus disabled" disabled>&minus;</button>
+                <input type="tel" max="3" min="1" value="1" class="btn-value">
+                <button class="btn btn-plus">&plus;</button>
+            </div>
+            <p class="goods-stock">库存量&nbsp;&nbsp;3台</p>
             <div class="goods-info">
                 <div class="goods-price">￥3000</div>
-                <div class="goods-bought">x5</div>
+                <div class="goods-bought">x1</div>
             </div>
         </div>
         <div class="delete-btn">
-            <button type="button">删除</button>
+            <button type="button" class="js-deleteCart">删除</button>
         </div>
     </div>
-    <div class="cart-group">
+    <div class="cart-group" data-goods-id="1" data-goods-price="9800">
         <div class="checked-box">
             <label>
-                <input type="checkbox" name="checkbox" class="weui-check">
+                <input type="checkbox" name="checkbox" class="weui-check js-checkGoods">
                 <i class="weui-icon-checked"></i>
             </label>
         </div>
@@ -72,33 +79,34 @@
             <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
         </div>
         <div class="goods-box">
-            <h4 class="goods-name" style="display: none">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
-            <p class="goods-describe" style="display: none">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
             <div class="edit-quantity">
                 <button class="btn btn-minus">&minus;</button>
-                <input type="tel" max="8" min="1" value="5" class="btn-value">
+                <input type="tel" max="5" min="1" value="3" class="btn-value">
                 <button class="btn btn-plus">&plus;</button>
             </div>
-            <p class="goods-stock">库存量&nbsp;&nbsp;100台</p>
+            <p class="goods-stock">库存量&nbsp;&nbsp;5台</p>
             <div class="goods-info">
-                <div class="goods-price">￥3000</div>
-                <div class="goods-bought">x5</div>
+                <div class="goods-price">￥9800</div>
+                <div class="goods-bought">x3</div>
             </div>
         </div>
         <div class="delete-btn">
-            <button type="button">删除</button>
+            <button type="button" class="js-deleteCart">删除</button>
         </div>
     </div>
 </div>
 <div class="cart-footer">
-    <div class="cart-total"><span class="cart-total_title">合计：</span><span class="cart-total_number">￥3000.00</span></div>
-    <div class="settlement"><button type="button">结算</button></div>
+    <div class="cart-total"><span class="cart-total_title">合计：</span><span class="cart-total_number">￥<i id="J_orderTotal">0</i></span></div>
+    <div class="settlement"><button type="button" id="J_settlementBtn">结算</button></div>
 </div>
+<form action="orderPlace.html" method="post" id="J_orderPlace">
+    <input type="hidden" name="order">
+</form>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
-<script src="../../mock/mock-min.js" th:remove="all"></script>
-<script src="../../mock/mall.js" th:remove="all"></script>
 <script src="../../wechat-resource/assets/js/mall/storage.js"></script>
-<script src="../../wechat-resource/assets/js/mall/cart.js?v=1"></script>
+<script src="../../wechat-resource/assets/js/mall/cart.js?v=2"></script>
 </html>

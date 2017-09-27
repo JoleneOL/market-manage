@@ -144,6 +144,7 @@
   color: #ccc;
 }
 .text-link {
+  font-size: 13px;
   color: #586c94;
 }
 .text-center {
@@ -999,6 +1000,7 @@
 }
 .view-agress_inline {
   display: inline-block;
+  padding-right: 0;
 }
 .view-scroll-wrap {
   height: 100%;

@@ -16,6 +16,7 @@ $(function () {
         }
     });
 
+    // 花呗分期相关
     var installment = $('#J_installment');
     var submitBtn = $('#J_submitBtn');
     var info = $('#J_installmentInfo');
@@ -190,7 +191,7 @@ $(function () {
         }
     };
 
-
+    // 订单购物车逻辑
     var $goodListData = $('#J_goodsList').find('.js-goods-list');
     var $goodsListArea = $('#J_goodsListArea');
     var $showGoodsList = $('#J_showGoodsList');
