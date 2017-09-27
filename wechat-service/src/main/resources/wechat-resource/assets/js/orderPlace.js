@@ -40,51 +40,6 @@ $(function () {
     }
 
 
-    var $goodListData = $('#J_goodsList').find('.js-goods-list');
-    var $goodsListArea = $('#J_goodsListArea');
-    var $showGoodsList = $('#J_showGoodsList');
-
-    function getBuyData() {
-        var dataJSON = [];
-        $goodListData.each(function () {
-            var data = {};
-            if ($(this).attr('data-amount') > 0) {
-                data['id'] = $(this).attr('data-id');
-                data['model'] = $(this).attr('data-model');
-                data['goods'] = $(this).attr('data-goods');
-                data['price'] = $(this).attr('data-price');
-                data['amount'] = $(this).attr('data-amount');
-                dataJSON.push(data);
-            }
-        });
-        return dataJSON;
-    }
-
-    function setBuyData(array) {
-        $goodsListArea.empty();
-        $.each(array, function (i, v) {
-            var hiddenInput = $('<input type="hidden" name="goods">').val(v['id'] + ',' + v['amount']).attr('data-id', v['id']);
-            $goodsListArea.append(hiddenInput);
-        });
-    }
-
-    function makeBuyList(array) {
-        $showGoodsList.empty();
-        $.each(array, function (i, v) {
-            var goods = $('<div class="weui-cell js-showList" data-id="' + v['id'] + '" data-amount="' + v['amount'] + '">\n' +
-                '              <div class="weui-cell__bd">\n' +
-                '                  <p>' + v['goods'] + '</p>\n' +
-                '                  <p class="weui-media-box__desc">' + v['model'] + '</p>\n' +
-                '              </div>\n' +
-                '              <div class="weui-cell__bd">\n' +
-                '                  <p class="text-error text-right">￥<span>' + v['price'] + '</span></p>\n' +
-                '                  <p class="text-error text-right">x<span>' + v['amount'] + '</span></p>\n' +
-                '              </div>\n' +
-                '          </div>');
-            $showGoodsList.append(goods);
-        });
-    }
-
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1([34578])\d{9}$/;

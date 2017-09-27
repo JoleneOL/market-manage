@@ -6,6 +6,30 @@ $(function () {
         }
     });
 
+    // 花呗分期相关
+    var installment = $('#J_installment');
+    var submitBtn = $('#J_submitBtn');
+    var info = $('#J_installmentInfo');
+    installment.change(function () {
+        installmentFunc($('#J_orderTotal').find('strong').text());
+        if ($(this).is(':checked')) {
+            $('#J_checkCode').removeClass('displayNone');
+            info.removeClass('displayNone');
+            submitBtn.text('提交分期订单');
+
+        } else {
+            $('#J_checkCode').addClass('displayNone');
+            info.addClass('displayNone');
+            submitBtn.html('下&nbsp;&nbsp;单');
+        }
+    });
+
+    function installmentFunc(total) {
+        var num = +total;
+        info.find('.js-total').text(num * 1.19);
+        info.find('.js-installment').text((num / 24).toFixed(2));
+    }
+
     $.validator.addMethod("isPhone", function (value, element) {
         var mobile = /^1([34578])\d{9}$/;
         return this.optional(element) || (mobile.test(value));
@@ -47,13 +71,63 @@ $(function () {
             if ($showGoodsList.children().length > 0) {
                 $.showLoading('订单提交中');
                 submitBtn.prop('disabled', true);
-                form.submit();
+                // form.submit();
+                submitOrder($('#J_form').serializeObject());
             } else {
                 $.toptip('商品列表不能为空', 1000);
             }
 
         }
     });
+
+    //订单提交
+    function submitOrder(data) {
+        $.showLoading('订单提交中');
+        $.ajax('/wechatOrder', {
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                $.hideLoading();
+                if (data.resultCode === 401) {
+                    $.toptip(data.resultMsg);
+                    resetGoodsList(data.data);
+                    return false;
+                }
+                if (data.resultCode === 402) {
+                    $.toptip('按揭码或者身份证号码无效');
+                    return false;
+                }
+                if (data.resultCode !== 200) {
+                    $.toptip("订单提交失败，请重试");
+                    return false;
+                }
+                var orderPKId = data.data.id;
+                var channelId = data.data.channelId;
+                var installmentHuabai = data.data.installmentHuabai;
+                var idNumber = data.data.idNumber;
+                var authorising = data.data.authorising;
+                //提交成功后的跳转
+                var payOrderHref = "wechatOrderPay.html"
+                    + "?orderPKId=" + orderPKId
+                    + "&installmentHuabai=" + installmentHuabai;
+                if (!!channelId)
+                    payOrderHref = payOrderHref
+                        + "&channelId=" + channelId;
+                if (!!idNumber)
+                    payOrderHref = payOrderHref
+                        + "&idNumber=" + idNumber;
+                if (!!authorising)
+                    payOrderHref = payOrderHref
+                        + "&authorising=" + authorising;
+                window.location.href = payOrderHref;
+            },
+            error: function () {
+                $.hideLoading();
+                $.toptip("系统错误");
+            }
+        })
+    }
 
     // 发票相关
     $('#J_needInvoice').click(function () {
@@ -154,5 +228,21 @@ $(function () {
         }
     };
 
+
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    }
 
 });

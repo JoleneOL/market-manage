@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="order" type="cn.lmjia.market.core.entity.MainOrder"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>订单详情</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+</head>
+<body class="view-bg-color view-fs-small">
+<div class="mall-toolbar clearfix js-extra-h-c">
+    <h3><a href="index.html">利美家</a></h3>
+    <div class="mall-toolbar-items">
+        <a href="orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
+        <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
+            <span class="cart-badge">0</span>
+        </a>
+    </div>
+</div>
+<form action="cart.html" method="post" id="J_cartForm">
+    <input type="hidden" name="order">
+</form>
+<section class="view_body">
+    <div class="view-form-list">
+        <div class="weui-cells__title">用户信息</div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">用户</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p th:text="${order.customer.name}">李菲菲</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">性别</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p th:text="${{order.customer.gender}}">女</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">手机号码</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p th:text="${order.customer.mobile}">15789944587</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">下单时间</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p th:text="${{order.orderTime}}">2017-09-09</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">收货地址</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p th:text="${order.installAddress}">浙江杭州西湖大西湖国际</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">订单总金额</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <p th:text="${{order.orderDueAmountMoney}}">5000.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="view-order-list">
+        <div class="weui-cells__title">商品信息</div>
+        <div class="weui-cells" th:each="record:${order.record.amountRecord}">
+            <div class="weui-cell">
+                <div class="weui-cell__bd" th:text="${record.productName}">量子立式净水机（黑色）</div>
+                <div class="weui-cell__ft text-error" th:text="${record.price}">￥<span>3000.00</span></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd" th:text="${record.productType}">SCRO-200LK-L</div>
+                <div class="weui-cell__ft text-error">x<span th:text="${record.amount}">1</span></div>
+            </div>
+        </div>
+        <div class="weui-cells" th:remove="all">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">量子立式净水机（白色）</div>
+                <div class="weui-cell__ft text-error">￥<span>5000.00</span></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">SCRO-200LK-B</div>
+                <div class="weui-cell__ft text-error">x<span>10</span></div>
+            </div>
+        </div>
+        <div class="view-order-list_ex">
+            <p class="view-order_ex_title">合计：<span th:text="${{order.orderDueAmountMoney}}">￥1841937</span></p>
+            <p class="view-order_ex_title text-gray">订单时间：<span th:text="${{order.orderTime}}">2000-04-07</span></p>
+        </div>
+    </div>
+</section>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
+</html>

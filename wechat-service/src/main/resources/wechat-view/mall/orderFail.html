@@ -12,10 +12,25 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
 
-    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+
 </head>
 <body class="view-fs-small">
+<div class="mall-toolbar clearfix">
+    <h3><a href="index.html">利美家</a></h3>
+    <div class="mall-toolbar-items">
+        <a href="orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
+        <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
+            <span class="cart-badge">0</span>
+        </a>
+    </div>
+</div>
+<form action="cart.html" method="post" id="J_cartForm">
+    <input type="hidden" name="order">
+</form>
 <div class="weui-msg">
     <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
     <div class="weui-msg__text-area">
@@ -23,12 +38,12 @@
         <p class="weui-msg__desc">单笔订单金额过大，请尝试商品分开下单。</p>
         <p class="weui-msg__desc">若有疑问可拨打下方客服电话进行咨询。</p>
     </div>
-    <div class="weui-msg__opr-area">
-        <p class="weui-btn-area">
-            <a href="orderPlace.html" th:href="@{/wechatOrder}" class="weui-btn weui-btn_custom">重新下单</a>
-            <a href="orderList.html" th:href="@{/wechatOrderList}" class="weui-btn weui-btn_default">订单列表</a>
-        </p>
-    </div>
+    <!--<div class="weui-msg__opr-area">-->
+        <!--<p class="weui-btn-area">-->
+            <!--<a href="orderPlace.html" th:href="@{/wechatOrder}" class="weui-btn weui-btn_custom">重新下单</a>-->
+            <!--<a href="orderList.html" th:href="@{/wechatOrderList}" class="weui-btn weui-btn_default">订单列表</a>-->
+        <!--</p>-->
+    <!--</div>-->
     <div class="weui-msg__extra-area">
         <div class="weui-footer">
             <p class="weui-footer__text weui-footer__links">客服电话 <a href="tel:0571-88187913">0571-88187913</a></p>
@@ -36,4 +51,6 @@
     </div>
 </div>
 </body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
 </html>
