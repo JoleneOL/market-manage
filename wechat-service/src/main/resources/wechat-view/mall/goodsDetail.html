@@ -19,7 +19,7 @@
 </head>
 <body class="bg-gray" th:object="${currentData}">
 <div class="mall-toolbar clearfix">
-    <h3><a href="index.html">利美家</a></h3>
+    <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
     <div class="mall-toolbar-items">
         <a href="../orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item"><i class="fa fa-search"></i></a>
@@ -99,26 +99,27 @@
         <div class="sku-pro-info">
             <h4 class="goods-name" th:text="*{product.name}">理光 GR II GRII 理光GR2代数码相机卡片机</h4>
             <p class="goods-price" th:text="*{totalPrice}">￥5579</p>
-            <p class="goods-stock">库存：<span th:text="${@stockService.usableStockTotal(currentData.product)}" class="js-goodsStock">3</span></p>
+            <p class="goods-stock">库存：<span th:text="${@stockService.usableStockTotal(currentData.product)}"
+                                            class="js-goodsStock">3</span></p>
         </div>
         <div class="sku-closed js-closed-menu"></div>
     </div>
     <div class="spec-menu-bd">
-        <!--TODO 这里循环是 <div class="sku-info"> @helloztt-->
-        <div class="sku-info">
-            <th:block th:each="property:*{product.productType.specPropertyNameList}">
-                <h4 th:text="${property.name}">颜色</h4>
-                <ul th:each="propertyValue:${currentData.product.productType.getPropertyValueByPropertyName(property)}" th:remove="all-but-first" class="property-list">
-                    <li th:with="propertyValueGoods=${@mainGoodService.forSaleByPropertyValue(null,currentData.product.productType,property,propertyValue)}"
-                        th:if="${propertyValueGoods != null}"
-                        th:attr="data-goods-id = ${propertyValueGoods.id},data-goods-stock=${@stockService.usableStockTotal(propertyValueGoods.product)}
+        <div class="sku-info" th:each="property:*{product.productType.specPropertyNameList}">
+            <h4 th:text="${property.name}">颜色</h4>
+            <ul th:each="propertyValue:${currentData.product.productType.getPropertyValueByPropertyName(property)}"
+                th:remove="all-but-first" class="property-list">
+                <li th:with="propertyValueGoods=${@mainGoodService.forSaleByPropertyValue(null,currentData.product.productType,property,propertyValue)}"
+                    th:if="${propertyValueGoods != null}"
+                    th:attr="data-goods-id = ${propertyValueGoods.id},data-goods-stock=${@stockService.usableStockTotal(propertyValueGoods.product)}
                         ,data-disabled=${@stockService.usableStockTotal(propertyValueGoods.product) <= 0}"
-                            th:text="${propertyValue.value}"
-                        data-goods-id="0" data-goods-stock="3" class="active">黑色</li>
-                    <li data-goods-id="1" data-goods-stock="5">白色</li>
-                    <li data-goods-id="2" data-goods-stock="0" data-disabled="disabled" class="disabled">骚红色</li>
-                </ul>
-            </th:block>
+                    th:text="${propertyValue.value}"
+                    th:class="${currentData.product.propertyNameValues.values().contains(propertyValue.value) ? 'active' : ''}"
+                    data-goods-id="0" data-goods-stock="3" class="active">黑色
+                </li>
+                <li data-goods-id="1" data-goods-stock="5">白色</li>
+                <li data-goods-id="2" data-goods-stock="0" data-disabled="disabled" class="disabled">骚红色</li>
+            </ul>
         </div>
         <div class="quantity-info">
             <div class="sku-quantity">

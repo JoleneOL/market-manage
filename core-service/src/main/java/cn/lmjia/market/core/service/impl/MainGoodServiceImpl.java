@@ -23,10 +23,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author CJ
@@ -88,7 +85,33 @@ public class MainGoodServiceImpl implements MainGoodService {
             } else {
                 predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
             }
-            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType), productType));
+            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType).get(ProductType_.id), productType.getId()));
+            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+        });
+    }
+
+    @Override
+    public List<MainGood> forSaleByPropertyValue(Channel channel, MainGood good, Map<Long, String> propertyValueMap) {
+        return mainGoodRepository.findAll((root, query, cb) -> {
+            Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
+            List<Predicate> predicateList = new ArrayList<>();
+            predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
+            predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
+            if (channel == null) {
+                predicateList.add(cb.or(
+                        channelJoin.isNull()
+                        , cb.isFalse(channelJoin.get(Channel_.extra))
+                ));
+            } else {
+                predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
+            }
+            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType).get(ProductType_.id), good.getProduct().getProductType().getId()));
+            if (!CollectionUtils.isEmpty(propertyValueMap)) {
+                propertyValueMap.keySet().forEach(property -> {
+                    predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).key().get(PropertyName_.id.getName()),property));
+                    predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).value(),propertyValueMap.get(property)));
+                });
+            }
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         });
     }

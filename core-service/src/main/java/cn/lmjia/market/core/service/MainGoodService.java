@@ -8,6 +8,7 @@ import me.jiangcai.logistics.entity.PropertyValue;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -45,12 +46,23 @@ public interface MainGoodService {
     List<MainGood> forSaleByProductType(Channel channel, ProductType productType);
 
     /**
-     * 根据特定类型-属性-属性值 查找商品
+     * 根据特定类型-属性-属性值 查找与此商品相关的其他商品
      *
-     * @param channel       可选的特定渠道
-     * @param productType   货品类型
-     * @param propertyName  规格
-     * @param propertyValue 规格值
+     * @param channel          可选的特定渠道
+     * @param good             商品
+     * @param propertyValueMap 属性键值
+     * @return
+     */
+    @Transactional(readOnly = true)
+    List<MainGood> forSaleByPropertyValue(Channel channel, MainGood good, Map<Long, String> propertyValueMap);
+
+    /**
+     * 暂时用于商城第一个版本
+     * 根据特定类型-属性-属性值 查找与此商品相关的其他商品
+     *
+     * @param channel          可选的特定渠道
+     * @param propertyName             商品
+     * @param propertyValue 属性键值
      * @return
      */
     @Transactional(readOnly = true)
