@@ -43,12 +43,12 @@ public class MainGoodServiceImpl implements MainGoodService {
 
     @Override
     public List<MainGood> forSale(Channel channel) {
-        return forSale(channel, null);
+        return forSale(channel, null, null, null);
     }
 
     @Override
-    public List<MainGood> forSale(Channel channel, String... tags) {
-        return mainGoodRepository.findAll((root, query, cb) -> {
+    public List<MainGood> forSale(Channel channel, ProductType productType, Map<Long, String> propertyValueMap, String... tags) {
+        List<MainGood> mainGoodList = mainGoodRepository.findAll((root, query, cb) -> {
             Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
             List<Predicate> predicateList = new ArrayList<>();
             predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
@@ -60,6 +60,15 @@ public class MainGoodServiceImpl implements MainGoodService {
                 ));
             } else {
                 predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
+            }
+            if (productType != null) {
+                predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType).get(ProductType_.id), productType.getId()));
+            }
+            if (!CollectionUtils.isEmpty(propertyValueMap)) {
+                propertyValueMap.keySet().forEach(property -> {
+                    predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).key().get(PropertyName_.id.getName()), property));
+                    predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).value(), propertyValueMap.get(property)));
+                });
             }
             if (tags != null && tags.length > 0) {
                 List<Predicate> tagSearchPredicateList = new ArrayList<>();
@@ -72,83 +81,23 @@ public class MainGoodServiceImpl implements MainGoodService {
             }
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         });
-    }
-
-    @Override
-    public List<MainGood> forSaleByProductType(Channel channel, ProductType productType) {
-        return mainGoodRepository.findAll((root, query, cb) -> {
-            Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
-            List<Predicate> predicateList = new ArrayList<>();
-            predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
-            predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
-            if (channel == null) {
-                predicateList.add(cb.or(
-                        channelJoin.isNull()
-                        , cb.isFalse(channelJoin.get(Channel_.extra))
-                ));
-            } else {
-                predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
-            }
-            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType).get(ProductType_.id), productType.getId()));
-            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
-        });
-    }
-
-    @Override
-    public List<MainGood> forSaleByPropertyValue(Channel channel, MainGood good, Map<Long, String> propertyValueMap) {
-        return mainGoodRepository.findAll((root, query, cb) -> {
-            Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
-            List<Predicate> predicateList = new ArrayList<>();
-            predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
-            predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
-            if (channel == null) {
-                predicateList.add(cb.or(
-                        channelJoin.isNull()
-                        , cb.isFalse(channelJoin.get(Channel_.extra))
-                ));
-            } else {
-                predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
-            }
-            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType).get(ProductType_.id), good.getProduct().getProductType().getId()));
-            if (!CollectionUtils.isEmpty(propertyValueMap)) {
-                propertyValueMap.keySet().forEach(property -> {
-                    predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).key().get(PropertyName_.id.getName()),property));
-                    predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).value(),propertyValueMap.get(property)));
-                });
-            }
-            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
-        });
+        if (mainGoodList != null && mainGoodList.size() > 0) {
+            mainOrderService.calculateGoodStock(mainGoodList);
+        }
+        return mainGoodList;
     }
 
     @Override
     public MainGood forSaleByPropertyValue(Channel channel, ProductType productType, PropertyName propertyName, PropertyValue propertyValue) {
-        List<MainGood> goodList = mainGoodRepository.findAll((root, query, cb) -> {
-            Join<MainGood, Channel> channelJoin = root.join(MainGood_.channel, JoinType.LEFT);
-            List<Predicate> predicateList = new ArrayList<>();
-            predicateList.add(cb.isTrue(root.get(MainGood_.enable)));
-            predicateList.add(cb.isTrue(root.get(MainGood_.product).get(Product_.enable)));
-            if (channel == null) {
-                predicateList.add(cb.or(
-                        channelJoin.isNull()
-                        , cb.isFalse(channelJoin.get(Channel_.extra))
-                ));
-            } else {
-                predicateList.add(cb.equal(root.get(MainGood_.channel), channel));
-            }
-            predicateList.add(cb.equal(root.get(MainGood_.product).get(Product_.productType), productType));
-            predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).key(), propertyName));
-            predicateList.add(cb.equal(root.join(MainGood_.product).joinMap(Product_.propertyNameValues.getName()).value(), propertyValue.getValue()));
-            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
-        });
-        if (CollectionUtils.isEmpty(goodList)) {
-            return null;
-        }
-        return goodList.get(0);
+        Map<Long, String> propertyNameValueMap = new HashMap<>();
+        propertyNameValueMap.put(propertyName.getId(), propertyValue.getValue());
+        List<MainGood> goodList = forSale(channel, productType, propertyNameValueMap, null);
+        return CollectionUtils.isEmpty(goodList) ? null : goodList.get(0);
     }
 
     @Override
     public Set<String> forSalePropertyValue(Channel channel, String tag) {
-        List<MainGood> forSaleList = forSale(channel, tag);
+        List<MainGood> forSaleList = forSale(channel, null, null, tag);
         if (forSaleList != null) {
             Set<String> propertyValues = new HashSet<>();
             forSaleList.forEach(mainGood -> mainGood.getProduct().getSpecPropertyNameValues().values().forEach(value -> {
@@ -162,7 +111,7 @@ public class MainGoodServiceImpl implements MainGoodService {
 
     @Override
     public List<MainGood> forSale() {
-        return forSale(null, null);
+        return forSale(null, null, null, null);
     }
 
     @Override

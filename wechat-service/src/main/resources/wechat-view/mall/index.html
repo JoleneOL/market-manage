@@ -94,7 +94,7 @@
             <a href="tagDetail.html" th:href="@{/wechatSearch/tagSearch(tagName=${listTag.name})}" class="more-list">更多 <i class="fa fa-angle-right"></i></a>
         </div>
         <div class="tag-list-bd" th:remove="all-but-first">
-            <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,listTag.name)}" th:attr="goodsId=${goods.id}">
+            <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,null,null,listTag.name)}" th:attr="goodsId=${goods.id}">
                 <a href="goodsDetail.html" th:href="@{/wechatSearch/goodsDetail/${goods.id}}" class="tag-content">
                     <img th:if="${goods.product.mainImg != null}" res:src="${goods.product.mainImg}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5137/80/1620258323/3817/d2ca0058/5912cf51N20cf199b.jpg!q70.jpg"

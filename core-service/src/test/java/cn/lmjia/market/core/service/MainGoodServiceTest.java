@@ -68,9 +68,9 @@ public class MainGoodServiceTest extends CoreServiceTest {
         // TODO: 2017-09-27 自己造几个多规格属性的类型，和货品
         //以量子项链为例,它有2个属性：颜色+尺寸
         ProductType productType = productTypeRepository.findTop1ByName("量子项链");
-        List<MainGood> expectGoodListByType = mainGoodService.forSaleByProductType(null, productType);
+        List<MainGood> expectGoodListByType = mainGoodService.forSale(null, productType,null);
         assertThat(expectGoodListByType.size()).isGreaterThanOrEqualTo(2);
-        List<MainGood> searchByNoProperty = mainGoodService.forSaleByPropertyValue(null, expectGoodListByType.get(0), null);
+        List<MainGood> searchByNoProperty = mainGoodService.forSale(null, expectGoodListByType.get(0).getProduct().getProductType(), null);
         assertThat(searchByNoProperty.size()).isEqualTo(expectGoodListByType.size());
 
         MainGood detailGood = expectGoodListByType.get(0);
@@ -91,19 +91,19 @@ public class MainGoodServiceTest extends CoreServiceTest {
         //先选择颜色属性，返回应该还是有2个商品
         Map<Long, String> propertyValueMap = new HashMap<>();
         propertyValueMap.put(color.getId(), colorValue);
-        List<MainGood> searchByColor = mainGoodService.forSaleByPropertyValue(null, detailGood, propertyValueMap);
+        List<MainGood> searchByColor = mainGoodService.forSale(null, detailGood.getProduct().getProductType(), propertyValueMap,null);
         assertThat(searchByColor.size()).isEqualTo(expectGoodListByType.size());
 
         //在选择尺寸属性，返回应该只有一个商品了
         propertyValueMap.put(size.getId(), sizeValue);
-        List<MainGood> searchByColorAndSize = mainGoodService.forSaleByPropertyValue(null, detailGood, propertyValueMap);
+        List<MainGood> searchByColorAndSize = mainGoodService.forSale(null, detailGood.getProduct().getProductType(), propertyValueMap,null);
         assertThat(searchByColorAndSize.size()).isEqualTo(1);
         assertThat(searchByColorAndSize.get(0)).isEqualTo(detailGood);
 
         //只选择尺寸，应该也只有一个商品
         propertyValueMap.clear();
         propertyValueMap.put(size.getId(), sizeValue);
-        List<MainGood> searchBySize = mainGoodService.forSaleByPropertyValue(null, detailGood, propertyValueMap);
+        List<MainGood> searchBySize = mainGoodService.forSale(null, detailGood.getProduct().getProductType(), propertyValueMap,null);
         assertThat(searchBySize.size()).isEqualTo(1);
         assertThat(searchBySize.get(0)).isEqualTo(detailGood);
 

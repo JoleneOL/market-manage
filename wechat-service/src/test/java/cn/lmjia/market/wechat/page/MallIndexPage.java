@@ -70,7 +70,7 @@ public class MallIndexPage extends AbstractWechatPage {
     }
 
     public void clickSearch() {
-        webDriver.findElement(By.className("fa-search")).click();
+        webDriver.findElement(By.className("m-search")).click();
     }
 
     public void clickTagSearch(Tag searchTag) {
