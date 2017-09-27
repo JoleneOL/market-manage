@@ -9,6 +9,7 @@ import cn.lmjia.market.core.repository.WithdrawRequestRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.WithdrawService;
+import cn.lmjia.market.core.util.TimeUtil;
 import cn.lmjia.market.manage.page.ManageWithdrawPage;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.WechatMyPage;
@@ -23,6 +24,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -81,7 +83,7 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         myPage.assertWithdrawAble()
                 .as("看到已经扣除正在提现的金额")
                 .isCloseTo(amount.subtract(toWithdraw), Offset.offset(new BigDecimal("0.000000000001")));
-        //managerReject(login);
+        managerReject(login);
 
         /*//新提现申请
         WithdrawRequest withdrawRequest = new WithdrawRequest();
@@ -99,15 +101,26 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
                 "111",
                 "天天快递");
 */
-        managerApproval(login);
+        //managerApproval(login);
         updateAllRunWith(login);
 
+        LocalDate localDate = LocalDate.now();
         List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
-
-        if (resultList.size() != 0) {
-            System.out.println(resultList.get(0).getRequestTime());
+        if(resultList.size() != 0){
+            //获取最新成功提现记录日期.
+            LocalDateTime lastDateTime = resultList.get(0).getRequestTime();
+            LocalDate lastTime = lastDateTime.toLocalDate();
+            //成功提现记录日期是否是当月1-5日.
+            if(TimeUtil.beforeTheDate(lastTime, 6)){
+                //当前日期是否不是16-20日,如果不是说明是1-5日之间第二次提现.跳转提示页面.
+                if(!TimeUtil.timeFrame(localDate, 15, 21)){
+                    System.out.println("1-5日重复申请");
+                }
+            }else {
+                System.out.println("错误日期申请");
+            }
         }else{
-            System.out.println("可以再次申请");
+            System.out.println("可以提现申请");
         }
 
     }

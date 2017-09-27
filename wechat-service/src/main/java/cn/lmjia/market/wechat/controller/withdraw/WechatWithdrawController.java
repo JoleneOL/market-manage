@@ -102,7 +102,7 @@ public class WechatWithdrawController {
                 return "wechat@incorrectDateVisit.html";
             }
             List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
-            if(resultList != null){
+            if(resultList.size() != 0){
                 //获取最新成功提现记录日期.
                 LocalDateTime lastDateTime = resultList.get(0).getRequestTime();
                 LocalDate lastTime = lastDateTime.toLocalDate();
