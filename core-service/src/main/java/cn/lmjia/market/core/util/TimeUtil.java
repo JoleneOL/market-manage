@@ -10,7 +10,7 @@ public class TimeUtil {
     private TimeUtil() {}
 
     /**
-     * 比对给定时间是否是当月的某一天时间.
+     * 比对给定时间是否是当月的某一天前的时间.
      *
      * @param date     给定时间
      * @param before   当月某一天
@@ -22,7 +22,7 @@ public class TimeUtil {
     }
 
     /**
-     * 比对给定时间是都在某个时间范围内
+     * 比对给定时间是都在当月某个时间范围内
      *
      * @param date    给定时间
      * @param start   开始时间

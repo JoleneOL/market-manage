@@ -1,11 +1,13 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 
+import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
+import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.WithdrawRequestRepository;
@@ -16,7 +18,6 @@ import cn.lmjia.market.core.service.WithdrawService;
 import cn.lmjia.market.core.util.TimeUtil;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
-import me.jiangcai.lib.seext.TimeUtils;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.user.notice.UserNoticeService;
@@ -33,21 +34,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Controller
@@ -95,14 +92,31 @@ public class WechatWithdrawController {
      * @return 我要提现页面
      */
     @GetMapping("/wechatWithdraw")
-    public String index(Model model) {
+    public String index(@AuthenticationPrincipal Login login,Model model) {
         //获取当前日期
         LocalDate localDate = LocalDate.now();
         //判断日期是否是1-5号,或者16-20日,只要不满足跳转友好界面
-        if(!environment.acceptsProfiles("unit_test")){
-            if(!TimeUtil.beforeTheDate(localDate,6)||TimeUtil.timeFrame(localDate,15,20)){
-                return "wechat@error/incorrectDateVisit.html";
+        if (!environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
+            //如过当前日期不在1-5号,或者不在15-20日之间.跳转提示页面.
+            if (!TimeUtil.beforeTheDate(localDate, 6) || !TimeUtil.timeFrame(localDate, 15, 21)) {
+                return "wechat@incorrectDateVisit.html";
             }
+            List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
+            if(resultList != null){
+                //获取最新成功提现记录日期.
+                LocalDateTime lastDateTime = resultList.get(0).getRequestTime();
+                LocalDate lastTime = lastDateTime.toLocalDate();
+                //成功提现记录日期是否是当月1-5日.
+                if(TimeUtil.beforeTheDate(lastTime, 6)){
+                    //当前日期是否不是16-20日,如果不是说明是1-5日之间第二次提现.跳转提示页面.
+                    if(!TimeUtil.timeFrame(localDate, 15, 21)){
+                        return "wechat@incorrectDateVisit.html";
+                    }
+                }else {
+                    return "wechat@incorrectDateVisit.html";
+                }
+            }
+
         }
 
         double rate = withdrawService.getCostRateForNoInvoice().doubleValue();

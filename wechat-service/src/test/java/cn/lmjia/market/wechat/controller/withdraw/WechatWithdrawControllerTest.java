@@ -3,6 +3,9 @@ package cn.lmjia.market.wechat.controller.withdraw;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.entity.support.WithdrawStatus;
+import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
+import cn.lmjia.market.core.repository.WithdrawRequestRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.WithdrawService;
@@ -14,10 +17,15 @@ import cn.lmjia.market.wechat.page.WechatWithdrawRecordPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawVerifyPage;
 import com.huotu.verification.repository.VerificationCodeRepository;
 import org.assertj.core.data.Offset;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 public class WechatWithdrawControllerTest extends WechatTestBase {
 
@@ -30,6 +38,80 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
     @Autowired
     private SystemService systemService;
 
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Autowired
+    private WithdrawRequestRepository withdrawRequestRepository;
+
+
+    @Test
+    public void goWithdrawAccessDenied() throws InterruptedException {
+        //新用户
+        Login login = newRandomLogin();
+        updateAllRunWith(login);
+        //断言没有体现余额
+        WechatMyPage myPage = getWechatMyPage();
+        myPage.assertWithdrawAble()
+                .as("这个时候没有可提现余额")
+                .isCloseTo(BigDecimal.ZERO, Offset.offset(new BigDecimal("0.000000000001")));
+        // 成功下了一笔订单 获得佣金X
+        makeSuccessOrder(login);
+        //可提现金额
+        BigDecimal amount = readService.currentBalance(login).getAmount();
+        myPage = getWechatMyPage();
+        myPage.assertWithdrawAble()
+                .as("有了")
+                .isCloseTo(amount, Offset.offset(new BigDecimal("0.000000000001")));
+        WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
+        BigDecimal toWithdraw = amount.subtract(BigDecimal.ONE).divideToIntegralValue(new BigDecimal("2"));
+
+        withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
+
+        WechatWithdrawVerifyPage verifyPage = initPage(WechatWithdrawVerifyPage.class);
+        Thread.sleep(1000);
+        // 此时验证手机号码
+        verifyPage.submitCode("1234");
+        // 成功验证
+        // 会看到可提现金额为X-Y
+
+        myPage = getWechatMyPage();
+        myPage.assertWithdrawAble()
+                .as("看到已经扣除正在提现的金额")
+                .isCloseTo(amount.subtract(toWithdraw), Offset.offset(new BigDecimal("0.000000000001")));
+        //managerReject(login);
+
+        /*//新提现申请
+        WithdrawRequest withdrawRequest = new WithdrawRequest();
+        withdrawRequest.setWhose(login);
+        withdrawRequest.setRequestTime(LocalDateTime.now());
+        withdrawRequest.setWithdrawStatus(WithdrawStatus.success);
+
+        withdrawRequestRepository.save(withdrawRequest);
+        withdrawService.withdrawNew(login,
+                "小王",
+                "6215199004049999888",
+                "中国银行",
+                "13988776655",
+                new BigDecimal(123),
+                "111",
+                "天天快递");
+*/
+        managerApproval(login);
+        updateAllRunWith(login);
+
+        List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
+
+        if (resultList.size() != 0) {
+            System.out.println(resultList.get(0).getRequestTime());
+        }else{
+            System.out.println("可以再次申请");
+        }
+
+    }
+
     @Test
     public void go() throws InterruptedException {
         // 测试就是校验我们的工作成功
@@ -41,12 +123,6 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         //设置一个财务
         //Manager manager = new Manager();
         Manager manager = newRandomManager(ManageLevel.finance);
-        //String[] role= {"finance"};
-        //设置角色为财务
-//        Set<ManageLevel> levelSet = Stream.of(role)
-//                .map(ManageLevel::valueOf)
-//                .collect(Collectors.toSet());
-//        manager.setLevelSet(levelSet);
         //绑定微信号
         bindDeveloperWechat(manager);
 
@@ -57,7 +133,6 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         myPage.assertWithdrawAble()
                 .as("这个时候没有可提现余额")
                 .isCloseTo(BigDecimal.ZERO, Offset.offset(new BigDecimal("0.000000000001")));
-
 
 
         // JS前端依然限制了
