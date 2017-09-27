@@ -77,8 +77,8 @@ $(function () {
         verify: function () {
             var plus = $('.btn-plus');
             var minus = $('.btn-minus');
-            var min = minus.find('a').attr('data-min');
-            var max = plus.find('a').attr('data-max');
+            var min = minus.find('a').attr('data-min') || 1;
+            var max = plus.find('a').attr('data-max') || 9999;
 
             if (+this.input.val() >= +max) {
                 this.input.val(max);
@@ -119,5 +119,6 @@ $(function () {
         local[$li.data('goods-id')] = $('.btn-input').find('input').val();
         Storage.setData(local);
         $.toast("添加成功", "text");
+        $('.js-closed-menu').trigger('click');
     });
 });

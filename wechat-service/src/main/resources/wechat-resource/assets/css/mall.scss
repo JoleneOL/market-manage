@@ -459,15 +459,17 @@ body {
 }
 
 .mall-cart-list {
-  background: #f5f5f5;
+  background: url("../img/mall/cart.png") center no-repeat;
+  min-height: 128px;
   .cart-group {
+    @include flex;
+    -webkit-align-items: center;
+    align-items: center;
+    background-color: #f5f5f5;
     border-bottom: 6px solid #fff;
     &:last-of-type {
       border-bottom: 1px solid #d9d9d9;
     }
-    @include flex;
-    -webkit-align-items: center;
-    align-items: center;
     .checked-box {
       width: 44px;
       label {
@@ -572,6 +574,42 @@ body {
     }
   }
 }
+.cart-group-edit {
+  .goods-name {
+    display: none !important;
+  }
+  .goods-describe {
+    display: none !important;
+  }
+  .edit-quantity {
+    @include flex;
+  }
+}
+.edit-quantity {
+  display: none;
+  height: 40px;
+  border: 1px solid #fff;
+  .btn {
+    width: 38px;
+    border: none;
+    background-color: transparent;
+    font-size: 24px;
+    &.disabled {
+      color: #ccc;
+    }
+  }
+  .btn-value {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    width: 100%;
+    border: none;
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    text-align: center;
+    background-color: transparent;
+  }
+}
 
 .cart-footer {
   position: fixed;
@@ -590,6 +628,9 @@ body {
     .cart-total_number {
       font-size: 16px;
       color: #f15353;
+      i {
+        font-style: normal;
+      }
     }
   }
   .settlement {
@@ -602,29 +643,6 @@ body {
       border: none;
       height: 100%;
     }
-  }
-}
-
-.edit-quantity {
-  @include flex;
-  height: 40px;
-  border: 1px solid #fff;
-  .btn {
-    width: 38px;
-    border: none;
-    background-color: transparent;
-    font-size: 24px;
-  }
-  .btn-value {
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    flex: 1;
-    width: 100%;
-    border: none;
-    border-left: 1px solid #fff;
-    border-right: 1px solid #fff;
-    text-align: center;
-    background-color: transparent;
   }
 }
 
