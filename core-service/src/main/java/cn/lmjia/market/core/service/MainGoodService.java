@@ -47,6 +47,9 @@ public interface MainGoodService {
     @Transactional(readOnly = true)
     MainGood forSaleByPropertyValue(Channel channel, ProductType productType, PropertyName propertyName, PropertyValue propertyValue);
 
+    @Transactional(readOnly = true)
+    MainGood findOne(Long goodsId);
+
     /**
      * 特定渠道中某标签下在上商品列表所用到的属性及属性值
      *

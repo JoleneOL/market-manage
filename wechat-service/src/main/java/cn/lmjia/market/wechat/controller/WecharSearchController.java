@@ -4,12 +4,12 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
-import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
+import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.logistics.entity.ProductType_;
@@ -39,7 +39,7 @@ public class WecharSearchController {
     @Autowired
     private ResourceService resourceService;
     @Autowired
-    private MainGoodRepository mainGoodRepository;
+    private MainGoodService mainGoodService;
 
     @GetMapping("/wechatSearch")
     public String search() {
@@ -56,7 +56,7 @@ public class WecharSearchController {
 
     @GetMapping("/wechatSearch/goodsDetail/{goodsId}")
     public String goodsDetail(@PathVariable Long goodsId, Model model) {
-        model.addAttribute("currentData", mainGoodRepository.findOne(goodsId));
+        model.addAttribute("currentData", mainGoodService.findOne(goodsId));
         return "wechat@mall/goodsDetail.html";
     }
 

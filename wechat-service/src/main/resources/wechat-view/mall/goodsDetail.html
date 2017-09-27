@@ -95,9 +95,9 @@
             </div>
         </div>
         <div class="sku-pro-info">
-            <h4 class="goods-name" th:text="*{product.name}">理光 GR II GRII 理光GR2代数码相机卡片机</h4>
-            <p class="goods-price" th:text="*{totalPrice}">￥5579</p>
-            <p class="goods-stock">库存：<span th:text="${@stockService.usableStockTotal(currentData.product)}"
+            <h4 class="goods-name"><span  th:text="*{product.name}" class="js-goodsName">理光 GR II GRII 理光GR2代数码相机卡片机</span></h4>
+            <p class="goods-price">￥<span th:text="*{totalPrice}" class="js-goodsPrice">5579</span></p>
+            <p class="goods-stock">库存：<span th:text="*{product.stock}"
                                             class="js-goodsStock">3</span></p>
         </div>
         <div class="sku-closed js-closed-menu"></div>
@@ -109,14 +109,20 @@
                 th:remove="all-but-first" class="property-list">
                 <li th:with="propertyValueGoods=${@mainGoodService.forSaleByPropertyValue(null,currentData.product.productType,property,propertyValue)}"
                     th:if="${propertyValueGoods != null}"
-                    th:attr="data-goods-id = ${propertyValueGoods.id},data-goods-stock=${@stockService.usableStockTotal(propertyValueGoods.product)}
-                        ,data-disabled=${@stockService.usableStockTotal(propertyValueGoods.product) <= 0}"
+                    res:src="${propertyValueGoods.product.mainImg}"
+                    th:attr="data-goods-id = ${propertyValueGoods.id},data-goods-stock=${propertyValueGoods.product.stock}
+                    ,data-goods-name=${propertyValueGoods.product.name},data-goods-price=${{propertyValueGoods.totalPrice}}
+                        ,data-disabled=${propertyValueGoods.product.stock <= 0}"
                     th:text="${propertyValue.value}"
                     th:class="${currentData.product.propertyNameValues.values().contains(propertyValue.value) ? 'active' : ''}"
-                    data-goods-id="0" data-goods-stock="3" class="active">黑色
+                    th:classappend="${propertyValueGoods.product.stock <= 0 ? 'disabled' : ''}"
+                    src="https://img.alicdn.com/imgextra/i2/62871920/TB2D0pofYsTMeJjy1zbXXchlVXa_!!62871920.jpg_120x120q50s150.jpg"
+                    data-goods-name="理光 GR II GRII 理光GR2代数码相机卡片机"
+                    data-goods-price="5579" data-goods-id="0" data-goods-stock="3" class="active">黑色
                 </li>
-                <li data-goods-id="1" data-goods-stock="5">白色</li>
-                <li data-goods-id="2" data-goods-stock="0" data-disabled="disabled" class="disabled">骚红色</li>
+                <li src="https://img1.360buyimg.com/da/jfs/t8266/86/1431159567/98188/3367b0c7/59b94a27Nbe9d0c16.jpg"
+                    data-goods-id="1" data-goods-name="净水器" data-goods-price="3000" data-goods-stock="5">白色</li>
+                <li data-goods-id="2" data-goods-name="优化宝" data-goods-price="4000" data-goods-stock="0" data-disabled="disabled" class="disabled">骚红色</li>
             </ul>
         </div>
         <div class="quantity-info">

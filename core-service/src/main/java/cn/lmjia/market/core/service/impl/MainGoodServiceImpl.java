@@ -96,6 +96,15 @@ public class MainGoodServiceImpl implements MainGoodService {
     }
 
     @Override
+    public MainGood findOne(Long goodsId) {
+        MainGood mainGood = mainGoodRepository.findOne(goodsId);
+        if(mainGood != null){
+            mainOrderService.calculateGoodStock(Arrays.asList(mainGood));
+        }
+        return mainGood;
+    }
+
+    @Override
     public Set<String> forSalePropertyValue(Channel channel, String tag) {
         List<MainGood> forSaleList = forSale(channel, null, null, tag);
         if (forSaleList != null) {

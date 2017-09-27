@@ -30,7 +30,12 @@ $(function () {
         if ($(this).hasClass('disabled')) return '';
         $(this).toggleClass('active').siblings().removeClass('active');
         if ($(this).hasClass('active')) {
+            $(".js-goodsName").text($(this).data('goods-name'));
+            $(".js-goodsPrice").text($(this).data('goods-price'));
             $('.js-goodsStock').text($(this).data('goods-stock'));
+            if($(this).attr('src') != undefined){
+                $("#J_specImage").attr('src',$(this).attr('src'));
+            }
             Quantity.setMax($(this).data('goods-stock'));
             Quantity.verify();
         } else {
