@@ -26,6 +26,7 @@ import me.jiangcai.wx.protocol.Protocol;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,6 @@ public class SalesmanServiceImpl implements SalesmanService {
     private EntityManager entityManager;
     @Autowired
     private SalesAchievementRepository salesAchievementRepository;
-    @Autowired
     private ConversionService conversionService;
     @Autowired
     private SystemStringService systemStringService;
@@ -66,6 +66,8 @@ public class SalesmanServiceImpl implements SalesmanService {
     private LoginService loginService;
     @Autowired
     private QRCodeService qrCodeService;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public void salesmanShareTo(long salesmanId, Login login) {
@@ -133,6 +135,9 @@ public class SalesmanServiceImpl implements SalesmanService {
 
             @Override
             public List<FieldDefinition<SalesAchievement>> fields() {
+                if (conversionService == null) {
+                    conversionService = applicationContext.getBean(ConversionService.class);
+                }
                 final BigDecimal rate = systemStringService.getCustomSystemString("market.default.all.rates"
                         , null, true, BigDecimal.class, new BigDecimal("0.36"));
                 return Arrays.asList(
