@@ -1,6 +1,11 @@
 package cn.lmjia.market.manage.controller.order;
 
-import cn.lmjia.market.core.entity.*;
+import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Customer_;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood_;
+import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -16,6 +21,7 @@ import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.haier.entity.HaierOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,10 +36,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +61,7 @@ public class ManageOrderController {
     @Autowired
     private MainOrderService mainOrderService;
     @Autowired
+    private ApplicationContext applicationContext;
     private ConversionService conversionService;
     @Autowired
     private LogisticsService logisticsService;
@@ -56,6 +72,9 @@ public class ManageOrderController {
     public RowDefinition<MainOrder> logisticsData(@AuthenticationPrincipal Login login, String mobile, Long depotId
             , String productCode
             , @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-M-d") LocalDate orderDate) {
+        if (conversionService == null) {
+            conversionService = applicationContext.getBean(ConversionService.class);
+        }
         return new MainOrderRows(login, time -> conversionService.convert(time, String.class)) {
 
             private ListJoin<MainOrder, StockShiftUnit> unitJoin;
