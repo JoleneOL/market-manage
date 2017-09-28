@@ -12,13 +12,19 @@ import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
+import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.QRCodeService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SalesmanService;
 import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.lib.sys.service.SystemStringService;
+import me.jiangcai.wx.message.ImageMessage;
 import me.jiangcai.wx.message.Message;
 import me.jiangcai.wx.message.TextMessage;
 import me.jiangcai.wx.model.PublicAccount;
+import me.jiangcai.wx.protocol.Protocol;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,10 +32,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,6 +50,7 @@ import java.util.List;
 @Service
 public class SalesmanServiceImpl implements SalesmanService {
 
+    private static final Log log = LogFactory.getLog(SalesmanServiceImpl.class);
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
@@ -53,6 +62,10 @@ public class SalesmanServiceImpl implements SalesmanService {
     private SystemStringService systemStringService;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private LoginService loginService;
+    @Autowired
+    private QRCodeService qrCodeService;
 
     @Override
     public void salesmanShareTo(long salesmanId, Login login) {
@@ -215,13 +228,46 @@ public class SalesmanServiceImpl implements SalesmanService {
 
     @Override
     public boolean focus(PublicAccount account, Message message) {
-        return message != null && message instanceof TextMessage && ((TextMessage) message).getContent().trim().equals("#业绩");
+        return message != null && message instanceof TextMessage && (
+                ((TextMessage) message).getContent().trim().equals("#业绩")
+                        || ((TextMessage) message).getContent().trim().equals("#推广码")
+        );
     }
 
     @Override
     public Message reply(PublicAccount account, Message message) {
-        TextMessage reply = new TextMessage();
-        reply.setContent(systemService.toUrl(SystemService.wechatSales));
-        return reply;
+        if (((TextMessage) message).getContent().trim().equals("#业绩")) {
+            TextMessage reply = new TextMessage();
+            reply.setContent(systemService.toUrl(SystemService.wechatSales));
+            return reply;
+        } else {
+            Login login = loginService.asWechat(message.getFrom());
+            if (login == null) {
+                TextMessage reply = new TextMessage();
+                reply.setContent("尚未注册。");
+                return reply;
+            }
+            try {
+                Salesman salesman = get(login.getId());
+                final BufferedImage image = qrCodeService.generateQRCode(systemService.toUrl("/wechatJoinSM"
+                        + salesman.getId()));
+                String id = Protocol.forAccount(account).addImage(false, image, "png");
+
+                ImageMessage reply = new ImageMessage();
+                reply.setMediaId(id);
+                return reply;
+            } catch (EntityNotFoundException ignored) {
+                TextMessage reply = new TextMessage();
+                reply.setContent("尚未注册。");
+                return reply;
+            } catch (Exception ex) {
+                log.warn("", ex);
+                TextMessage reply = new TextMessage();
+                reply.setContent("未知错误。");
+                return reply;
+            }
+
+        }
+
     }
 }
