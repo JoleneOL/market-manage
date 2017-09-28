@@ -1,5 +1,6 @@
 var Storage = {
     setData: function (data) {
+        console.log("data:" + data);
         var self = this;
         var storage = self.getData();
         $.extend(storage, data);

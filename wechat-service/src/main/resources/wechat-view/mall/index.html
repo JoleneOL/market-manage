@@ -19,7 +19,7 @@
 <div class="mall-toolbar clearfix">
     <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
     <div class="mall-toolbar-items">
-        <a href="orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="orderList.html" th:href="@{/wechatMallOrderList}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
         <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
             <span class="cart-badge">0</span>
@@ -88,14 +88,14 @@
     </div>
 </div>
 <div class="mall-tagList" th:remove="all-but-first">
-    <div class="tag-list tag-list-big" th:each="listTag:${@readService.allTagByType(1)}">
+    <div class="tag-list tag-list-big" th:each="listTag:${@readService.allTagByType(1)}" th:attr="data-tag-name=${listTag.name}" data-tag-name="热销">
         <div class="tag-list-hd">
             <h4 th:text="${listTag.name}">热销</h4>
             <a href="tagDetail.html" th:href="@{/wechatSearch/tagSearch(tagName=${listTag.name})}" class="more-list">更多 <i class="fa fa-angle-right"></i></a>
         </div>
         <div class="tag-list-bd" th:remove="all-but-first">
-            <div class="tag-list-item" th:each="goods:${@mainGoodService.forSale(null,null,null,listTag.name)}" th:attr="goodsId=${goods.id}">
-                <a href="goodsDetail.html" th:href="@{/wechatSearch/goodsDetail/${goods.id}}" class="tag-content">
+            <div class="tag-list-item" data-goods-id="0" th:each="goods:${@mainGoodService.forSale(null,null,null,listTag.name)}" th:attr="data-goods-id=${goods.id}">
+                <a href="goodsDetail.html" th:href="@{/wechatSearch/goodsDetail/} + ${goods.id}" class="tag-content">
                     <img th:if="${goods.product.mainImg != null}" res:src="${goods.product.mainImg}"
                             src="https://m.360buyimg.com/mobilecms/jfs/t5137/80/1620258323/3817/d2ca0058/5912cf51N20cf199b.jpg!q70.jpg"
                          class="tag-image">
@@ -183,9 +183,6 @@
         </div>
     </div>
 </div>
-<form action="orderPlace.html" th:action="@{/wechatSearch/goodsList}" method="post" id="J_orderPlace">
-    <input type="hidden" name="order">
-</form>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>

@@ -1,10 +1,12 @@
-package cn.lmjia.market.wechat.page;
+package cn.lmjia.market.wechat.page.mall;
 
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.Tag;
+import cn.lmjia.market.wechat.page.AbstractWechatPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 
 public class MallIndexPage extends AbstractWechatPage {
+    @FindBy(className = "js-cartBtn")
+    private WebElement cartLink;
     public MallIndexPage(WebDriver webDriver) {
         super(webDriver);
     }
@@ -62,7 +66,7 @@ public class MallIndexPage extends AbstractWechatPage {
             List<WebElement> goodsList = div.findElements(By.className("tag-list-item"));
             assertThat(goodsList.size()).isGreaterThanOrEqualTo(1);
             WebElement goodDiv = goodsList.stream()
-                    .filter(good -> good.getAttribute("goodsid").equals(mainGood.getId().toString()))
+                    .filter(good -> good.getAttribute("data-goods-id").equals(mainGood.getId().toString()))
                     .findFirst().orElse(null);
             assertThat(goodDiv).isNotNull();
 
@@ -76,5 +80,15 @@ public class MallIndexPage extends AbstractWechatPage {
     public void clickTagSearch(Tag searchTag) {
         webDriver.findElement(By.xpath("//div[@class='mall-tagBanner']//a[@tag-name='" + searchTag.getName() + "']"))
                 .click();
+    }
+
+    public void clickGoods(Tag listTag, MainGood mainGood) {
+        webDriver.findElement(By.xpath("//div[@data-tag-name='" + listTag.getName() + "']" +
+                "//div[@class='tag-list-item'][@data-goods-id='" + mainGood.getId() + "']" +
+                "/a")).click();
+    }
+
+    public void clickCart(){
+        cartLink.click();
     }
 }

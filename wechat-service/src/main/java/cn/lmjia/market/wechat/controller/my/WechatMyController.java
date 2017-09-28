@@ -27,6 +27,11 @@ public class WechatMyController {
         return "wechat@orderList.html";
     }
 
+    @GetMapping("/wechatMallOrderList")
+    public String wechatMallOrderList() {
+        return "wechat@mall/orderList.html";
+    }
+
     @GetMapping(SystemService.wechatMyURi)
     @Transactional(readOnly = true)
     public String my(@AuthenticationPrincipal Login login, Model model) {

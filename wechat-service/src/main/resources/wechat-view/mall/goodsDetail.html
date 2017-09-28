@@ -20,7 +20,7 @@
 <div class="mall-toolbar clearfix">
     <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
     <div class="mall-toolbar-items">
-        <a href="orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="orderList.html" th:href="@{/wechatMallOrderList}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
         <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
             <span class="cart-badge">0</span>
@@ -52,7 +52,7 @@
         <div class="swiper-pagination"></div>
     </div>-->
 </div>
-<div class="goods-info-wrap">
+<div class="goods-info-wrap" th:attr="data-goods-id=*{id}">
     <h4 class="goods-name" th:text="*{product.name}">现货! 国行正品 Ricoh/理光 GR II GRII 理光GR2代数码相机卡片机</h4>
     <div class="goods-price">
         <span th:text="*{{totalPrice}}">1314</span>
@@ -105,24 +105,24 @@
     <div class="spec-menu-bd">
         <div class="sku-info" th:each="property:*{product.productType.specPropertyNameList}">
             <h4 th:text="${property.name}">颜色</h4>
-            <ul th:each="propertyValue:${currentData.product.productType.getPropertyValueByPropertyName(property)}"
-                th:remove="all-but-first" class="property-list">
-                <li th:with="propertyValueGoods=${@mainGoodService.forSaleByPropertyValue(null,currentData.product.productType,property,propertyValue)}"
-                    th:if="${propertyValueGoods != null}"
-                    res:src="${propertyValueGoods.product.mainImg}"
-                    th:attr="data-goods-id = ${propertyValueGoods.id},data-goods-stock=${propertyValueGoods.product.stock}
+            <ul class="property-list">
+                <th:block th:each="propertyValue:${currentData.product.productType.getPropertyValueByPropertyName(property)}"
+                          th:with="propertyValueGoods = ${@mainGoodService.forSaleByPropertyValue(null,currentData.product.productType,property,propertyValue)}">
+                    <li th:if="${propertyValueGoods != null}"
+                        res:src="${propertyValueGoods.product.mainImg}"
+                        th:attr="data-goods-id = ${propertyValueGoods.id},data-goods-stock=${propertyValueGoods.product.stock}
                     ,data-goods-name=${propertyValueGoods.product.name},data-goods-price=${{propertyValueGoods.totalPrice}}
-                        ,data-disabled=${propertyValueGoods.product.stock <= 0}"
-                    th:text="${propertyValue.value}"
-                    th:class="${currentData.product.propertyNameValues.values().contains(propertyValue.value) ? 'active' : ''}"
-                    th:classappend="${propertyValueGoods.product.stock <= 0 ? 'disabled' : ''}"
-                    src="https://img.alicdn.com/imgextra/i2/62871920/TB2D0pofYsTMeJjy1zbXXchlVXa_!!62871920.jpg_120x120q50s150.jpg"
-                    data-goods-name="理光 GR II GRII 理光GR2代数码相机卡片机"
-                    data-goods-price="5579" data-goods-id="0" data-goods-stock="3" class="active">黑色
-                </li>
+                        ,data-disabled=${propertyValueGoods.product.stock <= 0 ? 'disabled' : ''}"
+                        th:text="${propertyValue.value}"
+                        th:class="${currentData.product.propertyNameValues.values().contains(propertyValue.value) ? 'active' : ''}"
+                        th:classappend="${propertyValueGoods.product.stock <= 0 ? 'disabled' : ''}"
+                        src="https://img.alicdn.com/imgextra/i2/62871920/TB2D0pofYsTMeJjy1zbXXchlVXa_!!62871920.jpg_120x120q50s150.jpg"
+                        data-goods-name="理光 GR II GRII 理光GR2代数码相机卡片机"
+                        data-goods-price="5579" data-goods-id="0" data-goods-stock="3" class="active">黑色
+                    </li>
+                </th:block>
                 <li src="https://img1.360buyimg.com/da/jfs/t8266/86/1431159567/98188/3367b0c7/59b94a27Nbe9d0c16.jpg"
-                    data-goods-id="1" data-goods-name="净水器" data-goods-price="3000" data-goods-stock="5">白色</li>
-                <li data-goods-id="2" data-goods-name="优化宝" data-goods-price="4000" data-goods-stock="0" data-disabled="disabled" class="disabled">骚红色</li>
+                    data-goods-id="1" data-goods-name="净水器" data-goods-price="3000" data-goods-stock="5"  th:remove="all">白色</li>
             </ul>
         </div>
         <div class="quantity-info">
@@ -141,13 +141,13 @@
         </div>
     </div>
 </div>
-<form action="orderPlace.html" method="post" id="J_orderPlace">
+<form action="orderPlace.html" th:action="@{/mallOrder}" method="post" id="J_orderPlace">
     <input type="hidden" name="order">
 </form>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
-<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
-<script src="../../wechat-resource/assets/js/mall/detail.js"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js" th:src="@{/wechat-resource/assets/js/mall/storage.js}"></script>
+<script src="../../wechat-resource/assets/js/mall/detail.js" th:src="@{/wechat-resource/assets/js/mall/detail.js}"></script>
 </html>

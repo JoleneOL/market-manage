@@ -20,7 +20,7 @@
 <div class="mall-toolbar clearfix">
     <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
     <div class="mall-toolbar-items">
-        <a href="orderList.html" th:href="@{/wechatMy}" class="toolbar-item">我的订单</a>
+        <a href="orderList.html" th:href="@{/wechatMallOrderList}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
     </div>
 </div>
@@ -37,7 +37,7 @@
         </div>
     </div>
 </div>
-<div class="mall-cart-list"  th:remove="all-but-first">
+<div class="mall-cart-list" >
     <div class="cart-group" data-goods-id="0" data-goods-price="3000"
          th:each="goods:${goodsMap.keySet()}"
          th:attr="data-goods-id=${goods.id},data-goods-price=${goods.totalPrice}">
@@ -52,7 +52,11 @@
         </div>
         <div class="goods-box">
             <h4 class="goods-name" th:text="${goods.product.name}">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
-            <p class="goods-describe" th:text="${goods.product.description}">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <p class="goods-describe">
+                <span th:each="property:${goods.product.specPropertyNameValues.keySet()}"><th:block th:text="|${property.name}:${goods.product.getPropertyNameValues().get(property)}|">颜色:红色</th:block></span>
+                <span>颜色:红色</span>
+                <span>颜色:红色</span>
+            </p>
             <div class="edit-quantity">
                 <button class="btn btn-minus" disabled
                         th:classappend="${(goodsMap.get(goods) >= 1 && goodsMap.get(goods) <= goods.product.stock) ? '' :'disabled'}"
@@ -71,7 +75,7 @@
             <button type="button" class="js-deleteCart">删除</button>
         </div>
     </div>
-    <div class="cart-group" data-goods-id="1" data-goods-price="9800">
+    <div class="cart-group" data-goods-id="1" data-goods-price="9800"  th:remove="all">
         <div class="checked-box">
             <label>
                 <input type="checkbox" name="checkbox" class="weui-check js-checkGoods">
@@ -104,7 +108,7 @@
     <div class="cart-total"><span class="cart-total_title">合计：</span><span class="cart-total_number">￥<i id="J_orderTotal">0</i></span></div>
     <div class="settlement"><button type="button" id="J_settlementBtn">结算</button></div>
 </div>
-<form action="orderPlace.html" method="post" id="J_orderPlace">
+<form action="orderPlace.html" th:action="@{/mallOrder}" method="post" id="J_orderPlace">
     <input type="hidden" name="order">
 </form>
 </body>

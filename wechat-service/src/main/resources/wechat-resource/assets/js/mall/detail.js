@@ -1,4 +1,5 @@
 $(function () {
+    $.toast.prototype.defaults.duration = 1000;
     var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',
         autoplay: 3000,
@@ -28,7 +29,8 @@ $(function () {
 
     $('.property-list').find('li').click(function () {
         if ($(this).hasClass('disabled')) return '';
-        $(this).toggleClass('active').siblings().removeClass('active');
+        $(this).parents("ul").find("li").removeClass('active');
+        $(this).toggleClass('active');
         if ($(this).hasClass('active')) {
             $(".js-goodsName").text($(this).data('goods-name'));
             $(".js-goodsPrice").text($(this).data('goods-price'));

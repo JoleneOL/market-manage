@@ -76,7 +76,7 @@
                                 <td th:text="*{{createTime}}">2017-09-09</td>
                             </tr>
                             <tr th:each="properyName:${currentData.propertyNameValues.keySet()}">
-                                <td>属性1</td>
+                                <td th:text="${properyName.name}">属性1</td>
                                 <td th:text="${currentData.propertyNameValues.get(properyName)}">属性值</td>
                             </tr>
                             </tbody>

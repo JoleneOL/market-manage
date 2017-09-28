@@ -1,7 +1,8 @@
-package cn.lmjia.market.wechat.page;
+package cn.lmjia.market.wechat.page.mall;
 
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.Tag;
+import cn.lmjia.market.wechat.page.AbstractWechatPage;
 import me.jiangcai.logistics.entity.PropertyValue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
