@@ -24,14 +24,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author CJ
@@ -40,6 +45,10 @@ import java.util.Locale;
 public class NoticeServiceImpl implements NoticeService {
 
     private static final Log log = LogFactory.getLog(NoticeServiceImpl.class);
+    /**
+     * 最后通知
+     */
+    private final Map<Serializable, Instant> noticeTimes = Collections.synchronizedMap(new HashMap<>());
     @Autowired
     private SystemService systemService;
     @Autowired
@@ -67,10 +76,19 @@ public class NoticeServiceImpl implements NoticeService {
         wechatNoticeHelper.registerTemplateMessage(new PaySuccessToCS(), null);
 
         wechatNoticeHelper.registerTemplateMessage(new NewLoginToLogin(), systemService.toUrl(SystemService.wechatMyURi));
+
     }
 
     @Override
     public void orderPaySuccess(OrderPaySuccess event) {
+        // 删除过期数据
+        noticeTimes.entrySet().stream()
+                .filter(entry -> entry.getValue().isBefore(Instant.now().minus(7, ChronoUnit.DAYS)))
+                .map(Map.Entry::getKey)
+                .forEach(noticeTimes::remove);
+        if (noticeTimes.containsKey(event.getPayableOrder().getPayableOrderId()))
+            return;
+        noticeTimes.put(event.getPayableOrder().getPayableOrderId(), Instant.now());
         if (event.getPayableOrder() instanceof MainOrder) {
             // 前提是 该用户绑定了微信
             MainOrder order = (MainOrder) event.getPayableOrder();
@@ -124,9 +142,8 @@ public class NoticeServiceImpl implements NoticeService {
                 log.trace("", ex);
             }
         }
-
-
     }
+
 
     @Override
     public void newLogin(Login login, String mobile) {
@@ -295,7 +312,7 @@ public class NoticeServiceImpl implements NoticeService {
 
         @Override
         public String title() {
-            return "订单支付成功-发送给下单者";
+            return null;
         }
 
         @Override
@@ -324,4 +341,5 @@ public class NoticeServiceImpl implements NoticeService {
             };
         }
     }
+
 }

@@ -54,6 +54,10 @@ public class StockShiftUnit {
     @ElementCollection
     private Map<Product, ProductBatch> amounts;
     /**
+     * 该物流是否需要安装，总是应用于出库订单
+     */
+    private boolean installation;
+    /**
      * 可选的来源仓库；
      */
     @ManyToOne
@@ -172,12 +176,10 @@ public class StockShiftUnit {
                 .filter(entry -> entry.getKey().isInstallation())
                 .count() > 0;
     }
-
     /**
-     *
      * @return 是否仅仅为入库单
      */
     public boolean isJustWarehousing() {
-        return origin==null && destination!=null;
+        return origin == null && destination != null;
     }
 }

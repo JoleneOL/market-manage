@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.controller.logistics;
 
 import cn.lmjia.market.core.entity.Factory;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.repository.FactoryRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -19,6 +20,7 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.UsageStock;
 import me.jiangcai.logistics.entity.support.ProductStatus;
 import me.jiangcai.logistics.entity.support.StockInfo;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
 import me.jiangcai.logistics.repository.DepotRepository;
@@ -48,10 +50,11 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
+ *仓库管理, 具有root权限和供应链管理权限可以操作.具有look可以查看
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasAnyRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"')")
 public class ManageStorageController {
 
     @Autowired
@@ -78,6 +81,7 @@ public class ManageStorageController {
         return "redirect:/manageStorage";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manage/storage")
     @Transactional(readOnly = true)
     @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
@@ -166,6 +170,7 @@ public class ManageStorageController {
         return data;
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageStorage")
     @Transactional(readOnly = true)
     public String index(Model model) {
@@ -203,7 +208,7 @@ public class ManageStorageController {
 
     @PostMapping("/manageStorageDelivery")
     @Transactional
-    public String sendToDepot(long factory, String product, long depot, int deliverQuantity) {
+    public String sendToDepot(long factory, String product, long depot, int deliverQuantity) throws UnnecessaryShipException {
         // 目前只支持日日顺
         Depot depotInfo = depotRepository.getOne(depot);
         if (!(depotInfo instanceof HaierDepot))
@@ -211,7 +216,7 @@ public class ManageStorageController {
         Factory factoryInfo = factoryRepository.getOne(factory);
         Product productInfo = productRepository.getOne(product);
         //
-        logisticsService.makeShift(haierSupplier, Collections.singleton(new Thing() {
+        logisticsService.makeShift(haierSupplier, null, Collections.singleton(new Thing() {
             @Override
             public Product getProduct() {
                 return productInfo;

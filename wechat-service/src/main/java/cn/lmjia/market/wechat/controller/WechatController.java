@@ -112,7 +112,7 @@ public class WechatController {
     @GetMapping("/toLoginWechat")
     public String login(WeixinUserDetail detail, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 检查这个是否具备了 身份，有的话 完成自动登录 否者跳到登录界面
-        log.debug(detail);
+        log.trace(detail);
         Login login = loginService.asWechat(detail.getOpenId());
         if (login == null)
             return "redirect:/wechatLogin";

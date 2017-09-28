@@ -32,6 +32,5 @@ public class AutoShare extends TempSceneReply {
 
     @Override
     public void happen(PublicAccount account, Message message, String sceneStr) {
-
     }
 }

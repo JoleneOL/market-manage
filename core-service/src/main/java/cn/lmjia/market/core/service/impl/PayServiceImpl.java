@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.util.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,14 +45,22 @@ public class PayServiceImpl implements PayService {
     private PromotionRequestService promotionRequestService;
 
     @Override
+    public String mainOrderPaySuccessUri(HttpServletRequest request, MainOrder order, PayOrder payOrder) {
+        if (!WeixinWebSpringConfig.isWeixinRequest(request)) {
+            if (payOrder == null)
+                return "/agentPaySuccess?mainOrderId=" + order.getId();
+            return "/agentPaySuccess?mainOrderId=" + order.getId() + "&payOrderId=" + payOrder.getId();
+        }
+        if (payOrder == null)
+            return "/wechatPaySuccess?mainOrderId=" + order.getId();
+        return "/wechatPaySuccess?mainOrderId=" + order.getId() + "&payOrderId=" + payOrder.getId();
+    }
+
+    @Override
     public ModelAndView paySuccess(HttpServletRequest request, PayableOrder payableOrder, PayOrder payOrder) {
         if (payableOrder instanceof MainOrder) {
             MainOrder mainOrder = (MainOrder) payableOrder;
-            if (!WeixinWebSpringConfig.isWeixinRequest(request)) {
-                // 非
-                return new ModelAndView("redirect:/agentPaySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
-            }
-            return new ModelAndView("redirect:/wechatPaySuccess?mainOrderId=" + mainOrder.getId() + "&payOrderId=" + payOrder.getId());
+            return new ModelAndView("redirect:" + mainOrderPaySuccessUri(request, mainOrder, payOrder));
         } else if (payableOrder instanceof PromotionRequest) {
             return new ModelAndView("redirect:/wechatUpgradeApplySuccess");
         } else
@@ -78,34 +85,23 @@ public class PayServiceImpl implements PayService {
     @Override
     public boolean isPaySuccess(String id) {
         // 前面的main-去去掉
-        long orderId = toOrderId(id);
-        Class<? extends PayableOrder> type = toOrderType(id);
-        if (type == MainOrder.class)
-            return mainOrderService.isPaySuccess(orderId);
-        return promotionRequestRepository.getOne(orderId).getPaymentStatus() == PaymentStatus.payed;
-    }
-
-    private long toOrderId(String text) {
-        return NumberUtils.parseNumber(text.split("-")[1], Long.class);
-    }
-
-    private Class<? extends PayableOrder> toOrderType(String text) {
-        final String text1 = text.split("-")[0];
-        if (text1.equalsIgnoreCase("main"))
-            return MainOrder.class;
-        if (text1.equalsIgnoreCase("PromotionRequest"))
-            return PromotionRequest.class;
-        throw new IllegalArgumentException("不支持的支付订单类型：" + text1);
+        PayableOrder order = getOrder(id);
+        if (order instanceof MainOrder)
+            return mainOrderService.isPaySuccess(((MainOrder) order).getId());
+        if (order instanceof PromotionRequest)
+            return ((PromotionRequest) order).getPaymentStatus() == PaymentStatus.payed;
+        throw new IllegalArgumentException("不支持的订单类型：" + order.getClass());
     }
 
     @Override
     public PayableOrder getOrder(String id) {
-        Class<? extends PayableOrder> type = toOrderType(id);
-        final long id1 = toOrderId(id);
-        if (type == MainOrder.class) {
-            return mainOrderService.getOrder(id1);
-        }
-        return promotionRequestRepository.getOne(id1);
+        Long orderId = MainOrder.payableOrderIdToId(id);
+        if (orderId != null)
+            return mainOrderService.getOrder(orderId);
+        orderId = PromotionRequest.payableOrderIdToId(id);
+        if (orderId != null)
+            return promotionRequestRepository.getOne(orderId);
+        throw new IllegalArgumentException("不支持的可支付ID:" + id);
     }
 
     @Override

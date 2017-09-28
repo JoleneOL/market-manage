@@ -27,4 +27,6 @@ public interface NoticeService {
      * @param mobile 它的手机号码
      */
     void newLogin(Login login, String mobile);
+
+
 }

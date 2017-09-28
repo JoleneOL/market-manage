@@ -47,7 +47,8 @@ public class ControllerSupport {
     public String sawSystemMaintainException(HttpServletRequest request, SystemMaintainException ex) {
         log.debug("发现系统维护异常", ex);
         if (WeixinWebSpringConfig.isWeixinRequest(request))
-            return "wechat@error/systemMaintain.html";
+//            return "wechat@error/systemMaintain.html";
+            return "wechat@orderFail.html";
         return "error/systemMaintain.html";
     }
 

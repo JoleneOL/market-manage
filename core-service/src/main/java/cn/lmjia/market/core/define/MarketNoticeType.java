@@ -20,7 +20,16 @@ public enum MarketNoticeType {
     /**
      * 成员删除通知
      */
-    TeamMemberDeleteNotify;
+    TeamMemberDeleteNotify,
+    /**
+     * 拒绝升级申请
+     */
+    PromotionRequestRejected,
+    /**
+     * 通知财务客户佣金提现申请
+     */
+    WithdrawSuccessRemindFinancial;
+
 
     private final String targetId;
 

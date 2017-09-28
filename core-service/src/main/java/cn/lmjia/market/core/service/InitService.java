@@ -37,6 +37,7 @@ import me.jiangcai.logistics.entity.support.PropertyType;
 import me.jiangcai.logistics.repository.ProductTypeRepository;
 import me.jiangcai.logistics.repository.PropertyNameRepository;
 import me.jiangcai.logistics.repository.PropertyValueRepository;
+import me.jiangcai.logistics.entity.StockShiftUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -393,6 +394,10 @@ public class InitService {
                             login.setLoginName("!" + login.getLoginName() + " ");
                         });
                         // 对login缓存的关系呢？ 这个不管了
+                        break;
+                    case muPartShift:
+                        jdbcService.tableAlterAddColumn(MainOrder.class, "ableShip", "1");
+                        jdbcService.tableAlterAddColumn(StockShiftUnit.class, "installation", "0");
                         break;
                     default:
                 }

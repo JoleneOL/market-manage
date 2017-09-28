@@ -1,36 +1,51 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 
+import cn.lmjia.market.core.config.CoreConfig;
+import cn.lmjia.market.core.define.MarketNoticeType;
+import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
+import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.WithdrawRequestRepository;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.WechatNoticeHelper;
 import cn.lmjia.market.core.service.WithdrawService;
+import cn.lmjia.market.core.util.TimeUtil;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.exception.SystemMaintainException;
+import me.jiangcai.user.notice.UserNoticeService;
+import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
+import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Controller
 public class WechatWithdrawController {
@@ -47,6 +62,14 @@ public class WechatWithdrawController {
     private ReadService readService;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private LoginService loginService;
+    @Autowired
+    private WechatNoticeHelper wechatNoticeHelper;
+    @Autowired
+    private UserNoticeService userNoticeService;
+    @Autowired
+    private Environment environment;
 
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
@@ -69,12 +92,38 @@ public class WechatWithdrawController {
      * @return 我要提现页面
      */
     @GetMapping("/wechatWithdraw")
-    public String index(Model model) {
+    public String index(@AuthenticationPrincipal Login login,Model model) {
+        //获取当前日期
+        LocalDate localDate = LocalDate.now();
+        //判断日期是否是1-5号,或者16-20日,只要不满足跳转友好界面
+        if (!environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
+            //如过当前日期不在1-5号,或者不在15-20日之间.跳转提示页面.
+            if (!TimeUtil.beforeTheDate(localDate, 6) || !TimeUtil.timeFrame(localDate, 15, 21)) {
+                return "wechat@incorrectDateVisit.html";
+            }
+            List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
+            if(resultList.size() != 0){
+                //获取最新成功提现记录日期.
+                LocalDateTime lastDateTime = resultList.get(0).getRequestTime();
+                LocalDate lastTime = lastDateTime.toLocalDate();
+                //成功提现记录日期是否是当月1-5日.
+                if(TimeUtil.beforeTheDate(lastTime, 6)){
+                    //当前日期是否不是16-20日,如果不是说明是1-5日之间第二次提现.跳转提示页面.
+                    if(!TimeUtil.timeFrame(localDate, 15, 21)){
+                        return "wechat@incorrectDateVisit.html";
+                    }
+                }else {
+                    return "wechat@incorrectDateVisit.html";
+                }
+            }
+
+        }
+
         double rate = withdrawService.getCostRateForNoInvoice().doubleValue();
         model.addAttribute("ratePercent"
                 , NumberFormat.getPercentInstance(Locale.CHINA)
                         .format(rate));
-        model.addAttribute("rate",rate);
+        model.addAttribute("rate", rate);
         model.addAttribute("companyName", systemStringService.getCustomSystemString("withdraw.invoice.companyName"
                 , null, true, String.class, "利每家科技有限公司"));
         model.addAttribute("companyAddress", systemStringService.getCustomSystemString("withdraw.invoice.companyAddress"
@@ -114,14 +163,15 @@ public class WechatWithdrawController {
             withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
                     , null);
         model.addAttribute("badCode", false);
-        return toVerify(login, model);
+        return toVerify(login, model, withdraw);
     }
 
-    private String toVerify(Login login, Model model) {
+    private String toVerify(Login login, Model model, BigDecimal withdraw) {
         String mobile = readService.mobileFor(login);
         String start = mobile.substring(0, 3);
         String end = mobile.substring(mobile.length() - 4, mobile.length());
         model.addAttribute("mosaicMobile", start + "****" + end);
+        model.addAttribute("withdraw", withdraw);
         return "wechat@withdrawVerify.html";
     }
 
@@ -136,13 +186,84 @@ public class WechatWithdrawController {
      * @return 手机验证码验证
      */
     @PostMapping("/withdrawVerify")
-    public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model) {
+    public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model, BigDecimal withdraw) {
         try {
             withdrawService.submitRequest(login, authCode);
+            //向财务发送短信提醒
+            remindFinancial(login, withdraw);
         } catch (IllegalVerificationCodeException ex) {
             model.addAttribute("badCode", true);
-            return toVerify(login, model);
+            return toVerify(login, model, withdraw);
         }
         return "wechat@withdrawSuccess.html";
+    }
+
+    /**
+     * 用户体现输入正确的验证码后,给财务发送短息提醒.
+     *
+     * @param login 提现的用户
+     */
+    private void remindFinancial(Login login, BigDecimal withdraw) {
+        //获取所有的管理者
+        List<Manager> managerList = loginService.managers();
+
+        //获取所有拥有财务权限的员工
+        List<Manager> role_finance = managerList.stream().filter(manager ->
+                manager.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_FINANCE"))
+        ).collect(Collectors.toList());
+
+        //模版信息类
+        WithdrawSuccessRemindFinancial withdrawSuccessRemindFinancial = new WithdrawSuccessRemindFinancial();
+        //注册模版信息
+        wechatNoticeHelper.registerTemplateMessage(withdrawSuccessRemindFinancial, null);
+
+        userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
+                null, withdrawSuccessRemindFinancial, readService.nameForPrincipal(login), "提现金额:￥" + withdraw + "元");
+    }
+
+    private class WithdrawSuccessRemindFinancial implements MarketUserNoticeType {
+
+        @Override
+        public Collection<? extends TemplateMessageParameter> parameterStyles() {
+            return Arrays.asList(
+                    new SimpleTemplateMessageParameter("first", "客户申请佣金提现。")
+                    , new SimpleTemplateMessageParameter("keyword1", "{0}")
+                    , new SimpleTemplateMessageParameter("keyword2", "{1}")
+                    , new SimpleTemplateMessageParameter("remark", "请尽快处理。")
+            );
+        }
+
+        @Override
+        public MarketNoticeType type() {
+            return MarketNoticeType.WithdrawSuccessRemindFinancial;
+        }
+
+        @Override
+        public String title() {
+            return null;
+        }
+
+        @Override
+        public boolean allowDifferentiation() {
+            return true;
+        }
+
+        @Override
+        public String defaultToText(Locale locale, Object[] parameters) {
+            return "客户佣金提现申请";
+        }
+
+        @Override
+        public String defaultToHTML(Locale locale, Object[] parameters) {
+            return "客户佣金提现申请";
+        }
+
+        @Override
+        public Class<?>[] expectedParameterTypes() {
+            return new Class<?>[]{
+                    String.class,//申请人 0
+                    String.class //申请内容 1
+            };
+        }
     }
 }

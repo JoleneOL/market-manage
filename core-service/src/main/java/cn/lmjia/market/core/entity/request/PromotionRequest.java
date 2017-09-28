@@ -17,6 +17,7 @@ import me.jiangcai.payment.PayableOrder;
 import me.jiangcai.payment.entity.PayOrder;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
@@ -122,7 +123,7 @@ public class PromotionRequest implements PayableOrder {
                         FieldBuilder.asName(PromotionRequest.class, "id")
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "name")
-                                .addBiSelect((promotionRequestRoot, criteriaBuilder) -> ReadService.nameForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
+                                .addBiSelect((Root<PromotionRequest> promotionRequestRoot, CriteriaBuilder criteriaBuilder) -> ReadService.nameForLogin(promotionRequestRoot.join("whose"), criteriaBuilder))
                                 .withoutOrder()
                                 .build()
                         , FieldBuilder.asName(PromotionRequest.class, "currentLevel")
@@ -133,8 +134,12 @@ public class PromotionRequest implements PayableOrder {
                                 .addSelect(promotionRequestRoot -> promotionRequestRoot.get("type"))
                                 .addFormat((object, type) -> toLevelName.apply((int) object))
                                 .build()
+                        ,
 //                        , FieldBuilder.asName(PromotionRequest.class, "type")
 //                                .build()
+                        FieldBuilder.asName(PromotionRequest.class,"agentName")
+                                .addSelect(promotionRequestRoot -> promotionRequestRoot.get("name"))
+                                .build()
                         , FieldBuilder.asName(PromotionRequest.class, "address")
                                 .addFormat((object, type) -> object.toString())
                                 .build()
@@ -239,6 +244,18 @@ public class PromotionRequest implements PayableOrder {
                 };
             }
         };
+    }
+
+    /**
+     * @param str {@link #getPayableOrderId()}
+     * @return 将该str转换为订单id；null表示无法解释或者非本类订单
+     */
+    public static Long payableOrderIdToId(String str) {
+        if (StringUtils.isEmpty(str))
+            return null;
+        if (!str.startsWith("PromotionRequest-"))
+            return null;
+        return NumberUtils.parseNumber(str.substring("PromotionRequest-".length()), Long.class);
     }
 
     @Override

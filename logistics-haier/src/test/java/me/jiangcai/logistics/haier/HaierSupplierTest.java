@@ -4,6 +4,7 @@ import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsTestBase;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
+import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -64,10 +65,10 @@ public class HaierSupplierTest extends LogisticsTestBase {
 
     // 临时入库
     @Test
-    public void tempIn() {
+    public void tempIn() throws UnnecessaryShipException {
         if (!haierApiTestSupport())
             return;
-        logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomSource(), randomDepot());
+        logisticsService.makeShift(haierSupplier, null, Collections.singleton(randomThing()), randomSource(), randomDepot());
 //        Set<Thing> goods = new HashSet<>();
 //        // uXkelZ和KWkLZc
 //        goods.add(newTempThing("KWkLZc"));
@@ -80,10 +81,10 @@ public class HaierSupplierTest extends LogisticsTestBase {
 
 
     @Test
-    public void go() {
+    public void go() throws UnnecessaryShipException {
         if (!haierApiTestSupport())
             return;
-        logisticsService.makeShift(haierSupplier, Collections.singleton(randomThing()), randomDepot(), randomDestination());
+        logisticsService.makeShift(haierSupplier, null, Collections.singleton(randomThing()), randomDepot(), randomDestination());
 //        Set<Thing> goods = new HashSet<>();
 //        // uXkelZ和KWkLZc
 //        goods.add(newTempThing("KWkLZc"));

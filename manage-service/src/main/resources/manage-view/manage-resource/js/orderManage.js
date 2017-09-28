@@ -4,7 +4,7 @@ $(function () {
     var beginTime = $('#J_beginDate').flatpickr({
         maxDate: new Date(),
         locale: 'zh',
-        onChange: function(dateObj, dateStr, instance) {
+        onChange: function (dateObj, dateStr, instance) {
             endTime.set("minDate", dateStr);
         }
     });
@@ -12,14 +12,14 @@ $(function () {
     var endTime = $('#J_endDate').flatpickr({
         maxDate: new Date(),
         locale: 'zh',
-        onChange: function(dateObj, dateStr, instance) {
+        onChange: function (dateObj, dateStr, instance) {
             beginTime.set("maxDate", dateStr);
         }
     });
 
     var _body = $('body');
 
-    var logisticsDetailUrl = _body.attr('data-logistics-detail-url');
+    var orderDeliveryUrl = _body.attr('data-order-delivery-url');
     var quickUrl = _body.attr('data-quick-url');
     var allowMockPay = _body.attr('data-allow-mock-pay') === 'true';
     var allowSettlement = _body.attr('data-allow-settlement') === 'true';
@@ -34,6 +34,8 @@ $(function () {
             }
         },
         "ordering": true,
+        // 默认排序为时间并且倒序
+        "order": [[10, "desc"]],
         "lengthChange": true,
         "searching": false,
         "colReorder": true,
@@ -122,7 +124,7 @@ $(function () {
                 data: function (item) {
                     var makeLogistics = '<a href="javascript:;" class="js-makeLogistics" data-id="' + item.id + '"><i class="fa fa-truck"></i>&nbsp;物流发货</a>';
 
-                    var viewLogistics = '<a href="javascript:;" class="js-viewLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
+                    // var viewLogistics = '<a href="javascript:;" class="js-viewLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
 
                     var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '" data-from="' + item.methodCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
                     var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;修改</a>';
@@ -143,12 +145,15 @@ $(function () {
                         // 已付款及其以上（排除待付款）
                         a = a + e;
                     }
-                    if (item.statusCode === 2) {
-                        // 物流发货
-                        a = a + makeLogistics;
-                    } else if (item.statusCode >= 3) {
-                        a = a + viewLogistics;
-                    }
+                    // if (item.statusCode === 2) {
+                    //     // 物流发货
+                    //     a = a + makeLogistics;
+                    // } else if (item.statusCode >= 3) {
+                    //     // a = a + viewLogistics;
+                    // }
+
+                    if (item.statusCode !== 1)
+                        a = a + makeLogistics;// 只要不是未支付即可发货 若支持订单关闭状态 则可将其也纳入规范
 
                     if (item.methodCode !== 2) {
                         //其他
@@ -262,55 +267,11 @@ $(function () {
         $('input[name=id]', detailForm).val($(this).attr('data-id'));
         $('input[name=from]', detailForm).val($(this).attr('data-from'));
         detailForm.submit();
-    }).on('click', '.js-viewLogistics', function () {
-        window.location.href = logisticsDetailUrl + '?id=' + $(this).data('id');
+        // }).on('click', '.js-viewLogistics', function () {
+        //     window.location.href = logisticsDetailUrl + '?id=' + $(this).data('id');
     }).on('click', '.js-makeLogistics', function () {
         var orderId = $(this).attr('data-id');
-        $.ajax('/orderData/logistics/' + orderId, {
-            dataType: 'json',
-            method: 'get',
-            success: function (response) {
-                // 获取可用仓库
-                var depots = response.depots;
-                if (depots.length === 0)
-                    layer.msg('没有该货品可用的库存，请尽快补充库存。');
-                else {
-                    layer.open({
-                        content: makeLogisticsRegion.html(),
-                        area: ['500px', 'auto'],
-                        btn: ['确认', '取消'],
-                        zIndex: 9999,
-                        success: function (layerd) {
-                            makeLogisticsRegionDepotId = $('[name=depotId]', layerd);
-                            $('[name=depotId]', layerd).change(function () {
-                                depotSelectChange(layerd);
-                            });
-                            $('[name=depotId]', layerd).blur(function () {
-                                depotSelectChange(layerd);
-                            });
-                            depotsUpdate(depots);
-                        },
-                        yes: function (index) {
-                            var value = makeLogisticsRegionDepotId.val();
-                            if (value) {
-                                $.ajax('/orderData/logistics/' + orderId, {
-                                    method: 'put',
-                                    contentType: 'text/plain',
-                                    data: value,
-                                    success: function () {
-                                        table.ajax.reload();
-                                        layer.close(index);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-
-            }, error: function () {
-                layer.msg('服务异常，请稍候重试');
-            }
-        });
+        window.location.href = orderDeliveryUrl + '?id=' + orderId;
     }).on('click', '.js-settlement', function () {
         // 重新接收端
         $.ajax('/orderData/settlement/' + $(this).attr('data-id'), {
@@ -360,7 +321,7 @@ $(function () {
                 $('#J_shipmentTime').flatpickr({
                     maxDate: new Date(),
                     locale: 'zh',
-                    onChange: function(dateObj, dateStr, instance) {
+                    onChange: function (dateObj, dateStr, instance) {
                         deliverTime.set("minDate", dateStr);
                     }
                 });

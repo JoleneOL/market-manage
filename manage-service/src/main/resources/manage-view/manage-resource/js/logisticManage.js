@@ -1,5 +1,7 @@
 $(function () {
-    var detailUrl = $('body').attr('data-detail-url');
+    var $body = $('body');
+    var detailUrl = $body.attr('data-detail-url');
+    var orderDetailUrl = $body.data('order-detail-url');
     // var receive = echarts.init(document.getElementById('J_waitReceive'));
     // var install = echarts.init(document.getElementById('J_waitInstall'));
 
@@ -86,7 +88,6 @@ $(function () {
         locale: 'zh'
     });
 
-    var $body = $('body');
 
     var logistics = $('#logisticsForm').DataTable({
         "processing": true,
@@ -140,7 +141,8 @@ $(function () {
                 "className": 'table-action',
                 "orderable": false,
                 data: function (item) {
-                    return '<a href="javascript:;" class="js-info" data-unit-id="' + item.unitId + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
+                    return '<a href="javascript:;" class="js-info" data-unit-id="' + item.id + '"><i class="fa fa-truck"></i>&nbsp;查看物流</a>'
+                        + '<a href="javascript:;" class="js-order-info" data-id="' + item.mainOrderId + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看订单</a>';
                 }
             }
         ],
@@ -316,6 +318,11 @@ $(function () {
         if (table === 'logistics') return logistics.ajax.reload();
         if (table === 'factory') return factory.ajax.reload();
         if (table === 'storage') return storage.ajax.reload();
+    }).on('click', '.js-order-info', function () {
+        var unitId = $(this).data('id');
+        if (unitId) {
+            window.location.href = orderDetailUrl + '?id=' + unitId;
+        }//否则是查看订单详情
     }).on('click', '.js-info', function () {
         var from = $(this).closest('.tab-pane').attr('id');
         var table = $('.tab-pane.active').attr('id');

@@ -28,4 +28,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSp
      */
     @Deprecated
     List<Customer> findByAgentLevel_SystemAndSuccessOrderTrue(AgentSystem system);
+
 }

@@ -3,7 +3,6 @@ package cn.lmjia.market.core.service.impl;
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.support.OrderStatus;
-import cn.lmjia.market.core.event.MainOrderDeliveredEvent;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
@@ -18,19 +17,12 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.DeliverableOrder;
 import me.jiangcai.logistics.StockService;
-import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
-import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.UsageStock_;
-import me.jiangcai.logistics.entity.support.ProductStatus;
-import me.jiangcai.logistics.entity.support.ShiftStatus;
-import me.jiangcai.logistics.event.InstallationEvent;
-import me.jiangcai.logistics.event.ShiftEvent;
-import me.jiangcai.logistics.haier.HaierSupplier;
-import me.jiangcai.logistics.option.LogisticsOptions;
-import me.jiangcai.logistics.repository.DepotRepository;
+import me.jiangcai.logistics.event.OrderInstalledEvent;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,10 +47,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -271,7 +264,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, orderIdPredicate(orderId, root, cb));
             } else if (orderDate != null) {
                 log.debug("search order with orderDate:" + orderDate);
-                predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get("orderTime"), orderDate.toString()));
+                predicate = cb.and(predicate, JpaFunctionUtils.dateEqual(cb, root.get(MainOrder_.orderTime), orderDate.toString()));
             } else {
                 // 日期过滤
                 if (beginDate != null) {
@@ -292,7 +285,16 @@ public class MainOrderServiceImpl implements MainOrderService {
                 predicate = cb.and(predicate, cb.equal(root.join(MainOrder_.amounts).key().get(MainGood_.id), goodId));
             }
             if (status != null && status != OrderStatus.EMPTY) {
-                predicate = cb.and(predicate, cb.equal(root.get("orderStatus"), status));
+                if (status == OrderStatus.forDeliver) {
+                    predicate = cb.and(predicate, cb.or(
+                            cb.equal(root.get(MainOrder_.orderStatus), status)
+                            , cb.and(
+                                    cb.equal(root.get(MainOrder_.orderStatus), OrderStatus.forDeliverConfirm)
+                                    , cb.equal(root.get(MainOrder_.ableShip), true)
+                            )
+                    ));
+                } else
+                    predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.orderStatus), status));
             }
 
             return predicate;
@@ -356,237 +358,26 @@ public class MainOrderServiceImpl implements MainOrderService {
     }
 
     @Override
-    public StockShiftUnit makeLogistics(Class<? extends LogisticsSupplier> supplierType, long orderId, long depotId) {
-        MainOrder order = getOrder(orderId);
-        Depot depot = depotRepository.getOne(depotId);
-
-        LogisticsSupplier supplier;
-        if (supplierType == HaierSupplier.class)
-            supplier = haierSupplier;
-        else
-            supplier = applicationContext.getBean(supplierType);
-
-        StockShiftUnit unit = logisticsService.makeShift(supplier, order.getAmounts().entrySet().stream()
-                        .map((Function<Map.Entry<MainGood, Integer>, Thing>) entry -> new Thing() {
-                            @Override
-                            public Product getProduct() {
-                                return entry.getKey().getProduct();
-                            }
-
-                            @Override
-                            public ProductStatus getProductStatus() {
-                                return ProductStatus.normal;
-                            }
-
-                            @Override
-                            public int getAmount() {
-                                return entry.getValue();
-                            }
-                        })
-                        .collect(Collectors.toSet())
-                , depot, order, LogisticsOptions.Installation);
-
-        if (order.getLogisticsSet() == null)
-            order.setLogisticsSet(new ArrayList<>());
-
-        order.getLogisticsSet().add(unit);
-        order.setCurrentLogistics(unit);
-        order.setOrderStatus(OrderStatus.forDeliverConfirm);
-        return unit;
+    public MainOrderFinishEvent forOrderInstalledEvent(OrderInstalledEvent event) {
+        if (event.getOrder() instanceof MainOrder) {
+            return new MainOrderFinishEvent((MainOrder) event.getOrder(), event.getSource());
+        }
+        return null;
     }
 
     @Override
-    public void forInstallationEvent(InstallationEvent event) {
-        logisticsToMainOrder(event.getUnit(), order -> {
-            final OrderStatus currentOrderStatus = order.getOrderStatus();
-            order.setOrderStatus(OrderStatus.afterSale);
-            if (currentOrderStatus != OrderStatus.forInstall) {
-                log.error(order.getSerialId() + "尚未收货就安装完成了。");
-            }
-            applicationEventPublisher.publishEvent(new MainOrderFinishEvent(order, event));
-        });
-    }
-
-    @Override
-    public int sumProductNum(Product product) {
-        return sumProductNum(product, null, null, OrderStatus.forPay, OrderStatus.forDeliver);
-    }
-
-    @Override
-    public int sumProductNum(Product product, LocalDateTime beginTime, LocalDateTime endTime, OrderStatus... orderStatuses) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery cq = cb.createQuery();
-        Root<MainOrder> root = cq.from(MainOrder.class);
-        //今日核算时间之前的订单
-        MapJoin<MainOrder, MainGood, Integer> amountsRoot = root.join(MainOrder_.amounts);
-        List<Predicate> list = new ArrayList<>();
-        list.add(cb.notEqual(root.get(MainOrder_.orderStatus), OrderStatus.close));
-        list.add(cb.equal(amountsRoot.key().get(MainGood_.product), product));
-        if (orderStatuses != null) {
-            list.add(root.get(MainOrder_.orderStatus)
-                    .in(orderStatuses));
-        }
-        if (beginTime != null) {
-            list.add(cb.greaterThanOrEqualTo(root.get(MainOrder_.orderTime), beginTime));
-        }
-        if (endTime != null) {
-            list.add(cb.lessThanOrEqualTo(root.get(MainOrder_.orderTime), endTime));
-        }
-        Predicate[] p = new Predicate[list.size()];
-        cq.where(cb.and(list.toArray(p)));
-        cq.select(cb.sum(amountsRoot.value()));
-        Object result = entityManager.createQuery(cq).getSingleResult();
-        return result != null ? (int) result : 0;
-    }
-
-    /**
-     * 获取清算时间配置
-     *
-     * @return
-     */
-    private int getOffsetHour() {
-        int offsetHour = systemStringService.getCustomSystemString("market.core.service.product.offsetHour", null, true, Integer.class, defaultOffsetHour);
-        if (!env.acceptsProfiles(CoreConfig.ProfileUnitTest) && (offsetHour > 23 || offsetHour < 0)) {
-            offsetHour = defaultOffsetHour;
-        }
-        return offsetHour;
-    }
-
-    /**
-     * 获取今日清算时间
-     *
-     * @return
-     */
-    @Override
-    public LocalDateTime getTodayOffsetTime() {
-        return getOffsetDate().atStartOfDay().plusHours(getOffsetHour());
-    }
-
-    /**
-     * 获取当前时间相对于清算时间的日期
-     * 比如清算时间是9点，现在是8点，那么当前时间相对于清算时间要减1天
-     *
-     * @return
-     */
-    private LocalDate getOffsetDate() {
-        return LocalDateTime.now().minusHours(getOffsetHour()).toLocalDate();
-    }
-
-    @Override
-    public int limitStock(Product product) {
-        //如果已经计算过了，就直接从 map 中获取
-        LocalDateTime now = LocalDateTime.now();
-        if (productStockMap.containsKey(product.getCode())) {
-            OffsetStock offsetStock = productStockMap.get(product.getCode());
-            if (offsetStock.getOffsetDate().equals(getOffsetDate())) {
-                return offsetStock.getStock();
-            }
-        }
-        long limitDay;
-        //如果未设置限购时间，或者限购时间已经超过了，那么货品就不限购
-        if (product instanceof MainProduct) {
-            LocalDate planSellOutDate = ((MainProduct) product).getPlanSellOutDate();
-            if (planSellOutDate == null || planSellOutDate.isBefore(now.toLocalDate())) {
-                limitDay = 1L;
-            } else {
-                limitDay = ChronoUnit.DAYS.between(now.minusHours(getOffsetHour()).toLocalDate(), planSellOutDate) + 1;
-            }
-        } else {
-            limitDay = 1L;
-
-        }
-        int totalUsableStock = stockService.usableStockTotal(product);
-        //锁定库存包括 代付款，待发货
-        int lockedStock = sumProductNum(product);
-        int todayStock = sumProductNum(product, getTodayOffsetTime(), null, null);
-        //限购数量 = 当前库存总数 - 当前冻结总数 + 今日下单数
-        int totalProductStock = totalUsableStock - lockedStock + todayStock;
-        int productStock = totalProductStock <= 0 ? 0 : (int) (totalProductStock / limitDay);
-        log.debug("Product:" + product.getCode()
-                + ";TotalUsableStock:" + totalUsableStock
-                + ";lockStock:" + lockedStock
-                + ";todayStock:" + todayStock
-                + ";limitDay:" + limitDay);
-        productStockMap.put(product.getCode(), new OffsetStock(getOffsetDate(), productStock));
-        return productStock;
-    }
-
-    @Override
-    public int usableStock(Product product) {
-        int limitStock = limitStock(product);
-        LocalDateTime orderBeginTime = getTodayOffsetTime();
-        //计算今日所有未关闭订单的货品数量
-        int todayStock = sumProductNum(product, orderBeginTime, null, null);
-        log.debug("Product:" + product.getCode() + ";limitStock:" + limitStock + ";lockedStock:" + todayStock);
-        return todayStock > limitStock ? 0 : limitStock - todayStock;
-    }
-
-    @Override
-    public void calculateGoodStock(Collection<MainGood> mainGoodSet) {
-        mainGoodSet.forEach(mainGood -> mainGood.getProduct().setStock(usableStock(mainGood.getProduct())));
-    }
-
-    private void checkGoodStock(Map<MainGood, Integer> amounts) throws MainGoodLowStockException {
-        Map<MainGood, Integer> lowStockProduct = new HashMap<>();
-        Map<MainGood, LocalDateTime> relieveTime = new HashMap<>();
-        for (MainGood good : amounts.keySet()) {
-            int usableStock = usableStock(good.getProduct());
-            if (good.getProduct().getPlanSellOutDate() == null && usableStock < amounts.get(good)) {
-                lowStockProduct.put(good, usableStock);
-            } else if (good.getProduct().getPlanSellOutDate() != null && usableStock < amounts.get(good)) {
-                lowStockProduct.put(good, usableStock);
-                relieveTime.put(good, getTodayOffsetTime().plusDays(1));
-            }
-        }
-        if (lowStockProduct.size() > 0) {
-            throw relieveTime.size() == 0 ? new MainGoodLowStockException(lowStockProduct) : new MainGoodLimitStockException(lowStockProduct, relieveTime);
-        }
-    }
-
-    @Override
-    public void forShiftEvent(ShiftEvent event) {
-        // 基于物流的变化，需要对订单进行状态更新
-        // 只关注 拒绝事件
-        final ShiftStatus toStatus = event.getStatus();
-        if (toStatus != ShiftStatus.reject
-                && toStatus != ShiftStatus.success)
-            return;
-        logisticsToMainOrder(event.getUnit(), order -> {
-            final OrderStatus currentOrderStatus = order.getOrderStatus();
-            switch (toStatus) {
-                case reject:
-                    if (currentOrderStatus == OrderStatus.forDeliverConfirm
-                            || currentOrderStatus == OrderStatus.forInstall
-                            || currentOrderStatus == OrderStatus.afterSale
-                            )
-                        order.setOrderStatus(OrderStatus.forDeliver);
-                    else {
-                        log.error("错误逻辑，应该是未进入物流状态的订单 收到了物流失败的事件。" + order.getSerialId());
-                    }
-                    break;
-                case success:
-                    if (currentOrderStatus == OrderStatus.forDeliverConfirm)
-                        order.setOrderStatus(OrderStatus.forInstall);
-                    applicationEventPublisher.publishEvent(new MainOrderDeliveredEvent(order, event));
-                    break;
-                default:
-            }
-        });
-
-    }
-
-    private void logisticsToMainOrder(final StockShiftUnit unit, Consumer<MainOrder> consumer) {
+    public DeliverableOrder orderFor(StockShiftUnit unit) {
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
         Root<MainOrder> root = cq.from(MainOrder.class);
         try {
-            MainOrder order = entityManager.createQuery(cq
+            return entityManager.createQuery(cq
                     .where(cb.isMember(unit, root.get("logisticsSet")))
             )
                     .getSingleResult();
-            consumer.accept(order);
         } catch (NoResultException ignored) {
             log.error("居然没有这个订单！我们还做别的生意么?" + unit.getId(), ignored);
+            return null;
         }
     }
 

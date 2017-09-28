@@ -3,9 +3,18 @@
  */
 $(function () {
 
-    $('#J_cityPicker').on('cp:updated',function(){
+    function typeUpdated() {
+        var type = $('select[name=type]').val();
+        $('.depot-peculiarly').hide();
+        $('.depot-for-' + type).show();
+    }
+
+    typeUpdated();
+    $('select[name=type]').change(typeUpdated);
+
+    $('#J_cityPicker').on('cp:updated', function () {
         var val = $(this).val();
-        $(this).val(val.replace(/\//g,' '));
+        $(this).val(val.replace(/\//g, ' '));
     });
 
     $.validator.addMethod("hasCity", function (value, element) {

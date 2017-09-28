@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -47,7 +48,7 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         bindDeveloperWechat(user);
         updateAllRunWith(user);
 
-        driver.get("http://localhost/wechatUpgrade");
+       driver.get("http://localhost/wechatUpgrade");
         assertThat(driver.getTitle())
                 .isEqualToIgnoringCase("我的下单");
 
@@ -90,10 +91,12 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
         // 这个时候业务算是完成了；我们可以看到后端请求了
         assertExistingRequest(user);
         // 我们批准它
-        approvedOnlyRequest(user, "我的省代理");
+        //approvedOnlyRequest(user, "我的省代理");
+        //拒绝他
+        goReject(user, "你是个好人");
         // 断言等级
-        assertThat(readService.agentLevelForPrincipal(user))
-                .isEqualTo(targetLevel);
+        //assertThat(readService.agentLevelForPrincipal(user)).isEqualTo(targetLevel);
+
         // 然后继续升级
         // 断言申请
         // 再批准
@@ -133,4 +136,22 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
 
     }
 
+    private void goReject(Login user, String title) throws Exception {
+        // driver.get("http://localhost/manage/promotionRequests/1/rejected?message='你是个好人'");
+        /*mockMvc.perform(put("/manage/promotionRequests/1/rejected").param("message", "你是个好人")
+                .accept(MediaType.parseMediaType("application/html;charset=UTF-8")));*/
+
+        runWith(newRandomManager(ManageLevel.root), () -> {
+            Number id = JsonPath.read(mockMvc.perform(
+                    get("/manage/promotionRequests")
+                            .param("mobile", readService.mobileFor(user))
+            )
+                    .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), "$.data[0].id");
+            mockMvc.perform(MockMvcRequestBuilders.put("/manage/promotionRequests/" + id + "/rejected")
+                    .contentType(MediaType.parseMediaType("text/plain; charset=UTF-8"))
+                    .content(title))
+            .andExpect(status().is2xxSuccessful());
+            return null;
+        });
+    }
 }

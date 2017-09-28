@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.repository.MainGoodRepository;
@@ -44,7 +45,7 @@ import java.util.Set;
  * @author CJ
  */
 @Controller
-@PreAuthorize("hasRole('ROOT')")
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_PRODUCT_CENTER + "')")
 public class ManageGoodController {
 
     @Autowired
@@ -73,6 +74,7 @@ public class ManageGoodController {
         mainGoodRepository.getOne(id).setEnable(true);
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageGood")
     public String index() {
         return "_goodsManage.html";
@@ -129,6 +131,7 @@ public class ManageGoodController {
         return "redirect:/manageGood";
     }
 
+    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/goods/list")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<MainGood> data(final String productName) {

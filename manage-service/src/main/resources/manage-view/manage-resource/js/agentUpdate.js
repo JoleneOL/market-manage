@@ -28,11 +28,15 @@ $(function () {
                 "title": "申请代理级别", "data": "applicationLevel", "name": "applicationLevel"
             },
             {
+                "title": "公司名称", "data": "agentName", "name": "agentName"
+            },
+            {
                 "title": "地址", "data": "address", "name": "address"
             },
             {
                 "title": "手机号", "data": "mobile", "name": "mobile"
             },
+
             {
                 "title": "身份证",
                 // "name": "IDCard",
@@ -112,11 +116,16 @@ $(function () {
         window.location.href = '_agentUpdateEdit.html' + '?id=' + $(this).data('id');
     }).on('click', '.js-rejected', function () {
         var id = $(this).data('id');
-        layer.confirm('拒绝申请？', {
-            btn: ['拒绝', '取消'] //按钮
-        }, function (index) {
-            $.ajax('/manage/promotionRequests/' + id + '/rejected', {
+        layer.prompt({
+            formType: 2,
+            title: '拒绝申请？',
+            area: ['300px', '100px'], //自定义文本域宽高,
+            //btn: ['拒绝', '取消'] //按钮
+        },function(value, index, elem){
+            $.ajax('/manage/promotionRequests/' + id +'/rejected',{
                 method: 'put',
+                contentType : 'text/plain; charset=UTF-8',
+                data : value,
                 success: function (res) {
                     table.ajax.reload();
                     layer.close(index);
@@ -126,6 +135,7 @@ $(function () {
                 }
             });
         });
+
     }).on('click', '.js-agree', function () {
         var id = $(this).data('id');
         layer.confirm('通过申请？', {

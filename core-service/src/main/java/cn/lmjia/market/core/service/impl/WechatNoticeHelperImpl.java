@@ -17,7 +17,8 @@ import java.util.Collection;
  * @author CJ
  */
 @Service
-public class WechatNoticeHelperImpl implements WechatNoticeHelper {
+public class
+WechatNoticeHelperImpl implements WechatNoticeHelper {
 
     @Autowired
     private Environment environment;
@@ -56,6 +57,10 @@ public class WechatNoticeHelperImpl implements WechatNoticeHelper {
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
                 case TRJCheckWarning:
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
+                case PromotionRequestRejected:
+                    return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
+                case WithdrawSuccessRemindFinancial:
+                    return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
                 default:
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
             }
@@ -78,6 +83,10 @@ public class WechatNoticeHelperImpl implements WechatNoticeHelper {
                 case TeamMemberDeleteWarn:
                 case TeamMemberDeleteNotify:
                     return "7I5cMlNFVAB1ku-P8FAmYU2CFCJ3aoWnU_yd-8LTnN0";
+                case PromotionRequestRejected:
+                    return "eA6yIFHBqkPvvm73VKfjNWwkBjOWor_8HbgZmbAsXS0";
+                case WithdrawSuccessRemindFinancial:
+                    return "k80HJQEcaDbcIGUcua26JLfeTD3_-0-xHF-L5zUGuAU";
                 default:
                     throw new IllegalArgumentException("未知的staging消息类型:" + type);
             }
@@ -105,6 +114,10 @@ public class WechatNoticeHelperImpl implements WechatNoticeHelper {
 //            记录时间：{{keyword3.DATA}}
 //            {{remark.DATA}}
                 return "qmKucHYknwnTL_3wISnRkLjucfeixbIosd83k-1svMo";
+            case PromotionRequestRejected:
+                return "NN7SBN3h-Z7WRnZjWmSHtV9R8MCsDtoIpIHsX8f--Tc";
+            case WithdrawSuccessRemindFinancial:
+                return "8ZdNxW4PwuRAugwGfT80jlTJXKM6lhe52ISWqUUDR8c";
             default:
                 throw new IllegalArgumentException("未知的消息类型:" + type);
         }
