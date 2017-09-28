@@ -41,8 +41,8 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <goods.version>1.0.0-SNAPSHOT</goods.version>
         <payment.version>1.1-SNAPSHOT</payment.version>
-        <vc.version>1.4</vc.version>
-        <jiangcai.notice.version>3.0</jiangcai.notice.version>
+        <vc.version>1.4.1</vc.version>
+        <jiangcai.notice.version>3.1</jiangcai.notice.version>
         <wx.version>1.0-SNAPSHOT</wx.version>
     </properties>
 

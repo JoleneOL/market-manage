@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.service;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentRate;
 
 import java.math.BigDecimal;
@@ -89,4 +90,10 @@ public interface SystemService {
     default int addressRateForLevel() {
         return 2;
     }
+
+    /**
+     * @param login 当前登录的用户
+     * @return
+     */
+    boolean allowWithdrawDisplay(Login login);
 }

@@ -139,4 +139,10 @@ $(function () {
         });
     })
 
+    $('#lxfwithdrawal').click(function(){
+        var now = new Date();
+        var t=now.toLocaleString();
+        var sbt = t.substr(t.lastIndexOf("/"));
+        alert(sbt);
+    })
 });
