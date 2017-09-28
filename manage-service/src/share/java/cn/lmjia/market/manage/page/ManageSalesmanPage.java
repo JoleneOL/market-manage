@@ -43,7 +43,6 @@ public class ManageSalesmanPage extends AbstractContentPage {
      * @param predicate      选择依赖
      */
     public void select2For(String selectSelector, String input, Predicate<WebElement> predicate) {
-        printThisPage();
         final By resultsBy = By.className("select2-results__option");
         final By containerBy = By.className("select2-container--open");
         final By inputBy = By.cssSelector(".select2-search > input");
@@ -54,14 +53,21 @@ public class ManageSalesmanPage extends AbstractContentPage {
 
 
         WebElement selectHelper = webDriver.findElement(By.cssSelector(selectSelector + " + .select2-container"));
-        selectHelper.click();
+        selectHelper.findElement(By.className("select2-selection")).click();
         new WebDriverWait(webDriver, 2).until(ExpectedConditions.visibilityOfElementLocated(containerBy));
 
         WebElement inputElement = webDriver.findElement(inputBy);
         inputElement.clear();
-        inputElement.sendKeys(input);
+        for (char c : input.toCharArray()) {
+            inputElement.sendKeys("" + c);
+//            printThisPage();
+        }
+//        inputElement.sendKeys(input);
         // 等待刷新
-        WebDriverUtil.waitFor(webDriver, driver -> !driver.findElements(resultsBy).isEmpty(), 2);
+        WebDriverUtil.waitFor(webDriver, driver -> driver
+                .findElements(resultsBy)
+                .stream()
+                .anyMatch(webElement -> !webElement.getAttribute("class").contains("loading-results")), 2);
 
         // select2-results__option--load-more
         int count = 0;

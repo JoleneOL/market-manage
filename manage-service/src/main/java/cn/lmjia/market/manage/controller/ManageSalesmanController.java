@@ -8,12 +8,23 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SalesmanService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -28,9 +39,49 @@ import java.util.Locale;
 @PreAuthorize("hasRole('ROOT')")
 public class ManageSalesmanController {
 
+    @Autowired
+    private SalesmanService salesmanService;
+    @Autowired
+    private LoginService loginService;
+
     @GetMapping("/manageSalesman")
     public String index() {
         return "_salesmanManage.html";
+    }
+
+    @PostMapping("/manage/salesmen")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void add(@RequestBody String id) {
+        salesmanService.newSalesman(loginService.get(NumberUtils.parseNumber(id, Long.class)), BigDecimal.ZERO, null);
+    }
+
+    @PutMapping("/manage/salesmen/{id}/rate")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateRate(@RequestBody String rate, @PathVariable("id") long id) {
+        salesmanService.get(id).setSalesRate(new BigDecimal(rate));
+    }
+
+    @PutMapping("/manage/salesmen/{id}/rank")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateRank(@RequestBody String rank, @PathVariable("id") long id) {
+        salesmanService.get(id).setRank(rank);
+    }
+
+    @PutMapping("/manage/salesmen/{id}/disable")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void disable(@PathVariable("id") long id) {
+        salesmanService.get(id).setEnable(false);
+    }
+
+    @PutMapping("/manage/salesmen/{id}/enable")
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@PathVariable("id") long id) {
+        salesmanService.get(id).setEnable(true);
     }
 
     @GetMapping("/manage/salesmen")

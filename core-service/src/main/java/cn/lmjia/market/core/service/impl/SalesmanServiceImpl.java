@@ -108,6 +108,7 @@ public class SalesmanServiceImpl implements SalesmanService {
     @Override
     public Salesman newSalesman(Login login, BigDecimal rate, String rank) {
         Salesman salesman = new Salesman();
+        salesman.setId(login.getId());
         salesman.setCreatedTime(LocalDateTime.now());
         salesman.setEnable(true);
         salesman.setLogin(login);
