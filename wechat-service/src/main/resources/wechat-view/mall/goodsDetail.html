@@ -57,10 +57,9 @@
     <div class="goods-price">
         <span th:text="*{{totalPrice}}">1314</span>
     </div>
-    <div class="goods-tab" th:each="tag:*{tags}" th:remove="all-but-first">
-        <p th:text="${tag.name}">安装：免安装费</p>
-        <p>快递：免运费</p>
-        <p>销量：1314台</p>
+    <div class="goods-tab" >
+        <p th:each="tag:*{tags}" th:text="${tag.name}">安装：免安装费</p>
+        <p th:remove="all">快递：免运费</p>
     </div>
 </div>
 <div class="goods-detail-wrap">

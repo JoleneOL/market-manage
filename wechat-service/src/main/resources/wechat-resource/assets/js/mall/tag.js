@@ -3,7 +3,7 @@ $(function () {
     function filterFunc() {
         var _tag = $('input[name="tag"]').val();
         var _property = $('input[name="propertyValue"]').val();
-        var _price = $('input[name="price"]').val();
+        var _price = $('input[name="priceOrder"]').val();
 
         var url = infiniteWrap.attr('data-url');
         $.showLoading();
@@ -12,7 +12,7 @@ $(function () {
             data: {
                 tag: _tag,
                 propertyValue: _property,
-                price: _price,
+                priceOrder: _price,
                 page: 0
             },
             dataType: 'json',
@@ -27,7 +27,7 @@ $(function () {
                     ajaxData: {
                         tag: _tag,
                         propertyValue: _property,
-                        price: _price
+                        priceOrder: _price
                     },
                     page: 1
                 });
@@ -89,7 +89,7 @@ $(function () {
         ajaxData: {
             tag: $('input[name="tag"]').val(),
             propertyValue: $('input[name="propertyValue"]').val(),
-            price: $('input[name="price"]').val()
+            priceOrder: $('input[name="priceOrder"]').val()
         },
         template: goodsTpl
     });
@@ -111,9 +111,9 @@ $(function () {
         $('.drop-down-wrap').hide().closest('.drop-down').hide();
         $(this).toggleClass('arrow-down').toggleClass('arrow-up');
         if ($(this).hasClass('arrow-down')) {
-            $('input[name="price"]').val('asc');
+            $('input[name="priceOrder"]').val('asc');
         } else {
-            $('input[name="price"]').val('desc');
+            $('input[name="priceOrder"]').val('desc');
         }
         filterFunc();
     });

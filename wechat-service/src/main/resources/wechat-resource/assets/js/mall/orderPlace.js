@@ -69,7 +69,7 @@ $(function () {
         },
         submitHandler: function (form) {
             if ($showGoodsList.children().length > 0) {
-                $.showLoading('订单提交中');
+                // $.showLoading('订单提交中');
                 submitBtn.prop('disabled', true);
                 // form.submit();
                 submitOrder($('#J_form').serializeObject());

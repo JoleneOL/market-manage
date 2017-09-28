@@ -54,14 +54,13 @@
             <h4 class="goods-name" th:text="${goods.product.name}">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
             <p class="goods-describe">
                 <span th:each="property:${goods.product.specPropertyNameValues.keySet()}"><th:block th:text="|${property.name}:${goods.product.getPropertyNameValues().get(property)}|">颜色:红色</th:block></span>
-                <span>颜色:红色</span>
-                <span>颜色:红色</span>
+                <span th:remove="all">颜色:红色</span>
             </p>
             <div class="edit-quantity">
                 <button class="btn btn-minus" disabled
                         th:classappend="${(goodsMap.get(goods) >= 1 && goodsMap.get(goods) <= goods.product.stock) ? '' :'disabled'}"
-                        th:disabled="${goodsMap.get(goods) >= 1 && goodsMap.get(goods) <= goods.product.stock}">&minus;</button>
-                <input type="tel" max="3" min="1" value="2" class="btn-value"
+                        th:disabled="${!(goodsMap.get(goods) >= 1 && goodsMap.get(goods) <= goods.product.stock)}">&minus;</button>
+                <input type="tel" max="3" min="1" value="2" class="btn-value" th:value="${goodsMap.get(goods)}"
                        th:attr="max=${goods.product.stock}">
                 <button class="btn btn-plus">&plus;</button>
             </div>
