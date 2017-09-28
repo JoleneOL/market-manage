@@ -14,10 +14,17 @@ import me.jiangcai.lib.sys.service.SystemStringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class WithdrawServiceImpl implements WithdrawService {
@@ -97,5 +104,15 @@ public class WithdrawServiceImpl implements WithdrawService {
         request.setManageTime(LocalDateTime.now());
         request.setTransactionRecordNumber(transactionRecordNumber);
         request.setComment(comment);
+    }
+
+    @Override
+    public List<WithdrawRequest> descTimeAndSuccess(Login login) {
+        return withdrawRequestRepository.findAll((root, query, cb)
+                -> cb.and(
+                cb.equal(root.get(WithdrawRequest_.whose), login)
+                , root.get(WithdrawRequest_.withdrawStatus)
+                        .in(WithdrawStatus.success)
+        ), new Sort(Sort.Direction.DESC, "requestTime"));
     }
 }
