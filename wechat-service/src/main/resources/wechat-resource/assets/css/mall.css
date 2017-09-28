@@ -627,6 +627,7 @@ body {
 }
 .cart-footer .settlement {
   margin-left: 12px;
+  height: 48px;
 }
 .cart-footer .settlement button {
   display: block;
