@@ -25,3 +25,9 @@ Mock.mock(/\/manage\/salesmen/, "get", {
         'rank': ''
     }]
 });
+
+// Mock.setup({
+//     timeout: '99999'
+// });
+//
+// Mock.mock(/\/stopIt/,{});
