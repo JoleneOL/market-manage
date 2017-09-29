@@ -76,6 +76,10 @@
                                 <td th:text="${@readService.mobileFor(currentData.orderBy)}">18958044532</td>
                             </tr>
                             <tr>
+                                <td>第三方支付订单号</td>
+                                <td th:text="${currentDate.payOrder.platformId}">201700000929</td>
+                            </tr>
+                            <tr>
                                 <td>收货人</td>
                                 <td th:text="${currentData.customer.name}">都督</td>
                             </tr>
