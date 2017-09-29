@@ -197,6 +197,7 @@ public class SalesmanServiceImpl implements SalesmanService {
                         predicate = cb.and(predicate, remark ? remarkPath.isNull() : remarkPath.isNotNull());
                     }
                     if (deal != null) {
+                        Join<?,MainOrder> orderPath = root.join(SalesAchievement_.mainOrder, JoinType.LEFT);
                         Predicate next;
                         if (deal)
                             next = cb.and(orderPath.isNotNull(), MainOrder.getOrderPaySuccess(orderPath, cb));
