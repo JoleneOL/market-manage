@@ -2,12 +2,15 @@ package cn.lmjia.market.core.controller;
 
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.ReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -68,26 +71,32 @@ public class LoginDataController {
             @Override
             public List<FieldDefinition<Login>> fields() {
                 return Arrays.asList(Fields.asBasic("id")
-                        , Fields.asFunction("name", root -> root.get("contactWay").get("name"))
-                        , Fields.asFunction("mobile", root -> root.get("contactWay").get("mobile"))
+                        , FieldBuilder.asName(Login.class, "name")
+                                .addBiSelect(ReadService::nameForLogin)
+                                .build()
+                        , FieldBuilder.asName(Login.class, "mobile")
+                                .addBiSelect(ReadService::mobileForLogin)
+                                .build()
                 );
             }
 
             @Override
             public Specification<Login> specification() {
                 if (StringUtils.isEmpty(search))
-                    return (root, query, cb) -> {
-                        // 必须得有 所以right
-                        Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.INNER);
-                        return cb.isNotNull(contactWayJoin);
-                    };
+                    return null;
+//                    return (root, query, cb) -> {
+//                        // 必须得有 所以right
+//                        Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.INNER);
+//                        return cb.isNotNull(contactWayJoin);
+//                    };
                 String jpaSearch = "%" + search + "%";
                 return (root, query, cb) -> {
                     // 必须得有 所以right
-                    Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.INNER);
+                    Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.LEFT);
                     return cb.or(
                             cb.like(contactWayJoin.get("mobile"), jpaSearch)
                             , cb.like(contactWayJoin.get("name"), jpaSearch)
+                            , cb.like(root.get(Login_.loginName), jpaSearch)
                     );
                 };
             }

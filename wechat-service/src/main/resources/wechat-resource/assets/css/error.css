@@ -19,10 +19,11 @@ h1 img {
 .img-big {
     width: 200px;
 }
-h2, p {
+h2, p ,h3{
     color: #676a6c;
     text-align: center;
 }
+
 .mb-no {
     margin-bottom: 0;
 }

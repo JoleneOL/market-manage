@@ -86,6 +86,7 @@ $(function () {
         $.ajax('/manage/salesmen', {
             method: 'post',
             contentType: 'text/plain',
+            data: target,
             success: function () {
                 table.ajax.reload();
             }

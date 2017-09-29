@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.luffy.libs</groupId>
             <artifactId>libseext</artifactId>
-            <version>1.3.7</version>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.payment</groupId>
@@ -122,6 +122,12 @@
             <groupId>me.jiangcai.user-notice</groupId>
             <artifactId>supplier-wechat</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>weixin-protocol</artifactId>
+                    <groupId>me.jiangcai.wx</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
