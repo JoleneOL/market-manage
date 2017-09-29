@@ -10,6 +10,7 @@ import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsHostService;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
+import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.domain.Specification;
@@ -120,4 +121,5 @@ public interface MainOrderService extends LogisticsHostService {
     @EventListener(OrderInstalledEvent.class)
     @Transactional
     MainOrderFinishEvent forOrderInstalledEvent(OrderInstalledEvent event);
+
 }

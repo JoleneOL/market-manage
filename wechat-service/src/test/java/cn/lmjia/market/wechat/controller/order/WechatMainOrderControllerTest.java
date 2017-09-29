@@ -13,4 +13,5 @@ public class WechatMainOrderControllerTest extends AbstractWechatMainOrderContro
         driver.get("http://localhost" + SystemService.wechatOrderURi);
         return initPage(WechatOrderPage.class);
     }
+
 }
