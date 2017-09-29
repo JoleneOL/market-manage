@@ -17,7 +17,6 @@ import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
-import cn.lmjia.market.core.repository.deal.SalesmanRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WechatNoticeHelper;
@@ -106,8 +105,6 @@ public class LoginServiceImpl implements LoginService {
     private WechatNoticeHelper wechatNoticeHelper;
     @Autowired
     private UserNoticeService userNoticeService;
-    @Autowired
-    private SalesmanRepository salesmanRepository;
 
     public LoginServiceImpl() {
         payStatus.add(OrderStatus.forDeliver);
@@ -405,7 +402,7 @@ public class LoginServiceImpl implements LoginService {
                 && !(currentLogin instanceof Manager)
                 && !currentLogin.isSuccessOrder()
                 && agentLevelRepository.findByLogin(currentLogin).isEmpty()
-                && !salesmanRepository.exists(login.getId());
+                && entityManager.find(Salesman.class, login.getId()) == null;
     }
 
     private void warnDeleteLogin(Login login) {
