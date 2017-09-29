@@ -10,11 +10,14 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentLevel_;
+import cn.lmjia.market.core.entity.deal.Salesman;
+import cn.lmjia.market.core.entity.deal.Salesman_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
+import cn.lmjia.market.core.repository.deal.SalesmanRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WechatNoticeHelper;
@@ -103,6 +106,8 @@ public class LoginServiceImpl implements LoginService {
     private WechatNoticeHelper wechatNoticeHelper;
     @Autowired
     private UserNoticeService userNoticeService;
+    @Autowired
+    private SalesmanRepository salesmanRepository;
 
     public LoginServiceImpl() {
         payStatus.add(OrderStatus.forDeliver);
@@ -321,6 +326,10 @@ public class LoginServiceImpl implements LoginService {
                 .distinct(true)
                 .where(cb.isNotNull(customerRoot.get(Customer_.login)));
         //
+        Subquery<Long> salesman = cq.subquery(Long.class);
+        Root<Salesman> salesmanRoot = salesman.from(Salesman.class);
+        salesman = salesman.select(cb.count(salesmanRoot))
+                .where(cb.equal(salesmanRoot.get(Salesman_.id), root.get(Login_.id)));
         entityManager.createQuery(cq
                 .distinct(true)
                 .where(
@@ -334,6 +343,8 @@ public class LoginServiceImpl implements LoginService {
                         , cb.equal(teamNumber, 0)
                         // 未曾下单
                         , cb.isFalse(root.get(Login_.successOrder))
+                        // 而且也非销售人员
+                        , cb.equal(salesman, 0L)
                 )
         )
                 .getResultList().forEach(login -> {
@@ -393,7 +404,8 @@ public class LoginServiceImpl implements LoginService {
         return loginRepository.countByGuideUser(currentLogin) == 0
                 && !(currentLogin instanceof Manager)
                 && !currentLogin.isSuccessOrder()
-                && agentLevelRepository.findByLogin(currentLogin).isEmpty();
+                && agentLevelRepository.findByLogin(currentLogin).isEmpty()
+                && !salesmanRepository.exists(login.getId());
     }
 
     private void warnDeleteLogin(Login login) {
