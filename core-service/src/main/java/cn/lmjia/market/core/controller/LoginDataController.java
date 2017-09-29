@@ -1,7 +1,10 @@
 package cn.lmjia.market.core.controller;
 
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.settlement.LoginCommissionJournal;
+import cn.lmjia.market.core.repository.settlement.LoginCommissionJournalRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
@@ -10,8 +13,12 @@ import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,8 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 身份数据相关控制器
@@ -32,6 +42,8 @@ public class LoginDataController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private LoginCommissionJournalRepository loginCommissionJournalRepository;
 
     /**
      * 公开可用的手机号码可用性校验
@@ -50,6 +62,27 @@ public class LoginDataController {
     @RowCustom(dramatizer = Select2Dramatizer.class, distinct = true)
     public RowDefinition<Login> searchLoginSelect2(String search) {
         return searchLogin(search);
+    }
+
+    @GetMapping(value = "/loginCommissionJournal", produces = "text/html")
+    @Transactional(readOnly = true)
+    public String journal(long id, @AuthenticationPrincipal Login login, Model model) {
+        // 自己只可以查自己的
+        if (!login.isManageable() && login.getId() != id)
+            throw new AccessDeniedException("不可以查看别人的流水");
+        final List<LoginCommissionJournal> list = loginCommissionJournalRepository.findByLoginOrderByHappenTimeAsc(loginService.get(id));
+        model.addAttribute("list", list);
+
+        BigDecimal current = BigDecimal.ZERO;
+        // 用于保存当时的数据
+        Map<String, Money> currentData = new HashMap<>();
+        for (LoginCommissionJournal journal : list) {
+            current = current.add(journal.getChanged());
+            currentData.put(journal.getId(), new Money(current));
+        }
+        model.addAttribute("currentData", currentData);
+
+        return "mock/journal.html";
     }
 
     /**

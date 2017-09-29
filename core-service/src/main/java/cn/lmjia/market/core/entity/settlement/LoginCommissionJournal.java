@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity.settlement;
 
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,12 +38,16 @@ public class LoginCommissionJournal {
     private Long mainOrderId;
     @Column(name = "HAPPEN_TIME")
     private LocalDateTime happenTime;
-    @Column(name = "MESSAGE")
-    private String message;
+    @Column(name = "TYPE")
+    private CommissionJournalType type;
     /**
      * 变化额，正数表示增加，负数表示减少
      */
     @Column(name = "CHANGED")
     private BigDecimal changed;
+
+    public Money getChangedAbsMoney() {
+        return new Money(getChanged().abs());
+    }
 
 }
