@@ -122,6 +122,12 @@
             <groupId>me.jiangcai.user-notice</groupId>
             <artifactId>supplier-wechat</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>weixin-protocol</artifactId>
+                    <groupId>me.jiangcai.wx</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>me.jiangcai.lib</groupId>
