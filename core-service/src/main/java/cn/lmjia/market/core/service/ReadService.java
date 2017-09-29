@@ -39,7 +39,8 @@ public interface ReadService {
         Expression<String> name = contactWayJoin.get("mobile");
         //
         return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
-                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+//                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+                , loginName);
     }
 
     static Expression<Integer> agentLevelForLogin(From<?, Login> loginPath, CriteriaBuilder criteriaBuilder) {
@@ -57,7 +58,8 @@ public interface ReadService {
         Expression<String> name = contactWayJoin.get("name");
         //
         return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
-                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+//                , JpaFunctionUtils.ifElse(criteriaBuilder, String.class, criteriaBuilder.greaterThan(criteriaBuilder.length(name), 0), name, loginName));
+                , loginName);
     }
 
 //    /**

@@ -83,11 +83,12 @@ public class LoginDataController {
             @Override
             public Specification<Login> specification() {
                 if (StringUtils.isEmpty(search))
-                    return (root, query, cb) -> {
-                        // 必须得有 所以right
-                        Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.INNER);
-                        return cb.isNotNull(contactWayJoin);
-                    };
+                    return null;
+//                    return (root, query, cb) -> {
+//                        // 必须得有 所以right
+//                        Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.INNER);
+//                        return cb.isNotNull(contactWayJoin);
+//                    };
                 String jpaSearch = "%" + search + "%";
                 return (root, query, cb) -> {
                     // 必须得有 所以right
