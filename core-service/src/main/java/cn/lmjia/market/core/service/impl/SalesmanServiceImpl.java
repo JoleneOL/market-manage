@@ -216,7 +216,7 @@ public class SalesmanServiceImpl implements SalesmanService {
                     }
                     if (remark != null) {
                         final Path<String> remarkPath = root.get(SalesAchievement_.remark);
-                        predicate = cb.and(predicate, remark ? remarkPath.isNull() : remarkPath.isNotNull());
+                        predicate = cb.and(predicate, !remark ? remarkPath.isNull() : remarkPath.isNotNull());
                     }
                     if (deal != null) {
                         Predicate next;

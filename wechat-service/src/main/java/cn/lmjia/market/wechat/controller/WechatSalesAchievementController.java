@@ -10,6 +10,7 @@ import cn.lmjia.market.core.util.ApiDramatizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,7 @@ public class WechatSalesAchievementController {
     @GetMapping("/api/salesList")
     @RowCustom(dramatizer = ApiDramatizer.class, distinct = true)
     public RowDefinition<SalesAchievement> list(@AuthenticationPrincipal Login login
-            , @RequestParam(required = false) LocalDate date, Boolean remark, Boolean deal) {
+            , @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Boolean remark, Boolean deal) {
         if (log.isTraceEnabled()) {
             log.trace("date:" + date + ", remark:" + remark + ", deal:" + deal);
         }

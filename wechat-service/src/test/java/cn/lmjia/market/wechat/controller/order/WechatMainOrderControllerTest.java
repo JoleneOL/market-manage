@@ -12,9 +12,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * 加入关于测试促销人员相关的事宜
@@ -78,6 +81,9 @@ public class WechatMainOrderControllerTest extends AbstractWechatMainOrderContro
         driver.get("http://localhost" + SystemService.wechatSales);
         Thread.sleep(2000L);
         System.out.println(driver.getPageSource());
+        mockMvc.perform(get("/api/salesList").param("date", DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now())))
+//                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     private BigDecimal randomRate() {
