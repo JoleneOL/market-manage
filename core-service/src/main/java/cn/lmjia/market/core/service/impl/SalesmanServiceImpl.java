@@ -234,6 +234,7 @@ public class SalesmanServiceImpl implements SalesmanService {
 
     @Override
     public boolean focus(PublicAccount account, Message message) {
+        log.debug("got wechat message:" + message);
         return message != null && message instanceof TextMessage && (
                 ((TextMessage) message).getContent().trim().equals("#业绩")
                         || ((TextMessage) message).getContent().trim().equals("#推广码")
@@ -243,10 +244,12 @@ public class SalesmanServiceImpl implements SalesmanService {
     @Override
     public Message reply(PublicAccount account, Message message) {
         if (((TextMessage) message).getContent().trim().equals("#业绩")) {
+            log.debug(message.getFrom() + "要看业绩");
             TextMessage reply = new TextMessage();
             reply.setContent(systemService.toUrl(SystemService.wechatSales));
             return reply;
         } else {
+            log.debug(message.getFrom() + "要获取推广码");
             Login login = loginService.asWechat(message.getFrom());
             if (login == null) {
                 TextMessage reply = new TextMessage();

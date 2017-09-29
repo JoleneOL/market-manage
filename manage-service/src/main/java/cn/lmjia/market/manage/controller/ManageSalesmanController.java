@@ -110,7 +110,7 @@ public class ManageSalesmanController {
                                     return enable ? "启用" : "禁用";
                                 })
                                 .build()
-                        , FieldBuilder.asName(Salesman.class, "enableLabel")
+                        , FieldBuilder.asName(Salesman.class, "enable")
                                 .addSelect(salesmanRoot -> salesmanRoot.get(Salesman_.enable))
                                 .build()
                         , FieldBuilder.asName(Salesman.class, "rateLabel")
