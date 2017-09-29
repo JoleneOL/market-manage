@@ -75,7 +75,7 @@
                                 <td>下单人手机</td>
                                 <td th:text="${@readService.mobileFor(currentData.orderBy)}">18958044532</td>
                             </tr>
-                            <tr>
+                            <tr th:if="${currentData.payOder != null}">
                                 <td>第三方支付订单号</td>
                                 <td th:text="${currentData.payOrder.platformId}">201700000929</td>
                             </tr>
