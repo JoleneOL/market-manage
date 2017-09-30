@@ -1,13 +1,13 @@
 package cn.lmjia.market.manage.controller.logistics;
 
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.manage.ManageServiceTest;
 import cn.lmjia.market.manage.page.ManageStorageDeliveryPage;
 import cn.lmjia.market.manage.page.ManageStoragePage;
 import com.jayway.jsonpath.JsonPath;
 import me.jiangcai.lib.test.matcher.NumberMatcher;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
-import me.jiangcai.logistics.repository.DepotRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ManageStorageControllerTest extends ManageServiceTest {
 
     @Autowired
-    private DepotRepository depotRepository;
+    private ReadService readService;
 
     @Before
     public void init() throws Exception {
@@ -54,7 +54,7 @@ public class ManageStorageControllerTest extends ManageServiceTest {
 
         // 随机批货
         final int amount = random.nextInt(30) + 1;
-        deliveryPage.submitAsAmount(depotRepository.findAll().stream()
+        deliveryPage.submitAsAmount(readService.allEnabledDepot().stream()
                 .filter(depot -> depot instanceof HaierDepot)
                 .max(new RandomComparator()).orElse(null).getName(), amount);
 
