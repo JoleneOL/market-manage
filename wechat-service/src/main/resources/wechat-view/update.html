@@ -191,13 +191,60 @@
             <button type="submit" class="weui-btn weui-btn_custom" id="J_submit">支&nbsp;&nbsp;付</button>
             <!--<button type="submit" class="weui-btn weui-btn_custom" id="J_submit">申&nbsp;&nbsp;请</button>-->
         </div>
-        <!--<label for="weuiAgree" class="weui-agree view-agress_inline">-->
-            <!--<input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">-->
-            <!--<span class="weui-agree__text">同意</span>-->
-        <!--</label>-->
-        <!--<a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules">《经销商电子协议》</a>-->
+        <label for="weuiAgree" class="weui-agree view-agress_inline">
+            <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">
+            <span class="weui-agree__text">同意</span>
+        </label>
+        <a href="javascript:;" class="text-link open-popup" data-target="#J_popup">《电子协议》</a>
     </form>
 </section>
+<div id="J_popup" class="weui-popup__container update-agreement">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="weui-tab">
+            <div class="weui-navbar">
+                <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+                    经销商
+                </a>
+                <a class="weui-navbar__item" href="#tab2">
+                    区县代理
+                </a>
+                <a class="weui-navbar__item" href="#tab3">
+                    市级代理
+                </a>
+            </div>
+            <div class="weui-tab__bd">
+                <div id="tab1" class="weui-tab__bd-item">
+                    <img src="../wechat-resource/assets/img/agreement/dealer/0001.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/dealer/0002.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/dealer/0003.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/dealer/0004.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/dealer/0005.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/dealer/0006.jpg">
+                </div>
+                <div id="tab2" class="weui-tab__bd-item">
+                    <img src="../wechat-resource/assets/img/agreement/district/0001.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/district/0002.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/district/0003.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/district/0004.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/district/0005.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/district/0006.jpg">
+                </div>
+                <div id="tab3" class="weui-tab__bd-item weui-tab__bd-item--active">
+                    <img src="../wechat-resource/assets/img/agreement/city/0001.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/city/0002.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/city/0003.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/city/0004.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/city/0005.jpg">
+                    <img src="../wechat-resource/assets/img/agreement/city/0006.jpg">
+                </div>
+            </div>
+        </div>
+        <div class="weui-tabbar">
+            <button type="button" class="weui-btn weui-btn_custom close-popup">确定</button>
+        </div>
+    </div>
+</div>
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
