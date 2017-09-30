@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="iPhone" type="java.lang.Boolean"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -21,9 +22,10 @@
         <div class="search-bar_form">
             <div class="search-bar_box">
                 <i class="weui-icon-search"></i>
-                <form action="">
+                <form action="" th:if="${iPhone != null && iPhone}">
                     <input type="search" class="search-bar_input" placeholder="请输入关键字搜索商品" name="search" id="J_searchInput">
                 </form>
+                <input th:if="${iPhone == null || !iPhone}" type="search" class="search-bar_input" placeholder="请输入关键字搜索商品" name="search" id="J_searchInput">
                 <a href="javascript:" class="weui-icon-clear js-clearBtn"></a>
             </div>
         </div>

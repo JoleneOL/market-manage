@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.criteria.*;
-import javax.ws.rs.POST;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
 
@@ -43,7 +43,11 @@ public class WecharSearchController {
     private MainGoodService mainGoodService;
 
     @GetMapping("/wechatSearch")
-    public String search() {
+    public String search(HttpServletRequest request,Model model) {
+        String userAgent = request.getHeader("user-agent");
+        if(userAgent.contains("iPhone")){
+            model.addAttribute("iPhone",true);
+        }
         return "wechat@mall/search.html";
     }
 
