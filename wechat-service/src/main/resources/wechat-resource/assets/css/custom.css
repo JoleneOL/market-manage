@@ -1506,6 +1506,16 @@
   content: " ";
   clear: both;
 }
+.update-agreement img {
+  display: block;
+  width: 100%;
+}
+.update-agreement .weui-tabbar {
+  padding: 10px 0;
+}
+.update-agreement .close-popup {
+  width: 200px;
+}
 .view-sales-item .view-sales-time {
   font-size: 12px;
   color: #888;
