@@ -16,12 +16,15 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.util.ApiDramatizer;
+import cn.lmjia.market.dealer.service.CommissionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -45,6 +48,9 @@ import java.util.function.Function;
  */
 @Controller
 public class CommissionController {
+
+    @Autowired
+    private CommissionService commissionService;
 
     public static String formatCommonInfo(Object origin) {
         String src = origin.toString();
@@ -255,6 +261,12 @@ public class CommissionController {
                 });
             }
         };
+    }
+
+    @RequestMapping("/orderDetail/Commission/{id}")
+    public String findCommission(@PathVariable("id")long id){
+        List<Commission> result = commissionService.findByOrderId(id);
+        return "_commissionDetail.html";
     }
 
 }
