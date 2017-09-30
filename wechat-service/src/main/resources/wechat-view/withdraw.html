@@ -101,7 +101,8 @@
                     <p>无发票，代扣税
                         <!--/*@thymesVar id="rate" type="java.lang.String"*/-->
                         <!--/*@thymesVar id="ratePercent" type="java.lang.String"*/-->
-                        <span id="J_noInvoiceCost" th:text="${ratePercent}">0.2</span></p>
+                        <span id="J_noInvoiceCost" th:text="${ratePercent}" data-value="0.2"
+                              th:data-value="${rate}">20%</span></p>
                 </div>
             </label>
             <label class="weui-cell weui-check__label" for="J_haveInvoice">
