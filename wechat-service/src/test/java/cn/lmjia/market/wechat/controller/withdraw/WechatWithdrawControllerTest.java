@@ -12,10 +12,10 @@ import cn.lmjia.market.wechat.page.WechatWithdrawPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawRecordPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawVerifyPage;
 import com.huotu.verification.repository.VerificationCodeRepository;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -29,12 +29,15 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
     private WithdrawService withdrawService;
     @Autowired
     private VerificationCodeRepository verificationCodeRepository;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(this);
+        // 基于 https://github.com/JoleneOL/market-manage/issues/176 的调整这里先将最低额度调整至1
+        systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MIN_AMOUNT, 1);
     }
-
 
     @Test
     public void goWithdrawAccessDenied() throws InterruptedException {
