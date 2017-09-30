@@ -18,6 +18,7 @@ import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.event.InstallationEvent;
 import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
+import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.domain.Specification;
@@ -208,4 +209,11 @@ public interface MainOrderService extends LogisticsHostService {
 
     LocalDateTime getTodayOffsetTime();
 
+
+    /**
+     * @param login 身份
+     * @return 该身份下过的所有订单
+     */
+    @Transactional(readOnly = true)
+    List<MainOrder> byOrderBy(Login login);
 }

@@ -5,6 +5,7 @@ import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.ApiResult;
@@ -14,6 +15,7 @@ import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.PayAssistanceService;
 import cn.lmjia.market.core.service.PayService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SalesmanService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
@@ -76,6 +78,8 @@ public class WechatMainOrderController extends AbstractMainOrderController {
 //    }
     @Autowired
     private ReadService readService;
+    @Autowired
+    private SalesmanService salesmanService;
 
     /**
      * @return 展示下单页面
@@ -98,6 +102,12 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         orderIndex(login, model, null);
         return "wechat@orderPlace.html";
     }
+
+//    @GetMapping("/_pay/{id}")
+//    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
+//            throws SystemMaintainException {
+//        return payOrder(openId, request, from(null, id));
+//    }
 
     /**
      * @return 展示下单页面
@@ -187,6 +197,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     @ResponseBody
     @Transactional
     public ApiResult newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender
+            , Long salesAchievementId
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
             , String authorising, String idNumber, boolean installmentHuabai
@@ -203,6 +214,12 @@ public class WechatMainOrderController extends AbstractMainOrderController {
                 activityCode, channelId, amounts);
         JSONObject result = new JSONObject();
         result.put("id", order.getId());
+        if (salesAchievementId != null) {
+            SalesAchievement achievement = salesmanService.getAchievement(salesAchievementId);
+            achievement.setCurrentRate(achievement.getWhose().getSalesRate());
+            order.setSalesAchievement(achievement);
+            achievement.setMainOrder(order);
+        }
         if (channelId != null) {
             //校验按揭码
             payAssistanceService.checkAuthorising(authorising, idNumber);

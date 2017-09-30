@@ -17,4 +17,5 @@ public interface LimitQRCodeRepository extends JpaRepository<LimitQRCode, Intege
 
     LimitQRCode findByLogin(Login login);
 
+    LimitQRCode findByLogin_Id(long id);
 }

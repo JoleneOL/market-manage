@@ -14,6 +14,10 @@ import java.util.Map;
  */
 public interface SystemService {
     /**
+     * 显示业绩的URL
+     */
+    String wechatSales = "/wechatSales";
+    /**
      * 我的URI
      */
     String wechatMyURi = "/wechatMy";

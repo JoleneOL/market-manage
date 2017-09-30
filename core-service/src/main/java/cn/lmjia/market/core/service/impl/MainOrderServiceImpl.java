@@ -25,6 +25,7 @@ import me.jiangcai.logistics.entity.UsageStock_;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.repository.DepotRepository;
+import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -547,5 +548,14 @@ public class MainOrderServiceImpl implements MainOrderService {
                 mainOrderRepository.save(order);
             }
         }
+    }
+
+    @Override
+    public List<MainOrder> byOrderBy(Login login) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        return entityManager.createQuery(cq.where(cb.equal(root.get(MainOrder_.orderBy), login)))
+                .getResultList();
     }
 }
