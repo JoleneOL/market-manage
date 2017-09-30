@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small">
+<body class="view-bg-color view-fs-small" data-min-amount="1000" data-max-amount-without-invoice="20000">
 <section class="view_body view_body-withdraw">
     <form action="withdrawVerify.html" method="post" th:action="@{/wechatWithdraw}" id="J_form">
         <div class="weui-cells__title">收款信息</div>
