@@ -19,4 +19,7 @@ public interface TagService {
 
     @Transactional
     void addTagToGood(MainGood good, String[] tags);
+
+    @Transactional
+    void delete(String name);
 }

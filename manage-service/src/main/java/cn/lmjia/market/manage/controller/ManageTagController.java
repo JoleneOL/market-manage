@@ -1,6 +1,5 @@
 package cn.lmjia.market.manage.controller;
 
-import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.repository.TagRepository;
@@ -22,20 +21,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 标签管理
@@ -126,16 +121,14 @@ public class ManageTagController {
 
     @DeleteMapping("/manage/tagList")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
     public void delete(@RequestParam String name) {
-        //找到所有用到这个标签的商品，删除它
-        List<MainGood> goodList = mainGoodService.forSale(null, null, null, name);
-        if (!CollectionUtils.isEmpty(goodList)) {
-            goodList.forEach(good ->
-                    good.getTags().removeIf(tag
-                            -> tag.getName().equals(name)));
+        try {
+            tagService.delete(name);
+        } catch (Throwable ignored) {
+            log.info("删除时错误", ignored);
+            // 为什么选择忽略它，因为它并非核心业务；基于什么关联的 可以通过DBA直接设置级联操作
         }
-        tagRepository.delete(name);
+
     }
 
     @GetMapping("/manage/tagList/check")

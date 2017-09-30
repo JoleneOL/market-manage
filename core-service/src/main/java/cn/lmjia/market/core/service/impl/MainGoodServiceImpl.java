@@ -7,11 +7,13 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.MainGoodService;
-import me.jiangcai.logistics.entity.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import cn.lmjia.market.core.service.MainOrderService;
+import me.jiangcai.logistics.entity.ProductType;
+import me.jiangcai.logistics.entity.ProductType_;
 import me.jiangcai.logistics.entity.Product_;
+import me.jiangcai.logistics.entity.PropertyName;
+import me.jiangcai.logistics.entity.PropertyName_;
+import me.jiangcai.logistics.entity.PropertyValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -25,14 +27,19 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author CJ
  */
 @Service("mainGoodService")
 public class MainGoodServiceImpl implements MainGoodService {
-    private static final Log log = LogFactory.getLog(MainGoodServiceImpl.class);
     @Autowired
     private MainGoodRepository mainGoodRepository;
     @Autowired
