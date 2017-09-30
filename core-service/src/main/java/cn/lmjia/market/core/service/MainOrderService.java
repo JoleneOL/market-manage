@@ -1,24 +1,20 @@
 package cn.lmjia.market.core.service;
 
 
+import cn.lmjia.market.core.aop.MultiBusinessSafe;
+import cn.lmjia.market.core.aop.MultipleBusinessLocker;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
-import cn.lmjia.market.core.exception.MainGoodLowStockException;
-import cn.lmjia.market.core.aop.MultiBusinessSafe;
-import cn.lmjia.market.core.aop.MultipleBusinessLocker;
-import lombok.Data;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
+import lombok.Data;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsHostService;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
-import me.jiangcai.logistics.entity.StockShiftUnit;
-import me.jiangcai.logistics.event.InstallationEvent;
-import me.jiangcai.logistics.event.ShiftEvent;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
-import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.domain.Specification;
@@ -55,18 +51,7 @@ public interface MainOrderService extends LogisticsHostService {
     MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress
             , Map<MainGood, Integer> amounts, String mortgageIdentifier) throws MainGoodLowStockException;
-    // 内部API
-    @Data
-    class Amounts implements MultipleBusinessLocker{
-        private final Map<MainGood, Integer> amounts;
 
-        @Override
-        public Object[] toLock() {
-            return amounts.keySet().stream()
-                    .map(mainGood -> ("MainGoodStockLock-"+mainGood.getProduct().getCode()).intern())
-                    .toArray(Object[]::new);
-        }
-    }
     @MultiBusinessSafe
     MainOrder newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress
@@ -209,11 +194,23 @@ public interface MainOrderService extends LogisticsHostService {
 
     LocalDateTime getTodayOffsetTime();
 
-
     /**
      * @param login 身份
      * @return 该身份下过的所有订单
      */
     @Transactional(readOnly = true)
     List<MainOrder> byOrderBy(Login login);
+
+    // 内部API
+    @Data
+    class Amounts implements MultipleBusinessLocker {
+        private final Map<MainGood, Integer> amounts;
+
+        @Override
+        public Object[] toLock() {
+            return amounts.keySet().stream()
+                    .map(mainGood -> ("MainGoodStockLock-" + mainGood.getProduct().getCode()).intern())
+                    .toArray(Object[]::new);
+        }
+    }
 }

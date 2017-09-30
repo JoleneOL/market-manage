@@ -1,7 +1,13 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.config.CoreConfig;
-import cn.lmjia.market.core.entity.*;
+import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.MainGood_;
+import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
+import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
@@ -15,7 +21,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.sys.service.SystemStringService;
-import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.DeliverableOrder;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.Depot;
@@ -23,37 +28,39 @@ import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.UsageStock_;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
-import me.jiangcai.logistics.haier.HaierSupplier;
-import me.jiangcai.logistics.repository.DepotRepository;
-import me.jiangcai.payment.entity.PayOrder;
 import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.MapJoin;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -63,7 +70,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainOrderServiceImpl implements MainOrderService {
 
     private static final Log log = LogFactory.getLog(MainOrderServiceImpl.class);
-
+    private static final int defaultMaxMinuteForPay = 60 * 24 * 3;
+    private static final int defaultOffsetHour = 9;
+    //用于关闭超时未支付订单
+    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(20);
     @Autowired
     private CustomerService customerService;
     @Autowired
@@ -80,32 +90,13 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Autowired
     private StockService stockService;
     @Autowired
-    private HaierSupplier haierSupplier;
-    @Autowired
-    private LogisticsService logisticsService;
-    @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
-    @Autowired
     private ApplicationContext applicationContext;
     @Autowired
     private SystemStringService systemStringService;
     @Autowired
     private Environment env;
-
     //货品的限购数量及清算时间
     private Map<String, OffsetStock> productStockMap = new HashMap<>();
-    private static final int defaultMaxMinuteForPay = 60 * 24 * 3;
-    private static final int defaultOffsetHour = 9;
-    //用于关闭超时未支付订单
-    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(50);
-
-    @PostConstruct
-    @Transactional
-    public void initExecutor() {
-        createExecutorToForPayOrder();
-    }
 
     @PreDestroy
     public void beforeClose() {
@@ -520,6 +511,15 @@ public class MainOrderServiceImpl implements MainOrderService {
         }
     }
 
+    @Override
+    public List<MainOrder> byOrderBy(Login login) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        return entityManager.createQuery(cq.where(cb.equal(root.get(MainOrder_.orderBy), login)))
+                .getResultList();
+    }
+
     @Getter
     @AllArgsConstructor
     class OffsetStock {
@@ -539,7 +539,7 @@ public class MainOrderServiceImpl implements MainOrderService {
         }
 
         @Override
-        @Transactional
+//        @Transactional 不会有任何作用的
         public void run() {
             MainOrder order = mainOrderRepository.findOne(orderId);
             if (order.getOrderStatus() == OrderStatus.forPay) {
@@ -548,14 +548,5 @@ public class MainOrderServiceImpl implements MainOrderService {
                 mainOrderRepository.save(order);
             }
         }
-    }
-
-    @Override
-    public List<MainOrder> byOrderBy(Login login) {
-        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
-        Root<MainOrder> root = cq.from(MainOrder.class);
-        return entityManager.createQuery(cq.where(cb.equal(root.get(MainOrder_.orderBy), login)))
-                .getResultList();
     }
 }

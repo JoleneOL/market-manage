@@ -28,20 +28,23 @@ import me.jiangcai.lib.upgrade.VersionUpgrade;
 import me.jiangcai.lib.upgrade.service.UpgradeService;
 import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.entity.Depot;
-import me.jiangcai.logistics.haier.entity.HaierDepot;
-import me.jiangcai.logistics.repository.DepotRepository;
+import me.jiangcai.logistics.entity.Product;
 import me.jiangcai.logistics.entity.ProductType;
 import me.jiangcai.logistics.entity.PropertyName;
 import me.jiangcai.logistics.entity.PropertyValue;
+import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.PropertyType;
+import me.jiangcai.logistics.haier.entity.HaierDepot;
+import me.jiangcai.logistics.repository.DepotRepository;
 import me.jiangcai.logistics.repository.ProductTypeRepository;
 import me.jiangcai.logistics.repository.PropertyNameRepository;
 import me.jiangcai.logistics.repository.PropertyValueRepository;
-import me.jiangcai.logistics.entity.StockShiftUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -62,7 +65,13 @@ import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * 初始化服务
@@ -104,9 +113,12 @@ public class InitService {
     private PropertyNameRepository propertyNameRepository;
     @Autowired
     private PropertyValueRepository propertyValueRepository;
+    @Autowired
+    private MainOrderService mainOrderService;
 
     @PostConstruct
     @Transactional
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     public void init() throws IOException, SQLException {
         commons();
         database();
@@ -116,6 +128,7 @@ public class InitService {
         depots();
         products();
         others();
+        mainOrderService.createExecutorToForPayOrder();
     }
 
     private void others() {
@@ -221,7 +234,7 @@ public class InitService {
                 final String values[] = properties.getProperty(property).split(",");
                 PropertyName propertyName = new PropertyName();
                 propertyName.setName(property);
-                propertyName.setType(PropertyType.valueOf(PropertyType.class,values[0]));
+                propertyName.setType(PropertyType.valueOf(PropertyType.class, values[0]));
                 propertyName.setSpec(Boolean.parseBoolean(values[1]));
                 //属性值
                 final String propertyValueNames[] = values[2].split("\\|");
@@ -295,12 +308,12 @@ public class InitService {
                         mainProduct.setProductType(productType);
                         if (value.length > 4) {
                             String[] propertyValues = value[4].split("\\|");
-                            Map<PropertyName,String> propertyNameValue = new HashMap<>();
-                            for(String propertyNameValueStr : propertyValues){
+                            Map<PropertyName, String> propertyNameValue = new HashMap<>();
+                            for (String propertyNameValueStr : propertyValues) {
                                 PropertyName propertyName = productType.getPropertyNameList().stream()
-                                        .filter(p->p.getName().equals(propertyNameValueStr.split(":")[0])).findFirst().orElse(null);
-                                if(propertyName != null){
-                                    propertyNameValue.put(propertyName,propertyNameValueStr.split(":")[1]);
+                                        .filter(p -> p.getName().equals(propertyNameValueStr.split(":")[0])).findFirst().orElse(null);
+                                if (propertyName != null) {
+                                    propertyNameValue.put(propertyName, propertyNameValueStr.split(":")[1]);
                                 }
                             }
                             mainProduct.setPropertyNameValues(propertyNameValue);
@@ -418,6 +431,17 @@ public class InitService {
                     case muPartShift:
                         jdbcService.tableAlterAddColumn(MainOrder.class, "ableShip", "1");
                         jdbcService.tableAlterAddColumn(StockShiftUnit.class, "installation", "0");
+                        break;
+                    case salesman:
+                        break;
+                    case mall:
+                        jdbcService.tableAlterAddColumn(Product.class, "mainImg", null);
+                        jdbcService.runJdbcWork(connection -> {
+                            try (Statement statement = connection.getConnection().createStatement()) {
+                                statement.execute("ALTER TABLE PRODUCT ADD COLUMN PRODUCTTYPE_ID BIGINT;");
+                                statement.execute("ALTER TABLE PRODUCT ADD CONSTRAINT FK_PRODUCT_PRODUCTTYPE_ID FOREIGN KEY (PRODUCTTYPE_ID) REFERENCES PRODUCTTYPE (ID)");
+                            }
+                        });
                         break;
                     default:
                 }

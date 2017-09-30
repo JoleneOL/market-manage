@@ -8,22 +8,28 @@ import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.wechat.WechatTestBase;
-import cn.lmjia.market.wechat.page.*;
+import cn.lmjia.market.wechat.page.LoginPage;
 import cn.lmjia.market.wechat.page.mall.MallIndexPage;
 import cn.lmjia.market.wechat.page.mall.MallSearchPage;
 import cn.lmjia.market.wechat.page.mall.MallTagDetailPage;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author CJ
  */
+@ActiveProfiles("mysql2")
 public class WechatControllerTest extends WechatTestBase {
     @Autowired
     private MainGoodService mainGoodService;
