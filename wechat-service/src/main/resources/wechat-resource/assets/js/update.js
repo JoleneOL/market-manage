@@ -164,14 +164,16 @@ $(function () {
             address: 'required',
             fullAddress: 'required',
             cardFrontPath: "required",
-            cardBackPath: "required"
+            cardBackPath: "required",
+            isAgree: "required"
         },
         messages: {
             agentName: '请输入必填字段',
             address: "请选择地址",
             fullAddress: "请填写详细地址",
             cardFrontPath: "请上传图片",
-            cardBackPath: "请上传图片"
+            cardBackPath: "请上传图片",
+            isAgree: "请同意协议"
         },
         errorPlacement: function (error, element) {
             $.toptip(error);
