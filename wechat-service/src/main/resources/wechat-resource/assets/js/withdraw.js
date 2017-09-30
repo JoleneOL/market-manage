@@ -30,6 +30,22 @@ $(function () {
             .addClass('view-input-big');
 
         calculateWithdrawAmount();
+        if($(allInInput).val() > $("body").attr('data-max-amount-without-invoice') ){
+            //是否有发票有return 没有不能提现
+            if($("#J_haveInvoice").attr('checked') == 'checked'){
+                return;
+            }else{
+                maxErrorShow();
+            }
+        }else{
+            //小于20000时 是否小于1000
+            if($(allInInput).val() < 1000){
+                //不能提现
+                minErrorShow();
+            }
+
+        }
+
     });
 
     var $invoice = $('#J_extra');
@@ -158,4 +174,64 @@ $(function () {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
         }
     })
+
+    //在输入提现金额的光标离开时是否能够提交.是否展示错误.
+    allInInput.blur(function(){
+        if($(this).val() < $("body").attr('data-min-amount')){
+            minErrorShow();
+            return;
+        }else{
+            $('#minError').hide();
+            $('#withSubmit').attr("disabled",false);
+        }
+
+        if($(this).val() > $("body").attr('data-max-amount-without-invoice')){
+            if($("#J_haveInvoice").attr('checked') == 'checked'){
+                return;
+            }else{
+                maxErrorShow();
+            }
+        }else{
+            $('#maxError').hide();
+            $('#withSubmit').attr("disabled",false);
+        }
+    })
+    //对于选中有发票时判断是否能够提现与是否展示错误信息
+    $("#J_haveInvoice").click(function(){
+        if($(allInInput).val() > $("body").attr('data-max-amount-without-invoice')){
+            $('#maxError').hide();
+            $('#withSubmit').attr("disabled",false);
+            return;
+        }else{
+            if($(allInInput).val() >= $("body").attr('data-min-amount')){
+                return;
+            }
+            minErrorShow();
+        }
+    })
+    //对于选中无发票时判断是否能够提现与是否展示错误信息
+    $("#J_noInvoice").click(function(){
+        if($(allInInput).val() > $("body").attr('data-max-amount-without-invoice')){
+            maxErrorShow();
+            return;
+        }else{
+            if($(allInInput).val() >= $("body").attr('data-min-amount')){
+                return;
+            }else{
+                minErrorShow();
+            }
+        }
+    })
+
+    function minErrorShow(){
+        $('#minError').show();
+        $('#maxError').hide();
+        $('#withSubmit').attr("disabled",true);
+    }
+
+    function maxErrorShow(){
+        $('#maxError').show();
+        $('#minError').hide();
+        $('#withSubmit').attr("disabled",true);
+    }
 });

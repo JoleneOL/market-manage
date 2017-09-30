@@ -95,11 +95,4 @@ public interface WithdrawService {
     @Transactional
     void approval(Manager manager, long requestId, String comment, String transactionRecordNumber);
 
-    /**
-     * 通过提现申请人查询成功提现记录.倒序!
-     * @param login 当前提现的申请人
-     * @return 倒序排列成功提现的记录
-     */
-    @Transactional(readOnly = true)
-    List<WithdrawRequest> descTimeAndSuccess(Login login);
 }
