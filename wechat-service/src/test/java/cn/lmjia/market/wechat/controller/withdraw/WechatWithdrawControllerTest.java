@@ -12,10 +12,13 @@ import cn.lmjia.market.wechat.page.WechatWithdrawPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawRecordPage;
 import cn.lmjia.market.wechat.page.WechatWithdrawVerifyPage;
 import com.huotu.verification.repository.VerificationCodeRepository;
+import me.jiangcai.lib.sys.service.SystemStringService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.assertj.core.data.Offset;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -23,20 +26,25 @@ import java.math.BigDecimal;
 
 public class WechatWithdrawControllerTest extends WechatTestBase {
 
+    private static final Log log = LogFactory.getLog(WechatWithdrawControllerTest.class);
     @Autowired
     private ReadService readService;
     @Autowired
     private WithdrawService withdrawService;
     @Autowired
     private VerificationCodeRepository verificationCodeRepository;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(this);
+        // 基于 https://github.com/JoleneOL/market-manage/issues/176 的调整这里先将最低额度调整至1
+        systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MIN_AMOUNT, 1);
     }
 
-
     @Test
+    @Ignore
     public void goWithdrawAccessDenied() throws InterruptedException {
         //新用户
         Login login = newRandomLogin();
@@ -53,10 +61,12 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         myPage = getWechatMyPage();
         myPage.assertWithdrawAble()
                 .as("有了")
-                .isCloseTo(amount, Offset.offset(new BigDecimal("0.000000000001")));
+                .isCloseTo(amount, Offset.offset(new BigDecimal("0.000000000001")))
+                .isGreaterThan(BigDecimal.ZERO);
         WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
         BigDecimal toWithdraw = amount.subtract(BigDecimal.ONE).divideToIntegralValue(new BigDecimal("2"));
 
+        log.info("toWithdraw" + toWithdraw);
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
 
         WechatWithdrawVerifyPage verifyPage = initPage(WechatWithdrawVerifyPage.class);
@@ -162,7 +172,9 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         // 调整为输入Y (Y<X)
         BigDecimal toWithdraw = amount.subtract(BigDecimal.ONE).divideToIntegralValue(new BigDecimal("2"));
 
+        log.info("toWithdraw" + toWithdraw);
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
+//        withdrawPage.printThisPage();
 
         WechatWithdrawVerifyPage verifyPage = initPage(WechatWithdrawVerifyPage.class);
         Thread.sleep(1000);
@@ -269,6 +281,5 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         ManageWithdrawPage.of(this, driver)
                 .reject(readService.nameForPrincipal(login));
     }
-
 
 }

@@ -9,7 +9,7 @@ AS
     sum(c.AMOUNT)                             AS `CHANGED`
   FROM commission AS c
     JOIN ordercommission AS oc ON (oc.SOURCE_ID = c.SOURCE_ID AND oc.REFUND = c.REFUND)
-  GROUP BY c.SOURCE_ID, oc.GENERATETIME
+  GROUP BY c.SOURCE_ID, oc.GENERATETIME, c.WHO_ID
   UNION SELECT
           concat('WR-', wr.ID, '-', wr.WHOSE_ID) AS `ID`,
           wr.WHOSE_ID                            AS `LOGIN_ID`,
