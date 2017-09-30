@@ -33,6 +33,9 @@ public class ManageSalesmanControllerTest extends ManageServiceTest {
         Login newOne = newRandomLogin();
         page.addSalesman(newOne.getLoginName());
 
+        Thread.sleep(1000L);
+        page.waitForTable();
+
         // 可以调整比例 调整等级 以及设定是否启用
         final double targetRate = Math.abs(random.nextDouble());
         mockMvc.perform(put("/manage/salesmen/" + newOne.getId() + "/rate")
