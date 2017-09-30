@@ -15,7 +15,16 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small" data-min-amount="1000" data-max-amount-without-invoice="20000">
+<!--/*@thymesVar id="minAmount" type="int"*/-->
+<!--/*@thymesVar id="maxAmount" type="int"*/-->
+<!--/*@thymesVar id="companyName" type="java.lang.String"*/-->
+<!--/*@thymesVar id="taxpayerCode" type="java.lang.String"*/-->
+<!--/*@thymesVar id="bankName" type="java.lang.String"*/-->
+<!--/*@thymesVar id="bankAccount" type="java.lang.String"*/-->
+<!--/*@thymesVar id="companyAddress" type="java.lang.String"*/-->
+<!--/*@thymesVar id="companyTelephone" type="java.lang.String"*/-->
+<body class="view-bg-color view-fs-small" data-min-amount="1000" th:data-min-amount="${minAmount}"
+      data-max-amount-without-invoice="20000" th:data-max-amount-without-invoice="${maxAmount}">
 <section class="view_body view_body-withdraw">
     <form action="withdrawVerify.html" method="post" th:action="@{/wechatWithdraw}" id="J_form">
         <div class="weui-cells__title">收款信息</div>
@@ -127,42 +136,36 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">公司名称</p></div>
                     <div class="weui-cell__bd">
-                        <!--/*@thymesVar id="companyName" type="java.lang.String"*/-->
                         <p th:text="${companyName}">利每家科技有限公司</p>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">公司税号</p></div>
                     <div class="weui-cell__bd">
-                        <!--/*@thymesVar id="taxpayerCode" type="java.lang.String"*/-->
                         <p th:text="${taxpayerCode}">91330108MA28MBU173</p>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">开户行</p></div>
                     <div class="weui-cell__bd">
-                        <!--/*@thymesVar id="bankName" type="java.lang.String"*/-->
                         <p th:text="${bankName}">兴业银行杭州滨江支行</p>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">开户账号</p></div>
                     <div class="weui-cell__bd">
-                        <!--/*@thymesVar id="bankAccount" type="java.lang.String"*/-->
                         <p th:text="${bankAccount}">356940100100162419</p>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">公司地址</p></div>
                     <div class="weui-cell__bd">
-                        <!--/*@thymesVar id="companyAddress" type="java.lang.String"*/-->
                         <p th:text="${companyAddress}">杭州市滨江区滨盛路1508号海亮大厦1803室</p>
                     </div>
                 </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">联系电话</p></div>
                     <div class="weui-cell__bd">
-                        <!--/*@thymesVar id="companyTelephone" type="java.lang.String"*/-->
                         <p th:text="${companyTelephone}">0570-88187913</p>
                     </div>
                 </div>
@@ -198,19 +201,20 @@
             <h1 class="text-center">利毎家市级代理、区县代理、经销商<br>爱心天使提现规则</h1>
             <section>
                 <section>
-                    <p>1、根据利每家后台系统显示的可提现收益申请提现。</p>
-                    <p>2、提现申请市级代理、区县代理、经销商毎月最多可以申请一次，次月5号前在利毎家后台系统递交申请，申请时请选择是否提供发票，如果选择提供发票，请与15号前把发票寄到利毎家财务部；如果选择不提供发票，利毎家后台系统直接扣除开票的相关税费（扣除20%）。</p>
-                    <p>3、财务于15号后审核已提交申请的提现，20号支付已申请的收益。</p>
-                    <p>4、如果在15号前未收到发票，由财务部先暂时扣除20%，等收到发票时退回暂扣款，有效期至下月5号。</p>
-                    <p>5、爱心天使的收益在不超于任意单品首次购买金额且未开具发票的部分可以随时申请提现，不需要提供发票，公司按其保证金退回付款；收益超过部分或已开具发票的同市级代理、区县代理、经销商的收益提现。</p>
-                    <p>6、发票的提供类型必须是增值税发票（公司提供增值税专用发票，个人提供增值税普通发票），发票的内容是服务费或劳务费，发票的购买方必须是利毎家科技有限公司,发票的销售方为与公司备案的合同一方。</p>
-                    <p>7、开票资料：</p>
-                    <p>公司名称：利每家科技有限公司</p>
-                    <p>公司税号：91330108MA28MBU173</p>
-                    <p>开&nbsp;&nbsp;户&nbsp;&nbsp;行：兴业银行杭州滨江支行</p>
-                    <p>开户帐号：356940100100162419</p>
-                    <p>地&emsp;&emsp;址：杭州市滨江区滨盛路1508号海亮大厦1803室</p>
-                    <p>电&emsp;&emsp;话：0571--88187913</p>
+                    <p> 一、提现规则</p>
+                    <p>1. 提现金额满1000元以上可以申请提现。</p>
+                    <p>2. 客户递交申请时请选择是否提供发票，如果选择提供发票，请把发票寄到利毎家财务部；如果选择不提供发票，每笔提现金额不得高于20000元，并同意代扣20%税金。
+                    </p>
+                    <p>3. 公司财务收到客户提交申请后T+1支付，提供发票的按收到发票之日计算（节假日顺延）。</p>
+                    <p>二、发票的要求</p>
+                    <p>1. 发票的类型必须是增值税发票（公司必须提供增值税专用发票），发票的内容是服务费或劳务费，发票的购买方必须是利毎家科技有限公司,发票的销售方和提现的收款人信息必须一致。</p>
+                    <p>三、利每家开票资料：</p>
+                    <p>公司名称：<span th:text="${companyName}">利每家科技有限公司</span></p>
+                    <p>公司税号：<span th:text="${taxpayerCode}">91330108MA28MBU173</span></p>
+                    <p>开&nbsp;&nbsp;户&nbsp;&nbsp;行：<span th:text="${bankName}">兴业银行杭州滨江支行</span></p>
+                    <p>开户帐号：<span th:text="${bankAccount}">356940100100162419</span></p>
+                    <p>地&emsp;&emsp;址：<span th:text="${companyAddress}">杭州市滨江区滨盛路1508号海亮大厦1803室</span></p>
+                    <p>电&emsp;&emsp;话：<span th:text="${companyTelephone}">0571--88187913</span></p>
                 </section>
             </section>
             <button type="button" class="weui-btn weui-btn_custom close-popup">确&emsp;&emsp;定</button>

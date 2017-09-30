@@ -1,13 +1,11 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 
-import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
-import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.WithdrawRequestRepository;
@@ -15,7 +13,6 @@ import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WechatNoticeHelper;
 import cn.lmjia.market.core.service.WithdrawService;
-import cn.lmjia.market.core.util.TimeUtil;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.lib.sys.service.SystemStringService;
@@ -34,13 +31,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -114,6 +113,10 @@ public class WechatWithdrawController {
         model.addAttribute("content", systemStringService.getCustomSystemString("withdraw.invoice.content"
                 , null, true, String.class, "服务费或劳务费的增值发票"));
 
+        model.addAttribute("minAmount", systemStringService.getCustomSystemString("market.withdraw.min.amount"
+                , null, true, Integer.class, 1000));
+        model.addAttribute("maxAmount", systemStringService.getCustomSystemString("market.withdraw.max.amount"
+                , null, true, Integer.class, 20000));
         return "wechat@withdraw.html";
     }
 
