@@ -4,7 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.logistics.entity.support.PropertyType;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +32,7 @@ public class PropertyName {
     /**
      * 参数名称
      */
+    @Column(length = 60)
     private String name;
     /**
      * 参数类型

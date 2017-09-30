@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.support.TagType;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -21,6 +22,7 @@ public class Tag {
      * 标签名称
      */
     @Id
+    @Column(length = 60)
     private String name;
     /**
      * 标签展示方式
@@ -29,7 +31,7 @@ public class Tag {
     /**
      * 是否有子类目（用于业务拓展，暂时用不到）
      */
-    private boolean isParent;
+    private boolean parent;
     /**
      * 上级类目（用于业务拓展，暂时用不到）
      */
@@ -38,6 +40,7 @@ public class Tag {
     /**
      * 标签图标
      */
+    @Column(length = 60)
     private String icon;
     /**
      * 排序

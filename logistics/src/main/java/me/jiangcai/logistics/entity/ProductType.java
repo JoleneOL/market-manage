@@ -3,7 +3,16 @@ package me.jiangcai.logistics.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,6 +34,7 @@ public class ProductType {
     /**
      * 类型名称
      */
+    @Column(length = 60)
     private String name;
 
     /**
@@ -39,6 +49,7 @@ public class ProductType {
     /**
      * 类目路径
      */
+    @Column(length = 60)
     private String path;
 
     /**

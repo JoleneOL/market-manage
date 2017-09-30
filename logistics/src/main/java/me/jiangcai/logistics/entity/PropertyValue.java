@@ -4,7 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
 
 /**
@@ -22,6 +27,7 @@ public class PropertyValue {
     /**
      * 参数值
      */
+    @Column(length = 60)
     private String value;
     /**
      * 属性
@@ -31,6 +37,7 @@ public class PropertyValue {
     /**
      * 默认图标
      */
+    @Column(length = 60)
     private String icon;
     /**
      * 排序
