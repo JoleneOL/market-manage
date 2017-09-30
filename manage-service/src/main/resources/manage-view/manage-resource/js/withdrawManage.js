@@ -94,10 +94,11 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
+                    var journal = '<a href="javascript:;" class="js-journal" data-id="' + item.loginId + '"><i class="fa fa-dashboard"></i>&nbsp;流水</a>';
                     if (item.statusCode == 2)
-                        return '<a href="javascript:;" class="js-makeApproval" data-id="' + item.id + '"><i class="fa fa-check-circle"></i>&nbsp;批准</a>'
+                        return journal + '<a href="javascript:;" class="js-makeApproval" data-id="' + item.id + '"><i class="fa fa-check-circle"></i>&nbsp;批准</a>'
                             + '<a href="javascript:;" class="js-makeRefuse" data-id="' + item.id + '"><i class="fa fa-times-circle"></i>&nbsp;拒绝</a>';
-                    return '';
+                    return journal;
                 }
             },
             {
@@ -166,6 +167,24 @@ $(function () {
     $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止
         table.ajax.reload();
+    }).on('click', '.js-journal', function () {
+        var loading = layer.load();
+        $.ajax(_body.data('journal-url') + "?id=" + $(this).data('id'), {
+            method: 'get',
+            dataType: 'html',// TODO 在初级版本中 因为还无法掌握数据->UI的高级技能 所以直接请求html 等老常就位可以将此改成请求数据
+            success: function (html) {
+                layer.close(loading);
+                layer.open({
+                    content: html,
+                    area: ['500px', 'auto'],
+                    // btn: ['确认', '取消'],
+                    zIndex: 9999
+                });
+            }, error: function () {
+                layer.close(loading);
+                layer.msg('服务端异常');
+            }
+        });
     }).on('click', '.js-makeApproval', function () {
         var id = $(this).data('id');
         openRegion($('#J_makeApproval'), id, approvalUrl);

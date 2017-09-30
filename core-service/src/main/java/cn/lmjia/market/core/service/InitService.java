@@ -150,6 +150,26 @@ public class InitService {
                 }
                 executeSQLCode(connection, "LoginAgentLevel.mysql.sql");
             }
+            //
+            String fileName;
+            if (connection.profile().isMySQL()) {
+                fileName = "mysql";
+            } else if (connection.profile().isH2()) {
+                fileName = "h2";
+            } else
+                throw new IllegalStateException("not support for:" + connection.getConnection());
+            try {
+                try (Statement statement = connection.getConnection().createStatement()) {
+                    statement.executeUpdate("DROP TABLE IF EXISTS `LoginCommissionJournal`");
+                    statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource(
+                                    "/LoginCommissionJournal." + fileName + ".sql").getInputStream()
+                            , Charset.forName("UTF-8")));
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("读取SQL失败", e);
+            }
+            //
+
         });
     }
 
