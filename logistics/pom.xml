@@ -71,6 +71,11 @@
             <artifactId>spring-security-core</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
+        <dependency>
+            <groupId>me.jiangcai.lib</groupId>
+            <artifactId>resource</artifactId>
+            <version>${jiangcai.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
