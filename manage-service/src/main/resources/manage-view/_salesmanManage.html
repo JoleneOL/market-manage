@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!--可以查看所有的销售，也可以调整某个销售的激活状态,rank,rate-->
+<!--也可以新增一个销售 通过身份搜索选择销售-->
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>销售人员管理</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
+      th:data-search-login-url="@{/loginData/select2}">
+<div class="wrapper wrapper-content">
+    <div class="row m-b-sm">
+        <div class="col-md-2">
+            <select class="form-control select2-single" name="login"
+                    id="loginInput"
+                    title="请选择用户作为销售人员">
+            </select>
+        </div>
+        <div class="col-md-6">
+            <div class="form-inline">
+                <div>
+                    <a class="btn btn-primary btn-sm" id="addButton" href="javascript:">新增为销售</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-b-sm">
+        <div class="col-sm-10">
+            <div class="form-inline">
+                <div class="js-selectToolbar">
+                    <input type="search" class="form-control input-sm" placeholder="用户名"
+                           name="name">
+                    <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="salesmanTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="J_Rate">
+    <div class="form-group">
+        <label > 比例:<span id="rateLabel">&nbsp;</span></label>
+        <input type="range" class="form-control" min="1" max="99"/>
+    </div>
+</template>
+<template id="J_Rank">
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">等级 </label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" name="rank"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
+<!--额外工具-->
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/salesmanManage.js" th:remove="all"></script>
+<!--生产环境请移除 End-->
+<script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
+        th:src="@{/assets/js/common/recommend.js}"></script>
+<script src="./manage-resource/js/salesmanManage.js"></script>
+</html>

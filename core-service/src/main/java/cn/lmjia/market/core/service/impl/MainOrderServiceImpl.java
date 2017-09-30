@@ -293,4 +293,13 @@ public class MainOrderServiceImpl implements MainOrderService {
             return null;
         }
     }
+
+    @Override
+    public List<MainOrder> byOrderBy(Login login) {
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<MainOrder> cq = cb.createQuery(MainOrder.class);
+        Root<MainOrder> root = cq.from(MainOrder.class);
+        return entityManager.createQuery(cq.where(cb.equal(root.get(MainOrder_.orderBy), login)))
+                .getResultList();
+    }
 }

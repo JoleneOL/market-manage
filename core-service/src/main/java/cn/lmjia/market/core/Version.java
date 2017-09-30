@@ -19,4 +19,8 @@ public enum Version {
      * 一个订单支持多个物流
      */
     muPartShift,
+    /**
+     * 促销人员体系
+     */
+    salesman,
 }

@@ -11,6 +11,7 @@
         <logger name="cn.lmjia.market" level="debug"/>
         <logger name="me.jiangcai.logistics" level="debug"/>
         <logger name="cn.lmjia.market.dealer.service.impl.PromotionServiceImpl" level="trace"/>
+        <logger name="cn.lmjia.market.wechat.controller.WechatSalesAchievementController" level="trace"/>
 
         <logger name="me.jiangcai.lib.jdbc.impl" level="debug"/>
 
