@@ -106,13 +106,4 @@ public class WithdrawServiceImpl implements WithdrawService {
         request.setComment(comment);
     }
 
-    @Override
-    public List<WithdrawRequest> descTimeAndSuccess(Login login) {
-        return withdrawRequestRepository.findAll((root, query, cb)
-                -> cb.and(
-                cb.equal(root.get(WithdrawRequest_.whose), login)
-                , root.get(WithdrawRequest_.withdrawStatus)
-                        .in(WithdrawStatus.success)
-        ), new Sort(Sort.Direction.DESC, "requestTime"));
-    }
 }

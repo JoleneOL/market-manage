@@ -93,31 +93,6 @@ public class WechatWithdrawController {
      */
     @GetMapping("/wechatWithdraw")
     public String index(@AuthenticationPrincipal Login login,Model model) {
-        //获取当前日期
-        LocalDate localDate = LocalDate.now();
-        //判断日期是否是1-5号,或者16-20日,只要不满足跳转友好界面
-        if (!environment.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
-            //如过当前日期不在1-5号,或者不在15-20日之间.跳转提示页面.
-            if (!TimeUtil.beforeTheDate(localDate, 6) || !TimeUtil.timeFrame(localDate, 15, 21)) {
-                return "wechat@incorrectDateVisit.html";
-            }
-            List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
-            if(resultList.size() != 0){
-                //获取最新成功提现记录日期.
-                LocalDateTime lastDateTime = resultList.get(0).getRequestTime();
-                LocalDate lastTime = lastDateTime.toLocalDate();
-                //成功提现记录日期是否是当月1-5日.
-                if(TimeUtil.beforeTheDate(lastTime, 6)){
-                    //当前日期是否不是16-20日,如果不是说明是1-5日之间第二次提现.跳转提示页面.
-                    if(!TimeUtil.timeFrame(localDate, 15, 21)){
-                        return "wechat@incorrectDateVisit.html";
-                    }
-                }else {
-                    return "wechat@incorrectDateVisit.html";
-                }
-            }
-
-        }
 
         double rate = withdrawService.getCostRateForNoInvoice().doubleValue();
         model.addAttribute("ratePercent"

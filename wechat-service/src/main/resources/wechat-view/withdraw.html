@@ -68,6 +68,8 @@
                     <input class="weui-input" type="text" placeholder="可提现金额 59988.09元"
                            th:placeholder="${'可提现金额 '}+${{@readService.currentBalance(#authentication.principal)}}"
                            id="J_allInVal" name="withdraw">
+                    <span id="minError" style="color:#F00;display:none" >最少提现金额1000元</span>
+                    <span id="maxError" style="color:#F00;display:none" >无发票最多提现20000元</span>
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                 <div class="weui-cell__ft">
@@ -185,7 +187,7 @@
             <p class="text-big">￥<span id="J_withdrawAmount"></span></p>
         </div>
         <div class="weui-flex__item">
-            <button type="submit" class="weui-btn weui-btn_custom" form="J_form">确定提现</button>
+            <button type="submit" class="weui-btn weui-btn_custom" form="J_form" id="withSubmit">确定提现</button>
         </div>
     </div>
 </div>
