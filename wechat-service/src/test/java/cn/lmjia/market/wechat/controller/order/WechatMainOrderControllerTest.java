@@ -38,7 +38,6 @@ public class WechatMainOrderControllerTest extends AbstractWechatMainOrderContro
         driver.get("http://localhost" + SystemService.wechatOrderURi);
         return initPage(WechatOrderPage.class);
     }
-
     @Test
     public void goWithSalesman() throws Exception {
         // 新增一个用户，然后下单，那么它的order必然与促销无关
