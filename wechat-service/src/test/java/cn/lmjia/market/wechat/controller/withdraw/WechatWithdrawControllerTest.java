@@ -3,13 +3,8 @@ package cn.lmjia.market.wechat.controller.withdraw;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
-import cn.lmjia.market.core.entity.support.WithdrawStatus;
-import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
-import cn.lmjia.market.core.repository.WithdrawRequestRepository;
 import cn.lmjia.market.core.service.ReadService;
-import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.WithdrawService;
-import cn.lmjia.market.core.util.TimeUtil;
 import cn.lmjia.market.manage.page.ManageWithdrawPage;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.WechatMyPage;
@@ -24,10 +19,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 
 public class WechatWithdrawControllerTest extends WechatTestBase {
@@ -38,16 +29,11 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
     private WithdrawService withdrawService;
     @Autowired
     private VerificationCodeRepository verificationCodeRepository;
-    @Autowired
-    private SystemService systemService;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
-
-    @Autowired
-    private WithdrawRequestRepository withdrawRequestRepository;
 
 
     @Test
@@ -104,28 +90,28 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
 */
         //managerApproval(login);
         updateAllRunWith(login);
-        LocalDate localDate = LocalDate.now();
-        if (TimeUtil.beforeTheDate(localDate, 6) || TimeUtil.timeFrame(localDate, 15, 21)) {
-            List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
-            if (resultList.size() != 0) {
-                //获取最新成功提现记录日期.
-                LocalDateTime lastDateTime = resultList.get(0).getRequestTime();
-                LocalDate lastTime = lastDateTime.toLocalDate();
-                //成功提现记录日期是否是当月1-5日.
-                if (TimeUtil.beforeTheDate(lastTime, 6)) {
-                    //当前日期是否不是16-20日,如果不是说明是1-5日之间第二次提现.跳转提示页面.
-                    if (!TimeUtil.timeFrame(localDate, 15, 21)) {
-                        System.out.println("1-5日重复申请");
-                    }
-                } else {
-                    System.out.println("错误日期申请");
-                }
-            } else {
-                System.out.println("可以提现申请");
-            }
-        }else{
-            System.out.println("错误的申请日期.");
-        }
+//        LocalDate localDate = LocalDate.now();
+//        if (TimeUtil.beforeTheDate(localDate, 6) || TimeUtil.timeFrame(localDate, 15, 21)) {
+//            List<WithdrawRequest> resultList = withdrawService.descTimeAndSuccess(login);
+//            if (resultList.size() != 0) {
+//                //获取最新成功提现记录日期.
+//                LocalDateTime lastDateTime = resultList.get(0).getRequestTime();
+//                LocalDate lastTime = lastDateTime.toLocalDate();
+//                //成功提现记录日期是否是当月1-5日.
+//                if (TimeUtil.beforeTheDate(lastTime, 6)) {
+//                    //当前日期是否不是16-20日,如果不是说明是1-5日之间第二次提现.跳转提示页面.
+//                    if (!TimeUtil.timeFrame(localDate, 15, 21)) {
+//                        System.out.println("1-5日重复申请");
+//                    }
+//                } else {
+//                    System.out.println("错误日期申请");
+//                }
+//            } else {
+//                System.out.println("可以提现申请");
+//            }
+//        }else{
+//            System.out.println("错误的申请日期.");
+//        }
     }
 
     @Test
