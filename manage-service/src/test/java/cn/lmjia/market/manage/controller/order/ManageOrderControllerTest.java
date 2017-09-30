@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Tests in error:
@@ -176,6 +178,12 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .as("物流完成之后 订单也应该完成")
                 .isEqualByComparingTo(OrderStatus.afterSale);
         mockMvc.perform(get("/manage/orderData/logistics"))
+                .andDo(print());
+
+        mockMvc.perform(get("/loginCommissionJournal").param("id", String.valueOf(order.getOrderBy().getId()))
+                .accept(MediaType.TEXT_HTML_VALUE)
+        )
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 
