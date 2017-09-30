@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
@@ -86,6 +87,9 @@ public class ManageWithdrawController {
             public List<FieldDefinition<WithdrawRequest>> fields() {
                 return Arrays.asList(
                         Fields.asBasic("id")
+                        , FieldBuilder.asName(WithdrawRequest.class, "loginId")
+                                .addSelect(withdrawRequestRoot -> withdrawRequestRoot.get(WithdrawRequest_.whose).get(Login_.id))
+                                .build()
                         , Fields.asBiFunction("user", ((root, criteriaBuilder)
                                 -> ReadService.nameForLogin(root.join(WithdrawRequest_.whose)
                                 , criteriaBuilder)))

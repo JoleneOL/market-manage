@@ -28,6 +28,8 @@
 
 <!--参考数据/orderData/manageableList-->
 <body data-url="/manage/withdraws"
+      data-journal-url="mock/journal.html"
+      th:data-journal-url="@{/loginCommissionJournal}"
       data-reject-url="/manage/withdraws/reject"
       data-approval-url="/manage/withdraws/approval">
 
@@ -136,6 +138,6 @@
 <script src="./mock/mock-min.js" th:remove="all"></script>
 <script src="./mock/api.js" th:remove="all"></script>
 
-<script src="manage-resource/js/withdrawManage.js"></script>
+<script src="manage-resource/js/withdrawManage.js?v=1"></script>
 
 </html>
