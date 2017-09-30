@@ -4,6 +4,8 @@ import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Login_;
+import cn.lmjia.market.core.entity.settlement.LoginCommissionJournal;
+import cn.lmjia.market.core.repository.settlement.LoginCommissionJournalRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
