@@ -50,8 +50,8 @@ public class WechatMallOrderControllerTest extends WechatTestBase {
         // 特别的设计，让这个帐号绑定到开发个人微信openId 确保可以收到消息
         bindDeveloperWechat(login1);
         updateAllRunWith(login1);
-        //以 立式净水器 为例，因为他有2种颜色
-        productType = productTypeRepository.findTop1ByName("立式净水器");
+        //以 立式净水机 为例，因为他有2种颜色
+        productType = productTypeRepository.findTop1ByName("立式净水机");
         goodForType = mainGoodService.forSale(null,productType,null,null);
     }
 
