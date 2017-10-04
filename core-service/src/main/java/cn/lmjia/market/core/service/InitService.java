@@ -336,6 +336,8 @@ public class InitService {
 
                 if (!propertyValueAware && product.isEnable())
                     log.info(product + "需要设置货品属性");
+
+                mainProductRepository.save(product);
             });
             return;
         }
