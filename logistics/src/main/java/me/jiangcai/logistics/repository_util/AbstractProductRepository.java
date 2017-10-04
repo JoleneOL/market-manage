@@ -12,4 +12,6 @@ import java.util.List;
 public interface AbstractProductRepository<T extends Product> extends JpaRepository<T, String>
         , JpaSpecificationExecutor<T> {
     List<T> findByEnableTrue();
+
+    List<T> findByProductTypeNull();
 }

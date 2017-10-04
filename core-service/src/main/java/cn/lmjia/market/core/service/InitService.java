@@ -283,8 +283,21 @@ public class InitService {
     }
 
     private void products() throws IOException {
-        if (mainProductRepository.count() > 0)
+        if (mainProductRepository.count() > 0) {
+            // 确保当前系统中 是不会存在 productType 为null的货品
+            List<ProductType> productTypeList = productTypeRepository.findAll();
+            // TODO 发现一个严重问题 发现 productTypeList 是空的！
+            mainProductRepository.findByProductTypeNull().forEach(product -> {
+
+                ProductType targetType = productTypeList.stream().filter(productType -> product.getName().contains(productType.getName()))
+                        // 如果多个 暂时不管了…………
+                        .findFirst().orElseThrow(() -> new IllegalStateException(product + "需要设置ProductType 但是却没找到合适的，升级失败。"));
+                product.setProductType(targetType);
+                // 属性还无法设置，建议手动设置
+                log.info(product + "需要设置货品属性");
+            });
             return;
+        }
         Properties properties = new Properties();
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(
                 new ClassPathResource("/defaultProducts.properties").getInputStream(), "UTF-8"))) {

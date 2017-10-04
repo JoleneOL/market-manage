@@ -128,6 +128,17 @@ public class Product {
         return Objects.hash(code);
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "enable=" + enable +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", SKU='" + SKU + '\'' +
+                ", productType=" + productType +
+                '}';
+    }
+
     /**
      * @return 体积，单位mm'3
      */
