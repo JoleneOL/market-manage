@@ -63,6 +63,14 @@ public class ProductType {
     private List<PropertyValue> propertyValueList;
 
     @Override
+    public String toString() {
+        return "ProductType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ProductType)) return false;

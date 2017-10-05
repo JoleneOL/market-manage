@@ -72,6 +72,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 初始化服务
@@ -286,7 +288,6 @@ public class InitService {
         if (mainProductRepository.count() > 0) {
             // 确保当前系统中 是不会存在 productType 为null的货品
             List<ProductType> productTypeList = productTypeRepository.findAll();
-            // TODO 发现一个严重问题 发现 productTypeList 是空的！
             mainProductRepository.findByProductTypeNull().forEach(product -> {
 
                 ProductType targetType = productTypeList.stream().filter(productType -> product.getName().contains(productType.getName()))
@@ -294,7 +295,49 @@ public class InitService {
                         .findFirst().orElseThrow(() -> new IllegalStateException(product + "需要设置ProductType 但是却没找到合适的，升级失败。"));
                 product.setProductType(targetType);
                 // 属性还无法设置，建议手动设置
-                log.info(product + "需要设置货品属性");
+                // 如果可以选择就帮忙选择出来 如果无从选择 就log一下得了
+                boolean propertyValueAware = false;
+                for (PropertyName propertyName : targetType.getPropertyNameList()) {
+                    propertyValueAware = false;
+                    if ("包装规格".equalsIgnoreCase(propertyName.getName())) {
+                        // 一个 和另外一个
+                        PropertyValue targetPropertyValue = targetType.getPropertyValueList().stream()
+                                .filter(pv -> {
+                                    Integer n1 = toNumber(pv.getValue());
+                                    Integer n2 = toNumber(product.getName());
+                                    return (n1 == null && n2 == null) || (n1 != null && n1.equals(n2));
+                                })
+                                .findFirst()
+                                .orElseThrow(() -> new IllegalStateException(product + "找不到准确的包装规格属性"));
+                        product.setPropertyNameValues(Collections.singletonMap(propertyName, targetPropertyValue.getValue()));
+                        propertyValueAware = true;
+                    } else if ("颜色".equalsIgnoreCase(propertyName.getName())) {
+                        PropertyValue targetPropertyValue;
+                        if (targetType.getPropertyValueList().size() == 1)
+                            targetPropertyValue = targetType.getPropertyValueList().get(0);
+                        else {
+                            targetPropertyValue = targetType.getPropertyValueList().stream()
+                                    .filter(pv -> product.getName().contains(pv.getValue()))
+                                    .findFirst()
+                                    .orElse(
+                                            // 实在找不到 则进入宽容模式
+                                            targetType.getPropertyValueList().stream()
+                                                    .filter(pv -> product.getName().replaceAll("黑", "").contains(pv.getValue().length() >= 3 ? pv.getValue().replaceAll("黑", "") : pv.getValue()))
+                                                    .findFirst()
+                                                    .orElse(null)
+                                    );
+                        }
+                        if (targetPropertyValue != null) {
+                            propertyValueAware = true;
+                            product.setPropertyNameValues(Collections.singletonMap(propertyName, targetPropertyValue.getValue()));
+                        }
+                    }
+                }
+
+                if (!propertyValueAware && product.isEnable())
+                    log.info(product + "需要设置货品属性");
+
+                mainProductRepository.save(product);
             });
             return;
         }
@@ -350,6 +393,14 @@ public class InitService {
             });
         }
 
+    }
+
+    private Integer toNumber(String value) {
+        Matcher matcher = Pattern.compile(".*(\\d+).*").matcher(value);
+        if (matcher.matches()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return null;
     }
 
     private void upgrade() {
@@ -453,6 +504,7 @@ public class InitService {
                             try (Statement statement = connection.getConnection().createStatement()) {
                                 statement.execute("ALTER TABLE PRODUCT ADD COLUMN PRODUCTTYPE_ID BIGINT;");
                                 statement.execute("ALTER TABLE PRODUCT ADD CONSTRAINT FK_PRODUCT_PRODUCTTYPE_ID FOREIGN KEY (PRODUCTTYPE_ID) REFERENCES PRODUCTTYPE (ID)");
+                                statement.execute("UPDATE `PRODUCT` SET `NAME`='台式净水机' WHERE `NAME`='台式净水器'");
                             }
                         });
                         break;
@@ -465,11 +517,15 @@ public class InitService {
 
     private void managers() {
         if (loginService.managers().isEmpty()) {
-            // 添加一个主管理员
+            // 添加一个默认管理员
             Manager manager = new Manager();
             manager.setLevelSet(Collections.singleton(ManageLevel.root));
             manager.setLoginName("root");
             loginService.password(manager, null, "654321");
+        }
+        if (environment.acceptsProfiles("staging")) {
+            // 在staging 环境中 root 密码总是稳定的
+            loginService.password(loginService.byLoginName("root"), "654321");
         }
     }
 }
