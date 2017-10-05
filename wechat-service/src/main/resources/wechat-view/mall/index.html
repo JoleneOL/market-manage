@@ -35,25 +35,13 @@
     <!--<img src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t7531/122/3206157162/41027/aa9c92f1/59bba3d8N58945bc1.jpg!q70.jpg">-->
     <!--</div>-->
     <div class="swiper-container">
-        <div class="swiper-wrapper" th:remove="all-but-first">
+        <div class="swiper-wrapper">
             <div class="swiper-slide" th:each="imgTag:${@readService.allTagByType(2)}" th:attr="tagName=${imgTag.name}">
                 <img res:src="${imgTag.icon}"
                      src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t7531/122/3206157162/41027/aa9c92f1/59bba3d8N58945bc1.jpg!q70.jpg">
             </div>
-            <div class="swiper-slide">
+            <div class="swiper-slide" th:remove="all">
                 <img src="https://img1.360buyimg.com/da/jfs/t7684/361/3106386494/64538/fedcfaa/59ba29d9N9cdff0bc.jpg">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://img1.360buyimg.com/da/jfs/t8266/86/1431159567/98188/3367b0c7/59b94a27Nbe9d0c16.jpg">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t9358/106/1553870784/143809/5dc39ec/59bbaf25N0cec07fb.jpg!q70.jpg">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://img1.360buyimg.com/da/jfs/t8911/273/1385575075/90946/4ef021c7/59b910a5N4f0da615.jpg">
-            </div>
-            <div class="swiper-slide">
-                <img src="https://m.360buyimg.com/mobilecms/s720x322_jfs/t9118/20/1455985783/89737/7770712b/59ba18d7N256a1bdc.jpg!q70.jpg">
             </div>
         </div>
         <div class="swiper-pagination"></div>
@@ -61,7 +49,7 @@
 </div>
 <div class="mall-tagBanner">
     <div class="tag-list tag-list-middle">
-        <div class="tag-list-bd" th:remove="all-but-first">
+        <div class="tag-list-bd">
             <div class="tag-list-item" th:each="searchTag:${@readService.allTagByType(0)}">
                 <a th:href="@{/wechatSearch/tagSearch(tagName=${searchTag.name})}" href="tagDetail.html" class="tag-content" th:attr="tag-name=${searchTag.name}" tag-name="净水器">
                     <img res:src="${searchTag.icon}"
@@ -70,30 +58,23 @@
                     <p class="tag-title" th:text="${searchTag.name}">净水器</p>
                 </a>
             </div>
-            <div class="tag-list-item">
+            <div class="tag-list-item" th:remove="all">
                 <a href="tagDetail.html" class="tag-content">
                     <img src="https://m.360buyimg.com/mobilecms/jfs/t5965/339/3633548361/13799/cd4d0416/5954cf81N3294a71c.png"
                          class="tag-image">
                     <p class="tag-title">食品优化宝</p>
                 </a>
             </div>
-            <div class="tag-list-item">
-                <a href="tagDetail.html" class="tag-content">
-                    <img src="https://m.360buyimg.com/mobilecms/jfs/t5842/205/151189300/13247/a6de2d/591d94edNc42fb94d.png"
-                         class="tag-image">
-                    <p class="tag-title">空气净化器</p>
-                </a>
-            </div>
         </div>
     </div>
 </div>
-<div class="mall-tagList" th:remove="all-but-first">
+<div class="mall-tagList">
     <div class="tag-list tag-list-big" th:each="listTag:${@readService.allTagByType(1)}" th:attr="data-tag-name=${listTag.name}" data-tag-name="热销">
         <div class="tag-list-hd">
             <h4 th:text="${listTag.name}">热销</h4>
             <a href="tagDetail.html" th:href="@{/wechatSearch/tagSearch(tagName=${listTag.name})}" class="more-list">更多 <i class="fa fa-angle-right"></i></a>
         </div>
-        <div class="tag-list-bd" th:remove="all-but-first">
+        <div class="tag-list-bd">
             <div class="tag-list-item" data-goods-id="0" th:each="goods:${@mainGoodService.forSale(null,null,null,listTag.name)}" th:attr="data-goods-id=${goods.id}">
                 <a href="goodsDetail.html" th:href="@{/wechatSearch/goodsDetail/} + ${goods.id}" class="tag-content">
                     <img th:if="${goods.product.mainImg != null}" res:src="${goods.product.mainImg}"
@@ -101,18 +82,13 @@
                          class="tag-image">
                     <p class="tag-title" th:text="${goods.product.name}">帅风橱下净水器</p>
                     <p class="tag-subTitle" th:text="${goods.product.description}"></p>
-                    <!--<div th:remove="all-but-first" class="tag-subTitle">
-                        <span th:each="tag:${goods.tags}" th:text="tag.name">净水器</span>
-                        <span>热销</span>
-                        <span>热销</span>
-                    </div>-->
                     <div class="tag-detail">
                         <div class="goods-price" th:text="'￥' + ${goods.totalPrice}">￥3000</div>
                         <!--<div class="goods-bought">9999人付款</div>-->
                     </div>
                 </a>
             </div>
-            <div class="tag-list-item">
+            <div class="tag-list-item" th:remove="all">
                 <a href="goodsDetail.html" class="tag-content">
                     <img src="https://m.360buyimg.com/mobilecms/jfs/t6385/2/2557936611/16340/88d1286d/5963868cN997a1bee.jpg!q70.jpg"
                          class="tag-image">
@@ -124,33 +100,9 @@
                     </div>
                 </a>
             </div>
-            <div class="tag-list-item">
-                <a href="goodsDetail.html" class="tag-content">
-                    <img src="https://m.360buyimg.com/mobilecms/jfs/t5458/79/1151352524/8169/61cdc42f/590c554dN7800dbb6.jpg!q70.jpg"
-                         class="tag-image">
-                    <p class="tag-title">科里空气净化器</p>
-                    <p class="tag-subTitle">弘毅斋 莲花椰丝拜垫打坐垫禅修垫蒲团加厚环保 瑜伽垫 褐色 60*60cm</p>
-                    <div class="tag-detail">
-                        <div class="goods-price">￥13000</div>
-                        <div class="goods-bought">399人付款</div>
-                    </div>
-                </a>
-            </div>
-            <div class="tag-list-item">
-                <a href="goodsDetail.html" class="tag-content">
-                    <img src="https://m.360buyimg.com/mobilecms/jfs/t8125/86/1562150339/29447/ec04eaaa/59bbbd21N095c4fe3.jpg!q70.jpg"
-                         class="tag-image">
-                    <p class="tag-title">科里空气净化器</p>
-                    <p class="tag-subTitle">弘毅斋 莲花椰丝拜垫打坐垫禅修垫蒲团加厚环保 瑜伽垫 褐色 60*60cm</p>
-                    <div class="tag-detail">
-                        <div class="goods-price">￥13000</div>
-                        <div class="goods-bought">399人付款</div>
-                    </div>
-                </a>
-            </div>
         </div>
     </div>
-    <div class="tag-list tag-list-big">
+    <div class="tag-list tag-list-big" th:remove="all">
         <div class="tag-list-hd">
             <h4>促销</h4>
             <a href="tagDetail.html" class="more-list">更多 <i class="fa fa-angle-right"></i></a>
