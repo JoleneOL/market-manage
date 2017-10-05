@@ -87,7 +87,7 @@ public class ManageTagController {
 
     @PostMapping("/manage/tagList")
     @Transactional
-    public String add(@RequestParam String name, @RequestParam Integer type
+    public String add(@RequestParam String name, Integer type
             , @RequestParam(required = false, defaultValue = "0") Integer weight, String icon) throws IOException {
 
         Tag tag = tagRepository.findOne(name);
