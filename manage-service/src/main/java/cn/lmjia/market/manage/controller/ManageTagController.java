@@ -101,7 +101,7 @@ public class ManageTagController {
 
         //转存资源
         if (!StringUtils.isEmpty(icon) && !icon.equalsIgnoreCase(tag.getIcon())) {
-            String tagImgResource = "tag/" + tag.getName() + "." + FileUtils.fileExtensionName(icon);
+            String tagImgResource = "tag/" + tag.getName().hashCode() + "." + FileUtils.fileExtensionName(icon);
             resourceService.moveResource(tagImgResource, icon);
             tag.setIcon(tagImgResource);
         }
