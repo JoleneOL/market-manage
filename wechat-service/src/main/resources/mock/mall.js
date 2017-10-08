@@ -17,7 +17,7 @@ Mock.mock(/\/api\/goodsList\?productName=(.*)/, "get", {
     ]
 });
 
-Mock.mock(/\/api\/goodsList\?tag=(.*)&propertyValue=(.*)&price=(.*)/, {
+Mock.mock(/\/api\/goodsList\?tag=(.*)&propertyValue=(.*)&priceOrder=(.*)&page=(.*)/, {
     "resultCode": 200,
     "resultMsg": "ok",
     "data|0-2": [
