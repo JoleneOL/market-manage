@@ -41,7 +41,6 @@
             <div class="ibox">
                 <div class="ibox-title">
                     订单信息
-                    <input id="mainOrderId" type="hidden" th:value="${currentData.id}">
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
@@ -68,7 +67,9 @@
                                 <td>订单可分佣金额</td>
                                 <td th:text="${{currentData.commissioningAmountMoney}}">10.1
                                     <span>
-                                          <input id="findCommission" type="button" value="佣金明细">
+                                          <button id="findCommission">佣金明细</button>
+                                        <a id="commissionDetail" href="_commissionDetail.html"
+                                           th:href="@{'/orderDetail/Commission?orderId'+${currentData.id}}"></a>
                                     </span>
                                 </td>
                             </tr>
@@ -347,8 +348,7 @@
         $('.js-condition').eq(1).hide();
 
         $('#findCommission').click(function(){
-            var orderId = $('#mainOrderId').val();
-            window.open("/orderDetail/Commission/"+orderId,"佣金明细")
+            $("#commissionDetail")[0].click();
         })
     });
 
