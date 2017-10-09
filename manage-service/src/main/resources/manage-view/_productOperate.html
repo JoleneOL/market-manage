@@ -430,6 +430,41 @@
 <script src="mock/mock-min.js" th:remove="all"></script>
 <script src="mock/api.js" th:remove="all"></script>
 
-<script src="//editor.kuanyes.com/ckeditor.js"></script>
+<!--<script src="//editor.kuanyes.com/ckeditor.js"></script>-->
+<!--更换tiny..-->
+<script src="//cdn.lmjia.cn/tinymce_4.7.1/js/tinymce/tinymce.min.js"></script>
+<script src="//cdn.lmjia.cn/tinymce_4.7.1/js/tinymce/jquery.tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea.editor',
+        language: 'zh_CN',
+        height: 500,
+        plugins: [
+            "advlist autolink lists link image charmap print preview anchor",
+            "searchreplace visualblocks code fullscreen",
+            "insertdatetime media table contextmenu paste imagetools image code"
+        ],
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image code",
+        imagetools_cors_hosts: ['test.lmjia.cn', 'app.lmjia.cn', 'localhost'],
+        // without images_upload_url set, Upload tab won't show up
+        images_upload_url: 'resourceUpload/tinyImage'
+        // we override default upload handler to simulate successful upload
+//        images_upload_handler: function (blobInfo, success, failure) {
+//            setTimeout(function () {
+//                // no matter what you upload, we will turn it into TinyMCE logo :)
+//                success('http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
+//            }, 2000);
+//        },
+//
+//        init_instance_callback: function (ed) {
+//            ed.execCommand('mceImage');
+//        }
+//        content_css: [
+//            '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+//            '//www.tinymce.com/css/codepen.min.css'
+//        ]
+
+    });
+</script>
 <script src="manage-resource/js/productAdd.js"></script>
 </html>
