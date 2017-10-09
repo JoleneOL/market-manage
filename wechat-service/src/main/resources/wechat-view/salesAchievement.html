@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--本页面可以展示当前登录销售人员的业绩。-->
+<!--交互点:-->
+<!--可以滚动获取业绩；-->
+<!--可以按日期，时间（几点前），是否已备注，是否已成交等要素进行筛选；-->
+
+<!--业绩具体字段有 具体时刻，手机(应支持点击呼叫)，名字，备注，是否已成交，订单总金额（若已成交），获取绩效（若已成交）-->
+<!--业绩交互点：可以设置备注-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>业绩</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+</head>
+<body class="view-bg-color view-fs-small">
+<div class="weui-cells__title js-extra-h">我的业绩</div>
+<div class="weui-cells weui-cells_checkbox js-extra-h">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">查询日期</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" type="text" id="J_date" name="date" placeholder="查询日期">
+        </div>
+        <div class="weui-cell__ft">
+            <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default_custom weui-btn_xs displayNone"
+               id="J_clear">清空</a>
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd">
+            <label class="weui-label">备注</label>
+        </div>
+        <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="remarkTrue" data-group="remark">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>已备注</p>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="remarkFalse" data-group="remark">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>未备注</p>
+                </div>
+            </label>
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd">
+            <label class="weui-label">成交</label>
+        </div>
+        <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="dealTrue" data-group="deal">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>已成交</p>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="dealFalse" data-group="deal">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>未成交</p>
+                </div>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="weui-btn-area js-extra-h">
+    <a class="weui-btn weui-btn_custom" href="javascript:" id="J_filter">筛&nbsp;&nbsp;选</a>
+</div>
+<div class="view-scroll-wrap" data-url="/api/salesList">
+    <div class="view-scroll-list">
+        <div class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">数据加载中...</span>
+        </div>
+    </div>
+</div>
+<div id="J_popup" class="weui-popup__container popup-bottom view-sales-popup">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a href="javascript:;" class="picker-button close-popup">关闭</a>
+                <h1 class="title">用户详情</h1>
+            </div>
+        </div>
+        <div class="modal-content" id="J_popupContainer">
+        </div>
+    </div>
+</div>
+</body>
+<template id="J_popupTpl">
+    <div class="weui-form-preview">
+        <div class="weui-form-preview__bd">
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">状态</label>
+                {{if statusCode == 1}}
+                <span class="weui-form-preview__value text-custom">已成交</span>
+                {{else}}
+                <span class="weui-form-preview__value text-error">未成交</span>
+                {{/if}}
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">时间</label>
+                <span class="weui-form-preview__value">{{time}}</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">用户</label>
+                <span class="weui-form-preview__value">{{name}}</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">手机号</label>
+                <span class="weui-form-preview__value"><a href="tel:{{tel}}">{{tel}}</a></span>
+            </div>
+            {{if statusCode == 1}}
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">订单金额</label>
+                <span class="weui-form-preview__value">￥{{sum}}</span>
+            </div>
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">获取绩效</label>
+                <span class="weui-form-preview__value">￥{{comm}}</span>
+            </div>
+            {{/if}}
+            <div class="weui-form-preview__item">
+                <label class="weui-form-preview__label">备注</label>
+                <span class="weui-form-preview__value">
+                    <span class="js-remark">{{remark}}</span>
+                    <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_default_custom weui-btn_xs"
+                       id="J_editRemark" data-id="{{id}}">编辑</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
+<script src="//cdn.lmjia.cn/invite/template-web.js"></script>
+
+<script src="../mock/mock-min.js" th:remove="all"></script>
+<script src="../mock/api.js" th:remove="all"></script>
+
+<script src="../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
+<script src="../wechat-resource/assets/js/sales.js"
+        th:src="@{/wechat-resource/assets/js/sales.js}"></script>
+</html>

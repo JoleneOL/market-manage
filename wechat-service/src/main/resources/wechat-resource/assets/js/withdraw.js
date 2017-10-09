@@ -1,4 +1,6 @@
 /**
+ * 加入最大值和最小值的检查
+ * 将比例设置到element中然后让JS去获取
  * Created by Neo on 2017/5/10.
  */
 $(function () {
@@ -6,7 +8,7 @@ $(function () {
     var amount = $('#J_withdrawAmount');
     var allInInput = $('#J_allInVal');
     var allInBtn = $('#J_allInBtn');
-    var rate = /*[[${rate}]]*/ "0.2";
+    var rate = $('#J_noInvoiceCost').attr('data-value');
     $('#J_Bank').on('keyup mouseout input', function () {
         var $this = $(this);
         var v = $this.val();
@@ -24,6 +26,8 @@ $(function () {
         calculateWithdrawAmount();
     });
 
+    $('input[name=invoice]').click(calculateWithdrawAmount);
+
     allInBtn.click(function () {
         allInInput
             .val(+$(this).attr('data-all-in'))
@@ -38,14 +42,14 @@ $(function () {
             $invoice.removeClass('displayNone');
             $('input[name="logisticsCode"]').rules('add', {
                 required: true,
-                messages : {
-                    required : "填写物流单号"
+                messages: {
+                    required: "填写物流单号"
                 }
             });
-             $('input[name="logisticsCompany"]').rules('add', {
+            $('input[name="logisticsCompany"]').rules('add', {
                 required: true,
-                messages : {
-                    required : "填写物流公司"
+                messages: {
+                    required: "填写物流公司"
                 }
             });
         } else {
@@ -56,17 +60,39 @@ $(function () {
         calculateWithdrawAmount();
     });
 
-    function calculateWithdrawAmount(){
-        var withdrawAmount = allInInput.val();
-        if(!!withdrawAmount){
+    var _body = $('body');
+
+    function calculateWithdrawAmount() {
+        var withdrawAmount = +allInInput.val();
+        if (!!withdrawAmount) {
             var invoiceType = $('.js-invoice:checked').val();
             //有发票
-            if(invoiceType === 'true'){
+            if (invoiceType === 'true') {
                 amount.text(withdrawAmount);
-            }else{
+            } else {
                 amount.text((withdrawAmount - withdrawAmount * rate).toFixed(2));
             }
+
+            $('#withSubmit').attr("disabled", false);
+            $('#minError').hide();
+            $('#maxError').hide();
+
+            // 最大值和最小值检查
+            if (withdrawAmount < _body.data('min-amount')) {
+                minErrorShow();
+                return;
+            }
+            // 如果选择了发票不再检查了
+            if ($("#J_haveInvoice").prop('checked')) {
+                return;
+            }
+
+            if (withdrawAmount > _body.data('max-amount-without-invoice')) {
+                maxErrorShow();
+            }
         }
+
+
     }
 
     // 安卓按钮高度
@@ -157,5 +183,17 @@ $(function () {
         unhighlight: function (element, errorClass, validClass) {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
         }
-    })
+    });
+
+    function minErrorShow() {
+        $('#minError').show();
+        $('#maxError').hide();
+        $('#withSubmit').attr("disabled", true);
+    }
+
+    function maxErrorShow() {
+        $('#maxError').show();
+        $('#minError').hide();
+        $('#withSubmit').attr("disabled", true);
+    }
 });

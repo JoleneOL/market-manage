@@ -10,6 +10,7 @@ import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.SalesmanService;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public abstract class AbstractMainOrderController {
     private LoginService loginService;
     @Autowired
     private MainGoodService mainGoodService;
+    @Autowired
+    private SalesmanService salesmanService;
 
     protected MainOrder from(String orderId, Long id) {
         if (id != null)
@@ -51,6 +54,7 @@ public abstract class AbstractMainOrderController {
         model.addAttribute("channel", channel);
         // 该量表示 渠道已经支持分期；如果这样的话，支付时不应该提供分期选项
         model.addAttribute("installmentSupported", (channel != null) && channel instanceof InstallmentChannel);
+        model.addAttribute("salesAchievement", salesmanService.pick(login));
     }
 
     protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender

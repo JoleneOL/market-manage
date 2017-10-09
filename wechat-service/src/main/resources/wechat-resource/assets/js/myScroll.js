@@ -31,7 +31,9 @@
         var myScroll = new IScroll(self, {
             mouseWheel: true,
             probeType: 3,
-            click: true
+            tap: true,
+            disableMouse: true,
+            disablePointer: true
         });
 
         function isPassive() {
@@ -74,12 +76,17 @@
                 return '';
             }
             s.ajaxData.page = s.page;
-            if (s.debug) console.info(s.ajaxData);
             $.ajax(s.ajaxUrl, {
                 method: s.ajaxMethod,
                 data: s.ajaxData,
                 dataType: 'json',
                 success: function (res) {
+                    if (s.debug) {
+                        console.group('请求数据：');
+                        console.log(s.ajaxData);
+                        console.log(res);
+                        console.groupEnd();
+                    }
                     if (res.resultCode !== 200) {
                         $.toast('请求失败', 'cancel');
                         s.loading = false;
@@ -126,6 +133,7 @@
             myScrollRefresh: function (goTop) {
                 if (goTop === true) myScroll.scrollTo(0, 0);
                 myScroll.refresh();
+                s.loading = false;
             }
         });
 

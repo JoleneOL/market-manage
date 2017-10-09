@@ -157,6 +157,11 @@
   vertical-align: middle;
   margin-right: 10px;
 }
+.weui-btn_xs {
+  font-size: 12px;
+  line-height: 1;
+  padding: 0;
+}
 .weui-btn_custom {
   background-color: #009bb6;
 }
@@ -1500,4 +1505,37 @@
   display: table;
   content: " ";
   clear: both;
+}
+.update-agreement img {
+  display: block;
+  width: 100%;
+}
+.update-agreement .weui-tabbar {
+  padding: 10px 0;
+}
+.update-agreement .close-popup {
+  width: 200px;
+}
+.view-sales-item .view-sales-time {
+  font-size: 12px;
+  color: #888;
+}
+.view-sales-item .view-sales-remark {
+  margin-right: 10px;
+  width: 40%;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  color: #888;
+}
+.view-sales-popup {
+  z-index: 10;
+}
+.view-sales-popup .weui-popup__overlay {
+  z-index: 10;
+  opacity: 1;
 }

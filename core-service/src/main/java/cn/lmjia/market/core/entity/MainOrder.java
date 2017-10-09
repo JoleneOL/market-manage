@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.entity;
 
 import cn.lmjia.market.core.define.Money;
+import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
@@ -39,6 +40,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -70,6 +72,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
+    private SalesAchievement salesAchievement;
     /**
      * 每日序列号
      * 业务量每天不会超过1000000
@@ -185,6 +189,12 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @OneToMany
     @OrderBy("createTime desc")
     private List<StockShiftUnit> logisticsSet;
+    /**
+     * 冗余设计，是否允许发货；它会在物流状态发生变化之后改变；
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartShift}
+     */
+    private boolean ableShip = true;
 //    /**
 //     * 所有物流信息
 //     * 包括已被拒绝接单的物流
@@ -193,12 +203,6 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 //     */
 //    @OneToMany
 //    private List<StockShiftUnit> allLogisticsSet;
-    /**
-     * 冗余设计，是否允许发货；它会在物流状态发生变化之后改变；
-     *
-     * @since {@link cn.lmjia.market.core.Version#muPartShift}
-     */
-    private boolean ableShip = true;
     /**
      * 已完成安装的物流
      *
@@ -214,6 +218,10 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     @Deprecated
     @ManyToOne
     private StockShiftUnit currentLogistics;
+    /**
+     * 是否使用花呗支付
+     */
+    private boolean huabei;
 
 //    /**
 //     * @param from order表
@@ -223,10 +231,20 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
 //    public static Join<Customer, Login> getCustomerLogin(From<?, MainOrder> from) {
 //        return getCustomer(from).join(Customer_.login);
 //    }
+
     /**
-     * 是否使用花呗支付
+     * @param root root
+     * @param cb   cb
+     * @return 订单成功支付的条件
+     * @see #isPay()
      */
-    private boolean huabei;
+    public static Predicate getOrderPaySuccess(From<?, MainOrder> root, CriteriaBuilder cb) {
+        final Path<OrderStatus> statusPath = root.get(MainOrder_.orderStatus);
+        return cb.and(
+                cb.notEqual(statusPath, OrderStatus.EMPTY)
+                , cb.notEqual(statusPath, OrderStatus.forPay)
+        );
+    }
 
     /**
      * @param from order表

@@ -2,6 +2,7 @@ package cn.lmjia.market.core.entity.deal;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder_;
+import cn.lmjia.market.core.entity.support.CommissionType;
 import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.lib.spring.data.AndSpecification;
@@ -57,6 +58,12 @@ public class Commission {
      */
     @Column(scale = 2, precision = 20)
     private BigDecimal amount;
+    /**
+     * 类型
+     *
+     * @since {@link cn.lmjia.market.core.Version#salesman}
+     */
+    private CommissionType type;
 
     /**
      * @param commissionFrom  佣金from

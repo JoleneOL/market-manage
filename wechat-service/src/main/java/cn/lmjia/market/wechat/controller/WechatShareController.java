@@ -1,7 +1,10 @@
 package cn.lmjia.market.wechat.controller;
 
+import cn.lmjia.market.core.converter.QRController;
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.deal.Salesman;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.SalesmanService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.wechat.service.WechatService;
 import me.jiangcai.wx.OpenId;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +39,10 @@ public class WechatShareController {
     private PublicAccount publicAccount;
     @Autowired
     private Environment environment;
+    @Autowired
+    private QRController qrController;
+    @Autowired
+    private SalesmanService salesmanService;
 
     // 二维码扫码将是一个永久场景(欢迎加入)二维码
     // 扫码需要关注，并且在关注后自动引导事件
@@ -53,8 +61,9 @@ public class WechatShareController {
         if (!loginService.isRegularLogin(login))
             return "redirect:" + SystemService.wechatShareMoreUri;
         model.addAttribute("login", login);
-        model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(login).getImageUrl());
-        model.addAttribute("url", systemService.toUrl("/wechatJoin" + login.getId()));
+        final String targetUrl = systemService.toUrl("/wechatJoin" + login.getId());
+        model.addAttribute("qrCodeUrl", qrController.urlForText(targetUrl).toString());
+        model.addAttribute("url", targetUrl);
         return "wechat@shareQC.html";
     }
 
@@ -64,6 +73,53 @@ public class WechatShareController {
         return "wechat@chance.html";
     }
 
+    /**
+     * 销售人员推广的地址
+     *
+     * @param id     销售人员id
+     * @param openId 用户openId
+     * @param login  当前身份
+     * @param model  model
+     * @return
+     */
+    @GetMapping("/wechatJoinSM{id}")
+    @Transactional
+    public String joinBySalesman(@PathVariable long id, @OpenId String openId, @AuthenticationPrincipal Object login
+            , Model model) {
+        Salesman salesman = salesmanService.get(id);
+        // 如果已登录 那么直接去下单
+        if (login != null && login instanceof Login) {
+            salesmanService.salesmanShareTo(id, (Login) login);
+            return "redirect:" + SystemService.wechatOrderURi;
+        }
+
+        // 看看是否已关注
+        //  必须关注本公众号才可以 测试环境可以跳过
+        final Protocol protocol = Protocol.forAccount(publicAccount);
+        try {
+            if (!environment.acceptsProfiles("unit_test")
+                    && !protocol.userDetail(openId).isSubscribe()) {
+                model.addAttribute("qrCodeUrl", wechatService.qrCodeFor(salesman));
+                return "wechat@subscribe_required.html";
+            }
+        } catch (BadAccessException ex) {
+            // 检测是否关注失败
+            log.debug("检测是否关注失败", ex);
+        }
+
+        salesmanService.salesmanShareTo(id, wechatService.shareTo(id, openId));
+        return "redirect:" + SystemService.wechatOrderURi;
+    }
+
+    /**
+     * 用户打开了其他人分享的推广地址
+     *
+     * @param id     谁分享的
+     * @param openId 用户openId
+     * @param login  当前身份
+     * @param model  model
+     * @return
+     */
     @GetMapping("/wechatJoin{id}")
     public String join(@PathVariable long id, @OpenId String openId, @AuthenticationPrincipal Object login, Model model) {
         // 如果已登录 那么直接去下单
@@ -75,7 +131,7 @@ public class WechatShareController {
         try {
             if (!environment.acceptsProfiles("unit_test")
                     && !protocol.userDetail(openId).isSubscribe()) {
-                model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(loginService.get(id)).getImageUrl());
+                model.addAttribute("qrCodeUrl", wechatService.qrCodeForLogin(loginService.get(id)));
                 return "wechat@subscribe_required.html";
             }
         } catch (BadAccessException ex) {

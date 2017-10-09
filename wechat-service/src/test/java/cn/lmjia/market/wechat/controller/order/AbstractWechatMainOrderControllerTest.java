@@ -16,7 +16,7 @@ public abstract class AbstractWechatMainOrderControllerTest<T extends WechatOrde
      */
     protected abstract T openOrderPage();
 
-    private void doOrder() throws Exception {
+    void doOrder() throws Exception {
         T page = openOrderPage();
         page.submitRandomOrder(null, null);
         PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatPaySuccess?mainOrderId=1");
