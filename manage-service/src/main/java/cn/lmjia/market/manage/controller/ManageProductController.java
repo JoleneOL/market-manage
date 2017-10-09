@@ -135,7 +135,7 @@ public class ManageProductController {
 
     @GetMapping("/manageProductImg")
     public String imgUpload(){
-        return "_imgOperator.html";
+        return "_imgOperate.html";
     }
 
     @PostMapping("/manageProductSubmit")

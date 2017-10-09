@@ -65,6 +65,7 @@ $(function () {
             auto: true,
             swf: '//cdn.lmjia.cn/webuploader/0.1.5/Uploader.swf',
             server: $('body').attr('data-upload-url'),
+            fileVal:'upload',
             pick: {
                 id: id,
                 multiple: false,

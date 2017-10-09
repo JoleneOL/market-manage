@@ -150,8 +150,9 @@ public class InitService {
         if ((environment.acceptsProfiles(CoreConfig.ProfileUnitTest) || environment.acceptsProfiles("staging"))
                 && mainGoodService.forSale(channel).isEmpty()) {
             MainGood good = mainGoodRepository.findAll((root, query, cb)
-                    -> cb.equal(MainGood.getTotalPrice(root, cb), new BigDecimal("3000"))).get(0);
-            channelService.setupChannel(good, channel);
+                    -> cb.equal(MainGood.getTotalPrice(root, cb), new BigDecimal("3000"))).stream().findFirst().orElse(null);
+            if(good != null)
+                channelService.setupChannel(good, channel);
         }
     }
 
