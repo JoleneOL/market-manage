@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en" class="main-html">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainProduct"*/-->
+<!--/*@thymesVar id="productType" type="me.jiangcai.logistics.entity.ProductType"*/-->
+<!--/*@thymesVar id="type" type="me.jiangcai.logistics.entity.ProductType"*/-->
+<!--/*@thymesVar id="propertyName" type="me.jiangcai.logistics.entity.PropertyName"*/-->
+<!--/*@thymesVar id="propertyValue" type="me.jiangcai.logistics.entity.PropertyValue"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>图片管理</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn//chosen/1.7.0/chosen.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="gray-bg" data-upload-url="/resourceUpload/webUploader" th:attr="data-upload-url=@{/resourceUpload/image}">
+<div class="wrapper wrapper-content gray-bg">
+    <form id="J_productForm" method="post"
+          action="_productManage.html" th:action="@{/manageProductSubmit}">
+        <input type="hidden" name="createNew" th:value="${currentData==null}"/>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        上传图片
+                    </div>
+                    <div class="ibox-content">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-horizontal J-property">
+                                        <div class="form-group">
+                                            <div class="col-sm-9 col-sm-offset-3">
+                                                <div class="upload-container clearfix">
+                                                    <div class="js-uploadShow view-upload-show pull-left">
+                                                        <!--没有图片就没有-->
+                                                        <img th:if="${currentData != null && currentData.mainImg != null}" res:src="${currentData.mainImg}"
+                                                             src="http://iph.href.lu/416x312?text=img3" alt="货品图片">
+                                                    </div>
+                                                    <div id="J_uploadProductImg" class="view-upload-btn pull-left"></div>
+                                                    <input name="productImgPath" style="width: 100%;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/flatpickr.min.js"></script>
+<script src="//cdn.lmjia.cn/flatpickr/3.0.6/l10n/zh.js"></script>
+<script src="manage-resource/js/content.min.js"></script>
+
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/api.js" th:remove="all"></script>
+
+<script src="manage-resource/js/imgUpload.js"></script>
+</html>
