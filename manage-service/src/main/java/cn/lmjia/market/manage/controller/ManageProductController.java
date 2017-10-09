@@ -133,11 +133,6 @@ public class ManageProductController {
         return "_productDetail.html";
     }
 
-    @GetMapping("/manageProductImg")
-    public String imgUpload(){
-        return "_imgOperate.html";
-    }
-
     @PostMapping("/manageProductSubmit")
     @Transactional
     public String edit(boolean createNew, String productName, String productBrand, String mainCategory
