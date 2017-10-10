@@ -296,6 +296,9 @@ public class InitService {
                         jdbcService.tableAlterAddColumn(MainOrder.class, "ableShip", "1");
                         jdbcService.tableAlterAddColumn(StockShiftUnit.class, "installation", "0");
                         break;
+                    case newCommission:
+                        jdbcService.tableAlterAddColumn(MainProduct.class, "commissionSource", "1");
+                        break;
                     default:
                 }
 

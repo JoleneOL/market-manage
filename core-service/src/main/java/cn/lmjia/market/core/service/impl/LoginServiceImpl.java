@@ -13,7 +13,6 @@ import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentLevel_;
 import cn.lmjia.market.core.entity.deal.Salesman;
 import cn.lmjia.market.core.entity.deal.Salesman_;
-import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.repository.ContactWayRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.repository.ManagerRepository;
@@ -61,11 +60,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -78,7 +75,6 @@ import java.util.stream.Collectors;
 public class LoginServiceImpl implements LoginService {
 
     private static final Log log = LogFactory.getLog(LoginServiceImpl.class);
-    private final Set<OrderStatus> payStatus = new HashSet<>();
     /**
      * 负责干这个事儿的，5线程应该是足够了
      */
@@ -110,13 +106,6 @@ public class LoginServiceImpl implements LoginService {
     private UserNoticeService userNoticeService;
     @Autowired
     private SystemService systemService;
-
-    public LoginServiceImpl() {
-        payStatus.add(OrderStatus.forDeliver);
-        payStatus.add(OrderStatus.forDeliverConfirm);
-        payStatus.add(OrderStatus.forInstall);
-        payStatus.add(OrderStatus.afterSale);
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -270,6 +259,8 @@ public class LoginServiceImpl implements LoginService {
             try {
                 return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
                         criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , criteriaBuilder.greaterThan(root.get(MainOrder_.goodCommissioningPriceAmountIndependent)
+                                , BigDecimal.ZERO)
                         , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
                 ))
                         .select(criteriaBuilder.count(root)))
@@ -288,6 +279,8 @@ public class LoginServiceImpl implements LoginService {
             try {
                 return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
                         criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , criteriaBuilder.greaterThan(root.get(MainOrder_.goodCommissioningPriceAmountIndependent)
+                                , BigDecimal.ZERO)
                         , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
                 ))
                         .select(criteriaBuilder.sum(root.get(MainOrder_.goodCommissioningPriceAmountIndependent))))
@@ -312,6 +305,8 @@ public class LoginServiceImpl implements LoginService {
             try {
                 return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
                         criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , criteriaBuilder.greaterThan(root.get(MainOrder_.goodCommissioningPriceAmountIndependent)
+                                , BigDecimal.ZERO)
                         , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
                         , criteriaBuilder.greaterThanOrEqualTo(root.get(MainOrder_.orderTime), startTime)
                         , criteriaBuilder.lessThanOrEqualTo(root.get(MainOrder_.orderTime), endTime)
@@ -335,6 +330,8 @@ public class LoginServiceImpl implements LoginService {
             try {
                 return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
                         criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , criteriaBuilder.greaterThan(root.get(MainOrder_.goodCommissioningPriceAmountIndependent)
+                                , BigDecimal.ZERO)
                         , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
                         , criteriaBuilder.greaterThanOrEqualTo(root.get(MainOrder_.goodCommissioningPriceAmountIndependent), regularLoginAsSingleOrderAmount)
                 ))

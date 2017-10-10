@@ -37,10 +37,18 @@ public class MainProduct extends Product {
 
     /**
      * 计划售罄日期
-     * @since  {@link cn.lmjia.market.core.Version#muPartOrder}
+     *
+     * @since {@link cn.lmjia.market.core.Version#muPartOrder}
      */
     @Column(columnDefinition = "datetime")
     private LocalDate planSellOutDate;
+
+    /**
+     * 该货品是否可以成为佣金的源头
+     *
+     * @since {@link cn.lmjia.market.core.Version#newCommission}
+     */
+    private boolean commissionSource;
 
     public Money getDepositMoney() {
         return new Money(deposit);
