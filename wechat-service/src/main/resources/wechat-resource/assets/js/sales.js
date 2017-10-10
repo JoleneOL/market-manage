@@ -83,7 +83,7 @@ $(function () {
         var statusCode = (obj.statusCode === 1) ? '<span>已成交</span>' : '<span class="text-error">未成交</span>';
         return '<a class="weui-cell weui-cell_access view-sales-item popup-btn js-openPopup"' +
             '        data-id="' + obj.id + '"' +
-            '        data-json="' + JSON.stringify(obj).replace(/"/g, "'") + '">' +
+            '        data-json="' + JSON.stringify(obj).replace(/"/g, "'") + '" href="javascript:;">' +
             '        <div class="weui-cell__bd">' +
             '            <p>' + obj.name + '</p>' +
             '            <p class="view-sales-time">' + obj.time + '</p>' +

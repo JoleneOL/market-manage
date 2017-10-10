@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jiangcai.lib.resource.Resource;
 import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.seext.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,38 @@ public class ResourceController {
     private ResourceService resourceService;
 
     /**
+     * 为tiny mce 专门设计的图片上传者
+     * <a href="https://www.tinymce.com/docs/get-started/upload-images/">More</a>
+     *
+     * @param file
+     * @return
+     * @throws JsonProcessingException
+     */
+    @RequestMapping(value = "/tinyImage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> tinyUpload(MultipartFile file) throws JsonProcessingException {
+        try {
+            try (InputStream inputStream = file.getInputStream()) {
+                String path = "watch/" + UUID.randomUUID().toString().replaceAll("-", "") + "." + FileUtils.fileExtensionName(file.getOriginalFilename());
+                resourceService.uploadResource(path, inputStream);
+                HashMap<String, Object> body = new HashMap<>();
+                body.put("location", resourceService.getResource(path).httpUrl().toString());
+                return ResponseEntity
+                        .ok()
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .body(objectMapper.writeValueAsString(body));
+            }
+        } catch (Exception ex) {
+            HashMap<String, Object> body = new HashMap<>();
+            body.put("error", ex.getLocalizedMessage());
+            return ResponseEntity
+                    .badRequest()
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .body(objectMapper.writeValueAsString(body));
+        }
+    }
+
+    /**
      * 为ckeditor而专门设置的编辑上传图片工具
      * 这里有一个很大的问题是上传以后仅仅是告知了客户端一个URL,客户端后来是否删除了 一概不得而知,所以需要一个监视的第三方工具
      * ,如果一直没有对此资源的GET请求,那么这些资源应该被删除。
@@ -51,8 +84,8 @@ public class ResourceController {
     public ResponseEntity<String> ckeditorUpload(MultipartFile upload) throws JsonProcessingException {
         try {
             try (InputStream inputStream = upload.getInputStream()) {
-                String path = "watch/" + UUID.randomUUID().toString().replaceAll("-", "") + ".png";
-//                ImageHelper.storeAsImage("png", resourceService, inputStream, path);
+                String path = "watch/" + UUID.randomUUID().toString().replaceAll("-", "") + "." + FileUtils.fileExtensionName(upload.getOriginalFilename());
+                resourceService.uploadResource(path, inputStream);
                 HashMap<String, Object> body = new HashMap<>();
                 body.put("uploaded", 1);
                 body.put("success", true);

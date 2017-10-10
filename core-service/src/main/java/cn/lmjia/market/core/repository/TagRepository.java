@@ -11,8 +11,8 @@ import java.util.List;
  * Created by helloztt on 2017-09-16.
  */
 public interface TagRepository extends JpaRepository<Tag, String>, JpaSpecificationExecutor<Tag> {
-    List<Tag> findByDisabledFalse();
+    List<Tag> findByDisabledFalseOrderByWeightDesc();
 
-    List<Tag> findByTypeAndDisabledFalse(TagType tagType);
+    List<Tag> findByTypeAndDisabledFalseOrderByWeightDesc(TagType tagType);
 
 }

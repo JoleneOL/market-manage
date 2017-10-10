@@ -128,8 +128,8 @@ public class WechatControllerTest extends WechatTestBase {
         if (good == null)
             return;
         Set<Tag> tagTypeSet = new HashSet<>();
-        tagTypeSet.addAll(tagRepository.findByTypeAndDisabledFalse(TagType.LIST));
-        tagTypeSet.addAll(tagRepository.findByTypeAndDisabledFalse(TagType.SEARCH));
+        tagTypeSet.addAll(tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.LIST));
+        tagTypeSet.addAll(tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.SEARCH));
         good.setTags(tagTypeSet);
         mainGoodRepository.save(good);
         // 尝试使用正确的密码登录吧
@@ -139,11 +139,11 @@ public class WechatControllerTest extends WechatTestBase {
         MallIndexPage indexPage = initPage(MallIndexPage.class);
 
         //校验滚图标签
-        indexPage.validatePageWithImgTag(tagRepository.findByTypeAndDisabledFalse(TagType.IMG));
+        indexPage.validatePageWithImgTag(tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.IMG));
         //校验分类
-        indexPage.validatePageWithSearch(tagRepository.findByTypeAndDisabledFalse(TagType.SEARCH));
+        indexPage.validatePageWithSearch(tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.SEARCH));
         //校验列表
-        indexPage.validatePageWithList(tagRepository.findByTypeAndDisabledFalse(TagType.LIST), good);
+        indexPage.validatePageWithList(tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.LIST), good);
 
         //到搜索页面去
         indexPage.clickSearch();
@@ -155,7 +155,7 @@ public class WechatControllerTest extends WechatTestBase {
         driver.get("http://localhost/wechatIndex");
         indexPage = initPage(MallIndexPage.class);
         //随便点一个分类标签
-        Tag searchTag = tagRepository.findByTypeAndDisabledFalse(TagType.SEARCH).stream()
+        Tag searchTag = tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.SEARCH).stream()
                 .max(Comparator.comparing(Tag::getName)).orElse(null);
         assertThat(searchTag).isNotNull();
         indexPage.clickTagSearch(searchTag);
