@@ -231,12 +231,12 @@ public class ReadServiceImpl implements ReadService {
 
     @Override
     public List<Tag> allEnabledTag() {
-        return tagRepository.findByDisabledFalse();
+        return tagRepository.findByDisabledFalseOrderByWeightDesc();
     }
 
     @Override
     public List<Tag> allTagByType(int tagType) {
-        return tagRepository.findByTypeAndDisabledFalse(TagType.values()[tagType]);
+        return tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.values()[tagType]);
     }
 
 }

@@ -60,7 +60,7 @@ public class WechatMallOrderControllerTest extends WechatTestBase {
      */
     public MallGoodsDetailPage goodsDetailFormIndex() throws IOException, InterruptedException {
         //先看看有没有商城列表的标签
-        List<Tag> listTags = tagRepository.findByTypeAndDisabledFalse(TagType.LIST);
+        List<Tag> listTags = tagRepository.findByTypeAndDisabledFalseOrderByWeightDesc(TagType.LIST);
         if(CollectionUtils.isEmpty(listTags)){
             //如果没有就造一个
             listTags = Arrays.asList(newRandomTag(TagType.LIST));
