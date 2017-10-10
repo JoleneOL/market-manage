@@ -151,7 +151,7 @@ public class InitService {
                 && mainGoodService.forSale(channel).isEmpty()) {
             MainGood good = mainGoodRepository.findAll((root, query, cb)
                     -> cb.equal(MainGood.getTotalPrice(root, cb), new BigDecimal("3000"))).stream().findFirst().orElse(null);
-            if(good != null)
+            if (good != null)
                 channelService.setupChannel(good, channel);
         }
     }
@@ -508,6 +508,9 @@ public class InitService {
                                 statement.execute("UPDATE `PRODUCT` SET `NAME`='台式净水机' WHERE `NAME`='台式净水器'");
                             }
                         });
+                        break;
+                    case deleteProduct:
+                        jdbcService.tableAlterAddColumn(Product.class, "deleted", "0");
                         break;
                     case newCommission:
                         jdbcService.tableAlterAddColumn(MainProduct.class, "commissionSource", "1");
