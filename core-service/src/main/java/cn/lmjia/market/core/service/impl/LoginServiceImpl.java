@@ -19,6 +19,7 @@ import cn.lmjia.market.core.repository.ManagerRepository;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.WechatNoticeHelper;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
@@ -105,6 +106,8 @@ public class LoginServiceImpl implements LoginService {
     private WechatNoticeHelper wechatNoticeHelper;
     @Autowired
     private UserNoticeService userNoticeService;
+    @Autowired
+    private SystemService systemService;
 
     public LoginServiceImpl() {
         payStatus.add(OrderStatus.forDeliver);
@@ -253,6 +256,11 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    public boolean isRegularLogin(Login login, MainOrder order) {
+        return false;
+    }
+
+    @Override
     public boolean isRegularLogin(Login login) {
         if (login == null)
             return false;
@@ -262,22 +270,30 @@ public class LoginServiceImpl implements LoginService {
 //        if (customerRepository.countByLoginAndSuccessOrderTrue(login) > 0)
 //            return true;
 
+        if (!systemService.isNonAgentAbleToGainCommission())
+            // 若非代理商没有拥有获得销售奖励的资格，则直接取消
+            return false;
+
         if (login.isSuccessOrder())
             return true;
-        // 订单是否存在
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-        Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
-        try {
-            return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
-                    criteriaBuilder.equal(root.get("orderBy"), login)
-                    , root.get("orderStatus").in(payStatus)
-            ))
-                    .select(criteriaBuilder.count(root)))
-                    .getSingleResult() > 0;
-        } catch (NoResultException ignored) {
-            return false;
+        // 订单是否存在
+        if (systemService.isRegularLoginAsAnyOrder()) {
+            CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+            Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+            try {
+                return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get("orderBy"), login)
+                        , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
+                ))
+                        .select(criteriaBuilder.count(root)))
+                        .getSingleResult() > 0;
+            } catch (NoResultException ignored) {
+                return false;
+            }
         }
+
+        return false;
     }
 
     @Override

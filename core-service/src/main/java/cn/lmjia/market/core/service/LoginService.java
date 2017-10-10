@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.util.Utils;
@@ -205,6 +206,13 @@ public interface LoginService extends UserDetailsService {
      */
     @Transactional(readOnly = true)
     boolean isRegularLogin(Login login);
+
+    /**
+     * @param login 身份
+     * @param order 最近刚下的订单
+     * @return 是否可以成为正式用户(爱心天使)
+     */
+    boolean isRegularLogin(Login login, MainOrder order);
 
     /**
      * 解除登录的微信号绑定

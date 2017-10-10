@@ -1,17 +1,12 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
-import cn.lmjia.market.core.service.LoginService;
-import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
-import org.apache.commons.lang.StringUtils;
+import me.jiangcai.lib.sys.service.SystemStringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author CJ
@@ -23,6 +18,8 @@ public class SystemServiceImpl implements SystemService {
     private Environment environment;
     @Autowired
     private AgentLevelRepository agentLevelRepository;
+    @Autowired
+    private SystemStringService systemStringService;
 
     @Override
     public String toUrl(String uri) {
@@ -31,9 +28,28 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public boolean allowWithdrawDisplay(Login login) {
-        if(login == null){
-            return false;
-        }
-        return agentLevelRepository.findByLogin(login).size()!=0;
+        return login != null && agentLevelRepository.findByLogin(login).size() != 0;
+    }
+
+    @Override
+    public void updateNonAgentAbleToGainCommission(boolean value) {
+        systemStringService.updateSystemString("market.NonAgentAbleToGainCommission", value);
+    }
+
+    @Override
+    public boolean isNonAgentAbleToGainCommission() {
+        return systemStringService.getCustomSystemString("market.NonAgentAbleToGainCommission"
+                , "market.NonAgentAbleToGainCommission.comment", true, Boolean.class, true);
+    }
+
+    @Override
+    public void updateRegularLoginAsAnyOrder(boolean value) {
+        systemStringService.updateSystemString("market.RegularLoginAsAnyOrder", value);
+    }
+
+    @Override
+    public boolean isRegularLoginAsAnyOrder() {
+        return systemStringService.getCustomSystemString("market.RegularLoginAsAnyOrder"
+                , "market.RegularLoginAsAnyOrder.comment", true, Boolean.class, true);
     }
 }

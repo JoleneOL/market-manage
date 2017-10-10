@@ -9,6 +9,7 @@ import cn.lmjia.market.core.event.MainOrderFinishEvent;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.CustomerService;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.cache.LoginRelationCacheService;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import org.apache.commons.logging.Log;
@@ -29,6 +30,8 @@ public class CustomerServiceImpl implements CustomerService {
     private LoginRepository loginRepository;
     @Autowired
     private LoginRelationCacheService loginRelationCacheService;
+    @Autowired
+    private LoginService loginService;
 
     @Override
     public Customer getNoNullCustomer(String name, String mobile, AgentLevel agentLevel, Login recommendBy) {
@@ -63,12 +66,14 @@ public class CustomerServiceImpl implements CustomerService {
 //        Customer customer = mainOrder.getCustomer();
         Login login = loginRepository.getOne(mainOrder.getOrderBy().getId());
         if (!login.isSuccessOrder()) {
-            log.debug(login + "首付付费成功，成为【爱心天使】");
-            login.setSuccessOrder(true);
-            loginRelationCacheService.loginFirstOrder(login);
-            // 如果它有推荐则产生改变
-            if (login.getGuideUser() != null)
-                return new LoginRelationChangedEvent(login.getGuideUser());
+            if (loginService.isRegularLogin(login, mainOrder)) {
+                log.debug(login + "首付付费成功，成为【爱心天使】");
+                login.setSuccessOrder(true);
+                loginRelationCacheService.loginFirstOrder(login);
+                // 如果它有推荐则产生改变
+                if (login.getGuideUser() != null)
+                    return new LoginRelationChangedEvent(login.getGuideUser());
+            }
         }
         return null;
     }
