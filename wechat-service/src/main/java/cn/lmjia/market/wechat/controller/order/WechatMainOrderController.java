@@ -7,6 +7,8 @@ import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
+import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.MainOrderService;
@@ -18,6 +20,7 @@ import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.trj.InvalidAuthorisingException;
 import cn.lmjia.market.core.trj.TRJEnhanceConfig;
 import cn.lmjia.market.core.trj.TRJService;
+import com.alibaba.fastjson.JSONObject;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.payment.chanpay.entity.ChanpayPayOrder;
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -119,10 +123,40 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "wechat@orderPlace.html";
     }
 
+//    @GetMapping("/_pay/{id}")
+//    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
+//            throws SystemMaintainException {
+//        return payOrder(openId, request, from(null, id));
+//    }
+
+    /**
+     * 微信支付
+     *
+     * @param orderId           订单编号，注意！！！
+     * @param orderPKId         订单主键，注意！！！
+     * @param channelId         渠道
+     * @param authorising       按揭码
+     * @param idNumber          身份证
+     * @param installmentHuabai 是否使用花呗支付
+     * @return 支付页面
+     * @throws SystemMaintainException     系统维护异常
+     * @throws InvalidAuthorisingException 按揭码校验异常
+     */
     @GetMapping("/wechatOrderPay")
-    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId)
-            throws SystemMaintainException {
-        final MainOrder order = from(orderId, null);
+    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, String orderId, Long orderPKId
+            , Long channelId, String authorising, String idNumber, Boolean installmentHuabai)
+            throws SystemMaintainException, InvalidAuthorisingException {
+        final MainOrder order = from(orderId, orderPKId);
+        if (channelId != null) {
+            Channel channel = channelService.get(channelId);
+            //        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))
+            if (channel.getName().equals(TRJService.ChannelName)) {
+                return payAssistanceService.payOrder(openId, request, order, authorising, idNumber);
+            }
+        }
+        if (installmentHuabai != null) {
+            order.setHuabei(installmentHuabai);
+        }
         return payAssistanceService.payOrder(openId, request, order, order.isHuabei());
     }
 
@@ -139,21 +173,47 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "wechat@orderDetail.html";
     }
 
+    /**
+     * 微信下单
+     *
+     * @param name              客户姓名
+     * @param gender            客户性别
+     * @param address           地址
+     * @param mobile            手机号
+     * @param activityCode      可选的按揭识别码
+     * @param channelId         渠道
+     * @param authorising       按揭码
+     * @param idNumber          身份证
+     * @param installmentHuabai 是否使用花呗支付
+     * @param goods             下单商品
+     * @return 创建订单结果
+     * @throws MainGoodLowStockException   库存不足异常
+     * @throws InvalidAuthorisingException 按揭码校验异常
+     */
     // name=%E5%A7%93%E5%90%8D&age=99&gender=2
     // &address=%E6%B5%99%E6%B1%9F%E7%9C%81+%E6%9D%AD%E5%B7%9E%E5%B8%82+%E6%BB%A8%E6%B1%9F%E5%8C%BA
     // &fullAddress=%E6%B1%9F%E7%95%94%E6%99%95%E5%95%A6&mobile=18606509616&goodId=2&leasedType=hzts02&amount=0&activityCode=xzs&recommend=2
     @PostMapping("/wechatOrder")
+    @ResponseBody
     @Transactional
-    public ModelAndView newOrder(Long salesAchievementId, @OpenId String openId, HttpServletRequest request
-            , String name, Gender gender
+    public ApiResult newOrder(@OpenId String openId, HttpServletRequest request, String name, Gender gender
+            , Long salesAchievementId
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
-            , String authorising, String idNumber, boolean installmentHuabai, String[] goods)
-            throws SystemMaintainException, InvalidAuthorisingException {
+            , String authorising, String idNumber, boolean installmentHuabai
+            , String[] goods,@RequestParam(name = "goods[]",required = false) String[] goodsArray)
+            throws MainGoodLowStockException, InvalidAuthorisingException {
         int age = 20;
-        MainGoodsAndAmounts amounts = MainGoodsAndAmounts.ofArray(goods);
+        MainGoodsAndAmounts amounts = null;
+        if(goods != null){
+            amounts = MainGoodsAndAmounts.ofArray(goods);
+        }else if(goodsArray != null){
+            amounts = MainGoodsAndAmounts.ofArray(goodsArray);
+        }
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,
                 activityCode, channelId, amounts);
+        JSONObject result = new JSONObject();
+        result.put("id", order.getId());
         if (salesAchievementId != null) {
             SalesAchievement achievement = salesmanService.getAchievement(salesAchievementId);
             achievement.setCurrentRate(achievement.getWhose().getSalesRate());
@@ -161,15 +221,14 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             achievement.setMainOrder(order);
         }
         if (channelId != null) {
-            Channel channel = channelService.get(channelId);
-            //        if (!StringUtils.isEmpty(authorising) && !StringUtils.isEmpty(idNumber))
-            if (channel.getName().equals(TRJService.ChannelName)) {
-                return payAssistanceService.payOrder(openId, request, order, authorising, idNumber);
-            }
+            //校验按揭码
+            payAssistanceService.checkAuthorising(authorising, idNumber);
+            result.put("channelId", channelId);
+            result.put("idNumber", idNumber);
+            result.put("authorising", authorising);
         }
-        order.setHuabei(installmentHuabai);
-
-        return payAssistanceService.payOrder(openId, request, order, installmentHuabai);
+        result.put("installmentHuabai", installmentHuabai);
+        return ApiResult.withCode(200, result);
     }
 
     @GetMapping("/_pay/paying")

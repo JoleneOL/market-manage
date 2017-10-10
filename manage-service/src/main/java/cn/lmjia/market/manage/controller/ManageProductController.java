@@ -9,7 +9,13 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.seext.FileUtils;
+import me.jiangcai.logistics.entity.PropertyName;
+import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.haier.HaierSupplier;
+import me.jiangcai.logistics.repository.ProductTypeRepository;
+import me.jiangcai.logistics.repository.PropertyNameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,10 +36,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 货品管理
@@ -52,6 +61,14 @@ public class ManageProductController {
     private MainProductRepository mainProductRepository;
     @Autowired
     private HaierSupplier haierSupplier;
+    @Autowired
+    private MainOrderService mainOrderService;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
+    @Autowired
+    private PropertyNameRepository propertyNameRepository;
+    @Autowired
+    private ResourceService resourceService;
 
     // 禁用和恢复
     @DeleteMapping("/products")
@@ -99,7 +116,8 @@ public class ManageProductController {
     }
 
     @GetMapping("/manageProductAdd")
-    public String indexForCreate() {
+    public String indexForCreate(@RequestParam Long productTypeId, Model model) {
+        model.addAttribute("productType", productTypeRepository.findOne(productTypeId));
         return "_productOperate.html";
     }
 
@@ -121,7 +139,8 @@ public class ManageProductController {
             , @RequestParam("type") String code, String SKU, BigDecimal productPrice, String unit, BigDecimal length
             , BigDecimal width, BigDecimal height, BigDecimal weight, BigDecimal serviceCharge, String productSummary
             , String productDetail, boolean installation
-            , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) {
+            , Long productType, String propertyNameValue, String productImgPath
+            , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) throws IOException {
         MainProduct product;
         if (createNew) {
             if (StringUtils.isEmpty(code))
@@ -130,7 +149,10 @@ public class ManageProductController {
                 throw new IllegalArgumentException("");
             if (mainProductRepository.findOne(code) != null)
                 throw new IllegalArgumentException("");
+            if (productTypeRepository.findOne(productType) == null)
+                throw new IllegalArgumentException("");
             product = new MainProduct();
+            product.setProductType(productTypeRepository.findOne(productType));
             product.setCode(code);
         } else {
             product = mainProductRepository.getOne(code);
@@ -148,11 +170,35 @@ public class ManageProductController {
         product.setVolumeHeight(height);
         product.setWeight(weight);
         product.setInstall(serviceCharge);
+        //如果计划售罄时间有改动，就要重新计算今日限购数量
+        boolean isCleanProductStock = (planSellOutDate != null && !planSellOutDate.equals(product.getPlanSellOutDate()))
+                || (product.getPlanSellOutDate() != null && !product.getPlanSellOutDate().equals(planSellOutDate));
         product.setPlanSellOutDate(planSellOutDate);
         product.setDescription(StringUtils.isEmpty(productSummary) ? null : productSummary);
         product.setRichDescription(StringUtils.isEmpty(productDetail) ? null : productDetail);
+        // 设置货品规格及规格值
+        Map<PropertyName, String> propertyNameValues = null;
+        if (!StringUtils.isEmpty(propertyNameValue)) {
+            propertyNameValues = new HashMap<>();
+            for (String nameValue : propertyNameValue.split(",")) {
+                PropertyName propertyName = propertyNameRepository.findOne(Long.valueOf(nameValue.split(":")[0]));
+                String propertyValue = nameValue.split(":")[1];
+                propertyNameValues.put(propertyName, propertyValue);
+            }
+        }
+        product.setPropertyNameValues(propertyNameValues);
+        product = mainProductRepository.saveAndFlush(product);
 
         mainProductRepository.save(product);
+        if(isCleanProductStock){
+            mainOrderService.cleanProductStock(product);
+        }
+        //转存资源
+        if (!StringUtils.isEmpty(productImgPath) && productImgPath.length() > 1) {
+            String productImgResource = "product/" + product.getCode() + "." + FileUtils.fileExtensionName(productImgPath);
+            resourceService.moveResource(productImgResource, productImgPath);
+            product.setMainImg(productImgResource);
+        }
         return "redirect:/manageProduct";
     }
 

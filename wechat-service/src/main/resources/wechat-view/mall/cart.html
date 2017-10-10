@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<!--/*@thymesVar id="goodsMap" type="java.util.Map<cn.lmjia.market.core.entity.MainGood,java.lang.Long>"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>购物车</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
+
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+</head>
+<body class="bg-gray cart-body">
+<div class="mall-toolbar clearfix">
+    <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
+    <div class="mall-toolbar-items">
+        <a href="orderList.html" th:href="@{/wechatMallOrderList}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
+    </div>
+</div>
+<div class="mall-extra-toolbar ">
+    <div class="toolbar-wrap clearfix">
+        <div class="toolbar-checkbox">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check" id="J_allCheck">
+                <i class="weui-icon-checked"></i>全选
+            </label>
+        </div>
+        <div class="toolbar-edit">
+            <button type="button" class="js-editBtn">编辑</button>
+        </div>
+    </div>
+</div>
+<div class="mall-cart-list" >
+    <div class="cart-group" data-goods-id="0" data-goods-price="3000"
+         th:each="goods:${goodsMap.keySet()}"
+         th:attr="data-goods-id=${goods.id},data-goods-price=${goods.totalPrice}">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check js-checkGoods">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img res:src="${goods.product.mainImg}" src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name" th:text="${goods.product.name}">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">
+                <span th:each="property:${goods.product.specPropertyNameValues.keySet()}"><th:block th:text="|${property.name}:${goods.product.getPropertyNameValues().get(property)}|">颜色:红色</th:block></span>
+                <span th:remove="all">颜色:红色</span>
+            </p>
+            <div class="edit-quantity">
+                <button class="btn btn-minus" disabled
+                        th:classappend="${(goodsMap.get(goods) >= 1 && goodsMap.get(goods) <= goods.product.stock) ? '' :'disabled'}"
+                        th:disabled="${!(goodsMap.get(goods) >= 1 && goodsMap.get(goods) <= goods.product.stock)}">&minus;</button>
+                <input type="tel" max="3" min="1" value="2" class="btn-value" th:value="${goodsMap.get(goods)}"
+                       th:attr="max=${goods.product.stock}">
+                <button class="btn btn-plus">&plus;</button>
+            </div>
+            <p class="goods-stock">库存量&nbsp;&nbsp;<th:block th:text="${goods.product.stock}">3</th:block><th:block th:text="${goods.product.unit}">台</th:block></p>
+            <div class="goods-info">
+                <div class="goods-price">￥<span th:text="${goods.totalPrice}">3000</span></div>
+                <div class="goods-bought">x<span th:text="${goodsMap.get(goods)}">1</span></div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button" class="js-deleteCart">删除</button>
+        </div>
+    </div>
+    <div class="cart-group" data-goods-id="1" data-goods-price="9800"  th:remove="all">
+        <div class="checked-box">
+            <label>
+                <input type="checkbox" name="checkbox" class="weui-check js-checkGoods">
+                <i class="weui-icon-checked"></i>
+            </label>
+        </div>
+        <div class="goods-image">
+            <img src="https://gw.alicdn.com/bao/uploaded/i3/1767251379/TB2xiJJbA7OyuJjSspbXXXZuXXa_!!1767251379.jpg_200x200q50s150.jpg_.webp">
+        </div>
+        <div class="goods-box">
+            <h4 class="goods-name">Ricoh/理光 GR II GRII数码相机GR2代卡片机关联G7X grii全新原装</h4>
+            <p class="goods-describe">GRII 国行【全新+保修5年】预售;官方标配</p>
+            <div class="edit-quantity">
+                <button class="btn btn-minus">&minus;</button>
+                <input type="tel" max="5" min="1" value="3" class="btn-value">
+                <button class="btn btn-plus">&plus;</button>
+            </div>
+            <p class="goods-stock">库存量&nbsp;&nbsp;5台</p>
+            <div class="goods-info">
+                <div class="goods-price">￥9800</div>
+                <div class="goods-bought">x3</div>
+            </div>
+        </div>
+        <div class="delete-btn">
+            <button type="button" class="js-deleteCart">删除</button>
+        </div>
+    </div>
+</div>
+<div class="cart-footer">
+    <div class="cart-total"><span class="cart-total_title">合计：</span><span class="cart-total_number">￥<i id="J_orderTotal">0</i></span></div>
+    <div class="settlement"><button type="button" id="J_settlementBtn">结算</button></div>
+</div>
+<form action="orderPlace.html" th:action="@{/mallOrder}" method="post" id="J_orderPlace">
+    <input type="hidden" name="order">
+</form>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
+<script src="../../wechat-resource/assets/js/mall/cart.js?v=2"></script>
+</html>

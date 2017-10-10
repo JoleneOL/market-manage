@@ -52,7 +52,7 @@ import java.util.function.BiFunction;
 /**
  * @author CJ
  */
-@Service
+@Service("stockService")
 public class StockServiceImpl implements StockService {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")

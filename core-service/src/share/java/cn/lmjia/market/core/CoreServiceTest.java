@@ -2,15 +2,16 @@ package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
-import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood;
-import cn.lmjia.market.core.entity.MainOrder;
-import cn.lmjia.market.core.entity.MainProduct;
-import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.*;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.entity.support.TagType;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.OrderRequest;
+import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
+import cn.lmjia.market.core.repository.TagRepository;
+import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
@@ -27,6 +28,7 @@ import me.jiangcai.lib.seext.EnumUtils;
 import me.jiangcai.lib.test.SpringWebTest;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSupplier;
+import me.jiangcai.logistics.StockService;
 import me.jiangcai.logistics.Thing;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.Product;
@@ -59,11 +61,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -92,7 +90,13 @@ public abstract class CoreServiceTest extends SpringWebTest {
     @Autowired
     private MainOrderService mainOrderService;
     @Autowired
+    private MainGoodRepository mainGoodRepository;
+    @Autowired
+    private StockService stockService;
+    @Autowired
     private QuickPayBean quickPayBean;
+    @Autowired
+    private CustomerRepository customerRepository;
     @Autowired
     private QuickTradeService quickTradeService;
     private Login allRunWith;
@@ -106,6 +110,8 @@ public abstract class CoreServiceTest extends SpringWebTest {
     private MainGoodService mainGoodService;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private TagRepository tagRepository;
     @Autowired
     private LogisticsService logisticsService;
     //</editor-fold>
@@ -319,21 +325,49 @@ public abstract class CoreServiceTest extends SpringWebTest {
      * @return 新增的随机订单
      */
     protected MainOrder newRandomOrderFor(Login who, Login recommend, String mobile) {
+        try {
+            return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
+                    , mobile, 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
+                    , randomAddress()
+                    , randomMainOrderAmountSet(), random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+        } catch (MainGoodLowStockException e) {
+            e.printStackTrace();
+        }
+        //单元测试时需要保证是由返回数据的
+        return null;
+    }
+
+    /**
+     * 对指定的商品下单,用于限购测试，需要抛出异常
+     *
+     * @param who       发起者
+     * @param recommend 推荐者
+     * @param mobile    客户手机号码
+     * @param amounts   商品及下单数
+     * @return
+     */
+    protected MainOrder newRandomOrderFor(Login who, Login recommend, String mobile, Map<MainGood, Integer> amounts) throws MainGoodLowStockException {
         return mainOrderService.newOrder(who, recommend, "客户" + RandomStringUtils.randomAlphabetic(6)
                 , mobile, 20 + random.nextInt(50), EnumUtils.randomEnum(Gender.class)
                 , randomAddress()
-                , randomMainOrderAmountSet(), random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
+                , amounts, random.nextBoolean() ? null : UUID.randomUUID().toString().replaceAll("-", ""));
     }
 
     private Map<MainGood, Integer> randomMainOrderAmountSet() {
         Map<MainGood, Integer> data = new HashMap<>();
         int count = 2 + random.nextInt(2);
-        while (count-- > 0) {
-            final MainGood nextGood = mainGoodService.forSale().stream()
-                    .filter(good -> !data.keySet().contains(good))
+        List<MainGood> forSaleGoodList = mainGoodService.forSale();
+        //计算货品可用库存
+        mainOrderService.calculateGoodStock(forSaleGoodList);
+        //保证 订单中至少有1个 非空的货品
+        // TODO: 2017/8/27 如果所有货品库存都为0，那就死掉了，考虑什么做法比较妥当
+        while (count-- > 0 || data.size() == 0) {
+            MainGood randomGood = forSaleGoodList.stream()
+                    .filter(good -> !data.keySet().contains(good) && good.getProduct() != null && good.getProduct().getStock() > 0)
                     .max(new RandomComparator()).orElse(null);
-            if (nextGood != null)
-                data.put(nextGood, 1 + random.nextInt(10));
+            if (randomGood != null) {
+                data.put(randomGood, random.nextInt(randomGood.getProduct().getStock()));
+            }
         }
         return data;
     }
@@ -512,5 +546,50 @@ public abstract class CoreServiceTest extends SpringWebTest {
                     depot.setName(RandomStringUtils.randomAlphabetic(5) + "仓库名字");
                     return depotRepository.saveAndFlush(depot);
                 });
+    }
+
+
+    /**
+     * 对某件货品，根据期望限购数量计算需要设置的计划售罄日期
+     * <p>
+     * 限购数量[expectStock] = (当前仓库总数[totalUsageStock] - 冻结库存数[lockedStock] + 今日下单数[todayStock] )/ diffDay
+     * - 今日下单数[todayStock]
+     *
+     * @param product
+     * @param expectStock
+     * @return
+     */
+    protected LocalDate calculatePlanSellOutDate(Product product, int expectStock) {
+
+        int totalUsageStock = stockService.usableStockTotal(product);
+        int lockedStock = mainOrderService.sumProductNum(product);
+        LocalDateTime todayOffsetTime = mainOrderService.getTodayOffsetTime();
+        int todayStock = mainOrderService.sumProductNum(product, todayOffsetTime, null, null);
+        int diffDay = (totalUsageStock - lockedStock + todayStock) / (expectStock + todayStock);
+
+        //校验一遍，如果和预期不一致，就返回空
+        int realStock = (totalUsageStock - lockedStock + todayStock) / diffDay - todayStock;
+        if (realStock == expectStock) {
+            return todayOffsetTime.plusDays(diffDay - 1).toLocalDate();
+        } else {
+            return null;
+        }
+    }
+
+    protected Tag newRandomTag() throws IOException {
+        return newRandomTag(TagType.SEARCH);
+    }
+
+    /**
+     * 使用MVC方式
+     * @param tagType
+     * @return
+     */
+    protected Tag newRandomTag(TagType tagType) throws IOException {
+        Tag tag = new Tag();
+        tag.setName(RandomStringUtils.randomAlphabetic(10) + "标签");
+        tag.setIcon(newRandomImagePath());
+        tag.setType(tagType);
+        return tagRepository.saveAndFlush(tag);
     }
 }

@@ -23,4 +23,8 @@ public enum Version {
      * 促销人员体系
      */
     salesman,
+    /**
+     * 商城
+     */
+    mall,
 }

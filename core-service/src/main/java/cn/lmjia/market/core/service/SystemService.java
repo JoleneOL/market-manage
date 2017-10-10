@@ -38,9 +38,17 @@ public interface SystemService {
      */
     String wechatOrderURi = "/wechatOrder";
     /**
+     * 支付URI
+     */
+    String wechatPayOrderURi = "/wechatOrderPay";
+    /**
      * 下单URI
      */
     String wechatOrderURiHB = "/wechatOrderHB";
+    /**
+     * 商城下单URI
+     */
+    String mallOrderURi = "/mallOrder";
 
     /**
      * @return 代理体系的层次数量

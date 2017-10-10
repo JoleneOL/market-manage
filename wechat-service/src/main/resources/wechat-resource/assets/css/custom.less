@@ -1303,6 +1303,10 @@
   height: 100% !important;
 }
 
+#J_upgradeRules {
+  z-index: 501;
+}
+
 .view-order-wrap {
   padding-top: 8px;
   background: #efeff4;
@@ -1628,6 +1632,17 @@
     -webkit-flex: 2;
     flex: 2;
   }
+  .view-refresh {
+    position: absolute;
+    right: 15px;
+    top: 14px;
+
+    color: @brand-success;
+  }
+  .view-refresh i {
+    font-size: 20px;
+    margin-right: 5px;
+  }
 }
 
 .view-goods_footer {
@@ -1769,5 +1784,21 @@
   .weui-popup__overlay {
     z-index: 10;
     opacity: 1;
+  }
+}
+
+.sold-out {
+  ::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, .1);
+    background-image: url("../img/sold-out.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50%;
   }
 }

@@ -243,6 +243,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
         return cb.and(
                 cb.notEqual(statusPath, OrderStatus.EMPTY)
                 , cb.notEqual(statusPath, OrderStatus.forPay)
+                , cb.notEqual(statusPath, OrderStatus.close)
         );
     }
 
@@ -436,7 +437,7 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
     }
 
     public boolean isPay() {
-        return orderStatus != OrderStatus.EMPTY && orderStatus != OrderStatus.forPay;
+        return orderStatus != OrderStatus.EMPTY && orderStatus != OrderStatus.forPay && orderStatus != OrderStatus.close;
     }
 
     @Override

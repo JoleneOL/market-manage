@@ -2,6 +2,7 @@ package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
@@ -11,6 +12,7 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.ChannelService;
+import cn.lmjia.market.core.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
@@ -33,7 +35,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 商品管理
@@ -52,6 +56,8 @@ public class ManageGoodController {
     private MainProductRepository mainProductRepository;
     @Autowired
     private ChannelService channelService;
+    @Autowired
+    private TagService tagService;
 
     // 禁用和恢复
     @PutMapping("/goods/{id}/off")
@@ -87,7 +93,7 @@ public class ManageGoodController {
 
     @PostMapping("/manageGoodSubmit")
     @Transactional
-    public String edit(Long id, String product, Long channel) {
+    public String edit(Long id, String product, Long channel, String[] tag) {
         MainGood good;
         if (id != null)
             good = mainGoodRepository.getOne(id);
@@ -109,6 +115,16 @@ public class ManageGoodController {
             else
                 good.setChannel(null);
         }
+
+        Set<Tag> tags = null;
+        if (tag != null && tag.length > 0) {
+            tags = new HashSet<>();
+            for (String tagName : tag) {
+                tags.add(tagService.save(tagName));
+            }
+        }
+        good.setTags(tags);
+
         if (id == null)
             mainGoodRepository.save(good);
 

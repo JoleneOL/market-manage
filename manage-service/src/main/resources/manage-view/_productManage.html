@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="productType" type="me.jiangcai.logistics.entity.ProductType"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -32,7 +33,14 @@
             <div class="col-md-12">
                 <div class="form-inline">
                     <div>
-                        <a class="btn btn-primary btn-sm" href="_productOperate.html" th:href="@{/manageProductAdd}">新增货品</a>
+                        <select id="J-productType" class="form-control" name="productType">
+                            <option value="1"
+                                    th:each="productType:${@readService.allProductType()}"
+                                    th:value="${productType.id}" th:text="${productType.name}">
+                                净水器
+                            </option>
+                        </select>
+                        <a class="btn btn-primary btn-sm" id="J_AddProduct"  data-href="_productOperate.html" th:attr="data-href=@{/manageProductAdd}">新增货品</a>
                     </div>
                 </div>
             </div>

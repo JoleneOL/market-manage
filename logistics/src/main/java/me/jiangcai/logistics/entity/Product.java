@@ -4,14 +4,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 /**
  * 货品
@@ -93,6 +97,23 @@ public class Product {
      */
     @Column(scale = 2, precision = 12)
     private BigDecimal weight;
+    /**
+     * todo 这里应该将主图压缩成小图和中图
+     * 货品主图资源路径
+     * {@link me.jiangcai.lib.resource.service.ResourceService#getResource(String)}
+     */
+    @Column(length = 60)
+    private String mainImg;
+    /**
+     * 货品类型
+     */
+    @ManyToOne
+    private ProductType productType;
+    /**
+     * 属性值
+     */
+    @ElementCollection
+    private Map<PropertyName, String> propertyNameValues;
 
     @Override
     public boolean equals(Object o) {
@@ -107,10 +128,37 @@ public class Product {
         return Objects.hash(code);
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "enable=" + enable +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", SKU='" + SKU + '\'' +
+                ", productType=" + productType +
+                '}';
+    }
+
     /**
      * @return 体积，单位mm'3
      */
     public BigDecimal getVolume() {
         return getVolumeLength().multiply(getVolumeWidth()).multiply(getVolumeHeight());
+    }
+
+    private Map<PropertyName, String> getPropertyNameValuesBySpec(boolean spec) {
+        Map<PropertyName, String> propertyNameStringMap = new TreeMap<>(
+                (o1, o2) -> o2.getWeight() - o1.getWeight());
+        propertyNameValues.keySet().stream().filter(p -> p.isSpec() == spec)
+                .forEach(p -> propertyNameStringMap.put(p, propertyNameValues.get(p)));
+        return propertyNameStringMap;
+    }
+
+    public Map<PropertyName, String> getSpecPropertyNameValues() {
+        return getPropertyNameValuesBySpec(true);
+    }
+
+    public Map<PropertyName, String> getNoSpecPropertyNameValues() {
+        return getPropertyNameValuesBySpec(false);
     }
 }

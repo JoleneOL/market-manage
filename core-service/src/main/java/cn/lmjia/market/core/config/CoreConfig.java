@@ -37,6 +37,7 @@ import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 @ComponentScan({
         "cn.lmjia.market.core.service"
         , "cn.lmjia.market.core.converter"
+        , "cn.lmjia.market.core.aop"
 })
 @EnableJpaRepositories("cn.lmjia.market.core.repository")
 public class CoreConfig extends WeixinWebSpringConfig implements WebModule {

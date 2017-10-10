@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="tag" type="java.lang.String"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>分类详情</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+</head>
+<body class="bg-gray" data-detail-url="goodsDetail.html" th:attr="data-detail-url=@{/wechatSearch/goodsDetail/}">
+<div class="mall-toolbar clearfix js-extra-h">
+    <h3><a href="index.html" th:href="@{/wechatIndex}">利美家</a></h3>
+    <div class="mall-toolbar-items">
+        <a href="orderList.html" th:href="@{/wechatMallOrderList}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
+        <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
+            <span class="cart-badge">0</span>
+        </a>
+    </div>
+</div>
+<form action="cart.html" th:action="@{/wechatSearch/goodsList}" method="post" id="J_cartForm">
+    <input type="hidden" name="order">
+</form>
+<div class="mall-filter-toolbar js-extra-h">
+    <!-- active -->
+    <div class="filter-item filter-drop-down filter-tag"><span
+            th:text="${(tag == null || tag.equalsIgnoreCase('all')) ? '全部' : tag}">全部</span></div>
+    <div class="filter-item filter-drop-down filter-prop"><span>全部</span></div>
+    <!--<div class="filter-item"><span>销量优先</span></div>-->
+    <!-- arrow-down / arrow-up -->
+    <div class="filter-item filter-sort-price arrow-down"><span>价格</span></div>
+</div>
+<div class="drop-down">
+    <ul class="drop-down-wrap js-tagDrop">
+        <li class="active" th:class="${(tag == null || tag.equalsIgnoreCase('all')) ? 'active' : ''}">全部</li>
+        <li th:each="searchTag:${@readService.allTagByType(0)}"
+            th:attr="data-id=${searchTag.name}"
+            th:text="${searchTag.name}"
+            th:class="${tag != null && tag.equalsIgnoreCase(searchTag.name)} ? 'active' : ''"
+            data-id="1">热销
+        </li>
+    </ul>
+    <ul class="drop-down-wrap js-propDrop">
+        <li class="active">全部</li>
+        <li th:each="propertyValue:${@mainGoodService.forSalePropertyValue(null,null)}"
+            th:attr="data-id=${propertyValue}"
+            th:text="${propertyValue}"
+            data-id="1">黑色
+        </li>
+    </ul>
+</div>
+<div class="data-area">
+    <input type="hidden" name="tag" value="all" th:value="${tag != null ? tag : 'all'}">
+    <input type="hidden" name="propertyValue" value="all">
+    <!--<input type="hidden" name="sales">-->
+    <input type="hidden" name="priceOrder" value="asc">
+</div>
+<div class="search-result">
+    <div class="view-scroll-wrap" data-url="/api/goodsList" th:attr="data-url=@{/wechatSearch/goodsList}">
+        <div class="view-scroll-list">
+            <div class="weui-loadmore">
+                <i class="weui-loading"></i>
+                <span class="weui-loadmore__tips">数据加载中...</span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/iscroll/5.2.0/iscroll-probe.min.js"></script>
+
+<script src="../../mock/mock-min.js" th:remove="all"></script>
+<script src="../../mock/mall.js" th:remove="all"></script>
+
+<script src="../../wechat-resource/assets/js/myScroll.js" th:src="@{/wechat-resource/assets/js/myScroll.js}"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
+<script src="../../wechat-resource/assets/js/mall/tag.js"></script>
+</html>

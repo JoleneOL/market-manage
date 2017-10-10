@@ -31,9 +31,10 @@
         var myScroll = new IScroll(self, {
             mouseWheel: true,
             probeType: 3,
-            tap: true,
-            disableMouse: true,
-            disablePointer: true
+            // tap: true,
+            // disableMouse: true,
+            // disablePointer: true
+            click: true
         });
 
         function isPassive() {
@@ -132,6 +133,7 @@
         $.extend({
             myScrollRefresh: function (goTop) {
                 if (goTop === true) myScroll.scrollTo(0, 0);
+                s.loading = false;
                 myScroll.refresh();
                 s.loading = false;
             }
