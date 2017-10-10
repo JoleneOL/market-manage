@@ -27,12 +27,12 @@ public class CommissionDetailsController {
             List<Commission> result = commissionDetailsService.findByOrderId(oId);
             if (result != null) {
                 model.addAttribute("commissionDetail", result);
-                return "_commissionDetail";
+                return "_commissionDetail.html";
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "_commissionDetail";
+        return "_commissionDetail.html";
     }
 
     ;
