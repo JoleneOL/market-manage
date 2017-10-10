@@ -163,9 +163,9 @@ public class MainOrderServiceImpl implements MainOrderService {
         if (maxMinuteForPay != null) {
             LocalDateTime now = LocalDateTime.now();
             //已经超过关闭时间的，直接把订单关掉
-            long count = forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isBefore(now)).count();
+            long count = forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now)).count();
             log.info("即将关闭" + count + "个订单");
-            forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isBefore(now))
+            forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now))
                     .forEach(order -> order.setOrderStatus(OrderStatus.close));
             //还没超过时间的，定义ExecutorService
             forPayOrderList.stream().filter(order -> order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now))
