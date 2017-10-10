@@ -65,7 +65,8 @@
                             </tr>
                             <tr>
                                 <td>订单可分佣金额</td>
-                                <td th:text="${{currentData.commissioningAmountMoney}}">10.1
+                                <td>
+                                    <span th:text="${{currentData.commissioningAmountMoney}}">10.1</span>
                                     <span>
                                           <button id="findCommission">佣金明细</button>
                                         <a id="commissionDetail" href="_commissionDetail.html"
