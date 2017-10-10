@@ -45,8 +45,9 @@ $(function () {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
-                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.code + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>';
-                    var b = '<a href="javascript:;" class="js-delete" data-id="' + item.code + '"><i class="fa fa-trash-o"></i>&nbsp;禁用</a>';
+                    var a = '<a href="javascript:;" class="js-checkInfo" data-id="' + item.code + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>'
+                        + '<a href="javascript:;" class="js-delete" data-id="' + item.code + '"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
+                    var b = '<a href="javascript:;" class="js-disable" data-id="' + item.code + '"><i class="fa fa-caret-square-o-down"></i>&nbsp;禁用</a>';
                     var b2 = '<a href="javascript:;" class="js-active" data-id="' + item.code + '"><i class="fa fa-caret-square-o-up"></i>&nbsp;激活</a>';
                     var c = '<a href="javascript:;" class="js-pushHR" data-id="' + item.code + '"><i class="fa fa-cloud-upload"></i>&nbsp;推送给日日顺</a>';
                     if (item.enable)
@@ -110,9 +111,25 @@ $(function () {
                 layer.msg('服务器异常');
             }
         });
-    }).on('click', '.js-delete', function () {
+    }).on('click', '.js-disable', function () {
         var id = $(this).data('id');
         layer.confirm('确定禁用货品？', {
+            btn: ['确定', '取消']
+        }, function (index) {
+            $.ajax('/products?code=' + encodeURIComponent(id), {
+                method: 'post',
+                success: function () {
+                    table.ajax.reload();
+                    layer.close(index);
+                },
+                error: function () {
+                    layer.msg('服务器异常');
+                }
+            });
+        });
+    }).on('click', '.js-delete', function () {
+        var id = $(this).data('id');
+        layer.confirm('确定删除货品？删除之后将永不再可见！', {
             btn: ['确定', '取消']
         }, function (index) {
             $.ajax('/products?code=' + encodeURIComponent(id), {
@@ -136,7 +153,7 @@ $(function () {
             return;
         }
         window.location.href = href + "?productTypeId=" + productTypeId;
-    })
+    });
 
     // 添加额外的参数
     function extendData() {
