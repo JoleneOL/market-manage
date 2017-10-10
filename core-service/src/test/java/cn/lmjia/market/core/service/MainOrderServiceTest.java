@@ -10,7 +10,6 @@ import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.StockService;
-import me.jiangcai.logistics.entity.Product;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -19,7 +18,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +73,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
                 assertEquals(lockStockMap.get(mainGood.getId()) + exceptLockStock, mainOrderService.sumProductNum(mainGood.getProduct()));
                 lockStockMap.put(mainGood.getId(), lockStockMap.get(mainGood.getId()) + exceptLockStock);
             } else {
-                assertEquals(0, mainOrderService.sumProductNum(mainGood.getProduct()));
+                assertEquals((int) lockStockMap.get(mainGood.getId()), mainOrderService.sumProductNum(mainGood.getProduct()));
             }
         });
 
@@ -122,7 +120,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         orderWithClose = mainOrderService.getOrder(orderWithClose.getId());
         assertEquals(OrderStatus.close, orderWithClose.getOrderStatus());
 
-        //2.先不设定关闭时间，然后再开启关闭订单功能
+        //2.先不设定关闭时间，然后再开启关闭订单功能(需要在Executor中关闭)
         systemStringService.delete("market.core.service.order.maxMinuteForPay");
         MainOrder orderWithoutClose = newRandomOrderFor(testLogin, testLogin);
         assertEquals(OrderStatus.forPay, orderWithoutClose.getOrderStatus());
@@ -132,8 +130,22 @@ public class MainOrderServiceTest extends CoreServiceTest {
         assertEquals(OrderStatus.forPay, orderWithoutClose.getOrderStatus());
         systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay", 10);
         mainOrderService.createExecutorToForPayOrder();
+        //等10s 就够了
+        waitSometime(10);
+        orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
+        assertEquals(OrderStatus.close, orderWithoutClose.getOrderStatus());
+        //3.先不设定关闭时间，然后再开启关闭订单功能（可以直接关闭）
+        systemStringService.delete("market.core.service.order.maxMinuteForPay");
+        orderWithoutClose = newRandomOrderFor(testLogin, testLogin);
+        assertEquals(OrderStatus.forPay, orderWithoutClose.getOrderStatus());
+        //等他2s,意思意思
+        orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
+        waitSometime(2);
+        assertEquals(OrderStatus.forPay, orderWithoutClose.getOrderStatus());
+        systemStringService.updateSystemString("market.core.service.order.maxMinuteForPay", 10);
         //之前已经等了2s了，现在等9s 就够了
         waitSometime(9);
+        mainOrderService.createExecutorToForPayOrder();
         orderWithoutClose = mainOrderService.getOrder(orderWithoutClose.getId());
         assertEquals(OrderStatus.close, orderWithoutClose.getOrderStatus());
         //避免影响其他测试，把变量删除
