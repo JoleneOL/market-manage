@@ -9,10 +9,11 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
+import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.PropertyName;
-import cn.lmjia.market.core.service.MainOrderService;
 import me.jiangcai.logistics.haier.HaierSupplier;
 import me.jiangcai.logistics.repository.ProductTypeRepository;
 import me.jiangcai.logistics.repository.PropertyNameRepository;
@@ -48,7 +49,6 @@ import java.util.Map;
  * 货品管理
  * 增加推送至日日顺的功能
  * 如果资料未全则不让推送
- * <p>
  * 允许编辑但是跟推送相关的资源 一旦存在值就不可编辑
  *
  * @author CJ
@@ -71,11 +71,20 @@ public class ManageProductController {
     private ResourceService resourceService;
 
     // 禁用和恢复
-    @DeleteMapping("/products")
+    @PostMapping("/products")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void disable(String code) {
         mainProductRepository.getOne(code).setEnable(false);
+    }
+
+    @DeleteMapping("/products")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void delete(String code) {
+        final MainProduct one = mainProductRepository.getOne(code);
+        one.setEnable(false);
+        one.setDeleted(true);
     }
 
     @PutMapping("/products")
@@ -245,7 +254,7 @@ public class ManageProductController {
             @Override
             public Specification<MainProduct> specification() {
                 return (root, query, cb) -> {
-                    Predicate predicate = cb.conjunction();
+                    Predicate predicate = cb.isFalse(root.get(Product_.deleted));
                     if (!StringUtils.isEmpty(productName))
                         predicate = cb.and(cb.like(root.get("name"), "%" + productName + "%"));
                     if (!StringUtils.isEmpty(type))
