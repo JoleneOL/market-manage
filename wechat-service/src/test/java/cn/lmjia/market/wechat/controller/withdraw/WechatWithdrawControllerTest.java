@@ -159,13 +159,19 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         makeSuccessOrder(login);
         // 尝试提现 会看到可提现金额为X
         BigDecimal amount = readService.currentBalance(login).getAmount();
+        log.info("amount:" + amount);
+        if (amount.compareTo(BigDecimal.ONE) == -1) {
+            //钱不够就手动充一点吧
+            login.setCommissionBalance(BigDecimal.valueOf(randomDouble(100, 20000, 2)));
+            amount = readService.currentBalance(login).getAmount();
+            log.info("add amount:" + amount);
+        }
         myPage = getWechatMyPage();
         myPage.assertWithdrawAble()
                 .as("有了")
                 .isCloseTo(amount, Offset.offset(new BigDecimal("0.000000000001")));
         // 强行输入 X+1 会看到错误信息
 //        log.info("准备失败的提现");
-        WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
 //        withdrawPage.randomRequestWithoutInvoice(amount.add(BigDecimal.ONE).toString());
 //        withdrawPage.reloadPageInfo();
 //        withdrawPage.assertHaveTooltip();
@@ -173,8 +179,11 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         BigDecimal toWithdraw = amount.subtract(BigDecimal.ONE).divideToIntegralValue(new BigDecimal("2"));
 
         log.info("toWithdraw" + toWithdraw);
+        //调整最高提现金额
+        if (toWithdraw.compareTo(BigDecimal.valueOf(20000L)) == 1)
+            systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MAX_AMOUNT, toWithdraw.setScale(0, BigDecimal.ROUND_UP));
+        WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
-//        withdrawPage.printThisPage();
 
         WechatWithdrawVerifyPage verifyPage = initPage(WechatWithdrawVerifyPage.class);
         Thread.sleep(1000);
