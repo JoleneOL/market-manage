@@ -53,6 +53,7 @@ public class WechatWithdrawController {
      * 最低可提现金额的属性名
      */
     static final String MARKET_WITHDRAW_MIN_AMOUNT = "market.withdraw.min.amount";
+    static final String MARKET_WITHDRAW_MAX_AMOUNT = "market.withdraw.max.amount";
     private static final Log log = LogFactory.getLog(WechatWithdrawController.class);
     @Autowired
     private WithdrawService withdrawService;
@@ -118,7 +119,7 @@ public class WechatWithdrawController {
 
         model.addAttribute("minAmount", systemStringService.getCustomSystemString(MARKET_WITHDRAW_MIN_AMOUNT
                 , null, true, Integer.class, 1000));
-        model.addAttribute("maxAmount", systemStringService.getCustomSystemString("market.withdraw.max.amount"
+        model.addAttribute("maxAmount", systemStringService.getCustomSystemString(MARKET_WITHDRAW_MAX_AMOUNT
                 , null, true, Integer.class, 20000));
         return "wechat@withdraw.html";
     }
