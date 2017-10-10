@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 可以运递货品的订单
@@ -71,11 +72,8 @@ public interface DeliverableOrder {
                 })));
 
         // 移除因为一些复杂的运算导致的0需求量
-        require.entrySet().stream().filter(productIntegerEntry -> productIntegerEntry.getValue() <= 0)
-                .map(Map.Entry::getKey)
-                .forEach(require::remove);
-
-        return require;
+        return require.entrySet().stream().filter(productIntegerEntry -> productIntegerEntry.getValue() > 0)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**
