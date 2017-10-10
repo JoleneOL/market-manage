@@ -46,7 +46,7 @@
                     <tr th:each="commission:${commissionDetail}">
                         <td th:text="${@readService.nameForPrincipal(commission.who)}">小红</td>
                         <td th:text="${commission.amount}">1999.00</td>
-                        <td th:text="${#numbers.formatDecimal(commission.rate,2)* 100 + '%'}">28%</td>
+                        <td th:text="${@readService.percentage(commission.rate)}">28%</td>
                         <td th:text="${commission.type}">促销</td>
                     </tr>
                     </tbody>
