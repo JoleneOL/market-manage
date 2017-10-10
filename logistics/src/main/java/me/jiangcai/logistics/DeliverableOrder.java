@@ -70,6 +70,11 @@ public interface DeliverableOrder {
                     }));
                 })));
 
+        // 移除因为一些复杂的运算导致的0需求量
+        require.entrySet().stream().filter(productIntegerEntry -> productIntegerEntry.getValue() <= 0)
+                .map(Map.Entry::getKey)
+                .forEach(require::remove);
+
         return require;
     }
 
