@@ -29,7 +29,9 @@ public class MallSearchPage extends AbstractWechatPage {
 
     public void searchGoods(MainGood good) throws InterruptedException {
         searchInput.clear();
+        Thread.sleep(5);
         searchInput.sendKeys(good.getProduct().getName());
+        Thread.sleep(5);
         searchInput.sendKeys(Keys.ENTER);
         Thread.sleep(1000);
         List<WebElement> resultItems = webDriver.findElement(By.id("J_resultContainer")).findElements(By.className("search-result_item"));
