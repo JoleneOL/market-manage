@@ -7,6 +7,7 @@ import me.jiangcai.logistics.entity.Product;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -49,6 +50,9 @@ public class MainProduct extends Product {
      * @since {@link cn.lmjia.market.core.Version#newCommission}
      */
     private boolean commissionSource;
+
+    @Transient
+    private int stock;
 
     public Money getDepositMoney() {
         return new Money(deposit);

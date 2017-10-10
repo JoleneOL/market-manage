@@ -36,4 +36,11 @@ public abstract class AbstractContentPage extends AbstractPage {
                 .getAttribute("href");
         webDriver.get(href);
     }
+
+    /**
+     * for debug
+     */
+    public void printHtml(){
+        System.out.println(webDriver.getPageSource());
+    }
 }

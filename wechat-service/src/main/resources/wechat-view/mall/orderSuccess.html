@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>下单成功</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css}">
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
+</head>
+<body class="view-fs-small">
+<div class="mall-toolbar clearfix">
+    <h3><a href="index.html" th:href="@{/wechatIndex}">利每家</a></h3>
+    <div class="mall-toolbar-items">
+        <a href="orderList.html" th:href="@{/wechatMallOrderList}" class="toolbar-item">我的订单</a>
+        <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
+        <a href="javascript:;" class="toolbar-item m-cart js-cartBtn">
+            <span class="cart-badge">0</span>
+        </a>
+    </div>
+</div>
+<form action="cart.html" th:action="@{/wechatSearch/goodsList}" method="post" id="J_cartForm">
+    <input type="hidden" name="order">
+</form>
+<div class="weui-msg">
+    <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon-custom weui-icon_msg"></i></div>
+    <div class="weui-msg__text-area">
+        <h2 class="weui-msg__title">下单成功</h2>
+        <p class="weui-msg__desc">若有疑问可拨打下方客服电话进行咨询。</p>
+    </div>
+    <!--<div class="weui-msg__opr-area">-->
+        <!--<p class="weui-btn-area">-->
+            <!--&lt;!&ndash;<a href="orderPlace.html" th:href="@{/wechatOrder}" class="weui-btn weui-btn_default">再下一单</a>&ndash;&gt;-->
+            <!--<a href="shareQC.html" class="weui-btn weui-btn_custom">马上分享</a>-->
+            <!--<a href="orderList.html" th:href="@{/wechatOrderList}" class="weui-btn weui-btn_default">订单列表</a>-->
+        <!--</p>-->
+    <!--</div>-->
+    <div class="weui-msg__extra-area">
+        <div class="weui-footer">
+            <p class="weui-footer__text weui-footer__links">客服电话 <a href="tel:0571-88187913">0571-88187913</a></p>
+        </div>
+    </div>
+</div>
+<th:block th:include="wechat@fragments/share.html::hideAllShare"/>
+</body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"></script>
+</html>

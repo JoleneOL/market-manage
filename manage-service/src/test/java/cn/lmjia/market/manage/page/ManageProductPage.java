@@ -1,9 +1,13 @@
 package cn.lmjia.market.manage.page;
 
 import cn.lmjia.market.core.pages.AbstractContentPage;
+import me.jiangcai.lib.test.SpringWebTest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 /**
  * 管理货品
@@ -40,6 +44,13 @@ public class ManageProductPage extends AbstractContentPage {
     }
 
     public ProductCreatePage clickNew() {
+        //随机选择一个货品类型
+        webDriver.findElement(By.id("J-productType"))
+                .findElements(By.tagName("option"))
+                .stream().max(new SpringWebTest.RandomComparator())
+                .orElseThrow(() -> new IllegalStateException("找不到可选的货品类型"))
+                .click();
+//        new Select(webDriver.findElement(By.id("J-productType"))).selectByVisibleText("台式净水器");
         webDriver.findElement(By.linkText("新增货品")).click();
         return initPage(ProductCreatePage.class);
     }

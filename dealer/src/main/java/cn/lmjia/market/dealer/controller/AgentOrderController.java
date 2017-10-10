@@ -3,6 +3,7 @@ package cn.lmjia.market.dealer.controller;
 import cn.lmjia.market.core.controller.main.order.AbstractMainOrderController;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.payment.chanpay.service.ChanpayPaymentForm;
 import me.jiangcai.payment.exception.SystemMaintainException;
@@ -40,7 +41,7 @@ public class AgentOrderController extends AbstractMainOrderController {
     public ModelAndView newOrder(HttpServletRequest request, String name, int age, Gender gender, Address address
             , String mobile, long goodId, int amount
             , String activityCode, long recommend, @AuthenticationPrincipal Login login, Model model)
-            throws SystemMaintainException {
+            throws SystemMaintainException, MainGoodLowStockException {
         MainOrder order = newOrder(login, model, recommend, name, age, gender, address, mobile,
                 activityCode, null, null);
         HashMap<String, Object> data = new HashMap<>();

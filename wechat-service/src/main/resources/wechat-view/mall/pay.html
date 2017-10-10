@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="pay-page">
+<!--/*@thymesVar id="order" type="me.jiangcai.payment.PayableOrder"*/-->
+<!--/*@thymesVar id="qrCodeUrl" type="java.lang.String"*/-->
+<!--/*@thymesVar id="wechatFriendly" type="boolean"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>付款</title>
+
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+
+    <link rel="stylesheet" href="../../wechat-resource/assets/css/custom.css"
+          th:href="@{/wechat-resource/assets/css/custom.css(v=1)}">
+</head>
+<body data-check-url="pay.html" th:data-check-url="@{''+${checkUri}}"
+      data-success-url="pay.html" th:data-success-url="@{''+${successUri}}">
+
+
+<div class="header_wrap">
+    <h1 class="header_wrap-title">订单支付</h1>
+</div>
+<div class="view-pay">
+    <p class="view-pay-title" th:text="${order.orderProductName}">某个净水器</p>
+    <p class="view-pay-qrcode"><img class="img-qrCode" src="../../wechat-resource/assets/img/temp.png"
+                                    th:src="${qrCodeUrl}" name="qrCode" id="qrCode"/></p>
+    <p class="view-pay-num">
+        ￥<span class="num"
+               th:text="${#numbers.formatDecimal(order.orderDueAmount,1,'COMMA',2,'POINT')}">123</span>
+    </p>
+    <p class="weixin" th:if="${wechatFriendly}">长按二维码可进行支付</p>
+</div>
+<footer>
+    <div class="weui-footer weui-footer_fixed-bottom">
+        <p class="weui-footer__text">支付账单</p>
+    </div>
+</footer>
+<p style="display: none" id="loadingFlag"></p>
+<div class="mask">
+    <img src="../../wechat-resource/assets/img/open.png">
+    <p>提示：微信中无法打开支付宝链接，请按照上图在其他浏览器中操作。</p>
+</div>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js" th:remove="all"></script>
+<!--<script wx:js=""></script>-->
+<!--<script wx:share="${#share.title(order)}|${#share.desc(order)}|${#share.link(order,#request)}|${#share.imageUrl(order)}"></script>-->
+<script src="../../wechat-resource/assets/js/pay.js" th:src="@{/wechat-resource/assets/js/pay.js}"></script>
+<script th:if="${!wechatFriendly}" src="../../wechat-resource/assets/js/isWechat.js"></script>
+</body>
+</html>

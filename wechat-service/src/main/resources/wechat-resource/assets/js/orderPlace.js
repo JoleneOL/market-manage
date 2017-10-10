@@ -16,6 +16,7 @@ $(function () {
         }
     });
 
+    // 花呗分期相关
     var installment = $('#J_installment');
     var submitBtn = $('#J_submitBtn');
     var info = $('#J_installmentInfo');
@@ -37,6 +38,7 @@ $(function () {
         info.find('.js-total').text(num * 1.19);
         info.find('.js-installment').text((num / 24).toFixed(2));
     }
+
 
     // 粗略的手机号正则
     $.validator.addMethod("isPhone", function (value, element) {
@@ -70,6 +72,10 @@ $(function () {
             amount: {
                 required: "请填写购买数量"
             },
+            idNumber: {
+                maxlength: '身份证长度为18位',
+                minlength: '身份证长度为18位'
+            },
             isAgree: "请同意《用户协议》"
         },
         errorPlacement: function (error, element) {
@@ -82,16 +88,115 @@ $(function () {
             $(element).closest('.weui-cell').removeClass("weui-cell_warn");
         },
         submitHandler: function (form) {
-            if ($showGoodsList.children().length > 0) {
+            if ($showGoodsList.children().length > 0){
                 $.showLoading('订单提交中');
                 submitBtn.prop('disabled', true);
-                form.submit();
-            } else {
-                $.toptip('商品列表不能为空', 1000);
+                submitOrder($('#J_form').serializeObject());
             }
+            else{
+                $.toptip('商品列表不能为空', 1000);
 
+            }
         }
     });
+
+    // 订单刷新
+    $('.js-refreshBtn').click(function () {
+        $.showLoading('库存刷新中');
+        $.ajax('/refreshStock', {
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $.hideLoading();
+                if (data.resultCode !== 200) {
+                    $.toptip(data.resultMsg);
+                    return false;
+                }
+                $.toptip("库存更新完毕", "success");
+                resetGoodsList(data.data);
+            },
+            error: function () {
+                $.hideLoading();
+                $.toptip("系统错误");
+            }
+        })
+    });
+
+    function submitOrder(data) {
+        $.showLoading('订单提交中');
+        $.ajax('/wechatOrder', {
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (data) {
+                $.hideLoading();
+                if (data.resultCode === 401) {
+                    $.toptip(data.resultMsg);
+                    resetGoodsList(data.data);
+                    return false;
+                }
+                if (data.resultCode === 402) {
+                    $.toptip('按揭码或者身份证号码无效');
+                    return false;
+                }
+                if (data.resultCode !== 200) {
+                    $.toptip("订单提交失败，请重试");
+                    return false;
+                }
+                var orderPKId = data.data.id;
+                var channelId = data.data.channelId;
+                var installmentHuabai = data.data.installmentHuabai;
+                var idNumber = data.data.idNumber;
+                var authorising = data.data.authorising;
+                //提交成功后的跳转
+                var payOrderHref = "wechatOrderPay.html"
+                    + "?orderPKId=" + orderPKId
+                    + "&installmentHuabai=" + installmentHuabai;
+                if (!!channelId)
+                    payOrderHref = payOrderHref
+                        + "&channelId=" + channelId;
+                if (!!idNumber)
+                    payOrderHref = payOrderHref
+                        + "&idNumber=" + idNumber;
+                if (!!authorising)
+                    payOrderHref = payOrderHref
+                        + "&authorising=" + authorising;
+                window.location.href = payOrderHref;
+            },
+            error: function () {
+                $.hideLoading();
+                $.toptip("系统错误");
+            }
+        })
+    }
+
+    function resetGoodsList(data) {
+        $.each(data, function (i, v) {
+            var id = v.id;
+            var stock = v.stock;
+            $goodListData.each(function () {
+                if ($(this).attr('data-id') == id) {
+                    var step = $(this).attr('data-amount');
+                    $(this).attr('data-amount', 0)
+                        .find('.js-limit-text').text(stock)
+                        .end()
+                        .find('.js-buy-value').prop('max', stock).val(0);
+                    if (stock == 0) {
+                        $(this).addClass('sold-out');
+                    }
+                    countTotal($(this), step, false)
+                }
+            });
+            $showGoodsList.find('.js-showList').each(function () {
+                if ($(this).attr('data-id') == id) $(this).remove();
+            });
+            $goodsListArea.find('input[name="goods"]').each(function () {
+                if ($(this).attr('data-id') == id) $(this).remove();
+            });
+        });
+    }
+
+
     $('#J_needInvoice').click(function () {
         var that = $(this);
         $.actions({
@@ -190,7 +295,7 @@ $(function () {
         }
     };
 
-
+    // 订单购物车逻辑
     var $goodListData = $('#J_goodsList').find('.js-goods-list');
     var $goodsListArea = $('#J_goodsListArea');
     var $showGoodsList = $('#J_showGoodsList');
@@ -256,6 +361,10 @@ $(function () {
         var dataJSON = getBuyData();
         setBuyData(dataJSON);
         makeBuyList(dataJSON);
+        var nowTotal = Number(goodsTotal.text());
+        $('input[name="orderTotal"]').val(nowTotal);
+        installmentFunc(nowTotal);
+        $('#J_orderTotal').find('strong').text(nowTotal.toFixed(2));
         closeMenu(e);
     });
 
@@ -368,11 +477,24 @@ $(function () {
         else
             nowTotal -= (price * step);
         goodsTotal.text(nowTotal.toFixed(2));
-        $('input[name="orderTotal"]').val(nowTotal);
-        installmentFunc(nowTotal);
-        $('#J_orderTotal').find('strong').text(nowTotal.toFixed(2));
     }
 
     Spinner.init();
 
+
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    }
 });

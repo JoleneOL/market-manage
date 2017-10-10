@@ -72,6 +72,17 @@ public abstract class ManageServiceTest extends DealerServiceTest {
                 .andExpect(header().string("location", "/manageFactory"));
     }
 
+    protected void addNewTag() throws Exception {
+        mockMvc.perform(
+                post("/manage/tagList")
+                        .param("name", RandomStringUtils.randomAlphabetic(10) + "标签")
+                        .param("type", String.valueOf(random.nextInt(1)))
+                        .param("weight", String.valueOf(random.nextInt(100)))
+                        .param("icon", newRandomImagePath()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("location", "/manageTag"));
+    }
+
     @Configuration
     public static class Config {
     }

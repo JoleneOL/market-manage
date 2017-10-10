@@ -141,7 +141,8 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     @Override
     public void reSettlement(MainOrder order) {
         if (order.getOrderStatus() == OrderStatus.forPay
-                || order.getOrderStatus() == OrderStatus.EMPTY) {
+                || order.getOrderStatus() == OrderStatus.EMPTY
+                || order.getOrderStatus() == OrderStatus.close) {
             throw new IllegalArgumentException("无法结算。");
         }
         OrderCommission orderCommission = orderCommissionRepository.findOne(new OrderCommissionPK(order));

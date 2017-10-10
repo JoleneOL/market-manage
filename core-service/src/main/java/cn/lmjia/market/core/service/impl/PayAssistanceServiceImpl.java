@@ -105,4 +105,9 @@ public class PayAssistanceServiceImpl implements PayAssistanceService {
         parameters.put(PaymentConfig.SKIP_TEST_PARAMETER_NAME, true);
         return paymentService.startPay(request, order, trjService, parameters);
     }
+
+    @Override
+    public void checkAuthorising(String authorising, String idNumber) throws InvalidAuthorisingException {
+        trjService.checkAuthorising(authorising, idNumber);
+    }
 }

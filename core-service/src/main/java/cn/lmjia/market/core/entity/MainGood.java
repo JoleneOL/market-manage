@@ -5,11 +5,13 @@ import cn.lmjia.market.core.entity.channel.InstallmentChannel;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -20,6 +22,7 @@ import javax.persistence.criteria.Path;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 具体的商品，用以销售
@@ -44,7 +47,19 @@ public class MainGood {
     private Channel channel;
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime = LocalDateTime.now();
+    /**
+     * 标签，它应该是一个多对多的关联
+     */
+//    @Convert(converter = GoodTagConverter.class)
+    @ManyToMany(cascade = {CascadeType.REFRESH})
+    private Set<Tag> tags;
 
+    /**
+     * @param path
+     * @param criteriaBuilder
+     * @return
+     * @see {@link MainGood#getTotalPrice()}
+     */
     public static Expression<BigDecimal> getTotalPrice(From<?, MainGood> path, CriteriaBuilder criteriaBuilder) {
         final Path<MainProduct> product = path.get(MainGood_.product);
         Join<MainGood, Channel> channel = path.join(MainGood_.channel, JoinType.LEFT);
@@ -92,6 +107,7 @@ public class MainGood {
 
     /**
      * @return 总价
+     * @see {@link MainGood#getTotalPrice(From, CriteriaBuilder)}
      */
     public BigDecimal getTotalPrice() {
         BigDecimal price = product.getDeposit();
