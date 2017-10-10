@@ -513,7 +513,7 @@ public class InitService {
                         jdbcService.tableAlterAddColumn(Product.class, "deleted", "0");
                         break;
                     case newCommission:
-                        jdbcService.tableAlterAddColumn(MainProduct.class, "commissionSource", "1");
+                        jdbcService.tableAlterAddColumn(MainGood.class, "commissionSource", "1");
                         break;
                     default:
                 }

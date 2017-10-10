@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/custom.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn//chosen/1.7.0/chosen.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
@@ -93,6 +94,16 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">可分佣 </label>
+                                            <div class="col-sm-6">
+                                                <label class="checkbox-inline i-checks">
+                                                    <input type="checkbox"
+                                                           name="commissionSource"
+                                                           value="true"
+                                                           th:checked="${currentData!=null?currentData.commissionSource:false}"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="col-sm-3 control-label">商品标签 <span
                                                     class="asterisk">*</span></label>
                                             <div class="col-sm-6">
@@ -104,7 +115,7 @@
                                                             th:selected="${currentData != null && currentData.tags.contains(tag)}"
                                                             th:value="${tag.name}" th:text="${tag.name}">净化器</option>
                                                     <option th:remove="all" value="量子">量子</option>
-                                                    <option  th:remove="all" value="优化宝">优化宝</option>
+                                                    <option th:remove="all" value="优化宝">优化宝</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-3">
@@ -142,7 +153,8 @@
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/localization/messages_zh.min.js"></script>
 <script src="//cdn.lmjia.cn/chosen/1.7.0/chosen.jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/hplus/plugins/iCheck/1.0.2/icheck.min.js"></script>
 
-<script src="manage-resource/js/goodsAdd.js"></script>
+<script src="manage-resource/js/goodsAdd.js?v=1"></script>
 
 </html>

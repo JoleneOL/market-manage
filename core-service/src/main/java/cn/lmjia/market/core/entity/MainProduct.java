@@ -44,13 +44,6 @@ public class MainProduct extends Product {
     @Column(columnDefinition = "datetime")
     private LocalDate planSellOutDate;
 
-    /**
-     * 该货品是否可以成为佣金的源头
-     *
-     * @since {@link cn.lmjia.market.core.Version#newCommission}
-     */
-    private boolean commissionSource;
-
     @Transient
     private int stock;
 
