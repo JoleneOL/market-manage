@@ -29,6 +29,10 @@ import java.util.TreeMap;
 public class Product {
 
     /**
+     * 含义上跟enable完全不同；该值为true 则该货品不会在系统中可见！
+     */
+    private boolean deleted = false;
+    /**
      * 可用状态
      */
     private boolean enable = true;

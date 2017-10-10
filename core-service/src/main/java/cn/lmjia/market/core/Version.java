@@ -2,6 +2,7 @@ package cn.lmjia.market.core;
 
 /**
  * 合并该文件时，请必须注意新增的（未发布的）必须在已发布的后面！！
+ *
  * @author CJ
  */
 public enum Version {
@@ -27,4 +28,5 @@ public enum Version {
      * 商城
      */
     mall,
+    deleteProduct,
 }
