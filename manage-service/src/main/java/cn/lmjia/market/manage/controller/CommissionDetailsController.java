@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class CommissionDetailsController {
     private CommissionDetailService commissionDetailsService;
 
     @RequestMapping("/orderDetail/Commission")
-    public String commissionDetail(String orderId, Model model) {
+    public String commissionDetail(@RequestParam("orderId")String orderId, Model model) {
         long oId = Long.parseLong(orderId);
         try {
             //根据订单id查询佣金详情
