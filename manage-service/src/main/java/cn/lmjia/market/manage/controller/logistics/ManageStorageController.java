@@ -8,6 +8,7 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.Deliverable;
@@ -72,12 +73,15 @@ public class ManageStorageController {
     @Autowired
     private LogisticsService logisticsService;
     @Autowired
+    private MainOrderService mainOrderService;
+    @Autowired
     private HaierSupplier haierSupplier;
 
     @PostMapping("/manage/addStockAsRoot")
     @Transactional
     public String addStockAsRoot(long depotId, String productCode, int amount, String message) {
         stockService.addStock(depotRepository.getOne(depotId), productRepository.getOne(productCode), amount, message);
+        mainOrderService.cleanProductStock(productRepository.getOne(productCode));
         return "redirect:/manageStorage";
     }
 

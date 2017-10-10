@@ -157,11 +157,14 @@ public class MainOrderServiceImpl implements MainOrderService {
     @Override
     public void createExecutorToForPayOrder() {
         List<MainOrder> forPayOrderList = mainOrderRepository.findAll(search(null, OrderStatus.forPay));
+        log.info("存在" + forPayOrderList.size() + "个未支付订单");
         Integer maxMinuteForPay = systemStringService.getCustomSystemString("market.core.service.order.maxMinuteForPay", null, true, Integer.class, defaultMaxMinuteForPay);
         //如果需要 关闭订单 这个功能
         if (maxMinuteForPay != null) {
             LocalDateTime now = LocalDateTime.now();
             //已经超过关闭时间的，直接把订单关掉
+            long count = forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isBefore(now)).count();
+            log.info("即将关闭" + count + "个订单");
             forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isBefore(now))
                     .forEach(order -> order.setOrderStatus(OrderStatus.close));
             //还没超过时间的，定义ExecutorService
