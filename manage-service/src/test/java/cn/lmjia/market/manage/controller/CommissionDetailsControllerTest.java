@@ -34,10 +34,10 @@ public class CommissionDetailsControllerTest extends ManageServiceTest {
         MainOrder mainOrder = newRandomOrderFor(login, login);
         makeOrderPay(mainOrder);
 
-        //根绝订单查询详情
+        //根据订单查询详情
         List<Commission> result = commissionDetailService.findByOrderId(mainOrder.getId());
         for (Commission commission : result) {
-            System.out.println("佣金获取人" + readService.nameForPrincipal(commission.getWho()) + "分佣金额" + commission.getAmount() + "分佣比例" + commission.getRate());
+            System.out.println("佣金获取人:" + readService.nameForPrincipal(commission.getWho()) + "分佣金额:" + commission.getAmount() + "分佣比例:" + commission.getRate()+"分佣类型:"+commission.getType());
         }
 
     }

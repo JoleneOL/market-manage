@@ -23,6 +23,13 @@
 </head>
 <body>
 <div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_orderManage.html" th:href="@{/orderManage}">订单管理</a></li>
+            </ol>
+        </div>
+    </div>
     <h1>佣金详情</h1>
     <div class="row">
         <div class="col-sm-12">
@@ -33,12 +40,14 @@
                         <td>佣金获取人</td>
                         <td>获取金额</td>
                         <td>相关比例</td>
+                        <td>佣金类型</td>
                     </tr>
                     <!--/*@thymesVar id="commissionDetail" type="java.util.List<cn.lmjia.market.core.entity.deal.Commission>"*/-->
                     <tr th:each="commission:${commissionDetail}">
                         <td th:text="${@readService.nameForPrincipal(commission.who)}">小红</td>
                         <td th:text="${commission.amount}">1999.00</td>
                         <td th:text="${#numbers.formatDecimal(commission.rate,2)* 100 + '%'}">28%</td>
+                        <td th:text="${commission.type}">促销</td>
                     </tr>
                     </tbody>
                 </table>
