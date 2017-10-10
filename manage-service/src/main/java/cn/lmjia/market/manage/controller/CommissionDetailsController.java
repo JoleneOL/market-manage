@@ -19,9 +19,10 @@ public class CommissionDetailsController {
     private CommissionDetailService commissionDetailsService;
 
     @RequestMapping("/orderDetail/Commission")
-    public String commissionDetail(long orderId, Model model) {
+    public String commissionDetail(String orderId, Model model) {
+        long oId = Long.parseLong(orderId);
         //根据订单id查询佣金详情
-        List<Commission> result = commissionDetailsService.findByOrderId(orderId);
+        List<Commission> result = commissionDetailsService.findByOrderId(oId);
         if (result != null) {
             model.addAttribute("commissionDetail", result);
             return "_commissionDetail";
