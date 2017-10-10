@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
  * @author CJ
  */
@@ -51,5 +53,23 @@ public class SystemServiceImpl implements SystemService {
     public boolean isRegularLoginAsAnyOrder() {
         return systemStringService.getCustomSystemString("market.RegularLoginAsAnyOrder"
                 , "market.RegularLoginAsAnyOrder.comment", true, Boolean.class, true);
+    }
+
+    @Override
+    public BigDecimal getRegularLoginAsSingleOrderAmount() {
+        return systemStringService.getCustomSystemString("market.RegularLoginAsSingleOrderAmount"
+                , "market.RegularLoginAsSingleOrderAmount.comment", true, BigDecimal.class, null);
+    }
+
+    @Override
+    public BigDecimal getRegularLoginAsTotalOrderAmount() {
+        return systemStringService.getCustomSystemString("market.RegularLoginAsTotalOrderAmount"
+                , "market.RegularLoginAsTotalOrderAmount.comment", true, BigDecimal.class, null);
+    }
+
+    @Override
+    public BigDecimal getRegularLoginAs24HOrderAmount() {
+        return systemStringService.getCustomSystemString("market.RegularLoginAs24HOrderAmount"
+                , "market.RegularLoginAs24HOrderAmount.comment", true, BigDecimal.class, null);
     }
 }

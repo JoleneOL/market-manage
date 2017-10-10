@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.AgentLevel_;
@@ -50,6 +51,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -257,6 +259,92 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public boolean isRegularLogin(Login login, MainOrder order) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        // 订单是否存在
+        if (systemService.isRegularLoginAsAnyOrder()) {
+            log.trace("身份认定只需任意订单即可 for:" + login);
+            if (order != null)
+                return true;
+            CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+            Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+            try {
+                return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
+                ))
+                        .select(criteriaBuilder.count(root)))
+                        .getSingleResult() > 0;
+            } catch (NoResultException ignored) {
+                return false;
+            }
+        }
+        // 条件应该是从宽松到严格！
+        // 爱心天使的认定是否需要累计完成足够金额的订单
+        final BigDecimal regularLoginAsTotalOrderAmount = systemService.getRegularLoginAsTotalOrderAmount();
+        if (regularLoginAsTotalOrderAmount != null) {
+            log.trace("身份认定需累计下单超过金额:" + regularLoginAsTotalOrderAmount + " for:" + login);
+            CriteriaQuery<BigDecimal> criteriaQuery = criteriaBuilder.createQuery(BigDecimal.class);
+            Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+            try {
+                return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
+                ))
+                        .select(criteriaBuilder.sum(root.get(MainOrder_.goodCommissioningPriceAmountIndependent))))
+                        .getSingleResult().compareTo(regularLoginAsTotalOrderAmount) != -1;
+            } catch (NoResultException ignored) {
+                return false;
+            }
+        }
+
+        // 爱心天使的认定是否需要在一天内累计完成足够金额的订单
+        final BigDecimal regularLoginAs24HOrderAmount = systemService.getRegularLoginAs24HOrderAmount();
+        if (regularLoginAs24HOrderAmount != null) {
+            log.trace("身份认定需单日累计下单超过金额:" + regularLoginAs24HOrderAmount + " for:" + login);
+            LocalDateTime endTime;
+            if (order != null) {
+                endTime = order.getOrderTime();
+            } else
+                endTime = LocalDateTime.now();
+            LocalDateTime startTime = endTime.minusDays(1);
+            CriteriaQuery<BigDecimal> criteriaQuery = criteriaBuilder.createQuery(BigDecimal.class);
+            Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+            try {
+                return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
+                        , criteriaBuilder.greaterThanOrEqualTo(root.get(MainOrder_.orderTime), startTime)
+                        , criteriaBuilder.lessThanOrEqualTo(root.get(MainOrder_.orderTime), endTime)
+                ))
+                        .select(criteriaBuilder.sum(root.get(MainOrder_.goodCommissioningPriceAmountIndependent))))
+                        .getSingleResult().compareTo(regularLoginAs24HOrderAmount) != -1;
+            } catch (NoResultException ignored) {
+                return false;
+            }
+        }
+
+
+        // 爱心天使的认定是否需要完成一笔足够金额的订单
+        final BigDecimal regularLoginAsSingleOrderAmount = systemService.getRegularLoginAsSingleOrderAmount();
+        if (regularLoginAsSingleOrderAmount != null) {
+            log.trace("身份认定需累计下单超过金额:" + regularLoginAsSingleOrderAmount + " for:" + login);
+            if (order != null && order.getCommissioningAmount().compareTo(regularLoginAsSingleOrderAmount) == 1)
+                return true;
+            CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+            Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+            try {
+                return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
+                        criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+                        , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
+                        , criteriaBuilder.greaterThanOrEqualTo(root.get(MainOrder_.goodCommissioningPriceAmountIndependent), regularLoginAsSingleOrderAmount)
+                ))
+                        .select(criteriaBuilder.count(root)))
+                        .getSingleResult() > 0;
+            } catch (NoResultException ignored) {
+                return false;
+            }
+        }
+
         return false;
     }
 
@@ -276,24 +364,7 @@ public class LoginServiceImpl implements LoginService {
 
         if (login.isSuccessOrder())
             return true;
-        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        // 订单是否存在
-        if (systemService.isRegularLoginAsAnyOrder()) {
-            CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-            Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
-            try {
-                return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
-                        criteriaBuilder.equal(root.get("orderBy"), login)
-                        , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
-                ))
-                        .select(criteriaBuilder.count(root)))
-                        .getSingleResult() > 0;
-            } catch (NoResultException ignored) {
-                return false;
-            }
-        }
-
-        return false;
+        return isRegularLogin(login, null);
     }
 
     @Override

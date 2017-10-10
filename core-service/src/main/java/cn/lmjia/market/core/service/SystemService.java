@@ -116,4 +116,19 @@ public interface SystemService {
      * @return 爱心天使的认定是否只需要完成一笔任意订单
      */
     boolean isRegularLoginAsAnyOrder();
+
+    /**
+     * @return 爱心天使的认定是否需要完成一笔足够金额的订单;如果null 表示没有这个条件
+     */
+    BigDecimal getRegularLoginAsSingleOrderAmount();
+
+    /**
+     * @return 爱心天使的认定是否需要累计完成足够金额的订单;如果null 表示没有这个条件
+     */
+    BigDecimal getRegularLoginAsTotalOrderAmount();
+
+    /**
+     * @return 爱心天使的认定是否需要在一天内累计完成足够金额的订单;如果null 表示没有这个条件
+     */
+    BigDecimal getRegularLoginAs24HOrderAmount();
 }
