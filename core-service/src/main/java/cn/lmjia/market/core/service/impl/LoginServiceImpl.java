@@ -523,6 +523,34 @@ public class LoginServiceImpl implements LoginService {
         scheduledExecutorService.shutdown();
     }
 
+    private boolean hasSuccessOrder(Login login) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+        Root<MainOrder> root = criteriaQuery.from(MainOrder.class);
+        try {
+            return entityManager.createQuery(criteriaQuery.where(criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get(MainOrder_.orderBy), login)
+//                    , criteriaBuilder.greaterThan(root.get(MainOrder_.goodCommissioningPriceAmountIndependent)
+//                            , BigDecimal.ZERO)
+                    , MainOrder.getOrderPaySuccess(root, criteriaBuilder)
+            ))
+                    .select(criteriaBuilder.count(root)))
+                    .getSingleResult() > 0;
+        } catch (NoResultException ignored) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean allowShare(Login login) {
+        return hasSuccessOrder(login) && systemStringService.getCustomSystemString("market.temp.allowAnyOrderLoginShare", null, true, Boolean.class, false);
+    }
+
+    @Override
+    public boolean allowUpgrade(Login login) {
+        return hasSuccessOrder(login) && systemStringService.getCustomSystemString("market.temp.allowAnyOrderLoginUpgrade", null, true, Boolean.class, false);
+    }
+
     private User toUser(final WeixinUserDetail detail) {
         return new User() {
             @Override

@@ -237,4 +237,18 @@ public interface LoginService extends UserDetailsService {
 
     @PreDestroy
     void preDestroy();
+
+    /**
+     * @param login
+     * @return 允许login分享推广
+     */
+    @Transactional(readOnly = true)
+    boolean allowShare(Login login);
+
+    /**
+     * @param login
+     * @return 允许login升级成为代理商
+     */
+    @Transactional(readOnly = true)
+    boolean allowUpgrade(Login login);
 }

@@ -58,7 +58,7 @@ public class WechatShareController {
     @GetMapping(SystemService.wechatShareUri)
     public String share(@AuthenticationPrincipal Login loginInput, Model model) {
         Login login = loginService.get(loginInput.getId());
-        if (!loginService.isRegularLogin(login))
+        if (!loginService.isRegularLogin(login) && !loginService.allowShare(login))
             return "redirect:" + SystemService.wechatShareMoreUri;
         model.addAttribute("login", login);
         final String targetUrl = systemService.toUrl("/wechatJoin" + login.getId());
