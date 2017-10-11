@@ -198,12 +198,14 @@ body {
       .tag-title {
         color: #000;
         font-size: 16px;
+        height: 25px;
       }
       .tag-subTitle {
         color: #d4d4d4;
         font-size: 12px;
       }
       .tag-detail {
+        height: 25px;
         .goods-price, .goods-bought {
           display: inline-block;
           width: 50%;

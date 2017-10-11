@@ -60,6 +60,9 @@ $(function () {
                 "title": "仓库", "data": "storage", "name": "storage"
             },
             {
+                "title": "货号", "data": "productCode", "name": "productCode"
+            },
+            {
                 "title": "货品", "data": "product", "name": "product"
             },
             {

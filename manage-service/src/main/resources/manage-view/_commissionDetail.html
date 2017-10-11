@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>订单分佣详情</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="manage-resource/css/style.min.css" th:href="@{'/manage-resource/css/style.min.css'}">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css" th:href="@{'/manage-resource/css/custom.css'}">
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_orderManage.html" th:href="@{/orderManage}">订单管理</a></li>
+            </ol>
+        </div>
+    </div>
+    <h1>佣金详情</h1>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-success" cellspacing="0" width="100%">
+                    <tbody>
+                    <tr>
+                        <td>佣金获取人</td>
+                        <td>获取金额</td>
+                        <td>相关比例</td>
+                        <td>佣金类型</td>
+                    </tr>
+                    <!--/*@thymesVar id="commissionDetail" type="java.util.List<cn.lmjia.market.core.entity.deal.Commission>"*/-->
+                    <tr th:each="commission:${commissionDetail}">
+                        <td th:text="${@readService.nameForPrincipal(commission.who)}">小红</td>
+                        <td th:text="${commission.amount}">1999.00</td>
+                        <td th:text="${@readService.percentage(commission.rate)}">28%</td>
+                        <td th:text="${commission.type}">促销</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.treeGrid.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+</html>
