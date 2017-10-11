@@ -386,6 +386,7 @@ public class InitService {
                 MainGood mainGood = mainGoodRepository.findByProduct(mainProduct);
                 if (mainGood == null) {
                     mainGood = new MainGood();
+                    mainGood.setCommissionSource(true);
                     mainGood.setCreateTime(LocalDateTime.now());
                     mainGood.setProduct(mainProduct);
                     mainGood.setEnable(true);
