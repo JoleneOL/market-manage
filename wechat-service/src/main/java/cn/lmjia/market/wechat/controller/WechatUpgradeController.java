@@ -42,7 +42,7 @@ public class WechatUpgradeController {
     public String index(@AuthenticationPrincipal Login loginInput, Model model) {
         // 正在申请 错误
         Login login = loginService.get(loginInput.getId());
-        if (!loginService.isRegularLogin(login)) {
+        if (!loginService.isRegularLogin(login) && !loginService.allowUpgrade(login)) {
             return "redirect:" + SystemService.wechatOrderURi;
         }
         if (promotionRequestService.currentRequest(login) != null) {
@@ -95,7 +95,7 @@ public class WechatUpgradeController {
 
         request.setOrderedName(readService.nameForPrincipal(login));
         request.setOrderedMobile(readService.mobileFor(login));
-        
+
         // 开始支付
         return payAssistanceService.payOrder(login.getWechatUser().getOpenId(), servletRequest, request, false);
     }

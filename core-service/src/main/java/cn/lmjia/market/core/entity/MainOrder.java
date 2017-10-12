@@ -342,7 +342,8 @@ public class MainOrder implements PayableOrder, CommissionSource, ThreadLocker, 
                 .map(good1 -> good1.getProduct().getName())
                 .collect(Collectors.joining(",")));
 //        setGoodCommissioningPrice(good.getProduct().getDeposit());
-        setGoodCommissioningPriceAmountIndependent(withAmount(good1 -> good1.getProduct().getDeposit()));
+        setGoodCommissioningPriceAmountIndependent(withAmount(good1 -> good1.isCommissionSource()
+                ? good1.getProduct().getDeposit() : BigDecimal.ZERO));
         setOrderBody(amounts.entrySet().stream()
                 .map(entry
                         -> entry.getValue()

@@ -18,6 +18,7 @@ import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.QuickTradeService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.test.QuickPayBean;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,6 +43,7 @@ import me.jiangcai.wx.model.Gender;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -117,6 +119,17 @@ public abstract class CoreServiceTest extends SpringWebTest {
     //</editor-fold>
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private SystemService systemService;
+
+    /**
+     * 为了让178可运作，又保证当前测试可行所以需要先将属性设定至初始版本友好
+     */
+    @Before
+    public void com178() {
+        systemService.updateNonAgentAbleToGainCommission(true);
+        systemService.updateRegularLoginAsAnyOrder(true);
+    }
 
     /**
      * 新增并且保存一个随机的管理员
