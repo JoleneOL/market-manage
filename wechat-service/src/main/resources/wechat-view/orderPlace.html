@@ -77,7 +77,8 @@
                 </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="text" id="J_cityPicker"
-                           th:value="${@environment.acceptsProfiles('staging')?'浙江省 杭州市 滨江区':''}" name="address">
+                           th:value="${@environment.acceptsProfiles('staging')?'浙江省 杭州市 滨江区':''}" name="address"
+                           placeholder="请选择地址">
                 </div>
                 <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
             </div>
