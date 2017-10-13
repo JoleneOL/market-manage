@@ -76,15 +76,19 @@
                         </li>
                     </ul>
                 </li>
-                <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','LOOK','SERVICE')">
+                <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','LOOK','SERVICE','FINANCE')">
                     <a href="#">
                         <i class="fa fa-users"></i>
                         <span class="nav-label">经销商管理</span>
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
-                        <li>
+                        <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','LOOK','SERVICE')">
                             <a class="J_menuItem" href="_agentManage.html" th:href="@{/agentManage}">查看经销商</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" href="_agentGoodAdvancePayment.html"
+                               th:href="@{/agentGoodAdvancePaymentManage}">预付货款管理</a>
                         </li>
                         <li sec:authorize="hasAnyRole('ROOT','ALL_AGENT','LOOK')">
                             <a class="J_menuItem" href="_agentUpdate.html"
@@ -103,7 +107,7 @@
                     </a>
                     <ul class="nav nav-second-level collapse">
                         <li>
-                            <a class="J_menuItem" href="_orderManage.html" th:href="@{/orderManage}">代理商下单管理</a>
+                            <a class="J_menuItem" href="_orderManage.html" th:href="@{/orderManage}">下单管理</a>
                         </li>
                         <li>
                             <a class="J_menuItem" href="_mortgageTRG.html" th:href="@{/mortgageTRG}">投融家按揭码</a>
@@ -119,12 +123,12 @@
                 <li sec:authorize="hasAnyRole('ROOT','FINANCE','LOOK')">
                     <a href="#">
                         <i class="fa fa-rmb"></i>
-                        <span class="nav-label">代理商佣金管理</span>
+                        <span class="nav-label">佣金管理</span>
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
                         <li th:remove="all">
-                            <a class="J_menuItem" href="_commDetail.html">代理商佣金明细</a>
+                            <a class="J_menuItem" href="_commDetail.html">佣金明细</a>
                         </li>
                         <li sec:authorize="hasAnyRole('ROOT','FINANCE','LOOK')">
                             <a class="J_menuItem" href="_withdrawManage.html" th:href="@{/withdrawManage}">提现管理</a>
