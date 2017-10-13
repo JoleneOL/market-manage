@@ -24,3 +24,4 @@ buildNumber.properties
 /dealer/src/main/webapp/
 /core-service/src/main/webapp/
 /wechat-service/src/main/webapp/
+/manage-service/src/main/webapp/
