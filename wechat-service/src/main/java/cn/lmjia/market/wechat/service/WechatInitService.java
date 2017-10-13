@@ -46,11 +46,11 @@ public class WechatInitService {
             Protocol.forAccount(publicAccount).createMenu(
                     new Menu[]
                             {
+
                                     createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
-                                    , createMenu("下单"
                                     , systemStringService.getCustomSystemString("market.mall.wechat.menu.on"
-                                            , null, false, Boolean.class, false)
-                                            ? createMenu("商城", systemService.toUrl("/wechatIndex")) : null
+                                    , null, false, Boolean.class, false) ? createMenu("商城", systemService.toUrl("/wechatIndex"))
+                                    : createMenu("下单"
                                     , createMenu("购买", systemService.toUrl(SystemService.wechatOrderURi))
                                     , createMenu("花呗分期", systemService.toUrl(SystemService.wechatOrderURiHB))
                                     , createMenu("投融家分期", systemService.toUrl(TRJEnhanceConfig.TRJOrderURI))

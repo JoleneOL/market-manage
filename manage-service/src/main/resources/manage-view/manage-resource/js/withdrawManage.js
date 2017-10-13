@@ -176,7 +176,7 @@ $(function () {
                 layer.close(loading);
                 layer.open({
                     content: html,
-                    area: ['500px', 'auto'],
+                    area: ['500px', '500px'],
                     // btn: ['确认', '取消'],
                     zIndex: 9999
                 });
