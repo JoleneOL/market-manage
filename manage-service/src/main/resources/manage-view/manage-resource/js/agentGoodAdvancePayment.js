@@ -75,12 +75,14 @@ $(function () {
             {
                 "title": "操作者",
                 "data": "operator",
-                "name": "operator"
+                "name": "operator",
+                "orderable": false
             },
             {
                 "title": "批准者",
                 "data": "approval",
-                "name": "approval"
+                "name": "approval",
+                "orderable": false
             },
             {
                 "title": "备注",
