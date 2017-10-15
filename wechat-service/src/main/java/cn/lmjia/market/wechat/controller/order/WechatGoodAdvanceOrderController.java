@@ -2,12 +2,11 @@ package cn.lmjia.market.wechat.controller.order;
 
 import cn.lmjia.market.core.controller.main.order.AbstractMainDeliverableOrderController;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.rows.MainOrderRows;
+import cn.lmjia.market.core.rows.AgentPrepaymentOrderRows;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import me.jiangcai.lib.spring.data.AndSpecification;
@@ -38,14 +37,14 @@ public class WechatGoodAdvanceOrderController extends AbstractMainDeliverableOrd
     /**
      * @return 仅仅显示我的订单
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/api/orderList")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/agentPrepaymentOrderList")
     @RowCustom(distinct = true, dramatizer = ApiDramatizer.class)
     public RowDefinition myOrder(@AuthenticationPrincipal Login login, String search, OrderStatus status) {
-        return new MainOrderRows(login, t -> t.format(formatter)) {
+        return new AgentPrepaymentOrderRows(t -> t.format(formatter)) {
             @Override
-            public Specification<MainOrder> specification() {
+            public Specification<AgentPrepaymentOrder> specification() {
                 return new AndSpecification<>(
-                        mainOrderService.search(search, status)
+                        mainDeliverableOrderService.search(search, status)
                         , (root, query, cb) -> cb.equal(root.get("orderBy"), login)
                 );
             }

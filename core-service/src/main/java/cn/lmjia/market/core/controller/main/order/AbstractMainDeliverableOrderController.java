@@ -2,7 +2,6 @@ package cn.lmjia.market.core.controller.main.order;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
-import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.InstallmentChannel;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder;
@@ -10,8 +9,8 @@ import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.MainGoodsAndAmounts;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.MainDeliverableOrderService;
 import cn.lmjia.market.core.service.MainGoodService;
-import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.SalesmanService;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.wx.model.Gender;
@@ -25,7 +24,7 @@ import java.util.Map;
  */
 public abstract class AbstractMainDeliverableOrderController<T extends MainDeliverableOrder> {
     @Autowired
-    protected MainOrderService mainOrderService;
+    protected MainDeliverableOrderService<T> mainDeliverableOrderService;
     @Autowired
     private MainGoodRepository mainGoodRepository;
     @Autowired
@@ -57,7 +56,7 @@ public abstract class AbstractMainDeliverableOrderController<T extends MainDeliv
         model.addAttribute("salesAchievement", salesmanService.pick(login));
     }
 
-    protected MainOrder newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
+    protected T newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
             , Address address, String mobile, String mortgageIdentifier, Long channelId
             , MainGoodsAndAmounts amounts) throws MainGoodLowStockException {
         Map<MainGood, Integer> realAmounts = amounts.toReal(mainGoodRepository);
@@ -67,7 +66,7 @@ public abstract class AbstractMainDeliverableOrderController<T extends MainDeliv
             }
         });
 
-        return mainOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age
+        return mainDeliverableOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age
                 , gender, address
                 , realAmounts, mortgageIdentifier);
     }
