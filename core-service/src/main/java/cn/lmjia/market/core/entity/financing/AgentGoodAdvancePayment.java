@@ -11,6 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -71,4 +74,13 @@ public class AgentGoodAdvancePayment {
     private String serial;
 
 
+    /**
+     * @param paymentPath     到货款的路径
+     * @param criteriaBuilder cb
+     * @return 是否认可货款支付是成功的
+     */
+    public static Predicate isSuccessPayment(Path<? extends AgentGoodAdvancePayment> paymentPath
+            , CriteriaBuilder criteriaBuilder) {
+        return criteriaBuilder.isTrue(paymentPath.get(AgentGoodAdvancePayment_.approved));
+    }
 }

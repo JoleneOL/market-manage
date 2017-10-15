@@ -5,7 +5,7 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.channel.ChannelRepository;
 import cn.lmjia.market.core.service.ChannelService;
-import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.MarketStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +23,13 @@ public class ChannelServiceImpl implements ChannelService {
     @Autowired
     private MainGoodRepository mainGoodRepository;
     @Autowired
-    private MainOrderService mainOrderService;
+    private MarketStockService marketStockService;
 
     @Override
     public Channel findByName(String name) {
         Channel channel = channelRepository.findByName(name);
         if(channel != null && channel.getMainGoodSet() != null){
-            mainOrderService.calculateGoodStock(channel.getMainGoodSet());
+            marketStockService.calculateGoodStock(channel.getMainGoodSet());
         }
         return channel;
     }

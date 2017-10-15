@@ -249,6 +249,11 @@ public class SalesmanServiceImpl implements SalesmanService {
             TextMessage reply = new TextMessage();
             reply.setContent(systemService.toUrl(SystemService.wechatSales));
             return reply;
+        } else if (((TextMessage) message).getContent().trim().equals("#货款")) {
+//            log.debug(message.getFrom() + "要看业绩");
+            TextMessage reply = new TextMessage();
+            reply.setContent(systemService.toUrl(SystemService.goodAdvanceOrderList));
+            return reply;
         } else {
             log.debug(message.getFrom() + "要获取推广码");
             Login login = loginService.asWechat(message.getFrom());

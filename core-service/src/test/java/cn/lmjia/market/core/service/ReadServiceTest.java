@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.support.ManageLevel;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +40,8 @@ public class ReadServiceTest extends CoreServiceTest {
                 .isEqualTo(name);
 
         System.out.println(readService.agentLevelForPrincipal(manager));
+        assertThat(readService.currentGoodAdvancePaymentBalance(manager).getAmount())
+                .isEqualTo(BigDecimal.ZERO);
     }
 
 }

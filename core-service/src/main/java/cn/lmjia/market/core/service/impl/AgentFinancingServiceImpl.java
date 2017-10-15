@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.financing.AgentFeeRecord;
 import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment;
 import cn.lmjia.market.core.entity.financing.AgentGoodPaymentRecord;
 import cn.lmjia.market.core.entity.financing.AgentIncomeRecord;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.repository.financing.AgentFeeRecordRepository;
 import cn.lmjia.market.core.repository.financing.AgentGoodAdvancePaymentRepository;
 import cn.lmjia.market.core.repository.financing.AgentGoodPaymentRecordRepository;
@@ -33,6 +34,8 @@ public class AgentFinancingServiceImpl implements AgentFinancingService {
     private AgentGoodAdvancePaymentRepository agentGoodAdvancePaymentRepository;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private AgentLevelRepository agentLevelRepository;
 
     @Override
     public void recordGoodPayment(Login who, BigDecimal amount, Integer type, String serial) {
@@ -79,7 +82,10 @@ public class AgentFinancingServiceImpl implements AgentFinancingService {
     public void addGoodPayment(Manager manager, long login, BigDecimal amount, LocalDate date, String serial) {
         AgentGoodAdvancePayment payment = new AgentGoodAdvancePayment();
         payment.setOperator(manager);
-        payment.setLogin(loginService.get(login));
+        final Login login1 = loginService.get(login);
+        payment.setLogin(login1);
+        if (agentLevelRepository.countByLogin(login1) == 0)
+            throw new IllegalArgumentException(login1 + "并非代理商");
         payment.setHappenTime(date.atStartOfDay());
         payment.setAmount(amount);
         payment.setSerial(serial);

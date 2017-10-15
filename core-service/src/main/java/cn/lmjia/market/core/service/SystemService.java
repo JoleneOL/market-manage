@@ -14,6 +14,10 @@ import java.util.Map;
  */
 public interface SystemService {
     /**
+     * 预付货款批货列表
+     */
+    String goodAdvanceOrderList = "/wechatGoodAdvanceOrderList";
+    /**
      * 显示业绩的URL
      */
     String wechatSales = "/wechatSales";
