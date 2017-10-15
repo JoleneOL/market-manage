@@ -20,7 +20,7 @@
       data-detail-url="orderDetail.html"
       data-pay-url="pay.html"
       data-invoice-url="invoice.html"
-      th:data-detail-url="@{/wechatOrderDetail}"
+      th:data-detail-url="@{/wechatAgentPrepaymentOrderDetail}"
       th:data-pay-url="@{/wechatOrderPay}">
 <section class="view_body view_pb-more">
     <div class="view_panel-commission js-extra-h-c">
@@ -59,7 +59,8 @@
     </div>
     <div id="tabs-container" class="swiper-container">
         <div class="swiper-wrapper">
-            <div class="swiper-slide view-scroll-wrap view-order-lists js-commItems" data-url="/api/orderList">
+            <div class="swiper-slide view-scroll-wrap view-order-lists js-commItems"
+                 data-url="/api/agentPrepaymentOrderList">
                 <div class="view-scroll-list">
                     <div class="weui-loadmore">
                         <i class="weui-loading"></i>
@@ -67,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/orderList?status=2">
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/agentPrepaymentOrderList?status=2">
                 <div class="view-scroll-list">
                     <div class="weui-loadmore">
                         <i class="weui-loading"></i>
@@ -75,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/orderList?status=3">
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/agentPrepaymentOrderList?status=3">
                 <div class="view-scroll-list">
                     <div class="weui-loadmore">
                         <i class="weui-loading"></i>
@@ -89,7 +90,7 @@
 <footer class="view_footer-fixed">
     <div class="weui-footer weui-footer_fixed-bottom">
         <div class="weui-btn-area">
-            <a href="orderPlace.html" th:href="@{/wechatOrder}" class="weui-btn weui-btn_custom">我要批货</a>
+            <a href="orderPlace.html" th:href="@{/wechatAgentPrepaymentOrder}" class="weui-btn weui-btn_custom">我要批货</a>
         </div>
     </div>
 </footer>

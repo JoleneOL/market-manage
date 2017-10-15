@@ -54,6 +54,18 @@ public abstract class AbstractMainDeliverableOrderController<T extends MainDeliv
         // 该量表示 渠道已经支持分期；如果这样的话，支付时不应该提供分期选项
         model.addAttribute("installmentSupported", (channel != null) && channel instanceof InstallmentChannel);
         model.addAttribute("salesAchievement", salesmanService.pick(login));
+
+        // 默认的
+        // 页面标题
+        model.addAttribute("title", "我的下单");
+        // 列表 标题
+        model.addAttribute("listTitle", "订单列表");
+        // 列表 URI
+        model.addAttribute("listUri", "/wechatOrderList");
+        // 下单 标题
+        model.addAttribute("orderTitle", "下&nbsp;&nbsp;单");
+        // 下单 URI
+        model.addAttribute("orderUri", "/wechatOrder");
     }
 
     protected T newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender
@@ -69,5 +81,15 @@ public abstract class AbstractMainDeliverableOrderController<T extends MainDeliv
         return mainDeliverableOrderService.newOrder(login, loginService.get(recommendId), name, mobile, age
                 , gender, address
                 , realAmounts, mortgageIdentifier);
+    }
+
+    protected MainGoodsAndAmounts getMainGoodAndAmounts(String[] goods, String[] goodsArray) {
+        MainGoodsAndAmounts amounts;
+        if (goods != null) {
+            amounts = MainGoodsAndAmounts.ofArray(goods);
+        } else if (goodsArray != null) {
+            amounts = MainGoodsAndAmounts.ofArray(goodsArray);
+        } else throw new IllegalArgumentException("goods required");
+        return amounts;
     }
 }

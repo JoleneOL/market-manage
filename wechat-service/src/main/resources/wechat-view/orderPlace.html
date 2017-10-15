@@ -6,6 +6,11 @@
 <!--/*@thymesVar id="installmentSupported" type="boolean"*/-->
 <!--/*@thymesVar id="channel" type="cn.lmjia.market.core.entity.channel.Channel"*/-->
 <!--/*@thymesVar id="salesAchievement" type="cn.lmjia.market.core.entity.deal.SalesAchievement"*/-->
+<!--/*@thymesVar id="title" type="java.lang.String"*/-->
+<!--/*@thymesVar id="listTitle" type="java.lang.String"*/-->
+<!--/*@thymesVar id="listUri" type="java.lang.String"*/-->
+<!--/*@thymesVar id="orderTitle" type="java.lang.String"*/-->
+<!--/*@thymesVar id="orderUri" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -13,7 +18,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>我的下单</title>
+    <title th:text="${title}">我的下单</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -22,11 +27,13 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small">
+<body class="view-bg-color view-fs-small" data-order-url="/wechatOrder" th:data-order-url="${orderUri}">
 <section class="view_body view-bg-color panel" id="J_main">
     <form action="orderSuccess.html" method="post" th:action="@{/wechatOrder}" th:method="post" id="J_form">
-        <div class="weui-cells__title">我要下单 <a href="orderList.html" th:href="@{/wechatOrderList}"
-                                               class="weui-cell_link">订单列表</a></div>
+        <div class="weui-cells__title"><span th:text="${title}">我要下单</span> <a href="orderList.html"
+                                                                               th:href="${listUri}"
+                                                                               class="weui-cell_link"
+                                                                               th:text="${listTitle}">订单列表</a></div>
         <div class="weui-cells">
             <div class="weui-cell weui-cell_access" id="J_addGoods">
                 <div class="weui-cell__bd"><i class="fa fa-plus-circle text-big text-custom view-add-icon"></i>添加商品
@@ -173,7 +180,7 @@
             ￥<span class="js-installment">**</span>/期
         </div>
         <div class="weui-btn-area">
-            <button type="submit" class="weui-btn weui-btn_custom" id="J_submitBtn">下&nbsp;&nbsp;单</button>
+            <button type="submit" class="weui-btn weui-btn_custom" id="J_submitBtn" th:utext="${orderTitle}">下&nbsp;&nbsp;单</button>
         </div>
         <label for="weuiAgree" class="weui-agree view-agress_inline">
             <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked name="isAgree">
@@ -184,7 +191,9 @@
 </section>
 <aside id="J_goodsList">
     <div class="weui-panel weui-panel_access view-goods_list">
-        <div class="weui-panel__hd">商品列表 <div class="view-refresh js-refreshBtn"><i class="fa fa-refresh "></i>刷新</div></div>
+        <div class="weui-panel__hd">商品列表
+            <div class="view-refresh js-refreshBtn"><i class="fa fa-refresh "></i>刷新</div>
+        </div>
         <div class="weui-panel__bd">
             <div class="weui-media-box weui-media-box_appmsg js-goods-list"
                  data-id="1"
@@ -214,14 +223,17 @@
                         <div class="view_flex-1">
                             <p class="weui-media-box__desc view-mb-4" th:text="${good.product.code}">SCRO-200QL/A</p>
                             <!--限购显示，不限购隐藏 可以嘛，给婷姐都考虑到了-->
-                            <p class="weui-media-box__desc text-error">限购<span class="js-limit-text" th:text="${good.product.stock}">11</span><span>台</span></p>
+                            <p class="weui-media-box__desc text-error">限购<span class="js-limit-text"
+                                                                               th:text="${good.product.stock}">11</span><span>台</span>
+                            </p>
                         </div>
                         <div class="view_flex-1 view_flex-right text-right">
                             <div class="spinner view-mt-4">
                                 <!--如果数量为0，class有 disabled，参数有disabled-->
                                 <button class="decrease disabled" disabled>&minus;</button>
                                 <!--max为限购的最大值-->
-                                <input type="number" class="value js-buy-value" min="0" max="100" th:max="${good.product.stock}" value="0">
+                                <input type="number" class="value js-buy-value" min="0" max="100"
+                                       th:max="${good.product.stock}" value="0">
                                 <!--如果数量为最大值，class有 disabled，参数有disabled-->
                                 <button class="increase">&plus;</button>
                             </div>
@@ -246,7 +258,8 @@
                     <div class="weui-flex">
                         <div class="view_flex-1">
                             <p class="weui-media-box__desc view-mb-4">SCRO-200QL/A</p>
-                            <p class="weui-media-box__desc text-error">限购<span class="js-limit-text">20</span><span>台</span></p>
+                            <p class="weui-media-box__desc text-error">限购<span
+                                    class="js-limit-text">20</span><span>台</span></p>
                         </div>
                         <div class="view_flex-1 view_flex-right text-right">
                             <div class="spinner view-mt-4">
@@ -486,7 +499,7 @@
 <script src="../mock/api.js" th:remove="all"></script>
 
 <script src="../wechat-resource/assets/js/orderPlace.js"
-        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=5)}"></script>
+        th:src="@{/wechat-resource/assets/js/orderPlace.js(v=6)}"></script>
 
 
 <script th:if="${trj}">

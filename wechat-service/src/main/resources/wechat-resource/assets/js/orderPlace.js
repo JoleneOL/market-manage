@@ -124,7 +124,7 @@ $(function () {
 
     function submitOrder(data) {
         $.showLoading('订单提交中');
-        $.ajax('/wechatOrder', {
+        $.ajax(body.data('order-url'), {
             method: 'POST',
             data: data,
             dataType: 'json',
