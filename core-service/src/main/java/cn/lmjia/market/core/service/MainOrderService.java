@@ -1,13 +1,9 @@
 package cn.lmjia.market.core.service;
 
 
-import cn.lmjia.market.core.aop.MultipleBusinessLocker;
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
-import lombok.Data;
-import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +12,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author CJ
@@ -34,13 +29,6 @@ public interface MainOrderService extends MainDeliverableOrderService<MainOrder>
      */
     @Transactional(readOnly = true)
     List<MainOrder> allOrders();
-
-    /**
-     * @param id 订单id
-     * @return 获取订单，never null
-     */
-    @Transactional(readOnly = true)
-    MainOrder getOrder(long id);
 
     /**
      * @param orderId {@link MainOrder#getSerialId(Path, CriteriaBuilder)}
@@ -73,13 +61,6 @@ public interface MainOrderService extends MainDeliverableOrderService<MainOrder>
     @Transactional
     void updateOrderTime(LocalDateTime time);
 
-    /**
-     * @param orderId 订单号
-     * @return 这个订单需要的库存信息
-     */
-    @Transactional(readOnly = true)
-    List<Depot> depotsForOrder(long orderId);
-
     @EventListener(OrderInstalledEvent.class)
     @Transactional
     MainOrderFinishEvent forOrderInstalledEvent(OrderInstalledEvent event);
@@ -91,16 +72,4 @@ public interface MainOrderService extends MainDeliverableOrderService<MainOrder>
     @Transactional(readOnly = true)
     List<MainOrder> byOrderBy(Login login);
 
-    // 内部API
-    @Data
-    class Amounts implements MultipleBusinessLocker {
-        private final Map<MainGood, Integer> amounts;
-
-        @Override
-        public Object[] toLock() {
-            return amounts.keySet().stream()
-                    .map(mainGood -> ("MainGoodStockLock-" + mainGood.getProduct().getCode()).intern())
-                    .toArray(Object[]::new);
-        }
-    }
 }

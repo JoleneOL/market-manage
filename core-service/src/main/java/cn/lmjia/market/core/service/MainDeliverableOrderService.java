@@ -1,24 +1,61 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.aop.MultiBusinessSafe;
+import cn.lmjia.market.core.aop.MultipleBusinessLocker;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
+import lombok.Data;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.LogisticsHostService;
+import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.wx.model.Gender;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author CJ
  */
 public interface MainDeliverableOrderService<T extends MainDeliverableOrder> extends LogisticsHostService {
+
+    /**
+     * @return 是否支持字符串的orderId
+     */
+    default boolean supportOrderId() {
+        return false;
+    }
+
+    default Predicate orderIdPredicate(String orderId, Root<T> root, CriteriaBuilder cb) {
+        return cb.conjunction();
+    }
+
+    /**
+     * @return 不言而喻
+     */
+    Class<T> getOrderClass();
+
+    /**
+     * @param id 订单主键
+     * @return 订单, never null
+     */
+    @Transactional(readOnly = true)
+    T getOrder(long id);
+
+    /**
+     * @param orderId 订单号
+     * @return 这个订单需要的库存信息
+     */
+    @Transactional(readOnly = true)
+    List<Depot> depotsForOrder(long orderId);
 
     /**
      * 新创建订单
@@ -65,4 +102,17 @@ public interface MainDeliverableOrderService<T extends MainDeliverableOrder> ext
      * @return 获取数据规格
      */
     Specification<T> search(String search, OrderStatus status);
+
+    // 内部API
+    @Data
+    class Amounts implements MultipleBusinessLocker {
+        private final Map<MainGood, Integer> amounts;
+
+        @Override
+        public Object[] toLock() {
+            return amounts.keySet().stream()
+                    .map(mainGood -> ("MainGoodStockLock-" + mainGood.getProduct().getCode()).intern())
+                    .toArray(Object[]::new);
+        }
+    }
 }
