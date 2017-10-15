@@ -3,7 +3,6 @@ package cn.lmjia.market.core.entity;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder;
-import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.util.CommissionSource;
@@ -20,7 +19,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -33,7 +31,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -46,7 +43,8 @@ import java.util.Locale;
 @Entity
 @Setter
 @Getter
-public class MainOrder extends MainDeliverableOrder implements PayableOrder, CommissionSource, ThreadLocker, LogisticsDestination, DeliverableOrder {
+public class MainOrder extends MainDeliverableOrder implements PayableOrder, CommissionSource, ThreadLocker
+        , LogisticsDestination, DeliverableOrder {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);
     /**
      * 最长长度
@@ -61,11 +59,6 @@ public class MainOrder extends MainDeliverableOrder implements PayableOrder, Com
      * 所以这个号在整体订单号中长度为 6
      */
     private int dailySerialId;
-    /**
-     * 原始记录
-     */
-    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private MainOrderRecord record;
     /**
      * 谁下的单，并不意味着它即可获得收益，需要确保该用户是否是正式用户（即下过一单或者是一个代理商，如果不是则给他的引导者）
      */
@@ -222,19 +215,9 @@ public class MainOrder extends MainDeliverableOrder implements PayableOrder, Com
     public void makeRecord() {
         super.makeRecord();
 
-        if (record != null)
-            throw new IllegalStateException("I really have a record!");
-        record = new MainOrderRecord();
-        record.setOrderTime(getOrderTime());
-        record.setAge(LocalDate.now().getYear() - getCustomer().getBirthYear());
-        record.setGender(getCustomer().getGender());
-        record.setInstallAddress(getInstallAddress());
-        record.setMobile(getCustomer().getMobile());
-        record.setMortgageIdentifier(mortgageIdentifier);
-        record.setName(getCustomer().getName());
-        record.updateAmounts(getAmounts());
+        getRecord().setMortgageIdentifier(mortgageIdentifier);
         if (recommendBy != null)
-            record.setRecommendByMobile(recommendBy.getLoginName());
+            getRecord().setRecommendByMobile(recommendBy.getLoginName());
 
         setGoodCommissioningPriceAmountIndependent(withAmount(good1 -> good1.isCommissionSource()
                 ? good1.getProduct().getDeposit() : BigDecimal.ZERO));
@@ -248,10 +231,6 @@ public class MainOrder extends MainDeliverableOrder implements PayableOrder, Com
     @Override
     public BigDecimal getOrderDueAmount() {
         return getGoodTotalPriceAmountIndependent();
-    }
-
-    public Money getOrderDueAmountMoney() {
-        return new Money(getOrderDueAmount());
     }
 
     public Money getCommissioningAmountMoney() {

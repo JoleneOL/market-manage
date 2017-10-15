@@ -1,8 +1,10 @@
 package cn.lmjia.market.core.entity.order;
 
+import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.record.MainOrderRecord;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.model.TimeLineUnit;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -27,9 +30,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +58,12 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * 原始记录
+     */
+    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    private MainOrderRecord record;
 
     private Address installAddress;
     /**
@@ -143,6 +154,17 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
      * 创建下单记录
      */
     public void makeRecord() {
+        if (record != null)
+            throw new IllegalStateException("I really have a record!");
+        record = new MainOrderRecord();
+        record.setOrderTime(getOrderTime());
+        record.setAge(LocalDate.now().getYear() - getCustomer().getBirthYear());
+        record.setGender(getCustomer().getGender());
+        record.setInstallAddress(getInstallAddress());
+        record.setMobile(getCustomer().getMobile());
+
+        record.setName(getCustomer().getName());
+        record.updateAmounts(getAmounts());
 
 //        setGoodTotalPrice(good.getTotalPrice());
         setGoodTotalPriceAmountIndependent(withAmount(MainGood::getTotalPrice));
@@ -298,5 +320,9 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
         list.add(new TimeLineUnit("佣金结算", lastShipDoneTime, lastShipDoneTime != null, firstShipTime == null));
 
         return list;
+    }
+
+    public Money getOrderDueAmountMoney() {
+        return new Money(getGoodTotalPriceAmountIndependent());
     }
 }

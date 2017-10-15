@@ -56,7 +56,7 @@ public class WechatGoodAdvanceOrderController extends AbstractMainDeliverableOrd
         return "wechat@goodAdvanceOrderList.html";
     }
 
-    @GetMapping("/wechatOrderDetail")
+    @GetMapping("/wechatAgentPrepaymentOrderDetail")
     public String detail(String orderId, Model model) {
         model.addAttribute("order", from(orderId, null));
         return "wechat@orderDetail.html";
@@ -64,6 +64,9 @@ public class WechatGoodAdvanceOrderController extends AbstractMainDeliverableOrd
 
     @Override
     protected AgentPrepaymentOrder from(String orderId, Long id) {
-        return null;
+        if (orderId != null) {
+            return mainDeliverableOrderService.getOrder(Long.parseLong(orderId));
+        }
+        return mainDeliverableOrderService.getOrder(id);
     }
 }
