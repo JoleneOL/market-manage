@@ -64,15 +64,19 @@
                                             <div class="col-sm-6">
                                                 <select data-placeholder="请选择货品" id="J_selectCat"
                                                         class="chosen-select form-control"
-                                                        name="product" th:disabled="${currentData!=null}">
+                                                        name="product" th:if="${currentData==null}">
                                                     <option value="净水机"
                                                             th:each="product:${@readService.allEnabledMainProduct()}"
-                                                            th:selected="${currentData!=null && product.equals(currentData.product)}"
-                                                            th:value="${product.code}" th:text="${product.name}">净水机
+                                                            th:value="${product.code}" th:text="|${product.name}(${product.code})|">净水器(hzls01)
                                                     </option>
-                                                    <option th:remove="all" value="净化器">净化器</option>
-                                                    <option th:remove="all" value="优化宝">优化宝</option>
+                                                    <option th:remove="all" value="净化器">净水器(hzls01)</option>
+                                                    <option th:remove="all" value="优化宝">优化宝(SP70)</option>
                                                 </select>
+                                                <th:block  th:if="${currentData != null}">
+                                                    <span class="form-control" readonly="true" th:readonly="${currentData != null}"
+                                                      th:text="|${currentData.product.name}(${currentData.product.code})|">净水器(hzls01)</span>
+                                                    <input type="hidden" name="product" th:value="${currentData.product.code}"/>
+                                                </th:block>
                                             </div>
                                         </div>
                                         <div class="form-group">
