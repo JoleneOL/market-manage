@@ -59,6 +59,7 @@ public class ChannelServiceImpl implements ChannelService {
         newGood.setEnable(good.isEnable());
         newGood.setProduct(good.getProduct());
         newGood.setChannel(channel);
+        newGood.setCommissionSource(good.isCommissionSource());
         return setupChannel(newGood, channel);
     }
 

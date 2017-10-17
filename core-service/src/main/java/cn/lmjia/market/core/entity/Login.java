@@ -129,7 +129,7 @@ public class Login implements UserDetails {
     private BigDecimal commissionBalance = BigDecimal.ZERO;
 
     /**
-     * 是否拥有一个成功的订单，算是爱心天使的标志吧
+     * 正式用户的标志(爱心天使)
      *
      * @since {@link cn.lmjia.market.core.Version#newLogin}
      */

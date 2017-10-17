@@ -101,7 +101,42 @@ public interface SystemService {
 
     /**
      * @param login 当前登录的用户
-     * @return
+     * @return 是否显示提现按钮
      */
     boolean allowWithdrawDisplay(Login login);
+
+    /**
+     * @param value 非代理商是否拥有获得销售奖励的资格
+     */
+    void updateNonAgentAbleToGainCommission(boolean value);
+
+    /**
+     * @return 非代理商是否拥有获得销售奖励的资格
+     */
+    boolean isNonAgentAbleToGainCommission();
+
+    /**
+     * @param value 爱心天使的认定是否只需要完成一笔任意订单
+     */
+    void updateRegularLoginAsAnyOrder(boolean value);
+
+    /**
+     * @return 爱心天使的认定是否只需要完成一笔任意订单
+     */
+    boolean isRegularLoginAsAnyOrder();
+
+    /**
+     * @return 爱心天使的认定是否需要完成一笔足够金额的订单;如果null 表示没有这个条件
+     */
+    BigDecimal getRegularLoginAsSingleOrderAmount();
+
+    /**
+     * @return 爱心天使的认定是否需要累计完成足够金额的订单;如果null 表示没有这个条件
+     */
+    BigDecimal getRegularLoginAsTotalOrderAmount();
+
+    /**
+     * @return 爱心天使的认定是否需要在一天内累计完成足够金额的订单;如果null 表示没有这个条件
+     */
+    BigDecimal getRegularLoginAs24HOrderAmount();
 }

@@ -386,6 +386,7 @@ public class InitService {
                 MainGood mainGood = mainGoodRepository.findByProduct(mainProduct);
                 if (mainGood == null) {
                     mainGood = new MainGood();
+                    mainGood.setCommissionSource(true);
                     mainGood.setCreateTime(LocalDateTime.now());
                     mainGood.setProduct(mainProduct);
                     mainGood.setEnable(true);
@@ -511,6 +512,9 @@ public class InitService {
                         break;
                     case deleteProduct:
                         jdbcService.tableAlterAddColumn(Product.class, "deleted", "0");
+                        break;
+                    case newCommission:
+                        jdbcService.tableAlterAddColumn(MainGood.class, "commissionSource", "1");
                         break;
                     default:
                 }
