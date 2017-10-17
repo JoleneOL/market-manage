@@ -23,7 +23,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,7 +75,6 @@ public class WechatGoodAdvanceOrderController extends AbstractMainDeliverableOrd
      */
     @PostMapping("/wechatAgentPrepaymentOrder")
     @ResponseBody
-    @Transactional
     public ApiResult newOrder(String name, Gender gender
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId

@@ -3,6 +3,7 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -68,5 +69,5 @@ public interface AgentFinancingService {
      * @param serial  单据号
      */
     @Transactional
-    void addGoodPayment(Manager manager, long login, BigDecimal amount, LocalDate date, String serial);
+    AgentGoodAdvancePayment addGoodPayment(Manager manager, long login, BigDecimal amount, LocalDate date, String serial);
 }

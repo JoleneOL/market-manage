@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.market.core.aop.MultiBusinessSafe;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood_;
@@ -159,6 +160,7 @@ public abstract class AbstractMainDeliverableOrderService<T extends MainDelivera
     }
 
     @Override
+    @MultiBusinessSafe
     public T newOrder(Login who, Login recommendBy, String name, String mobile, int age, Gender gender
             , Address installAddress, MainOrderService.Amounts amounts, String mortgageIdentifier)
             throws MainGoodLowStockException {

@@ -140,7 +140,8 @@ $(function () {
                     return false;
                 }
                 if (data.resultCode !== 200) {
-                    $.toptip("订单提交失败，请重试");
+                    var msg = data.resultMsg || '订单提交失败，请重试';
+                    $.toptip(msg);
                     return false;
                 }
                 var orderPKId = data.data.id;

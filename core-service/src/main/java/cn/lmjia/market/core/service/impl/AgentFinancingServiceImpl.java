@@ -79,7 +79,7 @@ public class AgentFinancingServiceImpl implements AgentFinancingService {
     }
 
     @Override
-    public void addGoodPayment(Manager manager, long login, BigDecimal amount, LocalDate date, String serial) {
+    public AgentGoodAdvancePayment addGoodPayment(Manager manager, long login, BigDecimal amount, LocalDate date, String serial) {
         AgentGoodAdvancePayment payment = new AgentGoodAdvancePayment();
         payment.setOperator(manager);
         final Login login1 = loginService.get(login);
@@ -89,6 +89,6 @@ public class AgentFinancingServiceImpl implements AgentFinancingService {
         payment.setHappenTime(date.atStartOfDay());
         payment.setAmount(amount);
         payment.setSerial(serial);
-        agentGoodAdvancePaymentRepository.save(payment);
+        return agentGoodAdvancePaymentRepository.save(payment);
     }
 }
