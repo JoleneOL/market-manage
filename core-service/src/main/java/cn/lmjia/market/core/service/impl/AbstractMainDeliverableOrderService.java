@@ -101,7 +101,8 @@ public abstract class AbstractMainDeliverableOrderService<T extends MainDelivera
                     ));
                 } else
                     predicate = cb.and(predicate, cb.equal(root.get(MainDeliverableOrder_.orderStatus), status));
-            }
+            } else
+                predicate = cb.and(predicate, cb.notEqual(root.get(MainDeliverableOrder_.orderStatus), OrderStatus.close));
 
             return predicate;
         };
