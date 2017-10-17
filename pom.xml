@@ -17,6 +17,7 @@
         <module>logistics</module>
         <module>logistics-haier</module>
         <module>cash-transfer</module>
+        <module>cash-transfer-supplier-cjb</module>
     </modules>
 
     <properties>
