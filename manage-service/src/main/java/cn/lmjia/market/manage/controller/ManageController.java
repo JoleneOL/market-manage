@@ -29,11 +29,6 @@ public class ManageController {
         return "_index.html";
     }
 
-    @GetMapping("/orderManage")
-    public String orderManage() {
-        return "_orderManage.html";
-    }
-
     @PutMapping("/order/orderMaintain")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void orderMaintain() {

@@ -15,8 +15,6 @@ import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.MainOrderRows;
 import cn.lmjia.market.core.rows.StockShiftUnitRows;
-import cn.lmjia.market.core.service.MainOrderService;
-import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.entity.Product_;
 import me.jiangcai.logistics.entity.StockShiftUnit;
 import me.jiangcai.logistics.haier.entity.HaierOrder;
@@ -32,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -45,27 +41,64 @@ import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author CJ
  */
 @Controller
 @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "')")
-public class ManageOrderController {
+public class ManageMainOrderController extends AbstractManageMainDeliverableOrderController<MainOrder> {
 
-    @Autowired
-    private MainOrderService mainOrderService;
     @Autowired
     private ApplicationContext applicationContext;
     private ConversionService conversionService;
-    @Autowired
-    private LogisticsService logisticsService;
 
+    @GetMapping("/mainOrderDelivery")
+    @Transactional(readOnly = true)
+    public String mainOrderDelivery(long id, Model model) {
+        // 物流模块提供数据，视图层依然由客户端项目，期待将来更高级视图解决方案的设计
+        return orderDelivery(model, id);
+    }
+
+    @GetMapping("/mainOrderDetail")
+    @Transactional(readOnly = true)
+    public String mainOrderDetail(long id, Model model) {
+        return orderDetail(model, id);
+    }
+
+    @Override
+    protected String orderDetailUri() {
+        return "/mainOrderDetail";
+    }
+
+    @Override
+    protected String orderDeliveryUri() {
+        return "/mainOrderDelivery";
+    }
+
+    @Override
+    protected String dataUri() {
+        return "/orderData/manageableList";
+    }
+
+    @Override
+    protected String managePageUri() {
+        return "/orderManage";
+    }
+
+    @Override
+    protected String managePageTitle() {
+        return "订单管理";
+    }
+
+    @GetMapping("/orderManage")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "','" + Login.ROLE_LOOK + "')")
+    public String orderManage(Model model) {
+        return orderManageIndex(model);
+    }
+
+    // 不应该存在在这个类中
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_LOGISTICS + "','" + Login.ROLE_SUPPLY_CHAIN + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/manage/orderData/logistics")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
@@ -154,50 +187,5 @@ public class ManageOrderController {
         };
     }
 
-    @GetMapping("/orderData/logistics/{orderId}")
-    @ResponseBody
-    @Transactional(readOnly = true)
-    public Object preLogistics(@PathVariable("orderId") long orderId) {
-        Map<String, Object> data = new HashMap<>();
-//        MainOrder order = mainOrderService.getOrder(orderId);
-        data.put("depots", mainOrderService.depotsForOrder(orderId).stream()
-//                .filter(stockInfo -> stockInfo.getAmount() >= order.getAmount())
-                        // 库存多的优先
-//                .sorted((o1, o2) -> o2.getAmount() - o1.getAmount())
-                        .map(info -> {
-                            Map<String, Object> x = new HashMap<>();
-                            x.put("id", info.getId());
-                            x.put("name", info.getName());
-                            x.put("quantity", 99999);
-                            x.put("distance", -1);
-                            return x;
-                        })
-                        .collect(Collectors.toSet())
-        );
-        return data;
-    }
-
-    @GetMapping("/mainOrderDelivery")
-    @Transactional(readOnly = true)
-    public String mainOrderDelivery(long id, Model model) {
-        // 物流模块提供数据，视图层依然由客户端项目，期待将来更高级视图解决方案的设计
-        MainOrder order = mainOrderService.getOrder(id);
-        logisticsService.viewModelForDelivery(order, model);
-        model.addAttribute("parentPageUri", "/orderManage");
-        model.addAttribute("parentPageName", "订单管理");
-        return "_orderDelivery.html";
-    }
-
-    @GetMapping("/mainOrderDetail")
-    @Transactional(readOnly = true)
-    public String orderDetail(long id, Model model) {
-        final MainOrder order = mainOrderService.getOrder(id);
-        model.addAttribute("currentData", order);
-        model.addAttribute("shipList", order.getLogisticsSet()
-                .stream()
-                .sorted(Comparator.comparing(StockShiftUnit::getCreateTime))
-                .collect(Collectors.toList()));
-        return "_orderDetail.html";
-    }
 
 }
