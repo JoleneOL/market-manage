@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.controller.order;
 
+import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder;
 import cn.lmjia.market.core.service.MainDeliverableOrderService;
 import me.jiangcai.logistics.LogisticsService;
@@ -62,7 +63,12 @@ public abstract class AbstractManageMainDeliverableOrderController<T extends Mai
 
     String orderDetail(Model model, long id) {
         MainDeliverableOrder order = mainDeliverableOrderService.getOrder(id);
+        model.addAttribute("parentPageUri", managePageUri());
+        model.addAttribute("parentPageName", managePageTitle());
         model.addAttribute("currentData", order);
+        if (order instanceof MainOrder) {
+            model.addAttribute("mainOrder", order);
+        }
         model.addAttribute("shipList", order.getLogisticsSet()
                 .stream()
                 .sorted(Comparator.comparing(StockShiftUnit::getCreateTime))

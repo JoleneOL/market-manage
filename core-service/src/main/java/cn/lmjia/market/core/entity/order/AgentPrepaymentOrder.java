@@ -37,4 +37,9 @@ public class AgentPrepaymentOrder extends MainDeliverableOrder {
     public String getHumanReadableId() {
         return "货款发货" + getId();
     }
+
+    @Override
+    public Login getOrderPerson() {
+        return belongs;
+    }
 }

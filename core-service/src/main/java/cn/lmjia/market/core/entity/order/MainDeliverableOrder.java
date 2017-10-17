@@ -2,6 +2,7 @@ package cn.lmjia.market.core.entity.order;
 
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.record.MainOrderRecord;
@@ -197,6 +198,11 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
      * @return 人类可读的id
      */
     public abstract String getHumanReadableId();
+
+    /**
+     * @return 下单人
+     */
+    public abstract Login getOrderPerson();
 
     /**
      * @return 总的数量

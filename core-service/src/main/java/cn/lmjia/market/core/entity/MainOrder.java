@@ -294,6 +294,11 @@ public class MainOrder extends MainDeliverableOrder implements PayableOrder, Com
     }
 
     @Override
+    public Login getOrderPerson() {
+        return orderBy;
+    }
+
+    @Override
     public boolean isPay() {
         return getOrderStatus() != OrderStatus.EMPTY && getOrderStatus() != OrderStatus.forPay && getOrderStatus() != OrderStatus.close;
     }
