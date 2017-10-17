@@ -201,7 +201,7 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
             , String authorising, String idNumber, boolean installmentHuabai
-            , String[] goods,@RequestParam(name = "goods[]",required = false) String[] goodsArray)
+            , String[] goods, @RequestParam(name = "goods[]", required = false) String[] goodsArray)
             throws MainGoodLowStockException, InvalidAuthorisingException {
         int age = 20;
         MainGoodsAndAmounts amounts = getMainGoodAndAmounts(goods, goodsArray);
@@ -314,7 +314,16 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             yours = order.getOrderBy().equals(login);
         }
         model.addAttribute("yours", yours);
-        return "wechat@orderSuccess.html";
+        return successView(model);
     }
 
+    @Override
+    protected String listUri() {
+        return "订单列表";
+    }
+
+    @Override
+    protected String listTitle() {
+        return "/wechatOrderList";
+    }
 }

@@ -149,7 +149,7 @@ $(function () {
                 var idNumber = data.data.idNumber;
                 var authorising = data.data.authorising;
                 //提交成功后的跳转
-                var payOrderHref = "wechatOrderPay.html"
+                var payOrderHref = body.data('order-pay-url')
                     + "?orderPKId=" + orderPKId
                     + "&installmentHuabai=" + installmentHuabai;
                 if (!!channelId)

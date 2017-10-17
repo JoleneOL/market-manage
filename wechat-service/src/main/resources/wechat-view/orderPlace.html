@@ -11,6 +11,7 @@
 <!--/*@thymesVar id="listUri" type="java.lang.String"*/-->
 <!--/*@thymesVar id="orderTitle" type="java.lang.String"*/-->
 <!--/*@thymesVar id="orderUri" type="java.lang.String"*/-->
+<!--/*@thymesVar id="payUri" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -27,7 +28,8 @@
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small" data-order-url="/wechatOrder" th:data-order-url="${orderUri}">
+<body class="view-bg-color view-fs-small" data-order-url="/wechatOrder" th:data-order-url="${orderUri}"
+      data-order-pay-url="/wechatOrderPay" th:data-order-pay-url="${payUri}">
 <section class="view_body view-bg-color panel" id="J_main">
     <form action="orderSuccess.html" method="post" th:action="@{/wechatOrder}" th:method="post" id="J_form">
         <div class="weui-cells__title"><span th:text="${title}">我要下单</span> <a href="orderList.html"

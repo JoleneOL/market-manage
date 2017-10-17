@@ -35,6 +35,16 @@ public abstract class AbstractMainDeliverableOrderController<T extends MainDeliv
     private SalesmanService salesmanService;
 
     /**
+     * @return 可访问列表的uri
+     */
+    protected abstract String listUri();
+
+    /**
+     * @return 「列表」的标题
+     */
+    protected abstract String listTitle();
+
+    /**
      * @param orderId 字符串id
      * @param id      直接id
      * @return 获取具体订单
@@ -59,13 +69,28 @@ public abstract class AbstractMainDeliverableOrderController<T extends MainDeliv
         // 页面标题
         model.addAttribute("title", "我的下单");
         // 列表 标题
-        model.addAttribute("listTitle", "订单列表");
+        model.addAttribute("listTitle", listTitle());
         // 列表 URI
-        model.addAttribute("listUri", "/wechatOrderList");
+        model.addAttribute("listUri", listUri());
         // 下单 标题
         model.addAttribute("orderTitle", "下&nbsp;&nbsp;单");
         // 下单 URI
         model.addAttribute("orderUri", "/wechatOrder");
+        // 支付 URI
+        model.addAttribute("payUri", "/wechatOrderPay");
+    }
+
+    /**
+     *
+     * @param model 相关model
+     * @return 下单成功页面的视图名
+     */
+    protected String successView(Model model) {
+        // 列表 标题
+        model.addAttribute("listTitle", listTitle());
+        // 列表 URI
+        model.addAttribute("listUri", listUri());
+        return "wechat@orderSuccess.html";
     }
 
     protected T newOrder(Login login, Model model, long recommendId, String name, int age, Gender gender

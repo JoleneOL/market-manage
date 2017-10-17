@@ -101,18 +101,32 @@ public class WechatGoodAdvanceOrderController extends AbstractMainDeliverableOrd
     }
 
     @Override
+    protected String listUri() {
+        return SystemService.goodAdvanceOrderList;
+    }
+
+    @Override
+    protected String listTitle() {
+        return "批货订单";
+    }
+
+    @Override
     protected void orderIndex(Login login, Model model, Channel channel) {
         super.orderIndex(login, model, channel);
         // 页面标题
         model.addAttribute("title", "批货下单");
-        // 列表 标题
-        model.addAttribute("listTitle", "批货订单");
-        // 列表 URI
-        model.addAttribute("listUri", SystemService.goodAdvanceOrderList);
         // 下单 标题
         model.addAttribute("orderTitle", "批&nbsp;&nbsp;货");
         // 下单 URI
         model.addAttribute("orderUri", "/wechatAgentPrepaymentOrder");
+        // 支付 URI
+        model.addAttribute("payUri", "/wechatAgentPrepaymentOrderSuccess");
+    }
+
+    @GetMapping("/wechatAgentPrepaymentOrderSuccess")
+    public String paySuccess(Model model) {
+        model.addAttribute("yours", true);
+        return successView(model);
     }
 
     /**
