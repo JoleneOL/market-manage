@@ -164,7 +164,7 @@ public class MainOrderServiceImpl implements MainOrderService {
             LocalDateTime now = LocalDateTime.now();
             //已经超过关闭时间的，直接把订单关掉
             long count;
-            if(!env.acceptsProfiles(CoreConfig.ProfileUnitTest)){
+            if (!env.acceptsProfiles(CoreConfig.ProfileUnitTest)) {
                 count = forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now)).count();
                 log.info("即将关闭" + count + "个订单");
                 forPayOrderList.stream().filter(order -> !order.getOrderTime().plusMinutes(maxMinuteForPay).isAfter(now))
@@ -176,7 +176,7 @@ public class MainOrderServiceImpl implements MainOrderService {
                             long waitMinute = ChronoUnit.MINUTES.between(now, order.getOrderTime().plusMinutes(maxMinuteForPay));
                             executor.schedule(new OrderPayStatusCheckThread(order.getId()), waitMinute, TimeUnit.MINUTES);
                         });
-            }else{
+            } else {
                 count = forPayOrderList.stream().filter(order -> !order.getOrderTime().plusSeconds(maxMinuteForPay).isAfter(now)).count();
                 log.info("即将关闭" + count + "个订单");
                 forPayOrderList.stream().filter(order -> !order.getOrderTime().plusSeconds(maxMinuteForPay).isAfter(now))
@@ -309,6 +309,8 @@ public class MainOrderServiceImpl implements MainOrderService {
                     ));
                 } else
                     predicate = cb.and(predicate, cb.equal(root.get(MainOrder_.orderStatus), status));
+            } else {
+                predicate = cb.and(predicate, cb.notEqual(root.get(MainOrder_.orderStatus), OrderStatus.close));
             }
 
             return predicate;
