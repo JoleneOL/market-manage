@@ -154,7 +154,8 @@ $(function () {
                 min: 0.01,
                 max: +allInBtn.attr('data-all-in'),
                 isFloat2: true
-            }
+            },
+            agree:'required'
         },
         messages: {
             payee: "请填写收款人",
@@ -172,7 +173,8 @@ $(function () {
                 number: "请填写正确金额",
                 min: "提款最小金额为 {0}",
                 max: "提款最大金额为 {0}"
-            }
+            },
+            agree:"请阅读提现规则"
         },
         errorPlacement: function (error, element) {
             console.log($(element).attr('name'), ' has error');
@@ -196,4 +198,10 @@ $(function () {
         $('#minError').hide();
         $('#withSubmit').attr("disabled", true);
     }
+
+    var $agreebutton = $('#J_agree_button');
+    var $agree = $('#J_agree');
+    $agreebutton.click(function(){
+        $agree.prop("checked",'checked');
+    });
 });

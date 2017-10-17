@@ -133,7 +133,9 @@
                     </div>
                     <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                 </div>
-                <div class="weui-cell weui-cell_link"><div class="weui-cell__bd text-error">开票信息</div></div>
+                <div class="weui-cell weui-cell_link">
+                    <div class="weui-cell__bd text-error">开票信息</div>
+                </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">公司名称</p></div>
                     <div class="weui-cell__bd">
@@ -178,8 +180,11 @@
                     </div>
                 </div>
             </div>
-            <a href="javascript:void(0);" class="weui-cell weui-cell_link open-popup" data-target="#J_upgradeRules">
-                <div class="weui-cell__bd">收益提现规则</div>
+            <a href="javascript:void(0);" class="weui-cell weui-cell_link open-popup"
+               data-target="#J_upgradeRules">
+                &emsp;<input type="checkbox" name="agree" onclick="return false" value='agree'
+                                   id="J_agree">
+                <div class="weui-cell__bd" style="color: #009bb6">&emsp;《收益提现规则》</div>
             </a>
         </div>
     </form>
@@ -218,7 +223,8 @@
                     <p>电&emsp;&emsp;话：<span th:text="${companyTelephone}">0571--88187913</span></p>
                 </section>
             </section>
-            <button type="button" class="weui-btn weui-btn_custom close-popup">确&emsp;&emsp;定</button>
+            <button type="button" class="weui-btn weui-btn_custom close-popup" id="J_agree_button">同&emsp;&emsp;意
+            </button>
         </article>
     </div>
 </div>
