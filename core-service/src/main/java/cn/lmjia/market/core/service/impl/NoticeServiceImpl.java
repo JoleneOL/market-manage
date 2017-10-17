@@ -4,8 +4,10 @@ import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.order.MainDeliverableOrder;
 import cn.lmjia.market.core.entity.request.PromotionRequest;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.event.MainDeliverableOrderDeliveryRequired;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ManagerService;
@@ -80,6 +82,28 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    public void mainDeliverableOrderDeliveryRequired(MainDeliverableOrderDeliveryRequired event) {
+        final MainDeliverableOrder order = event.getOrder();
+        cs(order);
+    }
+
+    private void cs(MainDeliverableOrder order) {
+        try {
+            userNoticeService.sendMessage(null, loginService.toWechatUser(managerService.levelAs(ManageLevel.customerService))
+                    , null, new PaySuccessToCS()
+                    , Date.from(ZonedDateTime.of(order.getOrderTime(), ZoneId.systemDefault()).toInstant())
+                    , order.getId(), order.getHumanReadableId()
+                    , order.getOrderBody()
+                    , order.getInstallAddress().toString()
+                    , "客户已支付订单，请尽快发货"
+                    , ""
+            );
+        } catch (Throwable ex) {
+            log.trace("", ex);
+        }
+    }
+
+    @Override
     public void orderPaySuccess(OrderPaySuccess event) {
         // 删除过期数据
         noticeTimes.entrySet().stream()
@@ -102,19 +126,7 @@ public class NoticeServiceImpl implements NoticeService {
                         , order.getOrderProductName(), order.getOrderDueAmount());
             }
 
-            try {
-                userNoticeService.sendMessage(null, loginService.toWechatUser(managerService.levelAs(ManageLevel.customerService))
-                        , null, new PaySuccessToCS()
-                        , Date.from(ZonedDateTime.of(order.getOrderTime(), ZoneId.systemDefault()).toInstant())
-                        , order.getId(), order.getSerialId()
-                        , order.getOrderBody()
-                        , order.getInstallAddress().toString()
-                        , "客户已支付订单，请尽快发货"
-                        , ""
-                );
-            } catch (Throwable ex) {
-                log.trace("", ex);
-            }
+            cs(order);
         } else if (event.getPayableOrder() instanceof PromotionRequest) {
             PromotionRequest request = (PromotionRequest) event.getPayableOrder();
             WeixinUserDetail detail = request.getWhose().getWechatUser();

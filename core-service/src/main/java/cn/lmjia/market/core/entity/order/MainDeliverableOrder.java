@@ -194,6 +194,11 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
     public abstract boolean isPay();
 
     /**
+     * @return 人类可读的id
+     */
+    public abstract String getHumanReadableId();
+
+    /**
      * @return 总的数量
      */
     public int getTotalAmount() {

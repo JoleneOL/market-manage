@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.event.MainDeliverableOrderDeliveryRequired;
 import me.jiangcai.payment.event.OrderPaySuccess;
 import org.springframework.context.event.EventListener;
 
@@ -19,6 +20,9 @@ public interface NoticeService {
     // 订单支付时发送事件
     @EventListener(OrderPaySuccess.class)
     void orderPaySuccess(OrderPaySuccess event);
+
+    @EventListener(MainDeliverableOrderDeliveryRequired.class)
+    void mainDeliverableOrderDeliveryRequired(MainDeliverableOrderDeliveryRequired event);
 
     /**
      * login刚刚加入，如果存在引导者 请给他发布通知

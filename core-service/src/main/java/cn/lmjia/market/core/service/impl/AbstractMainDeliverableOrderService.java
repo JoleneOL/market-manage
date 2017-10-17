@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
+import cn.lmjia.market.core.event.MainDeliverableOrderDeliveryRequired;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.service.CustomerService;
@@ -24,6 +25,7 @@ import me.jiangcai.wx.model.Gender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -54,6 +56,8 @@ public abstract class AbstractMainDeliverableOrderService<T extends MainDelivera
     private StockService stockService;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public Specification<T> search(String orderId, String mobile, Long goodId, LocalDate orderDate, LocalDate beginDate
@@ -185,7 +189,12 @@ public abstract class AbstractMainDeliverableOrderService<T extends MainDelivera
 //        order.setGood(good);
         order.makeRecord();
 
-        return persistOrder(order, mortgageIdentifier);
+        order = persistOrder(order, mortgageIdentifier);
+        if (order.isPay()) {
+            // 如果已经完成支付，则直接发布物流通知事件
+            applicationEventPublisher.publishEvent(new MainDeliverableOrderDeliveryRequired(order));
+        }
+        return order;
     }
 
     /**

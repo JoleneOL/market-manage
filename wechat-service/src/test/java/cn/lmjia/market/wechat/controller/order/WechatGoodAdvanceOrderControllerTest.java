@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.controller.order;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.service.AgentFinancingService;
@@ -45,6 +46,8 @@ public class WechatGoodAdvanceOrderControllerTest extends WechatTestBase {
 
         agentFinancingService.approvalGoodPayment(newRandomManager(ManageLevel.finance), payment.getId(), "ok");
 
+        Manager manager = newRandomManager(ManageLevel.customerService);
+        bindDeveloperWechat(manager);
 
         page = WechatGoodAdvanceOrderPage.of(this, driver);
 

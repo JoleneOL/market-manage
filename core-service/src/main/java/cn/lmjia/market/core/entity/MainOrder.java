@@ -289,6 +289,11 @@ public class MainOrder extends MainDeliverableOrder implements PayableOrder, Com
     }
 
     @Override
+    public String getHumanReadableId() {
+        return getSerialId();
+    }
+
+    @Override
     public boolean isPay() {
         return getOrderStatus() != OrderStatus.EMPTY && getOrderStatus() != OrderStatus.forPay && getOrderStatus() != OrderStatus.close;
     }

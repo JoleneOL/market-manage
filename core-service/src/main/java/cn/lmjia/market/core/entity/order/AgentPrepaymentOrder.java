@@ -32,4 +32,9 @@ public class AgentPrepaymentOrder extends MainDeliverableOrder {
     public boolean isPay() {
         return true;
     }
+
+    @Override
+    public String getHumanReadableId() {
+        return "货款发货" + getId();
+    }
 }
