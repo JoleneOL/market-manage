@@ -4,6 +4,7 @@ import cn.lmjia.market.core.controller.main.order.AbstractMainDeliverableOrderCo
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder_;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.ApiResult;
@@ -138,7 +139,7 @@ public class WechatGoodAdvanceOrderController extends AbstractMainDeliverableOrd
             public Specification<AgentPrepaymentOrder> specification() {
                 return new AndSpecification<>(
                         mainDeliverableOrderService.search(search, status)
-                        , (root, query, cb) -> cb.equal(root.get("orderBy"), login)
+                        , (root, query, cb) -> cb.equal(root.get(AgentPrepaymentOrder_.belongs), login)
                 );
             }
         };

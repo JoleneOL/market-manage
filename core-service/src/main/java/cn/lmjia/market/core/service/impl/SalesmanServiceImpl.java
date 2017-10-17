@@ -44,6 +44,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author CJ
@@ -68,6 +69,9 @@ public class SalesmanServiceImpl implements SalesmanService {
     private QRCodeService qrCodeService;
     @Autowired
     private ApplicationContext applicationContext;
+    private KeyWord salesman = new KeyWord("业绩", "yeji", "yj");
+    private KeyWord prePayment = new KeyWord("货款", "huokuan", "hk");
+    private KeyWord share = new KeyWord("推广码", "tg", "tuiguang");
 
     @Override
     public void salesmanShareTo(long salesmanId, Login login) {
@@ -219,7 +223,7 @@ public class SalesmanServiceImpl implements SalesmanService {
                         predicate = cb.and(predicate, !remark ? remarkPath.isNull() : remarkPath.isNotNull());
                     }
                     if (deal != null) {
-                        Join<?,MainOrder> orderPath = root.join(SalesAchievement_.mainOrder, JoinType.LEFT);
+                        Join<?, MainOrder> orderPath = root.join(SalesAchievement_.mainOrder, JoinType.LEFT);
                         Predicate next;
                         if (deal)
                             next = cb.and(orderPath.isNotNull(), MainOrder.getOrderPaySuccess(orderPath, cb));
@@ -236,25 +240,26 @@ public class SalesmanServiceImpl implements SalesmanService {
     @Override
     public boolean focus(PublicAccount account, Message message) {
         log.debug("got wechat message:" + message);
-        return message != null && message instanceof TextMessage && (
-                ((TextMessage) message).getContent().trim().equals("#业绩")
-                        || ((TextMessage) message).getContent().trim().equals("#推广码")
-        );
+        return salesman.test(message)
+                || prePayment.test(message)
+                || share.test(message);
     }
 
     @Override
     public Message reply(PublicAccount account, Message message) {
-        if (((TextMessage) message).getContent().trim().equals("#业绩")) {
+        if (salesman.test(message)) {
             log.debug(message.getFrom() + "要看业绩");
             TextMessage reply = new TextMessage();
             reply.setContent(systemService.toUrl(SystemService.wechatSales));
             return reply;
-        } else if (((TextMessage) message).getContent().trim().equals("#货款")) {
-//            log.debug(message.getFrom() + "要看业绩");
+        }
+        if (prePayment.test(message)) {
             TextMessage reply = new TextMessage();
             reply.setContent(systemService.toUrl(SystemService.goodAdvanceOrderList));
             return reply;
-        } else {
+        }
+
+        if (share.test(message)) {
             log.debug(message.getFrom() + "要获取推广码");
             Login login = loginService.asWechat(message.getFrom());
             if (login == null) {
@@ -281,8 +286,29 @@ public class SalesmanServiceImpl implements SalesmanService {
                 reply.setContent("未知错误。");
                 return reply;
             }
-
         }
 
+        return null;
+    }
+
+    private class KeyWord implements java.util.function.Predicate<Message> {
+
+        private final String[] words;
+
+        private KeyWord(String... words) {
+            this.words = words;
+        }
+
+        @Override
+        public boolean test(Message message) {
+            if (message == null)
+                return false;
+            if (!(message instanceof TextMessage))
+                return false;
+            final String str = ((TextMessage) message).getContent().trim();
+            return Stream.of(words)
+                    .anyMatch(s ->
+                            str.equals("#" + s) || str.equals("＃" + s));
+        }
     }
 }
