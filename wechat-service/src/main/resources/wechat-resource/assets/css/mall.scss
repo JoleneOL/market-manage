@@ -188,12 +188,21 @@ body {
       }
     }
     .tag-content {
-      padding-left: 15px;
-      padding-right: 15px;
+      padding: 0;
+      .goods-tag-wrap {
+        padding: 10px 15px 15px;
+      }
+      .tag-image-wrap {
+        position: relative;
+        padding-bottom: 100%;
+        width: 100%;
+        height: 0;
+      }
       .tag-image {
-        margin-bottom: 10px;
-        width: 105px;
-        height: 90px;
+        position: absolute;
+        margin: 0;
+        width: 100%;
+        height: 100%;
       }
       .tag-title {
         color: #000;
@@ -209,6 +218,7 @@ body {
         .goods-price, .goods-bought {
           display: inline-block;
           width: 50%;
+          overflow: hidden;
         }
         .goods-price {
           font-size: 16px;
@@ -218,6 +228,10 @@ body {
           font-size: 12px;
           text-align: right;
           color: #d4d4d4;
+          height: 25px;
+          line-height: 25px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }
@@ -586,6 +600,7 @@ body {
     }
   }
 }
+
 .cart-group-edit {
   .goods-name {
     display: none !important;
@@ -597,6 +612,7 @@ body {
     @include flex;
   }
 }
+
 .edit-quantity {
   display: none;
   height: 40px;
