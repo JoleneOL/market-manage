@@ -19,8 +19,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -43,6 +46,15 @@ import java.util.Locale;
 @Entity
 @Setter
 @Getter
+@SuppressWarnings("JpaDataSourceORMInspection")
+@AssociationOverrides(
+        {
+                @AssociationOverride(
+                        name = "installedLogisticsSet"
+                        , joinTable = @JoinTable(name = "MAINORDER_INSTALLED_STOCKSHIFTUNIT")
+                )
+        }
+)
 public class MainOrder extends MainDeliverableOrder implements PayableOrder, CommissionSource, ThreadLocker
         , LogisticsDestination, DeliverableOrder {
     public static final DateTimeFormatter SerialDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd", Locale.CHINA);

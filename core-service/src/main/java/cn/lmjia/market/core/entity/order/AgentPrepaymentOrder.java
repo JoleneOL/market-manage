@@ -4,7 +4,10 @@ import cn.lmjia.market.core.entity.Login;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
@@ -16,6 +19,15 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
+@SuppressWarnings("JpaDataSourceORMInspection")
+@AssociationOverrides(
+        {
+                @AssociationOverride(
+                        name = "installedLogisticsSet"
+                        , joinTable = @JoinTable(name = "AgentPrepaymentOrder_INSTALLED_STOCKSHIFTUNIT")
+                )
+        }
+)
 public class AgentPrepaymentOrder extends MainDeliverableOrder {
     /**
      * 哪个代理商

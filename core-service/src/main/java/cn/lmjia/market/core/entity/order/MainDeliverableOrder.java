@@ -27,7 +27,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -130,9 +129,9 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
      *
      * @since {@link cn.lmjia.market.core.Version#muPartShift}
      */
-    @SuppressWarnings("JpaDataSourceORMInspection")
+//    @SuppressWarnings("JpaDataSourceORMInspection")
     @OneToMany
-    @JoinTable(name = "MAINORDER_INSTALLED_STOCKSHIFTUNIT")
+//    @JoinTable(name = "MAINORDER_INSTALLED_STOCKSHIFTUNIT")
     private List<StockShiftUnit> installedLogisticsSet;
 
 
