@@ -23,19 +23,11 @@
       th:data-detail-url="@{/wechatAgentPrepaymentOrderDetail}"
       th:data-pay-url="@{/wechatOrderPay}">
 <section class="view_body view_pb-more">
-    <div class="view_panel-commission js-extra-h-c">
-        <div class="view_panel-header">
-            <div class="weui-flex">
-                <div class="weui-flex__item view_flex-3">
-                    <!--<div class="weui-cells__title view-mt-0">可提现佣金</div>-->
-                    <h1 class="view_page-title" id="WithdrawAbleAmount"><span
-                            th:text="${{@readService.currentGoodAdvancePaymentBalance(#authentication.principal)}}">￥886896</span><sub>可用预付货款</sub>
-                    </h1>
-                </div>
-            </div>
-        </div>
+    <div class="weui-cells__title js-extra-h-c">可用预付货款：
+        <h2 id="WithdrawAbleAmount" style="display: inline-block;color: #000;font-weight: 400;">
+            <span th:text="${{@readService.currentGoodAdvancePaymentBalance(#authentication.principal)}}">￥886896</span>
+        </h2>
     </div>
-    <div class="weui-cells__title">订单列表</div>
     <div class="weui-search-bar js-extra-h-c">
         <div class="weui-search-bar__form">
             <div class="weui-search-bar__box">
