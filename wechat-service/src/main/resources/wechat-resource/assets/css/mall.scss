@@ -214,22 +214,22 @@ body {
         font-size: 12px;
       }
       .tag-detail {
-        height: 25px;
         .goods-price, .goods-bought {
-          display: inline-block;
-          width: 50%;
           overflow: hidden;
         }
         .goods-price {
-          font-size: 16px;
+          height: 24px;
+          line-height: 24px;
+          font-size: 15px;
           color: #f15353;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .goods-bought {
           font-size: 12px;
-          text-align: right;
           color: #d4d4d4;
-          height: 25px;
-          line-height: 25px;
+          height: 24px;
+          line-height: 24px;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
