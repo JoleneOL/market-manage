@@ -38,6 +38,8 @@ public class MainOrderServiceTest extends CoreServiceTest {
     @Autowired
     private StockService stockService;
     @Autowired
+    private MarketStockService marketStockService;
+    @Autowired
     private MainGoodService mainGoodService;
     @Autowired
     private MainProductRepository mainProductRepository;
@@ -59,7 +61,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
 
         //如果货品已经存在订单了，就先给他一个初始值
         saleGoodList.forEach(mainGood -> {
-            int lockStock = mainOrderService.sumProductNum(mainGood.getProduct());
+            int lockStock = marketStockService.sumProductNum(mainGood.getProduct());
             lockStockMap.put(mainGood.getId(), lockStock);
         });
 
@@ -70,10 +72,10 @@ public class MainOrderServiceTest extends CoreServiceTest {
             Optional<MainGood> amountMainGood = forPayOrder.getAmounts().keySet().stream().filter(p -> p.getId().equals(mainGood.getId())).findAny();
             if (amountMainGood.isPresent()) {
                 int exceptLockStock = forPayOrder.getAmounts().get(amountMainGood.get());
-                assertEquals(lockStockMap.get(mainGood.getId()) + exceptLockStock, mainOrderService.sumProductNum(mainGood.getProduct()));
+                assertEquals(lockStockMap.get(mainGood.getId()) + exceptLockStock, marketStockService.sumProductNum(mainGood.getProduct()));
                 lockStockMap.put(mainGood.getId(), lockStockMap.get(mainGood.getId()) + exceptLockStock);
             } else {
-                assertEquals((int) lockStockMap.get(mainGood.getId()), mainOrderService.sumProductNum(mainGood.getProduct()));
+                assertEquals((int) lockStockMap.get(mainGood.getId()), marketStockService.sumProductNum(mainGood.getProduct()));
             }
         });
 
@@ -88,7 +90,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
             if (amountMainGood.isPresent()) {
                 int exceptLockStock = (lockStockMap.getOrDefault(mainGood.getId(), 0))
                         + finalForDeliveryOrder.getAmounts().get(amountMainGood.get());
-                assertEquals(exceptLockStock, mainOrderService.sumProductNum(mainGood.getProduct()));
+                assertEquals(exceptLockStock, marketStockService.sumProductNum(mainGood.getProduct()));
                 lockStockMap.put(mainGood.getId(), exceptLockStock);
             }
         });
@@ -100,9 +102,9 @@ public class MainOrderServiceTest extends CoreServiceTest {
         assertEquals(OrderStatus.afterSale, doneOrder.getOrderStatus());
         saleGoodList.forEach(mainGood -> {
             if (lockStockMap.containsKey(mainGood.getId())) {
-                assertEquals((int) lockStockMap.get(mainGood.getId()), mainOrderService.sumProductNum(mainGood.getProduct()));
+                assertEquals((int) lockStockMap.get(mainGood.getId()), marketStockService.sumProductNum(mainGood.getProduct()));
             } else {
-                assertEquals(0, mainOrderService.sumProductNum(mainGood.getProduct()));
+                assertEquals(0, marketStockService.sumProductNum(mainGood.getProduct()));
             }
         });
 
@@ -159,7 +161,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         MainGood orderGood = saleGoodList.get(0);
         //初始库存N
         int initStock = stockService.usableStockTotal(orderGood.getProduct()), initLockedStock = initStock - orderGood.getProduct().getStock();
-        mainOrderService.cleanProductStock(orderGood.getProduct());
+        marketStockService.cleanProductStock(orderGood.getProduct());
         //对这个订单下单超过货品库存
         Map<MainGood, Integer> amounts = new HashMap<>();
         amounts.put(orderGood, orderGood.getProduct().getStock() + 1 + random.nextInt(10));
@@ -191,7 +193,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         }
         orderGood.getProduct().setPlanSellOutDate(planSellOutDate);
         mainProductRepository.save(orderGood.getProduct());
-        mainOrderService.cleanProductStock(orderGood.getProduct());
+        marketStockService.cleanProductStock(orderGood.getProduct());
         orderGood = mainGoodService.forSale().stream().filter(p -> p.getId().equals(goodId)).findFirst().get();
         assertEquals(expectStock, orderGood.getProduct().getStock());
         //数量超过 expectStock，下单失败
@@ -228,7 +230,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         } catch (MainGoodLowStockException e) {
             assertTrue(e instanceof MainGoodLimitStockException);
         }
-        mainOrderService.cleanProductStock(orderGood.getProduct());
+        marketStockService.cleanProductStock(orderGood.getProduct());
         orderGood = mainGoodService.forSale().stream().filter(p -> p.getId().equals(goodId)).findFirst().get();
         int limitBuyNum = initStock / 2 - (initLockedStock + expectStock);
         if (limitBuyNum <= 0) {
@@ -256,7 +258,7 @@ public class MainOrderServiceTest extends CoreServiceTest {
         //防止对其他单元测试有影响，把预计售罄时间设置为null
         orderGood.getProduct().setPlanSellOutDate(null);
         mainProductRepository.save(orderGood.getProduct());
-        mainOrderService.cleanProductStock(orderGood.getProduct());
+        marketStockService.cleanProductStock(orderGood.getProduct());
     }
 
     @Test

@@ -10,6 +10,7 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.MarketStockService;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.logistics.entity.Product_;
@@ -69,6 +70,8 @@ public class ManageProductController {
     private PropertyNameRepository propertyNameRepository;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private MarketStockService marketStockService;
 
     // 禁用和恢复
     @PostMapping("/products")
@@ -118,6 +121,7 @@ public class ManageProductController {
             throw new IllegalArgumentException("");
         haierSupplier.updateProduct(product);
     }
+
     @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
     @GetMapping("/manageProduct")
     public String index() {
@@ -200,7 +204,7 @@ public class ManageProductController {
 
         mainProductRepository.save(product);
         if(isCleanProductStock){
-            mainOrderService.cleanProductStock(product);
+            marketStockService.cleanProductStock(product);
         }
         //转存资源
         if (!StringUtils.isEmpty(productImgPath) && productImgPath.length() > 1) {

@@ -2,6 +2,7 @@ package cn.lmjia.market.core.controller;
 
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
+import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.settlement.LoginCommissionJournal;
@@ -14,6 +15,7 @@ import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
+import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import java.math.BigDecimal;
@@ -63,8 +66,8 @@ public class LoginDataController {
     @PreAuthorize("!isAnonymous()")
     @GetMapping("/loginData/select2")
     @RowCustom(dramatizer = Select2Dramatizer.class, distinct = true)
-    public RowDefinition<Login> searchLoginSelect2(String search) {
-        return searchLogin(search);
+    public RowDefinition<Login> searchLoginSelect2(String search, Boolean agent) {
+        return searchLogin(search, agent);
     }
 
     @GetMapping(value = "/loginCommissionJournal", produces = "text/html")
@@ -92,9 +95,10 @@ public class LoginDataController {
      * 查询所有用户
      *
      * @param search 可能是名字或者电话号码
+     * @param agent  是否只获取代理商
      * @return 字段定义
      */
-    private RowDefinition<Login> searchLogin(String search) {
+    private RowDefinition<Login> searchLogin(String search, Boolean agent) {
         return new RowDefinition<Login>() {
             @Override
             public Class<Login> entityClass() {
@@ -115,15 +119,30 @@ public class LoginDataController {
 
             @Override
             public Specification<Login> specification() {
-                if (StringUtils.isEmpty(search))
+                if (StringUtils.isEmpty(search) && agent == null)
                     return null;
+                final Specification<Login> agentSpecification = (root, query, cb) -> {
+                    final Expression<Integer> levelForLogin = ReadService.agentLevelForLogin(root, cb);
+                    return agent ? cb.lessThan(levelForLogin, Customer.LEVEL)
+                            : cb.greaterThanOrEqualTo(levelForLogin, Customer.LEVEL);
+//                    Subquery<Long> subquery = query.subquery(Long.class);
+//                    Root<AgentLevel> agentLevelRoot = subquery.from(AgentLevel.class);
+//                    subquery = subquery
+//                            .select(cb.count(agentLevelRoot))
+//                            .where(cb.equal(agentLevelRoot.get(AgentLevel_.login), root));
+//                    return agent ? cb.greaterThan(subquery, 0L) : cb.equal(subquery, 0L);
+                };
+
+                if (StringUtils.isEmpty(search)) {
+                    return agentSpecification;
+                }
 //                    return (root, query, cb) -> {
 //                        // 必须得有 所以right
 //                        Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.INNER);
 //                        return cb.isNotNull(contactWayJoin);
 //                    };
                 String jpaSearch = "%" + search + "%";
-                return (root, query, cb) -> {
+                final Specification<Login> searchSpecification = (root, query, cb) -> {
                     // 必须得有 所以right
                     Join<Login, ContactWay> contactWayJoin = root.join("contactWay", JoinType.LEFT);
                     return cb.or(
@@ -132,6 +151,9 @@ public class LoginDataController {
                             , cb.like(root.get(Login_.loginName), jpaSearch)
                     );
                 };
+                if (agent == null)
+                    return searchSpecification;
+                return new AndSpecification<>(searchSpecification, agentSpecification);
             }
         };
     }

@@ -24,7 +24,7 @@ public class ManageOrderPage extends AbstractContentPage {
 
     @Override
     public void validatePage() {
-        assertTitle("用户订单");
+        assertTitle("订单管理");
     }
 
     /**

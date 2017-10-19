@@ -2,11 +2,14 @@ package cn.lmjia.market.dealer.controller.order;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.rows.AgentPrepaymentOrderRows;
 import cn.lmjia.market.core.rows.MainOrderRows;
+import cn.lmjia.market.core.service.AgentPrepaymentOrderService;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.util.ApiDramatizer;
@@ -50,6 +53,8 @@ public class OrderDataController {
     private AgentService agentService;
     @Autowired
     private MainOrderService mainOrderService;
+    @Autowired
+    private AgentPrepaymentOrderService agentPrepaymentOrderService;
     @Autowired
     private ConversionService conversionService;
     @Autowired
@@ -101,6 +106,26 @@ public class OrderDataController {
                 return new AndSpecification<>(
                         mainOrderService.search(orderId, mobile, goodId, orderDate, beginDate, endDate, status)
                         , agentService.manageableOrder(login)
+                );
+            }
+        };
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/orderData2/manageableList")
+    @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
+    public RowDefinition manageableList2(@AuthenticationPrincipal Login login, String orderId
+            , @RequestParam(value = "phone", required = false) String mobile, Long goodId
+            , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate beginDate
+            , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate endDate
+            , @DateTimeFormat(pattern = "yyyy-M-d") @RequestParam(required = false) LocalDate orderDate
+            , OrderStatus status) {
+        return new AgentPrepaymentOrderRows(t -> conversionService.convert(t, String.class)) {
+            @Override
+            public Specification<AgentPrepaymentOrder> specification() {
+                return new AndSpecification<>(
+                        agentPrepaymentOrderService.search(orderId, mobile, goodId, orderDate, beginDate, endDate, status)
+                        , login.isManageable() ? null : (Specification<AgentPrepaymentOrder>) (root, query, cb) -> cb.disjunction()
                 );
             }
         };

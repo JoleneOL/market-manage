@@ -4,6 +4,7 @@ import cn.lmjia.market.core.config.other.SecurityConfig;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.manage.ManageServiceTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author CJ
  */
+@Ignore
 @ContextConfiguration(classes = SecurityConfig.class)
 @ActiveProfiles("mysql2")
 public class QuickServiceControllerTest extends ManageServiceTest {

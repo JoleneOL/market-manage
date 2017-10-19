@@ -1,10 +1,19 @@
 package cn.lmjia.market.core.service.impl;
 
 import cn.lmjia.market.core.define.Money;
-import cn.lmjia.market.core.entity.*;
+import cn.lmjia.market.core.entity.ContactWay;
+import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment;
+import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment_;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder_;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
@@ -120,6 +129,45 @@ public class ReadServiceImpl implements ReadService {
     @Override
     public String percentage(BigDecimal input) {
         return NumberUtils.normalPercentage(input);
+    }
+
+    @Override
+    public Money currentGoodAdvancePaymentBalance(Object principal) {
+        Login login = toLogin(principal);
+        login = loginRepository.getOne(login.getId());
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<BigDecimal> sumQuery = criteriaBuilder.createQuery(BigDecimal.class);
+        Root<AgentGoodAdvancePayment> root = sumQuery.from(AgentGoodAdvancePayment.class);
+
+        sumQuery = sumQuery
+                .select(criteriaBuilder.sum(root.get(AgentGoodAdvancePayment_.amount)))
+                .where(
+                        criteriaBuilder.equal(root.get(AgentGoodAdvancePayment_.login), login)
+                        , AgentGoodAdvancePayment.isSuccessPayment(root, criteriaBuilder)
+                );
+
+        BigDecimal current;
+        try {
+            current = entityManager.createQuery(sumQuery).getSingleResult();
+            if (current == null)
+                current = BigDecimal.ZERO;
+        } catch (NoResultException | NullPointerException ignored) {
+            current = BigDecimal.ZERO;
+        }
+        // 减去非关闭的订单
+        sumQuery = criteriaBuilder.createQuery(BigDecimal.class);
+        Root<AgentPrepaymentOrder> orderRoot = sumQuery.from(AgentPrepaymentOrder.class);
+        sumQuery = sumQuery.select(criteriaBuilder.sum(orderRoot.get(AgentPrepaymentOrder_.goodTotalPriceAmountIndependent)))
+                .where(criteriaBuilder.and(
+                        criteriaBuilder.equal(orderRoot.get(AgentPrepaymentOrder_.belongs), login)
+                        , criteriaBuilder.notEqual(orderRoot.get(AgentPrepaymentOrder_.orderStatus), OrderStatus.close)
+                ));
+        try {
+            current = current.subtract(entityManager.createQuery(sumQuery).getSingleResult());
+        } catch (NoResultException | NullPointerException ignored) {
+        }
+
+        return new Money(current);
     }
 
     @Override

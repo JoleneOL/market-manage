@@ -7,7 +7,7 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.service.MainGoodService;
-import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.MarketStockService;
 import me.jiangcai.logistics.entity.ProductType;
 import me.jiangcai.logistics.entity.ProductType_;
 import me.jiangcai.logistics.entity.Product_;
@@ -42,11 +42,11 @@ import java.util.Set;
 public class MainGoodServiceImpl implements MainGoodService {
     @Autowired
     private MainGoodRepository mainGoodRepository;
-    @Autowired
-    private MainOrderService mainOrderService;
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private MarketStockService marketStockService;
 
     @Override
     public List<MainGood> forSale(Channel channel) {
@@ -89,7 +89,7 @@ public class MainGoodServiceImpl implements MainGoodService {
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         });
         if (mainGoodList != null && mainGoodList.size() > 0) {
-            mainOrderService.calculateGoodStock(mainGoodList);
+            marketStockService.calculateGoodStock(mainGoodList);
         }
         return mainGoodList;
     }
@@ -106,7 +106,7 @@ public class MainGoodServiceImpl implements MainGoodService {
     public MainGood findOne(Long goodsId) {
         MainGood mainGood = mainGoodRepository.findOne(goodsId);
         if(mainGood != null){
-            mainOrderService.calculateGoodStock(Arrays.asList(mainGood));
+            marketStockService.calculateGoodStock(Arrays.asList(mainGood));
         }
         return mainGood;
     }

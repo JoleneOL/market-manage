@@ -1,7 +1,11 @@
 package cn.lmjia.market.core.service;
 
 import cn.lmjia.market.core.define.Money;
-import cn.lmjia.market.core.entity.*;
+import cn.lmjia.market.core.entity.ContactWay;
+import cn.lmjia.market.core.entity.Customer;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
@@ -51,7 +55,7 @@ public interface ReadService {
      * @param criteriaBuilder cb
      * @return {@link #nameForPrincipal(Object)}
      */
-    static Expression<String> nameForLogin(From<?, Login> loginPath, CriteriaBuilder criteriaBuilder) {
+    static Expression<String> nameForLogin(From<?, ? extends Login> loginPath, CriteriaBuilder criteriaBuilder) {
         Join<Login, ContactWay> contactWayJoin = loginPath.join("contactWay", JoinType.LEFT);
         Expression<String> loginName = loginPath.get("loginName");
         Expression<String> name = contactWayJoin.get("name");
@@ -138,6 +142,13 @@ public interface ReadService {
 
     /**
      * @param principal 身份，一般是Login
+     * @return 可用的货款余额
+     */
+    @Transactional(readOnly = true)
+    Money currentGoodAdvancePaymentBalance(Object principal);
+
+    /**
+     * @param principal 身份，一般是Login
      * @return 头像
      */
     @Transactional(readOnly = true)
@@ -189,6 +200,7 @@ public interface ReadService {
 
     /**
      * 所有货品类型
+     *
      * @return
      */
     @Transactional(readOnly = true)
@@ -196,12 +208,14 @@ public interface ReadService {
 
     /**
      * 所有标签类型
+     *
      * @return
      */
     TagType[] allTagType();
 
     /**
      * 所有可用标签
+     *
      * @return
      */
     @Transactional(readOnly = true)

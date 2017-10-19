@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
-
+<!--/*@thymesVar id="title" type="java.lang.String"*/-->
+<!--/*@thymesVar id="dataUri" type="java.lang.String"*/-->
+<!--/*@thymesVar id="orderDeliveryUri" type="java.lang.String"*/-->
+<!--/*@thymesVar id="orderDetailUri" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -9,7 +12,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>用户订单</title>
+    <title th:text="${title}">订单管理</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -29,16 +32,16 @@
 
 <body class="gray-bg"
       data-url="/orderData/manageableList"
-      th:data-url="@{/orderData/manageableList}"
+      th:data-url="${dataUri}"
       data-quick-url="/orderData/quickDone/"
       data-allow-mock-pay="true"
       th:data-allow-mock-pay="${@environment.acceptsProfiles('allowMockPay')}"
       data-allow-settlement="true"
       data-order-delivery-url="_orderDelivery.html"
-      th:data-order-delivery-url="@{/mainOrderDelivery}"
+      th:data-order-delivery-url="${orderDeliveryUri}"
 >
 
-<form id="detailForm" action="_orderDetail.html" th:action="@{/mainOrderDetail}" method="get">
+<form id="detailForm" action="_orderDetail.html" th:action="${orderDetailUri}" method="get">
     <input type="hidden" name="id" value=""/>
     <input type="hidden" name="from" value=""/>
 </form>
