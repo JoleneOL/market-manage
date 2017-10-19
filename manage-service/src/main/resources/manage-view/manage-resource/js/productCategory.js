@@ -26,9 +26,9 @@ $(function () {
                     var  a = '<a href="javascript:;" class="js-edit" data-id="' + item.id + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;编辑</a>';
                     var b = '';
                     if (item.goods.length > 0)
-                        b = '<a href="javascript:;" class="js-del" data-id="' + item.id + '" data-items="'+ item.goods.length +'"><i class="fa fa fa-trash-o" aria-hidden="true"></i>&nbsp;删除</a>';
+                        b = '<a href="javascript:;" class="js-del" data-id="' + item.id + '" data-items="'+ item.goods.length +'"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;删除</a>';
                     else
-                        b = '<a href="javascript:;" class="js-del" data-id="' + item.id + '"><i class="fa fa fa-trash-o" aria-hidden="true"></i>&nbsp;删除</a>';
+                        b = '<a href="javascript:;" class="js-del" data-id="' + item.id + '"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;删除</a>';
                     return a + b;
                 }
             }

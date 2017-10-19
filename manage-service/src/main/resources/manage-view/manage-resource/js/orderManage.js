@@ -127,11 +127,11 @@ $(function () {
                     // var viewLogistics = '<a href="javascript:;" class="js-viewLogistics" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看物流</a>';
 
                     var a = '<a href="javascript:;" class="js-checkOrder" data-id="' + item.id + '" data-from="' + item.methodCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;查看</a>';
-                    var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;修改</a>';
-                    var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;快速完成订单</a>';
-                    var c2 = '<a href="javascript:;" class="js-quickDoneMore" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;快速完成订单</a>';
-                    var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;模拟支付</a>';
-                    var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa fa-pencil-square-o"></i>&nbsp;重新结算</a>';
+                    var b = '<a href="javascript:;" class="js-modifyOrder" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>';
+                    var c = '<a href="javascript:;" class="js-quickDone" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;快速完成订单</a>';
+                    var c2 = '<a href="javascript:;" class="js-quickDoneMore" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;快速完成订单</a>';
+                    var d = '<a href="javascript:;" class="js-mockPay" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;模拟支付</a>';
+                    var e = '<a href="javascript:;" class="js-settlement" data-id="' + item.id + '"><i class="fa fa-pencil-square-o"></i>&nbsp;重新结算</a>';
                     var f = '<a href="javascript:;" class="btn btn-primary btn-xs js-dispatch" data-id="' + item.id + '">派单</a>';
 
                     if (item.statusCode === 1 || item.statusCode === 2 || item.statusCode === 8) {
