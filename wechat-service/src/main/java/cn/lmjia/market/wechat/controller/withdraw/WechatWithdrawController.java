@@ -11,6 +11,7 @@ import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.WithdrawRequestRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.WechatNoticeHelper;
 import cn.lmjia.market.core.service.WithdrawService;
 import com.huotu.verification.IllegalVerificationCodeException;
@@ -23,7 +24,6 @@ import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -72,7 +72,7 @@ public class WechatWithdrawController {
     @Autowired
     private UserNoticeService userNoticeService;
     @Autowired
-    private Environment environment;
+    private SystemService systemService;
 
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
@@ -106,8 +106,7 @@ public class WechatWithdrawController {
                 , null, true, String.class, "利每家科技有限公司"));
         model.addAttribute("companyAddress", systemStringService.getCustomSystemString("withdraw.invoice.companyAddress"
                 , null, true, String.class, "杭州市滨江区滨盛路1508号海亮大厦1803室"));
-        model.addAttribute("companyTelephone", systemStringService.getCustomSystemString("withdraw.invoice.companyTelephone"
-                , null, true, String.class, "0570-88187913"));
+        model.addAttribute("companyTelephone", systemService.getCompanyCustomerServiceTel());
         model.addAttribute("taxpayerCode", systemStringService.getCustomSystemString("withdraw.invoice.taxpayerCode"
                 , null, true, String.class, "91330108MA28MBU173"));
         model.addAttribute("bankName", systemStringService.getCustomSystemString("withdraw.invoice.bankName"

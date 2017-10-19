@@ -98,6 +98,14 @@
             <p class="view-order_ex_title text-gray">订单时间：<span th:text="${{order.orderTime}}">2000-04-07</span></p>
         </div>
     </div>
+    <div class="weui-msg__extra-area">
+        <div class="weui-footer">
+            <p class="weui-footer__text weui-footer__links">联系电话 <a href="tel:0571-88187913"
+                                                                    th:href="${'tel:'+@systemService.companyCustomerServiceTel}"
+                                                                    th:text="${@systemService.companyCustomerServiceTel}">0571-88187913</a>
+            </p>
+        </div>
+    </div>
 </section>
 </body>
 </html>
