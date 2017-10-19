@@ -104,6 +104,11 @@ public interface SystemService {
     }
 
     /**
+     * @return 公司客服电话
+     */
+    String getCompanyCustomerServiceTel();
+
+    /**
      * @param login 当前登录的用户
      * @return 是否显示提现按钮
      */

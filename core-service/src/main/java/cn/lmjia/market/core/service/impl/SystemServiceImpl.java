@@ -29,6 +29,12 @@ public class SystemServiceImpl implements SystemService {
     }
 
     @Override
+    public String getCompanyCustomerServiceTel() {
+        return systemStringService.getCustomSystemString("withdraw.invoice.companyTelephone"
+                , null, true, String.class, "0571-88187913");
+    }
+
+    @Override
     public boolean allowWithdrawDisplay(Login login) {
         return login != null && agentLevelRepository.findByLogin(login).size() != 0;
     }
