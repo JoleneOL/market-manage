@@ -5,6 +5,30 @@
  */
 $(function () {
 
+    $('input[type=checkbox][data-group]').change(function () {
+        // 如果当前被选中，那么另一个必须不被选中
+        var self = $(this);
+        if (self.is(':checked')) {
+            var group = self.data('group');
+            var theOther = $('input[type=checkbox][data-group=' + group + ']').not('[name=' + self.attr('name') + ']');
+            theOther.prop('checked', false);
+
+            if (self.data('group') === 'logisticsType') {
+                var hideIt = self.attr('name') === 'logisticsTypeSelf';
+
+                var cells = $('._logisticsTypeDelivery');
+                if (hideIt) {
+                    cells.hide();
+                    logisticsNotRequired();
+                } else {
+                    cells.show();
+                    logisticsRequired();
+                }
+            }
+        }
+    });
+
+
     var amount = $('#J_withdrawAmount');
     var allInInput = $('#J_allInVal');
     var allInBtn = $('#J_allInBtn');
@@ -37,25 +61,34 @@ $(function () {
     });
 
     var $invoice = $('#J_extra');
+
+    function logisticsRequired() {
+        // $('input[name="logisticsCode"]').rules('add', {
+        //     required: true,
+        //     messages: {
+        //         required: "填写物流单号"
+        //     }
+        // });
+        // $('input[name="logisticsCompany"]').rules('add', {
+        //     required: true,
+        //     messages: {
+        //         required: "填写物流公司"
+        //     }
+        // });
+    }
+
+    function logisticsNotRequired() {
+        // $('input[name="logisticsCode"]').rules('remove');
+        // $('input[name="logisticsCompany"]').rules('remove');
+    }
+
     $('.js-invoice').change(function () {
         if ($(this).val() === 'true') {
             $invoice.removeClass('displayNone');
-            $('input[name="logisticsCode"]').rules('add', {
-                required: true,
-                messages: {
-                    required: "填写物流单号"
-                }
-            });
-            $('input[name="logisticsCompany"]').rules('add', {
-                required: true,
-                messages: {
-                    required: "填写物流公司"
-                }
-            });
+            logisticsRequired();
         } else {
             $invoice.addClass('displayNone');
-            $('input[name="logisticsCode"]').rules('remove');
-            $('input[name="logisticsCompany"]').rules('remove');
+            logisticsNotRequired();
         }
         calculateWithdrawAmount();
     });
@@ -154,6 +187,17 @@ $(function () {
                 min: 0.01,
                 max: +allInBtn.attr('data-all-in'),
                 isFloat2: true
+            },
+            logisticsCode: {
+                required: function () {
+                    return $("#logisticsTypeDelivery").is(':checked') && $('#J_haveInvoice').is(':checked');
+                }
+                // required:'#logisticsTypeDelivery:checked and #J_haveInvoice:checked'
+            },
+            logisticsCompany: {
+                required: function () {
+                    return $("#logisticsTypeDelivery").is(':checked') && $('#J_haveInvoice').is(':checked');
+                }
             }
         },
         messages: {
@@ -172,7 +216,9 @@ $(function () {
                 number: "请填写正确金额",
                 min: "提款最小金额为 {0}",
                 max: "提款最大金额为 {0}"
-            }
+            },
+            logisticsCode: '填写物流单号',
+            logisticsCompany: '填写物流公司'
         },
         errorPlacement: function (error, element) {
             console.log($(element).attr('name'), ' has error');
