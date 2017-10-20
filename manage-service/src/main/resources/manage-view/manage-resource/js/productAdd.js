@@ -41,7 +41,11 @@ $(function () {
                 }
             })
             $("input[name=propertyNameValue]").val(propertyNameValue);
-            form.submit();
+            if(!tinymce.activeEditor.getContent()) {
+                layer.msg('词条详情不能为空');
+            } else {
+                form.submit();
+            }
         }
     });
 
