@@ -12,8 +12,8 @@
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/city-picker/1.1.0/css/city-picker.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
     <link rel="stylesheet" href="./manage-resource/css/custom.css">
@@ -25,6 +25,7 @@
 </head>
 <body class="gray-bg"
       data-agent-id="12345"
+      data-url-sendAuthCode="/api/authCode"
       data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json">
 <div class="wrapper-content">
     <div class="ibox">
@@ -39,12 +40,7 @@
         <div class="col-sm-6">
             <div class="ibox">
                 <div class="ibox-title">
-                    订单信息
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                    </div>
+                    代理商详情
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
@@ -52,7 +48,9 @@
                             <tbody>
                             <tr>
                                 <td width="120px">代理商姓名</td>
-                                <td><span>哈哈哈</span><button class="btn btn-xs btn-danger fr" id="J_modifyName">修改姓名</button></td>
+                                <td><span>哈哈哈</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyName">修改姓名</button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>曾用名</td>
@@ -60,7 +58,31 @@
                             </tr>
                             <tr>
                                 <td>上级经销商</td>
-                                <td><span>天天向上</span><button class="btn btn-xs btn-danger fr" id="J_modifySuperior">修改上级</button></td>
+                                <td>
+                                    <span id="J_superiorName">天天向上</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifySuperior">修改上级</button>
+                                    <div class="form-horizontal m-t-md hide">
+                                        <div class="form-group" style="margin-left: 0;margin-right: 0;">
+                                            <div class="col-sm-12">
+                                                <select class="form-control select2-single" name="superior"
+                                                        id="superiorInput"
+                                                        title="请选择上级代理商">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 0;margin-right: 0;">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-xs btn-primary"
+                                                        id="J_confirmModify">确定
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button type="button" class="btn btn-xs btn-default"
+                                                        id="J_cancelModify">取消
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>级别</td>
@@ -68,7 +90,11 @@
                             </tr>
                             <tr>
                                 <td>手机号</td>
-                                <td><span>18958044532</span><button class="btn btn-xs btn-danger fr" id="J_modifyMobile">修改手机号</button></td>
+                                <td><span id="J_mobile">18958044532</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyMobile" data-toggle="modal"
+                                            data-target="#J_mobileModal" data-backdrop="static" data-keyboard="false">修改手机号
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>地址</td>
@@ -107,6 +133,42 @@
     </div>
 </div>
 </body>
+<div class="modal fade" tabindex="-1" id="J_mobileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">修改手机号</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">手机号</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="tel" class="form-control" placeholder="请输入手机号"
+                                       name="mobile">
+                                <span class="input-group-btn">
+                            <button class="btn btn-primary button-sendCode" style="min-width: 102px;" type="button" id="J_sendAuthCode">验证手机号</button>
+                        </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">验证码</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="请输入验证码"
+                                   class="form-control" name="authCode">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="J_cancelModifyMobile">取消</button>
+                <button type="button" class="btn btn-primary" id="J_confirmModifyMobile">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
 <script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
