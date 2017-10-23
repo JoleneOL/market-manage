@@ -117,6 +117,33 @@
             <div id="J_extra" class="weui-cells weui-cells_form displayNone">
                 <div class="weui-cell">
                     <div class="weui-cell__hd">
+                        <label class="weui-label">送达方式</label>
+                    </div>
+                    <div class="weui-cell__bd weui-cells_checkbox view-cells_inline">
+                        <label class="weui-cell weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="checkbox" class="weui-check" value="true" name="logisticsTypeSelf"
+                                       data-group="logisticsType">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>自行送达</p>
+                            </div>
+                        </label>
+                        <label class="weui-cell weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="checkbox" class="weui-check" checked id="logisticsTypeDelivery"
+                                       name="logisticsTypeDelivery" data-group="logisticsType">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>物流送达</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="weui-cell _logisticsTypeDelivery">
+                    <div class="weui-cell__hd">
                         <label class="weui-label">物流单号</label>
                     </div>
                     <div class="weui-cell__bd">
@@ -124,7 +151,7 @@
                     </div>
                     <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                 </div>
-                <div class="weui-cell">
+                <div class="weui-cell _logisticsTypeDelivery">
                     <div class="weui-cell__hd">
                         <label class="weui-label">物流公司</label>
                     </div>
@@ -226,6 +253,6 @@
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
-<script src="../wechat-resource/assets/js/withdraw.js" th:src="@{/wechat-resource/assets/js/withdraw.js(v=1)}"></script>
+<script src="../wechat-resource/assets/js/withdraw.js" th:src="@{/wechat-resource/assets/js/withdraw.js(v=2)}"></script>
 <th:block th:include="wechat@fragments/share.html::hideAllShare"/>
 </html>

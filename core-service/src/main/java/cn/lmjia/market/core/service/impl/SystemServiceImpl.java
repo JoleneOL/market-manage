@@ -36,7 +36,10 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public boolean allowWithdrawDisplay(Login login) {
-        return login != null && agentLevelRepository.findByLogin(login).size() != 0;
+        return login != null
+                && (systemStringService.getCustomSystemString("market.withdraw.allowAll", null
+                , true, Boolean.class, true)
+                || agentLevelRepository.findByLogin(login).size() != 0);
     }
 
     @Override

@@ -95,7 +95,7 @@ public class WechatWithdrawController {
      * @return 我要提现页面
      */
     @GetMapping("/wechatWithdraw")
-    public String index(@AuthenticationPrincipal Login login,Model model) {
+    public String index(@AuthenticationPrincipal Login login, Model model) {
 
         double rate = withdrawService.getCostRateForNoInvoice().doubleValue();
         model.addAttribute("ratePercent"
@@ -129,18 +129,23 @@ public class WechatWithdrawController {
     @PostMapping("/wechatWithdraw")
     @Transactional
     public String withdrawNew(String payee, String account
-            , String bank, String mobile, BigDecimal withdraw,
-                              boolean invoice, String logisticsCode, String logisticsCompany
+            , String bank, String mobile, BigDecimal withdraw
+            , boolean invoice, String logisticsCode, String logisticsCompany
+            , Boolean logisticsTypeSelf
             , @AuthenticationPrincipal Login login, Model model)
             throws SystemMaintainException, IOException {
         log.debug(login.getLoginName() + "申请提现");
         if (readService.currentBalance(login).getAmount().compareTo(withdraw) < 0) {
             return "redirect:/wechatWithdraw";
         }
-        if (invoice)
-            withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, logisticsCode
-                    , logisticsCompany);
-        else
+        if (invoice) {
+            if (logisticsTypeSelf != null && logisticsTypeSelf)
+                withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, "已自行运达"
+                        , "自送");
+            else
+                withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, logisticsCode
+                        , logisticsCompany);
+        } else
             withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
                     , null);
         model.addAttribute("badCode", false);

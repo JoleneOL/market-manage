@@ -53,6 +53,7 @@ public interface SystemService {
      * 商城下单URI
      */
     String mallOrderURi = "/mallOrder";
+    String wechatMallIndex = "/wechatIndex";
 
     /**
      * @return 代理体系的层次数量

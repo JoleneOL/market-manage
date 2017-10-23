@@ -86,7 +86,7 @@ public abstract class AbstractMainDeliverableOrderService<T extends MainDelivera
                 // 2个都可以
                 predicate = cb.and(predicate, cb.like(Customer.getMobile(root.get(MainDeliverableOrder_.customer)), "%" + mobile + "%"));
             }
-            if (goodId != null) {
+            if (goodId != null && goodId != 0) {
                 root.fetch(MainDeliverableOrder_.amounts);
                 predicate = cb.and(predicate, cb.equal(root.join(MainDeliverableOrder_.amounts).key().get(MainGood_.id), goodId));
             }
