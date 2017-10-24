@@ -210,7 +210,7 @@ public class AgentDataController {
 
             @Override
             public Specification<AgentLevel> specification() {
-                return agentService.manageable(true, login, agentName);
+                return agentService.manageable(false, login, agentName);
             }
         };
     }
