@@ -16,7 +16,7 @@
         <td class="fa fa-plus-circle"
             th:class="${data.changed.doubleValue()>0?'fa fa-plus-circle':'fa fa-minus-circle'}">&nbsp;</td>
         <td class="danger" th:class="${data.changed.doubleValue()>0?'danger':'success'}">
-            <a class="mainOrderDetailLink" href="javascript:" data-main-order-id="1"
+            <a class="mainOrderDetailLink" href="javascript:;" data-main-order-id="1"
                th:data-main-order-id="${data.mainOrderId}" th:text="${{data.changedAbsMoney}}">$100.00</a>
         </td>
         <td th:text="${data.type.toString()}">佣金收入</td>

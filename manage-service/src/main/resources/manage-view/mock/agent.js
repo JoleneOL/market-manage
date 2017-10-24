@@ -26,3 +26,35 @@ Mock.mock(/\/agent\/mobile\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });
+
+Mock.mock(/\/subordinate\/list/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'name': '@cname',
+            'address': '@county(true)',
+            'mobile': /^1([34578])\d{9}$/,
+            'orderTime': '@datetime("yyyy-MM-dd")',
+            'orderTotal': '@integer(3600, 10000)'
+        }
+    ]
+});
+
+Mock.mock(/\/journal\/list/, "get", {
+    "draw": 1,
+    "recordsTotal": 23,
+    "recordsFiltered": 23,
+    "data|10": [
+        {
+            'id': '@id',
+            'event': '@pick("increase","decrease")',
+            'happenTime': '@datetime("yyyy-MM-dd")',
+            'changedAbsMoney': '@integer(3600, 10000)',
+            'balance': '@integer(3600, 10000)',
+            'type': '@pick("购买","充值")'
+        }
+    ]
+});

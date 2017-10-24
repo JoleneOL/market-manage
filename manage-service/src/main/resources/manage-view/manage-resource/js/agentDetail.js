@@ -1,5 +1,6 @@
 $(function () {
-    var agentId = $('body').data('agent-id');
+    var _body = $('body');
+    var agentId = _body.data('agent-id');
 
     $('.js-uploadShow').on('click', 'img', function () {
         var $img = $('<img class="img-feedback-big img-thumbnail"/>').attr('src', $(this).attr('src'));
@@ -97,7 +98,7 @@ $(function () {
     });
     var $mobile = $('input[name="mobile"]');
     var $authCode = $('input[name="authCode"]');
-    var sendAuthCodeUrl = $('body').attr('data-url-sendAuthCode');
+    var sendAuthCodeUrl = _body.attr('data-url-sendAuthCode');
 
     $('#J_sendAuthCode').click(function () {
         var self = $(this);
@@ -177,4 +178,138 @@ $(function () {
             }
         });
     });
-});
+
+    var table = $('#subordinateTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": {
+            "url": _body.data('subordinate'),
+            "data": function (d) {
+                return $.extend({}, d, extendData());
+            }
+        },
+        "ordering": true,
+        "lengthChange": false,
+        "searching": false,
+        "colReorder": true,
+        "columns": [
+            {
+                "title": "下级姓名", "data": "name", "name": "name"
+            },
+            {
+                "title": "手机号", "data": "mobile", "name": "mobile"
+            },
+            {
+                "title": "地址", "data": "address", "name": "address"
+            },
+            {
+                "title": "下单时间", "data": "orderTime", "name": "orderTime"
+            },
+            {
+                "title": "下单金额", "data": "orderTotal", "name": "orderTotal"
+            }
+        ],
+        "displayLength": 15,
+        "dom": "<'row'<'col-sm-12'B>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "buttons": [{
+            "extend": "excel",
+            "text": "导出 Excel",
+            "className": "btn-xs",
+            "exportOptions": {
+                "columns": ":not(.table-action)"
+            }
+        }, {
+            "extend": 'colvis',
+            "text": "筛选列",
+            "className": "btn-xs"
+        }]
+    });
+    $(document).on('click', '.js-search', function () {
+        table.ajax.reload();
+    });
+
+    // 添加额外的参数
+    function extendData() {
+        var formItem = $('.js-selectToolbar').find('.form-control');
+        if (formItem.length === 0) return {};
+        var data = {};
+
+        formItem.each(function () {
+            var t = $(this);
+            var n = t.attr('name');
+            var v = t.val();
+            if (v) data[n] = v;
+        });
+        return data;
+    }
+
+
+    $('#journalTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax": _body.data('journal'),
+        "ordering": true,
+        "lengthChange": false,
+        "searching": false,
+        "colReorder": true,
+        "columns": [
+            {
+                "title": "日期", "data": "happenTime", "name": "happenTime"
+            },
+            {
+                "title": "变动金额",
+                "name": "changedAbsMoney",
+                data: function (item) {
+                    if (item.event === 'increase')
+                        return '<span class="text-danger">&#43; ￥' + item.changedAbsMoney + '</span>';
+                    return '<span class="text-navy">&#45; ￥' + item.changedAbsMoney + '</span>'
+                }
+            },
+            {
+                "title": "概要", "data": "type", "name": "type"
+            }
+            ,
+            {
+                "title": "当时余额", "name": "balance",
+                data: function (item) {
+                    return '<span>￥' + item.balance + '</span>';
+                }
+            },
+            {
+                title: "操作",
+                className: 'table-action',
+                data: function (item) {
+                    if (item.event === 'increase')
+                        return '';
+                    return '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>';
+                }
+            }
+        ],
+        "displayLength":
+            15,
+        "dom":
+        "<'row'<'col-sm-12'B>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "buttons":
+            [{
+                "extend": "excel",
+                "text": "导出 Excel",
+                "className": "btn-xs",
+                "exportOptions": {
+                    "columns": ":not(.table-action)"
+                }
+            }, {
+                "extend": 'colvis',
+                "text": "筛选列",
+                "className": "btn-xs"
+            }]
+    });
+
+    $(document).on('click', '.js-checkInfo', function () {
+        window.location.href = './_orderDetail.html' + '?id=' + $(this).data('id');
+    });
+})
+;
