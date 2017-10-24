@@ -68,6 +68,14 @@ $(function () {
                 "name": "serial"
             },
             {
+                "title": "货款余额",
+                "name": "balance",
+                "orderable": false,
+                data: function (item) {
+                    return '<a href="javascript:;" class="text-navy js-journal" data-id="' + item.id + '"><i class="fa fa-rmb"></i> ' + item.balance + '</a>';
+                }
+            },
+            {
                 "title": "时间",
                 "data": "happenTime",
                 "name": "happenTime"
@@ -191,13 +199,12 @@ $(function () {
     }
 
     $(document).on('click', '.js-search', function () {
-        // 点击搜索方法。但如果数据为空，是否阻止
         table.ajax.reload();
     }).on('click', '.js-journal', function () {
         var loading = layer.load();
         $.ajax(_body.data('journal-url') + "?id=" + $(this).data('id'), {
             method: 'get',
-            dataType: 'html',// TODO 在初级版本中 因为还无法掌握数据->UI的高级技能 所以直接请求html 等老常就位可以将此改成请求数据
+            dataType: 'html',
             success: function (html) {
                 layer.close(loading);
                 layer.open({
