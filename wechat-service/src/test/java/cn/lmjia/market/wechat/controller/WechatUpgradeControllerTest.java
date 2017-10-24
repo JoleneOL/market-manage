@@ -86,6 +86,7 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
 //        }
 
         driver.get("http://localhost" + payUri);
+        System.out.println(driver.getPageSource());
         PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatUpgradeApplySuccess");
 
         // 这个时候业务算是完成了；我们可以看到后端请求了

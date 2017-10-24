@@ -115,6 +115,7 @@ public class WechatMallOrderControllerTest extends WechatTestBase {
         //到填写详细信息页面
         MallOrderPlacePage orderPlacePage = initPage(MallOrderPlacePage.class);
         orderPlacePage.submitOrder();
+        orderPlacePage.printThisPage();
         PaySuccessPage.waitingForSuccess(this, driver, 3, "http://localhost/wechatPaySuccess?mainOrderId=1");
         cartPage.printThisPage();
 
