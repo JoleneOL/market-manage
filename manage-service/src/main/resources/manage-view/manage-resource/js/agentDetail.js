@@ -259,12 +259,12 @@ $(function () {
                 "title": "日期", "data": "happenTime", "name": "happenTime"
             },
             {
-                "title": "变动金额",
+                "title": "变动金额（元）",
                 "name": "changedAbsMoney",
                 data: function (item) {
                     if (item.event === 'increase')
-                        return '<span class="text-danger">&#43; ￥' + item.changedAbsMoney + '</span>';
-                    return '<span class="text-navy">&#45; ￥' + item.changedAbsMoney + '</span>'
+                        return '<span class="text-danger">&#43; ' + item.changedAbsMoney + '</span>';
+                    return '<span class="text-navy">&#45; ' + item.changedAbsMoney + '</span>'
                 }
             },
             {
@@ -272,7 +272,7 @@ $(function () {
             }
             ,
             {
-                "title": "当时余额", "name": "balance",
+                "title": "当时余额（元）", "name": "balance",
                 data: function (item) {
                     return '<span>￥' + item.balance + '</span>';
                 }
