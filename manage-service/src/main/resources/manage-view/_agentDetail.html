@@ -63,7 +63,7 @@
                             <tbody>
                             <tr>
                                 <td width="120px">级别</td>
-                                <td th:text="${@readService.getLoginTitle(@readService.agentLevelForPrincipal(login))}">
+                                <td th:text="${currentData==null?@readService.getLoginTitle(@readService.agentLevelForPrincipal(login)):@readService.getLoginTitle(currentData.level)}">
                                     爱心天使
                                 </td>
                             </tr>
@@ -73,7 +73,7 @@
                                     <button class="btn btn-xs btn-danger fr" id="J_modifyAgentRank">修改名称</button>
                                 </td>
                             </tr>
-                            <tr th:if="${currentData.superior!=null}">
+                            <tr th:if="${currentData!=null && currentData.superior!=null}">
                                 <td>上级经销商</td>
                                 <td>
                                     <span id="J_superiorName"
