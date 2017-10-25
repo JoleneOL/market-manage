@@ -22,9 +22,8 @@ $(function () {
             var loading = layer.load();
             $.ajax('/login/name/' + loginId, {
                 method: 'PUT',
-                data: {
-                    newName: value
-                },
+                data: value,
+                contentType: 'text/plain;charset=UTF-8',
                 dataType: 'json',
                 success: function (res) {
                     layer.close(loading);
@@ -161,10 +160,9 @@ $(function () {
         var loading = layer.load();
         $.ajax('/login/mobile/' + loginId, {
             method: 'PUT',
-            data: {
-                mobile: $mobile.val()
-                // ,$authCode: $authCode.val()
-            },
+            data: $mobile.val(),
+            // ,$authCode: $authCode.val()
+            contentType: 'text/plain;charset=UTF-8',
             dataType: 'json',
             success: function (res) {
                 layer.close(loading);
@@ -210,10 +208,10 @@ $(function () {
                 "title": "加入时间", "data": "createdTime", "name": "createdTime"
             },
             {
-                "title": "首次下单时间", "data": "earliestOrderTime", "name": "earliestOrderTime"
+                "title": "首次下单时间", "data": "earliestOrderTime", "name": "earliestOrderTime", "orderable": false
             },
             {
-                "title": "总下单金额", "data": "orderTotal", "name": "orderTotal"
+                "title": "总下单金额", "data": "orderTotal", "name": "orderTotal", "orderable": false
             }
         ],
         "displayLength": 15,
@@ -294,25 +292,22 @@ $(function () {
                 }
             }
         ],
-        "displayLength":
-            15,
-        "dom":
-        "<'row'<'col-sm-12'B>>" +
+        "displayLength": 15,
+        "dom": "<'row'<'col-sm-12'B>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "buttons":
-            [{
-                "extend": "excel",
-                "text": "导出 Excel",
-                "className": "btn-xs",
-                "exportOptions": {
-                    "columns": ":not(.table-action)"
-                }
-            }, {
-                "extend": 'colvis',
-                "text": "筛选列",
-                "className": "btn-xs"
-            }]
+        "buttons": [{
+            "extend": "excel",
+            "text": "导出 Excel",
+            "className": "btn-xs",
+            "exportOptions": {
+                "columns": ":not(.table-action)"
+            }
+        }, {
+            "extend": 'colvis',
+            "text": "筛选列",
+            "className": "btn-xs"
+        }]
     });
 
     $(document).on('click', '.js-checkInfo', function () {

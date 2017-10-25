@@ -37,6 +37,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -94,8 +95,9 @@ public class LoginDataController {
 
     @PutMapping("/login/name/{id}")
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_MANAGER + "')")
+    @ResponseBody
     @Transactional
-    public ApiResult changeName(String newName, @PathVariable("id") long id) {
+    public ApiResult changeName(@RequestBody String newName, @PathVariable("id") long id) {
         if (!StringUtils.isEmpty(newName)) {
             contactWayService.updateName(loginService.get(id), newName);
             return ApiResult.withOk();
@@ -105,8 +107,9 @@ public class LoginDataController {
 
     @PutMapping("/login/mobile/{id}")
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_MANAGER + "')")
+    @ResponseBody
     @Transactional
-    public ApiResult changeMobile(String mobile, @PathVariable("id") long id) {
+    public ApiResult changeMobile(@RequestBody String mobile, @PathVariable("id") long id) {
         if (!StringUtils.isEmpty(mobile)) {
             contactWayService.updateMobile(loginService.get(id), mobile);
             return ApiResult.withOk();
