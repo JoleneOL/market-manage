@@ -11,6 +11,7 @@ import cn.lmjia.market.core.entity.settlement.AgentGoodAdvancePaymentJournal;
 import cn.lmjia.market.core.entity.settlement.AgentGoodAdvancePaymentJournalType;
 import cn.lmjia.market.core.entity.settlement.AgentGoodAdvancePaymentJournal_;
 import cn.lmjia.market.core.entity.settlement.LoginCommissionJournal;
+import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.settlement.LoginCommissionJournalRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
@@ -19,6 +20,7 @@ import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
+import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.lib.spring.data.AndSpecification;
@@ -33,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -66,6 +70,8 @@ public class LoginDataController {
     private LoginCommissionJournalRepository loginCommissionJournalRepository;
     @Autowired
     private ConversionService conversionService;
+    @Autowired
+    private ContactWayService contactWayService;
 
     /**
      * 公开可用的手机号码可用性校验
@@ -84,6 +90,28 @@ public class LoginDataController {
     @RowCustom(dramatizer = Select2Dramatizer.class, distinct = true)
     public RowDefinition<Login> searchLoginSelect2(String search, Boolean agent) {
         return searchLogin(search, agent);
+    }
+
+    @PutMapping("/login/name/{id}")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_MANAGER + "')")
+    @Transactional
+    public ApiResult changeName(String newName, @PathVariable("id") long id) {
+        if (!StringUtils.isEmpty(newName)) {
+            contactWayService.updateName(loginService.get(id), newName);
+            return ApiResult.withOk();
+        }
+        return ApiResult.withCodeAndMessage(400, "没有有效的用户名", null);
+    }
+
+    @PutMapping("/login/mobile/{id}")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_MANAGER + "')")
+    @Transactional
+    public ApiResult changeMobile(String mobile, @PathVariable("id") long id) {
+        if (!StringUtils.isEmpty(mobile)) {
+            contactWayService.updateMobile(loginService.get(id), mobile);
+            return ApiResult.withOk();
+        }
+        return ApiResult.withCodeAndMessage(400, "没有有效的手机号", null);
     }
 
     @GetMapping(value = "/loginCommissionJournal", produces = "text/html")
@@ -134,7 +162,8 @@ public class LoginDataController {
                                         -> agentGoodAdvancePaymentJournalRoot.get(AgentGoodAdvancePaymentJournal_.agentPrepaymentOrderId))
                                 .build()
                         , FieldBuilder.asName(AgentGoodAdvancePaymentJournal.class, "event")
-                                .addSelect(agentGoodAdvancePaymentJournalRoot -> agentGoodAdvancePaymentJournalRoot.get(AgentGoodAdvancePaymentJournal_.type))
+                                .addSelect(agentGoodAdvancePaymentJournalRoot
+                                        -> agentGoodAdvancePaymentJournalRoot.get(AgentGoodAdvancePaymentJournal_.type))
                                 .addFormat((data, type) -> {
                                     AgentGoodAdvancePaymentJournalType journalType = (AgentGoodAdvancePaymentJournalType) data;
                                     switch (journalType) {

@@ -2,7 +2,7 @@ Mock.setup({
     timeout: 500
 });
 
-Mock.mock(/\/agent\/name\/\d/, {
+Mock.mock(/\/login\/name\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });
@@ -22,7 +22,7 @@ Mock.mock(/\/api\/authCode/, "post", {
 });
 
 
-Mock.mock(/\/agent\/mobile\/\d/, {
+Mock.mock(/\/login\/mobile\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
 });

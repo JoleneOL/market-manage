@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.deal.AgentLevel"*/-->
 <!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
 <head>
@@ -28,6 +28,8 @@
 </head>
 <body class="gray-bg"
       data-agent-id="12345"
+      data-login-id="123456"
+      th:data-login-id="${login.id}"
       data-url-sendAuthCode="/api/authCode"
       data-subordinate="/subordinate/list"
       th:data-subordinate="${'/loginData/subordinate?id='+login.id}"
@@ -98,11 +100,11 @@
                             </tr>
                             <tr>
                                 <td>级别</td>
-                                <td>爱心天使</td>
+                                <td th:text="${@readService.getLoginTitle(currentData.level)}">爱心天使</td>
                             </tr>
                             <tr>
                                 <td>手机号</td>
-                                <td><span id="J_mobile">18958044532</span>
+                                <td><span id="J_mobile" th:text="${@readService.mobileFor(login)}">18958044532</span>
                                     <button class="btn btn-xs btn-danger fr" id="J_modifyMobile" data-toggle="modal"
                                             data-target="#J_mobileModal" data-backdrop="static" data-keyboard="false">
                                         修改手机号
@@ -111,29 +113,32 @@
                             </tr>
                             <tr>
                                 <td>地址</td>
-                                <td>浙江杭州西湖大西湖国际</td>
+                                <td th:text="${@readService.addressFor(login)}">浙江杭州西湖大西湖国际</td>
                             </tr>
-                            <tr>
+                            <tr th:if="${login.contactWay!=null && login.contactWay.frontImagePath!=null}">
                                 <td>身份证（个人信息面）</td>
                                 <td>
                                     <div class="js-uploadShow view-upload-show">
-                                        <img src="http://iph.href.lu/416x312?text=img1" alt="个人信息面">
+                                        <img src="http://iph.href.lu/416x312?text=img1"
+                                             res:src="${login.contactWay.frontImagePath}" alt="个人信息面">
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr th:if="${login.contactWay!=null && login.contactWay.backImagePath!=null}">
                                 <td>身份证（国徽面）</td>
                                 <td>
                                     <div class="js-uploadShow view-upload-show">
-                                        <img src="http://iph.href.lu/416x312?text=img2" alt="国徽面">
+                                        <img src="http://iph.href.lu/416x312?text=img2"
+                                             res:src="${login.contactWay.backImagePath}" alt="国徽面">
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr th:if="${login.contactWay!=null && login.contactWay.businessLicensePath!=null}">
                                 <td>营业执照</td>
                                 <td>
                                     <div class="js-uploadShow view-upload-show">
-                                        <img src="http://iph.href.lu/416x312?text=img3" alt="营业执照">
+                                        <img src="http://iph.href.lu/416x312?text=img3"
+                                             res:src="${login.contactWay.businessLicensePath}" alt="营业执照">
                                     </div>
                                 </td>
                             </tr>

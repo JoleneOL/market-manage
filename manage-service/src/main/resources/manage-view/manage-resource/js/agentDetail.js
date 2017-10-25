@@ -1,6 +1,7 @@
 $(function () {
     var _body = $('body');
     var agentId = _body.data('agent-id');
+    var loginId = _body.data('login-id');
 
     $('.js-uploadShow').on('click', 'img', function () {
         var $img = $('<img class="img-feedback-big img-thumbnail"/>').attr('src', $(this).attr('src'));
@@ -19,7 +20,7 @@ $(function () {
         var name = $(this).prev();
         layer.prompt({title: '输入新用户名，并确认'}, function (value, index) {
             var loading = layer.load();
-            $.ajax('/agent/name/' + agentId, {
+            $.ajax('/login/name/' + loginId, {
                 method: 'PUT',
                 data: {
                     newName: value
@@ -158,7 +159,7 @@ $(function () {
         //     return layer.msg('验证码不能为空');
         // }
         var loading = layer.load();
-        $.ajax('/agent/mobile/' + agentId, {
+        $.ajax('/login/mobile/' + loginId, {
             method: 'PUT',
             data: {
                 mobile: $mobile.val()

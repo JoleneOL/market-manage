@@ -12,6 +12,8 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author CJ
  */
@@ -43,6 +45,18 @@ public class ManageAgentControllerTest extends ManageServiceTest {
         // 点击修改名字，并输入新名字
         final String newName = "新名字" + RandomStringUtils.randomAlphabetic(9);
         page.changeName(newName);
+//        page.printThisPage();
+        assertThat(readService.nameForPrincipal(toTestAgent.getLogin()))
+                .isEqualTo(newName);
+
+//        page.refresh();
+        page.assertMobile()
+                .isEqualTo(readService.mobileFor(toTestAgent.getLogin()));
+        final String newMobile = randomMobile();
+        page.changeMobile(newMobile);
+        assertThat(readService.mobileFor(toTestAgent.getLogin()))
+                .isEqualTo(newMobile);
+
     }
 
     private void addSubUserFor(Login login) {

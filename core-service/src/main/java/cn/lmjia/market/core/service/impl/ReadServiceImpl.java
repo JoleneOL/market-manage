@@ -128,6 +128,8 @@ public class ReadServiceImpl implements ReadService {
             return null;
         final Login login = toLogin(principal);
         ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
+        if (contactWay == null)
+            return null;
         return contactWay.getAddress();
     }
 
