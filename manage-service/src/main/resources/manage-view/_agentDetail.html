@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
 <!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.deal.AgentLevel"*/-->
 <!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
+<!--/*@thymesVar id="parentTitle" type="java.lang.String"*/-->
+<!--/*@thymesVar id="parentUri" type="java.lang.String"*/-->
+<!--/*@thymesVar id="detailTitle" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -10,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="format-detection" content="telephone=no"/>
-    <title>代理商详情</title>
+    <title th:text="${detailTitle}">代理商详情</title>
     <!--第三方库-->
     <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -28,6 +31,7 @@
 </head>
 <body class="gray-bg"
       data-agent-id="12345"
+      th:data-agent-id="${currentData==null?0:currentData.id}"
       data-login-id="123456"
       th:data-login-id="${login.id}"
       data-url-sendAuthCode="/api/authCode"
@@ -42,15 +46,15 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_agentManage.html" th:href="@{/agentManage}">代理商管理</a></li>
-                <li><strong>代理商详情</strong></li>
+                <li><a href="_agentManage.html" th:href="${parentUri}" th:text="${parentTitle}">代理商管理</a></li>
+                <li><strong th:text="${detailTitle}">代理商详情</strong></li>
             </ol>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6" th:class="${currentData==null?'col-sm-12':'col-sm-6'}">
             <div class="ibox">
-                <div class="ibox-title">
+                <div class="ibox-title" th:text="${detailTitle}">
                     代理商详情
                 </div>
                 <div class="ibox-content">
@@ -58,15 +62,15 @@
                         <table class="table table-hover table-bordered">
                             <tbody>
                             <tr>
-                                <td width="120px">代理商姓名</td>
-                                <td><span th:text="${@readService.nameForPrincipal(login)}" id="J_loginName">哈哈哈</span>
-                                    <button class="btn btn-xs btn-danger fr" id="J_modifyName">修改姓名</button>
+                                <td width="120px">级别</td>
+                                <td th:text="${@readService.getLoginTitle(@readService.agentLevelForPrincipal(login))}">
+                                    爱心天使
                                 </td>
                             </tr>
-                            <tr>
-                                <td>曾用名</td>
-                                <td id="J_oldName" th:utext="${@readService.joinUsedNamesForPrincipal(login,'&nbsp;')}">
-                                    呼呼呼
+                            <tr th:if="${currentData!=null}">
+                                <td width="120px">代理商名称</td>
+                                <td><span th:text="${currentData.rank}" id="J_agentRank">哈哈哈</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyAgentRank">修改名称</button>
                                 </td>
                             </tr>
                             <tr th:if="${currentData.superior!=null}">
@@ -99,8 +103,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>级别</td>
-                                <td th:text="${@readService.getLoginTitle(currentData.level)}">爱心天使</td>
+                                <td width="120px">姓名</td>
+                                <td><span th:text="${@readService.nameForPrincipal(login)}" id="J_loginName">哈哈哈</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyName">修改姓名</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>曾用名</td>
+                                <td id="J_oldName" th:utext="${@readService.joinUsedNamesForPrincipal(login,'&nbsp;')}">
+                                    呼呼呼
+                                </td>
                             </tr>
                             <tr>
                                 <td>手机号</td>
@@ -148,7 +160,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6" th:if="${currentData!=null}">
             <div class="ibox">
                 <div class="ibox-title">
                     货款记录

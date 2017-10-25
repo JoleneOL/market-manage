@@ -9,12 +9,16 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
+import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -31,10 +35,19 @@ import java.util.function.Function;
  * @author CJ
  */
 @Controller
-public class ManageLoginController {
+@PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_LOOK + "')")
+public class ManageLoginController extends AbstractLoginDetailController {
 
     @Autowired
     private ConversionService conversionService;
+    @Autowired
+    private LoginService loginService;
+
+    @GetMapping("/manageLoginDetail")
+    @Transactional(readOnly = true)
+    public String detail(Model model, long id) {
+        return _detailView(model, loginService.get(id));
+    }
 
     @GetMapping("/loginManage")
     public String index() {
@@ -108,4 +121,18 @@ public class ManageLoginController {
         };
     }
 
+    @Override
+    public String detailTitle() {
+        return "客户详情";
+    }
+
+    @Override
+    public String parentUri() {
+        return "/loginManage";
+    }
+
+    @Override
+    public String parentTitle() {
+        return "客户管理";
+    }
 }

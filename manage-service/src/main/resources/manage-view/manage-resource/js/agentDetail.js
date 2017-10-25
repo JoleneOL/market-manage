@@ -16,9 +16,40 @@ $(function () {
         });
     });
 
+    $('#J_modifyAgentRank').click(function () {
+        var name = $(this).prev();
+        layer.prompt({title: '输入新代理商名称，并确认'}, function (value, index) {
+            var loading = layer.load();
+            $.ajax('/agent/rank/' + agentId, {
+                method: 'PUT',
+                data: value,
+                contentType: 'text/plain;charset=UTF-8',
+                dataType: 'json',
+                success: function (res) {
+                    layer.close(loading);
+                    if (res.resultCode !== 200) {
+                        layer.close(index);
+                        layer.msg('修改失败，稍后再试');
+                        return '';
+                    }
+                    // $('#J_oldName').text(name.text());
+                    name.text(value);
+                    layer.close(index);
+                    layer.msg('修改成功');
+                },
+                error: function () {
+                    layer.close(loading);
+                    layer.close(index);
+                    layer.msg('修改失败，稍后再试');
+                }
+            });
+        });
+    });
+
+
     $('#J_modifyName').click(function () {
         var name = $(this).prev();
-        layer.prompt({title: '输入新用户名，并确认'}, function (value, index) {
+        layer.prompt({title: '输入新名字，并确认'}, function (value, index) {
             var loading = layer.load();
             $.ajax('/login/name/' + loginId, {
                 method: 'PUT',
