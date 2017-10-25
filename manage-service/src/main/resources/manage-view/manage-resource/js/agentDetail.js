@@ -46,7 +46,8 @@ $(function () {
         });
     });
     var superiorInput = $("#superiorInput");
-    superiorInput.makeRecommendSelect()
+    superiorInput.makeRecommendSelect();
+
     $('#J_modifySuperior').click(function () {
         var self = $(this);
         layer.confirm('<strong class="text-danger">只有一次修改机会！</strong>', {
@@ -96,7 +97,7 @@ $(function () {
         $(this).closest('.form-horizontal').addClass('hide');
         $('#J_modifySuperior').show();
     });
-    var $mobile = $('input[name="mobile"]');
+    var $mobile = $('input[name="newMobile"]');
     var $authCode = $('input[name="authCode"]');
     var sendAuthCodeUrl = _body.attr('data-url-sendAuthCode');
 
@@ -149,15 +150,19 @@ $(function () {
         if (!$mobile.val()) {
             return layer.msg('手机号不能为空');
         }
-        if (!$authCode.val()) {
-            return layer.msg('验证码不能为空');
+        if (!/^1([34578])\d{9}$/.test($mobile.val())) {
+            layer.msg('请输入正确的手机号');
+            return;
         }
+        // if (!$authCode.val()) {
+        //     return layer.msg('验证码不能为空');
+        // }
         var loading = layer.load();
         $.ajax('/agent/mobile/' + agentId, {
             method: 'PUT',
             data: {
-                mobile: $mobile.val(),
-                $authCode: $authCode.val()
+                mobile: $mobile.val()
+                // ,$authCode: $authCode.val()
             },
             dataType: 'json',
             success: function (res) {
@@ -192,6 +197,7 @@ $(function () {
         "lengthChange": false,
         "searching": false,
         "colReorder": true,
+        "order": [[2, "desc"]],
         "columns": [
             {
                 "title": "下级姓名", "data": "name", "name": "name"
@@ -200,13 +206,13 @@ $(function () {
                 "title": "手机号", "data": "mobile", "name": "mobile"
             },
             {
-                "title": "地址", "data": "address", "name": "address"
+                "title": "加入时间", "data": "createdTime", "name": "createdTime"
             },
             {
-                "title": "下单时间", "data": "orderTime", "name": "orderTime"
+                "title": "首次下单时间", "data": "earliestOrderTime", "name": "earliestOrderTime"
             },
             {
-                "title": "下单金额", "data": "orderTotal", "name": "orderTotal"
+                "title": "总下单金额", "data": "orderTotal", "name": "orderTotal"
             }
         ],
         "displayLength": 15,
@@ -309,7 +315,7 @@ $(function () {
     });
 
     $(document).on('click', '.js-checkInfo', function () {
-        window.location.href = './_orderDetail.html' + '?id=' + $(this).data('id');
+        window.location.href = _body.data('good-advance-order-detail') + '?orderId=' + $(this).data('id');
     });
 })
 ;

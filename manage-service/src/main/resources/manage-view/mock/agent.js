@@ -35,15 +35,16 @@ Mock.mock(/\/subordinate\/list/, "get", {
         {
             'id': '@id',
             'name': '@cname',
-            'address': '@county(true)',
+            // 'address': '@county(true)',
             'mobile': /^1([34578])\d{9}$/,
-            'orderTime': '@datetime("yyyy-MM-dd")',
+            'createdTime': '@datetime("yyyy-MM-dd")',
+            'earliestOrderTime': '@datetime("yyyy-MM-dd")',
             'orderTotal': '@integer(3600, 10000)'
         }
     ]
 });
 
-Mock.mock(/\/journal\/list/, "get", {
+Mock.mock(/\/agentGoodAdvancePaymentJournal/, "get", {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,

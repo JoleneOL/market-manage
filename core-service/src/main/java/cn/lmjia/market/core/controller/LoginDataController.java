@@ -5,6 +5,8 @@ import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Login_;
+import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.settlement.LoginCommissionJournal;
 import cn.lmjia.market.core.repository.settlement.LoginCommissionJournalRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
@@ -12,11 +14,13 @@ import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
+import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +36,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +58,8 @@ public class LoginDataController {
     private LoginService loginService;
     @Autowired
     private LoginCommissionJournalRepository loginCommissionJournalRepository;
+    @Autowired
+    private ConversionService conversionService;
 
     /**
      * 公开可用的手机号码可用性校验
@@ -89,6 +99,91 @@ public class LoginDataController {
         model.addAttribute("currentData", currentData);
 
         return "mock/journal.html";
+    }
+
+    @GetMapping(value = "/agentGoodAdvancePaymentJournal", produces = "application/json")
+    @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
+    public RowDefinition agentGoodAdvancePaymentJournal(long id, @AuthenticationPrincipal Login login) {
+        if (!login.isManageable() && login.getId() != id)
+            throw new AccessDeniedException("不可以查看别人的流水");
+        return null;
+    }
+
+    /**
+     * 加入时间，
+     * 最早下单时间，
+     * 总订单金额
+     * 手机号码
+     * 名字
+     *
+     * @return 直接发展的下线默认以时间倒序
+     */
+    @GetMapping(value = "/loginData/subordinate", produces = "application/json")
+    @RowCustom(distinct = true, dramatizer = JQueryDataTableDramatizer.class)
+    public RowDefinition<Login> subordinate(long id, String mobile, @AuthenticationPrincipal Login login) {
+        if (!login.isManageable() && login.getId() != id)
+            throw new AccessDeniedException("不可以查看别人的流水");
+        return new RowDefinition<Login>() {
+            @Override
+            public Class<Login> entityClass() {
+                return Login.class;
+            }
+
+            @Override
+            public List<FieldDefinition<Login>> fields() {
+                return Arrays.asList(
+                        Fields.asBasic("id")
+                        , FieldBuilder.asName(Login.class, "name")
+                                .addBiSelect(ReadService::nameForLogin)
+                                .build()
+                        , FieldBuilder.asName(Login.class, "mobile")
+                                .addBiSelect(ReadService::mobileForLogin)
+                                .build()
+                        , FieldBuilder.asName(Login.class, "createdTime")
+                                .addFormat((data, type) -> conversionService.convert(data, String.class))
+                                .build()
+                        , FieldBuilder.asName(Login.class, "earliestOrderTime")
+                                .addOwnSelect((root, cb, query) -> {
+                                    Subquery<LocalDateTime> subquery = query.subquery(LocalDateTime.class);
+                                    Root<MainOrder> root1 = subquery.from(MainOrder.class);
+                                    subquery = subquery.select(cb.least(root1.get(MainOrder_.orderTime)))
+                                            .groupBy(root1.get(MainOrder_.orderBy))
+                                            .where(cb.equal(root1.get(MainOrder_.orderBy), root), MainOrder.getOrderPaySuccess(root1, cb));
+                                    return cb.selectCase(cb.literal(true))
+                                            .when(true, subquery)
+                                            .otherwise(subquery);
+                                })
+                                .addFormat((data, type) -> conversionService.convert(data, String.class))
+                                .build()
+                        , FieldBuilder.asName(Login.class, "orderTotal")
+                                .addOwnSelect((root, cb, query) -> {
+                                    Subquery<BigDecimal> subquery = query.subquery(BigDecimal.class);
+                                    Root<MainOrder> root1 = subquery.from(MainOrder.class);
+                                    subquery = subquery.select(cb.sum(root1.get(MainOrder_.goodTotalPriceAmountIndependent)))
+                                            .groupBy(root1.get(MainOrder_.orderBy))
+                                            .where(cb.equal(root1.get(MainOrder_.orderBy), root), MainOrder.getOrderPaySuccess(root1, cb));
+                                    return cb.selectCase(cb.literal(true))
+                                            .when(true, subquery)
+                                            .otherwise(subquery);
+                                })
+                                .addFormat((data, type) -> conversionService.convert(data, String.class))
+                                .build()
+                );
+            }
+
+            @Override
+            public Specification<Login> specification() {
+                return (root, query, cb) -> {
+                    Predicate predicate = cb.and(
+                            cb.equal(root.get(Login_.guideUser).get(Login_.id), id)
+                            , cb.isTrue(root.get(Login_.successOrder))
+                    );
+                    if (StringUtils.isEmpty(mobile))
+                        return predicate;
+                    return cb.and(predicate, cb.like(ReadService.mobileForLogin(root, cb), "%" + mobile + "%"));
+                };
+            }
+        };
     }
 
     /**

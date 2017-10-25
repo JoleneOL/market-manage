@@ -30,7 +30,11 @@
       data-agent-id="12345"
       data-url-sendAuthCode="/api/authCode"
       data-subordinate="/subordinate/list"
-      data-journal="/journal/list"
+      th:data-subordinate="${'/loginData/subordinate?id='+login.id}"
+      data-journal="/agentGoodAdvancePaymentJournal"
+      th:data-journal="${'/agentGoodAdvancePaymentJournal?id='+login.id}"
+      data-good-advance-order-detail="_orderDetail.html"
+      th:data-good-advance-order-detail="/wechatAgentPrepaymentOrderDetail"
       data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json">
 <div class="wrapper-content">
     <div class="ibox">
@@ -194,21 +198,21 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <input type="tel" class="form-control" placeholder="请输入手机号"
-                                       name="mobile">
+                                       name="newMobile">
                                 <span class="input-group-btn">
-                            <button class="btn btn-primary button-sendCode" style="min-width: 102px;" type="button"
-                                    id="J_sendAuthCode">验证手机号</button>
+                            <!--<button class="btn btn-primary button-sendCode" style="min-width: 102px;" type="button"-->
+                                    <!--id="J_sendAuthCode">验证手机号</button>-->
                         </span>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">验证码</label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="请输入验证码"
-                                   class="form-control" name="authCode">
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                    <!--<label class="col-sm-3 control-label">验证码</label>-->
+                    <!--<div class="col-sm-6">-->
+                    <!--<input type="text" placeholder="请输入验证码"-->
+                    <!--class="form-control" name="authCode">-->
+                    <!--</div>-->
+                    <!--</div>-->
                 </form>
             </div>
             <div class="modal-footer">
