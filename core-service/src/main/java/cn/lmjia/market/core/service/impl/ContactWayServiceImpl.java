@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -51,7 +52,15 @@ public class ContactWayServiceImpl implements ContactWayService {
 
     @Override
     public ContactWay updateName(Login login, String name) {
-        return updateContactWay(login, contactWay -> contactWay.setName(name));
+        return updateContactWay(login, contactWay -> {
+            if (contactWay.getName() != null) {
+                if (contactWay.getUsedNames() == null) {
+                    contactWay.setUsedNames(new ArrayList<>());
+                }
+                contactWay.getUsedNames().add(contactWay.getName());
+            }
+            contactWay.setName(name);
+        });
     }
 
     @Override

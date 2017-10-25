@@ -45,6 +45,7 @@ import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -96,6 +97,19 @@ public class ReadServiceImpl implements ReadService {
         if (StringUtils.isEmpty(contactWay.getName()))
             return login.getLoginName();
         return contactWay.getName();
+    }
+
+    @Override
+    public String joinUsedNamesForPrincipal(Object principal, CharSequence delimiter) {
+        if (principal == null)
+            return "";
+        final Login login = toLogin(principal);
+        ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
+        if (contactWay == null)
+            return "";
+        if (contactWay.getUsedNames() == null)
+            return "";
+        return contactWay.getUsedNames().stream().collect(Collectors.joining(delimiter == null ? " " : delimiter));
     }
 
     @Override

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.deal.AgentLevel"*/-->
+<!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -34,7 +36,7 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_agentManage.html">代理商管理</a></li>
+                <li><a href="_agentManage.html" th:href="@{/agentManage}">代理商管理</a></li>
                 <li><strong>代理商详情</strong></li>
             </ol>
         </div>
@@ -51,18 +53,21 @@
                             <tbody>
                             <tr>
                                 <td width="120px">代理商姓名</td>
-                                <td><span>哈哈哈</span>
+                                <td><span th:text="${@readService.nameForPrincipal(login)}" id="J_loginName">哈哈哈</span>
                                     <button class="btn btn-xs btn-danger fr" id="J_modifyName">修改姓名</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>曾用名</td>
-                                <td id="J_oldName">呼呼呼</td>
+                                <td id="J_oldName" th:utext="${@readService.joinUsedNamesForPrincipal(login,'&nbsp;')}">
+                                    呼呼呼
+                                </td>
                             </tr>
-                            <tr>
+                            <tr th:if="${currentData.superior!=null}">
                                 <td>上级经销商</td>
                                 <td>
-                                    <span id="J_superiorName">天天向上</span>
+                                    <span id="J_superiorName"
+                                          th:text="${@readService.nameForPrincipal(currentData.superior.login)}">天天向上</span>
                                     <button class="btn btn-xs btn-danger fr" id="J_modifySuperior">修改上级</button>
                                     <div class="form-horizontal m-t-md hide">
                                         <div class="form-group" style="margin-left: 0;margin-right: 0;">
@@ -95,7 +100,8 @@
                                 <td>手机号</td>
                                 <td><span id="J_mobile">18958044532</span>
                                     <button class="btn btn-xs btn-danger fr" id="J_modifyMobile" data-toggle="modal"
-                                            data-target="#J_mobileModal" data-backdrop="static" data-keyboard="false">修改手机号
+                                            data-target="#J_mobileModal" data-backdrop="static" data-keyboard="false">
+                                        修改手机号
                                     </button>
                                 </td>
                             </tr>
@@ -140,7 +146,8 @@
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                        <table id="journalTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+                        <table id="journalTable" class="table table-hover table-success" cellspacing="0"
+                               width="100%"></table>
                     </div>
                 </div>
             </div>
@@ -165,7 +172,8 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table id="subordinateTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+                        <table id="subordinateTable" class="table table-hover table-success" cellspacing="0"
+                               width="100%"></table>
                     </div>
                 </div>
             </div>
@@ -188,7 +196,8 @@
                                 <input type="tel" class="form-control" placeholder="请输入手机号"
                                        name="mobile">
                                 <span class="input-group-btn">
-                            <button class="btn btn-primary button-sendCode" style="min-width: 102px;" type="button" id="J_sendAuthCode">验证手机号</button>
+                            <button class="btn btn-primary button-sendCode" style="min-width: 102px;" type="button"
+                                    id="J_sendAuthCode">验证手机号</button>
                         </span>
                             </div>
                         </div>

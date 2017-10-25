@@ -115,6 +115,13 @@ public interface ReadService {
 
     /**
      * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}
+     * @param delimiter 链接字符
+     * @return 用delimiter连接principal的曾用名
+     */
+    String joinUsedNamesForPrincipal(Object principal, CharSequence delimiter);
+
+    /**
+     * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}
      * @return 微信昵称；如果没有则使用{@link #nameForPrincipal(Object)}
      */
     String wechatNickNameForPrincipal(Object principal);
