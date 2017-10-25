@@ -38,7 +38,7 @@ public class ManageAgentControllerTest extends ManageServiceTest {
         ManageAgentDetailPage page = ManageAgentDetailPage.of(toTestAgent, this, driver);
 
         page.assertName()
-                .isEqualTo(readService.nameForPrincipal(readService.nameForPrincipal(toTestAgent.getLogin())));
+                .isEqualTo(readService.nameForPrincipal(toTestAgent.getLogin()));
 
         // 点击修改名字，并输入新名字
         final String newName = "新名字" + RandomStringUtils.randomAlphabetic(9);

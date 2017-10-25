@@ -7,6 +7,9 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.MainOrder_;
+import cn.lmjia.market.core.entity.settlement.AgentGoodAdvancePaymentJournal;
+import cn.lmjia.market.core.entity.settlement.AgentGoodAdvancePaymentJournalType;
+import cn.lmjia.market.core.entity.settlement.AgentGoodAdvancePaymentJournal_;
 import cn.lmjia.market.core.entity.settlement.LoginCommissionJournal;
 import cn.lmjia.market.core.repository.settlement.LoginCommissionJournalRepository;
 import cn.lmjia.market.core.row.FieldDefinition;
@@ -33,15 +36,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,10 +109,60 @@ public class LoginDataController {
 
     @GetMapping(value = "/agentGoodAdvancePaymentJournal", produces = "application/json")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
-    public RowDefinition agentGoodAdvancePaymentJournal(long id, @AuthenticationPrincipal Login login) {
+    public RowDefinition<AgentGoodAdvancePaymentJournal> agentGoodAdvancePaymentJournal(long id, @AuthenticationPrincipal Login login) {
         if (!login.isManageable() && login.getId() != id)
             throw new AccessDeniedException("不可以查看别人的流水");
-        return null;
+        return new RowDefinition<AgentGoodAdvancePaymentJournal>() {
+            @Override
+            public Class<AgentGoodAdvancePaymentJournal> entityClass() {
+                return AgentGoodAdvancePaymentJournal.class;
+            }
+
+            @Override
+            public List<Order> defaultOrder(CriteriaBuilder criteriaBuilder, Root<AgentGoodAdvancePaymentJournal> root) {
+                return Collections.singletonList(
+                        criteriaBuilder.asc(root.get(AgentGoodAdvancePaymentJournal_.happenTime))
+                );
+            }
+
+            @Override
+            public List<FieldDefinition<AgentGoodAdvancePaymentJournal>> fields() {
+                return Arrays.asList(
+                        Fields.asBasic("id")
+                        , FieldBuilder.asName(AgentGoodAdvancePaymentJournal.class, "orderId")
+                                .addSelect(agentGoodAdvancePaymentJournalRoot
+                                        -> agentGoodAdvancePaymentJournalRoot.get(AgentGoodAdvancePaymentJournal_.agentPrepaymentOrderId))
+                                .build()
+                        , FieldBuilder.asName(AgentGoodAdvancePaymentJournal.class, "event")
+                                .addSelect(agentGoodAdvancePaymentJournalRoot -> agentGoodAdvancePaymentJournalRoot.get(AgentGoodAdvancePaymentJournal_.type))
+                                .addFormat((data, type) -> {
+                                    AgentGoodAdvancePaymentJournalType journalType = (AgentGoodAdvancePaymentJournalType) data;
+                                    switch (journalType) {
+                                        case payment:
+                                            return "increase";
+                                        case makeOrder:
+                                            return "decrease";
+                                        default:
+                                            return "other";
+                                    }
+                                })
+                                .build()
+                        , FieldBuilder.asName(AgentGoodAdvancePaymentJournal.class, "happenTime")
+                                .addFormat((data, type) -> conversionService.convert(data, String.class))
+                                .build()
+                        , FieldBuilder.asName(AgentGoodAdvancePaymentJournal.class, "changedAbsMoney")
+                                .addBiSelect((agentGoodAdvancePaymentJournalRoot, criteriaBuilder)
+                                        -> criteriaBuilder.abs(agentGoodAdvancePaymentJournalRoot.get(AgentGoodAdvancePaymentJournal_.changed)))
+                                .build()
+                        , Fields.asBasic("type")
+                );
+            }
+
+            @Override
+            public Specification<AgentGoodAdvancePaymentJournal> specification() {
+                return (root, query, cb) -> cb.equal(root.get(AgentGoodAdvancePaymentJournal_.login).get(Login_.id), id);
+            }
+        };
     }
 
     /**

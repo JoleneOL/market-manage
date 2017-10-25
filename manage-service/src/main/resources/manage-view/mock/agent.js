@@ -51,10 +51,11 @@ Mock.mock(/\/agentGoodAdvancePaymentJournal/, "get", {
     "data|10": [
         {
             'id': '@id',
+            'orderId': '@id',
             'event': '@pick("increase","decrease")',
             'happenTime': '@datetime("yyyy-MM-dd")',
             'changedAbsMoney': '@integer(3600, 10000)',
-            'balance': '@integer(3600, 10000)',
+            // 'balance': '@integer(3600, 10000)',
             'type': '@pick("购买","充值")'
         }
     ]

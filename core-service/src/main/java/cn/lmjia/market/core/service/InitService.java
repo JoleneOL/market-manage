@@ -180,6 +180,10 @@ public class InitService {
                     statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource(
                                     "/LoginCommissionJournal." + fileName + ".sql").getInputStream()
                             , Charset.forName("UTF-8")));
+                    statement.executeUpdate("DROP TABLE IF EXISTS `AgentGoodAdvancePaymentJournal`");
+                    statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource(
+                                    "/AgentGoodAdvancePaymentJournal." + fileName + ".sql").getInputStream()
+                            , Charset.forName("UTF-8")));
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("读取SQL失败", e);

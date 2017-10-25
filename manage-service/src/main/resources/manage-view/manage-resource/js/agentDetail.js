@@ -277,19 +277,19 @@ $(function () {
                 "title": "概要", "data": "type", "name": "type"
             }
             ,
-            {
-                "title": "当时余额（元）", "name": "balance",
-                data: function (item) {
-                    return '<span>￥' + item.balance + '</span>';
-                }
-            },
+            // {
+            //     "title": "当时余额（元）", "name": "balance",
+            //     data: function (item) {
+            //         return '<span>￥' + item.balance + '</span>';
+            //     }
+            // },
             {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {
                     if (item.event === 'increase')
                         return '';
-                    return '<a href="javascript:;" class="js-checkInfo" data-id="' + item.id + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>';
+                    return '<a href="javascript:;" class="js-checkInfo" data-id="' + item.orderId + '"><i class="fa fa-check-circle-o"></i>&nbsp;详情</a>';
                 }
             }
         ],
