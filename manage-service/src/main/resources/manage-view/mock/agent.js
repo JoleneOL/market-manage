@@ -1,10 +1,18 @@
 Mock.setup({
-    timeout: 500
+    timeout: 50000
 });
 
 Mock.mock(/\/login\/name\/\d/, {
     "resultCode": 200,
     "resultMsg": "ok"
+});
+
+Mock.mock(/\/login\/guide\/\d/, {
+    "resultCode": 200,
+    "resultMsg": "ok",
+    "data": {
+        name: '@cname'
+    }
 });
 
 Mock.mock(/\/agent\/superior\/\d/, {

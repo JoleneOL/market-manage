@@ -295,7 +295,7 @@ public class ManageManagerController {
      */
     private void manageLogin(Login currentInput, Login login) {
         Login current = loginService.get(currentInput.getId());
-        if (current.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ROOT")))
+        if (current.isRoot())
             // root 可以执行任何管理
             return;
         // 否者就看权限是否可以覆盖login了

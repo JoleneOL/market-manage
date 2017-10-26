@@ -33,6 +33,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,6 +74,8 @@ public class LoginDataController {
     private ConversionService conversionService;
     @Autowired
     private ContactWayService contactWayService;
+    @Autowired
+    private ReadService readService;
 
     /**
      * 公开可用的手机号码可用性校验
@@ -103,6 +106,26 @@ public class LoginDataController {
             return ApiResult.withOk();
         }
         return ApiResult.withCodeAndMessage(400, "没有有效的用户名", null);
+    }
+
+    @PutMapping("/login/guide/{id}")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_AllAgent + "','" + Login.ROLE_MANAGER + "')")
+    @ResponseBody
+    @Transactional
+    public ApiResult changeGuide(@RequestBody String newGuide, @PathVariable("id") long id, @AuthenticationPrincipal Login login) {
+        // root 随意改  其他人嘛 嘿嘿
+        final Login target = loginService.get(id);
+        if (target.isGuideChanged() && !login.isRoot()) {
+            return ApiResult.withCodeAndMessage(400, "该用户已经改过引导者了。", null);
+        }
+        if (!StringUtils.isEmpty(newGuide)) {
+            long guideId = NumberUtils.parseNumber(newGuide, Long.class);
+            Login guide = loginService.get(guideId);
+            target.setGuideUser(guide);
+            target.setGuideChanged(true);
+            return ApiResult.withOk(Collections.singletonMap("name", readService.nameForPrincipal(guide)));
+        }
+        return ApiResult.withCodeAndMessage(400, "没有有效的引导者", null);
     }
 
     @PutMapping("/login/mobile/{id}")

@@ -25,7 +25,7 @@ public class ManageAgentControllerTest extends ManageServiceTest {
     private ReadService readService;
 
     @Test
-    public void go() {
+    public void go() throws InterruptedException {
 
         Login als[] = new Login[systemService.systemLevel()];
         AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
@@ -49,13 +49,28 @@ public class ManageAgentControllerTest extends ManageServiceTest {
         assertThat(readService.nameForPrincipal(toTestAgent.getLogin()))
                 .isEqualTo(newName);
 
-//        page.refresh();
+        page.refresh();
         page.assertMobile()
                 .isEqualTo(readService.mobileFor(toTestAgent.getLogin()));
         final String newMobile = randomMobile();
         page.changeMobile(newMobile);
+        Thread.sleep(1000L);
         assertThat(readService.mobileFor(toTestAgent.getLogin()))
                 .isEqualTo(newMobile);
+        page.refresh();
+
+        // 修改引导者
+        page.assertGuideName()
+                .isEqualTo(readService.nameForPrincipal(toTestAgent.getLogin().getGuideUser()));
+
+        // 新增一个Login?
+        Login newLogin = newRandomLogin();
+        page.changeGuide(newLogin);
+
+        page.assertGuideName()
+                .isEqualTo(readService.nameForPrincipal(newLogin));
+        assertThat(loginService.get(toTestAgent.getLogin().getId()).getGuideUser())
+                .isEqualTo(newLogin);
 
     }
 

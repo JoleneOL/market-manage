@@ -96,12 +96,15 @@ $(function () {
         var $parent = $(this).parent();
         var $form = $(this).closest('.form-horizontal');
         var newSuperiorId = superiorInput.val();
+        if (!newSuperiorId) {
+            layer.msg('请选择新的上级代理商');
+            return;
+        }
         var loading = layer.load();
         $.ajax('/agent/superior/' + agentId, {
             method: 'PUT',
-            data: {
-                newSuperior: newSuperiorId
-            },
+            contentType: 'text/plain;charset=UTF-8',
+            data: newSuperiorId,
             dataType: 'json',
             success: function (res) {
                 layer.close(loading);
@@ -128,6 +131,66 @@ $(function () {
         $(this).closest('.form-horizontal').addClass('hide');
         $('#J_modifySuperior').show();
     });
+
+    var guideInput = $("#guideInput");
+    guideInput.makeRecommendSelect(
+        {
+            placeholder: '请选择一个用户作为新的引导者'
+        }
+    );
+
+    $('#J_modifyGuide').click(function () {
+        var self = $(this);
+        layer.confirm('<strong class="text-danger">只有一次修改机会！</strong>', {
+            icon: 3,
+            title: '重要提示',
+            btn: ['确定', '取消']
+        }, function (index) {
+            self.hide();
+            self.next().removeClass('hide');
+            layer.close(index);
+        });
+    });
+    $('#J_confirmModifyGuide').click(function () {
+        var $parent = $(this).parent();
+        var $form = $(this).closest('.form-horizontal');
+        var newSuperiorId = guideInput.val();
+        if (!newSuperiorId) {
+            layer.msg('请选择新的引导者');
+            return;
+        }
+        var loading = layer.load();
+        $.ajax('/login/guide/' + loginId, {
+            method: 'PUT',
+            contentType: 'text/plain;charset=UTF-8',
+            data: newSuperiorId,
+            dataType: 'json',
+            success: function (res) {
+                console.log(res);
+                layer.close(loading);
+                if (res.resultCode !== 200) {
+                    layer.close(index);
+                    layer.msg('修改失败，稍后再试');
+                    return '';
+                }
+                $('#J_guideName').text(res.data['name']);
+                $('#J_modifyGuide').remove();
+                $parent.remove();
+                $form.addClass('hide');
+                layer.msg('修改成功');
+            },
+            error: function () {
+                layer.close(loading);
+                layer.close(index);
+                layer.msg('修改失败，稍后再试');
+            }
+        });
+    });
+    $('#J_cancelModifyGuide').click(function () {
+        $(this).closest('.form-horizontal').addClass('hide');
+        $('#J_modifyGuide').show();
+    });
+
     var $mobile = $('input[name="newMobile"]');
     var $authCode = $('input[name="authCode"]');
     var sendAuthCodeUrl = _body.attr('data-url-sendAuthCode');

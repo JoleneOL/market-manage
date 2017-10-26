@@ -1,5 +1,6 @@
 package cn.lmjia.market.manage.page;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.pages.AbstractContentPage;
 import me.jiangcai.lib.test.SpringWebTest;
@@ -73,5 +74,39 @@ public class ManageAgentDetailPage extends AbstractContentPage {
 //            input.sendKeys(mobile);
 //            return true;
 //        });
+    }
+
+    /**
+     * @return 引导者
+     */
+    public AbstractCharSequenceAssert<?, String> assertGuideName() {
+        return assertThat(webDriver.findElement(By.id("J_guideName")).getText());
+    }
+
+//    /**
+//     * 检查下是否有弹出框，有的话function就会被执行
+//     *
+//     * @param function 参数分别为弹出窗标题，整个弹出界面的div；如果返回true则表示输入，返回false就直接关闭
+//     */
+//    public void layerConfirm(BiFunction<String, WebElement, Boolean> function) {
+//        final By locator = By.className("layui-layer-prompt");
+//        layerInputAndYes(function, locator);
+//    }
+
+
+    public void changeGuide(Login login) {
+        // 开启修改
+        webDriver.findElement(By.id("J_modifyGuide")).click();
+        // 确认同意一次性修改
+//        printThisPage();
+        layerDialog((s, webElement) -> true);
+        new WebDriverWait(webDriver, 2).until(ExpectedConditions.visibilityOfElementLocated(By.id("J_confirmModifyGuide")));
+
+        // 输入名字
+        select2For("#guideInput", login.getLoginName(), webElement -> webElement.getText().contains(login.getLoginName()));
+
+        // 确认修改
+        webDriver.findElement(By.id("J_confirmModifyGuide")).click();
+        assertLayerMessage().isEqualTo("修改成功");
     }
 }

@@ -520,6 +520,9 @@ public class InitService {
                     case newCommission:
                         jdbcService.tableAlterAddColumn(MainGood.class, "commissionSource", "1");
                         break;
+                    case changeGuide:
+                        jdbcService.tableAlterAddColumn(Login.class, "changeGuide", "0");
+                        break;
                     default:
                 }
 
