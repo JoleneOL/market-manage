@@ -77,19 +77,24 @@ $(function () {
         });
     });
     var superiorInput = $("#superiorInput");
-    superiorInput.makeRecommendSelect();
+    superiorInput.makeRecommendSelect({
+        placeholder: '请选择一个用户作为新的上级代理商',
+        url: _body.data('search-agent-url')
+    });
 
     $('#J_modifySuperior').click(function () {
         var self = $(this);
-        layer.confirm('<strong class="text-danger">只有一次修改机会！</strong>', {
-            icon: 3,
-            title: '重要提示',
-            btn: ['确定', '取消']
-        }, function (index) {
-            self.hide();
-            self.next().removeClass('hide');
-            layer.close(index);
-        });
+        self.hide();
+        self.next().removeClass('hide');
+        // layer.confirm('<strong class="text-danger">只有一次修改机会！</strong>', {
+        //     icon: 3,
+        //     title: '重要提示',
+        //     btn: ['确定', '取消']
+        // }, function (index) {
+        //     self.hide();
+        //     self.next().removeClass('hide');
+        //     layer.close(index);
+        // });
     });
 
     $('#J_confirmModify').click(function () {

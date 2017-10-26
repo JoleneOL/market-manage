@@ -74,6 +74,21 @@ public class ReadServiceImpl implements ReadService {
     private TagRepository tagRepository;
 
     @Override
+    public String nameForAgent(AgentLevel agentLevel) {
+        String level;
+        if (!StringUtils.isEmpty(agentLevel.getLevelTitle()))
+            level = agentLevel.getLevelTitle();
+        else
+            level = getLoginTitle(agentLevel.getLevel());
+        String rank;
+        if (!StringUtils.isEmpty(agentLevel.getRank()))
+            rank = agentLevel.getRank();
+        else
+            rank = nameForPrincipal(agentLevel.getLogin());
+        return rank + "(" + level + ")";
+    }
+
+    @Override
     public String mobileFor(Object principal) {
         if (principal == null)
             return "";

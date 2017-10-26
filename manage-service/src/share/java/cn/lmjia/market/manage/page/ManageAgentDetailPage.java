@@ -83,6 +83,13 @@ public class ManageAgentDetailPage extends AbstractContentPage {
         return assertThat(webDriver.findElement(By.id("J_guideName")).getText());
     }
 
+    /**
+     * @return 上级代理商
+     */
+    public AbstractCharSequenceAssert<?, String> assertSuperiorName() {
+        return assertThat(webDriver.findElement(By.id("J_superiorName")).getText());
+    }
+
 //    /**
 //     * 检查下是否有弹出框，有的话function就会被执行
 //     *
@@ -107,6 +114,27 @@ public class ManageAgentDetailPage extends AbstractContentPage {
 
         // 确认修改
         webDriver.findElement(By.id("J_confirmModifyGuide")).click();
+        assertLayerMessage().isEqualTo("修改成功");
+    }
+
+    public void changeSuperior(Login login) {
+        // 开启修改
+        webDriver.findElement(By.id("J_modifySuperior")).click();
+        new WebDriverWait(webDriver, 2).until(ExpectedConditions.visibilityOfElementLocated(By.id("J_confirmModify")));
+
+        // 输入名字
+        select2For("#superiorInput", login.getLoginName(), webElement
+                        -> {
+                    return true;
+                }
+//            System.out.printf(login.getLoginName());
+//            System.out.println(webElement.getText());
+//            return webElement.getText().contains(login.getLoginName());
+//                }
+        );
+
+        // 确认修改
+        webDriver.findElement(By.id("J_confirmModify")).click();
         assertLayerMessage().isEqualTo("修改成功");
     }
 }

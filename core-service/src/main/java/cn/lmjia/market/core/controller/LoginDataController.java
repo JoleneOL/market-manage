@@ -92,8 +92,8 @@ public class LoginDataController {
     @PreAuthorize("!isAnonymous()")
     @GetMapping("/loginData/select2")
     @RowCustom(dramatizer = Select2Dramatizer.class, distinct = true)
-    public RowDefinition<Login> searchLoginSelect2(String search, Boolean agent) {
-        return searchLogin(search, agent);
+    public RowDefinition<Login> searchLoginSelect2(String search, Boolean agent, Integer level) {
+        return searchLogin(search, agent, level);
     }
 
     @PutMapping("/login/name/{id}")
@@ -300,11 +300,12 @@ public class LoginDataController {
     /**
      * 查询所有用户
      *
-     * @param search 可能是名字或者电话号码
-     * @param agent  是否只获取代理商
+     * @param search     可能是名字或者电话号码
+     * @param inputAgent 是否只获取代理商
+     * @param level      特选代理商必须具备的等级；若该选项存在则agent必须为true
      * @return 字段定义
      */
-    private RowDefinition<Login> searchLogin(String search, Boolean agent) {
+    private RowDefinition<Login> searchLogin(String search, Boolean inputAgent, Integer level) {
         return new RowDefinition<Login>() {
             @Override
             public Class<Login> entityClass() {
@@ -325,10 +326,17 @@ public class LoginDataController {
 
             @Override
             public Specification<Login> specification() {
+                final Boolean agent;
+                if (level != null) {
+                    agent = true;
+                } else
+                    agent = inputAgent;
                 if (StringUtils.isEmpty(search) && agent == null)
                     return null;
                 final Specification<Login> agentSpecification = (root, query, cb) -> {
                     final Expression<Integer> levelForLogin = ReadService.agentLevelForLogin(root, cb);
+                    if (level != null)
+                        return cb.lessThanOrEqualTo(levelForLogin, level);
                     return agent ? cb.lessThan(levelForLogin, Customer.LEVEL)
                             : cb.greaterThanOrEqualTo(levelForLogin, Customer.LEVEL);
 //                    Subquery<Long> subquery = query.subquery(Long.class);

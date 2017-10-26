@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
@@ -100,6 +101,12 @@ public interface ReadService {
                 return "经销商";
         }
     }
+
+    /**
+     * @param agentLevel 代理商
+     * @return 一个代理商的完整名称
+     */
+    String nameForAgent(AgentLevel agentLevel);
 
     /**
      * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}

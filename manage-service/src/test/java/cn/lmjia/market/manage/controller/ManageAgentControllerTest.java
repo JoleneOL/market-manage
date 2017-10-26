@@ -72,6 +72,14 @@ public class ManageAgentControllerTest extends ManageServiceTest {
         assertThat(loginService.get(toTestAgent.getLogin().getId()).getGuideUser())
                 .isEqualTo(newLogin);
 
+        //
+        Login newLevel = newRandomAgent(toTestAgent.getSuperior().getSuperior());
+        page.refresh();
+        page.assertSuperiorName()
+                .isEqualTo(readService.nameForAgent(toTestAgent.getSuperior()));
+        page.changeSuperior(newLevel);
+        assertThat(agentService.getAgent(toTestAgent.getId()).getSuperior().getLogin())
+                .isEqualTo(newLevel);
     }
 
     private void addSubUserFor(Login login) {

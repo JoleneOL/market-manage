@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me"
+      xmlns:sec="http://security.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.deal.AgentLevel"*/-->
 <!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
 <!--/*@thymesVar id="parentTitle" type="java.lang.String"*/-->
@@ -42,7 +43,9 @@
       data-good-advance-order-detail="_orderDetail.html"
       th:data-good-advance-order-detail="${'/wechatAgentPrepaymentOrderDetail'}"
       data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
-      th:data-search-login-url="@{/loginData/select2}">
+      th:data-search-login-url="@{/loginData/select2}"
+      data-search-agent-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
+      th:data-search-agent-url="${currentData==null?'':'/loginData/select2?level='+((currentData.level)-1)}">
 <div class="wrapper-content">
     <div class="ibox">
         <div class="ibox-content">
@@ -78,8 +81,10 @@
                                 <td>上级经销商</td>
                                 <td>
                                     <span id="J_superiorName"
-                                          th:text="${@readService.nameForPrincipal(currentData.superior.login)}">天天向上</span>
-                                    <button class="btn btn-xs btn-danger fr" id="J_modifySuperior">修改上级</button>
+                                          th:text="${@readService.nameForAgent(currentData.superior)}">天天向上</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifySuperior"
+                                            sec:authorize="hasAnyRole('ROOT')">修改上级
+                                    </button>
                                     <div class="form-horizontal m-t-md hide">
                                         <div class="form-group" style="margin-left: 0;margin-right: 0;">
                                             <div class="col-sm-12">
