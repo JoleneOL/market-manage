@@ -521,7 +521,7 @@ public class InitService {
                         jdbcService.tableAlterAddColumn(MainGood.class, "commissionSource", "1");
                         break;
                     case changeGuide:
-                        jdbcService.tableAlterAddColumn(Login.class, "changeGuide", "0");
+                        jdbcService.tableAlterAddColumn(Login.class, "guideChanged", "0");
                         break;
                     default:
                 }
