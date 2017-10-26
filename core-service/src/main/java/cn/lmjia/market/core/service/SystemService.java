@@ -14,6 +14,10 @@ import java.util.Map;
  */
 public interface SystemService {
     /**
+     * 预付货款批货列表
+     */
+    String goodAdvanceOrderList = "/wechatGoodAdvanceOrderList";
+    /**
      * 显示业绩的URL
      */
     String wechatSales = "/wechatSales";
@@ -49,6 +53,7 @@ public interface SystemService {
      * 商城下单URI
      */
     String mallOrderURi = "/mallOrder";
+    String wechatMallIndex = "/wechatIndex";
 
     /**
      * @return 代理体系的层次数量
@@ -98,6 +103,11 @@ public interface SystemService {
     default int addressRateForLevel() {
         return 2;
     }
+
+    /**
+     * @return 公司客服电话
+     */
+    String getCompanyCustomerServiceTel();
 
     /**
      * @param login 当前登录的用户

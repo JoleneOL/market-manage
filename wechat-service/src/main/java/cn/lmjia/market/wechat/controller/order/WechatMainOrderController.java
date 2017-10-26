@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -201,15 +201,11 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             , Address address, String mobile, String activityCode, @AuthenticationPrincipal Login login, Model model
             , @RequestParam(required = false) Long channelId
             , String authorising, String idNumber, boolean installmentHuabai
-            , String[] goods,@RequestParam(name = "goods[]",required = false) String[] goodsArray)
+            , String[] goods, @RequestParam(name = "goods[]", required = false) String[] goodsArray)
             throws MainGoodLowStockException, InvalidAuthorisingException {
         int age = 20;
-        MainGoodsAndAmounts amounts = null;
-        if(goods != null){
-            amounts = MainGoodsAndAmounts.ofArray(goods);
-        }else if(goodsArray != null){
-            amounts = MainGoodsAndAmounts.ofArray(goodsArray);
-        }
+        MainGoodsAndAmounts amounts = getMainGoodAndAmounts(goods, goodsArray);
+
         MainOrder order = newOrder(login, model, login.getId(), name, age, gender, address, mobile,
                 activityCode, channelId, amounts);
         JSONObject result = new JSONObject();
@@ -318,7 +314,16 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             yours = order.getOrderBy().equals(login);
         }
         model.addAttribute("yours", yours);
-        return "wechat@orderSuccess.html";
+        return successView(model);
     }
 
+    @Override
+    protected String listUri() {
+        return "/wechatOrderList";
+    }
+
+    @Override
+    protected String listTitle() {
+        return "订单列表";
+    }
 }

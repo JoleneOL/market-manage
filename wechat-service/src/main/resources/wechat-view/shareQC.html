@@ -25,14 +25,13 @@
 <section class="view_body view-body_share">
     <h1 class="text-center" th:text="${@readService.nameForPrincipal(#authentication.principal)}">节菲菲</h1>
     <h2 class="text-center">ID:<span th:text="${login.id+100000000}">12446968</span></h2>
-    <p class="text-center view-share-qc">
+    <p class="text-center view-share-qc view-mb-20">
         <img src="https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=1062989499,1682648318&fm=58" th:src="${qrCodeUrl}"
              alt="分享二维码">
     </p>
-    <!--<div class="text-center">-->
-        <!--<p>分享即能赚钱</p>-->
-        <!--<p>更多机会，请点击：合伙人升级</p>-->
-    <!--</div>-->
+    <div class="text-center">
+        <p class="text-middle">客服热线：<a href="tel:0571-88187913" class="text-black">0571-88187913</a></p>
+    </div>
     <!--<p class="view-share-qc">-->
     <!--<a href="javascript:;" class="weui-btn weui-btn_plain-default">分享给朋友</a>-->
     <!--</p>-->

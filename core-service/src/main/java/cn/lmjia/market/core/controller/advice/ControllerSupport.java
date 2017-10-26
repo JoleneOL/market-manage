@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.controller.advice;
 
+import cn.lmjia.market.core.exception.GoodAdvancePaymentBalanceNotEnoughException;
 import cn.lmjia.market.core.exception.MainGoodLimitStockException;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.ApiResult;
@@ -14,7 +15,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,11 +28,17 @@ public class ControllerSupport {
 
     private static final Log log = LogFactory.getLog(ControllerSupport.class);
 
+    @ExceptionHandler(GoodAdvancePaymentBalanceNotEnoughException.class)
+    @ResponseBody
+    public ApiResult sawGoodAdvancePaymentBalanceNotEnoughException(GoodAdvancePaymentBalanceNotEnoughException ex) {
+        return ApiResult.withCodeAndMessage(404, "货款余额不足", null);
+    }
+
     @ExceptionHandler(InvalidAuthorisingException.class)
     public String sawInvalidAuthorisingException(HttpServletRequest request, HttpServletResponse response) {
         boolean isAjax = isAjaxRequestOrBackJson(request);
-        if(isAjax){
-            ApiResult result = ApiResult.withCodeAndMessage(402,null,null);
+        if (isAjax) {
+            ApiResult result = ApiResult.withCodeAndMessage(402, null, null);
             try {
                 response.getWriter().write(result.toString());
             } catch (IOException e) {
@@ -60,12 +66,12 @@ public class ControllerSupport {
 
     @ExceptionHandler(MainGoodLowStockException.class)
     @ResponseBody
-    public ApiResult sawMainGoodLimitStockException(MainGoodLowStockException ex){
+    public ApiResult sawMainGoodLimitStockException(MainGoodLowStockException ex) {
         String message = "存在商品库存不足";
-        if(ex instanceof MainGoodLimitStockException){
+        if (ex instanceof MainGoodLimitStockException) {
             message = "存在商品下单数量超过限购数量";
         }
-        return ApiResult.withCodeAndMessage(401,message,ex.toData());
+        return ApiResult.withCodeAndMessage(401, message, ex.toData());
     }
 
     @ExceptionHandler(Throwable.class)

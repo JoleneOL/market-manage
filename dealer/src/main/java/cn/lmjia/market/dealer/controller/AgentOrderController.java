@@ -55,4 +55,13 @@ public class AgentOrderController extends AbstractMainOrderController {
     }
 
 
+    @Override
+    protected String listUri() {
+        return null;
+    }
+
+    @Override
+    protected String listTitle() {
+        return null;
+    }
 }

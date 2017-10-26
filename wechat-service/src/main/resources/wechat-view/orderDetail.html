@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<!--/*@thymesVar id="order" type="cn.lmjia.market.core.entity.MainOrder"*/-->
+<!--/*@thymesVar id="order" type="cn.lmjia.market.core.entity.order.MainDeliverableOrder"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -20,13 +20,13 @@
 <section class="view_body">
     <div class="view-form-list">
         <div class="weui-cells__title">用户信息</div>
-        <div class="weui-cells">
+        <div class="weui-cells" th:object="${order.customer}">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">用户</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p th:text="${order.customer.name}">李菲菲</p>
+                    <p th:text="*{name}">李菲菲</p>
                 </div>
             </div>
             <div class="weui-cell">
@@ -34,7 +34,7 @@
                     <label class="weui-label">性别</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p th:text="${{order.customer.gender}}">女</p>
+                    <p th:text="*{{gender}}">女</p>
                 </div>
             </div>
             <div class="weui-cell">
@@ -42,7 +42,7 @@
                     <label class="weui-label">手机号码</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <p th:text="${order.customer.mobile}">15789944587</p>
+                    <p th:text="*{mobile}">15789944587</p>
                 </div>
             </div>
             <div class="weui-cell">
@@ -96,6 +96,16 @@
         <div class="view-order-list_ex">
             <p class="view-order_ex_title">合计：<span th:text="${{order.orderDueAmountMoney}}">￥1841937</span></p>
             <p class="view-order_ex_title text-gray">订单时间：<span th:text="${{order.orderTime}}">2000-04-07</span></p>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div>
+        <div class="weui-footer">
+            <p class="weui-footer__text weui-footer__links">联系电话 <a href="tel:0571-88187913"
+                                                                    th:href="${'tel:'+@systemService.companyCustomerServiceTel}"
+                                                                    th:text="${@systemService.companyCustomerServiceTel}">0571-88187913</a>
+            </p>
         </div>
     </div>
 </section>
