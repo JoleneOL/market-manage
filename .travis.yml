@@ -11,6 +11,7 @@ env:
 services:
   - mysql
 before_install:
+  - mysql -e 'DROP DATABASE IF EXIST market;'
   - mysql -e 'CREATE DATABASE market;'
 
 script: mvn test

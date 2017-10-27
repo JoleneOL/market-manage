@@ -37,6 +37,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -157,6 +158,7 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
 
     @Bean
     public DataSource dataSource() {
+        log.debug("active profiles:" + StringUtils.arrayToCommaDelimitedString(environment.getActiveProfiles()));
         if (environment.acceptsProfiles("mysql")) {
             DriverManagerDataSource dataSource;
             if (environment.acceptsProfiles("jdbcProfile"))
