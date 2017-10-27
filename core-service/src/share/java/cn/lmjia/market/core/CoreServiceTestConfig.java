@@ -174,11 +174,7 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
             return fileDataSource("market");
 
         }
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:/cn/lmjia/market;DB_CLOSE_DELAY=-1;LOCK_TIMEOUT=10000");
-        log.info("dbName:/cn/lmjia/market");
-        return dataSource;
+        return memDataSource("cn/lmjia/market");
     }
 
     @Override

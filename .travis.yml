@@ -5,4 +5,12 @@ cache:
   - .autoconf
   - $HOME/.m2
 
+env:
+  - spring.profiles.active=mysql
+
+services:
+  - mysql
+before_install:
+  - mysql -e 'CREATE DATABASE market;'
+
 script: mvn test
