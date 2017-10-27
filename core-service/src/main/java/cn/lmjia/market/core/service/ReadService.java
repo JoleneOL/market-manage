@@ -106,7 +106,12 @@ public interface ReadService {
                         , cb.notEqual(orderRoot.get(AgentPrepaymentOrder_.orderStatus), OrderStatus.close)
                 ));
 
-        return cb.diff(add, ordered);
+        return cb.diff(cb.<Boolean, BigDecimal>selectCase(add.isNull())
+                        .when(true, BigDecimal.ZERO)
+                        .otherwise(add)
+                , cb.<Boolean, BigDecimal>selectCase(ordered.isNull())
+                        .when(true, BigDecimal.ZERO)
+                        .otherwise(ordered));
     }
 
     /**
