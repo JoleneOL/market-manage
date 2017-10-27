@@ -6,7 +6,7 @@ cache:
   - $HOME/.m2
 
 env:
-  - \"spring.profiles.active\"=mysql
+  - spring.profiles.active=mysql
 
 services:
   - mysql

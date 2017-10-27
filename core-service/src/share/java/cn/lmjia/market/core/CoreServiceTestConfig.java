@@ -159,7 +159,11 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
     @Bean
     public DataSource dataSource() {
         log.debug("active profiles:" + StringUtils.arrayToCommaDelimitedString(environment.getActiveProfiles()));
-        if (environment.acceptsProfiles("mysql")) {
+        if (environment.acceptsProfiles("h2file")) {
+            return fileDataSource("market");
+
+        }
+//        if (environment.acceptsProfiles("mysql")) {
             DriverManagerDataSource dataSource;
             if (environment.acceptsProfiles("jdbcProfile"))
                 dataSource = new TestDataSource();
@@ -171,12 +175,8 @@ public class CoreServiceTestConfig extends H2DataSourceConfig implements WebMvcC
             dataSource.setUrl("jdbc:mysql://localhost/market");
             dataSource.setUsername("root");
             return dataSource;
-        }
-        if (environment.acceptsProfiles("h2file")) {
-            return fileDataSource("market");
-
-        }
-        return memDataSource("cn/lmjia/market");
+//        }
+//        return memDataSource("cn/lmjia/market");
     }
 
     @Override
