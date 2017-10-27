@@ -45,7 +45,9 @@
       data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
       th:data-search-login-url="@{/loginData/select2}"
       data-search-agent-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
-      th:data-search-agent-url="${currentData==null?'':'/loginData/select2?level='+((currentData.level)-1)}">
+      th:data-search-agent-url="${currentData==null?'':'/loginData/select2?level='+((currentData.level)-1)}"
+      data-login-detail-url="_agentDetail.html"
+      th:data-login-detail-url="@{/manageLoginDetail}">
 <div class="wrapper-content">
     <div class="ibox">
         <div class="ibox-content">
@@ -122,7 +124,7 @@
                                     呼呼呼
                                 </td>
                             </tr>
-                            <tr>
+                            <tr th:if="${login.guideUser!=null}">
                                 <td>引导者</td>
                                 <td>
                                     <a href="_agentDetail.html"

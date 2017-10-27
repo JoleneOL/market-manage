@@ -298,7 +298,10 @@ $(function () {
         "order": [[2, "desc"]],
         "columns": [
             {
-                "title": "下级姓名", "data": "name", "name": "name"
+                "title": "姓名", "name": "name"
+                , data: function (item) {
+                return '<a href="' + _body.data('login-detail-url') + '?id=' + item.id + '">' + item.name + '</a>';
+            }
             },
             {
                 "title": "手机号", "data": "mobile", "name": "mobile"
