@@ -80,8 +80,10 @@
                             <tr th:if="${currentData!=null && currentData.superior!=null}">
                                 <td>上级经销商</td>
                                 <td>
-                                    <span id="J_superiorName"
-                                          th:text="${@readService.nameForAgent(currentData.superior)}">天天向上</span>
+                                    <a href="_agentDetail.html"
+                                       th:href="@{/manageAgentDetail(id=${currentData.superior.id})}"><span
+                                            id="J_superiorName"
+                                            th:text="${@readService.nameForAgent(currentData.superior)}"></span></a>
                                     <button class="btn btn-xs btn-danger fr" id="J_modifySuperior"
                                             sec:authorize="hasAnyRole('ROOT')">修改上级
                                     </button>
@@ -123,8 +125,11 @@
                             <tr>
                                 <td>引导者</td>
                                 <td>
-                                    <span id="J_guideName"
-                                          th:text="${@readService.nameForPrincipal(login.guideUser)}">天天向上</span>
+                                    <a href="_agentDetail.html"
+                                       th:href="@{/manageLoginDetail(id=${login.guideUser.id})}">
+                                        <span id="J_guideName"
+                                              th:text="${@readService.nameForPrincipal(login.guideUser)}">天天向上</span>
+                                    </a>
                                     <button class="btn btn-xs btn-danger fr" id="J_modifyGuide"
                                             th:disabled="${!login.guideChanged && !#authorization.expression('hasRole(''ROOT'')') }">
                                         修改引导者

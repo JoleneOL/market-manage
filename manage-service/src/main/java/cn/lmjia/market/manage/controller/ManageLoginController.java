@@ -103,7 +103,11 @@ public class ManageLoginController extends AbstractLoginDetailController {
                     if (!StringUtils.isEmpty(name)) {
                         predicate = cb.and(
                                 predicate
-                                , cb.like(root.get(Login_.loginName), "%" + name + "%")
+                                , cb.or(
+                                        cb.like(root.get(Login_.loginName), "%" + name + "%")
+                                        , cb.like(ReadService.nameForLogin(root, cb), "%" + name + "%")
+                                        , cb.like(ReadService.mobileForLogin(root, cb), "%" + name + "%")
+                                )
                         );
                     }
                     return predicate;
