@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity.settlement;
 
+import cn.lmjia.market.core.define.Journal;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
 import lombok.Getter;
@@ -24,7 +25,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class AgentGoodAdvancePaymentJournal {
+public class AgentGoodAdvancePaymentJournal implements Journal {
     @Id
     private String id;
     @ManyToOne
@@ -44,6 +45,11 @@ public class AgentGoodAdvancePaymentJournal {
      */
     @Column(name = "CHANGED")
     private BigDecimal changed;
+
+    @Override
+    public Long getMainOrderId() {
+        return null;
+    }
 
     public Money getChangedAbsMoney() {
         return new Money(getChanged().abs());

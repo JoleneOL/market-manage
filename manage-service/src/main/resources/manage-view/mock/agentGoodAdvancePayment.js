@@ -21,6 +21,7 @@ Mock.mock(/\/manage\/agentGoodAdvancePayment/, "get", {
         {
             'id': '@id',
             'user': '@cname',
+            'loginId': '@id',
             'amount': '@integer(100, 10000)',
             'balance': '@integer(100, 10000)',
             'mobile': /^1([34578])\d{9}$/,

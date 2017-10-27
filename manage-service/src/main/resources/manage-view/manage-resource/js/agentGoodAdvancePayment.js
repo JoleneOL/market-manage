@@ -67,14 +67,14 @@ $(function () {
                 "data": "serial",
                 "name": "serial"
             },
-            // {
-            //     "title": "货款余额",
-            //     "name": "balance",
-            //     "orderable": false,
-            //     data: function (item) {
-            //         return '<a href="javascript:;" class="text-navy js-journal" data-id="' + item.id + '"><i class="fa fa-rmb"></i> ' + item.balance + '</a>';
-            //     }
-            // },
+            {
+                "title": "货款余额",
+                "name": "balance",
+                "orderable": false,
+                data: function (item) {
+                    return '<a href="javascript:;" class="text-navy js-journal" data-id="' + item.loginId + '"><i class="fa fa-rmb"></i> ' + item.balance + '</a>';
+                }
+            },
             {
                 "title": "时间",
                 "data": "happenTime",

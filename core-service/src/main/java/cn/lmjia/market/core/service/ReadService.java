@@ -8,6 +8,11 @@ import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment;
+import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment_;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder_;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
@@ -17,10 +22,13 @@ import me.jiangcai.logistics.entity.ProductType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -76,6 +84,30 @@ public interface ReadService {
 //        return JpaFunctionUtils.ifNull(criteriaBuilder, String.class, name
 //                , nameForLogin(customerFrom.join(Customer_.login), criteriaBuilder));
 //    }
+
+    static Expression<BigDecimal> currentGoodAdvancePaymentBalance(Expression<? extends Login> loginFrom
+            , CriteriaBuilder cb, CriteriaQuery<?> cq) {
+        Subquery<BigDecimal> add = cq.subquery(BigDecimal.class);
+        Root<AgentGoodAdvancePayment> root = add.from(AgentGoodAdvancePayment.class);
+        add = add
+                .select(cb.sum(root.get(AgentGoodAdvancePayment_.amount)))
+                .where(
+                        cb.equal(root.get(AgentGoodAdvancePayment_.login), loginFrom)
+                        , AgentGoodAdvancePayment.isSuccessPayment(root, cb)
+                );
+
+        Subquery<BigDecimal> ordered = cq.subquery(BigDecimal.class);
+
+        // 减去非关闭的订单
+        Root<AgentPrepaymentOrder> orderRoot = ordered.from(AgentPrepaymentOrder.class);
+        ordered = ordered.select(cb.sum(orderRoot.get(AgentPrepaymentOrder_.goodTotalPriceAmountIndependent)))
+                .where(cb.and(
+                        cb.equal(orderRoot.get(AgentPrepaymentOrder_.belongs), loginFrom)
+                        , cb.notEqual(orderRoot.get(AgentPrepaymentOrder_.orderStatus), OrderStatus.close)
+                ));
+
+        return cb.diff(add, ordered);
+    }
 
     /**
      * @param i 登录者级别；可以视作代理级别

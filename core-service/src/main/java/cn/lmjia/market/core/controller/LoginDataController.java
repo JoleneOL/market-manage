@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.controller;
 
+import cn.lmjia.market.core.define.Journal;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.ContactWay;
 import cn.lmjia.market.core.entity.Customer;
@@ -16,6 +17,7 @@ import cn.lmjia.market.core.repository.settlement.LoginCommissionJournalReposito
 import cn.lmjia.market.core.row.FieldDefinition;
 import cn.lmjia.market.core.row.RowCustom;
 import cn.lmjia.market.core.row.RowDefinition;
+import cn.lmjia.market.core.row.RowService;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
@@ -76,6 +78,8 @@ public class LoginDataController {
     private ContactWayService contactWayService;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private RowService rowService;
 
     /**
      * 公开可用的手机号码可用性校验
@@ -153,6 +157,34 @@ public class LoginDataController {
         // 用于保存当时的数据
         Map<String, Money> currentData = new HashMap<>();
         for (LoginCommissionJournal journal : list) {
+            current = current.add(journal.getChanged());
+            currentData.put(journal.getId(), new Money(current));
+        }
+        model.addAttribute("currentData", currentData);
+
+        return "mock/journal.html";
+    }
+
+    @GetMapping(value = "/agentGoodAdvancePaymentJournal", produces = "text/html")
+    @Transactional(readOnly = true)
+    public String agentGoodAdvancePaymentJournal(long id, @AuthenticationPrincipal Login login, Model model) {
+        // 自己只可以查自己的
+        if (!login.isManageable() && login.getId() != id)
+            throw new AccessDeniedException("不可以查看别人的流水");
+
+        final RowDefinition<AgentGoodAdvancePaymentJournal> definition = agentGoodAdvancePaymentJournal(id, login);
+
+        return toJournalView(model, definition);
+    }
+
+    private <T extends Journal> String toJournalView(Model model, RowDefinition<T> definition) {
+        final List<T> list = rowService.queryAllEntity(definition);
+        model.addAttribute("list", list);
+
+        BigDecimal current = BigDecimal.ZERO;
+        // 用于保存当时的数据
+        Map<String, Money> currentData = new HashMap<>();
+        for (T journal : list) {
             current = current.add(journal.getChanged());
             currentData.put(journal.getId(), new Money(current));
         }
