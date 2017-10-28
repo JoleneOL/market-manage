@@ -86,7 +86,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author CJ
  */
-@ActiveProfiles({"test", CoreConfig.ProfileUnitTest})
+@ActiveProfiles(value = {"test", CoreConfig.ProfileUnitTest},resolver = TestSpringActiveProfileResolver.class)
 @ContextConfiguration(classes = CoreServiceTestConfig.class)
 @WebAppConfiguration
 public abstract class CoreServiceTest extends SpringWebTest {
