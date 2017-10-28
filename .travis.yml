@@ -13,4 +13,4 @@ services:
 before_install:
   - mysql -e 'CREATE DATABASE market;'
 
-script: mvn test
+script: mvn test -Pmysql
