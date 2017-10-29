@@ -8,6 +8,7 @@ cache:
 services:
   - mysql
 before_install:
+  - mysql -e 'DROP DATABASE IF EXISTS market;'
   - mysql -e 'CREATE DATABASE market;'
 
 script: mvn test -Dspring.profiles.active=mysql
