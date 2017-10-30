@@ -41,6 +41,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -409,11 +410,15 @@ public class AgentServiceImpl implements AgentService {
         Set<AgentLevel> superiors = null;
         int level = 0;
         while (true) {
-            List<AgentLevel> list;
+            final List<AgentLevel> list;
             if (superiors == null)
                 list = agentLevelRepository.findBySuperiorAndSystem(null, system);
-            else
-                list = agentLevelRepository.findBySystemAndSuperiorIn(system, superiors);
+            else {
+                list = superiors.stream()
+                        .map(superior -> agentLevelRepository.findBySuperiorAndSystem(superior, system))
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList());
+            }
 
             if (list.isEmpty()) {
                 log.info(system + "健康检查完成");
