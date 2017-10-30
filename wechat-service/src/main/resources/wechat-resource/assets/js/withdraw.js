@@ -199,9 +199,20 @@ $(function () {
         $('#withSubmit').attr("disabled", true);
     }
 
-    var $agreebutton = $('#J_agree_button');
+    var $agreeButton = $('#J_agree_button');
     var $agree = $('#J_agree');
-    $agreebutton.click(function(){
-        $agree.prop("checked",'checked');
+    $agreeButton.click(function(){
+        $agree.prop('checked','checked');
+        localStorage.setItem('agree',true);
     });
+    var $rejectButton = $('#J_reject_button');
+    $rejectButton.click(function(){
+        $agree.prop('checked','');
+        localStorage.removeItem('agree')
+    })
+
+    var flag = localStorage.getItem('agree');
+    if(flag != undefined){
+        $agree.prop('checked','checked');
+    }
 });
