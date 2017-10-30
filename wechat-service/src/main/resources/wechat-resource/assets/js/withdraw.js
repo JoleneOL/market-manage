@@ -247,6 +247,7 @@ $(function () {
 
     var $agreeButton = $('#J_agree_button');
     var $agree = $('#weuiAgree');
+    var $rules = $('#rules');
     $agreeButton.click(function(){
         $agree.prop('checked','checked');
         localStorage.setItem('agree',true);
@@ -265,7 +266,8 @@ $(function () {
         if(!$agree.prop('checked')){
             localStorage.removeItem('agree');
         }else{
-            localStorage.setItem('agree',true);
+            $agree.prop('checked','');
+            $rules.click();
         }
     })
 });
