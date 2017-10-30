@@ -248,23 +248,24 @@ $(function () {
     var $agreeButton = $('#J_agree_button');
     var $agree = $('#weuiAgree');
     var $rules = $('#rules');
+    var agreeWithdrawAgreement = 'agreeWithdrawAgreement';
     $agreeButton.click(function(){
         $agree.prop('checked','checked');
-        localStorage.setItem('agree',true);
+        localStorage.setItem(agreeWithdrawAgreement, true);
     });
     var $rejectButton = $('#J_reject_button');
     $rejectButton.click(function(){
         $agree.prop('checked','');
-        localStorage.removeItem('agree')
-    })
+        localStorage.removeItem(agreeWithdrawAgreement)
+    });
 
-    var flag = localStorage.getItem('agree');
+    var flag = localStorage.getItem(agreeWithdrawAgreement);
     if(flag != undefined){
         $agree.prop('checked','checked');
     }
     $agree.click(function(){
         if(!$agree.prop('checked')){
-            localStorage.removeItem('agree');
+            localStorage.removeItem(agreeWithdrawAgreement);
         }else{
             $agree.prop('checked','');
             $rules.click();
