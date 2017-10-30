@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.CascadeType;
@@ -108,6 +109,10 @@ public class Login implements UserDetails {
      */
     @ManyToOne
     private Login guideUser;
+    /**
+     * 是否被修改锅引导者
+     */
+    private boolean guideChanged = false;
     @OneToOne(cascade = CascadeType.ALL)
     private ContactWay contactWay;
     /**
@@ -129,7 +134,7 @@ public class Login implements UserDetails {
     private BigDecimal commissionBalance = BigDecimal.ZERO;
 
     /**
-     * 是否拥有一个成功的订单，算是爱心天使的标志吧
+     * 正式用户的标志(爱心天使)
      *
      * @since {@link cn.lmjia.market.core.Version#newLogin}
      */
@@ -197,5 +202,9 @@ public class Login implements UserDetails {
                 ", enabled=" + enabled +
                 ", guideUser=" + guideUser +
                 '}';
+    }
+
+    public boolean isRoot() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ROOT"));
     }
 }

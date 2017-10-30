@@ -58,7 +58,7 @@ public class WechatShareController {
     @GetMapping(SystemService.wechatShareUri)
     public String share(@AuthenticationPrincipal Login loginInput, Model model) {
         Login login = loginService.get(loginInput.getId());
-        if (!loginService.isRegularLogin(login))
+        if (!loginService.isRegularLogin(login) && !loginService.allowShare(login))
             return "redirect:" + SystemService.wechatShareMoreUri;
         model.addAttribute("login", login);
         final String targetUrl = systemService.toUrl("/wechatJoin" + login.getId());
@@ -124,7 +124,7 @@ public class WechatShareController {
     public String join(@PathVariable long id, @OpenId String openId, @AuthenticationPrincipal Object login, Model model) {
         // 如果已登录 那么直接去下单
         if (login != null && login instanceof Login)
-            return "redirect:" + SystemService.wechatOrderURi;
+            return "redirect:" + SystemService.wechatMallIndex;
         // 看看是否已关注
         //  必须关注本公众号才可以 测试环境可以跳过
         final Protocol protocol = Protocol.forAccount(publicAccount);
@@ -140,6 +140,6 @@ public class WechatShareController {
         }
 
         wechatService.shareTo(id, openId);
-        return "redirect:" + SystemService.wechatOrderURi;
+        return "redirect:" + SystemService.wechatMallIndex;
     }
 }

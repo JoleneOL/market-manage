@@ -56,6 +56,8 @@ $(function () {
         statusString: function (obj) {
             if (obj.statusCode === 1) {
                 return '未付款';
+            } else if (obj.statusCode === 7) {
+                return '已关闭';
             } else {
                 return '已付款';
             }

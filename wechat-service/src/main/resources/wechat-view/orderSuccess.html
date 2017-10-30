@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="yours" type="boolean"*/-->
+<!--/*@thymesVar id="listTitle" type="java.lang.String"*/-->
+<!--/*@thymesVar id="listUri" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -25,16 +27,20 @@
         <p class="weui-msg__desc" th:if="${yours}">下单成功，请耐心等待商家与您联系。若有疑问可拨打下方客服电话进行咨询。</p>
         <p class="weui-msg__desc" th:if="${!yours}">已支付成功，请耐心等待通知。</p>
     </div>
-    <!--<div class="weui-msg__opr-area">-->
-        <!--<p class="weui-btn-area">-->
-            <!--&lt;!&ndash;<a href="orderPlace.html" th:href="@{/wechatOrder}" class="weui-btn weui-btn_default">再下一单</a>&ndash;&gt;-->
+    <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+            <!--<a href="orderPlace.html" th:href="@{/wechatOrder}" class="weui-btn weui-btn_default">再下一单</a>-->
             <!--<a href="shareQC.html" class="weui-btn weui-btn_custom">马上分享</a>-->
-            <!--<a href="orderList.html" th:href="@{/wechatOrderList}" class="weui-btn weui-btn_default">订单列表</a>-->
-        <!--</p>-->
-    <!--</div>-->
+            <a href="orderList.html" th:href="${listUri}" class="weui-btn weui-btn_default"
+               th:text="${listTitle}">订单列表</a>
+        </p>
+    </div>
     <div class="weui-msg__extra-area" th:if="${yours}">
         <div class="weui-footer">
-            <p class="weui-footer__text weui-footer__links">客服电话 <a href="tel:0571-88187913">0571-88187913</a></p>
+            <p class="weui-footer__text weui-footer__links">客服电话 <a href="tel:0571-88187913"
+                                                                    th:href="${'tel:'+@systemService.companyCustomerServiceTel}"
+                                                                    th:text="${@systemService.companyCustomerServiceTel}">0571-88187913</a>
+            </p>
         </div>
     </div>
 </div>

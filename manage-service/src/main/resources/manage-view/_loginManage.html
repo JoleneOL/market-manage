@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>客户管理</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body data-edit-url="_agentDetail.html" th:data-edit-url="@{/manageLoginDetail}"
+      data-scan-url="http://placehold.it/228x178?text=SCAN" th:data-scan-url="@{/manage/bindManager}">
+<div class="wrapper wrapper-content">
+    <!--/*@thymesVar id="rawPassword" type="java.lang.String"*/-->
+    <div class="row m-b-sm" th:if="${rawPassword!=null}">
+        <div class="col-md-12">
+            <div class="form-inline">
+                <div class="text-danger">
+                    新增用户密码为<span style="color: #2A2E36" th:text="${rawPassword}">19292</span>，这是最后一次以明文形式显示，系统将不再保留。
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-b-sm">
+        <div class="col-sm-10">
+            <div class="form-inline">
+                <div class="js-selectToolbar">
+                    <input type="search" class="form-control input-sm" placeholder="用户名"
+                           name="name">
+                    <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="table-responsive">
+                <table id="userTable" class="table table-hover table-success" cellspacing="0" width="100%"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="J_ScanZone">
+    <span><b>请确保已关注微信公众号</b></span>
+    <img name="scanUrl" style="width: 200px;height: 200px;" src="http://placehold.it/200*200?text=Loading"/>
+</template>
+
+</body>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<!--额外工具-->
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+<!--生产环境请移除 Begin-->
+<script src="mock/mock-min.js" th:remove="all"></script>
+<script src="mock/login.js" th:remove="all"></script>
+<!--生产环境请移除 End-->
+<script src="./manage-resource/js/loginManage.js"></script>
+</html>

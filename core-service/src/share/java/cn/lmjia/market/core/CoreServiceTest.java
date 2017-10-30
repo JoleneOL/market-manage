@@ -2,7 +2,12 @@ package cn.lmjia.market.core;
 
 import cn.lmjia.market.core.config.CoreConfig;
 import cn.lmjia.market.core.converter.LocalDateConverter;
-import cn.lmjia.market.core.entity.*;
+import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.MainGood;
+import cn.lmjia.market.core.entity.MainOrder;
+import cn.lmjia.market.core.entity.MainProduct;
+import cn.lmjia.market.core.entity.Manager;
+import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.TagType;
@@ -10,14 +15,16 @@ import cn.lmjia.market.core.exception.MainGoodLowStockException;
 import cn.lmjia.market.core.model.OrderRequest;
 import cn.lmjia.market.core.repository.CustomerRepository;
 import cn.lmjia.market.core.repository.LoginRepository;
-import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.repository.MainGoodRepository;
+import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.MarketStockService;
 import cn.lmjia.market.core.service.QuickTradeService;
 import cn.lmjia.market.core.service.ReadService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.test.QuickPayBean;
 import cn.lmjia.market.core.util.LoginAuthentication;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,6 +49,7 @@ import me.jiangcai.wx.model.Gender;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -61,7 +69,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -117,6 +130,19 @@ public abstract class CoreServiceTest extends SpringWebTest {
     //</editor-fold>
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private SystemService systemService;
+    @Autowired
+    private MarketStockService marketStockService;
+
+    /**
+     * 为了让178可运作，又保证当前测试可行所以需要先将属性设定至初始版本友好
+     */
+    @Before
+    public void com178() {
+        systemService.updateNonAgentAbleToGainCommission(true);
+        systemService.updateRegularLoginAsAnyOrder(true);
+    }
 
     /**
      * 新增并且保存一个随机的管理员
@@ -358,7 +384,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
         int count = 2 + random.nextInt(2);
         List<MainGood> forSaleGoodList = mainGoodService.forSale();
         //计算货品可用库存
-        mainOrderService.calculateGoodStock(forSaleGoodList);
+        marketStockService.calculateGoodStock(forSaleGoodList);
         //保证 订单中至少有1个 非空的货品
         // TODO: 2017/8/27 如果所有货品库存都为0，那就死掉了，考虑什么做法比较妥当
         while (count-- > 0 || data.size() == 0) {
@@ -548,7 +574,6 @@ public abstract class CoreServiceTest extends SpringWebTest {
                 });
     }
 
-
     /**
      * 对某件货品，根据期望限购数量计算需要设置的计划售罄日期
      * <p>
@@ -562,9 +587,9 @@ public abstract class CoreServiceTest extends SpringWebTest {
     protected LocalDate calculatePlanSellOutDate(Product product, int expectStock) {
 
         int totalUsageStock = stockService.usableStockTotal(product);
-        int lockedStock = mainOrderService.sumProductNum(product);
-        LocalDateTime todayOffsetTime = mainOrderService.getTodayOffsetTime();
-        int todayStock = mainOrderService.sumProductNum(product, todayOffsetTime, null, null);
+        int lockedStock = marketStockService.sumProductNum(product);
+        LocalDateTime todayOffsetTime = marketStockService.getTodayOffsetTime();
+        int todayStock = marketStockService.sumProductNum(product, todayOffsetTime, null, null);
         int diffDay = (totalUsageStock - lockedStock + todayStock) / (expectStock + todayStock);
 
         //校验一遍，如果和预期不一致，就返回空

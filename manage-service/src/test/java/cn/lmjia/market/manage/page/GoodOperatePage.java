@@ -53,7 +53,8 @@ public abstract class GoodOperatePage extends AbstractContentPage {
     }
 
     public ManageGoodPage submitWithChannel() {
-        if (product.isEnabled()) {
+        //只有添加商品时选择货品才有效
+        if (webDriver.getTitle().contains("新增商品") && product.isEnabled()) {
             inputSelect(webDriver.findElement(By.tagName("form")), "product", s -> true);
         }
         inputSelect(webDriver.findElement(By.tagName("form")), "channel", x -> !"无".equals(x));
@@ -70,7 +71,7 @@ public abstract class GoodOperatePage extends AbstractContentPage {
         assertThat(addTag(randomTag)).isTrue();
         //已经存在的添加失败
         assertThat(addTag(randomTag)).isFalse();
-        initMultiSelect(webDriver.findElement(By.tagName("form")),"tag",x -> randomTag.equals(x));
+        initMultiSelect(webDriver.findElement(By.tagName("form")), "tag", x -> randomTag.equals(x));
         webDriver.findElement(By.cssSelector("[type=submit]")).click();
         return initPage(ManageGoodPage.class);
     }
@@ -81,14 +82,14 @@ public abstract class GoodOperatePage extends AbstractContentPage {
         webDriver.findElement(By.id("J_addTag")).click();
         WebElement addTagName = webDriver.findElement(By.className("layui-layer-input"));
         addTagName.clear();
-        if(name != null) {
+        if (name != null) {
             addTagName.sendKeys(name);
         }
         webDriver.findElement(By.className("layui-layer-btn0")).click();
         Thread.sleep(3000);
         //看看现在 option 有几个
         int afterOptionNum = webDriver.findElement(By.id("J_selectTag")).findElements(By.tagName("option")).size();
-        if(afterOptionNum > beforeOptionNum){
+        if (afterOptionNum > beforeOptionNum) {
             return true;
         }
         return false;
@@ -109,12 +110,12 @@ public abstract class GoodOperatePage extends AbstractContentPage {
 
         WebElement element;
         do {
-            if(!container1.hasNext()) {
+            if (!container1.hasNext()) {
                 throw new IllegalStateException("找不到符合要求的Label");
             }
 
-            element = (WebElement)container1.next();
-        } while(!useIt.apply(element.getText()));
+            element = (WebElement) container1.next();
+        } while (!useIt.apply(element.getText()));
 
         action.clickAndHold(element).perform();
         Thread.sleep(10);

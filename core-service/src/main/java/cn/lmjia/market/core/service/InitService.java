@@ -180,6 +180,10 @@ public class InitService {
                     statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource(
                                     "/LoginCommissionJournal." + fileName + ".sql").getInputStream()
                             , Charset.forName("UTF-8")));
+                    statement.executeUpdate("DROP TABLE IF EXISTS `AgentGoodAdvancePaymentJournal`");
+                    statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource(
+                                    "/AgentGoodAdvancePaymentJournal." + fileName + ".sql").getInputStream()
+                            , Charset.forName("UTF-8")));
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("读取SQL失败", e);
@@ -386,6 +390,7 @@ public class InitService {
                 MainGood mainGood = mainGoodRepository.findByProduct(mainProduct);
                 if (mainGood == null) {
                     mainGood = new MainGood();
+                    mainGood.setCommissionSource(true);
                     mainGood.setCreateTime(LocalDateTime.now());
                     mainGood.setProduct(mainProduct);
                     mainGood.setEnable(true);
@@ -511,6 +516,12 @@ public class InitService {
                         break;
                     case deleteProduct:
                         jdbcService.tableAlterAddColumn(Product.class, "deleted", "0");
+                        break;
+                    case newCommission:
+                        jdbcService.tableAlterAddColumn(MainGood.class, "commissionSource", "1");
+                        break;
+                    case changeGuide:
+                        jdbcService.tableAlterAddColumn(Login.class, "guideChanged", "0");
                         break;
                     default:
                 }

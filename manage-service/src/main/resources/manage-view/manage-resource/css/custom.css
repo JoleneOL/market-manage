@@ -1,3 +1,6 @@
+.fr {
+    float: right;
+}
 .display-inline {
     display: inline-block;
 }

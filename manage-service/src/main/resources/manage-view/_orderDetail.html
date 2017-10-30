@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
-<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainOrder"*/-->
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.order.MainDeliverableOrder"*/-->
+<!--/*@thymesVar id="mainOrder" type="cn.lmjia.market.core.entity.MainOrder"*/-->
+<!--/*@thymesVar id="parentPageName" type="java.lang.String"*/-->
+<!--/*@thymesVar id="parentPageUri" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
@@ -31,8 +34,8 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_orderManage.html" th:href="@{/orderManage}">订单管理</a></li>
-                <li><strong>订单详情:<span th:text="${currentData.serialId}">20170910000210</span></strong></li>
+                <li><a href="_orderManage.html" th:href="${parentPageUri}" th:text="${parentPageName}">订单管理</a></li>
+                <li><strong>订单详情:<span th:text="${currentData.humanReadableId}">20170910000210</span></strong></li>
             </ol>
         </div>
     </div>
@@ -63,12 +66,12 @@
                                 <td>订单总金额</td>
                                 <td th:text="${{currentData.orderDueAmountMoney}}">100.10</td>
                             </tr>
-                            <tr>
+                            <tr th:if="${mainOrder!=null}">
                                 <td>订单可分佣金额</td>
                                 <td>
-                                    <span th:text="${{currentData.commissioningAmountMoney}}">10.1</span>
+                                    <span th:text="${{mainOrder.commissioningAmountMoney}}">10.1</span>
                                     <span>
-                                          <button id="findCommission">佣金明细</button>
+                                          <button id="findCommission" class="btn btn-sm">佣金明细</button>
                                         <a id="commissionDetail" href="_commissionDetail.html"
                                            th:href="@{'/orderDetail/Commission?orderId='+${currentData.id}}"></a>
                                     </span>
@@ -76,15 +79,15 @@
                             </tr>
                             <tr>
                                 <td>下单人</td>
-                                <td th:text="${@readService.nameForPrincipal(currentData.orderBy)}">李菲菲</td>
+                                <td th:text="${@readService.nameForPrincipal(currentData.orderPerson)}">李菲菲</td>
                             </tr>
                             <tr>
                                 <td>下单人手机</td>
-                                <td th:text="${@readService.mobileFor(currentData.orderBy)}">18958044532</td>
+                                <td th:text="${@readService.mobileFor(currentData.orderPerson)}">18958044532</td>
                             </tr>
-                            <tr th:if="${currentData.payOrder != null}">
+                            <tr th:if="${mainOrder!=null && mainOrder.payOrder != null}">
                                 <td>第三方支付订单号</td>
-                                <td th:text="${currentData.payOrder.platformId}">201700000929</td>
+                                <td th:text="${mainOrder.payOrder.platformId}">201700000929</td>
                             </tr>
                             <tr>
                                 <td>收货人</td>

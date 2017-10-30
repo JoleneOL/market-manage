@@ -91,6 +91,15 @@ public class LoginDataControllerTest extends CoreWebTest {
         )
                 .andExpect(similarSelect2("classpath:/mock/searchLogin.json"))
                 .andExpect(jsonPath("$.total_count").value(1));
+
+
+        // 加入是否代理商
+        mockMvc.perform(
+                get("/loginData/select2")
+                        .param("agent", "true")
+        )
+//                .andDo(print())
+                .andExpect(similarSelect2("classpath:/mock/searchLogin.json"));
     }
 
 }

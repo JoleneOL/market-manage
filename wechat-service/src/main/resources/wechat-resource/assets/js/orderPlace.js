@@ -124,7 +124,7 @@ $(function () {
 
     function submitOrder(data) {
         $.showLoading('订单提交中');
-        $.ajax('/wechatOrder', {
+        $.ajax(body.data('order-url'), {
             method: 'POST',
             data: data,
             dataType: 'json',
@@ -140,7 +140,8 @@ $(function () {
                     return false;
                 }
                 if (data.resultCode !== 200) {
-                    $.toptip("订单提交失败，请重试");
+                    var msg = data.resultMsg || '订单提交失败，请重试';
+                    $.toptip(msg);
                     return false;
                 }
                 var orderPKId = data.data.id;
@@ -149,7 +150,7 @@ $(function () {
                 var idNumber = data.data.idNumber;
                 var authorising = data.data.authorising;
                 //提交成功后的跳转
-                var payOrderHref = "wechatOrderPay.html"
+                var payOrderHref = body.data('order-pay-url')
                     + "?orderPKId=" + orderPKId
                     + "&installmentHuabai=" + installmentHuabai;
                 if (!!channelId)

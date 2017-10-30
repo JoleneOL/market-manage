@@ -13,7 +13,7 @@ $(function () {
             theme: options.theme || "bootstrap",
             width: null,
             containerCssClass: ':all:',
-            placeholder: "选择一个用户",
+            placeholder: options.placeholder || "选择一个用户",
             allowClear: true,
             language: "zh-CN",
             ajax: {

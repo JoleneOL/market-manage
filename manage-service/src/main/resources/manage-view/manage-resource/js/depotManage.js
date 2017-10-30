@@ -45,11 +45,12 @@ $(function () {
                 "title": "供应商信息", "data": "supplierInfo", "name": "supplierInfo"
             },
             {
-                "title": "启用", "data": "enable", "name": "enable"
+                "title": "启用", "data": "enable", "name": "enable", "orderable": false,
             },
             {
                 title: "操作",
                 className: 'table-action',
+                "orderable": false,
                 data: function (item) {
                     if (item.enable)
                         return '<a href="javascript:;" class="js-disableDepot" data-id="' + item.id + '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;禁用</a>';

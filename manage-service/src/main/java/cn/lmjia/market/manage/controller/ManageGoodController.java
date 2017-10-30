@@ -93,7 +93,7 @@ public class ManageGoodController {
 
     @PostMapping("/manageGoodSubmit")
     @Transactional
-    public String edit(Long id, String product, Long channel, String[] tag) {
+    public String edit(Long id, boolean commissionSource, String product, Long channel, String[] tag) {
         MainGood good;
         if (id != null)
             good = mainGoodRepository.getOne(id);
@@ -115,6 +115,7 @@ public class ManageGoodController {
             else
                 good.setChannel(null);
         }
+        good.setCommissionSource(commissionSource);
 
         Set<Tag> tags = null;
         if (tag != null && tag.length > 0) {

@@ -29,4 +29,12 @@ public enum Version {
      */
     mall,
     deleteProduct,
+    /**
+     * 178 165新分佣体系
+     */
+    newCommission,
+    /**
+     * 引导者改变
+     */
+    changeGuide,
 }

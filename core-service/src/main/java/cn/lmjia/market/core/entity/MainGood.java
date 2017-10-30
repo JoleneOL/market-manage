@@ -48,6 +48,12 @@ public class MainGood {
     @Column(columnDefinition = "timestamp")
     private LocalDateTime createTime = LocalDateTime.now();
     /**
+     * 该货品是否可以成为佣金的源头
+     *
+     * @since {@link cn.lmjia.market.core.Version#newCommission}
+     */
+    private boolean commissionSource;
+    /**
      * 标签，它应该是一个多对多的关联
      */
 //    @Convert(converter = GoodTagConverter.class)
