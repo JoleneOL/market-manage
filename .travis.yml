@@ -7,8 +7,13 @@ cache:
 
 services:
   - mysql
+
+before_script:
+  - echo -e "[mysqld]\nlower_case_table_names = 1" | sudo tee -a /etc/mysql/my.cnf
+  - sudo service mysql restart
+
 before_install:
-  - mysql -e 'SET GLOBAL lower_case_table_names=1'
+  - mysql --verbose -e  "show variables like 'lower%';"
   - mysql -e 'DROP DATABASE IF EXISTS market;'
   - mysql -e 'CREATE DATABASE market;'
 
