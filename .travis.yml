@@ -8,6 +8,7 @@ cache:
 services:
   - mysql
 before_install:
+  - mysql -e 'SET GLOBAL lower_case_table_names=1'
   - mysql -e 'DROP DATABASE IF EXISTS market;'
   - mysql -e 'CREATE DATABASE market;'
 
