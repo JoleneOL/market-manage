@@ -23,5 +23,5 @@ public interface CashTransferService {
      * @param cashReceiver 现金接受者信息
      * @return 请求处理结果
      */
-    Map<String, Object> cashTransfer(CashTransferSupplier supplier, EntityOwner owner, String fBank, CashReceiver cashReceiver) throws SupplierApiUpgradeException, BadAccessException, TransferFailureException, IOException;
+    Map<String, Object> cashTransfer(CashTransferSupplier supplier, EntityOwner owner,String fBank, CashReceiver cashReceiver) throws SupplierApiUpgradeException, BadAccessException, TransferFailureException, IOException;
 }

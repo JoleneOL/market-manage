@@ -1,6 +1,7 @@
 package cn.lmjia.cash.transfer.cjb.message;
 
 import cn.lmjia.cash.transfer.cjb.message.transfer.XferTrnRq;
+import cn.lmjia.cash.transfer.cjb.message.transfer.query.XferInqTrnRq;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -26,4 +27,11 @@ public class Securities_msgsRQV1 implements Serializable{
      */
     @JsonProperty("XFERTRNRQ")
     private XferTrnRq xferTrnRq;
+
+
+    /**
+     * 查询转账是否成功
+     */
+    @JsonProperty("XFERINQTRNRQ")
+    private XferInqTrnRq xferInqTrnRq;
 }

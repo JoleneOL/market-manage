@@ -3,7 +3,7 @@ package cn.lmjia.cash.transfer;
 import java.math.BigDecimal;
 
 /**
- * 现金接收者
+ * 提现信息
  * @author lxf
  */
 public interface CashReceiver {

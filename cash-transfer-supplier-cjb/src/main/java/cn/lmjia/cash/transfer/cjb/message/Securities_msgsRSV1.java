@@ -1,6 +1,7 @@
 package cn.lmjia.cash.transfer.cjb.message;
 
 import cn.lmjia.cash.transfer.cjb.message.transfer.XferTrnRs;
+import cn.lmjia.cash.transfer.cjb.message.transfer.query.XferInqTrnRs;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -25,4 +26,10 @@ public class Securities_msgsRSV1 {
      */
     @JsonProperty("XFERTRNRS")
     private XferTrnRs xferTrnRs;
+
+    /**
+     * 查询转账状态响应.
+     */
+    @JsonProperty("XFERINQTRNRS")
+    private XferInqTrnRs xferInqTrnRs;
 }

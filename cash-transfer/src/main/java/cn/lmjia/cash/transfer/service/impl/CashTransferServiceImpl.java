@@ -7,6 +7,7 @@ import cn.lmjia.cash.transfer.exception.TransferFailureException;
 import cn.lmjia.cash.transfer.service.CashTransferService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class CashTransferServiceImpl implements CashTransferService {
 
     private static final Log log = LogFactory.getLog(CashTransferServiceImpl.class);
@@ -26,10 +28,8 @@ public class CashTransferServiceImpl implements CashTransferService {
         }
         //获取付款账户的密钥和信息,
         OwnerAccount ownerAccount = owner.getOwnerAccount(fBank);
-        Map<String, Object> result = new HashMap<>();
         //调用供应商的转账服务
-        LocalDateTime arriveTime = null;
-        arriveTime = supplier.cashTransfer(ownerAccount, cashReceiver);
+        Map<String, Object> resultMessage = supplier.cashTransfer(ownerAccount, cashReceiver);
 //        try {
 //            arriveTime = supplier.cashTransfer(ownerAccount, cashReceiver);
 //        } catch (IOException e) {
@@ -45,8 +45,6 @@ public class CashTransferServiceImpl implements CashTransferService {
 //            e.printStackTrace();
 //            resultMessage.append(e.getMessage());
 //        }
-
-
-        return result;
+        return resultMessage;
     }
 }

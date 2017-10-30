@@ -17,7 +17,7 @@ public class XferTrnRs implements Serializable {
     private static final long serialVersionUID = 7123732046460700619L;
 
     @JsonProperty("TRNUID")
-    private String trnuid;
+    private String trnuId;
 
 
     @JsonProperty("STATUS")

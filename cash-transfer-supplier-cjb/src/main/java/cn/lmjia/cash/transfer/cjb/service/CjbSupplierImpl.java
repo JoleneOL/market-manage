@@ -6,34 +6,27 @@ import cn.lmjia.cash.transfer.cjb.message.*;
 import cn.lmjia.cash.transfer.cjb.message.sonrq.SignonMsgsRQV1;
 import cn.lmjia.cash.transfer.cjb.message.sonrq.Sonrq;
 import cn.lmjia.cash.transfer.cjb.message.transfer.*;
+import cn.lmjia.cash.transfer.cjb.message.transfer.query.*;
 import cn.lmjia.cash.transfer.exception.BadAccessException;
 import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
 import cn.lmjia.cash.transfer.exception.TransferFailureException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import me.jiangcai.logistics.exception.SupplierException;
-import me.jiangcai.logistics.haier.http.ResponseHandler;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,16 +39,18 @@ import java.util.UUID;
 public class CjbSupplierImpl implements CjbSupplier {
     private static final Log log = LogFactory.getLog(CjbSupplierImpl.class);
 
-    private String sendUrl;
+    private final String sendUrl;
+
+    public CjbSupplierImpl(Environment environment) {
+        this.sendUrl = environment.getProperty("cjb.URL", "http://120.55.60.148:8008");
+    }
 
     @Override
-    public LocalDateTime cashTransfer(OwnerAccount account, CashReceiver receiver) throws BadAccessException, TransferFailureException, JsonProcessingException {
-        //主体访问供应商的登录信息.
-        Map<String, String> message = account.getSonrq();
+    public Map<String, Object> cashTransfer(OwnerAccount account, CashReceiver receiver) throws BadAccessException, TransferFailureException, JsonProcessingException {
         //报文根标签对象.
         Fox requestFox = new Fox();
         //将登录信息转换成报文对象.
-        SignonMsgsRQV1 signonMsgsRQV1 = usSonrq(message);
+        SignonMsgsRQV1 signonMsgsRQV1 = usSonrq(account);
         requestFox.setSignonMsgsRQV1(signonMsgsRQV1);
         //转账信息报文
         Securities_msgsRQV1 securities_msgsRQV1 = usSecurities(account, receiver);
@@ -68,13 +63,38 @@ public class CjbSupplierImpl implements CjbSupplier {
         Status status = responseFox.getSecurities_msgsRSV1().getXferTrnRs().getStatus();
         log.info("转账请求处理结果响应码:" + status.getCode() + "请求处理结果响应信息:" + status.getMessage());
 
-        //结果处理
-        Map<String, Object> result = cashTransferResult(responseFox);
-        return (LocalDateTime) result.get("DTXFERPRC");
+        //结果
+        return cashTransferResult(responseFox);
     }
 
+    @Override
+    public Map<String, Object> statusQuery(OwnerAccount account, CashReceiver receuver) throws BadAccessException, JsonProcessingException, TransferFailureException {
+        //报文根标签对象.
+        Fox requestFox = new Fox();
+        Securities_msgsRQV1 securities_msgsRQV1 = new Securities_msgsRQV1();
+        //将登录信息转换成报文对象.
+        SignonMsgsRQV1 signonMsgsRQV1 = usSonrq(account);
+        requestFox.setSignonMsgsRQV1(signonMsgsRQV1);
+        //封装查询信息根对象
+        XferInqTrnRq xferInqTrnRq = new XferInqTrnRq();
+        //该次查询的TrunId
+        xferInqTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + UUID.randomUUID().toString().replace("-", ""));
+
+        XferInqRq xferInqRq = new XferInqRq();
+        //要查询的转账交易TrunId
+        xferInqRq.setClientRef(receuver.getId());
+
+        xferInqTrnRq.setXferInqRq(xferInqRq);
+        securities_msgsRQV1.setXferInqTrnRq(xferInqTrnRq);
+        requestFox.setSecurities_msgsRQV1(securities_msgsRQV1);
+        //发送请求
+        Fox responseFox = sendRequest(requestFox);
+        return cashTransferResult(responseFox);
+    }
+
+
     /**
-     * 处理
+     * 处理现金转账,查询转账状态响应结果处理
      *
      * @param responseFox 响应的报文对象
      * @return 结果信息
@@ -88,24 +108,57 @@ public class CjbSupplierImpl implements CjbSupplier {
             //登录失败
             throw new BadAccessException("错误码:" + status.getCode() + "登录信息错误:" + status.getMessage() + " 处理时间" + responseFox.getSignonMsgsRSV1().getSonrs().getDtServer());
         }
+        //现金转账响应
         XferTrnRs xferTrnRs = responseFox.getSecurities_msgsRSV1().getXferTrnRs();
-        Status transferStatus = xferTrnRs.getStatus();
-        if (!"0".equals(transferStatus.getCode())) {
-            //失败的请求
-            throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + "转账错误信息:" + transferStatus.getMessage() + "错误的提现申请单号:" + xferTrnRs.getTrnuid());
-        }
-        //成功
-        XferRs xferRs = xferTrnRs.getXferRs();
+        //查询现金转账响应
+        XferInqTrnRs xferInqTrnRs = responseFox.getSecurities_msgsRSV1().getXferInqTrnRs();
         Map<String, Object> result = new HashMap<>();
-        result.put("TRNUID", xferTrnRs.getTrnuid());
-        result.put("SRVRID", xferRs.getSrvrId());
-        result.put("MEMO", xferRs.getXferInfo().getMemo());
-        result.put("XFERPRCCODE", xferRs.getXferPrcsts().getXferPrcCode());
-        //指令处理时间 yyyy-MM-dd HH:mm:ss
-        result.put("DTXFERPRC", LocalDateTime.parse(xferRs.getXferPrcsts().getDtXferPrc(), formatter));
-        String message = xferRs.getXferPrcsts().getMessage();
-        if (StringUtils.isNotBlank(message)) {
-            result.put("MESSAGE", message);
+
+        if (xferTrnRs != null) {
+            //转账请求
+            Status transferStatus = xferTrnRs.getStatus();
+            if (!"0".equals(transferStatus.getCode())) {
+                //失败的请求
+                throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + "转账错误信息:" + transferStatus.getMessage() + "错误的提现申请单号:" + xferTrnRs.getTrnuId());
+            }
+            //成功
+            XferRs xferRs = xferTrnRs.getXferRs();
+            result.put("TRNUID", xferTrnRs.getTrnuId());
+            result.put("SRVRID", xferRs.getSrvrId());
+            result.put("MEMO", xferRs.getXferInfo().getMemo());
+            result.put("XFERPRCCODE", xferRs.getXferPrcsts().getXferPrcCode());
+            //指令处理时间 yyyy-MM-dd HH:mm:ss
+            result.put("DTXFERPRC", LocalDateTime.parse(xferRs.getXferPrcsts().getDtXferPrc(), formatter));
+            String message = xferRs.getXferPrcsts().getMessage();
+            if (StringUtils.isNotBlank(message)) {
+                result.put("MESSAGE", message);
+            }
+        } else if (xferInqTrnRs != null) {
+            //查询转账状态请求
+            Status transferStatus = xferInqTrnRs.getStatus();
+            if (!"0".equals(transferStatus.getCode())) {
+                //失败的请求
+                throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + "转账错误信息:" + transferStatus.getMessage() + "错误的提现申请单号:" + xferTrnRs.getTrnuId());
+            }
+            //成功
+            result.put("TRNUID", xferInqTrnRs.getTrnuId());
+            XferList xferList = xferInqTrnRs.getXferInqRs().getXferList();
+            String more = xferList.getMore();
+            if("N".equalsIgnoreCase(more)){
+                //没有记录
+                throw new TransferFailureException("这个TrnuId"+xferInqTrnRs.getTrnuId()+"没有转账记录");
+            }else{
+                Xfer xfer = xferList.getXfer();
+                result.put("SRVRTID", xfer.getSrvrtId());
+                result.put("MEMO", xfer.getXferInfo().getMemo());
+                result.put("XFERPRCCODE", xfer.getXferPrcsts().getXferPrcCode());
+                //指令处理时间 yyyy-MM-dd HH:mm:ss
+                result.put("DTXFERPRC", LocalDateTime.parse(xfer.getXferPrcsts().getDtXferPrc(), formatter));
+                String message = xfer.getXferPrcsts().getMessage();
+                if (StringUtils.isNotBlank(message)) {
+                    result.put("MESSAGE", message);
+                }
+            }
         }
         return result;
     }
@@ -116,19 +169,13 @@ public class CjbSupplierImpl implements CjbSupplier {
     }
 
 
-    private Fox sendRequest(Fox requestMessage) throws JsonProcessingException, BadAccessException {
+    public Fox sendRequest(Fox requestMessage) throws JsonProcessingException, BadAccessException {
         return sendRequest(requestMessage, null, null);
     }
 
-    /**
-     * 发送请求
-     *
-     * @param requestMessage 请求报文
-     * @return 响应报文
-     */
-    private Fox sendRequest(Fox requestMessage, Boolean interBank, Boolean local) throws JsonProcessingException, BadAccessException {
+    public Fox sendRequest(Fox requestMessage, Boolean interBank, Boolean local) throws JsonProcessingException, BadAccessException {
         StringBuffer content = new StringBuffer("<?xml version=\"1.0\" encoding=\"GBK\"?>");
-        String xml = xmlMapper.writeValueAsString(requestMessage).replaceAll(" xmlns=\"\"","");
+        String xml = xmlMapper.writeValueAsString(requestMessage).replaceAll(" xmlns=\"\"", "");
         content.append(xml);
         if (content.toString().contains("<ACCTTO")) {
             if (interBank != null || local != null) {
@@ -174,7 +221,12 @@ public class CjbSupplierImpl implements CjbSupplier {
                 .build();
     }
 
-    private SignonMsgsRQV1 usSonrq(Map<String, String> message) {
+    /**
+     * @param account 账户信息
+     * @return 登录指令对象
+     */
+    private SignonMsgsRQV1 usSonrq(OwnerAccount account) {
+        Map<String, String> message = account.getSonrq();
         SignonMsgsRQV1 signonMsgsRQV1 = new SignonMsgsRQV1();
         Sonrq sonrq = new Sonrq();
         sonrq.setCid(message.get("cid"));
@@ -198,7 +250,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         Securities_msgsRQV1 securities_msgsRQV1 = new Securities_msgsRQV1();
         XferTrnRq xferTrnRq = new XferTrnRq();
         //客户端交易的唯一标志，否则客户端将无法分辨响应报文的对应关系,最大30位建议值为YYYYMMDD+序号
-        xferTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + receiver.getId());
+        xferTrnRq.setTrnuId(receiver.getId());
 
         XferRq xferRq = new XferRq();
         XferInfo xferInfo = new XferInfo();
