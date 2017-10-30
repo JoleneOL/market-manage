@@ -188,9 +188,7 @@ $(function () {
                 max: +allInBtn.attr('data-all-in'),
                 isFloat2: true
             },
-<<<<<<< HEAD
-            agree:'required'
-=======
+            agree:'required',
             logisticsCode: {
                 required: function () {
                     return $("#logisticsTypeDelivery").is(':checked') && $('#J_haveInvoice').is(':checked');
@@ -202,7 +200,6 @@ $(function () {
                     return $("#logisticsTypeDelivery").is(':checked') && $('#J_haveInvoice').is(':checked');
                 }
             }
->>>>>>> production
         },
         messages: {
             payee: "请填写收款人",
@@ -221,12 +218,9 @@ $(function () {
                 min: "提款最小金额为 {0}",
                 max: "提款最大金额为 {0}"
             },
-<<<<<<< HEAD
-            agree:"请阅读提现规则"
-=======
+            agree:"请阅读提现规则",
             logisticsCode: '填写物流单号',
             logisticsCompany: '填写物流公司'
->>>>>>> production
         },
         errorPlacement: function (error, element) {
             console.log($(element).attr('name'), ' has error');
