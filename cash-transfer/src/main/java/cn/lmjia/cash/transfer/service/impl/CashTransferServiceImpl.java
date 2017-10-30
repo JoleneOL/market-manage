@@ -29,22 +29,6 @@ public class CashTransferServiceImpl implements CashTransferService {
         //获取付款账户的密钥和信息,
         OwnerAccount ownerAccount = owner.getOwnerAccount(fBank);
         //调用供应商的转账服务
-        Map<String, Object> resultMessage = supplier.cashTransfer(ownerAccount, cashReceiver);
-//        try {
-//            arriveTime = supplier.cashTransfer(ownerAccount, cashReceiver);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            log.error("网络存在异常"+ e.toString());
-//        } catch (SupplierApiUpgradeException e) {
-//            e.printStackTrace();
-//            log.error(e.toString()+"经销商的api需要更新了!");
-//        } catch (BadAccessException e) {
-//            e.printStackTrace();
-//            log.error(e.toString()+"密钥错误");
-//        } catch (TransferFailureException e) {
-//            e.printStackTrace();
-//            resultMessage.append(e.getMessage());
-//        }
-        return resultMessage;
+        return supplier.cashTransfer(ownerAccount, cashReceiver);
     }
 }
