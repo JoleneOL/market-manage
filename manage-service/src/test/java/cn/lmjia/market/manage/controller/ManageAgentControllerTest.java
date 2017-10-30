@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.manage.ManageServiceTest;
@@ -23,6 +24,8 @@ public class ManageAgentControllerTest extends ManageServiceTest {
     private SystemService systemService;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private LoginRepository loginRepository;
 
     @Test
     public void go() throws InterruptedException {
@@ -33,6 +36,9 @@ public class ManageAgentControllerTest extends ManageServiceTest {
 
         updateAllRunWith(newRandomManager(ManageLevel.root));
         final AgentLevel toTestAgent = as[as.length - 2];
+
+        toTestAgent.getLogin().setGuideUser(als[als.length - 1]);
+        loginRepository.save(toTestAgent.getLogin());
 
         // 让他拥有几个直接客户 并且成功下单了！
         addSubUserFor(toTestAgent.getLogin());
