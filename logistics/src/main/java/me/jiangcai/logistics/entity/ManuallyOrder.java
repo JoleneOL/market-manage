@@ -28,4 +28,9 @@ public class ManuallyOrder extends StockShiftUnit {
     public String getSupplierOrganizationName() {
         return getSupplierCompany();
     }
+
+    @Override
+    public String getHumanReadableExpressId() {
+        return orderNumber;
+    }
 }

@@ -44,7 +44,7 @@
         <payment.version>1.1-SNAPSHOT</payment.version>
         <vc.version>1.4.1</vc.version>
         <jiangcai.notice.version>3.1</jiangcai.notice.version>
-        <wx.version>2.1</wx.version>
+        <wx.version>2.1.1</wx.version>
     </properties>
 
     <distributionManagement>
