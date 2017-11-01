@@ -213,6 +213,15 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
                 .sum();
     }
 
+    @Override
+    public void updateLastShiftDestination(LogisticsDestination destination) {
+        installAddress.setProvince(destination.getProvince());
+        installAddress.setPrefecture(destination.getCity());
+        installAddress.setCounty(destination.getCountry());
+        installAddress.setOtherAddress(destination.getDetailAddress());
+        customer.setName(destination.getConsigneeName());
+        customer.setMobile(destination.getConsigneeMobile());
+    }
 
     @Override
     public String getProvince() {

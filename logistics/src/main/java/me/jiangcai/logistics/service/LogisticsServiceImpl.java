@@ -187,6 +187,8 @@ public class LogisticsServiceImpl implements LogisticsService {
                 if (require.get(product.getProduct()) - product.getAmount() < 0)
                     throw new UnnecessaryShipException(product.getProduct());
             }
+
+            order.updateLastShiftDestination(destination);
         }
         LogisticsSupplier supplier;
         if (supplier1 == null) {

@@ -177,4 +177,8 @@ public interface DeliverableOrder {
      */
     Serializable getRepresentationalId();
 
+    /**
+     * @param destination 最近使用的物流地址
+     */
+    void updateLastShiftDestination(LogisticsDestination destination);
 }
