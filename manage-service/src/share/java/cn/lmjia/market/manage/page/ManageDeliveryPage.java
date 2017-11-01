@@ -46,6 +46,10 @@ public class ManageDeliveryPage extends AbstractContentPage {
                     .ifPresent(element -> element.sendKeys("1"));
         }
         submit.click();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {
+        }
         layerDialog((s, element) -> {
             WebElement orderNumber = element.findElement(By.name("orderNumber"));
             orderNumber.clear();

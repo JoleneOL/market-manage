@@ -11,10 +11,14 @@ import org.springframework.util.StringUtils;
 public class TestSpringActiveProfileResolver extends DefaultActiveProfilesResolver {
     @Override
     public String[] resolve(Class<?> testClass) {
-        final String[] activeProfiles = super.resolve(testClass);
+        String[] activeProfiles = super.resolve(testClass);
         final String activeProfilesFromProperty = System.getProperty("spring.profiles.active");
+        final String activeProfilesFromEnv = System.getenv("spring.profiles.active");
         if (!StringUtils.isEmpty(activeProfilesFromProperty)) {
-            return ArrayUtils.addAll(activeProfiles, activeProfilesFromProperty.split(","));
+            activeProfiles = ArrayUtils.addAll(activeProfiles, activeProfilesFromProperty.split(","));
+        }
+        if(!StringUtils.isEmpty(activeProfilesFromEnv)){
+            activeProfiles =  ArrayUtils.addAll(activeProfiles, activeProfilesFromEnv.split(","));
         }
         return activeProfiles;
     }
