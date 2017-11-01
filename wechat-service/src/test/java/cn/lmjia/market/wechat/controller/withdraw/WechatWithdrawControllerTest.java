@@ -182,9 +182,12 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         log.info("toWithdraw" + toWithdraw);
         //调整最高提现金额
         if (toWithdraw.compareTo(BigDecimal.valueOf(20000L)) == 1)
-            systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MAX_AMOUNT, toWithdraw.setScale(0, BigDecimal.ROUND_UP));
+            systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MAX_AMOUNT
+                    , toWithdraw.setScale(0, BigDecimal.ROUND_UP));
         WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
+        withdrawPage.agreeRules();
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
+
 
         WechatWithdrawVerifyPage verifyPage = initPage(WechatWithdrawVerifyPage.class);
         Thread.sleep(1000);

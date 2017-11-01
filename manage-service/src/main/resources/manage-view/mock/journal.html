@@ -2,37 +2,55 @@
     <thead>
     <tr>
         <th>日期</th>
-        <th>&nbsp;</th>
         <th>异动金额</th>
         <th>概要</th>
         <th>当时余额</th>
     </tr>
     </thead>
     <tbody>
-    <!--/*@thymesVar id="list" type="java.util.List<cn.lmjia.market.core.entity.settlement.LoginCommissionJournal>"*/-->
+    <!--/*@thymesVar id="list" type="java.util.List<cn.lmjia.market.core.define.Journal>"*/-->
     <!--/*@thymesVar id="currentData" type="java.util.Map<java.lang.String,java.lang.String>"*/-->
     <tr th:each="data:${list}">
         <td th:text="${{data.happenTime}}">2017-8-10</td>
-        <td class="fa fa-plus-circle"
-            th:class="${data.changed.doubleValue()>0?'fa fa-plus-circle':'fa fa-minus-circle'}">&nbsp;</td>
         <td class="danger" th:class="${data.changed.doubleValue()>0?'danger':'success'}">
-            <a class="mainOrderDetailLink" href="javascript:" data-main-order-id="1"
-               th:data-main-order-id="${data.mainOrderId}" th:text="${{data.changedAbsMoney}}">$100.00</a>
+            <a th:if="${data.mainOrderId!=null}" class="mainOrderDetailLink" href="javascript:;" data-main-order-id="1"
+               th:data-main-order-id="${data.mainOrderId}">
+                <span th:text="${data.changed.doubleValue()>0?'+':'-'}">+</span>
+                <span th:text="${{data.changedAbsMoney}}">$100.0</span>
+            </a>
+            <a th:if="${data.agentPrepaymentOrderId}" class="agentPrepaymentOrderDetailLink" href="javascript:;"
+               data-agent-prepayment-order-id="1"
+               th:data-agent-prepayment-order-id="${data.agentPrepaymentOrderId}">
+                <span th:text="${data.changed.doubleValue()>0?'+':'-'}">+</span>
+                <span th:text="${{data.changedAbsMoney}}">$100.0</span>
+            </a>
+            <th:block th:if="${data.mainOrderId==null && data.agentPrepaymentOrderId==null}">
+                <span th:text="${data.changed.doubleValue()>0?'+':'-'}">+</span>
+                <span th:text="${{data.changedAbsMoney}}">$100.0</span>
+            </th:block>
         </td>
         <td th:text="${data.type.toString()}">佣金收入</td>
         <th th:text="${{currentData.get(data.id)}}">$100.00</th>
     </tr>
     <tr th:remove="all">
         <td>2017-8-11</td>
-        <td class="fa fa-plus-circle">&nbsp;</td>
-        <td class="danger"><a class="mainOrderDetailLink" href="javascript:" data-main-order-id="2">$200.00</a></td>
+        <td class="danger">
+            <a class="mainOrderDetailLink" href="javascript:" data-main-order-id="2">
+                <span>+</span>
+                <span>$200.00</span>
+            </a>
+        </td>
         <td>佣金收入</td>
         <th>$300.00</th>
     </tr>
     <tr th:remove="all">
         <td>2017-8-20</td>
-        <td class="fa fa-minus-circle">&nbsp;</td>
-        <td class="success"><a class="mainOrderDetailLink" href="javascript:">$300.00</a></td>
+        <td class="success">
+            <a class="mainOrderDetailLink" href="javascript:">
+                <span>-</span>
+                <span>$300.00</span>
+            </a>
+        </td>
         <td>提现</td>
         <th>$0.00</th>
     </tr>
@@ -46,7 +64,13 @@
                 if (id && id != '' && id != 'null') {
                     $(ele).attr('href', 'mainOrderDetail?id=' + id);
                 }
-            })
+            });
+            $('.agentPrepaymentOrderDetailLink').each(function (i, ele) {
+                var id = $(ele).attr('data-agent-prepayment-order-id');
+                if (id && id != '' && id != 'null') {
+                    $(ele).attr('href', 'agentPrepaymentOrderDetail?id=' + id);
+                }
+            });
         });
     }
 </script>

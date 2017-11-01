@@ -21,7 +21,9 @@ Mock.mock(/\/manage\/agentGoodAdvancePayment/, "get", {
         {
             'id': '@id',
             'user': '@cname',
+            'loginId': '@id',
             'amount': '@integer(100, 10000)',
+            'balance': '@integer(100, 10000)',
             'mobile': /^1([34578])\d{9}$/,
             'status': '@pick(["待处理","已拒绝","已成功"])',
             'approved': '@pick(@bool,@toNull)',

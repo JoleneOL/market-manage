@@ -13,8 +13,7 @@ public class ManageAgentGoodAdvancePaymentControllerTest extends ManageServiceTe
     @Test
     public void go() {
         updateAllRunWith(newRandomManager(ManageLevel.root));
-        ManageAgentGoodAdvancePaymentPage page = ManageAgentGoodAdvancePaymentPage.of(this, driver);
-
+        ManageAgentGoodAdvancePaymentPage.of(this, driver);
         // 添加一个
     }
 

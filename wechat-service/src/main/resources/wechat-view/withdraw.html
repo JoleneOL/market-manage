@@ -160,7 +160,9 @@
                     </div>
                     <div class="weui-cell__ft"><i class="weui-icon-warn"></i></div>
                 </div>
-                <div class="weui-cell weui-cell_link"><div class="weui-cell__bd text-error">开票信息</div></div>
+                <div class="weui-cell weui-cell_link">
+                    <div class="weui-cell__bd text-error">开票信息</div>
+                </div>
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><p class="weui-label">公司名称</p></div>
                     <div class="weui-cell__bd">
@@ -205,9 +207,11 @@
                     </div>
                 </div>
             </div>
-            <a href="javascript:void(0);" class="weui-cell weui-cell_link open-popup" data-target="#J_upgradeRules">
-                <div class="weui-cell__bd">收益提现规则</div>
-            </a>
+            <label for="weuiAgree" class="weui-agree view-agress_inline">
+                <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" name="isAgree">
+                <span class="weui-agree__text">同意</span>
+            </label>
+            <a href="javascript:;" class="text-link open-popup" data-target="#J_upgradeRules" id="rules">《收益提现规则》</a>
         </div>
     </form>
 </section>
@@ -245,7 +249,10 @@
                     <p>电&emsp;&emsp;话：<span th:text="${companyTelephone}">0571--88187913</span></p>
                 </section>
             </section>
-            <button type="button" class="weui-btn weui-btn_custom close-popup">确&emsp;&emsp;定</button>
+            <button type="button" class="weui-btn weui-btn_custom close-popup" id="J_agree_button">同&emsp;&emsp;意
+            </button>
+            <button type="button" class="weui-btn weui-btn_custom close-popup" id="J_reject_button">拒&emsp;&emsp;绝
+            </button>
         </article>
     </div>
 </div>
@@ -253,6 +260,6 @@
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
-<script src="../wechat-resource/assets/js/withdraw.js" th:src="@{/wechat-resource/assets/js/withdraw.js(v=2)}"></script>
+<script src="../wechat-resource/assets/js/withdraw.js" th:src="@{/wechat-resource/assets/js/withdraw.js(v=3)}"></script>
 <th:block th:include="wechat@fragments/share.html::hideAllShare"/>
 </html>

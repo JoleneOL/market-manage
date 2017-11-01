@@ -2,9 +2,12 @@ package cn.lmjia.market.wechat.page;
 
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * 我要提现
@@ -89,5 +92,15 @@ public class WechatWithdrawPage extends AbstractWechatPage {
         logisticsCompany.clear();
         logisticsCompany.sendKeys(RandomStringUtils.randomAlphabetic(10));
         submit.click();
+    }
+
+    /**
+     * 同意规则
+     */
+    public void agreeRules() {
+        webDriver.findElement(By.id("rules")).click();
+        new WebDriverWait(webDriver, 2)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("J_agree_button")));
+        webDriver.findElement(By.id("J_agree_button")).click();
     }
 }
