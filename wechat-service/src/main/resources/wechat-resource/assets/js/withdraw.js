@@ -188,7 +188,7 @@ $(function () {
                 max: +allInBtn.attr('data-all-in'),
                 isFloat2: true
             },
-            isAgree:'required',
+            isAgree: 'required',
             logisticsCode: {
                 required: function () {
                     return $("#logisticsTypeDelivery").is(':checked') && $('#J_haveInvoice').is(':checked');
@@ -218,7 +218,7 @@ $(function () {
                 min: "提款最小金额为 {0}",
                 max: "提款最大金额为 {0}"
             },
-            isAgree:"请阅读提现规则",
+            isAgree: "请阅读提现规则",
             logisticsCode: '填写物流单号',
             logisticsCompany: '填写物流公司'
         },
@@ -249,26 +249,44 @@ $(function () {
     var $agree = $('#weuiAgree');
     var $rules = $('#rules');
     var agreeWithdrawAgreement = 'agreeWithdrawAgreement';
-    $agreeButton.click(function(){
-        $agree.prop('checked','checked');
+
+    $agreeButton.click(function () {
+        $agree.prop('checked', 'checked');
         localStorage.setItem(agreeWithdrawAgreement, true);
+        var payeeVal = $('.payee').val();
+        var accountVal = $('.account').val();
+        var bankVal = $('.bank').val();
+        var mobileVal = $('.mobile').val();
+        var information = JSON.stringify(new Array(payeeVal, accountVal, bankVal, mobileVal));
+        localStorage.setItem('information', information);
     });
+
     var $rejectButton = $('#J_reject_button');
-    $rejectButton.click(function(){
-        $agree.prop('checked','');
+    $rejectButton.click(function () {
+        $agree.prop('checked', '');
         localStorage.removeItem(agreeWithdrawAgreement)
     });
 
     var flag = localStorage.getItem(agreeWithdrawAgreement);
-    if(flag != undefined){
-        $agree.prop('checked','checked');
+    if (flag != undefined) {
+        $agree.prop('checked', 'checked');
     }
-    $agree.click(function(){
-        if(!$agree.prop('checked')){
+    $agree.click(function () {
+        if (!$agree.prop('checked')) {
             localStorage.removeItem(agreeWithdrawAgreement);
-        }else{
-            $agree.prop('checked','');
+        } else {
+            $agree.prop('checked', '');
             $rules.click();
         }
     })
+
+    var have = localStorage.getItem('information');
+    if(have != undefined){
+        var array = JSON.parse(have);
+        $('.payee').val(array[0]);
+        $('.account').val(array[1]);
+        $('#J_Bank').varl(array[1]);
+        $('.bank').val(array[2]);
+        $('.mobile').val(array[3]);
+    }
 });
