@@ -35,7 +35,7 @@
 </div>
 <div class="weui-cells__title">常见问题</div>
 <div class="weui-cells">
-    <div th:each="commonProblem:${commonProblemService.findByIsWeigth()}">
+    <div th:each="commonProblem:${@commonProblemService.findByIsWeigth()}">
     <a class="weui-cell weui-cell_access" href="helpDetail.html" th:href="@{/commonProblemDetail/} + ${commonProblem.id}" >
         <div class="weui-cell__bd" th:text="${commonProblem.title}">微信实验室开启方法</div>
         <div class="weui-cell__ft"></div>
