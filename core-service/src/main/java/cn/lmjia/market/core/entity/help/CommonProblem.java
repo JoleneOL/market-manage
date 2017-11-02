@@ -62,7 +62,7 @@ public class CommonProblem {
 
         if (enable != that.enable) return false;
         if (isWeight != that.isWeight) return false;
-        if (Id != null ? !Id.equals(that.Id) : that.Id != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         if (content != null ? !content.equals(that.content) : that.content != null) return false;
         if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
@@ -71,7 +71,7 @@ public class CommonProblem {
 
     @Override
     public int hashCode() {
-        int result = Id != null ? Id.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (enable ? 1 : 0);
@@ -84,7 +84,7 @@ public class CommonProblem {
     @Override
     public String toString() {
         return "CommonProblem{" +
-                "Id=" + Id +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", enable=" + enable +
