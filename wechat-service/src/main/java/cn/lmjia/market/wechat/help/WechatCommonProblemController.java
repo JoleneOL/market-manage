@@ -1,4 +1,4 @@
-package cn.lmjia.market.wechat.page.help;
+package cn.lmjia.market.wechat.help;
 
 import cn.lmjia.market.core.entity.help.CommonProblem;
 import cn.lmjia.market.core.service.help.CommonProblemService;

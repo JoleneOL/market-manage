@@ -34,6 +34,11 @@ public class ManageCommonProblemController {
     @Autowired
     private CommonProblemService commonProblemService;
 
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_PRODUCT_CENTER + "','"+Login.ROLE_LOOK+"')")
+    @GetMapping("/manageCommonProblem")
+    public String index(){
+        return "operation-management/_helpCenter.html";
+    }
     @GetMapping("/manageCommonProblem/List")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<CommonProblem> data() {
@@ -88,7 +93,7 @@ public class ManageCommonProblemController {
             throw new IllegalArgumentException("");
         }
         commonProblemService.addCommonProblem(id,title,content);
-        return "redirect:/manageCommonProblem/List";
+        return "redirect:/manageCommonProblem";
     }
 
 
