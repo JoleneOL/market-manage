@@ -53,6 +53,7 @@ public interface SystemService {
      * 商城下单URI
      */
     String mallOrderURi = "/mallOrder";
+    String wechatMallIndex = "/wechatIndex";
 
     /**
      * @return 代理体系的层次数量
@@ -104,6 +105,11 @@ public interface SystemService {
     }
 
     /**
+     * @return 公司客服电话
+     */
+    String getCompanyCustomerServiceTel();
+
+    /**
      * @param login 当前登录的用户
      * @return 是否显示提现按钮
      */
@@ -143,4 +149,8 @@ public interface SystemService {
      * @return 爱心天使的认定是否需要在一天内累计完成足够金额的订单;如果null 表示没有这个条件
      */
     BigDecimal getRegularLoginAs24HOrderAmount();
+
+    default String getFirstName() {
+        return "利每家";
+    }
 }

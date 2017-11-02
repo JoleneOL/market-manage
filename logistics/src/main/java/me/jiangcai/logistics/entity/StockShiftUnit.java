@@ -168,6 +168,14 @@ public class StockShiftUnit {
     }
 
     /**
+     * @return 人类可以理解的快递单号
+     */
+    @Transient
+    public String getHumanReadableExpressId() {
+        return null;
+    }
+
+    /**
      * @return 检查下 是否需要安装
      */
     public boolean checkInstallation() {

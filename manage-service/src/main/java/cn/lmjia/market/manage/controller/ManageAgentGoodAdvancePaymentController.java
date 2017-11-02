@@ -1,6 +1,7 @@
 package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment;
 import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment_;
@@ -106,7 +107,13 @@ public class ManageAgentGoodAdvancePaymentController {
                                     return ReadService.nameForLogin(loginJoin, criteriaBuilder);
                                 })
                                 .build()
+                        , FieldBuilder.asName(AgentGoodAdvancePayment.class, "loginId")
+                                .addSelect(agentGoodAdvancePaymentRoot -> loginJoin.get(Login_.id))
+                                .build()
                         , Fields.asBasic("amount")
+                        , FieldBuilder.asName(AgentGoodAdvancePayment.class, "balance")
+                                .addOwnSelect((root, cb, query) -> ReadService.currentGoodAdvancePaymentBalance(loginJoin, cb, query))
+                                .build()
                         , FieldBuilder.asName(AgentGoodAdvancePayment.class, "mobile")
                                 .addBiSelect((agentGoodAdvancePaymentRoot, criteriaBuilder)
                                         -> ReadService.mobileForLogin(loginJoin, criteriaBuilder))

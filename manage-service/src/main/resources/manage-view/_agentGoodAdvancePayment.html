@@ -28,11 +28,12 @@
     <![endif]-->
 </head>
 
-<body data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
+<body class="gray-bg"
+      data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
       th:data-search-login-url="@{/loginData/select2(agent=true)}"
       data-url="/manage/agentGoodAdvancePayment"
       data-journal-url="mock/journal.html"
-      th:data-journal-url="@{/loginCommissionJournal}"
+      th:data-journal-url="@{/agentGoodAdvancePaymentJournal}"
       data-reject-url="/manage/agentGoodAdvancePayment/reject"
       data-approval-url="/manage/agentGoodAdvancePayment/approval">
 
@@ -87,33 +88,37 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <ul class="nav nav-tabs nav-dark js-orderStatus">
-                    <li class="active">
-                        <a href="#paymentDataGrid" data-toggle="tab" data-status="2">
-                            <strong>待处理</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#paymentDataGrid" data-toggle="tab" data-status="0">
-                            <strong>全部</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#paymentDataGrid" data-toggle="tab" data-status="3">
-                            <strong>已拒绝</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#paymentDataGrid" data-toggle="tab" data-status="4">
-                            <strong>已批准</strong>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="paymentDataGrid">
-                        <div class="table-responsive">
-                            <table id="paymentTable" class="table table-hover table-success" cellspacing="0"
-                                   width="100%"></table>
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <ul class="nav nav-tabs nav-dark js-orderStatus">
+                            <li class="active">
+                                <a href="#paymentDataGrid" data-toggle="tab" data-status="2">
+                                    <strong>待处理</strong>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#paymentDataGrid" data-toggle="tab" data-status="0">
+                                    <strong>全部</strong>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#paymentDataGrid" data-toggle="tab" data-status="3">
+                                    <strong>已拒绝</strong>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#paymentDataGrid" data-toggle="tab" data-status="4">
+                                    <strong>已批准</strong>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="paymentDataGrid">
+                                <div class="table-responsive">
+                                    <table id="paymentTable" class="table table-hover table-success" cellspacing="0"
+                                           width="100%"></table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -168,6 +173,6 @@
 <script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
 <script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
         th:src="@{/assets/js/common/recommend.js}"></script>
-<script src="manage-resource/js/agentGoodAdvancePayment.js"></script>
+<script src="manage-resource/js/agentGoodAdvancePayment.js?171027"></script>
 
 </html>

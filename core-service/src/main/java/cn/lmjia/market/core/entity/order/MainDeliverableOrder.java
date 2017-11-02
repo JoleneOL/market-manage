@@ -37,6 +37,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,6 +213,15 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
                 .sum();
     }
 
+    @Override
+    public void updateLastShiftDestination(LogisticsDestination destination) {
+        installAddress.setProvince(destination.getProvince());
+        installAddress.setPrefecture(destination.getCity());
+        installAddress.setCounty(destination.getCountry());
+        installAddress.setOtherAddress(destination.getDetailAddress());
+        customer.setName(destination.getConsigneeName());
+        customer.setMobile(destination.getConsigneeMobile());
+    }
 
     @Override
     public String getProvince() {
@@ -330,6 +340,21 @@ public abstract class MainDeliverableOrder implements LogisticsDestination, Deli
         list.add(new TimeLineUnit("佣金结算", lastShipDoneTime, lastShipDoneTime != null, firstShipTime == null));
 
         return list;
+    }
+
+    /**
+     * @return 正在物流或者已经完成的物流订单
+     */
+    public List<StockShiftUnit> getDrivingOrFinishLogisticsSet() {
+        return logisticsSet.stream()
+                .filter(stockShiftUnit -> {
+                    final ShiftStatus currentStatus = stockShiftUnit.getCurrentStatus();
+                    return currentStatus == ShiftStatus.accept
+                            || currentStatus == ShiftStatus.movement
+                            || currentStatus == ShiftStatus.success;
+                })
+                .sorted(Comparator.comparing(StockShiftUnit::getCreateTime))
+                .collect(Collectors.toList());
     }
 
     public Money getOrderDueAmountMoney() {

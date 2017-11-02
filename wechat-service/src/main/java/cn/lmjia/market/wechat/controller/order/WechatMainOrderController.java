@@ -319,11 +319,11 @@ public class WechatMainOrderController extends AbstractMainOrderController {
 
     @Override
     protected String listUri() {
-        return "订单列表";
+        return "/wechatOrderList";
     }
 
     @Override
     protected String listTitle() {
-        return "/wechatOrderList";
+        return "订单列表";
     }
 }

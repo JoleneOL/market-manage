@@ -3,6 +3,7 @@ package me.jiangcai.logistics.controller;
 import me.jiangcai.jpa.JpaUtils;
 import me.jiangcai.logistics.DeliverableOrder;
 import me.jiangcai.logistics.LogisticsConfig;
+import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.Thing;
@@ -107,6 +108,9 @@ public class LogisticsController {
     @ResponseBody
     public Map<String, Object> logisticsShip(DeliverableOrderId orderPK, boolean installation, long depot
             , HttpServletRequest request, @RequestParam(required = false) String orderNumber
+            , @RequestParam(required = false) String consigneeName
+            , @RequestParam(required = false) String consigneeMobile
+            , @RequestParam(required = false) String address
             , @RequestParam(required = false) String company, Locale locale) {
         // 获取订单
         Class<? extends Serializable> idClass = JpaUtils.idClassForEntity(orderPK.getType());
@@ -171,9 +175,62 @@ public class LogisticsController {
             return productIntegerMap;
         });
 
+        LogisticsDestination defaultDestination = order.getLogisticsDestination();
+        // 地址信息必须高度符合规格！
+        final String province;
+        final String city;
+        final String country;
+        final String detailAddress;
+        if (!StringUtils.isEmpty(address) && address.split("-").length >= 4) {
+            String[] _address = address.split("-");
+            province = _address[0];
+            city = _address[1];
+            country = _address[2];
+            String[] _detailAddress = new String[_address.length - 3];
+            System.arraycopy(_address, 3, _detailAddress, 0, _detailAddress.length);
+            detailAddress = String.join("-", _detailAddress);
+        } else {
+            province = defaultDestination.getProvince();
+            city = defaultDestination.getCity();
+            country = defaultDestination.getCountry();
+            detailAddress = defaultDestination.getDetailAddress();
+        }
+
+        LogisticsDestination destination = new LogisticsDestination() {
+            @Override
+            public String getProvince() {
+                return province;
+            }
+
+            @Override
+            public String getCity() {
+                return city;
+            }
+
+            @Override
+            public String getCountry() {
+                return country;
+            }
+
+            @Override
+            public String getDetailAddress() {
+                return detailAddress;
+            }
+
+            @Override
+            public String getConsigneeName() {
+                return !StringUtils.isEmpty(consigneeName) ? consigneeName : defaultDestination.getConsigneeName();
+            }
+
+            @Override
+            public String getConsigneeMobile() {
+                return !StringUtils.isEmpty(consigneeMobile) ? consigneeMobile : defaultDestination.getConsigneeMobile();
+            }
+        };
+
         try {
             StockShiftUnit unit = logisticsService.makeShift(supplier, order, collection, depotEntity
-                    , order.getLogisticsDestination(), installation ? LogisticsOptions.Installation : 0);
+                    , destination, installation ? LogisticsOptions.Installation : 0);
             if (unit instanceof ManuallyOrder) {
                 ((ManuallyOrder) unit).setOrderNumber(orderNumber);
                 ((ManuallyOrder) unit).setSupplierCompany(company);
