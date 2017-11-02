@@ -3,11 +3,11 @@ package cn.lmjia.market.wechat.controller.help;
 import cn.lmjia.market.core.entity.help.CommonProblem;
 import cn.lmjia.market.core.service.help.CommonProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,5 +34,38 @@ public class WechatCommonProblemController {
     @GetMapping("/commonProblem")
     public String index(){
         return "wechat@helpCenter/index.html";
+    }
+
+
+    @PutMapping("/help/{id}/enable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void enable(@PathVariable("id") long id){
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setEnable(true);
+    }
+
+    @PutMapping("/help/{id}/disable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void disable(@PathVariable("id") long id){
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setEnable(false);
+    }
+
+    @PutMapping("/help/{id}/isWeightLabel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void isWeightLabel(@PathVariable("id") long id){
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setWeight(true);
+    }
+
+    @PutMapping("/help/{id}/notWeightLabel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void notWeightLabel(@PathVariable("id") long id){
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setWeight(false);
     }
 }
