@@ -1,4 +1,4 @@
-package cn.lmjia.market.wechat.help;
+package cn.lmjia.market.wechat.controller.help;
 
 import cn.lmjia.market.core.entity.help.CommonProblem;
 import cn.lmjia.market.core.service.help.CommonProblemService;
@@ -29,5 +29,10 @@ public class WechatCommonProblemController {
     @ResponseBody
     public List<CommonProblem> search(String title){
         return commonProblemService.findByTitle(title);
+    }
+
+    @GetMapping("/commonProblem")
+    public String index(){
+        return "wechat@helpCenter/index.html";
     }
 }

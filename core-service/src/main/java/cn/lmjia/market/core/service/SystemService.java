@@ -56,6 +56,10 @@ public interface SystemService {
     String wechatMallIndex = "/wechatIndex";
 
     /**
+     * 帮助中心URI
+     */
+    String helpCenterURi = "/commonProblem";
+    /**
      * @return 代理体系的层次数量
      */
     default int systemLevel() {

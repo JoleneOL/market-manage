@@ -54,7 +54,7 @@ public class ManageCommonProblemController {
                         , FieldBuilder.asName(CommonProblem.class, "title")
                                 .build()
                         , Fields.asBasic("enable")
-                        , FieldBuilder.asName(CommonProblem.class, "enableLable")
+                        , FieldBuilder.asName(CommonProblem.class, "enableLabel")
                                 .addSelect(CommonProblemRoot -> CommonProblemRoot.get(CommonProblem_.enable))
                                 .addFormat((data, type) -> {
                                     boolean enable = (boolean) data;
