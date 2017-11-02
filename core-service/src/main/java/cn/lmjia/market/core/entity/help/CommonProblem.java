@@ -18,7 +18,7 @@ public class CommonProblem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     /**
      * 标题
