@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("commonProblemService")
 @Transactional
 public class CommonProblemServiceImpl implements CommonProblemService {
 
