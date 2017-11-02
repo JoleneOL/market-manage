@@ -229,7 +229,7 @@
                         <span class="nav-label">安装管理</span>
                     </a>
                 </li>
-                <li>
+                <li sec:authorize="hasAnyRole('ROOT','LOOK','ROLE_PRODUCT_CENTER')">
                     <a href="#">
                         <i class="fa fa-line-chart"></i>
                         <span class="nav-label">运营管理</span>

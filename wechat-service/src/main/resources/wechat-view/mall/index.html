@@ -47,28 +47,6 @@
         <div class="swiper-pagination"></div>
     </div>
 </div>
-<div class="mall-tagBanner">
-    <div class="tag-list tag-list-middle">
-        <div class="tag-list-bd">
-            <div class="tag-list-item" th:each="searchTag:${@readService.allTagByType(0)}">
-                <a th:href="@{/wechatSearch/tagSearch(tagName=${searchTag.name})}" href="tagDetail.html"
-                   class="tag-content" th:attr="tag-name=${searchTag.name}" tag-name="净水器">
-                    <img res:src="${searchTag.icon}"
-                         src="https://m.360buyimg.com/mobilecms/jfs/t5668/159/160398199/14046/acfe1fa3/591d9424N068a7ad0.png"
-                         class="tag-image">
-                    <p class="tag-title" th:text="${searchTag.name}">净水器</p>
-                </a>
-            </div>
-            <div class="tag-list-item" th:remove="all">
-                <a href="tagDetail.html" class="tag-content">
-                    <img src="https://m.360buyimg.com/mobilecms/jfs/t5965/339/3633548361/13799/cd4d0416/5954cf81N3294a71c.png"
-                         class="tag-image">
-                    <p class="tag-title">食品优化宝</p>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="mall-tagList">
     <div class="tag-list tag-list-big" th:each="listTag:${@readService.allTagByType(1)}"
          th:attr="data-tag-name=${listTag.name}" data-tag-name="热销">

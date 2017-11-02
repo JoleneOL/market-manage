@@ -22,9 +22,9 @@ $(function () {
             }
         }
     });
-
+    var _body = $('body');
     function ajaxSearch(query) {
-        $.ajax('/api/search?q=' + query, {
+        $.ajax(_body.data(Search-url)+'?title=' + query, {
             method: 'GET',
             dataType: 'json',
             success: function (res) {

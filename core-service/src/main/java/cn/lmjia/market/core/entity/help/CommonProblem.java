@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * 常见问题
@@ -34,12 +35,23 @@ public class CommonProblem {
     /**
      * 是否启用
      */
-    private boolean enable;
+    private boolean enable=true;
 
     /**
      * 权重,是否在常见问题列表里展示.
      */
     private boolean isWeight;
+
+    /**
+     * 创建时间
+     */
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime createTime = LocalDateTime.now();
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime updateTime;
 
     @Override
     public boolean equals(Object o) {
@@ -52,7 +64,9 @@ public class CommonProblem {
         if (isWeight != that.isWeight) return false;
         if (Id != null ? !Id.equals(that.Id) : that.Id != null) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        return content != null ? content.equals(that.content) : that.content == null;
+        if (content != null ? !content.equals(that.content) : that.content != null) return false;
+        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
+        return updateTime != null ? updateTime.equals(that.updateTime) : that.updateTime == null;
     }
 
     @Override
@@ -62,6 +76,8 @@ public class CommonProblem {
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (enable ? 1 : 0);
         result = 31 * result + (isWeight ? 1 : 0);
+        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
+        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
         return result;
     }
 
@@ -73,6 +89,8 @@ public class CommonProblem {
                 ", content='" + content + '\'' +
                 ", enable=" + enable +
                 ", isWeight=" + isWeight +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
                 '}';
     }
 }

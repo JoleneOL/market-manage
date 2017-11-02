@@ -2,7 +2,7 @@ Mock.setup({
     timeout: 1000
 });
 
-Mock.mock(/\/api\/helpCenter/, {
+Mock.mock(/\/manageCommonProblem\/List/, {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
@@ -10,7 +10,11 @@ Mock.mock(/\/api\/helpCenter/, {
         {
             'id': '@id',
             'title': '@ctitle',
-            'type': '@pick(账号设置,转账服务,佣金提现,订单问题,其他功能)'
+            /*'updateTime': '@datetime("yyyy-MM-dd")',*/
+            'enableLabel': '@pick(启用, 禁用)',
+            'enable': '@pick([true, false])',
+            'isWeightLabel':'@pick(展示,隐藏)',
+            'isWeight':'@pick([true, false])'
         }
     ]
 });

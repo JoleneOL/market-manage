@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="main-html">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.help.CommonProblem"*/-->
 <head>
     <meta charset="UTF-8">
     <meta charset="UTF-8">
@@ -32,11 +33,12 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_helpCenter.html">帮助中心</a></li>
+                <li><a href="_helpCenter.html" th:href="@{/manageCommonProblem/List}">帮助中心</a></li>
                 <li><strong>新增词条</strong></li>
             </ol>
         </div>
-        <form id="J_helpForm" method="post" action="_helpCenter.html">
+        <form id="J_helpForm" method="post" action="_helpCenter.html" th:action="@{/manageCommonProblemSubmit}">
+            <input type="hidden" name="id" th:value="${currentData!=null?currentData.id:null}">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="ibox">
@@ -52,12 +54,14 @@
                                                 <label class="col-sm-3 control-label">词条标题 <span
                                                         class="asterisk">*</span></label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" placeholder="请输入词条标题" class="form-control"
-                                                           name="entryTitle" required>
+                                                    <input type="text" placeholder="请输入词条标题"
+                                                           th:value="${currentData!=null?currentData.title:null}"
+                                                           class="form-control"
+                                                           name="title" required>
                                                 </div>
                                             </div>
                                             <!--TODO 目前可以没有-->
-                                            <div class="form-group">
+                                            <!--<div class="form-group">
                                                 <label class="col-sm-3 control-label">词条类型 <span
                                                         class="asterisk">*</span>
                                                 </label>
@@ -68,25 +72,25 @@
                                                         <option value="3">其他问题</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">词条详情 <span
                                                         class="asterisk">*</span></label>
                                                 <div class="col-sm-9">
-                                                <textarea class="form-control editor" rows="3" name="entryDetail"
+                                                <textarea class="form-control editor" rows="3" name="content"
                                                           title="详情" required></textarea>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-sm-6 col-sm-offset-3 control-label">
-                                                    <button type="submit"
+                                                    <button th:if="${currentData==null}" type="submit"
                                                             class="btn btn-primary btn-block btn-lg">
                                                         新&nbsp;增
                                                     </button>
-                                                    <!--<button type="submit"-->
-                                                    <!--class="btn btn-primary btn-block btn-lg">-->
-                                                    <!--修&nbsp;改-->
-                                                    <!--</button>-->
+                                                    <button th:if="${currentData!=null}" type="submit"
+                                                            class="btn btn-primary btn-block btn-lg">
+                                                        修&nbsp;改
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -162,7 +166,7 @@
             }
         },
         submitHandler: function (form) {
-            if(!tinymce.activeEditor.getContent()) {
+            if (!tinymce.activeEditor.getContent()) {
                 layer.msg('词条详情不能为空');
             } else {
                 form.submit();
