@@ -250,13 +250,13 @@ $(function () {
     var $rules = $('#rules');
     var agreeWithdrawAgreement = 'agreeWithdrawAgreement';
 
-    $agreeButton.click(function () {
+    $('#withSubmit').click(function () {
         $agree.prop('checked', 'checked');
         localStorage.setItem(agreeWithdrawAgreement, true);
-        var payeeVal = $('.payee').val();
-        var accountVal = $('.account').val();
-        var bankVal = $('.bank').val();
-        var mobileVal = $('.mobile').val();
+        var payeeVal = $('input[name=payee]').val();
+        var accountVal = $('input[name=account]').val();
+        var bankVal = $('input[name=bank]').val();
+        var mobileVal = $('input[name=mobile]').val();
         var information = JSON.stringify(new Array(payeeVal, accountVal, bankVal, mobileVal));
         localStorage.setItem('information', information);
     });
@@ -283,10 +283,16 @@ $(function () {
     var have = localStorage.getItem('information');
     if(have != undefined){
         var array = JSON.parse(have);
-        $('.payee').val(array[0]);
-        $('.account').val(array[1]);
-        $('#J_Bank').varl(array[1]);
-        $('.bank').val(array[2]);
-        $('.mobile').val(array[3]);
+        $('input[name=payee]').val(array[0]);
+        $('input[name=account]').val(array[1]);
+        $('#J_Bank').val(array[1]);
+        if($('#J_Bank').val() != null){
+            var $this = $('#J_Bank');
+            var v = $('#J_Bank').val();
+            /\S{5}/.test(v) && $this.val(v.replace(/\s/g, '').replace(/(.{4})/g, "$1 "));
+            $('input[name="account"]').val($this.val().replace(/\s/g, ''));
+        }
+        $('input[name=bank]').val(array[2]);
+        $('input[name=mobile]').val(array[3]);
     }
 });
