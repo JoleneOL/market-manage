@@ -7,8 +7,8 @@ Mock.mock(/\/api\/search\?title=(.*)/, "get", {
     "resultMsg": "ok",
     "data|0-5": [
         {
-            'helpId': '@id()',
-            'helpTitle': '@ctitle()'
+            'id': '@id()',
+            'title': '@ctitle()'
         }
     ]
 });
