@@ -78,7 +78,7 @@
                                                         class="asterisk">*</span></label>
                                                 <div class="col-sm-9">
                                                 <textarea class="form-control editor" rows="3" name="content"
-                                                          title="详情" th:value="${currentData!=null?currentData.content:null}" required></textarea>
+                                                          title="详情" th:utext="${currentData!=null?currentData.content:null}" required></textarea>
                                                 </div>
                                             </div>
                                             <div class="form-group">

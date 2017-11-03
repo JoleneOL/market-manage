@@ -63,11 +63,12 @@ public class CommonProblemServiceImpl implements CommonProblemService {
     public List<CommonProblem> findByTitle(String keyword) {
         List<CommonProblem> result = commonProblemRepository.findAll((root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
-            predicateList.add(cb.isTrue(root.get(CommonProblem_.enable)));
+            Predicate p = cb.isTrue(root.get(CommonProblem_.enable));
+            Predicate p1 = null;
             if (StringUtils.isNotEmpty(keyword)) {
-                predicateList.add(cb.or(cb.like(root.get(CommonProblem_.content), "%" + keyword + "%"), cb.like(root.get(CommonProblem_.title), "%" + keyword + "%")));
+                p1 = cb.or(cb.like(root.get(CommonProblem_.content), "%" + keyword + "%"), cb.like(root.get(CommonProblem_.title), "%" + keyword + "%"));
             }
-            return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
+            return cb.and(p,p1);
         });
         return result;
     }
