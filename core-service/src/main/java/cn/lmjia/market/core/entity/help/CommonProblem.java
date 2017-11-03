@@ -51,6 +51,7 @@ public class CommonProblem {
     /**
      * 修改时间
      */
+    @Column(columnDefinition = "updateTime")
     private LocalDateTime updateTime;
 
     @Override

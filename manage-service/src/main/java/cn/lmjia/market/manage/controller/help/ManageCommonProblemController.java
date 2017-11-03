@@ -34,11 +34,12 @@ public class ManageCommonProblemController {
     @Autowired
     private CommonProblemService commonProblemService;
 
-    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_PRODUCT_CENTER + "','"+Login.ROLE_LOOK+"')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_PRODUCT_CENTER + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/manageCommonProblem")
-    public String index(){
+    public String index() {
         return "operation-management/_helpCenter.html";
     }
+
     @GetMapping("/manageCommonProblem/List")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<CommonProblem> data() {
@@ -47,6 +48,7 @@ public class ManageCommonProblemController {
             public Class<CommonProblem> entityClass() {
                 return CommonProblem.class;
             }
+
             @Override
             public List<FieldDefinition<CommonProblem>> fields() {
                 return Arrays.asList(
@@ -66,8 +68,10 @@ public class ManageCommonProblemController {
                                     boolean isWeight = (boolean) data;
                                     return isWeight ? "展示" : "隐藏";
                                 }).build()
+                        , Fields.asBasic("isWeight")
                 );
             }
+
             @Override
             public Specification<CommonProblem> specification() {
                 return null;
@@ -77,22 +81,22 @@ public class ManageCommonProblemController {
 
 
     @GetMapping("/manageCommonProblemAdd")
-    public String indexForCreate(){
+    public String indexForCreate() {
         return "operation-management/_helpDetail.html";
     }
 
     @GetMapping("/manageCommonProblemEdit")
-    public String indexForEdit(long id, Model model){
+    public String indexForEdit(long id, Model model) {
         model.addAttribute("currentData", commonProblemService.getOne(id));
         return "operation-management/_helpDetail.html";
     }
 
     @PostMapping("/manageCommonProblemSubmit")
-    public String add(Long id,String title,String content){
-        if(StringUtils.isBlank(title)){
+    public String add(Long id, String title, String content) {
+        if (StringUtils.isBlank(title)) {
             throw new IllegalArgumentException("");
         }
-        commonProblemService.addCommonProblem(id,title,content);
+        commonProblemService.addCommonProblem(id, title, content);
         return "redirect:/manageCommonProblem";
     }
 
