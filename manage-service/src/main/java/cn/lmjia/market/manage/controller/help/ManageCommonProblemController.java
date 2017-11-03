@@ -13,11 +13,12 @@ import cn.lmjia.market.core.service.help.CommonProblemService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -101,4 +102,35 @@ public class ManageCommonProblemController {
     }
 
 
+    @PutMapping("/help/{id}/enable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void enable(@PathVariable("id") long id) {
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setEnable(true);
+    }
+
+    @PutMapping("/help/{id}/disable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void disable(@PathVariable("id") long id) {
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setEnable(false);
+    }
+
+    @PutMapping("/help/{id}/isWeightLabel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void isWeightLabel(@PathVariable("id") long id) {
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setWeight(true);
+    }
+
+    @PutMapping("/help/{id}/notWeightLabel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void notWeightLabel(@PathVariable("id") long id) {
+        CommonProblem commonProblem = commonProblemService.getOne(id);
+        commonProblem.setWeight(false);
+    }
 }

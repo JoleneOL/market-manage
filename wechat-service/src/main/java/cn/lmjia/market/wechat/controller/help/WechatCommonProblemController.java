@@ -27,6 +27,7 @@ public class WechatCommonProblemController {
 
     @GetMapping("/commonProblem/search")
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public List<CommonProblem> search(@RequestParam("title") String title){
         return commonProblemService.findByTitle(title);
     }
@@ -37,35 +38,4 @@ public class WechatCommonProblemController {
     }
 
 
-    @PutMapping("/help/{id}/enable")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void enable(@PathVariable("id") long id){
-        CommonProblem commonProblem = commonProblemService.getOne(id);
-        commonProblem.setEnable(true);
-    }
-
-    @PutMapping("/help/{id}/disable")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void disable(@PathVariable("id") long id){
-        CommonProblem commonProblem = commonProblemService.getOne(id);
-        commonProblem.setEnable(false);
-    }
-
-    @PutMapping("/help/{id}/isWeightLabel")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void isWeightLabel(@PathVariable("id") long id){
-        CommonProblem commonProblem = commonProblemService.getOne(id);
-        commonProblem.setWeight(true);
-    }
-
-    @PutMapping("/help/{id}/notWeightLabel")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void notWeightLabel(@PathVariable("id") long id){
-        CommonProblem commonProblem = commonProblemService.getOne(id);
-        commonProblem.setWeight(false);
-    }
 }
