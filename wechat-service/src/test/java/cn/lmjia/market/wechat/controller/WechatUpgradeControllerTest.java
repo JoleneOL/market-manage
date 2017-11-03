@@ -50,7 +50,8 @@ public class WechatUpgradeControllerTest extends WechatTestBase {
 
        driver.get("http://localhost/wechatUpgrade");
         assertThat(driver.getTitle())
-                .isEqualToIgnoringCase("我的下单");
+                .as("尚未购买不允许升级，去商城逛逛吧")
+                .isEqualToIgnoringCase("商城");
 
         // 去买个东西吧
         makeSuccessOrder(user);
