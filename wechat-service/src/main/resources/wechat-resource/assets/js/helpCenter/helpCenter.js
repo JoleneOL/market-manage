@@ -24,9 +24,12 @@ $(function () {
     });
     var _body = $('body');
     function ajaxSearch(query) {
-        $.ajax(_body.attr('data-search-url')+'?title=' + query, {
+        $.ajax(_body.attr('data-search-url'), {
             method: 'GET',
             dataType: 'json',
+            data: {
+                title: query
+            },
             success: function (res) {
                 $.hideLoading();
                 if (res.resultCode !== 200) {
