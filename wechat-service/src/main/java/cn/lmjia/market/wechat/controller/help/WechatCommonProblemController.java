@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lxf
@@ -27,8 +29,18 @@ public class WechatCommonProblemController {
 
     @GetMapping("/commonProblem/search")
     @ResponseBody
-    public List<CommonProblem> search(String title){
-        return commonProblemService.findByTitle(title);
+    public Map<String, Object> search(String title){
+        Map<String, Object> result = new HashMap<>();
+        try{
+            List<CommonProblem> problemList = commonProblemService.findByTitle(title);
+            result.put("data",problemList);
+            result.put("resultCode",200);
+            result.put("resultMsg","OK");
+        }catch(Exception e){
+            result.put("resultCode",500);
+            result.put("resultMsg","error");
+        }
+        return result;
     }
 
     @GetMapping("/commonProblem")

@@ -31,6 +31,7 @@ $(function () {
                 title: query
             },
             success: function (res) {
+                alert(res.resultCode);
                 $.hideLoading();
                 if (res.resultCode !== 200) {
                     $.toast('请求失败', 'cancel');
