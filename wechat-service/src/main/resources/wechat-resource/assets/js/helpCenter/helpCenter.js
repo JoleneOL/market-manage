@@ -49,9 +49,10 @@ $(function () {
 
     function renderList(data) {
         var str = '';
-        if (data.data.length > 0) {
+        alert(data);
+        if (data.length > 0) {
             str = '<div class="weui-cells__title">相关问题</div><div class="weui-cells">';
-            $.each(data.data, function (i, v) {
+            $.each(data, function (i, v) {
                 str += '<a class="weui-cell weui-cell_access" href="helpDetail.html?id=' + v.helpId + '" th:href="@{/commonProblemDetail/}'+v.id+'" >' +
                     '  <div class="weui-cell__bd" th:text="'+v.title+'">' + v.helpTitle + '</div>' +
                     '  <div class="weui-cell__ft"></div>' +
