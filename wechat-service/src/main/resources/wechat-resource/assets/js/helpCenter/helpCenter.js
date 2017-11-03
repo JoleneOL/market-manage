@@ -48,8 +48,8 @@ $(function () {
         if (data.length > 0) {
             str = '<div class="weui-cells__title">相关问题</div><div class="weui-cells">';
             $.each(data, function (i, v) {
-                str += '<a class="weui-cell weui-cell_access" href="helpDetail.html?id=' + v.helpId + '">' +
-                    '  <div class="weui-cell__bd">' + v.helpTitle + '</div>' +
+                str += '<a class="weui-cell weui-cell_access" href="helpDetail.html?id=' + v.helpId + '" th:href="@{/commonProblemDetail/}'+v.id+'" >' +
+                    '  <div class="weui-cell__bd">' + v.title + '</div>' +
                     '  <div class="weui-cell__ft"></div>' +
                     '</a>'
             });
