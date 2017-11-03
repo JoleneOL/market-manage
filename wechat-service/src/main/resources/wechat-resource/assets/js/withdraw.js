@@ -249,16 +249,19 @@ $(function () {
     var $agree = $('#weuiAgree');
     var $rules = $('#rules');
     var agreeWithdrawAgreement = 'agreeWithdrawAgreement';
+    var informationStored ='information';
 
-    $('#withSubmit').click(function () {
-        $agree.prop('checked', 'checked');
+    $agreeButton.click(function(){
+        $agree.prop('checked', true);
         localStorage.setItem(agreeWithdrawAgreement, true);
+    })
+    $('#withSubmit').click(function () {
         var payeeVal = $('input[name=payee]').val();
         var accountVal = $('input[name=account]').val();
         var bankVal = $('input[name=bank]').val();
         var mobileVal = $('input[name=mobile]').val();
         var information = JSON.stringify(new Array(payeeVal, accountVal, bankVal, mobileVal));
-        localStorage.setItem('information', information);
+        localStorage.setItem(informationStored, information);
     });
 
     var $rejectButton = $('#J_reject_button');
@@ -269,7 +272,7 @@ $(function () {
 
     var flag = localStorage.getItem(agreeWithdrawAgreement);
     if (flag != undefined) {
-        $agree.prop('checked', 'checked');
+        $agree.prop('checked', true);
     }
     $agree.click(function () {
         if (!$agree.prop('checked')) {
@@ -280,7 +283,7 @@ $(function () {
         }
     })
 
-    var have = localStorage.getItem('information');
+    var have = localStorage.getItem(informationStored);
     if(have != undefined){
         var array = JSON.parse(have);
         $('input[name=payee]').val(array[0]);
