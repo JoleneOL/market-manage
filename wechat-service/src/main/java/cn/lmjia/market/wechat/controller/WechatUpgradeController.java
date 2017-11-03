@@ -43,7 +43,7 @@ public class WechatUpgradeController {
         // 正在申请 错误
         Login login = loginService.get(loginInput.getId());
         if (!loginService.isRegularLogin(login) && !loginService.allowUpgrade(login)) {
-            return "redirect:" + SystemService.wechatOrderURi;
+            return "redirect:" + SystemService.wechatMallIndex;
         }
         if (promotionRequestService.currentRequest(login) != null) {
 //            throw new IllegalStateException("申请正在处理中。");

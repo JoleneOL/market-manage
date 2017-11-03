@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.controller.my;
 
 import cn.lmjia.market.core.entity.Login;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
@@ -21,6 +22,10 @@ public class WechatMyController {
     private AgentService agentService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private SystemService systemService;
+    @Autowired
+    private AgentLevelRepository agentLevelRepository;
 
     @GetMapping("/wechatOrderList")
     public String wechatOrderList() {
@@ -35,6 +40,10 @@ public class WechatMyController {
     @GetMapping(SystemService.wechatMyURi)
     @Transactional(readOnly = true)
     public String my(@AuthenticationPrincipal Login login, Model model) {
+        // 爱心天使
+        if (!systemService.isNonAgentAbleToGainCommission() && agentLevelRepository.countByLogin(login) == 0) {
+            return "redirect:/wechatOrderList";
+        }
         myTeam(login, model);
         model.addAttribute("login", login);
         return "wechat@personalCenter.html";

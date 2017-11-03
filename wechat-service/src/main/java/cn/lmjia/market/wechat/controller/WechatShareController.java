@@ -90,7 +90,7 @@ public class WechatShareController {
         // 如果已登录 那么直接去下单
         if (login != null && login instanceof Login) {
             salesmanService.salesmanShareTo(id, (Login) login);
-            return "redirect:" + SystemService.wechatOrderURi;
+            return "redirect:" + SystemService.wechatMallIndex;
         }
 
         // 看看是否已关注
@@ -108,7 +108,7 @@ public class WechatShareController {
         }
 
         salesmanService.salesmanShareTo(id, wechatService.shareTo(id, openId));
-        return "redirect:" + SystemService.wechatOrderURi;
+        return "redirect:" + SystemService.wechatMallIndex;
     }
 
     /**

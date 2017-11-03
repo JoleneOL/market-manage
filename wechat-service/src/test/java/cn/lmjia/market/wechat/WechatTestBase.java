@@ -11,7 +11,12 @@ import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.DealerServiceTest;
 import cn.lmjia.market.manage.config.ManageConfig;
 import cn.lmjia.market.wechat.config.WechatConfig;
-import cn.lmjia.market.wechat.page.*;
+import cn.lmjia.market.wechat.page.WechatMyPage;
+import cn.lmjia.market.wechat.page.WechatMyTeamPage;
+import cn.lmjia.market.wechat.page.WechatOrderListPage;
+import cn.lmjia.market.wechat.page.WechatRegisterPage;
+import cn.lmjia.market.wechat.page.WechatSharePage;
+import cn.lmjia.market.wechat.page.WechatWithdrawPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import me.jiangcai.wx.model.PublicAccount;
 import me.jiangcai.wx.model.WeixinUserDetail;
@@ -162,7 +167,7 @@ public abstract class WechatTestBase extends DealerServiceTest {
             registerPage.submitSuccessAs(RandomStringUtils.randomAlphabetic(10));
             // 应该进入下单
             assertThat(driver.getTitle())
-                    .isEqualTo("我的下单");
+                    .isEqualTo("商城");
 
             // 这个用户肯定是来自 origin 的
             newUser = loginService.byLoginName(mobile);

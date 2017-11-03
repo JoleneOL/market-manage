@@ -64,7 +64,8 @@ public class WechatInitService {
         //  获取其他菜单，一般就是 a:b|
         String menuPattern = systemStringService.getCustomSystemString(MARKET_FIRST_MENUS
                 , "market.first.menus.comment"
-                , false, String.class, "企业介绍:利每家企业介绍|企业视频:利每家企业宣传片|招商加盟:利每家招商加盟");
+                , false, String.class, "企业介绍:利每家企业介绍|企业视频:利每家企业宣传片");
+        // |招商加盟:利每家招商加盟
 
         log.debug("视图使用的菜单:" + menuPattern);
         Map<String, String> menuMedias = Stream.of(menuPattern.split("\\|"))
@@ -132,7 +133,7 @@ public class WechatInitService {
         );
 
         final Menu menu3 = createMenu("个人中心"
-                , createMenu("推广", systemService.toUrl(SystemService.wechatShareUri))
+                , createMenu("分享", systemService.toUrl(SystemService.wechatShareUri))
                 , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
                 , createMenu("帮助中心",systemService.toUrl(SystemService.helpCenterURi)));
 

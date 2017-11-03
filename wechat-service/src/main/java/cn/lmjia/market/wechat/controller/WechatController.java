@@ -107,7 +107,7 @@ public class WechatController {
         if (login.getGuideUser() != null)
             noticeService.newLogin(login, mobile);
 
-        return "redirect:" + SystemService.wechatOrderURi;
+        return "redirect:" + SystemService.wechatMallIndex;
     }
 
     @GetMapping("/wechatRegister")
