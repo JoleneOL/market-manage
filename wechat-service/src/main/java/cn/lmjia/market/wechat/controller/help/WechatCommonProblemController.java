@@ -27,7 +27,7 @@ public class WechatCommonProblemController {
 
     @GetMapping("/commonProblem/search")
     @ResponseBody
-    public List<CommonProblem> search(String title){
+    public List<CommonProblem> search(@RequestParam("title") String title){
         return commonProblemService.findByTitle(title);
     }
 
