@@ -162,17 +162,34 @@
                                 <div class="col-sm-8">
                                     <div class="form-horizontal J-property">
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">货品主图</label>
                                             <div class="col-sm-9 col-sm-offset-3">
                                                 <div class="upload-container clearfix">
                                                     <div class="js-uploadShow view-upload-show pull-left">
                                                         <!--没有图片就没有-->
                                                         <img th:if="${currentData != null && currentData.mainImg != null}"
                                                              res:src="${currentData.mainImg}"
-                                                             src="http://iph.href.lu/416x312?text=img3" alt="货品图片">
+                                                             src="http://iph.href.lu/416x312?text=img1" alt="货品图片">
                                                     </div>
                                                     <div id="J_uploadProductImg"
                                                          class="view-upload-btn pull-left"></div>
                                                     <input type="hidden" name="productImgPath"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">缩略图（1:1）</label>
+                                            <div class="col-sm-9 col-sm-offset-3">
+                                                <div class="upload-container clearfix">
+                                                    <div class="js-uploadShow view-upload-show pull-left">
+                                                        <!--没有图片就没有-->
+                                                        <img th:if="${currentData != null && currentData.thumbnailImg != null}"
+                                                             res:src="${currentData.thumbnailImg}"
+                                                             src="http://iph.href.lu/416x312?text=img2" alt="缩略图">
+                                                    </div>
+                                                    <div id="J_uploadThumbnailImg"
+                                                         class="view-upload-btn pull-left"></div>
+                                                    <input type="hidden" name="thumbnailImgPath"/>
                                                 </div>
                                             </div>
                                         </div>

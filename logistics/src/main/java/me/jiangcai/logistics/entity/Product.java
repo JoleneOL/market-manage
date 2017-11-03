@@ -108,6 +108,12 @@ public class Product {
      */
     @Column(length = 60)
     private String mainImg;
+
+    /**
+     * 缩略图，缺省时取主图
+     */
+    @Column(length = 60)
+    private String thumbnailImg;
     /**
      * 货品类型
      */
