@@ -10,6 +10,7 @@ import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.MainGoodService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import com.alibaba.fastjson.JSONObject;
 import me.jiangcai.lib.resource.service.ResourceService;
@@ -41,6 +42,8 @@ public class WecharSearchController {
     private ResourceService resourceService;
     @Autowired
     private MainGoodService mainGoodService;
+    @Autowired
+    private SystemService systemService;
 
     @GetMapping("/wechatSearch")
     public String search(HttpServletRequest request,Model model) {
@@ -62,6 +65,7 @@ public class WecharSearchController {
     @GetMapping("/wechatSearch/goodsDetail/{goodsId}")
     public String goodsDetail(@PathVariable Long goodsId, Model model) {
         model.addAttribute("currentData", mainGoodService.findOne(goodsId));
+        model.addAttribute("shareUrl",systemService.toUrl("/wechatSearch/goodsDetail/" + goodsId));
         return "wechat@mall/goodsDetail.html";
     }
 

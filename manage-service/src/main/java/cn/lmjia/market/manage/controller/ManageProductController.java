@@ -152,7 +152,7 @@ public class ManageProductController {
             , @RequestParam("type") String code, String SKU, BigDecimal productPrice, String unit, BigDecimal length
             , BigDecimal width, BigDecimal height, BigDecimal weight, BigDecimal serviceCharge, String productSummary
             , String productDetail, boolean installation
-            , Long productType, String propertyNameValue, String productImgPath, String thumbnailImgPath
+            , Long productType, String propertyNameValue, String productImgPath
             , @RequestParam(required = false, defaultValue = "") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate planSellOutDate) throws IOException {
         MainProduct product;
         if (createNew) {
@@ -211,12 +211,6 @@ public class ManageProductController {
             String productImgResource = "product/" + product.getCode() + "." + FileUtils.fileExtensionName(productImgPath);
             resourceService.moveResource(productImgResource, productImgPath);
             product.setMainImg(productImgResource);
-        }
-        //缩略图转存资源
-        if (!StringUtils.isEmpty(thumbnailImgPath) && thumbnailImgPath.length() > 1){
-            String thumbnailImgResource = "product/" + product.getCode() + "-small"+ "." + FileUtils.fileExtensionName(productImgPath);
-            resourceService.moveResource(thumbnailImgResource,thumbnailImgPath);
-            product.setThumbnailImg(thumbnailImgResource);
         }
         return "redirect:/manageProduct";
     }

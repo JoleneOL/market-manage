@@ -132,10 +132,8 @@ $(function () {
         }
     };
 
-    var uploadProductImg = createUploader('#J_uploadProductImg', 'productImg'),
-        uploadThumbnailImg = createUploader('#J_uploadThumbnailImg','thumbnailImg');
+    var uploadProductImg = createUploader('#J_uploadProductImg', 'productImg');
     Uploader.init(uploadProductImg, '#J_uploadProductImg');
-    Uploader.init(uploadThumbnailImg, '#J_uploadThumbnailImg');
 
     function createUploader(id, fileName) {
         return WebUploader.create({
