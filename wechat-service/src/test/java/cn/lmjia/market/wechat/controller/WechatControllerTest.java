@@ -180,6 +180,7 @@ public class WechatControllerTest extends WechatTestBase {
     }
 
     @Test
+    @Repeat(10)
     public void wechatForwardTest(){
         //首先要有一个转发者
         String rawPassword = UUID.randomUUID().toString();

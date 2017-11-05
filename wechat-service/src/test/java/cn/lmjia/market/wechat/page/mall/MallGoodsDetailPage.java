@@ -54,10 +54,11 @@ public class MallGoodsDetailPage extends AbstractWechatPage {
     }
 
     public void clickBuyNow(){
-        buyNowBtn.click();
+        webDriver.findElements(By.className("js-open-menu")).get(0).click();
         try {
             Thread.sleep(1000);
-        } catch (InterruptedException ignored) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         buyNowBtn.click();
     }
