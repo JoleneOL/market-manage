@@ -37,4 +37,8 @@ public enum Version {
      * 引导者改变
      */
     changeGuide,
+    /**
+     * 商品分享
+     */
+    goodShare
 }

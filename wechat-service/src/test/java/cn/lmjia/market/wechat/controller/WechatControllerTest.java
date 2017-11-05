@@ -18,6 +18,7 @@ import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -187,7 +188,7 @@ public class WechatControllerTest extends WechatTestBase {
         //随便拿一个商品
         MainGood mainGood = mainGoodService.forSale().stream().findAny().get();
         //转发
-        String shareUrl = "http://localhost/wechatForward/" + mainGood.getId() + "_" + login.getId();
+        String shareUrl = "http://localhost/wechatForward/" + mainGood.getId() + "_" + login.getId() + "?from=singlemessage&isappinstalled=0";
 
 
         //1.自己看看

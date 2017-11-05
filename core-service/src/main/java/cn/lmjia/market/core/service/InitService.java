@@ -523,6 +523,8 @@ public class InitService {
                     case changeGuide:
                         jdbcService.tableAlterAddColumn(Login.class, "guideChanged", "0");
                         break;
+                    case goodShare:
+                        jdbcService.tableAlterAddColumn(MainGood.class,"thumbnailImg",null);
                     default:
                 }
 

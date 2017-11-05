@@ -66,7 +66,7 @@ public class WecharSearchController {
     public String goodsDetail(@PathVariable Long goodsId, Model model) {
         MainGood mainGood = mainGoodService.findOne(goodsId);
         model.addAttribute("currentData", mainGood);
-        model.addAttribute("shareUrl", systemService.toUrl("/wechatSearch/goodsDetail/" + goodsId));
+        model.addAttribute("shareUrl", systemService.toUrl("/wechatForward/" + goodsId));
         try {
             if (!StringUtils.isEmpty(mainGood.getThumbnailImg())) {
                 model.addAttribute("shareImg", resourceService.getResource(mainGood.getThumbnailImg()).httpUrl().toString());
