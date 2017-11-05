@@ -38,6 +38,10 @@ public class MallGoodsDetailPage extends AbstractWechatPage {
         assertTitle("商品详情");
     }
 
+    public String getShareUrl() {
+        return webDriver.findElement(By.tagName("body")).getAttribute("data-shareUrl");
+    }
+
     /**
      * 校验某个商品
      *
@@ -49,34 +53,44 @@ public class MallGoodsDetailPage extends AbstractWechatPage {
 
     }
 
+    public void clickBuyNow(){
+        buyNowBtn.click();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {
+        }
+        buyNowBtn.click();
+    }
+
     /**
      * 校验类型相同的商品(假定只有一种规格)
+     *
      * @param sameTypeGoodList
      */
-    public void validateSameTypeGoods(MainGood mainGood,List<MainGood> sameTypeGoodList){
+    public void validateSameTypeGoods(MainGood mainGood, List<MainGood> sameTypeGoodList) {
         //遍历规格
         List<WebElement> propertyList = webDriver.findElements(By.xpath("//div[@class='sku-info']//ul/li"));
         assertThat(propertyList.size()).isGreaterThanOrEqualTo(1);
-        propertyList.forEach(li->{
+        propertyList.forEach(li -> {
             String propertyValue = li.getText();
-            if(mainGood.getProduct().getPropertyNameValues().containsValue(propertyValue)){
+            if (mainGood.getProduct().getPropertyNameValues().containsValue(propertyValue)) {
                 assertThat(li.getAttribute("class").contains("active"));
-            }else{
-                MainGood propertyGood = sameTypeGoodList.stream().filter(p->p.getProduct().getPropertyNameValues().containsValue(propertyValue)).findFirst().orElse(null);
+            } else {
+                MainGood propertyGood = sameTypeGoodList.stream().filter(p -> p.getProduct().getPropertyNameValues().containsValue(propertyValue)).findFirst().orElse(null);
                 assertThat(propertyGood).isNotNull();
-                if(propertyGood.getProduct().getStock() <= 0){
+                if (propertyGood.getProduct().getStock() <= 0) {
                     assertThat(li.getAttribute("class").contains("disabled"));
                 }
             }
         });
     }
 
-    public void addGoodsToCard(){
+    public void addGoodsToCard() {
         List<WebElement> propertyList = webDriver.findElements(By.xpath("//div[@class='sku-info']//ul/li"));
         assertThat(propertyList.size()).isGreaterThanOrEqualTo(1);
         propertyList.stream()
-                .filter(li-> StringUtils.isEmpty(li.getAttribute("class")) || !li.getAttribute("class").contains("disabled"))
-                .forEach(li->{
+                .filter(li -> StringUtils.isEmpty(li.getAttribute("class")) || !li.getAttribute("class").contains("disabled"))
+                .forEach(li -> {
                     openAddCartLink.click();
                     li.click();
                     assertThat(li.getAttribute("class").contains("active"));
@@ -87,5 +101,16 @@ public class MallGoodsDetailPage extends AbstractWechatPage {
                     }
                 });
         toCart.click();
+    }
+
+    public void validateShareUrl(Long goodId, Long shareId) {
+        String shareUrl = getShareUrl();
+        assertThat(shareUrl).isNotEmpty();
+        String goodAndId = shareUrl.substring(shareUrl.lastIndexOf("/") + 1);
+        assertThat(goodAndId.indexOf("_")).isGreaterThanOrEqualTo(-1);
+        assertThat(goodAndId.split("_")[0]).isEqualToIgnoringCase(String.valueOf(goodId));
+        if (shareId != null) {
+            assertThat(goodAndId.split("_")[1]).isEqualToIgnoringCase(String.valueOf(shareId));
+        }
     }
 }

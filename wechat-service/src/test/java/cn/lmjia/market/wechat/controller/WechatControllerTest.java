@@ -9,12 +9,15 @@ import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.LoginPage;
+import cn.lmjia.market.wechat.page.WechatRegisterPage;
+import cn.lmjia.market.wechat.page.mall.MallGoodsDetailPage;
 import cn.lmjia.market.wechat.page.mall.MallIndexPage;
 import cn.lmjia.market.wechat.page.mall.MallSearchPage;
 import cn.lmjia.market.wechat.page.mall.MallTagDetailPage;
 import me.jiangcai.wx.model.WeixinUserDetail;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -173,6 +176,43 @@ public class WechatControllerTest extends WechatTestBase {
         tagDetailPage.validateGoods(mainGoodService.forSale());
 
 
+    }
+
+    @Test
+    public void wechatForwardTest(){
+        //首先要有一个转发者
+        String rawPassword = UUID.randomUUID().toString();
+        Login login = newRandomAgent(rawPassword);
+
+        //随便拿一个商品
+        MainGood mainGood = mainGoodService.forSale().stream().findAny().get();
+        //转发
+        String shareUrl = "http://localhost/wechatForward/" + mainGood.getId() + "_" + login.getId();
+
+
+        //1.自己看看
+        LoginPage loginPage = getLoginPageForBrowseIndex();
+        loginPage.login(login.getLoginName(), rawPassword);
+        driver.get(shareUrl);
+        MallGoodsDetailPage testGoodDetailPage = initPage(MallGoodsDetailPage.class);
+        testGoodDetailPage.validateShareUrl(mainGood.getId(),login.getId());
+
+        //退出登录
+        driver.get("http://localhost/logout");
+
+        //2.在没有Login的情况下访问
+        driver.get(shareUrl);
+        testGoodDetailPage = initPage(MallGoodsDetailPage.class);
+        testGoodDetailPage.validateShareUrl(mainGood.getId(),null);
+
+        //点立即购买，应该是跳转到注册页面
+        testGoodDetailPage.clickBuyNow();
+        testGoodDetailPage.printThisPage();
+        WechatRegisterPage registerPage = initPage(WechatRegisterPage.class);
+
+        //还能访问商城
+        driver.get("http://localhost/wechatIndex");
+        MallIndexPage indexPage = initPage(MallIndexPage.class);
     }
 
 }
