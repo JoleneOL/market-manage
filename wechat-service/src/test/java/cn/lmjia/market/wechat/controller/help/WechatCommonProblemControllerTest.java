@@ -1,5 +1,6 @@
 package cn.lmjia.market.wechat.controller.help;
 
+import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.help.CommonProblemService;
 import cn.lmjia.market.wechat.WechatTestBase;
@@ -18,6 +19,9 @@ public class WechatCommonProblemControllerTest extends WechatTestBase{
     @Test
     public void index() throws Exception {
 
+        Login login = newRandomLogin();
+        updateAllRunWith(login);
+
         String title = RandomStringUtils.randomAscii(10);
         commonProblemService.addAndEditCommonProblem(null, title,RandomStringUtils.randomAscii(20));
 
@@ -27,7 +31,6 @@ public class WechatCommonProblemControllerTest extends WechatTestBase{
         HelpCenterPage page = initPage(HelpCenterPage.class);
 
         page.assertHasTopic(title);
-
 
     }
 
