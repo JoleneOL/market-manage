@@ -44,7 +44,7 @@ public class WechatCommonProblemController {
         return result;
     }
 
-    @GetMapping("/helpCenter/commonProblem")
+    @GetMapping(SystemService.helpCenterURi)
     public String index(){
         return "wechat@helpCenter/index.html";
     }
