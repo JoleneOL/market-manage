@@ -29,7 +29,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
 
     @Override
     @Transactional
-    public CommonProblem addCommonProblem(Long id, String title, String content) {
+    public CommonProblem addAndEditCommonProblem(Long id, String title, String content) {
         CommonProblem commonProblem = null;
         if (id != null) {
             commonProblem = commonProblemRepository.getOne(id);

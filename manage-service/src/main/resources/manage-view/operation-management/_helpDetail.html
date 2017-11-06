@@ -37,7 +37,7 @@
                 <li><strong>新增词条</strong></li>
             </ol>
         </div>
-        <form id="J_helpForm" method="post" action="_helpCenter.html" th:action="@{/manageCommonProblemSubmit}">
+        <form id="J_helpForm" method="post" action="_helpCenter.html" th:action="@{/manage/commonProblemSubmit}">
             <input type="hidden" name="id" th:value="${currentData!=null?currentData.id:null}">
             <div class="row">
                 <div class="col-sm-12">

@@ -25,7 +25,9 @@ public class ManageCommonProblemControllerTest extends ManageServiceTest {
         if(StringUtils.isBlank(title)){
             throw new IllegalArgumentException("");
         }
-        CommonProblem commonProblem = commonProblemService.addCommonProblem(id, title, content);
+        commonProblemService.addAndEditCommonProblem(id, title, content);
+
+        CommonProblem commonProblem = commonProblemService.getOne(id);
         assertThat(commonProblem)
                 .isNotNull();
     }

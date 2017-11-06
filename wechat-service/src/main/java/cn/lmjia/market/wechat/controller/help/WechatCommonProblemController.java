@@ -1,6 +1,7 @@
 package cn.lmjia.market.wechat.controller.help;
 
 import cn.lmjia.market.core.entity.help.CommonProblem;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.help.CommonProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class WechatCommonProblemController {
         return result;
     }
 
-    @GetMapping("/commonProblem")
+    @GetMapping(SystemService.helpCenterURi)
     public String index(){
         return "wechat@helpCenter/index.html";
     }

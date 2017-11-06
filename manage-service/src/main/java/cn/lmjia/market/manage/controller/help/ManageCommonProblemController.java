@@ -36,12 +36,12 @@ public class ManageCommonProblemController {
     private CommonProblemService commonProblemService;
 
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_PRODUCT_CENTER + "','" + Login.ROLE_LOOK + "')")
-    @GetMapping("/manageCommonProblem")
+    @GetMapping("/manage/commonProblem")
     public String index() {
         return "operation-management/_helpCenter.html";
     }
 
-    @GetMapping("/manageCommonProblem/List")
+    @GetMapping("/manage/commonProblemList")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<CommonProblem> data() {
         return new RowDefinition<CommonProblem>() {
@@ -81,24 +81,24 @@ public class ManageCommonProblemController {
     }
 
 
-    @GetMapping("/manageCommonProblemAdd")
+    @GetMapping("/manage/commonProblemAdd")
     public String indexForCreate() {
         return "operation-management/_helpDetail.html";
     }
 
-    @GetMapping("/manageCommonProblemEdit")
+    @GetMapping("/manage/commonProblemEdit")
     public String indexForEdit(long id, Model model) {
         model.addAttribute("currentData", commonProblemService.getOne(id));
         return "operation-management/_helpDetail.html";
     }
 
-    @PostMapping("/manageCommonProblemSubmit")
+    @PostMapping("/manage/commonProblemSubmit")
     public String add(Long id, String title, String content) {
         if (StringUtils.isBlank(title)) {
             throw new IllegalArgumentException("");
         }
-        commonProblemService.addCommonProblem(id, title, content);
-        return "redirect:/manageCommonProblem";
+        commonProblemService.addAndEditCommonProblem(id, title, content);
+        return "redirect:/manage/commonProblem";
     }
 
 

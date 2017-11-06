@@ -58,7 +58,7 @@ public interface SystemService {
     /**
      * 帮助中心URI
      */
-    String helpCenterURi = "/commonProblem";
+    String helpCenterURi = "/helpCenter/commonProblem";
     /**
      * @return 代理体系的层次数量
      */
