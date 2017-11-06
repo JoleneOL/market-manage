@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
@@ -112,6 +113,10 @@ public class WechatController {
         if (login.getGuideUser() != null)
             noticeService.newLogin(login, mobile);
 
+        //重新保存用户信息到上下文中
+        SecurityContext context=SecurityContextHolder.getContext();
+        Authentication auth=new UsernamePasswordAuthenticationToken(login.getLoginName(),login.getPassword());
+        context.setAuthentication(auth);
         return "redirect:" + SystemService.wechatMallIndex;
     }
 

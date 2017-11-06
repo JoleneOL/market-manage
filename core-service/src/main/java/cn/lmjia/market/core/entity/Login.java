@@ -204,6 +204,21 @@ public class Login implements UserDetails {
                 '}';
     }
 
+    /**
+     * 判断当前用户和目标用户是否有引导关系
+     * @param target
+     * @return
+     */
+    public boolean hasRelation(Login target){
+        if(this.equals(target)){
+            return true;
+        }
+        if(target.getGuideUser() == null){
+            return false;
+        }
+        return hasRelation(target.getGuideUser());
+    }
+
     public boolean isRoot() {
         return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ROOT"));
     }

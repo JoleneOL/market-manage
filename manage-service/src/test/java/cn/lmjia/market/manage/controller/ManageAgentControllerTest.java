@@ -12,6 +12,7 @@ import cn.lmjia.market.manage.page.ManageAgentDetailPage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Repeat;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +29,8 @@ public class ManageAgentControllerTest extends ManageServiceTest {
     private LoginRepository loginRepository;
 
     @Test
-    public void go() throws InterruptedException {
+    @Repeat(10)
+    public void go() throws Exception {
 
         Login als[] = new Login[systemService.systemLevel()];
         AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
@@ -39,6 +41,7 @@ public class ManageAgentControllerTest extends ManageServiceTest {
 
         toTestAgent.getLogin().setGuideUser(als[als.length - 1]);
         loginRepository.save(toTestAgent.getLogin());
+        System.out.println(toTestAgent.getLogin().toString());
 
         // 让他拥有几个直接客户 并且成功下单了！
         addSubUserFor(toTestAgent.getLogin());
@@ -70,6 +73,7 @@ public class ManageAgentControllerTest extends ManageServiceTest {
                 .isEqualTo(readService.nameForPrincipal(toTestAgent.getLogin().getGuideUser()));
 
         // 新增一个Login?
+        // TODO: 2017/11/6 如何保证newLogin 和 toTestAgent 没关系？ 如果有关系正好测试一下是否返回失败?
         Login newLogin = newRandomLogin();
         page.changeGuide(newLogin);
 
