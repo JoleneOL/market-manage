@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="../../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small view-help-center" data-search-url="/api/search" th:data-search-url="@{/commonProblem/search}">
+<body class="view-bg-color view-fs-small view-help-center"
+      data-search-url="/api/search" th:data-search-url="@{/commonProblem/search}" data-detail-url="helpDetail.html?id=" th:data-detail-url="/commonProblemDetail/">
 <div class="weui-search-bar">
     <div class="weui-search-bar__form">
         <div class="weui-search-bar__box">
@@ -166,5 +167,5 @@
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="../../mock/mock-min.js" th:remove="all"></script>
 <script src="../../mock/extend.js" th:remove="all"></script>
-<script src="../../wechat-resource/assets/js/helpCenter/helpCenter.js"  th:src="@{/wechat-resource/assets/js/helpCenter/help.js}"></script>
+<script src="../../wechat-resource/assets/js/helpCenter/helpCenter.js"></script>
 </html>
