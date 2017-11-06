@@ -11,9 +11,11 @@ import cn.lmjia.market.core.entity.deal.pk.OrderCommissionPK;
 import cn.lmjia.market.core.entity.support.CommissionType;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.event.MainOrderFinishEvent;
+import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.repository.deal.OrderCommissionRepository;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.dealer.service.AgentService;
 import cn.lmjia.market.dealer.service.CommissionRateService;
 import cn.lmjia.market.dealer.service.CommissionSettlementService;
@@ -28,6 +30,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 /**
@@ -49,6 +52,10 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
     private MainOrderService mainOrderService;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private SystemService systemService;
+    @Autowired
+    private AgentLevelRepository agentLevelRepository;
 
     @EventListener(MainOrderFinishEvent.class)
     @ThreadSafe
@@ -94,15 +101,40 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
 
         orderCommission = orderCommissionRepository.save(orderCommission);
 
-        // 给予奖励的目标
-        final Login orderBy = mainOrderService.getEnjoyability(order);
+        // 先确定分销模型
+        final Login firstOrderBy = mainOrderService.getEnjoyability(order);
+
+        final Login orderBy;
+        if (systemService.isSplitMarketingCommission()) {
+            // 是否切割 切割的话
+            if (systemService.isAgentGainAllMarketing() && agentLevelRepository.countByLogin(firstOrderBy) > 0) {
+                orderBy = firstOrderBy;
+            } else
+                orderBy = mainOrderService.getEnjoyability(firstOrderBy);
+            //
+            // 先获得销售奖的归属
+            // 给予奖励的目标
+        } else {
+            orderBy = firstOrderBy;
+        }
 
         AgentSystem system = agentService.agentSystem(orderBy);
+        final BigDecimal saleRate;
+        final CommissionType marketing;
+        if (systemService.isSplitMarketingCommission()) {
+            saleRate = commissionRateService.saleRate(system).setScale(5, BigDecimal.ROUND_HALF_UP).divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+            marketing = CommissionType.firstGuide;
+
+            saveCommission(orderCommission, null, firstOrderBy, saleRate, CommissionType.firstMarketing);
+        } else {
+            saleRate = commissionRateService.saleRate(system);
+            marketing = CommissionType.directMarketing;
+        }
         // 开始分派！
         // 谁可以获得？
         {
             // 销售者
-            saveCommission(orderCommission, null, orderBy, commissionRateService.saleRate(system), CommissionType.directMarketing);
+            saveCommission(orderCommission, null, orderBy, saleRate, marketing);
         }
 
         AgentLevel[] sales = agentService.agentLine(orderBy);
