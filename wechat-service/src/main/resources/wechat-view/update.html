@@ -203,13 +203,13 @@
     <div class="weui-popup__modal">
         <div class="weui-tab">
             <div class="weui-navbar">
-                <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+                <a class="weui-navbar__item weui-bar__item--on" href="#tab1" th:text="${@readService.getLoginTitle(4)}">
                     经销商
                 </a>
-                <a class="weui-navbar__item" href="#tab2">
+                <a class="weui-navbar__item" href="#tab2" th:text="${@readService.getLoginTitle(3)}">
                     区县代理
                 </a>
-                <a class="weui-navbar__item" href="#tab3">
+                <a class="weui-navbar__item" href="#tab3" th:text="${@readService.getLoginTitle(2)}">
                     市级代理
                 </a>
             </div>

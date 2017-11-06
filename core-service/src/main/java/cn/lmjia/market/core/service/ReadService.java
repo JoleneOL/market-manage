@@ -125,9 +125,9 @@ public interface ReadService {
             case 1:
                 return "超级代理";
             case 2:
-                return "市级代理";// 5% 1% 区域服务费 1%
+                return "合伙人";// 5% 1% 区域服务费 1%
             case 3:
-                return "区县代理";// 5% 1% 未来再实现的1%
+                return "运营商";// 5% 1% 未来再实现的1%
             case 4:
                 return "经销商";// 5% 1%
             case Customer.LEVEL:
