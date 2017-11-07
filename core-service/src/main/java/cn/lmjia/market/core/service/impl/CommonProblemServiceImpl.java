@@ -69,7 +69,8 @@ public class CommonProblemServiceImpl implements CommonProblemService {
             Predicate p = cb.isTrue(root.get(CommonProblem_.enable));
             Predicate p1 = null;
             if (StringUtils.isNotEmpty(keyword)) {
-                p1 = cb.or(cb.like(root.get(CommonProblem_.content), "%" + keyword + "%"), cb.like(root.get(CommonProblem_.title), "%" + keyword + "%"));
+                p1 = cb.or(cb.like(root.get(CommonProblem_.content), "%" + keyword + "%"),
+                        cb.like(root.get(CommonProblem_.title), "%" + keyword + "%"));
             }
             return cb.and(p,p1);
         },new Sort(Sort.Direction.DESC, CommonProblem_.weight.getName()));

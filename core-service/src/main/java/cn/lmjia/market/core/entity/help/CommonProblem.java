@@ -60,36 +60,6 @@ public class CommonProblem {
     private LocalDateTime updateTime;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CommonProblem that = (CommonProblem) o;
-
-        if (enable != that.enable) return false;
-        if (hot != that.hot) return false;
-        if (weight != that.weight) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (content != null ? !content.equals(that.content) : that.content != null) return false;
-        if (createTime != null ? !createTime.equals(that.createTime) : that.createTime != null) return false;
-        return updateTime != null ? updateTime.equals(that.updateTime) : that.updateTime == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (content != null ? content.hashCode() : 0);
-        result = 31 * result + (enable ? 1 : 0);
-        result = 31 * result + (hot ? 1 : 0);
-        result = 31 * result + weight;
-        result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
-        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "CommonProblem{" +
                 "id=" + id +
