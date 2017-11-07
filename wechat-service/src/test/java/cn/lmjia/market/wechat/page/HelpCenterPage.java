@@ -13,7 +13,7 @@ public class HelpCenterPage extends AbstractWechatPage {
 
     @Override
     public void validatePage() {
-        assertTitle("帮助中心");
+        assertTitle("帮助");
     }
 
     /**

@@ -6,6 +6,7 @@ import cn.lmjia.market.core.repository.help.CommonProblemRepository;
 import cn.lmjia.market.core.service.help.CommonProblemService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
 
     @Override
     @Transactional
-    public CommonProblem addAndEditCommonProblem(Long id, String title, String content) {
+    public CommonProblem addAndEditCommonProblem(Long id, String title, Integer weight, String content) {
         CommonProblem commonProblem = null;
         if (id != null) {
             commonProblem = commonProblemRepository.getOne(id);
@@ -39,9 +40,11 @@ public class CommonProblemServiceImpl implements CommonProblemService {
             commonProblem.setCreateTime(LocalDateTime.now());
         }
         commonProblem.setTitle(title);
+        commonProblem.setWeight(weight);
         commonProblem.setContent(content);
         commonProblem.setEnable(true);
-        commonProblem.setWeight(false);
+        //默认是不首页展示的
+        commonProblem.setHot(false);
         commonProblemRepository.save(commonProblem);
         return commonProblem;
     }
@@ -52,7 +55,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
         List<CommonProblem> result = commonProblemRepository.findAll((root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             predicateList.add(cb.isTrue(root.get(CommonProblem_.enable)));
-            predicateList.add(cb.isTrue(root.get(CommonProblem_.isWeight)));
+            predicateList.add(cb.isTrue(root.get(CommonProblem_.hot)));
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         });
         return result;
@@ -69,7 +72,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
                 p1 = cb.or(cb.like(root.get(CommonProblem_.content), "%" + keyword + "%"), cb.like(root.get(CommonProblem_.title), "%" + keyword + "%"));
             }
             return cb.and(p,p1);
-        });
+        },new Sort(Sort.Direction.DESC, "weight"));
         return result;
     }
 

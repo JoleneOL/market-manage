@@ -38,9 +38,14 @@ public class CommonProblem {
     private boolean enable=true;
 
     /**
-     * 权重,是否在常见问题列表里展示.
+     * 是否在常见问题列表里展示.
      */
-    private boolean isWeight;
+    private boolean hot;
+
+    /**
+     * 权重,排序.
+     */
+    private int weight = 50;
 
     /**
      * 创建时间
@@ -62,7 +67,8 @@ public class CommonProblem {
         CommonProblem that = (CommonProblem) o;
 
         if (enable != that.enable) return false;
-        if (isWeight != that.isWeight) return false;
+        if (hot != that.hot) return false;
+        if (weight != that.weight) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         if (content != null ? !content.equals(that.content) : that.content != null) return false;
@@ -76,7 +82,8 @@ public class CommonProblem {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (enable ? 1 : 0);
-        result = 31 * result + (isWeight ? 1 : 0);
+        result = 31 * result + (hot ? 1 : 0);
+        result = 31 * result + weight;
         result = 31 * result + (createTime != null ? createTime.hashCode() : 0);
         result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
         return result;
@@ -89,7 +96,8 @@ public class CommonProblem {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", enable=" + enable +
-                ", isWeight=" + isWeight +
+                ", hot=" + hot +
+                ", weight=" + weight +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

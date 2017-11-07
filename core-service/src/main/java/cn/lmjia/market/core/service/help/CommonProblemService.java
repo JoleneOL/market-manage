@@ -18,9 +18,10 @@ public interface CommonProblemService {
      * 添加与修改常见问题
      * @param id 常见问题id,添加时可以为null.
      * @param title 标题
+     * @param weight
      * @param content 内容
      */
-    CommonProblem addAndEditCommonProblem(Long id,String title,String content);
+    CommonProblem addAndEditCommonProblem(Long id, String title, Integer weight, String content);
 
     /**
      * @return 所有直接展示在微信端的常见问题.

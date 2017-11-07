@@ -17,7 +17,10 @@ $(function () {
                 "title": "状态", "data": "enableLabel", "name": "enableLabel",
             },
             {
-                "title": "首页展示状态", "data": "isWeightLabel", "name": "isWeightLabel",
+                "title": "首页展示状态", "data": "isHotLabel", "name": "isHotLabel",
+            },
+            {
+                "title": "权重", "data": "weight", "name": "weight",
             },
             {
                 title: "操作",
@@ -29,11 +32,11 @@ $(function () {
                     }
                     else
                         a += '<a href="javascript:;" class="js-enable" data-id="' + item.id + '"><i class="fa fa-unlock"></i>&nbsp;启用</a>';
-                    if (item.isWeight) {
-                        a += '<a href="javascript:;" class="js-notWeightLabel" data-id="' + item.id + '" ><i class="fa fa-lock"></i>&nbsp;隐藏</a>';
+                    if (item.hot) {
+                        a += '<a href="javascript:;" class="js-notHotLabel" data-id="' + item.id + '" ><i class="fa fa-lock"></i>&nbsp;隐藏</a>';
                     }
                     else
-                        a += '<a href="javascript:;" class="js-isWeightLabel" data-id="' + item.id + '"><i class="fa fa-unlock"></i>&nbsp;展示</a>';
+                        a += '<a href="javascript:;" class="js-isHotLabel" data-id="' + item.id + '"><i class="fa fa-unlock"></i>&nbsp;展示</a>';
                     return a;
                 }
             }
@@ -83,9 +86,9 @@ $(function () {
                 layer.msg('服务器异常');
             }
         })
-    }).on('click', '.js-notWeightLabel', function () {
+    }).on('click', '.js-notHotLabel', function () {
         var id = $(this).data('id');
-        $.ajax('/help/' + id + '/notWeightLabel', {
+        $.ajax('/help/' + id + '/notHotLabel', {
             method: 'put',
             success: function () {
                 table.ajax.reload();
@@ -94,9 +97,9 @@ $(function () {
                 layer.msg('服务器异常');
             }
         })
-    }).on('click', '.js-isWeightLabel', function () {
+    }).on('click', '.js-isHotLabel', function () {
         var id = $(this).data('id');
-        $.ajax('/help/' + id + '/isWeightLabel', {
+        $.ajax('/help/' + id + '/isHotLabel', {
             method: 'put',
             success: function () {
                 table.ajax.reload();

@@ -56,6 +56,8 @@ public class ManageCommonProblemController {
                         Fields.asBasic("id")
                         , FieldBuilder.asName(CommonProblem.class, "title")
                                 .build()
+                        , FieldBuilder.asName(CommonProblem.class, "weight")
+                                .build()
                         , Fields.asBasic("enable")
                         , FieldBuilder.asName(CommonProblem.class, "enableLabel")
                                 .addSelect(CommonProblemRoot -> CommonProblemRoot.get(CommonProblem_.enable))
@@ -63,13 +65,13 @@ public class ManageCommonProblemController {
                                     boolean enable = (boolean) data;
                                     return enable ? "启用" : "禁用";
                                 }).build()
-                        , FieldBuilder.asName(CommonProblem.class, "isWeightLabel")
-                                .addSelect(CommonProblemRoot -> CommonProblemRoot.get(CommonProblem_.isWeight))
+                        , FieldBuilder.asName(CommonProblem.class, "isHotLabel")
+                                .addSelect(CommonProblemRoot -> CommonProblemRoot.get(CommonProblem_.hot))
                                 .addFormat((data, type) -> {
-                                    boolean isWeight = (boolean) data;
-                                    return isWeight ? "展示" : "隐藏";
+                                    boolean hot = (boolean) data;
+                                    return hot ? "展示" : "隐藏";
                                 }).build()
-                        , Fields.asBasic("isWeight")
+                        , Fields.asBasic("hot")
                 );
             }
 
@@ -93,11 +95,12 @@ public class ManageCommonProblemController {
     }
 
     @PostMapping("/manage/commonProblemSubmit")
-    public String add(Long id, String title, String content) {
+    public String add(Long id, String title, Integer weight,String content) {
         if (StringUtils.isBlank(title)) {
             throw new IllegalArgumentException("");
         }
-        commonProblemService.addAndEditCommonProblem(id, title, content);
+        weight = weight == null ? 50 : weight;
+        commonProblemService.addAndEditCommonProblem(id, title, weight,content);
         return "redirect:/manage/commonProblem";
     }
 
@@ -118,19 +121,19 @@ public class ManageCommonProblemController {
         commonProblem.setEnable(false);
     }
 
-    @PutMapping("/help/{id}/isWeightLabel")
+    @PutMapping("/help/{id}/isHotLabel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void isWeightLabel(@PathVariable("id") long id) {
+    public void isHotLabel(@PathVariable("id") long id) {
         CommonProblem commonProblem = commonProblemService.getOne(id);
-        commonProblem.setWeight(true);
+        commonProblem.setHot(true);
     }
 
-    @PutMapping("/help/{id}/notWeightLabel")
+    @PutMapping("/help/{id}/notHotLabel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void notWeightLabel(@PathVariable("id") long id) {
+    public void notHotLabel(@PathVariable("id") long id) {
         CommonProblem commonProblem = commonProblemService.getOne(id);
-        commonProblem.setWeight(false);
+        commonProblem.setHot(false);
     }
 }

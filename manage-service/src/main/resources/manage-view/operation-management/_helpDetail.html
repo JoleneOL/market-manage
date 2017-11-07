@@ -33,7 +33,7 @@
     <div class="ibox">
         <div class="ibox-content">
             <ol class="breadcrumb">
-                <li><a href="_helpCenter.html" th:href="@{/manageCommonProblem}">帮助中心</a></li>
+                <li><a href="_helpCenter.html" th:href="@{/manage/commonProblem}">帮助中心</a></li>
                 <li><strong>新增词条</strong></li>
             </ol>
         </div>
@@ -58,6 +58,15 @@
                                                            th:value="${currentData!=null?currentData.title:null}"
                                                            class="form-control"
                                                            name="title" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">词条权重 <span>&nbsp</span></label>
+                                                <div class="col-sm-6">
+                                                    <input type="text" placeholder="请输入权重,默认值50"
+                                                           th:value="${currentData!=null?currentData.weight:null}"
+                                                           class="form-control"
+                                                           name="weight">
                                                 </div>
                                             </div>
                                             <!--TODO 目前可以没有-->

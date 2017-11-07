@@ -2,7 +2,7 @@ Mock.setup({
     timeout: 1000
 });
 
-Mock.mock(/\/manageCommonProblem\/List/, {
+Mock.mock(/\/manage\/commonProblemList/, {
     "draw": 1,
     "recordsTotal": 23,
     "recordsFiltered": 23,
@@ -13,8 +13,8 @@ Mock.mock(/\/manageCommonProblem\/List/, {
             /*'updateTime': '@datetime("yyyy-MM-dd")',*/
             'enableLabel': '@pick(启用, 禁用)',
             'enable': '@pick([true, false])',
-            'isWeightLabel':'@pick(展示,隐藏)',
-            'isWeight':'@pick([true, false])'
+            'isHotLabel':'@pick(展示,隐藏)',
+            'weight':'50'
         }
     ]
 });
