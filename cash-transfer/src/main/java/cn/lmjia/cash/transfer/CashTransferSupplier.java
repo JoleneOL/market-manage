@@ -17,6 +17,12 @@ import java.util.Map;
 public interface CashTransferSupplier {
 
     /**
+     *
+     * @return 该供应商的名字
+     */
+    String getName();
+
+    /**
      * @param owner 在单业务主场景下，这个参数是可选的
      * @return 可用余额
      * @throws IOException                 网络异常

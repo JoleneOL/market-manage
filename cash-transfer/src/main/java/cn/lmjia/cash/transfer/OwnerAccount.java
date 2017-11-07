@@ -10,7 +10,7 @@ public interface OwnerAccount {
     /**
      * @return 付款账号
      */
-    String getAcctId();
+    String getAccountNum();
 
     /**
      * @return 付款人姓名
@@ -30,5 +30,5 @@ public interface OwnerAccount {
     /**
      * @return 访问供应商的登录信息.
      */
-    Map<String,String> getSonrq();
+    Map<String,String> getLoginInformation();
 }

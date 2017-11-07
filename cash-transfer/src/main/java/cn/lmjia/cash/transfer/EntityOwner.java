@@ -7,10 +7,10 @@ package cn.lmjia.cash.transfer;
  */
 public interface EntityOwner {
     /**
-     * @param fbank 选择付款的银行.也是选择供应商
+     * @param supplierName 选择付款的银行.也是选择供应商
      * @return 当前主体的对应银行的账户信息
      */
-    OwnerAccount getOwnerAccount(String fbank);
+    OwnerAccount getOwnerAccount(String supplierName);
 
     /**
      * @return 获取主体的名称,可以是公司名,法人,自然人名

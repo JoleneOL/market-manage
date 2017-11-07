@@ -11,7 +11,7 @@ import cn.lmjia.cash.transfer.exception.BadAccessException;
 import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
 import cn.lmjia.cash.transfer.exception.TransferFailureException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.StatusLine;
@@ -164,6 +164,11 @@ public class CjbSupplierImpl implements CjbSupplier {
     }
 
     @Override
+    public String getName() {
+        return "兴业银行";
+    }
+
+    @Override
     public BigDecimal queryBalance(EntityOwner owner) throws IOException, SupplierApiUpgradeException, BadAccessException {
         return null;
     }
@@ -226,7 +231,7 @@ public class CjbSupplierImpl implements CjbSupplier {
      * @return 登录指令对象
      */
     private SignonMsgsRQV1 usSonrq(OwnerAccount account) {
-        Map<String, String> message = account.getSonrq();
+        Map<String, String> message = account.getLoginInformation();
         SignonMsgsRQV1 signonMsgsRQV1 = new SignonMsgsRQV1();
         Sonrq sonrq = new Sonrq();
         sonrq.setCid(message.get("cid"));
@@ -256,7 +261,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         XferInfo xferInfo = new XferInfo();
         //付款人账户信息
         Acctfrom acctfrom = new Acctfrom();
-        acctfrom.setAcctId(account.getAcctId());
+        acctfrom.setAcctId(account.getAccountNum());
         acctfrom.setBankDesc(account.getBankDesc());
         acctfrom.setCity(account.getCity());
         acctfrom.setName(account.getName());

@@ -18,10 +18,11 @@ public interface CashTransferService {
     /**
      * 转账服务
      * @param supplier 供应商
-     * @param owner 主体
-     * @param fBank 主体选择付款的银行
+     * @param owner 主体;在单主体的环境中可以传空
      * @param cashReceiver 现金接受者信息
      * @return 请求处理结果
      */
-    Map<String, Object> cashTransfer(CashTransferSupplier supplier, EntityOwner owner,String fBank, CashReceiver cashReceiver) throws SupplierApiUpgradeException, BadAccessException, TransferFailureException, IOException;
+    Map<String, Object> cashTransfer(CashTransferSupplier supplier, EntityOwner owner,
+                                     CashReceiver cashReceiver) throws SupplierApiUpgradeException, BadAccessException
+            , TransferFailureException, IOException;
 }

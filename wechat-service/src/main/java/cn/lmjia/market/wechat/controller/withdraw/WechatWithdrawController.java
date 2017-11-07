@@ -80,10 +80,6 @@ public class WechatWithdrawController {
     private UserNoticeService userNoticeService;
     @Autowired
     private SystemService systemService;
-    @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private EntityOwner owner;
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
         return "wechat@withdrawRecord.html";
@@ -160,20 +156,7 @@ public class WechatWithdrawController {
             //无发票自动转账
             WithdrawRequest withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
                     , null);
-            CashTransferSupplier supplier = (CashTransferSupplier) applicationContext.getBean("CjbSupplier");
-            try {
-                supplier.cashTransfer(owner.getOwnerAccount("CjbSupplier"),withdrawRequest);
-                withdrawRequest.setWithdrawStatus(WithdrawStatus.success);
-            } catch (SupplierApiUpgradeException e) {
-                e.printStackTrace();
-                log.error(e.getMessage());
-            } catch (BadAccessException e) {
-                e.printStackTrace();
-                log.error(e.getMessage());
-            } catch (TransferFailureException e) {
-                e.printStackTrace();
-                log.error(e.getMessage());
-            }
+
         }
         model.addAttribute("badCode", false);
         return toVerify(login, model, withdraw);
