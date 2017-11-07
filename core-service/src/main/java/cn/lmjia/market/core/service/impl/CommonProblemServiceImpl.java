@@ -43,7 +43,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
         commonProblem.setWeight(weight);
         commonProblem.setContent(content);
         commonProblem.setEnable(true);
-        //默认是不首页展示的
+        //默认是不在微信帮助首页展示的
         commonProblem.setHot(false);
         commonProblemRepository.save(commonProblem);
         return commonProblem;
@@ -72,7 +72,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
                 p1 = cb.or(cb.like(root.get(CommonProblem_.content), "%" + keyword + "%"), cb.like(root.get(CommonProblem_.title), "%" + keyword + "%"));
             }
             return cb.and(p,p1);
-        },new Sort(Sort.Direction.DESC, "weight"));
+        },new Sort(Sort.Direction.DESC, CommonProblem_.weight.getName()));
         return result;
     }
 
