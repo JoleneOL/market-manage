@@ -106,18 +106,23 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
 
         final Login orderBy;
         if (systemService.isSplitMarketingCommission()) {
+            log.debug("切割销售奖，首笔销售奖给予：" + firstOrderBy);
             // 是否切割 切割的话
             if (systemService.isAgentGainAllMarketing() && agentLevelRepository.countByLogin(firstOrderBy) > 0) {
                 orderBy = firstOrderBy;
+                log.debug("身份为代理商获取所有销售奖。");
             } else if (systemService.isOnlyAgentGainFirstGuide()) {
                 // 只给代理商
                 Login c = firstOrderBy;
                 while (agentLevelRepository.countByLogin(c) == 0) {
-                    c = mainOrderService.getEnjoyability(c);
+                    c = mainOrderService.getEnjoyability(c.getGuideUser());
                 }
                 orderBy = c;
-            } else
-                orderBy = mainOrderService.getEnjoyability(firstOrderBy);
+                log.debug("代理商需获取首笔推荐，给予：" + orderBy);
+            } else {
+                orderBy = mainOrderService.getEnjoyability(firstOrderBy.getGuideUser());
+                log.debug("首笔推荐奖励给予：" + orderBy);
+            }
             //
             // 先获得销售奖的归属
             // 给予奖励的目标
