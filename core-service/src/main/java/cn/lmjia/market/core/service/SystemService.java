@@ -140,6 +140,13 @@ public interface SystemService {
     void updateSplitMarketingCommission(boolean value);
 
     /**
+     * @return 在 {@link #isSplitMarketingCommission() 分割}的前提下是否只有代理商可以获得推荐奖。
+     */
+    boolean isOnlyAgentGainFirstGuide();
+
+    void updateOnlyAgentGainFirstGuide(boolean value);
+
+    /**
      * @return 代理商将获取全部销售奖 不再切割给别人
      */
     boolean isAgentGainAllMarketing();

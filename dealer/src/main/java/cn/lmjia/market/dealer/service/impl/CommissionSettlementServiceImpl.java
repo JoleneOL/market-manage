@@ -109,6 +109,13 @@ public class CommissionSettlementServiceImpl implements CommissionSettlementServ
             // 是否切割 切割的话
             if (systemService.isAgentGainAllMarketing() && agentLevelRepository.countByLogin(firstOrderBy) > 0) {
                 orderBy = firstOrderBy;
+            } else if (systemService.isOnlyAgentGainFirstGuide()) {
+                // 只给代理商
+                Login c = firstOrderBy;
+                while (agentLevelRepository.countByLogin(c) == 0) {
+                    c = mainOrderService.getEnjoyability(c);
+                }
+                orderBy = c;
             } else
                 orderBy = mainOrderService.getEnjoyability(firstOrderBy);
             //

@@ -65,6 +65,17 @@ public class SystemServiceImpl implements SystemService {
     }
 
     @Override
+    public boolean isOnlyAgentGainFirstGuide() {
+        return systemStringService.getCustomSystemString("market.OnlyAgentGainFirstGuide"
+                , "market.OnlyAgentGainFirstGuide.comment", true, Boolean.class, false);
+    }
+
+    @Override
+    public void updateOnlyAgentGainFirstGuide(boolean value) {
+        systemStringService.updateSystemString("market.OnlyAgentGainFirstGuide", value);
+    }
+
+    @Override
     public boolean isSplitMarketingCommission() {
         return systemStringService.getCustomSystemString("market.SplitMarketingCommission"
                 , null, true, Boolean.class, false);
