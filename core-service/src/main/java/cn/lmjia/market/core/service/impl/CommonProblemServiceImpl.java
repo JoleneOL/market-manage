@@ -38,13 +38,13 @@ public class CommonProblemServiceImpl implements CommonProblemService {
         } else {
             commonProblem = new CommonProblem();
             commonProblem.setCreateTime(LocalDateTime.now());
+            commonProblem.setHot(false);
         }
         commonProblem.setTitle(title);
         commonProblem.setWeight(weight);
         commonProblem.setContent(content);
         commonProblem.setEnable(true);
         //默认是不在微信帮助首页展示的
-        commonProblem.setHot(false);
         commonProblemRepository.save(commonProblem);
         return commonProblem;
     }
@@ -57,7 +57,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
             predicateList.add(cb.isTrue(root.get(CommonProblem_.enable)));
             predicateList.add(cb.isTrue(root.get(CommonProblem_.hot)));
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
-        });
+        },new Sort(Sort.Direction.DESC, CommonProblem_.weight.getName()));
         return result;
     }
 
@@ -73,7 +73,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
                         cb.like(root.get(CommonProblem_.title), "%" + keyword + "%"));
             }
             return cb.and(p,p1);
-        },new Sort(Sort.Direction.DESC, CommonProblem_.weight.getName()));
+        });
         return result;
     }
 
