@@ -7,6 +7,12 @@ import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.entity.Tag;
 import cn.lmjia.market.core.entity.channel.Channel;
+import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment;
+import cn.lmjia.market.core.entity.financing.AgentGoodAdvancePayment_;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder;
+import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder_;
+import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.entity.support.TagType;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import me.jiangcai.jpa.entity.support.Address;
@@ -16,10 +22,13 @@ import me.jiangcai.logistics.entity.ProductType;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -76,6 +85,35 @@ public interface ReadService {
 //                , nameForLogin(customerFrom.join(Customer_.login), criteriaBuilder));
 //    }
 
+    static Expression<BigDecimal> currentGoodAdvancePaymentBalance(Expression<? extends Login> loginFrom
+            , CriteriaBuilder cb, CriteriaQuery<?> cq) {
+        Subquery<BigDecimal> add = cq.subquery(BigDecimal.class);
+        Root<AgentGoodAdvancePayment> root = add.from(AgentGoodAdvancePayment.class);
+        add = add
+                .select(cb.sum(root.get(AgentGoodAdvancePayment_.amount)))
+                .where(
+                        cb.equal(root.get(AgentGoodAdvancePayment_.login), loginFrom)
+                        , AgentGoodAdvancePayment.isSuccessPayment(root, cb)
+                );
+
+        Subquery<BigDecimal> ordered = cq.subquery(BigDecimal.class);
+
+        // 减去非关闭的订单
+        Root<AgentPrepaymentOrder> orderRoot = ordered.from(AgentPrepaymentOrder.class);
+        ordered = ordered.select(cb.sum(orderRoot.get(AgentPrepaymentOrder_.goodTotalPriceAmountIndependent)))
+                .where(cb.and(
+                        cb.equal(orderRoot.get(AgentPrepaymentOrder_.belongs), loginFrom)
+                        , cb.notEqual(orderRoot.get(AgentPrepaymentOrder_.orderStatus), OrderStatus.close)
+                ));
+
+        return cb.diff(cb.<Boolean, BigDecimal>selectCase(add.isNull())
+                        .when(true, BigDecimal.ZERO)
+                        .otherwise(add)
+                , cb.<Boolean, BigDecimal>selectCase(ordered.isNull())
+                        .when(true, BigDecimal.ZERO)
+                        .otherwise(ordered));
+    }
+
     /**
      * @param i 登录者级别；可以视作代理级别
      * @return 登录标题
@@ -87,9 +125,9 @@ public interface ReadService {
             case 1:
                 return "超级代理";
             case 2:
-                return "市级代理";// 5% 1% 区域服务费 1%
+                return "合伙人";// 5% 1% 区域服务费 1%
             case 3:
-                return "区县代理";// 5% 1% 未来再实现的1%
+                return "运营商";// 5% 1% 未来再实现的1%
             case 4:
                 return "经销商";// 5% 1%
             case Customer.LEVEL:
@@ -102,6 +140,12 @@ public interface ReadService {
     }
 
     /**
+     * @param agentLevel 代理商
+     * @return 一个代理商的完整名称
+     */
+    String nameForAgent(AgentLevel agentLevel);
+
+    /**
      * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}
      * @return 手机号码；或者一个空字符串
      */
@@ -112,6 +156,13 @@ public interface ReadService {
      * @return 名字；或者登录名
      */
     String nameForPrincipal(Object principal);
+
+    /**
+     * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}
+     * @param delimiter 链接字符
+     * @return 用delimiter连接principal的曾用名
+     */
+    String joinUsedNamesForPrincipal(Object principal, CharSequence delimiter);
 
     /**
      * @param principal 身份；通常是一个{@link cn.lmjia.market.core.entity.Login}

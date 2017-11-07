@@ -36,6 +36,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -148,6 +149,8 @@ public class LogisticsServiceImpl implements LogisticsService {
     }
 
     private Map<Depot, Map<Product, Integer>> getDepotInfo(Map<? extends Product, Integer> wantShipProduct) {
+        if (wantShipProduct.isEmpty())
+            return Collections.emptyMap();
         Map<Depot, Map<Product, Integer>> depotInfo = new HashMap<>();
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<UsageStock> cq = cb.createQuery(UsageStock.class);
@@ -184,6 +187,8 @@ public class LogisticsServiceImpl implements LogisticsService {
                 if (require.get(product.getProduct()) - product.getAmount() < 0)
                     throw new UnnecessaryShipException(product.getProduct());
             }
+
+            order.updateLastShiftDestination(destination);
         }
         LogisticsSupplier supplier;
         if (supplier1 == null) {

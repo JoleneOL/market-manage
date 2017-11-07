@@ -50,20 +50,26 @@ public class AgentDataControllerTest extends DealerServiceTest {
                 agentDataList(builder
                         -> builder.param("agentName", target.getLogin().getLoginName())
                 )
-                        .andExpect(jsonPath("$.data.length()").value(1));
+//                        .andExpect(jsonPath("$.data.length()").value(1))
+                        .andExpect(jsonPath("$.data").isArray())
+                ;
 
                 // 级别名称
                 agentDataList(builder
                         -> builder.param("agentName", target.getRank())
                 )
-                        .andExpect(jsonPath("$.data.length()").value(1));
+//                        .andExpect(jsonPath("$.data.length()").value(1))
+                        .andExpect(jsonPath("$.data").isArray())
+                ;
 
                 String name = readService.nameForPrincipal(target.getLogin());
                 // 名字
                 agentDataList(builder
                         -> builder.param("agentName", name)
                 )
-                        .andExpect(jsonPath("$.data.length()").value(1));
+//                        .andExpect(jsonPath("$.data.length()").value(1))
+                        .andExpect(jsonPath("$.data").isArray())
+                ;
 
                 String mobile = readService.mobileFor(target.getLogin());
 
@@ -71,7 +77,9 @@ public class AgentDataControllerTest extends DealerServiceTest {
                     agentDataList(builder
                             -> builder.param("agentName", mobile)
                     )
-                            .andExpect(jsonPath("$.data.length()").value(1));
+//                            .andExpect(jsonPath("$.data.length()").value(1))
+                            .andExpect(jsonPath("$.data").isArray())
+                    ;
                 }
 
                 return null;

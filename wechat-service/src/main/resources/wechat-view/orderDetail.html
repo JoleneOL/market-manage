@@ -98,16 +98,68 @@
             <p class="view-order_ex_title text-gray">订单时间：<span th:text="${{order.orderTime}}">2000-04-07</span></p>
         </div>
     </div>
-    <br/>
-    <br/>
-    <div>
+    <div class="logistics-list" th:if="${!order.drivingOrFinishLogisticsSet.isEmpty()}">
+        <div class="weui-cells__title">物流信息</div>
+        <div class="weui-cells weui-cells_form" th:each="unit:${order.drivingOrFinishLogisticsSet}">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">物流公司</label></div>
+                <div class="weui-cell__bd" th:text="${unit.supplierOrganizationName}">天天快递</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">快递单号</label></div>
+                <div class="weui-cell__bd">
+                    <input type="text" class="weui-input js-logisticCode" readonly value="425265675675475687"
+                           th:value="${unit.humanReadableExpressId}" title="单号">
+                </div>
+                <div class="weui-cell__ft">
+                    <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary js-copyBtn">复制</a>
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells weui-cells_form" th:remove="all">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">物流公司</label></div>
+                <div class="weui-cell__bd">青岛日日顺物流有限公司</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">快递单号</label></div>
+                <div class="weui-cell__bd">
+                    <input type="text" class="weui-input js-logisticCode" readonly value="X123456asdfghjkl" title="单号">
+                </div>
+                <div class="weui-cell__ft">
+                    <a href="javascript:;" class="weui-btn weui-btn_mini weui-btn_primary js-copyBtn">复制</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="view-mt-20">
         <div class="weui-footer">
-            <p class="weui-footer__text weui-footer__links">联系电话 <a href="tel:0571-88187913"
-                                                                    th:href="${'tel:'+@systemService.companyCustomerServiceTel}"
-                                                                    th:text="${@systemService.companyCustomerServiceTel}">0571-88187913</a>
+            <p class="weui-footer__text weui-footer__links">联系电话
+                <a href="tel:0571-88187913"
+                   th:href="${'tel:'+@systemService.companyCustomerServiceTel}"
+                   th:text="${@systemService.companyCustomerServiceTel}">0571-88187913</a>
             </p>
         </div>
     </div>
 </section>
 </body>
+<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdn.lmjia.cn/clipboard/1.7.1/clipboard.min.js"></script>
+<script>
+    var clipboard = new Clipboard('.js-copyBtn', {
+        target: function (trigger) {
+            return $(trigger).closest('.weui-cell').find('.js-logisticCode')[0];
+        }
+    });
+    clipboard.on("success", function (e) {
+        $.toast("已复制");
+        e.clearSelection();
+    });
+
+    clipboard.on("error", function (e) {
+        $.toast("复制失败，请手动复制");
+        e.clearSelection();
+    });
+</script>
 </html>

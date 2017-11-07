@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me"
+      xmlns:sec="http://security.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.deal.AgentLevel"*/-->
+<!--/*@thymesVar id="login" type="cn.lmjia.market.core.entity.Login"*/-->
+<!--/*@thymesVar id="parentTitle" type="java.lang.String"*/-->
+<!--/*@thymesVar id="parentUri" type="java.lang.String"*/-->
+<!--/*@thymesVar id="detailTitle" type="java.lang.String"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title th:text="${detailTitle}">代理商详情</title>
+    <!--第三方库-->
+    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/select2/4.0.3/css/select2-bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <!--重置库-->
+    <link rel="stylesheet" href="./manage-resource/css/style.min.css">
+    <link rel="stylesheet" href="./manage-resource/css/custom.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="gray-bg"
+      data-agent-id="12345"
+      th:data-agent-id="${currentData==null?0:currentData.id}"
+      data-login-id="123456"
+      th:data-login-id="${login.id}"
+      data-url-sendAuthCode="/api/authCode"
+      data-subordinate="/subordinate/list"
+      th:data-subordinate="${'/loginData/subordinate?id='+login.id}"
+      data-journal="/agentGoodAdvancePaymentJournal"
+      th:data-journal="${'/agentGoodAdvancePaymentJournal?id='+login.id}"
+      data-good-advance-order-detail="_orderDetail.html"
+      th:data-good-advance-order-detail="${'/wechatAgentPrepaymentOrderDetail'}"
+      data-search-login-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
+      th:data-search-login-url="@{/loginData/select2}"
+      data-search-agent-url="/market-manage/core-service/src/test/resources/mock/searchLogin.json"
+      th:data-search-agent-url="${currentData==null?'':'/loginData/select2?level='+((currentData.level)-1)}"
+      data-login-detail-url="_agentDetail.html"
+      th:data-login-detail-url="@{/manageLoginDetail}">
+<div class="wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <ol class="breadcrumb">
+                <li><a href="_agentManage.html" th:href="${parentUri}" th:text="${parentTitle}">代理商管理</a></li>
+                <li><strong th:text="${detailTitle}">代理商详情</strong></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6" th:class="${currentData==null?'col-sm-12':'col-sm-6'}">
+            <div class="ibox">
+                <div class="ibox-title" th:text="${detailTitle}">
+                    代理商详情
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <tbody>
+                            <tr>
+                                <td width="120px">级别</td>
+                                <td th:text="${currentData==null?@readService.getLoginTitle(@readService.agentLevelForPrincipal(login)):@readService.getLoginTitle(currentData.level)}">
+                                    爱心天使
+                                </td>
+                            </tr>
+                            <tr th:if="${currentData!=null}">
+                                <td width="120px">代理商名称</td>
+                                <td><span th:text="${currentData.rank}" id="J_agentRank">哈哈哈</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyAgentRank">修改名称</button>
+                                </td>
+                            </tr>
+                            <tr th:if="${currentData!=null && currentData.superior!=null}">
+                                <td>上级经销商</td>
+                                <td>
+                                    <a href="_agentDetail.html"
+                                       th:href="@{/manageAgentDetail(id=${currentData.superior.id})}"><span
+                                            id="J_superiorName"
+                                            th:text="${@readService.nameForAgent(currentData.superior)}"></span></a>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifySuperior"
+                                            sec:authorize="hasAnyRole('ROOT')">修改上级
+                                    </button>
+                                    <div class="form-horizontal m-t-md hide">
+                                        <div class="form-group" style="margin-left: 0;margin-right: 0;">
+                                            <div class="col-sm-12">
+                                                <select class="form-control select2-single" name="superior"
+                                                        id="superiorInput"
+                                                        title="请选择上级代理商">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 0;margin-right: 0;">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-xs btn-primary"
+                                                        id="J_confirmModify">确定
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button type="button" class="btn btn-xs btn-default"
+                                                        id="J_cancelModify">取消
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="120px">姓名</td>
+                                <td><span th:text="${@readService.nameForPrincipal(login)}" id="J_loginName">哈哈哈</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyName">修改姓名</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>曾用名</td>
+                                <td id="J_oldName" th:utext="${@readService.joinUsedNamesForPrincipal(login,'&nbsp;')}">
+                                    呼呼呼
+                                </td>
+                            </tr>
+                            <tr th:if="${login.guideUser!=null}">
+                                <td>引导者</td>
+                                <td>
+                                    <a href="_agentDetail.html"
+                                       th:href="@{/manageLoginDetail(id=${login.guideUser.id})}">
+                                        <span id="J_guideName"
+                                              th:text="${@readService.nameForPrincipal(login.guideUser)}">天天向上</span>
+                                    </a>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyGuide"
+                                            th:disabled="${!login.guideChanged && !#authorization.expression('hasRole(''ROOT'')') }">
+                                        修改引导者
+                                    </button>
+                                    <div class="form-horizontal m-t-md hide">
+                                        <div class="form-group" style="margin-left: 0;margin-right: 0;">
+                                            <div class="col-sm-12">
+                                                <select class="form-control select2-single" name="guide"
+                                                        id="guideInput"
+                                                        title="请选择引导者">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 0;margin-right: 0;">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-xs btn-primary"
+                                                        id="J_confirmModifyGuide">确定
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button type="button" class="btn btn-xs btn-default"
+                                                        id="J_cancelModifyGuide">取消
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>手机号</td>
+                                <td><span id="J_mobile" th:text="${@readService.mobileFor(login)}">18958044532</span>
+                                    <button class="btn btn-xs btn-danger fr" id="J_modifyMobile" data-toggle="modal"
+                                            data-target="#J_mobileModal" data-backdrop="static" data-keyboard="false">
+                                        修改手机号
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>地址</td>
+                                <td th:text="${@readService.addressFor(login)}">浙江杭州西湖大西湖国际</td>
+                            </tr>
+                            <tr th:if="${login.contactWay!=null && login.contactWay.frontImagePath!=null}">
+                                <td>身份证（个人信息面）</td>
+                                <td>
+                                    <div class="js-uploadShow view-upload-show">
+                                        <img src="http://iph.href.lu/416x312?text=img1"
+                                             res:src="${login.contactWay.frontImagePath}" alt="个人信息面">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${login.contactWay!=null && login.contactWay.backImagePath!=null}">
+                                <td>身份证（国徽面）</td>
+                                <td>
+                                    <div class="js-uploadShow view-upload-show">
+                                        <img src="http://iph.href.lu/416x312?text=img2"
+                                             res:src="${login.contactWay.backImagePath}" alt="国徽面">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${login.contactWay!=null && login.contactWay.businessLicensePath!=null}">
+                                <td>营业执照</td>
+                                <td>
+                                    <div class="js-uploadShow view-upload-show">
+                                        <img src="http://iph.href.lu/416x312?text=img3"
+                                             res:src="${login.contactWay.businessLicensePath}" alt="营业执照">
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6" th:if="${currentData!=null}">
+            <div class="ibox">
+                <div class="ibox-title">
+                    货款记录
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table id="journalTable" class="table table-hover table-success" cellspacing="0"
+                               width="100%"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    发展成功的下线
+                </div>
+                <div class="ibox-content">
+                    <div class="row m-b-sm">
+                        <div class="col-sm-10">
+                            <div class="form-inline">
+                                <div class="js-selectToolbar">
+                                    <input type="search" class="form-control input-sm" placeholder="手机号"
+                                           name="mobile">
+                                    <button type="button" class="btn btn-primary btn-sm js-search">查询</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="subordinateTable" class="table table-hover table-success" cellspacing="0"
+                               width="100%"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div class="modal fade" tabindex="-1" id="J_mobileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">修改手机号</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">手机号</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <input type="tel" class="form-control" placeholder="请输入手机号"
+                                       name="newMobile">
+                                <span class="input-group-btn">
+                            <!--<button class="btn btn-primary button-sendCode" style="min-width: 102px;" type="button"-->
+                                    <!--id="J_sendAuthCode">验证手机号</button>-->
+                        </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="form-group">-->
+                    <!--<label class="col-sm-3 control-label">验证码</label>-->
+                    <!--<div class="col-sm-6">-->
+                    <!--<input type="text" placeholder="请输入验证码"-->
+                    <!--class="form-control" name="authCode">-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="J_cancelModifyMobile">取消</button>
+                <button type="button" class="btn btn-primary" id="J_confirmModifyMobile">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
+<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/select2.full.min.js"></script>
+<script src="//cdn.lmjia.cn/select2/4.0.3/js/i18n/zh-CN.js"></script>
+
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<!--额外工具-->
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
+<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+
+<script src="./mock/mock-min.js" th:remove="all"></script>
+<script src="./mock/agent.js" th:remove="all"></script>
+<script src="../../../../../../market-manage/web/src/main/webapp/assets/js/common/recommend.js"
+        th:src="@{/assets/js/common/recommend.js}"></script>
+<script src="manage-resource/js/agentDetail.js"></script>
+</html>

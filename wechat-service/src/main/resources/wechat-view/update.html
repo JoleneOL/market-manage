@@ -203,13 +203,13 @@
     <div class="weui-popup__modal">
         <div class="weui-tab">
             <div class="weui-navbar">
-                <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+                <a class="weui-navbar__item weui-bar__item--on" href="#tab1" th:text="${@readService.getLoginTitle(4)}">
                     经销商
                 </a>
-                <a class="weui-navbar__item" href="#tab2">
+                <a class="weui-navbar__item" href="#tab2" th:text="${@readService.getLoginTitle(3)}">
                     区县代理
                 </a>
-                <a class="weui-navbar__item" href="#tab3">
+                <a class="weui-navbar__item" href="#tab3" th:text="${@readService.getLoginTitle(2)}">
                     市级代理
                 </a>
             </div>
@@ -248,7 +248,7 @@
 </body>
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
-<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/city-picker.min.js"></script>
+<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/city-picker.min.m.js"></script>
 <script src="//cdn.lmjia.cn/webuploader/0.1.5/webuploader.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-validation/1.16.0/jquery.validate.min.js"></script>
 <script src="../mock/mock-min.js" th:remove="all"></script>

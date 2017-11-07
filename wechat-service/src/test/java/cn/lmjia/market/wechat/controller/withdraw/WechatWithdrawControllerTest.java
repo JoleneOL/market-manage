@@ -41,6 +41,7 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
 //        MockitoAnnotations.initMocks(this);
         // 基于 https://github.com/JoleneOL/market-manage/issues/176 的调整这里先将最低额度调整至1
         systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MIN_AMOUNT, 1);
+        systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MAX_AMOUNT, 999999999);
     }
 
     @Test
@@ -181,9 +182,12 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         log.info("toWithdraw" + toWithdraw);
         //调整最高提现金额
         if (toWithdraw.compareTo(BigDecimal.valueOf(20000L)) == 1)
-            systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MAX_AMOUNT, toWithdraw.setScale(0, BigDecimal.ROUND_UP));
+            systemStringService.updateSystemString(WechatWithdrawController.MARKET_WITHDRAW_MAX_AMOUNT
+                    , toWithdraw.setScale(0, BigDecimal.ROUND_UP));
         WechatWithdrawPage withdrawPage = myPage.toWithdrawPage();
+        withdrawPage.agreeRules();
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
+
 
         WechatWithdrawVerifyPage verifyPage = initPage(WechatWithdrawVerifyPage.class);
         Thread.sleep(1000);
