@@ -130,6 +130,34 @@ public interface SystemService {
     boolean isNonAgentAbleToGainCommission();
 
     /**
+     * @return 下单者是否可以拥有获得奖励的资格
+     */
+    boolean isOrderAbleToGainCommission();
+
+    void updateOrderAbleToGainCommission(boolean value);
+
+    /**
+     * @return 是否切割销售奖 {@link cn.lmjia.market.core.entity.support.CommissionType#firstMarketing}和{@link cn.lmjia.market.core.entity.support.CommissionType#firstGuide}
+     */
+    boolean isSplitMarketingCommission();
+
+    void updateSplitMarketingCommission(boolean value);
+
+    /**
+     * @return 在 {@link #isSplitMarketingCommission() 分割}的前提下是否只有代理商可以获得推荐奖。
+     */
+    boolean isOnlyAgentGainFirstGuide();
+
+    void updateOnlyAgentGainFirstGuide(boolean value);
+
+    /**
+     * @return 代理商将获取全部销售奖 不再切割给别人
+     */
+    boolean isAgentGainAllMarketing();
+
+    void updateAgentGainAllMarketing(boolean value);
+
+    /**
      * @param value 爱心天使的认定是否只需要完成一笔任意订单
      */
     void updateRegularLoginAsAnyOrder(boolean value);
