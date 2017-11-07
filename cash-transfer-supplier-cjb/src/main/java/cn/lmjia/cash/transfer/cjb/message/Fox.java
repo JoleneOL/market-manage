@@ -30,7 +30,7 @@ public class Fox implements Serializable {
     /**
      * 登录响应信息根标签
      */
-    @JsonProperty("SINGONMSGSRSV1")
+    @JsonProperty("SIGNONMSGSRSV1")
     private SignonMsgsRSV1 signonMsgsRSV1;
 
     /**

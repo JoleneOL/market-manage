@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.entity.withdraw;
 
+import cn.lmjia.cash.transfer.CashReceiver;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-public class WithdrawRequest {
+public class WithdrawRequest implements CashReceiver {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -122,5 +123,43 @@ public class WithdrawRequest {
 
     public Money getTaxFee() {
         return new Money(amount.subtract(actualAmount));
+    }
+
+    @Override
+    public String getAcctId() {
+        return this.account;
+    }
+
+    @Override
+    public String getName() {
+        return this.payee;
+    }
+
+    @Override
+    public String getBankDesc() {
+        return this.bank;
+    }
+
+    @Override
+    public String getBankNumber() {
+        //TODO 目前这个还没弄明白是什么
+        return null;
+    }
+
+    @Override
+    public String getCity() {
+        //TODO 还需要添加一个新的字段.
+        return null;
+    }
+
+    @Override
+    public String getPurpose() {
+        return actualAmount.toString();
+    }
+
+    @Override
+    public String getMemo() {
+        //TODO 这是备注.目前
+        return null;
     }
 }

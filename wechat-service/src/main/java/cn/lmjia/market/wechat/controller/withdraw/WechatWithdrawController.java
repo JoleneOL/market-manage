@@ -1,11 +1,17 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 
+import cn.lmjia.cash.transfer.CashTransferSupplier;
+import cn.lmjia.cash.transfer.EntityOwner;
+import cn.lmjia.cash.transfer.exception.BadAccessException;
+import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
+import cn.lmjia.cash.transfer.exception.TransferFailureException;
 import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
+import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.WithdrawRequestRepository;
@@ -24,6 +30,7 @@ import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -73,7 +80,10 @@ public class WechatWithdrawController {
     private UserNoticeService userNoticeService;
     @Autowired
     private SystemService systemService;
-
+    @Autowired
+    private ApplicationContext applicationContext;
+    @Autowired
+    private EntityOwner owner;
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
         return "wechat@withdrawRecord.html";
@@ -139,15 +149,32 @@ public class WechatWithdrawController {
             return "redirect:/wechatWithdraw";
         }
         if (invoice) {
+            //有发票
             if (logisticsTypeSelf != null && logisticsTypeSelf)
                 withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, "已自行运达"
                         , "自送");
             else
                 withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, logisticsCode
                         , logisticsCompany);
-        } else
-            withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
+        } else {
+            //无发票自动转账
+            WithdrawRequest withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
                     , null);
+            CashTransferSupplier supplier = (CashTransferSupplier) applicationContext.getBean("CjbSupplier");
+            try {
+                supplier.cashTransfer(owner.getOwnerAccount("CjbSupplier"),withdrawRequest);
+                withdrawRequest.setWithdrawStatus(WithdrawStatus.success);
+            } catch (SupplierApiUpgradeException e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+            } catch (BadAccessException e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+            } catch (TransferFailureException e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+            }
+        }
         model.addAttribute("badCode", false);
         return toVerify(login, model, withdraw);
     }

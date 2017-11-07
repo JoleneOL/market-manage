@@ -20,7 +20,7 @@ public class Sonrq implements Serializable {
     /**
      * 客户端日期时间YYYY-MM-DD_HH:MM:SS 必输
      */
-    @JsonProperty("DTCLINET")
+    @JsonProperty("DTCLIENT")
     private String dtClient;
 
     /**

@@ -35,7 +35,7 @@ import java.util.UUID;
 /**
  * @author lxf
  */
-@Component
+@Component("CjbSupplier")
 public class CjbSupplierImpl implements CjbSupplier {
     private static final Log log = LogFactory.getLog(CjbSupplierImpl.class);
 
