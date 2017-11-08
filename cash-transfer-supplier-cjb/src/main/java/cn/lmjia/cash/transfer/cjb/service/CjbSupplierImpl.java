@@ -47,7 +47,7 @@ public class CjbSupplierImpl implements CjbSupplier {
     }
 
     @Override
-    public Map<String, Object> cashTransfer(OwnerAccount account, CashReceiver receiver) throws BadAccessException, TransferFailureException, JsonProcessingException {
+    public CashTransferResult cashTransfer(OwnerAccount account, CashReceiver receiver) throws BadAccessException, TransferFailureException, JsonProcessingException {
         //报文根标签对象.
         Fox requestFox = new Fox();
         //将登录信息转换成报文对象.
@@ -69,7 +69,7 @@ public class CjbSupplierImpl implements CjbSupplier {
     }
 
     @Override
-    public Map<String, Object> statusQuery(OwnerAccount account, CashReceiver receuver) throws BadAccessException, JsonProcessingException, TransferFailureException {
+    public CashTransferResult statusQuery(OwnerAccount account, CashReceiver receuver) throws BadAccessException, JsonProcessingException, TransferFailureException {
         //报文根标签对象.
         Fox requestFox = new Fox();
         Securities_msgsRQV1 securities_msgsRQV1 = new Securities_msgsRQV1();
@@ -125,15 +125,17 @@ public class CjbSupplierImpl implements CjbSupplier {
             }
             //成功
             XferRs xferRs = xferTrnRs.getXferRs();
-            result.put("TRNUID", xferTrnRs.getTrnuId());
-            result.put("SRVRID", xferRs.getSrvrId());
-            result.put("MEMO", xferRs.getXferInfo().getMemo());
-            result.put("XFERPRCCODE", xferRs.getXferPrcsts().getXferPrcCode());
+            cashTransferResult.setClientSerial(xferInqTrnRs.getTrnuId());
+            cashTransferResult.setServiceSerial(xferRs.getSrvrId());
+            if(xferRs.getXferInfo().getMemo() != null){
+                cashTransferResult.setMemo(xferRs.getXferInfo().getMemo());
+            }
+            cashTransferResult.setResultStatuCode(xferRs.getXferPrcsts().getXferPrcCode());
             //指令处理时间 yyyy-MM-dd HH:mm:ss
-            result.put("DTXFERPRC", LocalDateTime.parse(xferRs.getXferPrcsts().getDtXferPrc(), formatter));
+            cashTransferResult.setProcessingTime( LocalDateTime.parse(xferRs.getXferPrcsts().getDtXferPrc(), formatter));
             String message = xferRs.getXferPrcsts().getMessage();
             if (StringUtils.isNotBlank(message)) {
-                result.put("MESSAGE", message);
+                cashTransferResult.setMessage(message);
             }
         } else if (xferInqTrnRs != null) {
             //查询转账状态请求
@@ -153,7 +155,9 @@ public class CjbSupplierImpl implements CjbSupplier {
                 //查询的转账记录 xfer是这条记录的信息.
                 Xfer xfer = xferList.getXfer();
                 cashTransferResult.setServiceSerial(xfer.getSrvrtId());
-                cashTransferResult.setMemo(xfer.getXferInfo().getMemo());
+                if(xfer.getXferInfo().getMemo() != null){
+                    cashTransferResult.setMemo(xfer.getXferInfo().getMemo());
+                }
                 cashTransferResult.setResultStatuCode(xfer.getXferPrcsts().getXferPrcCode());
                 //指令处理时间 yyyy-MM-dd HH:mm:ss
                 cashTransferResult.setProcessingTime(LocalDateTime.parse(xfer.getXferPrcsts().getDtXferPrc(), formatter));

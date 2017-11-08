@@ -4,6 +4,7 @@ package cn.lmjia.market.wechat.controller.withdraw;
 import cn.lmjia.cash.transfer.exception.BadAccessException;
 import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
 import cn.lmjia.cash.transfer.exception.TransferFailureException;
+import cn.lmjia.cash.transfer.model.CashTransferResult;
 import cn.lmjia.cash.transfer.service.CashTransferService;
 import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
@@ -194,7 +195,7 @@ public class WechatWithdrawController {
             }else{
                 //没有发票自动提现,默认供应商
                 try {
-                    cashTransferService.cashTransfer(null, null, withdrawRequest);
+                    CashTransferResult cashTransferResult = cashTransferService.cashTransfer(null, null, withdrawRequest);
                     //向财务发送短信提醒
                     remindFinancial(login, withdraw,true);
                 } catch (SupplierApiUpgradeException e) {

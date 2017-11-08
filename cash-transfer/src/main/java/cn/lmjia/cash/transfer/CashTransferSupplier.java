@@ -3,11 +3,11 @@ package cn.lmjia.cash.transfer;
 import cn.lmjia.cash.transfer.exception.BadAccessException;
 import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
 import cn.lmjia.cash.transfer.exception.TransferFailureException;
+import cn.lmjia.cash.transfer.model.CashTransferResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * 现金转账供应商
@@ -41,7 +41,7 @@ public interface CashTransferSupplier {
      * @throws TransferFailureException     转账失败时异常
      * @return 结果信息.
      */
-    Map<String, Object> cashTransfer(OwnerAccount ownerAccount, CashReceiver receiver) throws IOException, SupplierApiUpgradeException, BadAccessException,TransferFailureException;
+    CashTransferResult cashTransfer(OwnerAccount ownerAccount, CashReceiver receiver) throws IOException, SupplierApiUpgradeException, BadAccessException,TransferFailureException;
 
     /**
      * * 交易状态查询
@@ -52,6 +52,6 @@ public interface CashTransferSupplier {
      * @throws JsonProcessingException 对象与xml转换异常
      * @throws TransferFailureException 登录成功,但是转账失败
      */
-    Map<String,Object> statusQuery(OwnerAccount ownerAccount, CashReceiver receuver) throws BadAccessException, JsonProcessingException, TransferFailureException;
+    CashTransferResult statusQuery(OwnerAccount ownerAccount, CashReceiver receuver) throws BadAccessException, JsonProcessingException, TransferFailureException;
 
 }
