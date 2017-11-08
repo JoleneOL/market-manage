@@ -22,5 +22,6 @@ public class HelpCenterPage extends AbstractWechatPage {
      */
     public void assertHasTopic(String title) {
         // TODO 不知怎麽實現
+        printThisPage();
     }
 }

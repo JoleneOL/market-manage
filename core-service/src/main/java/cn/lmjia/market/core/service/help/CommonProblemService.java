@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service.help;
 
 import cn.lmjia.market.core.entity.help.CommonProblem;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public interface CommonProblemService {
     /**
      * @return 返回常见问题对象
      */
+    @Transactional(readOnly = true)
     CommonProblem getOne(long id);
 
     /**
@@ -21,12 +23,13 @@ public interface CommonProblemService {
      * @param weight
      * @param content 内容
      */
+    @Transactional
     CommonProblem addAndEditCommonProblem(Long id, String title, Integer weight, String content);
 
     /**
      * @return 所有直接展示在微信端的常见问题.
      */
-    List<CommonProblem> findByIsWeigth();
+    List<CommonProblem> findByWeight();
 
     /**
      * @param keyword 关键字

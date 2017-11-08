@@ -23,7 +23,6 @@ public class CommonProblemServiceImpl implements CommonProblemService {
     private CommonProblemRepository commonProblemRepository;
 
     @Override
-    @Transactional
     public CommonProblem getOne(long id) {
         return commonProblemRepository.getOne(id);
     }
@@ -31,7 +30,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
     @Override
     @Transactional
     public CommonProblem addAndEditCommonProblem(Long id, String title, Integer weight, String content) {
-        CommonProblem commonProblem = null;
+        CommonProblem commonProblem;
         if (id != null) {
             commonProblem = commonProblemRepository.getOne(id);
             commonProblem.setUpdateTime(LocalDateTime.now());
@@ -50,22 +49,18 @@ public class CommonProblemServiceImpl implements CommonProblemService {
     }
 
     @Override
-    @Transactional
-    public List<CommonProblem> findByIsWeigth() {
-        List<CommonProblem> result = commonProblemRepository.findAll((root, query, cb) -> {
+    public List<CommonProblem> findByWeight() {
+        return commonProblemRepository.findAll((root, query, cb) -> {
             List<Predicate> predicateList = new ArrayList<>();
             predicateList.add(cb.isTrue(root.get(CommonProblem_.enable)));
             predicateList.add(cb.isTrue(root.get(CommonProblem_.hot)));
             return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
         },new Sort(Sort.Direction.DESC, CommonProblem_.weight.getName()));
-        return result;
     }
 
     @Override
-    @Transactional
     public List<CommonProblem> findByTitle(String keyword) {
-        List<CommonProblem> result = commonProblemRepository.findAll((root, query, cb) -> {
-            List<Predicate> predicateList = new ArrayList<>();
+        return commonProblemRepository.findAll((root, query, cb) -> {
             Predicate p = cb.isTrue(root.get(CommonProblem_.enable));
             Predicate p1 = null;
             if (StringUtils.isNotEmpty(keyword)) {
@@ -74,7 +69,6 @@ public class CommonProblemServiceImpl implements CommonProblemService {
             }
             return cb.and(p,p1);
         });
-        return result;
     }
 
 
