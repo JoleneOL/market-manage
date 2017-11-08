@@ -17,8 +17,8 @@ import java.util.Map;
 public interface CashTransferService {
     /**
      * 转账服务
-     * @param supplier 供应商
-     * @param owner 主体;在单主体的环境中可以传空
+     * @param supplier 供应商,可以为Null默认是兴业银行
+     * @param owner 主体;在单主体的环境中可以为null
      * @param cashReceiver 现金接受者信息
      * @return 请求处理结果
      */

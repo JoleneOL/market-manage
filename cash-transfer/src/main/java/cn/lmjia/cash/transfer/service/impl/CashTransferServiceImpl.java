@@ -30,6 +30,7 @@ public class CashTransferServiceImpl implements CashTransferService {
             owner = applicationContext.getBean(EntityOwner.class);
         }
         if(supplier == null){
+            //默认的经销商
             supplier = applicationContext.getBean(CashTransferSupplier.class);
         }
         //获取付款账户的密钥和信息,

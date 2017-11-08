@@ -1,6 +1,9 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 
+import cn.lmjia.cash.transfer.exception.BadAccessException;
+import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
+import cn.lmjia.cash.transfer.exception.TransferFailureException;
 import cn.lmjia.cash.transfer.service.CashTransferService;
 import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
@@ -42,10 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -188,13 +188,29 @@ public class WechatWithdrawController {
             WithdrawRequest withdrawRequest = withdrawService.get(withdrawRequestId);
             //判断是否有发票
             if(withdrawRequest.isInvoice()){
-                //有发票
+                //有发票,管理平台财务控制转账.
+                //向财务发送短信提醒
+                remindFinancial(login, withdraw,false);
             }else{
-                //没有发票自动提现
-                cashTransferService.cashTransfer()
+                //没有发票自动提现,默认供应商
+                try {
+                    cashTransferService.cashTransfer(null, null, withdrawRequest);
+                    //向财务发送短信提醒
+                    remindFinancial(login, withdraw,true);
+                } catch (SupplierApiUpgradeException e) {
+                    e.printStackTrace();
+                    log.error(e.getMessage());
+                } catch (BadAccessException e) {
+                    e.printStackTrace();
+                    log.error(e.getMessage());
+                } catch (TransferFailureException e) {
+                    e.printStackTrace();
+                    log.error(e.getMessage());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    log.error(e.getMessage());
+                }
             }
-            //向财务发送短信提醒
-            remindFinancial(login, withdraw);
         } catch (IllegalVerificationCodeException ex) {
             model.addAttribute("badCode", true);
             return toVerify(login, model, withdraw,withdrawRequestId);
@@ -206,8 +222,10 @@ public class WechatWithdrawController {
      * 用户体现输入正确的验证码后,给财务发送短息提醒.
      *
      * @param login 提现的用户
+     * @param withdraw 提现金额
+     * @param automatic 是否自动转账
      */
-    private void remindFinancial(Login login, BigDecimal withdraw) {
+    private void remindFinancial(Login login, BigDecimal withdraw, boolean automatic) {
         //获取所有的管理者
         List<Manager> managerList = loginService.managers();
 
@@ -221,8 +239,15 @@ public class WechatWithdrawController {
         //注册模版信息
         wechatNoticeHelper.registerTemplateMessage(withdrawSuccessRemindFinancial, null);
 
-        userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
-                null, withdrawSuccessRemindFinancial, readService.nameForPrincipal(login), "提现金额:￥" + withdraw + "元");
+        if(automatic){
+            userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
+                    null, withdrawSuccessRemindFinancial, readService.nameForPrincipal(login)+"  (自动转账)", "提现金额:￥" + withdraw + "元");
+        }else{
+            userNoticeService.sendMessage(null, loginService.toWechatUser(role_finance),
+                    null, withdrawSuccessRemindFinancial, readService.nameForPrincipal(login), "提现金额:￥" + withdraw + "元");
+        }
+
+
     }
 
     private class WithdrawSuccessRemindFinancial implements MarketUserNoticeType {

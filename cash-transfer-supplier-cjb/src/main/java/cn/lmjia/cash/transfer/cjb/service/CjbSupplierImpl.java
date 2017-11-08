@@ -10,6 +10,7 @@ import cn.lmjia.cash.transfer.cjb.message.transfer.query.*;
 import cn.lmjia.cash.transfer.exception.BadAccessException;
 import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
 import cn.lmjia.cash.transfer.exception.TransferFailureException;
+import cn.lmjia.cash.transfer.model.CashTransferResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -101,7 +102,7 @@ public class CjbSupplierImpl implements CjbSupplier {
      * @throws BadAccessException       业务主登录出错时
      * @throws TransferFailureException 转账失败时
      */
-    private Map<String, Object> cashTransferResult(Fox responseFox) throws BadAccessException, TransferFailureException {
+    private CashTransferResult cashTransferResult(Fox responseFox) throws BadAccessException, TransferFailureException {
         //看登录信息是否成功
         Status status = responseFox.getSignonMsgsRSV1().getSonrs().getStatus();
         if (!"0".equals(status.getCode())) {
@@ -114,6 +115,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         XferInqTrnRs xferInqTrnRs = responseFox.getSecurities_msgsRSV1().getXferInqTrnRs();
         Map<String, Object> result = new HashMap<>();
 
+        CashTransferResult cashTransferResult = new CashTransferResult();
         if (xferTrnRs != null) {
             //转账请求
             Status transferStatus = xferTrnRs.getStatus();
@@ -138,29 +140,30 @@ public class CjbSupplierImpl implements CjbSupplier {
             Status transferStatus = xferInqTrnRs.getStatus();
             if (!"0".equals(transferStatus.getCode())) {
                 //失败的请求
-                throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + "转账错误信息:" + transferStatus.getMessage() + "错误的提现申请单号:" + xferTrnRs.getTrnuId());
+                throw new TransferFailureException("查询失败错误码:" + transferStatus.getCode() + "查询失败错误信息:" + transferStatus.getMessage() );
             }
             //成功
-            result.put("TRNUID", xferInqTrnRs.getTrnuId());
+            cashTransferResult.setClientSerial(xferInqTrnRs.getTrnuId());
             XferList xferList = xferInqTrnRs.getXferInqRs().getXferList();
             String more = xferList.getMore();
             if("N".equalsIgnoreCase(more)){
                 //没有记录
-                throw new TransferFailureException("这个TrnuId"+xferInqTrnRs.getTrnuId()+"没有转账记录");
+                throw new TransferFailureException("没有查询到转账记录");
             }else{
+                //查询的转账记录 xfer是这条记录的信息.
                 Xfer xfer = xferList.getXfer();
-                result.put("SRVRTID", xfer.getSrvrtId());
-                result.put("MEMO", xfer.getXferInfo().getMemo());
-                result.put("XFERPRCCODE", xfer.getXferPrcsts().getXferPrcCode());
+                cashTransferResult.setServiceSerial(xfer.getSrvrtId());
+                cashTransferResult.setMemo(xfer.getXferInfo().getMemo());
+                cashTransferResult.setResultStatuCode(xfer.getXferPrcsts().getXferPrcCode());
                 //指令处理时间 yyyy-MM-dd HH:mm:ss
-                result.put("DTXFERPRC", LocalDateTime.parse(xfer.getXferPrcsts().getDtXferPrc(), formatter));
+                cashTransferResult.setProcessingTime(LocalDateTime.parse(xfer.getXferPrcsts().getDtXferPrc(), formatter));
                 String message = xfer.getXferPrcsts().getMessage();
                 if (StringUtils.isNotBlank(message)) {
-                    result.put("MESSAGE", message);
+                    cashTransferResult.setMessage(message);
                 }
             }
         }
-        return result;
+        return cashTransferResult;
     }
 
     @Override
@@ -255,7 +258,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         Securities_msgsRQV1 securities_msgsRQV1 = new Securities_msgsRQV1();
         XferTrnRq xferTrnRq = new XferTrnRq();
         //客户端交易的唯一标志，否则客户端将无法分辨响应报文的对应关系,最大30位建议值为YYYYMMDD+序号
-        xferTrnRq.setTrnuId(receiver.getWithdrawId());
+        xferTrnRq.setTrnuId(receiver.getWithdrawId().toString());
 
         XferRq xferRq = new XferRq();
         XferInfo xferInfo = new XferInfo();
