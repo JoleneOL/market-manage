@@ -1,10 +1,11 @@
 $(function () {
     "use strict";
-    var _body = $('body');
+    var $body = $('body');
+    var _body = $body;
     var table = $('#helpTable').DataTable({
         "processing": true,
         "serverSide": true,
-        "ajax": $('body').attr('data-url'),
+        "ajax": $body.attr('data-url'),
         "ordering": true,
         "lengthChange": false,
         "searching": false,
@@ -14,13 +15,13 @@ $(function () {
                 "title": "标题", "data": "title", "name": "title"
             },
             {
-                "title": "状态", "data": "enableLabel", "name": "enableLabel",
+                "title": "状态", "data": "enableLabel", "name": "enableLabel"
             },
             {
-                "title": "首页展示状态", "data": "isHotLabel", "name": "isHotLabel",
+                "title": "首页展示状态", "data": "isHotLabel", "name": "isHotLabel"
             },
             {
-                "title": "权重", "data": "weight", "name": "weight",
+                "title": "权重", "data": "weight", "name": "weight"
             },
             {
                 title: "操作",
