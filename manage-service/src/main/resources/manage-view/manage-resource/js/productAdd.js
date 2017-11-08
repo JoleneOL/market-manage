@@ -39,10 +39,10 @@ $(function () {
                     }
                     propertyNameValue += (propertyNameId + ":" + propertyValue);
                 }
-            })
+            });
             $("input[name=propertyNameValue]").val(propertyNameValue);
             if(!tinymce.activeEditor.getContent()) {
-                layer.msg('词条详情不能为空');
+                layer.msg('货品详情不能为空');
             } else {
                 form.submit();
             }
