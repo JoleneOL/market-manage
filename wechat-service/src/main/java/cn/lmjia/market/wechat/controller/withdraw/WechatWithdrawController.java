@@ -1,11 +1,7 @@
 package cn.lmjia.market.wechat.controller.withdraw;
 
 
-import cn.lmjia.cash.transfer.CashTransferSupplier;
-import cn.lmjia.cash.transfer.EntityOwner;
-import cn.lmjia.cash.transfer.exception.BadAccessException;
-import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
-import cn.lmjia.cash.transfer.exception.TransferFailureException;
+import cn.lmjia.cash.transfer.service.CashTransferService;
 import cn.lmjia.market.core.define.MarketNoticeType;
 import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
@@ -30,7 +26,6 @@ import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -80,6 +75,8 @@ public class WechatWithdrawController {
     private UserNoticeService userNoticeService;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private CashTransferService cashTransferService;
     @GetMapping("/wechatWithdrawRecord")
     public String record() {
         return "wechat@withdrawRecord.html";
@@ -144,30 +141,33 @@ public class WechatWithdrawController {
         if (readService.currentBalance(login).getAmount().compareTo(withdraw) < 0) {
             return "redirect:/wechatWithdraw";
         }
+
+        WithdrawRequest withdrawRequest ;
         if (invoice) {
             //有发票
             if (logisticsTypeSelf != null && logisticsTypeSelf)
-                withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, "已自行运达"
+                withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, "已自行运达"
                         , "自送");
             else
-                withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, logisticsCode
+                withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, logisticsCode
                         , logisticsCompany);
         } else {
             //无发票自动转账
-            WithdrawRequest withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
+            withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, mobile, withdraw, null
                     , null);
 
         }
         model.addAttribute("badCode", false);
-        return toVerify(login, model, withdraw);
+        return toVerify(login, model, withdraw,withdrawRequest.getWithdrawId());
     }
 
-    private String toVerify(Login login, Model model, BigDecimal withdraw) {
+    private String toVerify(Login login, Model model, BigDecimal withdraw,Long withdrawRequestId) {
         String mobile = readService.mobileFor(login);
         String start = mobile.substring(0, 3);
         String end = mobile.substring(mobile.length() - 4, mobile.length());
         model.addAttribute("mosaicMobile", start + "****" + end);
         model.addAttribute("withdraw", withdraw);
+        model.addAttribute("withdrawRequestId",withdrawRequestId);
         return "wechat@withdrawVerify.html";
     }
 
@@ -182,14 +182,22 @@ public class WechatWithdrawController {
      * @return 手机验证码验证
      */
     @PostMapping("/withdrawVerify")
-    public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model, BigDecimal withdraw) {
+    public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model, BigDecimal withdraw,Long withdrawRequestId) {
         try {
             withdrawService.submitRequest(login, authCode);
+            WithdrawRequest withdrawRequest = withdrawService.get(withdrawRequestId);
+            //判断是否有发票
+            if(withdrawRequest.isInvoice()){
+                //有发票
+            }else{
+                //没有发票自动提现
+                cashTransferService.cashTransfer()
+            }
             //向财务发送短信提醒
             remindFinancial(login, withdraw);
         } catch (IllegalVerificationCodeException ex) {
             model.addAttribute("badCode", true);
-            return toVerify(login, model, withdraw);
+            return toVerify(login, model, withdraw,withdrawRequestId);
         }
         return "wechat@withdrawSuccess.html";
     }

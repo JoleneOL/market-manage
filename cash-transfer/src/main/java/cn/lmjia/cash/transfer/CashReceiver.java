@@ -10,11 +10,11 @@ public interface CashReceiver {
     /**
      * @return 该提现申请数据库中id;
      */
-    String getId();
+    Long getWithdrawId();
     /**
      * @return 收款账号,最大32位
      */
-    String getAcctId();
+    String getAccountNum();
 
     /**
      * @return 收款人姓名,最大50位
@@ -39,7 +39,7 @@ public interface CashReceiver {
     /**
      * @return 提现金额
      */
-    BigDecimal getAmount();
+    BigDecimal getWithdrawAmount();
 
     /**
      * @return 用款用途

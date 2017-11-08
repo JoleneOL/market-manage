@@ -126,7 +126,12 @@ public class WithdrawRequest implements CashReceiver {
     }
 
     @Override
-    public String getAcctId() {
+    public Long getWithdrawId() {
+        return this.id;
+    }
+
+    @Override
+    public String getAccountNum() {
         return this.account;
     }
 
@@ -153,8 +158,13 @@ public class WithdrawRequest implements CashReceiver {
     }
 
     @Override
+    public BigDecimal getWithdrawAmount() {
+        return this.amount;
+    }
+
+    @Override
     public String getPurpose() {
-        return actualAmount.toString();
+        return null;
     }
 
     @Override

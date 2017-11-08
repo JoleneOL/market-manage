@@ -82,7 +82,7 @@ public class CjbSupplierImpl implements CjbSupplier {
 
         XferInqRq xferInqRq = new XferInqRq();
         //要查询的转账交易TrunId
-        xferInqRq.setClientRef(receuver.getId());
+        xferInqRq.setClientRef(receuver.getWithdrawId().toString());
 
         xferInqTrnRq.setXferInqRq(xferInqRq);
         securities_msgsRQV1.setXferInqTrnRq(xferInqTrnRq);
@@ -255,7 +255,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         Securities_msgsRQV1 securities_msgsRQV1 = new Securities_msgsRQV1();
         XferTrnRq xferTrnRq = new XferTrnRq();
         //客户端交易的唯一标志，否则客户端将无法分辨响应报文的对应关系,最大30位建议值为YYYYMMDD+序号
-        xferTrnRq.setTrnuId(receiver.getId());
+        xferTrnRq.setTrnuId(receiver.getWithdrawId());
 
         XferRq xferRq = new XferRq();
         XferInfo xferInfo = new XferInfo();
@@ -267,7 +267,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         acctfrom.setName(account.getName());
         //收款人信息
         AcctTo acctTo = new AcctTo();
-        acctTo.setAcctId(receiver.getAcctId());
+        acctTo.setAcctId(receiver.getAccountNum());
         acctTo.setBankNum(receiver.getBankNumber());
         acctTo.setName(receiver.getName());
         acctTo.setBankDesc(receiver.getBankDesc());
@@ -276,7 +276,7 @@ public class CjbSupplierImpl implements CjbSupplier {
             acctTo.setCity(receiver.getCity());
         }
         //转账金额
-        xferInfo.setTrnAmt(receiver.getAmount());
+        xferInfo.setTrnAmt(receiver.getWithdrawAmount());
         //用款用途
         xferInfo.setPurPose(receiver.getPurpose());
         if (StringUtils.isNotBlank(receiver.getMemo())) {
