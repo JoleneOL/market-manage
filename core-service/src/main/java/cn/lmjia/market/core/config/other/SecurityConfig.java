@@ -2,6 +2,7 @@ package cn.lmjia.market.core.config.other;
 
 import cn.lmjia.market.core.config.MVCConfig;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
@@ -85,6 +86,7 @@ public class SecurityConfig {
                             .authorizeRequests();
 
             registry
+                    .antMatchers(SystemService.helpCenterURi).permitAll()
                     // misc
                     .antMatchers("/misc/sendLoginCode", "/misc/sendRegisterCode", "/toQR").permitAll()
                     // 分享支付
