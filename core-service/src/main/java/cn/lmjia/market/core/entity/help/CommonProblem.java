@@ -4,7 +4,12 @@ package cn.lmjia.market.core.entity.help;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 import java.time.LocalDateTime;
 
 /**
@@ -40,7 +45,7 @@ public class CommonProblem {
     /**
      * 是否在常见问题列表里展示.
      */
-    private boolean hot;
+    private boolean hot = true;
 
     /**
      * 权重,排序.

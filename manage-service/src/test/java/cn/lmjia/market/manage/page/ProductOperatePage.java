@@ -50,7 +50,7 @@ public abstract class ProductOperatePage extends AbstractContentPage {
     private WebElement weight;
     @FindBy(name = "productSummary")
     private WebElement productSummary;
-//    @FindBy(name = "richDescription")
+    //    @FindBy(name = "richDescription")
 //    private WebElement richDescription;
     @FindBy(name = "planSellOutDate")
     private WebElement planSellOutDate;
@@ -103,13 +103,16 @@ public abstract class ProductOperatePage extends AbstractContentPage {
         }
 
         //如果是输入框类型的属性，就写
-        try{
+        try {
             webDriver.findElement(By.className("J-property-more"))
                     .findElements(By.tagName("input"))
-                    .forEach(valueInput -> tryInput(valueInput,RandomStringUtils.randomAlphabetic(5)));
-        }catch (NoSuchElementException e){
+                    .forEach(valueInput -> tryInput(valueInput, RandomStringUtils.randomAlphabetic(5)));
+        } catch (NoSuchElementException e) {
             //说明没有输入框类型的属性
         }
+
+        // 详情输入
+        inputTinyMCE("productDetail", RandomStringUtils.randomAlphabetic(5));
 
         webDriver.findElement(By.cssSelector("[type=submit]")).click();
         return initPage(ManageProductPage.class);

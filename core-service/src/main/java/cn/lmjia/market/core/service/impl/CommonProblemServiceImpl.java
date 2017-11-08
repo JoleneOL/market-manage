@@ -29,7 +29,7 @@ public class CommonProblemServiceImpl implements CommonProblemService {
 
     @Override
     @Transactional
-    public CommonProblem addAndEditCommonProblem(Long id, String title, Integer weight, String content) {
+    public CommonProblem addAndEditCommonProblem(Long id, String title, int weight, String content) {
         CommonProblem commonProblem;
         if (id != null) {
             commonProblem = commonProblemRepository.getOne(id);
@@ -37,7 +37,6 @@ public class CommonProblemServiceImpl implements CommonProblemService {
         } else {
             commonProblem = new CommonProblem();
             commonProblem.setCreateTime(LocalDateTime.now());
-            commonProblem.setHot(false);
         }
         commonProblem.setTitle(title);
         commonProblem.setWeight(weight);
