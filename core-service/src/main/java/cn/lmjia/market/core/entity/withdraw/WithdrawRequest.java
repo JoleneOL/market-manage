@@ -113,6 +113,14 @@ public class WithdrawRequest implements CashReceiver {
     @ManyToOne
     private Manager manageBy;
 
+    @Column(length = 30)
+    private String clientSerial;
+    /**
+     * 银行处理时间
+     */
+    @Column(columnDefinition = "timestamp")
+    private LocalDateTime bankProcessingTime;
+
     public Money getActualAmountMoney() {
         return new Money(actualAmount);
     }
@@ -123,11 +131,6 @@ public class WithdrawRequest implements CashReceiver {
 
     public Money getTaxFee() {
         return new Money(amount.subtract(actualAmount));
-    }
-
-    @Override
-    public Long getWithdrawId() {
-        return this.id;
     }
 
     @Override
@@ -169,7 +172,6 @@ public class WithdrawRequest implements CashReceiver {
 
     @Override
     public String getMemo() {
-        //TODO 这是备注.目前
-        return null;
+        return this.comment;
     }
 }

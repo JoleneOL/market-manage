@@ -10,7 +10,7 @@ public interface CashReceiver {
     /**
      * @return 该提现申请数据库中id;
      */
-    Long getWithdrawId();
+    Long getId();
     /**
      * @return 收款账号,最大32位
      */

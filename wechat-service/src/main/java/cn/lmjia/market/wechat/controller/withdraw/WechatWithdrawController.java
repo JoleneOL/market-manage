@@ -159,7 +159,7 @@ public class WechatWithdrawController {
 
         }
         model.addAttribute("badCode", false);
-        return toVerify(login, model, withdraw,withdrawRequest.getWithdrawId());
+        return toVerify(login, model, withdraw,withdrawRequest.getId());
     }
 
     private String toVerify(Login login, Model model, BigDecimal withdraw,Long withdrawRequestId) {
@@ -196,20 +196,30 @@ public class WechatWithdrawController {
                 //没有发票自动提现,默认供应商
                 try {
                     CashTransferResult cashTransferResult = cashTransferService.cashTransfer(null, null, withdrawRequest);
-                    //向财务发送短信提醒
+                    //向财务发送短信提醒,客户自动转账.
+                    log.info(cashTransferResult.toString());
+                    withdrawService.automaticIsSuccessful(withdrawRequest.getId(),cashTransferResult.getProcessingTime());
                     remindFinancial(login, withdraw,true);
                 } catch (SupplierApiUpgradeException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
+                    model.addAttribute("failure", true);
+                    return toVerify(login, model, withdraw,withdrawRequestId);
                 } catch (BadAccessException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
+                    model.addAttribute("failure", true);
+                    return toVerify(login, model, withdraw,withdrawRequestId);
                 } catch (TransferFailureException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
+                    model.addAttribute("failure", true);
+                    return toVerify(login, model, withdraw,withdrawRequestId);
                 } catch (IOException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
+                    model.addAttribute("failure", true);
+                    return toVerify(login, model, withdraw,withdrawRequestId);
                 }
             }
         } catch (IllegalVerificationCodeException ex) {

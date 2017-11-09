@@ -1,5 +1,10 @@
 package cn.lmjia.market.manage.controller;
 
+import cn.lmjia.cash.transfer.CashTransferSupplier;
+import cn.lmjia.cash.transfer.EntityOwner;
+import cn.lmjia.cash.transfer.cjb.CjbSupplier;
+import cn.lmjia.cash.transfer.model.CashTransferResult;
+import cn.lmjia.cash.transfer.service.CashTransferService;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.Manager;
@@ -15,7 +20,10 @@ import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -44,10 +52,16 @@ import java.util.List;
 @Controller
 public class ManageWithdrawController {
 
+    private static final Log log = LogFactory.getLog(ManageWithdrawController.class);
+
     @Autowired
     private ConversionService conversionService;
     @Autowired
     private WithdrawService withdrawService;
+    @Autowired
+    private CashTransferService cashTransferService;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_FINANCE + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/withdrawManage")
@@ -65,8 +79,22 @@ public class ManageWithdrawController {
     @PostMapping("/manage/withdraws/approval")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void approval(@AuthenticationPrincipal Manager manager, long id, String comment, String transactionRecordNumber) {
-        withdrawService.approval(manager, id, comment, transactionRecordNumber);
+    public void approval(@AuthenticationPrincipal Manager manager, long id, String comment, String transactionRecordNumber, EntityOwner owner, String bankName) throws Exception {
+        CashTransferSupplier supplier = null;
+        if ("兴业银行".equalsIgnoreCase(bankName)) {
+            supplier = applicationContext.getBean(CjbSupplier.class);
+        }
+        //转账
+        WithdrawRequest request = withdrawService.get(id);
+        request.setComment(comment);
+        request.setTransactionRecordNumber(transactionRecordNumber);
+        try {
+            CashTransferResult cashTransferResult = cashTransferService.cashTransfer(supplier, owner, request);
+            withdrawService.approval(manager, id, cashTransferResult);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new Exception();
+        }
     }
 
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_FINANCE + "','" + Login.ROLE_LOOK + "')")

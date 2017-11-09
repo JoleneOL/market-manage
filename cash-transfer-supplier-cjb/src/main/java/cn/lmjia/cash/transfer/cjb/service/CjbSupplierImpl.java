@@ -83,7 +83,7 @@ public class CjbSupplierImpl implements CjbSupplier {
 
         XferInqRq xferInqRq = new XferInqRq();
         //要查询的转账交易TrunId
-        xferInqRq.setClientRef(receuver.getWithdrawId().toString());
+        xferInqRq.setClientRef(receuver.getId().toString());
 
         xferInqTrnRq.setXferInqRq(xferInqRq);
         securities_msgsRQV1.setXferInqTrnRq(xferInqTrnRq);
@@ -262,7 +262,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         Securities_msgsRQV1 securities_msgsRQV1 = new Securities_msgsRQV1();
         XferTrnRq xferTrnRq = new XferTrnRq();
         //客户端交易的唯一标志，否则客户端将无法分辨响应报文的对应关系,最大30位建议值为YYYYMMDD+序号
-        xferTrnRq.setTrnuId(receiver.getWithdrawId().toString());
+        xferTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + receiver.getId().toString());
 
         XferRq xferRq = new XferRq();
         XferInfo xferInfo = new XferInfo();

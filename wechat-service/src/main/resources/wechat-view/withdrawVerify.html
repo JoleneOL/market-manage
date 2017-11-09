@@ -61,4 +61,10 @@
         $.toptip('验证码错误');
     })
 </script>
+<!--/*@thymesVar id="failure" type="boolean"*/-->
+<script th:if="${failure}">
+    $(function(){
+        $.toptip('转账失败,请联系客服.');
+    })
+</script>
 </html>

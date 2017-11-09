@@ -1,6 +1,7 @@
 package cn.lmjia.market.core.service;
 
 
+import cn.lmjia.cash.transfer.model.CashTransferResult;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public interface WithdrawService {
 
@@ -86,13 +86,19 @@ public interface WithdrawService {
 
     /**
      * 通过特定提现申请
-     *
      * @param manager                 处理人
      * @param requestId               请求
-     * @param comment                 留言
-     * @param transactionRecordNumber 收据id
+     * @param result                  封装的从银行接收的结果数据.
      */
     @Transactional
-    void approval(Manager manager, long requestId, String comment, String transactionRecordNumber);
+    void approval(Manager manager, long requestId, CashTransferResult result);
 
+    /**
+     * 自动转账成功时,将这个提现请求的状态修改掉.
+     *
+     * @param withdrawRequestId 成功的提现上申请
+     * @param processingTime 供应商(银行)处理的时间.
+     */
+    @Transactional
+    void automaticIsSuccessful(long withdrawRequestId, LocalDateTime processingTime);
 }

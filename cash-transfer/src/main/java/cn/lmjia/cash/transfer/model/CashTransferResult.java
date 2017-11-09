@@ -40,4 +40,15 @@ public class CashTransferResult {
      */
     private String message;
 
+    @Override
+    public String toString() {
+        return "CashTransferResult{" +
+                "客户端该次查询的流水号='" + clientSerial + '\'' +
+                ", 服务端的流水号='" + serviceSerial + '\'' +
+                ", 备注='" + memo + '\'' +
+                ", 该次指令的响应码='" + resultStatuCode + '\'' +
+                ", 指令处理时间=" + processingTime +
+                ", 返回的信息='" + message + '\'' +
+                '}';
+    }
 }

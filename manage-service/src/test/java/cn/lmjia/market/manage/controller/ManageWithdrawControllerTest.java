@@ -41,7 +41,7 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
         ManageWithdrawPage page = ManageWithdrawPage.of(this, driver);
         page.reject(readService.nameForPrincipal(target));
 
-        assertThat(withdrawService.get(request1.getWithdrawId()).getWithdrawStatus())
+        assertThat(withdrawService.get(request1.getId()).getWithdrawStatus())
                 .isEqualByComparingTo(WithdrawStatus.refuse);
 
         WithdrawRequest request2 = randomWithdrawRequest(target);
@@ -49,7 +49,7 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
         page.refresh();
         page.approval(readService.nameForPrincipal(target));
 
-        assertThat(withdrawService.get(request2.getWithdrawId()).getWithdrawStatus())
+        assertThat(withdrawService.get(request2.getId()).getWithdrawStatus())
                 .isEqualByComparingTo(WithdrawStatus.success);
 
         // 提交一个带发票的

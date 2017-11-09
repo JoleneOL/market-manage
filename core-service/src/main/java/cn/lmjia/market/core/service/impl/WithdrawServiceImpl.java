@@ -1,5 +1,6 @@
 package cn.lmjia.market.core.service.impl;
 
+import cn.lmjia.cash.transfer.model.CashTransferResult;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.WithdrawStatus;
@@ -14,17 +15,10 @@ import me.jiangcai.lib.sys.service.SystemStringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class WithdrawServiceImpl implements WithdrawService {
@@ -97,13 +91,22 @@ public class WithdrawServiceImpl implements WithdrawService {
     }
 
     @Override
-    public void approval(Manager manager, long requestId, String comment, String transactionRecordNumber) {
+    public void approval(Manager manager, long requestId, CashTransferResult result) {
+
         WithdrawRequest request = get(requestId);
+        //银行处理时间
+        request.setBankProcessingTime(result.getProcessingTime());
         request.setWithdrawStatus(WithdrawStatus.success);
         request.setManageBy(manager);
         request.setManageTime(LocalDateTime.now());
-        request.setTransactionRecordNumber(transactionRecordNumber);
-        request.setComment(comment);
+    }
+
+    @Override
+    public void automaticIsSuccessful(long withdrawRequestId, LocalDateTime processingTime) {
+        WithdrawRequest request = get(withdrawRequestId);
+        request.setBankProcessingTime(processingTime);
+        // TODO : 这里还有点疑问是否应该直接变成成功状态
+        request.setWithdrawStatus(WithdrawStatus.success);
     }
 
 }
