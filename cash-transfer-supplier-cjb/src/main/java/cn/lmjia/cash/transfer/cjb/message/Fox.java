@@ -43,7 +43,7 @@ public class Fox implements Serializable {
     /**
      * 余额查询响应根标签
      */
-    @JsonProperty("SECURITIES_MESGSRSV1")
+    @JsonProperty("SECURITIES_MSGSRSV1")
     private Securities_msgsRSV1 securities_msgsRSV1;
 
 

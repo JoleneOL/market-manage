@@ -36,14 +36,14 @@ import java.util.UUID;
 /**
  * @author lxf
  */
-@Component("CjbSupplier")
+@Component("cjbSupplier")
 public class CjbSupplierImpl implements CjbSupplier {
     private static final Log log = LogFactory.getLog(CjbSupplierImpl.class);
 
     private final String sendUrl;
 
     public CjbSupplierImpl(Environment environment) {
-        this.sendUrl = environment.getProperty("cjb.URL", "http://120.55.60.148:8008");
+        this.sendUrl = environment.getProperty("cjb.URL", "http://120.55.60.148:8007");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         requestFox.setSecurities_msgsRQV1(securities_msgsRQV1);
 
         boolean interBank = receiver.getBankDesc().contains("兴业") ? true : false;
-        boolean local = receiver.getCity().contains(account.getCity()) ? true : false;
+        boolean local = receiver.getCity().contains(account.getCity()==null?"":account.getCity()) ? true : false;
         //发送消息
         Fox responseFox = sendRequest(requestFox, interBank, local);
         Status status = responseFox.getSecurities_msgsRSV1().getXferTrnRs().getStatus();
@@ -83,7 +83,7 @@ public class CjbSupplierImpl implements CjbSupplier {
 
         XferInqRq xferInqRq = new XferInqRq();
         //要查询的转账交易TrunId
-        xferInqRq.setClientRef(receuver.getId().toString());
+        xferInqRq.setClientRef(receuver.getWithdrawId().toString());
 
         xferInqTrnRq.setXferInqRq(xferInqRq);
         securities_msgsRQV1.setXferInqTrnRq(xferInqTrnRq);
@@ -113,7 +113,6 @@ public class CjbSupplierImpl implements CjbSupplier {
         XferTrnRs xferTrnRs = responseFox.getSecurities_msgsRSV1().getXferTrnRs();
         //查询现金转账响应
         XferInqTrnRs xferInqTrnRs = responseFox.getSecurities_msgsRSV1().getXferInqTrnRs();
-        Map<String, Object> result = new HashMap<>();
 
         CashTransferResult cashTransferResult = new CashTransferResult();
         if (xferTrnRs != null) {
@@ -125,7 +124,7 @@ public class CjbSupplierImpl implements CjbSupplier {
             }
             //成功
             XferRs xferRs = xferTrnRs.getXferRs();
-            cashTransferResult.setClientSerial(xferInqTrnRs.getTrnuId());
+            cashTransferResult.setClientSerial(xferTrnRs.getTrnuId());
             cashTransferResult.setServiceSerial(xferRs.getSrvrId());
             if(xferRs.getXferInfo().getMemo() != null){
                 cashTransferResult.setMemo(xferRs.getXferInfo().getMemo());
@@ -275,7 +274,8 @@ public class CjbSupplierImpl implements CjbSupplier {
         //收款人信息
         AcctTo acctTo = new AcctTo();
         acctTo.setAcctId(receiver.getAccountNum());
-        acctTo.setBankNum(receiver.getBankNumber());
+        String num = StringUtils.isEmpty(receiver.getBankNumber())?"":receiver.getBankNumber();
+        acctTo.setBankNum(num);
         acctTo.setName(receiver.getName());
         acctTo.setBankDesc(receiver.getBankDesc());
         //付款人银行和收款人银行是否是同个银行
@@ -283,12 +283,16 @@ public class CjbSupplierImpl implements CjbSupplier {
             acctTo.setCity(receiver.getCity());
         }
         //转账金额
-        xferInfo.setTrnAmt(receiver.getWithdrawAmount());
+        xferInfo.setTrnAmt(receiver.getWithdrawAmount().setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
         //用款用途
-        xferInfo.setPurPose(receiver.getPurpose());
+        if(!StringUtils.isEmpty(receiver.getPurpose())) {
+            xferInfo.setPurPose(receiver.getPurpose());
+        }
         if (StringUtils.isNotBlank(receiver.getMemo())) {
             xferInfo.setMemo(receiver.getMemo());
         }
+        xferInfo.setAcctfrom(acctfrom);
+        xferInfo.setAcctTo(acctTo);
         xferRq.setXferInfo(xferInfo);
         xferTrnRq.setXferRq(xferRq);
         securities_msgsRQV1.setXferTrnRq(xferTrnRq);

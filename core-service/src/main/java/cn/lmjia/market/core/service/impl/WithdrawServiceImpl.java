@@ -96,6 +96,8 @@ public class WithdrawServiceImpl implements WithdrawService {
         WithdrawRequest request = get(requestId);
         //银行处理时间
         request.setBankProcessingTime(result.getProcessingTime());
+        //这笔申请在银行中的流水号
+        request.setClientSerial(result.getClientSerial());
         request.setWithdrawStatus(WithdrawStatus.success);
         request.setManageBy(manager);
         request.setManageTime(LocalDateTime.now());

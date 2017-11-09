@@ -46,7 +46,7 @@ public class XferInfo implements Serializable{
      * 转账金额，不能为空、空格且金额必须大于0.01，必须为数值型，decimal(17,2)，即整数位最长15位，小数位2位，以下同,必输
      */
     @JsonProperty("TRNAMT")
-    private BigDecimal trnAmt;
+    private String trnAmt;
 
     /**
      * 支付方式 ,非输入

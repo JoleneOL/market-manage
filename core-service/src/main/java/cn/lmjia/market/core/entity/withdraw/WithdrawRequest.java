@@ -134,6 +134,11 @@ public class WithdrawRequest implements CashReceiver {
     }
 
     @Override
+    public String getWithdrawId() {
+        return this.clientSerial;
+    }
+
+    @Override
     public String getAccountNum() {
         return this.account;
     }

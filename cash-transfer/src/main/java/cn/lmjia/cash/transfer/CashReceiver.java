@@ -11,6 +11,11 @@ public interface CashReceiver {
      * @return 该提现申请数据库中id;
      */
     Long getId();
+
+    /**
+     * @return 获取该提现申请在于银行交接是转账流水号.如果为Null说明是没发送过转账指令.
+     */
+    String getWithdrawId();
     /**
      * @return 收款账号,最大32位
      */
