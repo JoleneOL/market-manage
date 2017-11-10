@@ -96,25 +96,24 @@
                             <label class="col-sm-3 control-label">订单用户</label>
                             <div class="col-sm-6">
                                 <input type="text" placeholder="订单用户" class="form-control"
-                                       name="orderUser" value="前面的名字"
-                                       th:value="${currentData.logisticsDestination.consigneeName}" readonly>
+                                       name="consigneeName" value="前面的名字"
+                                       th:value="${currentData.logisticsDestination.consigneeName}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">订单手机号</label>
                             <div class="col-sm-6">
                                 <input type="text" placeholder="订单手机号" class="form-control"
-                                       name="phone" value="18898886888"
-                                       th:value="${currentData.logisticsDestination.consigneeMobile}" readonly>
+                                       name="consigneeMobile" value="18898886888"
+                                       th:value="${currentData.logisticsDestination.consigneeMobile}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">订单地址</label>
                             <div class="col-sm-6">
                                 <input type="text" placeholder="订单地址" class="form-control"
-                                       name="address" value="浙江省-杭州市-滨江区海亮大厦"
-                                       th:value="${currentData.logisticsDestination.province+'-'+currentData.logisticsDestination.city+'-'+currentData.logisticsDestination.country}"
-                                       readonly>
+                                       name="address" value="浙江省-杭州市-滨江区-海亮大厦"
+                                       th:value="${currentData.logisticsDestination.province+'-'+currentData.logisticsDestination.city+'-'+currentData.logisticsDestination.country+'-'+currentData.logisticsDestination.detailAddress}">
                             </div>
                         </div>
                         <!--<div class="form-group">-->

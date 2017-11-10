@@ -54,6 +54,50 @@ public class SystemServiceImpl implements SystemService {
     }
 
     @Override
+    public boolean isOrderAbleToGainCommission() {
+        return systemStringService.getCustomSystemString("market.OrderAbleToGainCommission"
+                , "market.OrderAbleToGainCommission.comment", true, Boolean.class, true);
+    }
+
+    @Override
+    public void updateOrderAbleToGainCommission(boolean value) {
+        systemStringService.updateSystemString("market.OrderAbleToGainCommission", value);
+    }
+
+    @Override
+    public boolean isOnlyAgentGainFirstGuide() {
+        return systemStringService.getCustomSystemString("market.OnlyAgentGainFirstGuide"
+                , "market.OnlyAgentGainFirstGuide.comment", true, Boolean.class, false);
+    }
+
+    @Override
+    public void updateOnlyAgentGainFirstGuide(boolean value) {
+        systemStringService.updateSystemString("market.OnlyAgentGainFirstGuide", value);
+    }
+
+    @Override
+    public boolean isSplitMarketingCommission() {
+        return systemStringService.getCustomSystemString("market.SplitMarketingCommission"
+                , null, true, Boolean.class, false);
+    }
+
+    @Override
+    public void updateSplitMarketingCommission(boolean value) {
+        systemStringService.updateSystemString("market.SplitMarketingCommission", value);
+    }
+
+    @Override
+    public boolean isAgentGainAllMarketing() {
+        return systemStringService.getCustomSystemString("market.AgentGainAllMarketing"
+                , null, true, Boolean.class, true);
+    }
+
+    @Override
+    public void updateAgentGainAllMarketing(boolean value) {
+        systemStringService.updateSystemString("market.AgentGainAllMarketing", value);
+    }
+
+    @Override
     public void updateRegularLoginAsAnyOrder(boolean value) {
         systemStringService.updateSystemString("market.RegularLoginAsAnyOrder", value);
     }

@@ -142,6 +142,11 @@ public abstract class CoreServiceTest extends SpringWebTest {
     public void com178() {
         systemService.updateNonAgentAbleToGainCommission(true);
         systemService.updateRegularLoginAsAnyOrder(true);
+
+
+        systemService.updateAgentGainAllMarketing(true);
+        systemService.updateOrderAbleToGainCommission(true);
+        systemService.updateSplitMarketingCommission(false);
     }
 
     /**
@@ -607,6 +612,7 @@ public abstract class CoreServiceTest extends SpringWebTest {
 
     /**
      * 使用MVC方式
+     *
      * @param tagType
      * @return
      */

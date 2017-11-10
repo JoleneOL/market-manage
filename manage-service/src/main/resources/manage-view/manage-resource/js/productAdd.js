@@ -39,9 +39,13 @@ $(function () {
                     }
                     propertyNameValue += (propertyNameId + ":" + propertyValue);
                 }
-            })
+            });
             $("input[name=propertyNameValue]").val(propertyNameValue);
-            form.submit();
+            if(!tinymce.activeEditor.getContent()) {
+                layer.msg('货品详情不能为空');
+            } else {
+                form.submit();
+            }
         }
     });
 

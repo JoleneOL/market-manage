@@ -156,8 +156,8 @@
                         </li>
                     </ul>
                 </li>
-                <li th:remove="all">
-                    <a class="J_menuItem" href="_main.html">
+                <li>
+                    <a class="J_menuItem" href="_loginManage.html" th:href="@{/loginManage}">
                         <i class="fa fa-user"></i>
                         <span class="nav-label">客户管理</span>
                     </a>
@@ -228,6 +228,18 @@
                         <i class="fa fa-wrench"></i>
                         <span class="nav-label">安装管理</span>
                     </a>
+                </li>
+                <li sec:authorize="hasAnyRole('ROOT','LOOK','ROLE_PRODUCT_CENTER')">
+                    <a href="#">
+                        <i class="fa fa-line-chart"></i>
+                        <span class="nav-label">运营管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="operation-management/_helpCenter.html" th:href="@{/manage/commonProblem}" class="J_menuItem">帮助中心</a>
+                        </li>
+                    </ul>
                 </li>
                 <li sec:authorize="hasAnyRole('ROOT')">
                     <a href="#">

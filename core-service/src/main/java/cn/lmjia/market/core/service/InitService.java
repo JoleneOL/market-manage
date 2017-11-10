@@ -117,6 +117,8 @@ public class InitService {
     private PropertyValueRepository propertyValueRepository;
     @Autowired
     private MainOrderService mainOrderService;
+    @Autowired
+    private SystemService systemService;
 
     @PostConstruct
     @Transactional
@@ -180,6 +182,10 @@ public class InitService {
                     statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource(
                                     "/LoginCommissionJournal." + fileName + ".sql").getInputStream()
                             , Charset.forName("UTF-8")));
+                    statement.executeUpdate("DROP TABLE IF EXISTS `AgentGoodAdvancePaymentJournal`");
+                    statement.executeUpdate(StreamUtils.copyToString(new ClassPathResource(
+                                    "/AgentGoodAdvancePaymentJournal." + fileName + ".sql").getInputStream()
+                            , Charset.forName("UTF-8")));
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("读取SQL失败", e);
@@ -187,6 +193,12 @@ public class InitService {
             //
 
         });
+
+        // 设置默认值
+        systemService.updateSplitMarketingCommission(systemService.isSplitMarketingCommission());
+        systemService.updateOrderAbleToGainCommission(systemService.isOrderAbleToGainCommission());
+        systemService.updateAgentGainAllMarketing(systemService.isAgentGainAllMarketing());
+        systemService.updateOnlyAgentGainFirstGuide(systemService.isOnlyAgentGainFirstGuide());
     }
 
     private void executeSQLCode(ConnectionProvider connection, String resourceName) throws SQLException {
@@ -515,6 +527,9 @@ public class InitService {
                         break;
                     case newCommission:
                         jdbcService.tableAlterAddColumn(MainGood.class, "commissionSource", "1");
+                        break;
+                    case changeGuide:
+                        jdbcService.tableAlterAddColumn(Login.class, "guideChanged", "0");
                         break;
                     default:
                 }

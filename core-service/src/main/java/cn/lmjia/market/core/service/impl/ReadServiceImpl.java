@@ -45,6 +45,7 @@ import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author CJ
@@ -73,6 +74,21 @@ public class ReadServiceImpl implements ReadService {
     private TagRepository tagRepository;
 
     @Override
+    public String nameForAgent(AgentLevel agentLevel) {
+        String level;
+        if (!StringUtils.isEmpty(agentLevel.getLevelTitle()))
+            level = agentLevel.getLevelTitle();
+        else
+            level = getLoginTitle(agentLevel.getLevel());
+        String rank;
+        if (!StringUtils.isEmpty(agentLevel.getRank()))
+            rank = agentLevel.getRank();
+        else
+            rank = nameForPrincipal(agentLevel.getLogin());
+        return rank + "(" + level + ")";
+    }
+
+    @Override
     public String mobileFor(Object principal) {
         if (principal == null)
             return "";
@@ -99,6 +115,19 @@ public class ReadServiceImpl implements ReadService {
     }
 
     @Override
+    public String joinUsedNamesForPrincipal(Object principal, CharSequence delimiter) {
+        if (principal == null)
+            return "";
+        final Login login = toLogin(principal);
+        ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
+        if (contactWay == null)
+            return "";
+        if (contactWay.getUsedNames() == null)
+            return "";
+        return contactWay.getUsedNames().stream().collect(Collectors.joining(delimiter == null ? " " : delimiter));
+    }
+
+    @Override
     public String wechatNickNameForPrincipal(Object principal) {
         final Login login = toLogin(principal);
         // 这个时候不见得有 刷新下
@@ -114,6 +143,8 @@ public class ReadServiceImpl implements ReadService {
             return null;
         final Login login = toLogin(principal);
         ContactWay contactWay = loginRepository.getOne(login.getId()).getContactWay();
+        if (contactWay == null)
+            return null;
         return contactWay.getAddress();
     }
 

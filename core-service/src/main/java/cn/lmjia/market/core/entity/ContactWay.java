@@ -6,10 +6,12 @@ import me.jiangcai.jpa.entity.support.Address;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.List;
 
 /**
  * 联系方式
@@ -34,6 +36,11 @@ public class ContactWay {
      */
     @Column(length = 50)
     private String name;
+    /**
+     * 曾用名
+     */
+    @ElementCollection
+    private List<String> usedNames;
 
     private Address address;
     @Column(length = 60)

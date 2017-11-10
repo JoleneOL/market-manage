@@ -94,6 +94,11 @@ public class DemoOrder implements DeliverableOrder {
     }
 
     @Override
+    public void updateLastShiftDestination(LogisticsDestination destination) {
+
+    }
+
+    @Override
     public void switchToLogisticsFinishStatus() {
         lastStatus = "switchToLogisticsFinishStatus";
     }

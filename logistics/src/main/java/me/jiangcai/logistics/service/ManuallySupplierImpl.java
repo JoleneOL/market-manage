@@ -4,6 +4,7 @@ import me.jiangcai.logistics.LogisticsDestination;
 import me.jiangcai.logistics.LogisticsSource;
 import me.jiangcai.logistics.entity.ManuallyOrder;
 import me.jiangcai.logistics.entity.StockShiftUnit;
+import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.supplier.ManuallySupplier;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class ManuallySupplierImpl implements ManuallySupplier {
             , Consumer<StockShiftUnit> forUnit, int options) {
         ManuallyOrder manuallyOrder = new ManuallyOrder();
         forUnit.accept(manuallyOrder);
+        manuallyOrder.setCurrentStatus(ShiftStatus.accept);
         return manuallyOrder;
     }
 

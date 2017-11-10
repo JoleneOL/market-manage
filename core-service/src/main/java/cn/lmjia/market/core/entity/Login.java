@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.jiangcai.wx.standard.entity.StandardWeixinUser;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.CascadeType;
@@ -108,6 +109,10 @@ public class Login implements UserDetails {
      */
     @ManyToOne
     private Login guideUser;
+    /**
+     * 是否被修改锅引导者
+     */
+    private boolean guideChanged = false;
     @OneToOne(cascade = CascadeType.ALL)
     private ContactWay contactWay;
     /**
@@ -197,5 +202,9 @@ public class Login implements UserDetails {
                 ", enabled=" + enabled +
                 ", guideUser=" + guideUser +
                 '}';
+    }
+
+    public boolean isRoot() {
+        return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ROOT"));
     }
 }

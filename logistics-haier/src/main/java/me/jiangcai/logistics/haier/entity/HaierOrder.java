@@ -34,4 +34,9 @@ public class HaierOrder extends StockShiftUnit {
     public String getSupplierOrganizationName() {
         return "青岛日日顺物流有限公司";
     }
+
+    @Override
+    public String getHumanReadableExpressId() {
+        return getExpressId();
+    }
 }
