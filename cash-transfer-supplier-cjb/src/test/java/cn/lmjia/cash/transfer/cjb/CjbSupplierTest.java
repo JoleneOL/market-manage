@@ -119,7 +119,7 @@ public class CjbSupplierTest extends SpringWebTest {
 
             @Override
             public String getCity() {
-                return "杭州";
+                return null;
             }
 
             @Override

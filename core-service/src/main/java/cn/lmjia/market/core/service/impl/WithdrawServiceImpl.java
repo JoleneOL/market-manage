@@ -92,11 +92,10 @@ public class WithdrawServiceImpl implements WithdrawService {
 
     @Override
     public void approval(Manager manager, long requestId, CashTransferResult result) {
-
         WithdrawRequest request = get(requestId);
         //银行处理时间
         request.setBankProcessingTime(result.getProcessingTime());
-        //这笔申请在银行中的流水号
+        //这提现申请在银行中的流水号
         request.setClientSerial(result.getClientSerial());
         request.setWithdrawStatus(WithdrawStatus.success);
         request.setManageBy(manager);

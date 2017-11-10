@@ -58,7 +58,10 @@ public class CjbSupplierImpl implements CjbSupplier {
         requestFox.setSecurities_msgsRQV1(securities_msgsRQV1);
 
         boolean interBank = receiver.getBankDesc().contains("兴业") ? true : false;
-        boolean local = receiver.getCity().contains(account.getCity()==null?"":account.getCity()) ? true : false;
+        boolean local = false;
+        if(receiver.getCity() != null){
+            local = receiver.getCity().contains(account.getCity()==null?"":account.getCity()) ? true : false;
+        }
         //发送消息
         Fox responseFox = sendRequest(requestFox, interBank, local);
         Status status = responseFox.getSecurities_msgsRSV1().getXferTrnRs().getStatus();
@@ -274,13 +277,14 @@ public class CjbSupplierImpl implements CjbSupplier {
         //收款人信息
         AcctTo acctTo = new AcctTo();
         acctTo.setAcctId(receiver.getAccountNum());
-        String num = StringUtils.isEmpty(receiver.getBankNumber())?"":receiver.getBankNumber();
-        acctTo.setBankNum(num);
+        acctTo.setBankNum(receiver.getBankNumber());
         acctTo.setName(receiver.getName());
         acctTo.setBankDesc(receiver.getBankDesc());
         //付款人银行和收款人银行是否是同个银行
-        if (!account.getCity().equals(receiver.getCity())) {
-            acctTo.setCity(receiver.getCity());
+        if(receiver.getCity() != null){
+            if (!account.getCity().equals(receiver.getCity())) {
+                acctTo.setCity(receiver.getCity());
+            }
         }
         //转账金额
         xferInfo.setTrnAmt(receiver.getWithdrawAmount().setScale(2,BigDecimal.ROUND_DOWN).toPlainString());

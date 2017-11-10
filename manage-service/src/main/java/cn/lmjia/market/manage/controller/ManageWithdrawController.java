@@ -86,7 +86,9 @@ public class ManageWithdrawController {
         }
         //转账
         WithdrawRequest request = withdrawService.get(id);
+        //备注
         request.setComment(comment);
+        //
         request.setTransactionRecordNumber(transactionRecordNumber);
         try {
             CashTransferResult cashTransferResult = cashTransferService.cashTransfer(supplier, owner, request);
