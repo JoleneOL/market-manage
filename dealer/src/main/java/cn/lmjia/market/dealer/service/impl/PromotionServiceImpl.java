@@ -16,7 +16,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 
 /**
@@ -42,6 +48,28 @@ public class PromotionServiceImpl implements PromotionService {
     private ReadService readService;
     @Autowired
     private LoginService loginService;
+    @SuppressWarnings("SpringJavaAutowiringInspection")
+    @Autowired
+    private EntityManager entityManager;
+
+    @PostConstruct
+    @Transactional
+    public void init() {
+        // 自动升级3 为  2
+        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Login> cq = cb.createQuery(Login.class);
+        Root<Login> root = cq.from(Login.class);
+
+        entityManager.createQuery(
+                cq.where(cb.equal(ReadService.agentLevelForLogin(root, cb), 3))
+        )
+                .getResultList()
+                .forEach(login -> {
+                    log.info("212更新自动升级代理商 " + login.getId() + ":" + readService.nameForPrincipal(login));
+                    AgentLevel top = agentService.highestAgent(login);
+                    agentLevelUpgrade(login, top);
+                });
+    }
 
     @Override
     public LoginRelationChangedEvent tryPromotion(LoginRelationChangedEvent event) {

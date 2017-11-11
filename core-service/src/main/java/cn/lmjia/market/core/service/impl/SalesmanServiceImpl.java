@@ -144,7 +144,7 @@ public class SalesmanServiceImpl implements SalesmanService {
                     conversionService = applicationContext.getBean(ConversionService.class);
                 }
                 final BigDecimal rate = systemStringService.getCustomSystemString("market.default.all.rates"
-                        , null, true, BigDecimal.class, new BigDecimal("0.36"));
+                        , null, true, BigDecimal.class, new BigDecimal("0.375"));
                 return Arrays.asList(
                         Fields.asBasic("id")
                         , FieldBuilder.asName(SalesAchievement.class, "remark")

@@ -140,6 +140,14 @@ public interface ReadService {
     }
 
     /**
+     * @param level
+     * @return 是否允许使用这个代理级别
+     */
+    default boolean isAllowAgentLevel(int level) {
+        return level != 3;
+    }
+
+    /**
      * @param agentLevel 代理商
      * @return 一个代理商的完整名称
      */
