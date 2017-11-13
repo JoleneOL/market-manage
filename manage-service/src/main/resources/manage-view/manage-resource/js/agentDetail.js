@@ -114,7 +114,6 @@ $(function () {
             success: function (res) {
                 layer.close(loading);
                 if (res.resultCode !== 200) {
-                    layer.close(index);
                     layer.msg('修改失败，稍后再试');
                     return '';
                 }
@@ -126,7 +125,6 @@ $(function () {
             },
             error: function () {
                 layer.close(loading);
-                layer.close(index);
                 layer.msg('修改失败，稍后再试');
             }
         });
@@ -171,10 +169,9 @@ $(function () {
             data: newSuperiorId,
             dataType: 'json',
             success: function (res) {
-                console.log(res);
+                // console.log(res);
                 layer.close(loading);
                 if (res.resultCode !== 200) {
-                    layer.close(index);
                     layer.msg('修改失败，稍后再试');
                     return '';
                 }
@@ -186,7 +183,6 @@ $(function () {
             },
             error: function () {
                 layer.close(loading);
-                layer.close(index);
                 layer.msg('修改失败，稍后再试');
             }
         });
