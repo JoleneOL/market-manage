@@ -7,6 +7,7 @@ import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.service.CommissionDetailService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.manage.ManageServiceTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,7 @@ import java.util.List;
  *
  * @author lxf
  */
+@Ignore
 public class CommissionDetailsControllerTest extends ManageServiceTest {
 
     @Autowired
