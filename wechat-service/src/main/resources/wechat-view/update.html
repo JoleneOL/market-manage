@@ -66,10 +66,10 @@
                                 th:text="${@readService.getLoginTitle(4)}">经销商
                         </option>
                         <option th:if="${u2Enable && @readService.isAllowAgentLevel(3)}" value="2"
-                                th:text="${@readService.getLoginTitle(3)}">区县代理
+                                th:text="${@readService.getLoginTitle(3)}">运营商
                         </option>
                         <option th:if="${u3Enable && @readService.isAllowAgentLevel(2)}" value="3"
-                                th:text="${@readService.getLoginTitle(2)}">市级代理
+                                th:text="${@readService.getLoginTitle(2)}">合伙人
                         </option>
                     </select>
                 </div>
@@ -212,11 +212,11 @@
                 <a class="weui-navbar__item weui-bar__item--on" href="#tab1" th:text="${@readService.getLoginTitle(4)}">
                     经销商
                 </a>
-                <a class="weui-navbar__item" href="#tab2" th:text="${@readService.getLoginTitle(3)}">
-                    区县代理
-                </a>
+                <!--<a class="weui-navbar__item" href="#tab2" th:text="${@readService.getLoginTitle(3)}">-->
+                    <!--区县代理-->
+                <!--</a>-->
                 <a class="weui-navbar__item" href="#tab3" th:text="${@readService.getLoginTitle(2)}">
-                    市级代理
+                    合伙人
                 </a>
             </div>
             <div class="weui-tab__bd">
@@ -228,14 +228,14 @@
                     <img src="../wechat-resource/assets/img/agreement/dealer/0005.jpg">
                     <img src="../wechat-resource/assets/img/agreement/dealer/0006.jpg">
                 </div>
-                <div id="tab2" class="weui-tab__bd-item">
-                    <img src="../wechat-resource/assets/img/agreement/district/0001.jpg">
-                    <img src="../wechat-resource/assets/img/agreement/district/0002.jpg">
-                    <img src="../wechat-resource/assets/img/agreement/district/0003.jpg">
-                    <img src="../wechat-resource/assets/img/agreement/district/0004.jpg">
-                    <img src="../wechat-resource/assets/img/agreement/district/0005.jpg">
-                    <img src="../wechat-resource/assets/img/agreement/district/0006.jpg">
-                </div>
+                <!--<div id="tab2" class="weui-tab__bd-item">-->
+                    <!--<img src="../wechat-resource/assets/img/agreement/district/0001.jpg">-->
+                    <!--<img src="../wechat-resource/assets/img/agreement/district/0002.jpg">-->
+                    <!--<img src="../wechat-resource/assets/img/agreement/district/0003.jpg">-->
+                    <!--<img src="../wechat-resource/assets/img/agreement/district/0004.jpg">-->
+                    <!--<img src="../wechat-resource/assets/img/agreement/district/0005.jpg">-->
+                    <!--<img src="../wechat-resource/assets/img/agreement/district/0006.jpg">-->
+                <!--</div>-->
                 <div id="tab3" class="weui-tab__bd-item weui-tab__bd-item--active">
                     <img src="../wechat-resource/assets/img/agreement/city/0001.jpg">
                     <img src="../wechat-resource/assets/img/agreement/city/0002.jpg">
