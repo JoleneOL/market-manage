@@ -1806,3 +1806,40 @@
     background-size: 50%;
   }
 }
+
+//2017年10月19日
+.view-help-center {
+  padding-top: 44px;
+  .weui-search-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99;
+  }
+}
+.view-search-mask {
+  display: none;
+  position: absolute;
+  top: 44px;
+  bottom: 0;
+  width: 100%;
+  background: #f0eff5;
+  z-index: 999;
+  .no-result {
+    padding-top: 40%;
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+  }
+}
+.weui-article {
+  font-size: 14px;
+  h1 {
+    font-size: 15px;
+    font-weight: 700;
+    .border-1px-bottom(#e5e5e5);
+    &:after {
+      bottom: -6px;
+    }
+  }
+}

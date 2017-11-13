@@ -1568,3 +1568,48 @@
   background-position: center center;
   background-size: 50%;
 }
+.view-help-center {
+  padding-top: 44px;
+}
+.view-help-center .weui-search-bar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99;
+}
+.view-search-mask {
+  display: none;
+  position: absolute;
+  top: 44px;
+  bottom: 0;
+  width: 100%;
+  background: #f0eff5;
+  z-index: 999;
+}
+.view-search-mask .no-result {
+  padding-top: 40%;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
+}
+.weui-article {
+  font-size: 14px;
+}
+.weui-article h1 {
+  font-size: 15px;
+  font-weight: 700;
+  position: relative;
+}
+.weui-article h1::after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+}
+.weui-article h1:after {
+  bottom: -6px;
+}

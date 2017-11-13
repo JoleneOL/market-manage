@@ -117,6 +117,8 @@ public class InitService {
     private PropertyValueRepository propertyValueRepository;
     @Autowired
     private MainOrderService mainOrderService;
+    @Autowired
+    private SystemService systemService;
 
     @PostConstruct
     @Transactional
@@ -191,6 +193,12 @@ public class InitService {
             //
 
         });
+
+        // 设置默认值
+        systemService.updateSplitMarketingCommission(systemService.isSplitMarketingCommission());
+        systemService.updateOrderAbleToGainCommission(systemService.isOrderAbleToGainCommission());
+        systemService.updateAgentGainAllMarketing(systemService.isAgentGainAllMarketing());
+        systemService.updateOnlyAgentGainFirstGuide(systemService.isOnlyAgentGainFirstGuide());
     }
 
     private void executeSQLCode(ConnectionProvider connection, String resourceName) throws SQLException {

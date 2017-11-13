@@ -12,6 +12,7 @@ import cn.lmjia.market.core.jpa.JpaFunctionUtils;
 import cn.lmjia.market.core.repository.MainOrderRepository;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.SystemService;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.lib.sys.service.SystemStringService;
 import me.jiangcai.logistics.event.OrderInstalledEvent;
@@ -69,6 +70,8 @@ public class MainOrderServiceImpl extends AbstractMainDeliverableOrderService<Ma
     private ApplicationContext applicationContext;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private SystemService systemService;
     @Autowired
     private Environment env;
 
@@ -205,11 +208,15 @@ public class MainOrderServiceImpl extends AbstractMainDeliverableOrderService<Ma
     @Override
     public Login getEnjoyability(MainOrder order) {
         Login orderBy = order.getOrderBy();
+        if (!systemService.isOrderAbleToGainCommission())
+            return getEnjoyability(orderBy.getGuideUser());
         return getEnjoyability(orderBy);
     }
 
     @Override
     public Login getEnjoyability(Login orderBy) {
+        if (orderBy == null)
+            return loginService.byLoginName("master");
         Login login = orderBy;
         while (!loginService.isRegularLogin(login)) {
             // 最终都没有找到收益人 则给 管理员。。

@@ -45,6 +45,13 @@ public class MallIndexPage extends AbstractWechatPage {
     }
 
     public void validatePageWithSearch(List<Tag> searchTags) {
+        if (searchTags == null || searchTags.isEmpty()) {
+            // 我以为是这个问题。
+            assertThat(webDriver.findElements(By.className("mall-tagBanner")).isEmpty())
+                    .as("不存在标签")
+                    .isTrue();
+            return;
+        }
         List<WebElement> searchDivs = webDriver.findElement(By.className("mall-tagBanner"))
                 .findElements(By.className("tag-list-item"));
         assertThat(searchDivs.size()).isEqualTo(searchTags.size());

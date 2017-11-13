@@ -100,6 +100,13 @@ public class TeamDataController {
             AgentLevel agentLevel = agentService.getAgent(NumberUtils.parseNumber(userId.substring("Agent".length())
                     , Long.class));
             targetLogin = agentLevel.getLogin();
+            // 如果它的下级被隐藏 则直接去同个人所属的下级
+            if (!readService.isAllowAgentLevel(agentLevel.getLevel() + 1)) {
+                agentLevel = agentLevel.getSubAgents().stream()
+                        .filter(agentLevel1 -> agentLevel1.getLogin().equals(targetLogin))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("没有直属？"));
+            }
             model.addAttribute("dataUrl", "/api/subordinate/" + agentLevel.getId());
         } else {
             targetLogin = loginService.get(NumberUtils.parseNumber(userId, Long.class));

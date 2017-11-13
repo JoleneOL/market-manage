@@ -66,4 +66,21 @@ public abstract class AbstractPage extends me.jiangcai.lib.test.page.AbstractPag
         new WebDriverWait(webDriver, 3)
                 .until(ExpectedConditions.invisibilityOfElementLocated(By.className("layui-layer-btn" + id)));
     }
+
+    /**
+     * 输入tinyMCE的富文本框
+     *
+     * @param name 字段名称
+     * @param text 目标内容
+     */
+    protected void inputTinyMCE(String name, String text) {
+        WebDriver frame = webDriver.switchTo().frame(name + "_ifr");
+
+        try {
+            WebElement body = frame.findElement(By.tagName("body"));
+            body.sendKeys(text);
+        } finally {
+            frame.switchTo().parentFrame();
+        }
+    }
 }
