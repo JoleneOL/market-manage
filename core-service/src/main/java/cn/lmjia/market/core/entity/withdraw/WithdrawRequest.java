@@ -92,10 +92,10 @@ public class WithdrawRequest implements CashReceiver {
     private String logisticsCompany;
 
     /**
-     * 转账单据编号
+     * 转账单据编号 目前没有用
      */
-    @Column(length = 50)
-    private String transactionRecordNumber;
+//    @Column(length = 50)
+//    private String transactionRecordNumber;
 
     /**
      * 备注信息，最多100个字
@@ -113,6 +113,9 @@ public class WithdrawRequest implements CashReceiver {
     @ManyToOne
     private Manager manageBy;
 
+    /**
+     * 该请求在发送银行指令是的流水号.
+     */
     @Column(length = 30)
     private String clientSerial;
     /**

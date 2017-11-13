@@ -89,7 +89,7 @@ public class CjbSupplierTest extends SpringWebTest {
         return new CashReceiver() {
             @Override
             public Long getId() {
-                return 1l;
+                return 3l;
             }
 
             @Override

@@ -79,21 +79,22 @@ public class ManageWithdrawController {
     @PostMapping("/manage/withdraws/approval")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void approval(@AuthenticationPrincipal Manager manager, long id, String comment, String transactionRecordNumber, EntityOwner owner, String bankName) throws Exception {
-        CashTransferSupplier supplier = null;
+    public void approval(@AuthenticationPrincipal Manager manager, long id, String comment,String bankName) throws Exception {
+        final CashTransferSupplier supplier;
         if ("兴业银行".equalsIgnoreCase(bankName)) {
             supplier = applicationContext.getBean(CjbSupplier.class);
-        }
+        }else
+        supplier = applicationContext.getBean(CjbSupplier.class);
+
         //转账
         WithdrawRequest request = withdrawService.get(id);
         //备注
         request.setComment(comment);
-        //
-        request.setTransactionRecordNumber(transactionRecordNumber);
         try {
-            CashTransferResult cashTransferResult = cashTransferService.cashTransfer(supplier, owner, request);
+            CashTransferResult cashTransferResult = cashTransferService.cashTransfer(supplier, null, request);
             withdrawService.approval(manager, id, cashTransferResult);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             throw new Exception();
         }

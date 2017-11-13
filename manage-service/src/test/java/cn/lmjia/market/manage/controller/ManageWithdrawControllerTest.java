@@ -43,13 +43,20 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
 
         assertThat(withdrawService.get(request1.getId()).getWithdrawStatus())
                 .isEqualByComparingTo(WithdrawStatus.refuse);
-
+        //第二次拒绝 跳过201711102这个流水号,这个流水号有问题不好使
         WithdrawRequest request2 = randomWithdrawRequest(target);
+
+        page.refresh();
+        page.reject(readService.nameForPrincipal(target));
+        assertThat(withdrawService.get(request2.getId()).getWithdrawStatus())
+                .isEqualByComparingTo(WithdrawStatus.refuse);
+
+        WithdrawRequest request3 = testWithdrawRequest(target);
 
         page.refresh();
         page.approval(readService.nameForPrincipal(target));
 
-        assertThat(withdrawService.get(request2.getId()).getWithdrawStatus())
+        assertThat(withdrawService.get(request3.getId()).getWithdrawStatus())
                 .isEqualByComparingTo(WithdrawStatus.success);
 
         // 提交一个带发票的
@@ -82,4 +89,12 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
         return request;
     }
 
+    //用于兴业银行测试转账的提现申请
+    private WithdrawRequest testWithdrawRequest(Login target) {
+        WithdrawRequest request = withdrawService.withdrawNew(target, "汪汪", "622908121000127611",
+                RandomStringUtils.randomAlphabetic(10), randomMobile(), new BigDecimal("100"),
+                null, null);
+        mockPadding(request);
+        return request;
+    }
 }

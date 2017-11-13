@@ -19,6 +19,7 @@ public class MyBank implements EntityOwner{
     @Autowired
     private Environment environment;
 
+
     @Override
     public OwnerAccount getOwnerAccount(String supplierName) {
         if ("兴业银行".equalsIgnoreCase(supplierName) || supplierName==null){
@@ -26,13 +27,13 @@ public class MyBank implements EntityOwner{
                 @Override
                 public String getAccountNum() {
                     //目前不知道
-                    return null;
+                    return environment.getProperty("market.owner.accountNum","117010100100000177");
                 }
 
                 @Override
                 public String getName() {
                     //
-                    return null;
+                    return environment.getProperty("market.owner.accountNum","中国民族证券有限责任公司12");
                 }
 
                 @Override
@@ -48,10 +49,10 @@ public class MyBank implements EntityOwner{
                 @Override
                 public Map<String, String> getLoginInformation() {
                     Map<String, String> message = new HashMap<>();
-                    message.put("cId","3500918700");
-                    message.put("userId","");
-                    message.put("userPass","");
-                    return null;
+                    message.put("cid",environment.getProperty("market.owner.cid","1100343164"));
+                    message.put("userId",environment.getProperty("market.owner.userId","chenlong"));
+                    message.put("userPass",environment.getProperty("market.owner.userPass","a11111"));
+                    return message;
                 }
             };
         }
