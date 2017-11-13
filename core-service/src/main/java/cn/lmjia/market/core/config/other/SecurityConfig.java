@@ -86,6 +86,9 @@ public class SecurityConfig {
                             .authorizeRequests();
 
             registry
+                    //帮助中心,帮助详情
+                    .antMatchers("/commonProblemDetail/**").permitAll()
+                    //帮助中心
                     .antMatchers(SystemService.helpCenterURi).permitAll()
                     // misc
                     .antMatchers("/misc/sendLoginCode", "/misc/sendRegisterCode", "/toQR").permitAll()
