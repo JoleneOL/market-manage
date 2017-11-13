@@ -19,6 +19,8 @@ public class WechatWithdrawPage extends AbstractWechatPage {
     private WebElement payee;
     @FindBy(id = "J_Bank")
     private WebElement account;
+    @FindBy(css = "input[name=account]")
+    private WebElement realAccount;
     @FindBy(name = "bank")
     private WebElement bank;
     @FindBy(name = "mobile")
@@ -67,6 +69,8 @@ public class WechatWithdrawPage extends AbstractWechatPage {
         final char[] accountChars = RandomStringUtils.randomNumeric(18).toCharArray();
         for (char accountChar : accountChars) {
             account.sendKeys(new String(new char[]{accountChar}));
+            if (realAccount.getAttribute("value").length() >= amount.length())
+                break;
             Thread.sleep(100L);
         }
 //        account.sendKeys(RandomStringUtils.randomNumeric(18));

@@ -46,14 +46,13 @@ $(function () {
         });
     }
 
-    var helpDetail = _body.attr('data-detail-url');
     function renderList(data) {
         var str = '';
         if (data.length > 0) {
             str = '<div class="weui-cells__title">相关问题</div><div class="weui-cells">';
             $.each(data, function (i, v) {
-                str += '<a class="weui-cell weui-cell_access" href="'+helpDetail + v.id + '">' +
-                    '  <div class="weui-cell__bd">' + v.title + '</div>' +
+                str += '<a class="weui-cell weui-cell_access" href="/commonProblemDetail/' + v.id + '">' +
+                    '  <div class="weui-cell__bd" >' + v.title + '</div>' +
                     '  <div class="weui-cell__ft"></div>' +
                     '</a>'
             });

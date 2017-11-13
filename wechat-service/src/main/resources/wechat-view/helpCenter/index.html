@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <title>帮助中心</title>
+    <title>帮助</title>
 
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
     <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="../../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
 </head>
-<body class="view-bg-color view-fs-small view-help-center">
+<body class="view-bg-color view-fs-small view-help-center"
+      data-search-url="/api/search" th:data-search-url="@{/commonProblem/search}" data-detail-url="helpDetail.html?id=" th:data-detail-url="@{/commonProblemDetail/}">
 <div class="weui-search-bar">
     <div class="weui-search-bar__form">
         <div class="weui-search-bar__box">
@@ -35,123 +36,125 @@
 </div>
 <div class="weui-cells__title">常见问题</div>
 <div class="weui-cells">
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
-        <div class="weui-cell__bd">微信实验室开启方法</div>
+    <div th:each="commonProblem:${@commonProblemService.findByWeight()}">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:href="@{/commonProblemDetail/} + ${commonProblem.id}" >
+        <div class="weui-cell__bd" th:text="${commonProblem.title}">微信实验室开启方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    </div>
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">开启或关闭微信朋友圈的方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信聊天文件查找方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信怎么设置朋友查看我的朋友圈的范围？</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">你未发现的微信小功能</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信小视频如何保存</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信实验室开启方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">开启或关闭微信朋友圈的方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信聊天文件查找方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信怎么设置朋友查看我的朋友圈的范围？</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">你未发现的微信小功能</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信小视频如何保存</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信实验室开启方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">开启或关闭微信朋友圈的方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信聊天文件查找方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信怎么设置朋友查看我的朋友圈的范围？</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">你未发现的微信小功能</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信小视频如何保存</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信实验室开启方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">开启或关闭微信朋友圈的方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信聊天文件查找方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信怎么设置朋友查看我的朋友圈的范围？</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">你未发现的微信小功能</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信小视频如何保存</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信实验室开启方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">开启或关闭微信朋友圈的方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信聊天文件查找方法</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信怎么设置朋友查看我的朋友圈的范围？</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">你未发现的微信小功能</div>
         <div class="weui-cell__ft"></div>
     </a>
-    <a class="weui-cell weui-cell_access" href="helpDetail.html">
+    <a class="weui-cell weui-cell_access" href="helpDetail.html" th:remove="all">
         <div class="weui-cell__bd">微信小视频如何保存</div>
         <div class="weui-cell__ft"></div>
     </a>

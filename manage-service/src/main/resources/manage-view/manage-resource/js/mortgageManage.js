@@ -43,9 +43,9 @@ $(function () {
                 className: 'table-action',
                 data: function (item) {
                     if(item.statusCode === 4)
-                        return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa fa-check-circle-o"></i>&nbsp;重新申请信审</a>';
+                        return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;重新申请信审</a>';
                     if (item.statusCode === 2)
-                        return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa fa-check-circle-o"></i>&nbsp;申请信审</a>';
+                        return '<a href="javascript:;" class="js-info" data-id="' + item.id + '" data-from="2" data-status="' + item.statusCode + '"><i class="fa fa-check-circle-o"></i>&nbsp;申请信审</a>';
                     return '';
                 }
             }

@@ -254,13 +254,14 @@ $(function () {
     $agreeButton.click(function(){
         $agree.prop('checked', true);
         localStorage.setItem(agreeWithdrawAgreement, true);
-    })
+    });
+
     $('#withSubmit').click(function () {
         var payeeVal = $('input[name=payee]').val();
         var accountVal = $('input[name=account]').val();
         var bankVal = $('input[name=bank]').val();
         var mobileVal = $('input[name=mobile]').val();
-        var information = JSON.stringify(new Array(payeeVal, accountVal, bankVal, mobileVal));
+        var information = JSON.stringify([payeeVal, accountVal, bankVal, mobileVal]);
         localStorage.setItem(informationStored, information);
     });
 
@@ -281,7 +282,7 @@ $(function () {
             $agree.prop('checked', '');
             $rules.click();
         }
-    })
+    });
 
     var have = localStorage.getItem(informationStored);
     if(have != undefined){

@@ -17,11 +17,12 @@
 </head>
 <body class="view-bg-color view-fs-small">
 <article class="weui-article">
-    <h1>微信小视频如何保存</h1>
-    <section>
-        <p>在微信中轻触【我】->【设置】，“允许朋友查看朋友圈的范围”，可以设置允许朋友看！</p>
-        <p>在微信中轻触【我】->【设置】，“允许朋友查看朋友圈的范围”，可以设置允许朋友看！</p>
-        <p>
+    <!--/*@thymesVar id="commonProblem" type="cn.lmjia.market.core.entity.help.CommonProblem"*/-->
+    <h1 th:text="${commonProblem.title}">微信小视频如何保存</h1>
+    <section th:utext="${commonProblem.content}">
+        <p th:remove="all">在微信中轻触【我】->【设置】，“允许朋友查看朋友圈的范围”，可以设置允许朋友看！</p>
+        <p th:remove="all">在微信中轻触【我】->【设置】，“允许朋友查看朋友圈的范围”，可以设置允许朋友看！</p>
+        <p th:remove="all">
             <img src="http://dev_r.lmjia.cn/watch/a56eae58564743ad83b694f2f065eb1f.jpg"  />
         </p>
     </section>

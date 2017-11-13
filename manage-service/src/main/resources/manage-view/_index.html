@@ -229,6 +229,18 @@
                         <span class="nav-label">安装管理</span>
                     </a>
                 </li>
+                <li sec:authorize="hasAnyRole('ROOT','LOOK','ROLE_PRODUCT_CENTER')">
+                    <a href="#">
+                        <i class="fa fa-line-chart"></i>
+                        <span class="nav-label">运营管理</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="operation-management/_helpCenter.html" th:href="@{/manage/commonProblem}" class="J_menuItem">帮助中心</a>
+                        </li>
+                    </ul>
+                </li>
                 <li sec:authorize="hasAnyRole('ROOT')">
                     <a href="#">
                         <i class="fa fa-desktop"></i>

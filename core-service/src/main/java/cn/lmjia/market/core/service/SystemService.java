@@ -56,6 +56,10 @@ public interface SystemService {
     String wechatMallIndex = "/wechatIndex";
 
     /**
+     * 帮助中心URI
+     */
+    String helpCenterURi = "/helpCenter/commonProblem";
+    /**
      * @return 代理体系的层次数量
      */
     default int systemLevel() {
@@ -69,11 +73,11 @@ public interface SystemService {
         Map<Integer, AgentRate> data = new HashMap<>();
         data.put(0, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
         data.put(1, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
-        data.put(2, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
-        data.put(3, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
+        data.put(2, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.025")));
+//        data.put(3, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
         // 暂时取消 level 3的默认分成
-//        data.put(3, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
-        data.put(4, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
+        data.put(3, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
+        data.put(4, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.05")));
         return data;
     }
 
@@ -124,6 +128,34 @@ public interface SystemService {
      * @return 非代理商是否拥有获得销售奖励的资格
      */
     boolean isNonAgentAbleToGainCommission();
+
+    /**
+     * @return 下单者是否可以拥有获得奖励的资格
+     */
+    boolean isOrderAbleToGainCommission();
+
+    void updateOrderAbleToGainCommission(boolean value);
+
+    /**
+     * @return 是否切割销售奖 {@link cn.lmjia.market.core.entity.support.CommissionType#firstMarketing}和{@link cn.lmjia.market.core.entity.support.CommissionType#firstGuide}
+     */
+    boolean isSplitMarketingCommission();
+
+    void updateSplitMarketingCommission(boolean value);
+
+    /**
+     * @return 在 {@link #isSplitMarketingCommission() 分割}的前提下是否只有代理商可以获得推荐奖。
+     */
+    boolean isOnlyAgentGainFirstGuide();
+
+    void updateOnlyAgentGainFirstGuide(boolean value);
+
+    /**
+     * @return 代理商将获取全部销售奖 不再切割给别人
+     */
+    boolean isAgentGainAllMarketing();
+
+    void updateAgentGainAllMarketing(boolean value);
 
     /**
      * @param value 爱心天使的认定是否只需要完成一笔任意订单
