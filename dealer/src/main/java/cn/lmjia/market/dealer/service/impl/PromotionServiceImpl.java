@@ -2,6 +2,7 @@ package cn.lmjia.market.dealer.service.impl;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
+import cn.lmjia.market.core.entity.deal.AgentLevel_;
 import cn.lmjia.market.core.event.LoginRelationChangedEvent;
 import cn.lmjia.market.core.repository.deal.AgentLevelRepository;
 import cn.lmjia.market.core.service.LoginService;
@@ -22,8 +23,11 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 /**
  * @author CJ
@@ -69,6 +73,34 @@ public class PromotionServiceImpl implements PromotionService {
                     AgentLevel top = agentService.highestAgent(login);
                     agentLevelUpgrade(login, top);
                 });
+
+        // 修复一个数据BUG
+        // 若自己存在更高(小)级别的代理 那么必然是从属于它
+        CriteriaQuery<AgentLevel> badLevelCQ = cb.createQuery(AgentLevel.class);
+        Root<AgentLevel> badLevelRoot = badLevelCQ.from(AgentLevel.class);
+        // 它的上级
+        Join<AgentLevel, AgentLevel> superior = badLevelRoot.join(AgentLevel_.superior);
+        // 它的同用户的更高级别
+        Join<AgentLevel, Login> login = badLevelRoot.join(AgentLevel_.login);
+        Subquery<AgentLevel> highAgent = badLevelCQ.subquery(AgentLevel.class);
+        Root<AgentLevel> highAgentRoot = highAgent.from(AgentLevel.class);
+        highAgent = highAgent
+                .where(cb.equal(highAgentRoot.get(AgentLevel_.login), login)
+                        , cb.equal(highAgentRoot.get(AgentLevel_.level), cb.diff(badLevelRoot.get(AgentLevel_.level), 1))
+                );
+        entityManager.createQuery(
+                badLevelCQ.where(
+//                        highAgent.isNotNull(),
+                        cb.notEqual(superior, highAgent)
+                )
+        ).getResultList().forEach(agentLevel -> {
+            AgentLevel newTop = agentLevelRepository.findTopByLoginAndLevel(agentLevel.getLogin(), agentLevel.getLevel() - 1);
+            agentLevel.getSuperior().getSubAgents().remove(agentLevel);
+
+            agentLevel.setSuperior(newTop);
+            newTop.getSubAgents().add(agentLevel);
+            agentLevelRepository.save(agentLevel);
+        });
     }
 
     @Override
@@ -136,9 +168,11 @@ public class PromotionServiceImpl implements PromotionService {
             // 使用原来上级的上级
             top.setSuperior(levelInput.getSuperior().getSuperior());
             top.setLevel(levelInput.getLevel() - 1);
+            top.setSubAgents(Collections.singletonList(levelInput));
             top = agentLevelRepository.save(top);
 
             levelInput.setSuperior(top);
+            agentLevelRepository.save(levelInput);
             // 原来跟我的关系需要复制成新的等级
             // 原来我跟其他人的关系
             loginRelationCacheService.addLowestAgentLevelCache(top);
