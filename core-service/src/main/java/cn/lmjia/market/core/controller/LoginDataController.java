@@ -126,7 +126,7 @@ public class LoginDataController {
             long guideId = NumberUtils.parseNumber(newGuide, Long.class);
             Login guide = loginService.get(guideId);
             //检查一下这个guide的引导者和target有没有关系
-            if(target.hasRelation(guide)){
+            if (!target.isGuideAble(guide)) {
                 return ApiResult.withCodeAndMessage(400,"用户不能互为引导者",null);
             }
             target.setGuideUser(guide);

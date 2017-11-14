@@ -172,7 +172,10 @@ $(function () {
                 // console.log(res);
                 layer.close(loading);
                 if (res.resultCode !== 200) {
-                    layer.msg('修改失败，稍后再试');
+                    if (res.resultMsg)
+                        layer.msg(res.resultMsg);
+                    else
+                        layer.msg('修改失败，稍后再试');
                     return '';
                 }
                 $('#J_guideName').text(res.data['name']);

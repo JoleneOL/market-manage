@@ -12,7 +12,6 @@ import cn.lmjia.market.manage.page.ManageAgentDetailPage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Repeat;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +28,7 @@ public class ManageAgentControllerTest extends ManageServiceTest {
     private LoginRepository loginRepository;
 
     @Test
-    @Repeat(10)
+//    @Repeat(10)
     public void go() throws Exception {
 
         Login als[] = new Login[systemService.systemLevel()];
@@ -73,8 +72,21 @@ public class ManageAgentControllerTest extends ManageServiceTest {
                 .isEqualTo(readService.nameForPrincipal(toTestAgent.getLogin().getGuideUser()));
 
         // 新增一个Login?
-        // TODO: 2017/11/6 如何保证newLogin 和 toTestAgent 没关系？ 如果有关系正好测试一下是否返回失败?
+        // 确认是存在关系的
         Login newLogin = newRandomLogin();
+        while (loginService.get(toTestAgent.getLogin().getId()).isGuideAble(newLogin)) {
+            newLogin = newRandomLogin();
+        }
+        // 必须失败！
+        page.changeGuideAndFailed(newLogin);
+
+
+        page.refresh();
+        newLogin = newRandomLogin();
+        while (!loginService.get(toTestAgent.getLogin().getId()).isGuideAble(newLogin)) {
+            // 确认是不存在关系的
+            newLogin = loginService.byLoginName("master");
+        }
         page.changeGuide(newLogin);
 
         page.assertGuideName()
