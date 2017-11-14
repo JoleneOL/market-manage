@@ -33,15 +33,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 管理提现,拥有root权限和财务权限的人可以管理.
@@ -79,7 +78,8 @@ public class ManageWithdrawController {
     @PostMapping("/manage/withdraws/approval")
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void approval(@AuthenticationPrincipal Manager manager, long id, String comment,String bankName) throws Exception {
+    public @ResponseBody
+    Map<String,Object> approval(@AuthenticationPrincipal Manager manager, long id, String comment, String bankName) {
         final CashTransferSupplier supplier;
         if ("兴业银行".equalsIgnoreCase(bankName)) {
             supplier = applicationContext.getBean(CjbSupplier.class);
@@ -93,10 +93,17 @@ public class ManageWithdrawController {
         try {
             CashTransferResult cashTransferResult = cashTransferService.cashTransfer(supplier, null, request);
             withdrawService.approval(manager, id, cashTransferResult);
+            Map<String,Object> resultMsg = new HashMap<>();
+            resultMsg.put("resultCode",0);
+            resultMsg.put("resultMsg","ok");
+            return resultMsg;
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
-            throw new Exception();
+            Map<String,Object> resultMsg = new HashMap<>();
+            resultMsg.put("resultCode",1);
+            resultMsg.put("resultMsg",e.getMessage());
+            return resultMsg;
         }
     }
 
@@ -128,7 +135,7 @@ public class ManageWithdrawController {
                                 -> ReadService.agentLevelForLogin(root.join(WithdrawRequest_.whose)
                                 , criteriaBuilder)))
                         , Fields.asBasic("comment")
-                        , Fields.asBasic("transactionRecordNumber")
+                        , Fields.asBasic("clientSerial")
                         , Fields.asBasic("logisticsCode")
                         , Fields.asBasic("logisticsCompany")
                         , Fields.asBasic("actualAmount")

@@ -33,7 +33,7 @@ public class WithdrawServiceImpl implements WithdrawService {
     private ReadService readService;
 
     @Override
-    public WithdrawRequest withdrawNew(Login who, String payee, String account, String bank, String mobile, BigDecimal amount
+    public WithdrawRequest withdrawNew(Login who, String payee, String account, String bank, String bankCity, String mobile, BigDecimal amount
             , String logisticsCode, String logisticsCompany) {
 
         WithdrawRequest request = new WithdrawRequest();
@@ -42,8 +42,10 @@ public class WithdrawServiceImpl implements WithdrawService {
         request.setRequestTime(LocalDateTime.now());
         request.setAccount(account);
         request.setBank(bank);
+        request.setBankCity(bankCity);
         request.setMobile(mobile);
         request.setAmount(amount);
+        request.setWithdrawPurpose("佣金提现");
         request.setWithdrawStatus(WithdrawStatus.init);
 
         if (logisticsCode == null) {

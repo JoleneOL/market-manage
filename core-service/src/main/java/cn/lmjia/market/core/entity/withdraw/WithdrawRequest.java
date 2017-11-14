@@ -54,6 +54,11 @@ public class WithdrawRequest implements CashReceiver {
     private String bank;
 
     /**
+     * 开户行所在城市
+     */
+    @Column(length = 20)
+    private String bankCity;
+    /**
      * 收款人电话
      */
     @Column(length = 20)
@@ -124,6 +129,12 @@ public class WithdrawRequest implements CashReceiver {
     @Column(columnDefinition = "timestamp")
     private LocalDateTime bankProcessingTime;
 
+    /**
+     * 提现目的
+     */
+    @Column(length = 30)
+    private String withdrawPurpose;
+
     public Money getActualAmountMoney() {
         return new Money(actualAmount);
     }
@@ -174,8 +185,9 @@ public class WithdrawRequest implements CashReceiver {
     }
 
     @Override
+    //目前只有佣金提现,还有别的吗?
     public String getPurpose() {
-        return null;
+        return withdrawPurpose == null?"佣金提现":withdrawPurpose;
     }
 
     @Override

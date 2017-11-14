@@ -55,9 +55,11 @@ public class ManageWithdrawPage extends AbstractContentPage {
     public void approval(String name) throws InterruptedException {
         WebElement targetRow = getTargetRow(name);
         targetRow.findElement(By.className("js-makeApproval")).click();
-        WebElement number = webDriver.findElement(By.className("layui-layer-dialog")).findElement(By.id("J_makeApproval_transactionRecordNumber"));
+        WebElement number = webDriver.findElement(By.className("layui-layer-dialog")).findElement(By.id("J_makeApproval_bankName"));
         number.clear();
-        number.sendKeys(RandomStringUtils.randomNumeric(10));
+        //number.sendKeys(RandomStringUtils.randomNumeric(10));
+        //这里应该是银行的名字. 默认是兴业,所以就随便写了.
+        number.sendKeys(RandomStringUtils.random(4));
         clickLayerButton(0);
         Thread.sleep(500);
     }

@@ -620,7 +620,7 @@ Mock.mock(/\/manage\/withdraws/, "get", {
             'logisticsCompany': '@pick(["-", "某公司"])',
             'logisticsCode': '@pick(["-", "@id"])',
             'comment': null,
-            'transactionRecordNumber': null,
+            'clientSerial': null,
             'status': '@pick(["待审核","已拒绝","已成功"])',
             'statusCode': '@integer(2, 4)'
         }

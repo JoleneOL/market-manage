@@ -177,6 +177,7 @@ $(function () {
                 isPositive: true
             },
             bank: 'required',
+            bankCity:'required',
             mobile: {
                 required: true,
                 isPhone: true
@@ -209,6 +210,7 @@ $(function () {
                 digits: "请输入正确的收款账号"
             },
             bank: "请填写开户行",
+            bankCity:'请填写开户行所在城市',
             mobile: {
                 required: "请填写手机号码"
             },
@@ -260,8 +262,9 @@ $(function () {
         var payeeVal = $('input[name=payee]').val();
         var accountVal = $('input[name=account]').val();
         var bankVal = $('input[name=bank]').val();
+        var bankCityVal = $('input[name=bankCity]').val();
         var mobileVal = $('input[name=mobile]').val();
-        var information = JSON.stringify([payeeVal, accountVal, bankVal, mobileVal]);
+        var information = JSON.stringify([payeeVal, accountVal, bankVal,bankCityVal, mobileVal]);
         localStorage.setItem(informationStored, information);
     });
 
@@ -297,6 +300,7 @@ $(function () {
             $('input[name="account"]').val($this.val().replace(/\s/g, ''));
         }
         $('input[name=bank]').val(array[2]);
-        $('input[name=mobile]').val(array[3]);
+        $('input[name=bankCity]').val(array[3])
+        $('input[name=mobile]').val(array[4]);
     }
 });

@@ -23,14 +23,14 @@ public interface WithdrawService {
      * @param payee            收款人
      * @param account          收款账号
      * @param bank             开户行
-     * @param mobile           收款人电话
+     * @param bankCity
+     *@param mobile           收款人电话
      * @param amount           提现金额
      * @param logisticsCode    物流单号
-     * @param logisticsCompany 物流公司
-     * @return 新创建的提现
+     * @param logisticsCompany 物流公司     @return 新创建的提现
      */
     @Transactional
-    WithdrawRequest withdrawNew(Login who, String payee, String account, String bank, String mobile, BigDecimal amount
+    WithdrawRequest withdrawNew(Login who, String payee, String account, String bank, String bankCity, String mobile, BigDecimal amount
             , String logisticsCode, String logisticsCompany);
 
     /**

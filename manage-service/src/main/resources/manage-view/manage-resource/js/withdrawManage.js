@@ -107,9 +107,9 @@ $(function () {
                 "name": "comment"
             },
             {
-                "title": "转账单据号",
-                "data": "transactionRecordNumber",
-                "name": "transactionRecordNumber"
+                "title": "银行处理流水号",
+                "data": "clientSerial",
+                "name": "clientSerial"
             }
         ],
         "displayLength": 15,
@@ -152,10 +152,21 @@ $(function () {
                     $.ajax(workUrl, {
                         method: 'post',
                         data: value,
-                        success: function () {
+                        success: function (res) {
+                            if(res != undefined){
+                                if(res.resultCode == 0){
+                                    table.ajax.reload();
+                                    layer.close(index);
+                                }else if(res.resultCode == 1){
+                                    layer.open({
+                                        title:'转账失败',
+                                        content:res.why
+                                    })
+                                }
+                            }
                             table.ajax.reload();
                             layer.close(index);
-                        }, error: function () {
+                        }, error: function (msg) {
                             layer.msg('服务端异常');
                         }
                     });
