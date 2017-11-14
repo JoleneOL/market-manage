@@ -2,10 +2,10 @@ package cn.lmjia.market.manage.controller.logistics;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
-import cn.lmjia.market.core.row.RowCustom;
-import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.StockShiftUnitRows;
+import me.jiangcai.crud.row.RowCustom;
+import me.jiangcai.crud.row.RowDefinition;
+import me.jiangcai.crud.row.supplier.JQueryDataTableDramatizer;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.entity.ManuallyOrder;
 import me.jiangcai.logistics.entity.Product;

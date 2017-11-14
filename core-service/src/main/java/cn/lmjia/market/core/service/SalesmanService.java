@@ -3,7 +3,7 @@ package cn.lmjia.market.core.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.deal.Salesman;
-import cn.lmjia.market.core.row.RowDefinition;
+import me.jiangcai.crud.row.RowDefinition;
 import me.jiangcai.wx.MessageReply;
 import org.springframework.transaction.annotation.Transactional;
 

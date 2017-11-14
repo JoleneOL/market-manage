@@ -1,6 +1,6 @@
 package cn.lmjia.market.core.rows;
 
-import cn.lmjia.market.core.row.RowDefinition;
+import me.jiangcai.crud.row.RowDefinition;
 
 import java.time.LocalDateTime;
 import java.util.function.Function;

@@ -26,7 +26,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <javaee.version>7.0</javaee.version>
         <eclipselink.version>2.6.2</eclipselink.version>
-        <jiangcai.version>3.0-SNAPSHOT</jiangcai.version>
+        <jiangcai.version>4.0-SNAPSHOT</jiangcai.version>
         <spring.version>4.3.8.RELEASE</spring.version>
         <spring.data.rest.version>2.4.4.RELEASE</spring.data.rest.version>
         <spring.security.version>4.0.4.RELEASE</spring.security.version>

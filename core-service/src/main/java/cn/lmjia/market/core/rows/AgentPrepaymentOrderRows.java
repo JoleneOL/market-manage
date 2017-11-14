@@ -3,10 +3,10 @@ package cn.lmjia.market.core.rows;
 import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder;
 import cn.lmjia.market.core.entity.order.AgentPrepaymentOrder_;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder_;
-import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.field.FieldBuilder;
-import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.ReadService;
+import me.jiangcai.crud.row.FieldDefinition;
+import me.jiangcai.crud.row.field.FieldBuilder;
+import me.jiangcai.crud.row.field.Fields;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

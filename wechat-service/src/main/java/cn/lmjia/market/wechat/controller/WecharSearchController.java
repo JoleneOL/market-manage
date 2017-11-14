@@ -4,14 +4,14 @@ import cn.lmjia.market.core.entity.MainGood;
 import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
-import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.RowCustom;
-import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.field.FieldBuilder;
-import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import com.alibaba.fastjson.JSONObject;
+import me.jiangcai.crud.row.FieldDefinition;
+import me.jiangcai.crud.row.RowCustom;
+import me.jiangcai.crud.row.RowDefinition;
+import me.jiangcai.crud.row.field.FieldBuilder;
+import me.jiangcai.crud.row.field.Fields;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.logistics.entity.ProductType_;
 import me.jiangcai.logistics.entity.Product_;
@@ -27,10 +27,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by helloztt on 2017-09-25.
