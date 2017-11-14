@@ -1,8 +1,13 @@
 package cn.lmjia.market.wechat.page;
 
+import cn.lmjia.market.wechat.controller.help.HelpDetailPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 它的模版是/helpcenter/index.html
  */
 public class HelpCenterPage extends AbstractWechatPage {
+
     public HelpCenterPage(WebDriver webDriver) {
         super(webDriver);
     }
@@ -21,7 +27,6 @@ public class HelpCenterPage extends AbstractWechatPage {
     }
 
     /**
-     *
      * @param title 確認頁面渲染出了這個標題的幫助
      */
     public void assertHasTopic(String title) {
@@ -31,5 +36,12 @@ public class HelpCenterPage extends AbstractWechatPage {
                 .anyMatch(title::equalsIgnoreCase))
                 .as("我们确保看到了这个标题的帮助")
                 .isTrue();
+    }
+
+    public HelpDetailPage clickHelpDetail() throws InterruptedException {
+        Thread.sleep(500);
+        webDriver.findElements(By.className("weui-cell")).stream()
+                .map(webElement -> webElement.findElement(By.className("weui-cell__bd"))).findFirst().get().click();
+        return initPage(HelpDetailPage.class);
     }
 }

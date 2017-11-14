@@ -3,6 +3,7 @@ package cn.lmjia.market.wechat.controller.withdraw;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Manager;
 import cn.lmjia.market.core.entity.support.ManageLevel;
+import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
 import cn.lmjia.market.manage.page.ManageWithdrawPage;
@@ -35,6 +36,8 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
     private VerificationCodeRepository verificationCodeRepository;
     @Autowired
     private SystemStringService systemStringService;
+    @Autowired
+    private LoginRepository loginRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -164,6 +167,7 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         if (amount.compareTo(BigDecimal.ONE) == -1) {
             //钱不够就手动充一点吧
             login.setCommissionBalance(BigDecimal.valueOf(randomDouble(100, 20000, 2)));
+            loginRepository.save(login);
             amount = readService.currentBalance(login).getAmount();
             log.info("add amount:" + amount);
         }

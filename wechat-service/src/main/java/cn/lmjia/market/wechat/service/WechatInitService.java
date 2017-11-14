@@ -133,9 +133,9 @@ public class WechatInitService {
         );
 
         final Menu menu3 = createMenu("个人中心"
+                , createMenu("帮助",systemService.toUrl(SystemService.helpCenterURi))
                 , createMenu("分享", systemService.toUrl(SystemService.wechatShareUri))
-                , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi))
-                , createMenu("帮助",systemService.toUrl(SystemService.helpCenterURi)));
+                , createMenu("我的", systemService.toUrl(SystemService.wechatMyURi)));
 
 
         try {

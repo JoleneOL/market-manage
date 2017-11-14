@@ -18,7 +18,6 @@ public class WechatCommonProblemControllerTest extends WechatTestBase{
 
 //        Login login = newRandomLogin();
 //        updateAllRunWith(login);
-
         String title = RandomStringUtils.randomAscii(10);
         commonProblemService.addAndEditCommonProblem(null, title,50 , RandomStringUtils.randomAscii(20));
 
@@ -26,9 +25,13 @@ public class WechatCommonProblemControllerTest extends WechatTestBase{
         driver.get("http://localhost"+ SystemService.helpCenterURi);
 
         HelpCenterPage page = initPage(HelpCenterPage.class);
-
+        //在帮助首页查看是否有这个标题的帮助
         page.assertHasTopic(title);
+        //点击进入详情页面
+        HelpDetailPage helpDetailPage = page.clickHelpDetail();
 
+        //判断是否有这个标题的帮助
+        helpDetailPage.asssertHasTopic(title);
     }
 
 }

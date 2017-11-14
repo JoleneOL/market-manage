@@ -56,7 +56,7 @@ public class ManageDeliveryPage extends AbstractContentPage {
             return true;
         });
         // 不应该再有弹出框
-        assertInfo().isNull();
+        assertInfo().isNullOrEmpty();
     }
 
 }

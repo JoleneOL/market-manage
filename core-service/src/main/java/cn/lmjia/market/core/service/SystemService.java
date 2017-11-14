@@ -73,11 +73,11 @@ public interface SystemService {
         Map<Integer, AgentRate> data = new HashMap<>();
         data.put(0, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
         data.put(1, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
-        data.put(2, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
-        data.put(3, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
+        data.put(2, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.025")));
+//        data.put(3, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
         // 暂时取消 level 3的默认分成
-//        data.put(3, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
-        data.put(4, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.01")));
+        data.put(3, new AgentRate(BigDecimal.ZERO, BigDecimal.ZERO));
+        data.put(4, new AgentRate(new BigDecimal("0.05"), new BigDecimal("0.05")));
         return data;
     }
 
