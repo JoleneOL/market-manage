@@ -203,6 +203,7 @@ public class InitService {
         systemService.updateOrderAbleToGainCommission(systemService.isOrderAbleToGainCommission());
         systemService.updateAgentGainAllMarketing(systemService.isAgentGainAllMarketing());
         systemService.updateOnlyAgentGainFirstGuide(systemService.isOnlyAgentGainFirstGuide());
+        log.info("InitService的database方法执行了!!!");
     }
 
     private void executeSQLCode(ConnectionProvider connection, String resourceName) throws SQLException {

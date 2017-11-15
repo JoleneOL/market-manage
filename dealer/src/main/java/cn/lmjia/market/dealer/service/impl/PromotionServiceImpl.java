@@ -68,6 +68,7 @@ public class PromotionServiceImpl implements PromotionService {
         if (inited)
             return;
         inited = true;
+        log.info("PromotionServiceImpl的realInit方法执行了!!!");
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Login> cq = cb.createQuery(Login.class);
         Root<Login> root = cq.from(Login.class);
