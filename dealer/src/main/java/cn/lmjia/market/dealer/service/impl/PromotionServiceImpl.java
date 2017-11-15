@@ -67,48 +67,54 @@ public class PromotionServiceImpl implements PromotionService {
         // 自动升级3 为  2
         if (inited)
             return;
-        inited = true;
-        final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Login> cq = cb.createQuery(Login.class);
-        Root<Login> root = cq.from(Login.class);
+        try {
+            final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Login> cq = cb.createQuery(Login.class);
+            Root<Login> root = cq.from(Login.class);
 
-        entityManager.createQuery(
-                cq.where(cb.equal(ReadService.agentLevelForLogin(root, cb), 3))
-        )
-                .getResultList()
-                .forEach(login -> {
-                    log.info("212更新自动升级代理商 " + login.getId() + ":" + readService.nameForPrincipal(login));
-                    AgentLevel top = agentService.highestAgent(login);
-                    agentLevelUpgrade(login, top);
-                });
+            entityManager.createQuery(
+                    cq.where(cb.equal(ReadService.agentLevelForLogin(root, cb), 3))
+            )
+                    .getResultList()
+                    .forEach(login -> {
+                        log.info("212更新自动升级代理商 " + login.getId() + ":" + readService.nameForPrincipal(login));
+                        AgentLevel top = agentService.highestAgent(login);
+                        agentLevelUpgrade(login, top);
+                    });
 
-        // 修复一个数据BUG
-        // 若自己存在更高(小)级别的代理 那么必然是从属于它
-        CriteriaQuery<AgentLevel> badLevelCQ = cb.createQuery(AgentLevel.class);
-        Root<AgentLevel> badLevelRoot = badLevelCQ.from(AgentLevel.class);
-        // 它的上级
-        Join<AgentLevel, AgentLevel> superior = badLevelRoot.join(AgentLevel_.superior);
-        // 它的同用户的更高级别
-        Join<AgentLevel, Login> login = badLevelRoot.join(AgentLevel_.login);
-        Subquery<AgentLevel> highAgent = badLevelCQ.subquery(AgentLevel.class);
-        Root<AgentLevel> highAgentRoot = highAgent.from(AgentLevel.class);
-        highAgent = highAgent
-                .where(cb.equal(highAgentRoot.get(AgentLevel_.login), login)
-                        , cb.equal(highAgentRoot.get(AgentLevel_.level), cb.diff(badLevelRoot.get(AgentLevel_.level), 1))
-                );
-        entityManager.createQuery(
-                badLevelCQ.where(
+            // 修复一个数据BUG
+            // 若自己存在更高(小)级别的代理 那么必然是从属于它
+            CriteriaQuery<AgentLevel> badLevelCQ = cb.createQuery(AgentLevel.class);
+            Root<AgentLevel> badLevelRoot = badLevelCQ.from(AgentLevel.class);
+            // 它的上级
+            Join<AgentLevel, AgentLevel> superior = badLevelRoot.join(AgentLevel_.superior);
+            // 它的同用户的更高级别
+            Join<AgentLevel, Login> login = badLevelRoot.join(AgentLevel_.login);
+            Subquery<AgentLevel> highAgent = badLevelCQ.subquery(AgentLevel.class);
+            Root<AgentLevel> highAgentRoot = highAgent.from(AgentLevel.class);
+            highAgent = highAgent
+                    .where(cb.equal(highAgentRoot.get(AgentLevel_.login), login)
+                            , cb.equal(highAgentRoot.get(AgentLevel_.level), cb.diff(badLevelRoot.get(AgentLevel_.level), 1))
+                    );
+            entityManager.createQuery(
+                    badLevelCQ.where(
 //                        highAgent.isNotNull(),
-                        cb.notEqual(superior, highAgent)
-                )
-        ).getResultList().forEach(agentLevel -> {
-            AgentLevel newTop = agentLevelRepository.findTopByLoginAndLevel(agentLevel.getLogin(), agentLevel.getLevel() - 1);
-            agentLevel.getSuperior().getSubAgents().remove(agentLevel);
+                            cb.notEqual(superior, highAgent)
+                    )
+            ).getResultList().forEach(agentLevel -> {
+                AgentLevel newTop = agentLevelRepository.findTopByLoginAndLevel(agentLevel.getLogin(), agentLevel.getLevel() - 1);
+                agentLevel.getSuperior().getSubAgents().remove(agentLevel);
 
-            agentLevel.setSuperior(newTop);
-            newTop.getSubAgents().add(agentLevel);
-            agentLevelRepository.save(agentLevel);
-        });
+                agentLevel.setSuperior(newTop);
+                newTop.getSubAgents().add(agentLevel);
+                agentLevelRepository.save(agentLevel);
+            });
+
+            inited = true;
+        } catch (Throwable ex) {
+            log.trace("失败了一次，但是无所谓", ex);
+        }
+
     }
 
     @Override
