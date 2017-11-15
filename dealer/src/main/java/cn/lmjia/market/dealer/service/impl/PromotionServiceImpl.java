@@ -55,11 +55,19 @@ public class PromotionServiceImpl implements PromotionService {
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
     private EntityManager entityManager;
+    private boolean inited;
 
     @PostConstruct
     @Transactional
     public void init() {
+        realInit();
+    }
+
+    private void realInit() {
         // 自动升级3 为  2
+        if (inited)
+            return;
+        inited = true;
         final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Login> cq = cb.createQuery(Login.class);
         Root<Login> root = cq.from(Login.class);
@@ -101,6 +109,11 @@ public class PromotionServiceImpl implements PromotionService {
             newTop.getSubAgents().add(agentLevel);
             agentLevelRepository.save(agentLevel);
         });
+    }
+
+    @Override
+    public void afterInit() {
+        realInit();
     }
 
     @Override
