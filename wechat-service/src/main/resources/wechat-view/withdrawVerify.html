@@ -24,7 +24,7 @@
     <h3 class="text-big" id="J_mobile" th:text="${mosaicMobile}">189*****3070</h3>
     <form method="post" action="withdrawSuccess.html" th:action="@{/withdrawVerify}" id="J_messageForm">
         <input type="hidden" name="withdraw" th:value="${withdraw}">
-        <input type="hidden" name="withdrawRequestId" th:value="${withdrawRequestId}">
+        <input type="hidden" name="id" th:value="${id}">
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell weui-cell_vcode">
                 <div class="weui-cell__hd">
@@ -59,12 +59,6 @@
 <script th:if="${badCode}">
     $(function () {
         $.toptip('验证码错误');
-    })
-</script>
-<!--/*@thymesVar id="failure" type="boolean"*/-->
-<script th:if="${failure}">
-    $(function(){
-        $.toptip('转账失败,请联系客服.');
     })
 </script>
 </html>

@@ -207,35 +207,37 @@ public class WechatWithdrawControllerTest extends WechatTestBase {
         // Px---以管理员身份
         // 此时会看到该提现申请
         // 点击拒绝
-        managerReject(login);
+        //现在都自动提现了,无法手动拒绝了.
+        /*managerReject(login);
         // -- 回到用户身份
         updateAllRunWith(login);
         // 会看到可提现金额回到X
         myPage = getWechatMyPage();
         myPage.assertWithdrawAble()
                 .as("恢复原金额")
-                .isCloseTo(amount, Offset.offset(new BigDecimal("0.000000000001")));
+                .isCloseTo(amount, Offset.offset(new BigDecimal("0.000000000001")));*/
         //
         // 重复流程2直置Px
         // 在重复之前需要先删除该手机号码的提现验证码记录
-        deleteVC();
+        /*deleteVC();
         withdrawPage = myPage.toWithdrawPage();
         withdrawPage.randomRequestWithoutInvoice(toWithdraw.toString());
         verifyPage = initPage(WechatWithdrawVerifyPage.class);
         // 此时验证手机号码
         Thread.sleep(1000);
-        verifyPage.submitCode("1234");
+        verifyPage.submitCode("1234");*/
 
         // 此时会看到该提现申请
         // 点击同意
-        managerApproval(login);
+        //自动提现不需要同意
+       // managerApproval(login);
         // -- 回到用户身份
         // 会看到可提现金额回到X-Y
-        updateAllRunWith(login);
+        /*updateAllRunWith(login);
         myPage = getWechatMyPage();
         myPage.assertWithdrawAble()
                 .as("看到已经扣除正在提现的金额")
-                .isCloseTo(amount.subtract(toWithdraw), Offset.offset(new BigDecimal("0.000000000001")));
+                .isCloseTo(amount.subtract(toWithdraw), Offset.offset(new BigDecimal("0.000000000001")));*/
         // 同时看到已提现金额为Y
 
         // 使用发票提现

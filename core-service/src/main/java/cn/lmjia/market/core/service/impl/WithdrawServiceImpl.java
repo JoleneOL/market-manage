@@ -59,7 +59,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             request.setLogisticsCompany(logisticsCompany);
         }
 
-        return withdrawRequestRepository.save(request);
+        return withdrawRequestRepository.saveAndFlush(request);
     }
 
     @Override
@@ -108,7 +108,6 @@ public class WithdrawServiceImpl implements WithdrawService {
     public void automaticIsSuccessful(long withdrawRequestId, LocalDateTime processingTime) {
         WithdrawRequest request = get(withdrawRequestId);
         request.setBankProcessingTime(processingTime);
-        // TODO : 这里还有点疑问是否应该直接变成成功状态
         request.setWithdrawStatus(WithdrawStatus.success);
     }
 

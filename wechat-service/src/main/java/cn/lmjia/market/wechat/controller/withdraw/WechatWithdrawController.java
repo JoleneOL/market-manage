@@ -133,7 +133,7 @@ public class WechatWithdrawController {
     @PostMapping("/wechatWithdraw")
     @Transactional
     public String withdrawNew(String payee, String account
-            , String bank,String bangCity, String mobile, BigDecimal withdraw
+            , String bank,String bankCity, String mobile, BigDecimal withdraw
             , boolean invoice, String logisticsCode, String logisticsCompany
             , Boolean logisticsTypeSelf
             , @AuthenticationPrincipal Login login, Model model)
@@ -147,14 +147,14 @@ public class WechatWithdrawController {
         if (invoice) {
             //有发票
             if (logisticsTypeSelf != null && logisticsTypeSelf)
-                withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, bangCity, mobile, withdraw,
+                withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, bankCity, mobile, withdraw,
                         "已自行运达", "自送");
             else
-                withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, bangCity, mobile, withdraw,
+                withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, bankCity, mobile, withdraw,
                         logisticsCode, logisticsCompany);
         } else {
-            //无发票自动转账
-            withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, bangCity, mobile, withdraw,
+            //无发票添加申请->手机验证->自动转账
+            withdrawRequest = withdrawService.withdrawNew(login, payee, account, bank, bankCity, mobile, withdraw,
                     null, null);
 
         }
@@ -162,13 +162,13 @@ public class WechatWithdrawController {
         return toVerify(login, model, withdraw,withdrawRequest.getId());
     }
 
-    private String toVerify(Login login, Model model, BigDecimal withdraw,Long withdrawRequestId) {
+    private String toVerify(Login login, Model model, BigDecimal withdraw,Long id) {
         String mobile = readService.mobileFor(login);
         String start = mobile.substring(0, 3);
         String end = mobile.substring(mobile.length() - 4, mobile.length());
         model.addAttribute("mosaicMobile", start + "****" + end);
         model.addAttribute("withdraw", withdraw);
-        model.addAttribute("withdrawRequestId",withdrawRequestId);
+        model.addAttribute("id",id);
         return "wechat@withdrawVerify.html";
     }
 
@@ -183,10 +183,10 @@ public class WechatWithdrawController {
      * @return 手机验证码验证
      */
     @PostMapping("/withdrawVerify")
-    public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model, BigDecimal withdraw,Long Id) {
+    public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model, BigDecimal withdraw,Long id) {
         try {
             withdrawService.submitRequest(login, authCode);
-            WithdrawRequest withdrawRequest = withdrawService.get(Id);
+            WithdrawRequest withdrawRequest = withdrawService.get(id);
             //判断是否有发票
             if(withdrawRequest.isInvoice()){
                 //有发票,管理平台财务控制转账.
@@ -203,28 +203,28 @@ public class WechatWithdrawController {
                 } catch (SupplierApiUpgradeException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("failure", true);
-                    return toVerify(login, model, withdraw, Id);
+                    model.addAttribute("msg", e.getMessage());
+                    return "wechat@withdrawFailure.html";
                 } catch (BadAccessException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("failure", true);
-                    return toVerify(login, model, withdraw, Id);
+                    model.addAttribute("msg", e.getMessage());
+                    return "wechat@withdrawFailure.html";
                 } catch (TransferFailureException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("failure", true);
-                    return toVerify(login, model, withdraw, Id);
+                    model.addAttribute("msg", e.getMessage());
+                    return "wechat@withdrawFailure.html";
                 } catch (IOException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("failure", true);
-                    return toVerify(login, model, withdraw, Id);
+                    model.addAttribute("msg", e.getMessage());
+                    return "wechat@withdrawFailure.html";
                 }
             }
         } catch (IllegalVerificationCodeException ex) {
             model.addAttribute("badCode", true);
-            return toVerify(login, model, withdraw, Id);
+            return toVerify(login, model, withdraw, id);
         }
         return "wechat@withdrawSuccess.html";
     }

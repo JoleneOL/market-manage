@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -59,8 +60,9 @@ public class CjbSupplierImpl implements CjbSupplier {
 
         boolean interBank = receiver.getBankDesc().contains("兴业") ? true : false;
         boolean local = false;
-        if(receiver.getCity() != null){
-            local = receiver.getCity().contains(account.getCity()==null?"":account.getCity()) ? true : false;
+        if (receiver.getCity() != null) {
+            //如果是空就给个值,否则空指针
+            local = receiver.getCity().contains(account.getCity() == null ? "1" : account.getCity()) ? true : false;
         }
         //发送消息
         Fox responseFox = sendRequest(requestFox, interBank, local);
@@ -129,12 +131,12 @@ public class CjbSupplierImpl implements CjbSupplier {
             XferRs xferRs = xferTrnRs.getXferRs();
             cashTransferResult.setClientSerial(xferTrnRs.getTrnuId());
             cashTransferResult.setServiceSerial(xferRs.getSrvrId());
-            if(xferRs.getXferInfo().getMemo() != null){
+            if (xferRs.getXferInfo().getMemo() != null) {
                 cashTransferResult.setMemo(xferRs.getXferInfo().getMemo());
             }
             cashTransferResult.setResultStatuCode(xferRs.getXferPrcsts().getXferPrcCode());
             //指令处理时间 yyyy-MM-dd HH:mm:ss
-            cashTransferResult.setProcessingTime( LocalDateTime.parse(xferRs.getXferPrcsts().getDtXferPrc(), formatter));
+            cashTransferResult.setProcessingTime(LocalDateTime.parse(xferRs.getXferPrcsts().getDtXferPrc(), formatter));
             String message = xferRs.getXferPrcsts().getMessage();
             if (StringUtils.isNotBlank(message)) {
                 cashTransferResult.setMessage(message);
@@ -144,20 +146,20 @@ public class CjbSupplierImpl implements CjbSupplier {
             Status transferStatus = xferInqTrnRs.getStatus();
             if (!"0".equals(transferStatus.getCode())) {
                 //失败的请求
-                throw new TransferFailureException("查询失败错误码:" + transferStatus.getCode() + "查询失败错误信息:" + transferStatus.getMessage() );
+                throw new TransferFailureException("查询失败错误码:" + transferStatus.getCode() + "查询失败错误信息:" + transferStatus.getMessage());
             }
             //成功
             cashTransferResult.setClientSerial(xferInqTrnRs.getTrnuId());
             XferList xferList = xferInqTrnRs.getXferInqRs().getXferList();
             String more = xferList.getMore();
-            if("N".equalsIgnoreCase(more)){
+            if ("N".equalsIgnoreCase(more)) {
                 //没有记录
                 throw new TransferFailureException("没有查询到转账记录");
-            }else{
+            } else {
                 //查询的转账记录 xfer是这条记录的信息.
                 Xfer xfer = xferList.getXfer();
                 cashTransferResult.setServiceSerial(xfer.getSrvrtId());
-                if(xfer.getXferInfo().getMemo() != null){
+                if (xfer.getXferInfo().getMemo() != null) {
                     cashTransferResult.setMemo(xfer.getXferInfo().getMemo());
                 }
                 cashTransferResult.setResultStatuCode(xfer.getXferPrcsts().getXferPrcCode());
@@ -216,7 +218,7 @@ public class CjbSupplierImpl implements CjbSupplier {
             CloseableHttpResponse response = client.execute(post);
             StatusLine statusLine = response.getStatusLine();
             log.info("响应状态码:" + statusLine.getStatusCode());
-            InputStreamReader inputStreamReader = new InputStreamReader(response.getEntity().getContent(), "utf-8");
+            InputStreamReader inputStreamReader = new InputStreamReader(response.getEntity().getContent(), "gbk");
             //返回响应报文.
             return xmlMapper.readValue(inputStreamReader, Fox.class);
         } catch (IOException e) {
@@ -281,15 +283,15 @@ public class CjbSupplierImpl implements CjbSupplier {
         acctTo.setName(receiver.getName());
         acctTo.setBankDesc(receiver.getBankDesc());
         //付款人银行和收款人银行是否是同个银行
-        if(receiver.getCity() != null){
+        if (receiver.getCity() != null) {
             if (!account.getCity().equals(receiver.getCity())) {
                 acctTo.setCity(receiver.getCity());
             }
         }
         //转账金额
-        xferInfo.setTrnAmt(receiver.getWithdrawAmount().setScale(2,BigDecimal.ROUND_DOWN).toPlainString());
+        xferInfo.setTrnAmt(receiver.getWithdrawAmount().setScale(2, BigDecimal.ROUND_DOWN).toPlainString());
         //用款用途
-        if(!StringUtils.isEmpty(receiver.getPurpose())) {
+        if (!StringUtils.isEmpty(receiver.getPurpose())) {
             xferInfo.setPurPose(receiver.getPurpose());
         }
         if (StringUtils.isNotBlank(receiver.getMemo())) {

@@ -23,6 +23,8 @@ public class WechatWithdrawPage extends AbstractWechatPage {
     private WebElement realAccount;
     @FindBy(name = "bank")
     private WebElement bank;
+    @FindBy(name = "bankCity")
+    private WebElement bankCity;
     @FindBy(name = "mobile")
     private WebElement mobile;
     @FindBy(name = "withdraw")
@@ -77,6 +79,9 @@ public class WechatWithdrawPage extends AbstractWechatPage {
 //        Thread.sleep(500);
         bank.clear();
         bank.sendKeys(RandomStringUtils.randomAlphabetic(8));
+        bankCity.clear();
+        //开户行城市,随便写来个杭州.
+        bankCity.sendKeys("杭州市");
         mobile.clear();
         mobile.sendKeys("13" + RandomStringUtils.randomNumeric(9));
         withdraw.clear();
