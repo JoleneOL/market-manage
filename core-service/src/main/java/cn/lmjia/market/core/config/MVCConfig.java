@@ -4,9 +4,8 @@ import cn.lmjia.market.core.converter.AddressResolver;
 import cn.lmjia.market.core.converter.EnumConverterFactory;
 import cn.lmjia.market.core.define.Money;
 import cn.lmjia.market.core.enhance.NewSpringResourceTemplateResolver;
-import cn.lmjia.market.core.row.IndefiniteRowDefinitionHandler;
-import cn.lmjia.market.core.row.RowDefinitionHandler;
 import cn.lmjia.market.core.util.ImageResolver;
+import me.jiangcai.crud.CrudConfig;
 import me.jiangcai.lib.resource.ResourceSpringConfig;
 import me.jiangcai.lib.resource.thymeleaf.ResourceDialect;
 import me.jiangcai.wx.model.Gender;
@@ -73,10 +72,6 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
 //    private final DateConverter dateConverter;
     private final Environment environment;
     private final Set<WebModule> webModules;
-    @Autowired
-    private RowDefinitionHandler rowDefinitionHandler;
-    @Autowired
-    private IndefiniteRowDefinitionHandler indefiniteRowDefinitionHandler;
 
     @Autowired
     public MVCConfig(ThymeleafViewResolver htmlViewResolver, Environment environment, Set<WebModule> webModules) {
@@ -97,8 +92,6 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> returnValueHandlers) {
 //        returnValueHandlers.add(new DrawablePageAndSelectionResolver());
         returnValueHandlers.add(0, new ImageResolver());
-        returnValueHandlers.add(rowDefinitionHandler);
-        returnValueHandlers.add(indefiniteRowDefinitionHandler);
     }
 
     @Override
@@ -311,8 +304,7 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
             return resolver;
         }
 
-        @ComponentScan("cn.lmjia.market.core.row")
-        @Import({WeixinWebSpringConfig.class, ResourceSpringConfig.class})
+        @Import({WeixinWebSpringConfig.class, ResourceSpringConfig.class, CrudConfig.class})
         @Configuration
 //        @ComponentScan("me.jiangcai.wx.web.thymeleaf")
 //        @ComponentScan("me.jiangcai.wx.couple")

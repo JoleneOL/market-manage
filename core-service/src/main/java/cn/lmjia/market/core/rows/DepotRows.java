@@ -1,8 +1,8 @@
 package cn.lmjia.market.core.rows;
 
-import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.field.FieldBuilder;
-import cn.lmjia.market.core.row.field.Fields;
+import me.jiangcai.crud.row.FieldDefinition;
+import me.jiangcai.crud.row.field.FieldBuilder;
+import me.jiangcai.crud.row.field.Fields;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.haier.entity.HaierDepot;
 import me.jiangcai.logistics.haier.entity.HaierDepot_;

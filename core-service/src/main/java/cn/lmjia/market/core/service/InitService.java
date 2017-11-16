@@ -43,6 +43,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
@@ -119,6 +120,8 @@ public class InitService {
     private MainOrderService mainOrderService;
     @Autowired
     private SystemService systemService;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @PostConstruct
     @Transactional
@@ -133,6 +136,7 @@ public class InitService {
         products();
         others();
         mainOrderService.createExecutorToForPayOrder();
+        applicationEventPublisher.publishEvent(new InitDone());
     }
 
     private void others() {
@@ -552,5 +556,12 @@ public class InitService {
             // 在staging 环境中 root 密码总是稳定的
             loginService.password(loginService.byLoginName("root"), "654321");
         }
+    }
+
+    /**
+     * 初始化已完成
+     */
+    public static class InitDone {
+
     }
 }

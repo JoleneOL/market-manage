@@ -24,7 +24,7 @@
     <loggers>
         <logger name="cn.lmjia.market" level="debug"/>
 
-        <logger name="cn.lmjia.market.core.row.RowDefinitionHandler" level="info"/>
+        <logger name="me.jiangcai.crud.row.RowDefinitionHandler" level="info"/>
         <logger name="me.jiangcai.payment" level="debug"/>
 
         <!--可调试微信的响应数据-->
