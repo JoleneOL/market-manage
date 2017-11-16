@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" xmlns:wx="http://wx.jiangcai.me" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -162,4 +162,7 @@
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
 <script src="../../wechat-resource/assets/js/mall/storage.js"></script>
 <script src="../../wechat-resource/assets/js/mall/index.js"></script>
+<script th:if="${#authentication.principal != null}" wx:js=""></script>
+<script  th:if="${#authentication.principal != null}"
+         wx:share="利每家|${'您的好友'+@readService.wechatNickNameForPrincipal(#authentication.principal)+'向您推荐'}|${@systemService.toUrl('/wechatForward/')+'0_'+#authentication.principal.id}|https://cdn.lmjia.cn/lmjia_logo_1.png"></script>
 </html>

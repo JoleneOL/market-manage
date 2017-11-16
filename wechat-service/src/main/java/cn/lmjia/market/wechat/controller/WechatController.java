@@ -218,7 +218,11 @@ public class WechatController {
             // 执行登录
             loginToSecurity(login,request,response);
         }
-        return "redirect:/wechatSearch/goodsDetail/" + goodId;
+        if(goodId > 0){
+            return "redirect:/wechatSearch/goodsDetail/" + goodId;
+        }else{
+            return "redirect:" + SystemService.wechatMallIndex;
+        }
     }
 
     private void loginToSecurity(Login login, HttpServletRequest request, HttpServletResponse response){
