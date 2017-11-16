@@ -3,6 +3,7 @@ package cn.lmjia.market.dealer.service;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.AgentLevel;
 import cn.lmjia.market.core.event.LoginRelationChangedEvent;
+import cn.lmjia.market.core.service.InitService;
 import me.jiangcai.lib.thread.ThreadSafe;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author CJ
  */
 public interface PromotionService {
+
+    @EventListener(InitService.InitDone.class)
+    @Transactional
+    void afterInit();
 
     /**
      * @param event 触发事件
