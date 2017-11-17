@@ -84,7 +84,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         //封装查询信息根对象
         XferInqTrnRq xferInqTrnRq = new XferInqTrnRq();
         //该次查询的TrunId
-        xferInqTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + UUID.randomUUID().toString().replace("-", ""));
+        xferInqTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + UUID.randomUUID().toString().replace("-", "").substring(0, 20));
 
         XferInqRq xferInqRq = new XferInqRq();
         //要查询的转账交易TrunId
@@ -125,7 +125,8 @@ public class CjbSupplierImpl implements CjbSupplier {
             Status transferStatus = xferTrnRs.getStatus();
             if (!"0".equals(transferStatus.getCode())) {
                 //失败的请求
-                throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + "转账错误信息:" + transferStatus.getMessage() + "错误的提现申请单号:" + xferTrnRs.getTrnuId());
+                throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + "转账错误信息:" +
+                        transferStatus.getMessage() + "错误的提现申请单号:" + xferTrnRs.getTrnuId());
             }
             //成功
             XferRs xferRs = xferTrnRs.getXferRs();
@@ -146,7 +147,8 @@ public class CjbSupplierImpl implements CjbSupplier {
             Status transferStatus = xferInqTrnRs.getStatus();
             if (!"0".equals(transferStatus.getCode())) {
                 //失败的请求
-                throw new TransferFailureException("查询失败错误码:" + transferStatus.getCode() + "查询失败错误信息:" + transferStatus.getMessage());
+                throw new TransferFailureException("查询失败错误码:" + transferStatus.getCode() + "查询失败错误信息:" +
+                        transferStatus.getMessage());
             }
             //成功
             cashTransferResult.setClientSerial(xferInqTrnRs.getTrnuId());
@@ -189,6 +191,16 @@ public class CjbSupplierImpl implements CjbSupplier {
         return sendRequest(requestMessage, null, null);
     }
 
+    /**
+     * 发送请求
+     *
+     * @param requestMessage 请求报文对象
+     * @param interBank      是否行内银行
+     * @param local          是否同城
+     * @return 接受的银行报文对象.
+     * @throws JsonProcessingException
+     * @throws BadAccessException
+     */
     public Fox sendRequest(Fox requestMessage, Boolean interBank, Boolean local) throws JsonProcessingException, BadAccessException {
         StringBuffer content = new StringBuffer("<?xml version=\"1.0\" encoding=\"GBK\"?>");
         String xml = xmlMapper.writeValueAsString(requestMessage).replaceAll(" xmlns=\"\"", "");
@@ -238,6 +250,8 @@ public class CjbSupplierImpl implements CjbSupplier {
     }
 
     /**
+     * 将主体的账户信息组合成 登录报文指令对象.
+     *
      * @param account 账户信息
      * @return 登录指令对象
      */
@@ -258,6 +272,8 @@ public class CjbSupplierImpl implements CjbSupplier {
     }
 
     /**
+     * 将付款人信息,收款人信息组合成 转账指令对象
+     *
      * @param account  付款人信息
      * @param receiver 收款人信息
      * @return 转账指令对象
@@ -266,7 +282,8 @@ public class CjbSupplierImpl implements CjbSupplier {
         Securities_msgsRQV1 securities_msgsRQV1 = new Securities_msgsRQV1();
         XferTrnRq xferTrnRq = new XferTrnRq();
         //客户端交易的唯一标志，否则客户端将无法分辨响应报文的对应关系,最大30位建议值为YYYYMMDD+序号
-        xferTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + receiver.getId().toString());
+        //决定用UUID
+        xferTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + UUID.randomUUID().toString().replace("-", "").substring(0, 20));
 
         XferRq xferRq = new XferRq();
         XferInfo xferInfo = new XferInfo();

@@ -135,7 +135,7 @@ public class ManageWithdrawController {
                                 -> ReadService.agentLevelForLogin(root.join(WithdrawRequest_.whose)
                                 , criteriaBuilder)))
                         , Fields.asBasic("comment")
-                        , Fields.asBasic("clientSerial")
+                        , Fields.asBasic("serviceSerial")
                         , Fields.asBasic("logisticsCode")
                         , Fields.asBasic("logisticsCompany")
                         , Fields.asBasic("actualAmount")

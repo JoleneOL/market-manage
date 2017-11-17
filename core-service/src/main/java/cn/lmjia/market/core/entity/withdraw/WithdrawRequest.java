@@ -119,10 +119,16 @@ public class WithdrawRequest implements CashReceiver {
     private Manager manageBy;
 
     /**
-     * 该请求在发送银行指令是的流水号.
+     * 该申请在发送指令的客户端流水号.
      */
     @Column(length = 30)
     private String clientSerial;
+
+    /**
+     * 该请求在发送指令时,银行返回的服务端流水号.
+     */
+    @Column(length = 30)
+    private String serviceSerial;
     /**
      * 银行处理时间
      */
@@ -169,14 +175,13 @@ public class WithdrawRequest implements CashReceiver {
 
     @Override
     public String getBankNumber() {
-        //TODO 目前这个还没弄明白是什么
+        //可以不用填写,先留着,万一将来需要呢
         return null;
     }
 
     @Override
     public String getCity() {
-        //TODO 还需要添加一个新的字段.
-        return null;
+        return this.bankCity;
     }
 
     @Override

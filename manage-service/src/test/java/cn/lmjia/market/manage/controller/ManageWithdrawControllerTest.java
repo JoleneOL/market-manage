@@ -30,7 +30,7 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
     private WithdrawRequestRepository withdrawRequestRepository;
 
     @Test
-    public void go() throws InterruptedException {
+    public void  go() throws InterruptedException {
 
         // 可以检查是否存在发票
         Login target = newRandomLogin();
@@ -43,19 +43,13 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
         assertThat(withdrawService.get(request1.getId()).getWithdrawStatus())
                 .isEqualByComparingTo(WithdrawStatus.refuse);
 
-        //再增加一个
-        WithdrawRequest request2 = randomWithdrawRequest(target);
-        page.refresh();
-        page.reject(readService.nameForPrincipal(target));
-        assertThat(withdrawService.get(request2.getId()).getWithdrawStatus())
-                .isEqualByComparingTo(WithdrawStatus.refuse);
-
         //通过申请
-        WithdrawRequest request3 = testWithdrawRequest(target);
+        WithdrawRequest request2 = testWithdrawRequest(target);
         page.refresh();
         page.approval(readService.nameForPrincipal(target));
 
-        assertThat(withdrawService.get(request3.getId()).getWithdrawStatus())
+        WithdrawStatus withdrawStatus = withdrawService.get(request2.getId()).getWithdrawStatus();
+        assertThat(withdrawStatus)
                 .isEqualByComparingTo(WithdrawStatus.success);
 
         // 提交一个带发票的

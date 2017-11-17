@@ -190,7 +190,7 @@ public class WechatWithdrawController {
             //判断是否有发票
             if(withdrawRequest.isInvoice()){
                 //有发票,管理平台财务控制转账.
-                //向财务发送短信提醒
+                //向财务发送短信提醒,自己提供发票
                 remindFinancial(login, withdraw,false);
             }else{
                 //没有发票自动提现,默认供应商
@@ -203,23 +203,24 @@ public class WechatWithdrawController {
                 } catch (SupplierApiUpgradeException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("msg", e.getMessage());
-                    return "wechat@withdrawFailure.html";
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    return "wechat@withdrawSuccess.html";
                 } catch (BadAccessException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("msg", e.getMessage());
-                    return "wechat@withdrawFailure.html";
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    return "wechat@withdrawSuccess.html";
                 } catch (TransferFailureException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("msg", e.getMessage());
-                    return "wechat@withdrawFailure.html";
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    return withdrawFailure(e.getMessage(),model);
                 } catch (IOException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
-                    model.addAttribute("msg", e.getMessage());
-                    return "wechat@withdrawFailure.html";
+                    //记录到备注
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    return "wechat@withdrawSuccess.html";
                 }
             }
         } catch (IllegalVerificationCodeException ex) {
@@ -227,6 +228,27 @@ public class WechatWithdrawController {
             return toVerify(login, model, withdraw, id);
         }
         return "wechat@withdrawSuccess.html";
+    }
+
+    /**
+     * 当客户自己因为自己的原因时,给他跳转失败页面
+     * @param message
+     * @param model
+     * @return
+     */
+    public String withdrawFailure(String message,Model model){
+        model.addAttribute("msg",message);
+        return "wechat@withdrawFailure.html";
+    }
+
+    /**
+     * 当申请因为我们的原因失败时,将原因写入申请的备注
+     * @param withdrawRequest 该条错误的申请
+     * @param message 错误信息.
+     */
+    public void recordCommentAndRefuseRequest(WithdrawRequest withdrawRequest,String message){
+        withdrawRequest.setComment(message);
+        withdrawRequest.setWithdrawStatus(WithdrawStatus.refuse);
     }
 
     /**

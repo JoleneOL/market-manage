@@ -6,4 +6,13 @@ package cn.lmjia.cash.transfer.exception;
  * @author CJ
  */
 public class SupplierApiUpgradeException extends Exception {
+    public SupplierApiUpgradeException(){
+
+    }
+    public SupplierApiUpgradeException(String s){
+        super(s);
+    }
+    public SupplierApiUpgradeException(Exception e){
+        super(e);
+    }
 }

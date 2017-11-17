@@ -107,9 +107,9 @@ $(function () {
                 "name": "comment"
             },
             {
-                "title": "银行处理流水号",
-                "data": "clientSerial",
-                "name": "clientSerial"
+                "title": "银行服务流水号流水号",
+                "data": "serviceSerial",
+                "name": "serviceSerial"
             }
         ],
         "displayLength": 15,
