@@ -56,6 +56,7 @@
     <h4 class="goods-name" th:text="*{product.name}">现货! 国行正品 Ricoh/理光 GR II GRII 理光GR2代数码相机卡片机</h4>
     <div class="goods-price">
         <span th:text="*{{totalPrice}}">1314</span>
+        <span class="goods-price_origin"><i>¥</i><del>10000.00</del></span>
     </div>
     <div class="goods-tab" >
         <p th:each="tag:*{tags}" th:text="${tag.name}">安装：免安装费</p>
@@ -95,7 +96,11 @@
         </div>
         <div class="sku-pro-info">
             <h4 class="goods-name"><span  th:text="*{product.name}" class="js-goodsName">理光 GR II GRII 理光GR2代数码相机卡片机</span></h4>
-            <p class="goods-price">￥<span th:text="*{totalPrice}" class="js-goodsPrice">5579</span></p>
+            <p class="goods-price">
+                ￥<span th:text="*{totalPrice}" class="js-goodsPrice">5579</span>
+                <!--TODO-->
+                <span class="goods-price_origin"><i>¥</i><del>10000.00</del></span>
+            </p>
             <p class="goods-stock">库存：<span th:text="*{product.stock}"
                                             class="js-goodsStock">3</span></p>
         </div>

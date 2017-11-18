@@ -12,6 +12,7 @@ Mock.mock(/\/api\/goodsList\?productName=(.*)/, "get", {
             goodsImage: Mock.Random.image('357x357'),
             description: '@csentence',
             price: '@integer(3000, 10000)',
+            originPrice: '@integer(3000, 10000)',
             salesVolume:'@integer(1000, 99999)'
         }
     ]
@@ -27,6 +28,7 @@ Mock.mock(/\/api\/goodsList\?tag=(.*)&propertyValue=(.*)&priceOrder=(.*)&page=(.
             goodsImage: Mock.Random.image('357x357'),
             description: '@csentence',
             price: '@integer(3000, 10000)',
+            originPrice: '@integer(3000, 10000)',
             salesVolume:'@integer(1000, 99999)'
         }
     ]

@@ -66,7 +66,11 @@
             </div>
             <p class="goods-stock">库存量&nbsp;&nbsp;<th:block th:text="${goods.product.stock}">3</th:block><th:block th:text="${goods.product.unit}">台</th:block></p>
             <div class="goods-info">
-                <div class="goods-price">￥<span th:text="${goods.totalPrice}">3000</span></div>
+                <div class="goods-price">
+                    <span th:text="'￥' + ${goods.totalPrice}">￥3000</span>
+                    <!--TODO-->
+                    <span class="goods-price_origin"><i>¥</i><del>10000.00</del></span>
+                </div>
                 <div class="goods-bought">x<span th:text="${goodsMap.get(goods)}">1</span></div>
             </div>
         </div>
@@ -94,7 +98,10 @@
             </div>
             <p class="goods-stock">库存量&nbsp;&nbsp;5台</p>
             <div class="goods-info">
-                <div class="goods-price">￥9800</div>
+                <div class="goods-price">
+                    <span>￥9800</span>
+                    <span class="goods-price_origin"><i>¥</i><del>10000.00</del></span>
+                </div>
                 <div class="goods-bought">x3</div>
             </div>
         </div>
