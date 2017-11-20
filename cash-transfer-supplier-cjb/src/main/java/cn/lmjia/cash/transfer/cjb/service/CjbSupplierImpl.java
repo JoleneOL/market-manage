@@ -4,6 +4,7 @@ import cn.lmjia.cash.transfer.*;
 import cn.lmjia.cash.transfer.cjb.CjbSupplier;
 import cn.lmjia.cash.transfer.cjb.message.*;
 import cn.lmjia.cash.transfer.cjb.message.sonrq.SignonMsgsRQV1;
+import cn.lmjia.cash.transfer.cjb.message.sonrq.SignonMsgsRSV1;
 import cn.lmjia.cash.transfer.cjb.message.sonrq.Sonrq;
 import cn.lmjia.cash.transfer.cjb.message.transfer.*;
 import cn.lmjia.cash.transfer.cjb.message.transfer.query.*;
@@ -66,6 +67,11 @@ public class CjbSupplierImpl implements CjbSupplier {
         }
         //发送消息
         Fox responseFox = sendRequest(requestFox, interBank, local);
+        Status sonrStatus = responseFox.getSignonMsgsRSV1().getSonrs().getStatus();
+        if(Integer.parseInt(sonrStatus.getCode()) != 0){
+            //登录指令出问题了
+            throw new BadAccessException("登录指令响应码:"+sonrStatus.getCode()+",登录指令错误信息:"+sonrStatus.getMessage());
+        }
         Status status = responseFox.getSecurities_msgsRSV1().getXferTrnRs().getStatus();
         log.info("转账请求处理结果响应码:" + status.getCode() + "请求处理结果响应信息:" + status.getMessage());
 
