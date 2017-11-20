@@ -183,6 +183,7 @@ public class WechatWithdrawController {
      * @return 手机验证码验证
      */
     @PostMapping("/withdrawVerify")
+    @Transactional
     public String withdrawVerify(@AuthenticationPrincipal Login login, String authCode, Model model, BigDecimal withdraw,Long id) {
         try {
             withdrawService.submitRequest(login, authCode);
