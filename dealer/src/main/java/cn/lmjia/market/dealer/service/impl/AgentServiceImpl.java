@@ -347,8 +347,23 @@ public class AgentServiceImpl implements AgentService {
 //            // 如果login是一个客户，那么应该采用它引导者
 //            return recommendAgentLine(login.getGuideUser());
 //        }
+        // 只设置等级比我们低的，那么自然从低开始
+        int currentLevel = line.length - 1;
+        while (currentLevel >= 0) {
+            if (line[currentLevel].getLogin().equals(login)) {
+                result[currentLevel] = line[currentLevel];
+                currentLevel--;
+            } else {
+                break;
+            }
+        }
+
+        if (currentLevel != line.length - 1)
+            result[currentLevel + 1] = null;
+
         for (int i = 0; i < line.length; i++) {
-            result[i] = newParallelRecommend(line[i].getLogin().getGuideUser(), i);
+            if (result[i] == null)
+                result[i] = newParallelRecommend(line[i].getLogin().getGuideUser(), i);
         }
 //        int count = systemService.systemLevel();
 ////        result[count] = current;
