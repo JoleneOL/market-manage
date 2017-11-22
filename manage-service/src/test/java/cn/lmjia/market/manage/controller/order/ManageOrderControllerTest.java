@@ -6,6 +6,7 @@ import cn.lmjia.market.core.entity.MainOrder_;
 import cn.lmjia.market.core.entity.support.ManageLevel;
 import cn.lmjia.market.core.entity.support.OrderStatus;
 import cn.lmjia.market.core.service.MainOrderService;
+import cn.lmjia.market.core.service.MarketStockService;
 import cn.lmjia.market.manage.ManageServiceTest;
 import cn.lmjia.market.manage.page.ManageMainOrderDetailPage;
 import cn.lmjia.market.manage.page.ManageOrderPage;
@@ -56,6 +57,8 @@ public class ManageOrderControllerTest extends ManageServiceTest {
     private MainOrderService mainOrderService;
     @Autowired
     private LogisticsService logisticsService;
+    @Autowired
+    private MarketStockService marketStockService;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
     @Autowired
@@ -123,11 +126,16 @@ public class ManageOrderControllerTest extends ManageServiceTest {
                 .filter(depotFilter)
                 .max(new RandomComparator()).orElseThrow(() -> new IllegalStateException("找不到何时的仓库"));
 
-        order.getAmounts().forEach((good, integer) -> stockService.addStock(
-                targetDepot
-                , good.getProduct()
-                , 100000, null
-        ));
+        order.getAmounts().forEach((good, integer) -> {
+            stockService.addStock(
+                    targetDepot
+                    , good.getProduct()
+                    , 100000, null
+            );
+
+            //这里加了库存，StockService就要清一下
+            marketStockService.cleanProductStock(good.getProduct());
+        });
 
 //        设定一样商品为我们的检测数据
         MainGood good = order.getAmounts().keySet().stream().max(new RandomComparator()).orElse(null);

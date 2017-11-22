@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" xmlns:wx="http://weixin.jiangcai.me" lang="en">
 <!--/*@thymesVar id="currentData" type="cn.lmjia.market.core.entity.MainGood"*/-->
+<!--/*@thymesVar id="shareUrl" type="java.lang.String"*/-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,7 +17,7 @@
 
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 </head>
-<body class="bg-gray" th:object="${currentData}">
+<body class="bg-gray" th:data-shareUrl="${shareUrl+'_'+ #authentication.principal.id}" th:object="${currentData}">
 <div class="mall-toolbar clearfix">
     <h3><a href="index.html" th:href="@{/wechatIndex}">商城</a></h3>
     <div class="mall-toolbar-items">
@@ -89,7 +90,7 @@
     <div class="spec-menu-hd">
         <div class="sku-img">
             <div class="spec-first-pic">
-                <img id="J_specImage" res:src="*{product.mainImg}"
+                <img id="J_specImage" res:src="*{thumbnailImg}"
                      src="https://img.alicdn.com/imgextra/i2/62871920/TB2D0pofYsTMeJjy1zbXXchlVXa_!!62871920.jpg_120x120q50s150.jpg">
             </div>
         </div>
@@ -147,6 +148,9 @@
 <script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
+<script th:if="${#authentication.principal != null}" wx:js=""></script>
+<script th:if="${#authentication.principal != null}"
+        wx:share="利每家|${'您的好友'+@readService.wechatNickNameForPrincipal(#authentication.principal)+'向您推荐'+currentData.product.name}|${shareUrl+'_'+ #authentication.principal.id} |${shareImg!=null?shareImg:'https://cdn.lmjia.cn/lmjia_logo_1.png'}"></script>
 <script src="../../wechat-resource/assets/js/mall/storage.js" th:src="@{/wechat-resource/assets/js/mall/storage.js}"></script>
 <script src="../../wechat-resource/assets/js/mall/detail.js" th:src="@{/wechat-resource/assets/js/mall/detail.js}"></script>
 </html>

@@ -5,6 +5,7 @@ import cn.lmjia.market.core.entity.MainGood_;
 import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.Channel_;
 import cn.lmjia.market.core.service.MainGoodService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.ApiDramatizer;
 import com.alibaba.fastjson.JSONObject;
 import me.jiangcai.crud.row.FieldDefinition;
@@ -50,12 +51,14 @@ public class WecharSearchController {
     private ResourceService resourceService;
     @Autowired
     private MainGoodService mainGoodService;
+    @Autowired
+    private SystemService systemService;
 
     @GetMapping("/wechatSearch")
-    public String search(HttpServletRequest request,Model model) {
+    public String search(HttpServletRequest request, Model model) {
         String userAgent = request.getHeader("user-agent");
-        if(userAgent.contains("iPhone")){
-            model.addAttribute("iPhone",true);
+        if (userAgent.contains("iPhone")) {
+            model.addAttribute("iPhone", true);
         }
         return "wechat@mall/search.html";
     }
@@ -70,7 +73,16 @@ public class WecharSearchController {
 
     @GetMapping("/wechatSearch/goodsDetail/{goodsId}")
     public String goodsDetail(@PathVariable Long goodsId, Model model) {
-        model.addAttribute("currentData", mainGoodService.findOne(goodsId));
+        MainGood mainGood = mainGoodService.findOne(goodsId);
+        model.addAttribute("currentData", mainGood);
+        model.addAttribute("shareUrl", systemService.toUrl("/wechatForward/" + goodsId));
+        try {
+            if (!StringUtils.isEmpty(mainGood.getThumbnailImg())) {
+                model.addAttribute("shareImg", resourceService.getResource(mainGood.getThumbnailImg()).httpUrl().toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "wechat@mall/goodsDetail.html";
     }
 
@@ -186,7 +198,7 @@ public class WecharSearchController {
     }
 
     @PostMapping("/wechatSearch/goodsList")
-    public String cartGoodsList(@RequestParam String order,Model model) {
+    public String cartGoodsList(@RequestParam String order, Model model) {
         Map<MainGood, Long> cartGoodsMap = new HashMap<>();
         JSONObject object = JSONObject.parseObject(order);
         object.keySet().forEach(key -> {
