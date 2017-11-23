@@ -40,7 +40,7 @@ public enum Version {
     /**
      * 商品分享
      */
-    goodShare
+    goodShare,
     /**
      * 商城2.0
      */

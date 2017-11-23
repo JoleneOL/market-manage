@@ -131,6 +131,7 @@ $(function () {
                 dataType: 'json',
                 success: function (res) {
                     layer.close(loading);
+                    console.log(res);
                     if (res.resultCode === 302) {
                         // 需要 orderNumber
                         layer.open({

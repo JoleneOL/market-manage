@@ -64,7 +64,8 @@ public class MallCartPage extends AbstractWechatPage {
         checkAll.click();
     }
 
-    public void clickSettlement(){
+    public void clickSettlement() throws InterruptedException {
         settlementBtn.click();
+        Thread.sleep(500);
     }
 }
