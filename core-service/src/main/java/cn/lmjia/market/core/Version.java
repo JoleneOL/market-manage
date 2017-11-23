@@ -38,6 +38,10 @@ public enum Version {
      */
     changeGuide,
     /**
+     * 商品分享
+     */
+    goodShare
+    /**
      * 商城2.0
      */
     mall2

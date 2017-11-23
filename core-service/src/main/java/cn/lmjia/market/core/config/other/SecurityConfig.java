@@ -97,6 +97,8 @@ public class SecurityConfig {
                     // 登录跳转页面
                     .antMatchers("/wechatJoin**", "/wechatRegister").permitAll()
                     .antMatchers("/toLoginWechat", "/wechatLogin").permitAll()
+                    //商品详情页中间跳转页
+                    .antMatchers("/wechatForward/*_*").permitAll()
                     // 微信绑定
                     .antMatchers("/wechat/bindTo**").permitAll()
                     // 手机号码可用性检测

@@ -206,7 +206,7 @@ public class ManageProductController {
         if(isCleanProductStock){
             marketStockService.cleanProductStock(product);
         }
-        //转存资源
+        //主图转存资源
         if (!StringUtils.isEmpty(productImgPath) && productImgPath.length() > 1) {
             String productImgResource = "product/" + product.getCode() + "." + FileUtils.fileExtensionName(productImgPath);
             resourceService.moveResource(productImgResource, productImgPath);

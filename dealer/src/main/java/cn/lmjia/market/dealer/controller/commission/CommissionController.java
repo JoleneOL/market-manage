@@ -214,6 +214,7 @@ public class CommissionController {
                             @Override
                             public Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe) {
                                 NumberFormat format = NumberFormat.getPercentInstance(Locale.CHINA);
+                                format.setMaximumFractionDigits(2);
                                 return format.format(origin);
                             }
 

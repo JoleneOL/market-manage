@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,6 +30,10 @@ public class WechatMallOrderController {
      */
     @PostMapping(SystemService.mallOrderURi)
     public String index(@AuthenticationPrincipal Login login, @RequestParam String order, Model model) {
+        //只有存在用户名才能下单
+        if (StringUtils.isEmpty(login.getUsername())) {
+            return "redirect:/wechatRegister";
+        }
         Map<MainGood, Long> cartGoodsMap = new HashMap<>();
         JSONObject object = JSONObject.parseObject(order);
         object.keySet().forEach(key -> {

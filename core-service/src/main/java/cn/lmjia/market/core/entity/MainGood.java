@@ -4,6 +4,7 @@ import cn.lmjia.market.core.entity.channel.Channel;
 import cn.lmjia.market.core.entity.channel.InstallmentChannel;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -62,6 +63,12 @@ public class MainGood {
 
     @Column(scale = 2, precision = 12)
     private BigDecimal originPrice;
+
+    /**
+     * 缩略图，缺省时取主图
+     */
+    @Column(length = 60)
+    private String thumbnailImg;
 
     /**
      * @param path
@@ -151,5 +158,13 @@ public class MainGood {
     @Override
     public int hashCode() {
         return Objects.hash(id, product, channel);
+    }
+
+    /**
+     * 获取商品缩略图，缺省为货品主图
+     * @return
+     */
+    public String getThumbnailImg(){
+        return StringUtils.isEmpty(thumbnailImg) ? product.getMainImg() : thumbnailImg;
     }
 }

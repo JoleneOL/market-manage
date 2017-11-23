@@ -7,6 +7,7 @@ import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.NoticeService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.LoginAuthentication;
+import cn.lmjia.market.wechat.service.WechatService;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.wx.OpenId;
@@ -18,6 +19,9 @@ import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,6 +69,8 @@ public class WechatController {
     private PublicAccount publicAccount;
     @Autowired
     private NoticeService noticeService;
+    @Autowired
+    private WechatService wechatService;
 
     @GetMapping("/wechat/bindTo{id}")
     @Transactional
@@ -107,6 +113,10 @@ public class WechatController {
         if (login.getGuideUser() != null)
             noticeService.newLogin(login, mobile);
 
+        //重新保存用户信息到上下文中
+        SecurityContext context=SecurityContextHolder.getContext();
+        Authentication auth=new UsernamePasswordAuthenticationToken(login.getLoginName(),login.getPassword());
+        context.setAuthentication(auth);
         return "redirect:" + SystemService.wechatMallIndex;
     }
 
@@ -127,16 +137,7 @@ public class WechatController {
             return "redirect:/wechatRegister";
         }
         // 执行登录
-
-        HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
-        SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
-
-        final LoginAuthentication authentication = new LoginAuthentication(login.getId(), loginService);
-        context.setAuthentication(authentication);
-//
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        httpSessionSecurityContextRepository.saveContext(context, holder.getRequest(), holder.getResponse());
+        loginToSecurity(login,request,response);
         // 跳转回去！
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
@@ -194,5 +195,47 @@ public class WechatController {
             return "redirect:/wechatLogin?type=codeError";
         }
         return "redirect:/toLoginWechat";
+    }
+
+    /**
+     * 用户在商品详情页转发，当前用户点击查看的跳转页面。如果是新用户，就给它建一个缺少loginName的账号
+     * @param openId 当前用户openId
+     * @param goodId 分享的商品
+     * @param id 转发来源用户
+     * @return 最终总是跳转到商品详情页
+     */
+    @GetMapping("/wechatForward/{goodId}_{id}")
+    public String wechatForward(@OpenId String openId,@PathVariable Long goodId,@PathVariable Long id
+            , HttpServletRequest request, HttpServletResponse response){
+        //判断是否登录
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || authentication instanceof AnonymousAuthenticationToken){
+            Login login = loginService.asWechat(openId);
+            //判断是否是新用户，如果是新用户，就给它一个id
+            if(login == null){
+                login = wechatService.shareTo(id,openId);
+            }
+            // 执行登录
+            loginToSecurity(login,request,response);
+        }
+        if(goodId > 0){
+            return "redirect:/wechatSearch/goodsDetail/" + goodId;
+        }else{
+            return "redirect:" + SystemService.wechatMallIndex;
+        }
+    }
+
+    private void loginToSecurity(Login login, HttpServletRequest request, HttpServletResponse response){
+        //对 login 执行登录
+
+        HttpRequestResponseHolder holder = new HttpRequestResponseHolder(request, response);
+        SecurityContext context = httpSessionSecurityContextRepository.loadContext(holder);
+
+        LoginAuthentication authentication = new LoginAuthentication(login.getId(), loginService);
+        context.setAuthentication(authentication);
+//
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        httpSessionSecurityContextRepository.saveContext(context, holder.getRequest(), holder.getResponse());
     }
 }

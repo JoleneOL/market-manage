@@ -28,7 +28,8 @@ public class ManageAgentControllerTest extends ManageServiceTest {
     private LoginRepository loginRepository;
 
     @Test
-    public void go() throws InterruptedException {
+//    @Repeat(10)
+    public void go() throws Exception {
 
         Login als[] = new Login[systemService.systemLevel()];
         AgentLevel as[] = new AgentLevel[systemService.systemLevel()];
@@ -39,6 +40,7 @@ public class ManageAgentControllerTest extends ManageServiceTest {
 
         toTestAgent.getLogin().setGuideUser(als[als.length - 1]);
         loginRepository.save(toTestAgent.getLogin());
+        System.out.println(toTestAgent.getLogin().toString());
 
         // 让他拥有几个直接客户 并且成功下单了！
         addSubUserFor(toTestAgent.getLogin());
@@ -70,7 +72,21 @@ public class ManageAgentControllerTest extends ManageServiceTest {
                 .isEqualTo(readService.nameForPrincipal(toTestAgent.getLogin().getGuideUser()));
 
         // 新增一个Login?
+        // 确认是存在关系的
         Login newLogin = newRandomLogin();
+        while (loginService.get(toTestAgent.getLogin().getId()).isGuideAble(newLogin)) {
+            newLogin = newRandomLogin();
+        }
+        // 必须失败！
+        page.changeGuideAndFailed(newLogin);
+
+
+        page.refresh();
+        newLogin = newRandomLogin();
+        while (!loginService.get(toTestAgent.getLogin().getId()).isGuideAble(newLogin)) {
+            // 确认是不存在关系的
+            newLogin = loginService.byLoginName("master");
+        }
         page.changeGuide(newLogin);
 
         page.assertGuideName()

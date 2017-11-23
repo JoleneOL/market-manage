@@ -7,6 +7,8 @@ import cn.lmjia.market.core.repository.MainGoodRepository;
 import cn.lmjia.market.core.repository.MainProductRepository;
 import cn.lmjia.market.core.service.ChannelService;
 import cn.lmjia.market.core.service.TagService;
+import me.jiangcai.lib.resource.service.ResourceService;
+import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.crud.row.FieldDefinition;
 import me.jiangcai.crud.row.RowCustom;
 import me.jiangcai.crud.row.RowDefinition;
@@ -34,6 +36,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -59,6 +62,8 @@ public class ManageGoodController {
     private ChannelService channelService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private ResourceService resourceService;
 
     // 禁用和恢复
     @PutMapping("/goods/{id}/off")
@@ -94,7 +99,7 @@ public class ManageGoodController {
 
     @PostMapping("/manageGoodSubmit")
     @Transactional
-    public String edit(Long id, boolean commissionSource, String product, Long channel, BigDecimal originPrice, String[] tag) {
+    public String edit(Long id, boolean commissionSource, String product, Long channel, String thumbnailImgPath, BigDecimal originPrice, String[] tag) throws IOException {
         MainGood good;
         if (id != null)
             good = mainGoodRepository.getOne(id);
@@ -128,9 +133,15 @@ public class ManageGoodController {
         }
         good.setTags(tags);
 
+        //缩略图转存资源
+        if (!StringUtils.isEmpty(thumbnailImgPath) && thumbnailImgPath.length() > 1){
+            String thumbnailImgResource = "good/" + product + "-small"+ "." + FileUtils.fileExtensionName(thumbnailImgPath);
+            resourceService.moveResource(thumbnailImgResource,thumbnailImgPath);
+            good.setThumbnailImg(thumbnailImgResource);
+        }
+
         if (id == null)
             mainGoodRepository.save(good);
-
         return "redirect:/manageGood";
     }
 

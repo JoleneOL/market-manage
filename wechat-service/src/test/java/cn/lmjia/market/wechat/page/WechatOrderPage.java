@@ -143,7 +143,7 @@ public class WechatOrderPage extends AbstractWechatPage {
                             if (amountChooser == null) {
                                 int targetMax = limitAmount / 4;
                                 int targetMin = 1;
-                                if (targetMax >= targetMin)
+                                if (targetMax > targetMin)
                                     amount = new Random().nextInt(targetMax - targetMin) + targetMin;
                                 else
                                     amount = Math.min(targetMin, limitAmount);

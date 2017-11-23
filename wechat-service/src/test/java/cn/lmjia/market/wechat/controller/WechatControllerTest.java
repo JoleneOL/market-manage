@@ -9,12 +9,14 @@ import cn.lmjia.market.core.repository.TagRepository;
 import cn.lmjia.market.core.service.MainGoodService;
 import cn.lmjia.market.wechat.WechatTestBase;
 import cn.lmjia.market.wechat.page.LoginPage;
-import cn.lmjia.market.wechat.page.mall.MallIndexPage;
-import cn.lmjia.market.wechat.page.mall.MallSearchPage;
-import cn.lmjia.market.wechat.page.mall.MallTagDetailPage;
+import cn.lmjia.market.wechat.page.WechatRegisterPage;
+import cn.lmjia.market.wechat.page.mall.*;
 import me.jiangcai.wx.model.WeixinUserDetail;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -171,6 +173,64 @@ public class WechatControllerTest extends WechatTestBase {
         //搜索全部
         tagDetailPage.clickTagOrPropertyValue(null);
         tagDetailPage.validateGoods(mainGoodService.forSale());
+
+
+    }
+
+    @Test
+    public void wechatForwardTest(){
+        //首先要有一个转发者
+        String rawPassword = UUID.randomUUID().toString();
+        Login login = newRandomAgent(rawPassword);
+
+        //随便拿一个商品
+        MainGood mainGood = mainGoodService.forSale().stream().findAny().get();
+        //转发
+        String shareUrl = "http://localhost/wechatForward/" + mainGood.getId() + "_" + login.getId() + "?from=singlemessage&isappinstalled=0";
+
+
+        //1.自己看看
+        LoginPage loginPage = getLoginPageForBrowseIndex();
+        loginPage.login(login.getLoginName(), rawPassword);
+        driver.get(shareUrl);
+        MallGoodsDetailPage testGoodDetailPage = initPage(MallGoodsDetailPage.class);
+        testGoodDetailPage.validateShareUrl(mainGood.getId(),login.getId());
+
+        //退出登录
+        driver.get("http://localhost/logout");
+
+        //2.在没有Login的情况下访问
+        driver.get(shareUrl);
+        testGoodDetailPage = initPage(MallGoodsDetailPage.class);
+        testGoodDetailPage.validateShareUrl(mainGood.getId(),null);
+
+        //点立即购买，应该是跳转到注册页面
+        testGoodDetailPage.clickBuyNow();
+        testGoodDetailPage.printThisPage();
+        WechatRegisterPage registerPage = initPage(WechatRegisterPage.class);
+
+        //还能访问商城
+
+        // 完成注册
+        String mobile = randomMobile();
+        registerPage.sendAuthCode(mobile);
+        registerPage.submitSuccessAs(RandomStringUtils.randomAlphabetic(10));
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {
+
+        }
+
+        //应该到商城首页
+        MallIndexPage indexPage = initPage(MallIndexPage.class);
+
+        //再次来到商品详情页
+        driver.get(shareUrl);
+        testGoodDetailPage = initPage(MallGoodsDetailPage.class);
+        testGoodDetailPage.clickBuyNow();
+        //到填写详细信息页面
+        MallOrderPlacePage orderPlacePage = initPage(MallOrderPlacePage.class);
 
 
     }
