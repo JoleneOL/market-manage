@@ -60,6 +60,9 @@ public class MainGood {
     @ManyToMany(cascade = {CascadeType.REFRESH})
     private Set<Tag> tags;
 
+    @Column(scale = 2, precision = 12)
+    private BigDecimal originPrice;
+
     /**
      * @param path
      * @param criteriaBuilder
@@ -125,6 +128,14 @@ public class MainGood {
             }
         }
         return price.add(product.getInstall());
+    }
+
+    /**
+     * 判断是否有原价，如果没有就不显示原价
+     * @return
+     */
+    public boolean hasOriginPrice() {
+        return originPrice != null && originPrice.compareTo(BigDecimal.ZERO) == 1;
     }
 
     @Override

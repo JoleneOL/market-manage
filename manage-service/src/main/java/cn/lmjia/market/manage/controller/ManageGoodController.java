@@ -33,6 +33,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -74,7 +75,7 @@ public class ManageGoodController {
         mainGoodRepository.getOne(id).setEnable(true);
     }
 
-    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_SUPPLY_CHAIN + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/manageGood")
     public String index() {
         return "_goodsManage.html";
@@ -93,7 +94,7 @@ public class ManageGoodController {
 
     @PostMapping("/manageGoodSubmit")
     @Transactional
-    public String edit(Long id, boolean commissionSource, String product, Long channel, String[] tag) {
+    public String edit(Long id, boolean commissionSource, String product, Long channel, BigDecimal originPrice, String[] tag) {
         MainGood good;
         if (id != null)
             good = mainGoodRepository.getOne(id);
@@ -116,6 +117,7 @@ public class ManageGoodController {
                 good.setChannel(null);
         }
         good.setCommissionSource(commissionSource);
+        good.setOriginPrice(originPrice);
 
         Set<Tag> tags = null;
         if (tag != null && tag.length > 0) {
@@ -132,7 +134,7 @@ public class ManageGoodController {
         return "redirect:/manageGood";
     }
 
-    @PreAuthorize("hasAnyRole('ROOT','"+ Login.ROLE_SUPPLY_CHAIN+"','"+Login.ROLE_LOOK+"')")
+    @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_SUPPLY_CHAIN + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/goods/list")
     @RowCustom(dramatizer = JQueryDataTableDramatizer.class, distinct = true)
     public RowDefinition<MainGood> data(final String productName) {
@@ -163,6 +165,9 @@ public class ManageGoodController {
                                 .build()
                         , FieldBuilder.asName(MainGood.class, "createTime")
                                 .addFormat((data, type) -> conversionService.convert(data, String.class))
+                                .build()
+                        , FieldBuilder.asName(MainGood.class, "originPrice")
+                                .addSelect(mainGoodRoot -> mainGoodRoot.get("originPrice"))
                                 .build()
                 );
             }

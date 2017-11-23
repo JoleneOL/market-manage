@@ -27,6 +27,9 @@ $(function () {
                 "title": "特供渠道", "data": "channelName", "name": "channelName"
             },
             {
+                "title": "原价", "data": "originPrice", "name": "originPrice"
+            },
+            {
                 title: "操作",
                 className: 'table-action',
                 data: function (item) {

@@ -535,6 +535,8 @@ public class InitService {
                     case changeGuide:
                         jdbcService.tableAlterAddColumn(Login.class, "guideChanged", "0");
                         break;
+                    case mall2:
+                        jdbcService.tableAlterAddColumn(MainGood.class,"originPrice",null);
                     default:
                 }
 

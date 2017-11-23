@@ -37,4 +37,8 @@ public enum Version {
      * 引导者改变
      */
     changeGuide,
+    /**
+     * 商城2.0
+     */
+    mall2
 }

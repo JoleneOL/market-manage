@@ -93,8 +93,7 @@
                         <div class="tag-detail">
                             <div class="goods-price">
                                 <span th:text="'￥' + ${goods.totalPrice}">￥3000.00</span>
-                                <!--TODO-->
-                                <span class="goods-price_origin"><i>¥</i><del>10000.00</del></span>
+                                <span class="goods-price_origin" th:if="${goods.hasOriginPrice()}"><i>¥</i><del th:text="${goods.originPrice}">10000.00</del></span>
                             </div>
                             <!--<div class="goods-bought">9999人付款</div>-->
                         </div>
