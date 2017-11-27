@@ -150,7 +150,7 @@
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
 <script th:if="${#authentication.principal != null}" wx:js=""></script>
 <script th:if="${#authentication.principal != null}"
-        wx:share="利每家|${'您的好友'+@readService.wechatNickNameForPrincipal(#authentication.principal)+'向您推荐'+currentData.product.name}|${shareUrl+'_'+ #authentication.principal.id} |${shareImg!=null?shareImg:'https://cdn.lmjia.cn/lmjia_logo_1.png'}"></script>
+        wx:share="利每家|${'您的好友'+@readService.wechatNickNameForPrincipal(#authentication.principal)+'向您推荐'+currentData.product.name  + '。'+ currentData.product.description}|${shareUrl+'_'+ #authentication.principal.id} |${shareImg!=null?shareImg:'https://cdn.lmjia.cn/lmjia_logo_1.png'}"></script>
 <script src="../../wechat-resource/assets/js/mall/storage.js" th:src="@{/wechat-resource/assets/js/mall/storage.js}"></script>
 <script src="../../wechat-resource/assets/js/mall/detail.js" th:src="@{/wechat-resource/assets/js/mall/detail.js}"></script>
 </html>
