@@ -10,6 +10,7 @@ $(function () {
 
     var rejectUrl = _body.attr('data-reject-url');
     var approvalUrl = _body.attr('data-approval-url');
+    var searchUrl = _body.attr('data-search-url');
 
     var table = $('#withdrawTable').DataTable({
         "processing": true,
@@ -98,6 +99,8 @@ $(function () {
                     if (item.statusCode == 2)
                         return journal + '<a href="javascript:;" class="js-makeApproval" data-id="' + item.id + '"><i class="fa fa-check-circle"></i>&nbsp;批准</a>'
                             + '<a href="javascript:;" class="js-makeRefuse" data-id="' + item.id + '"><i class="fa fa-times-circle"></i>&nbsp;拒绝</a>';
+                    if (item.statusCode == 4)
+                        return journal + '<a href="javascript:;" class="js-makeSearch" data-id="' + item.id + '"><i class="fa fa-eye"></i>&nbsp;转账状态</a>';
                     return journal;
                 }
             },
@@ -152,21 +155,18 @@ $(function () {
                     $.ajax(workUrl, {
                         method: 'post',
                         data: value,
-                        success: function (res) {
-                            if(res != undefined){
-                                if(res.resultCode == 0){
+                        success: function (data) {
+                            if (data !== undefined) {
+                                if (data.resultCode === 0) {
                                     table.ajax.reload();
                                     layer.close(index);
-                                }else if(res.resultCode == 1){
-                                    layer.open({
-                                        title:'转账失败',
-                                        content:res.why
-                                    })
+                                } else if (data.resultCode === 1) {
+                                    layer.alert(data.resultMsg);
                                 }
                             }
                             table.ajax.reload();
                             layer.close(index);
-                        }, error: function (msg) {
+                        }, error: function () {
                             layer.msg('服务端异常');
                         }
                     });
@@ -174,6 +174,26 @@ $(function () {
             }
         });
     }
+
+    function makeSearch(id, url) {
+        $.ajax(url+'?id='+id, {
+            method: 'get',
+            dataType: 'json',
+            success: function (data) {
+                if (data !== undefined) {
+                    if (data.resultCode === 0) {
+                        layer.alert(data.resultMsg);
+                    } else if (data.resultCode === 1) {
+                        layer.alert(data.resultMsg);
+                    }
+                }
+                table.ajax.reload();
+            }, error: function () {
+                layer.msg('服务器异常');
+            }
+        });
+    }
+
 
     $(document).on('click', '.js-search', function () {
         // 点击搜索方法。但如果数据为空，是否阻止
@@ -202,7 +222,11 @@ $(function () {
     }).on('click', '.js-makeRefuse', function () {
         var id = $(this).data('id');
         openRegion($('#J_makeRefuse'), id, rejectUrl);
+    }).on('click', '.js-makeSearch', function () {
+        var id = $(this).data('id');
+        makeSearch(id, searchUrl);
     });
+
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         table.ajax.reload();

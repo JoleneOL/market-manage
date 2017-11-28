@@ -107,10 +107,12 @@ public class WithdrawServiceImpl implements WithdrawService {
     }
 
     @Override
-    public void automaticIsSuccessful(long withdrawRequestId, LocalDateTime processingTime) {
+    public void automaticIsSuccessful(long withdrawRequestId, CashTransferResult result) {
         WithdrawRequest request = get(withdrawRequestId);
-        request.setBankProcessingTime(processingTime);
+        request.setBankProcessingTime(result.getProcessingTime());
         request.setWithdrawStatus(WithdrawStatus.success);
+        request.setClientSerial(result.getClientSerial());
+        request.setServiceSerial(result.getServiceSerial());
     }
 
 }

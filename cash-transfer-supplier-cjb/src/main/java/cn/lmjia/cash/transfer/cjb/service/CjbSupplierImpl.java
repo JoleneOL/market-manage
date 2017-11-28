@@ -59,11 +59,11 @@ public class CjbSupplierImpl implements CjbSupplier {
         Securities_msgsRQV1 securities_msgsRQV1 = usSecurities(account, receiver);
         requestFox.setSecurities_msgsRQV1(securities_msgsRQV1);
 
-        boolean interBank = receiver.getBankDesc().contains("兴业") ? true : false;
+        boolean interBank = receiver.getBankDesc().contains("兴业");
         boolean local = false;
         if (receiver.getCity() != null) {
             //如果是空就给个值,否则空指针
-            local = receiver.getCity().contains(account.getCity() == null ? "1" : account.getCity()) ? true : false;
+            local = receiver.getCity().contains(account.getCity() == null ? "1" : account.getCity());
         }
         //发送消息
         Fox responseFox = sendRequest(requestFox, interBank, local);
@@ -73,7 +73,7 @@ public class CjbSupplierImpl implements CjbSupplier {
             throw new BadAccessException("登录指令响应码:"+sonrStatus.getCode()+",登录指令错误信息:"+sonrStatus.getMessage());
         }
         Status status = responseFox.getSecurities_msgsRSV1().getXferTrnRs().getStatus();
-        log.info("转账请求处理结果响应码:" + status.getCode() + "请求处理结果响应信息:" + status.getMessage());
+        log.info("转账请求处理结果响应码:" + status.getCode() + ",请求处理结果响应信息:" + status.getMessage());
 
         //结果
         return cashTransferResult(responseFox);
@@ -94,7 +94,7 @@ public class CjbSupplierImpl implements CjbSupplier {
 
         XferInqRq xferInqRq = new XferInqRq();
         //要查询的转账交易TrunId
-        xferInqRq.setClientRef(receuver.getWithdrawId().toString());
+        xferInqRq.setClientRef(receuver.getWithdrawId());
 
         xferInqTrnRq.setXferInqRq(xferInqRq);
         securities_msgsRQV1.setXferInqTrnRq(xferInqTrnRq);
@@ -118,7 +118,7 @@ public class CjbSupplierImpl implements CjbSupplier {
         Status status = responseFox.getSignonMsgsRSV1().getSonrs().getStatus();
         if (!"0".equals(status.getCode())) {
             //登录失败
-            throw new BadAccessException("错误码:" + status.getCode() + "登录信息错误:" + status.getMessage() + " 处理时间" + responseFox.getSignonMsgsRSV1().getSonrs().getDtServer());
+            throw new BadAccessException("错误码:" + status.getCode() + ",登录信息错误:" + status.getMessage() + ",处理时间" + responseFox.getSignonMsgsRSV1().getSonrs().getDtServer());
         }
         //现金转账响应
         XferTrnRs xferTrnRs = responseFox.getSecurities_msgsRSV1().getXferTrnRs();
@@ -131,8 +131,8 @@ public class CjbSupplierImpl implements CjbSupplier {
             Status transferStatus = xferTrnRs.getStatus();
             if (!"0".equals(transferStatus.getCode())) {
                 //失败的请求
-                throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + "转账错误信息:" +
-                        transferStatus.getMessage() + "错误的提现申请单号:" + xferTrnRs.getTrnuId());
+                throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + ",转账错误信息:" +
+                        transferStatus.getMessage() + ",错误的提现申请单号:" + xferTrnRs.getTrnuId());
             }
             //成功
             XferRs xferRs = xferTrnRs.getXferRs();
@@ -160,9 +160,9 @@ public class CjbSupplierImpl implements CjbSupplier {
             cashTransferResult.setClientSerial(xferInqTrnRs.getTrnuId());
             XferList xferList = xferInqTrnRs.getXferInqRs().getXferList();
             String more = xferList.getMore();
-            if ("N".equalsIgnoreCase(more)) {
-                //没有记录
-                throw new TransferFailureException("没有查询到转账记录");
+            if ("Y".equalsIgnoreCase(more)) {
+                //有下一页
+                throw new TransferFailureException("正常应该查询到一页,不应该有下一页.");
             } else {
                 //查询的转账记录 xfer是这条记录的信息.
                 Xfer xfer = xferList.getXfer();
@@ -289,7 +289,10 @@ public class CjbSupplierImpl implements CjbSupplier {
         XferTrnRq xferTrnRq = new XferTrnRq();
         //客户端交易的唯一标志，否则客户端将无法分辨响应报文的对应关系,最大30位建议值为YYYYMMDD+序号
         //决定用UUID
-        xferTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + UUID.randomUUID().toString().replace("-", "").substring(0, 20));
+        if(receiver.getWithdrawId() == null)
+            xferTrnRq.setTrnuId(LocalDateTime.now().format(fotmatterYear) + UUID.randomUUID().toString().replace("-", "").substring(0, 20));
+        else
+            xferTrnRq.setTrnuId(receiver.getWithdrawId());
 
         XferRq xferRq = new XferRq();
         XferInfo xferInfo = new XferInfo();

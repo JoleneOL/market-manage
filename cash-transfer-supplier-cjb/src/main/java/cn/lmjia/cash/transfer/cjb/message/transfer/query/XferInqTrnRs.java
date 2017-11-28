@@ -12,11 +12,14 @@ import java.io.Serializable;
 public class XferInqTrnRs implements Serializable{
     private static final long serialVersionUID = 6794659983732066927L;
 
-    @JsonProperty("TRUNID")
+    @JsonProperty("TRNUID")
     private String trnuId;
 
     @JsonProperty("STATUS")
     private Status status;
+
+    @JsonProperty("CLTCOOKIE")
+    private String cltCookie;
 
     @JsonProperty("XFERINQRS")
     private XferInqRs xferInqRs;

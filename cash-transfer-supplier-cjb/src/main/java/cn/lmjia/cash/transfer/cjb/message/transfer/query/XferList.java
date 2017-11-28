@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class XferList implements Serializable{
     private static final long serialVersionUID = -953021982503888210L;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty(isAttribute = true,localName = "MORE")
     private String more;
 
     @JsonProperty("FROM")

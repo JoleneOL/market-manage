@@ -11,6 +11,6 @@ import java.io.Serializable;
 public class XferInqRs implements Serializable {
 
     private static final long serialVersionUID = 3736612447674098510L;
-    @JsonProperty("XFERLIST ")
+    @JsonProperty("XFERLIST")
     private XferList xferList;
 }

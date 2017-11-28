@@ -3,8 +3,11 @@ package cn.lmjia.market.manage.controller;
 import cn.lmjia.cash.transfer.CashTransferSupplier;
 import cn.lmjia.cash.transfer.EntityOwner;
 import cn.lmjia.cash.transfer.cjb.CjbSupplier;
+import cn.lmjia.cash.transfer.exception.BadAccessException;
+import cn.lmjia.cash.transfer.exception.TransferFailureException;
 import cn.lmjia.cash.transfer.model.CashTransferResult;
 import cn.lmjia.cash.transfer.service.CashTransferService;
+import cn.lmjia.cash.transfer.service.TransferStatusQueryService;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.Login_;
 import cn.lmjia.market.core.entity.Manager;
@@ -20,6 +23,7 @@ import cn.lmjia.market.core.row.field.Fields;
 import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.core.service.WithdrawService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +65,8 @@ public class ManageWithdrawController {
     private CashTransferService cashTransferService;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private TransferStatusQueryService transferStatusQueryService;
 
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_FINANCE + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/withdrawManage")
@@ -75,9 +81,30 @@ public class ManageWithdrawController {
         withdrawService.reject(manager, id, comment);
     }
 
+    @GetMapping("/manage/withdraws/search")
+    @ResponseBody
+    @Transactional
+    public Map<String,Object> TransferState(Long id){
+        WithdrawRequest withdrawRequest = withdrawService.get(id);
+        Map<String,Object> result = new HashMap<>();
+        try {
+            CashTransferResult cashTransferResult = transferStatusQueryService.statusQuery(null, null, withdrawRequest);
+            result.put("resultCode",0);
+            result.put("resultMsg",cashTransferResult.getMessage());
+            //将结果写到备注
+            withdrawRequest.setComment(cashTransferResult.getMessage());
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            result.put("resultCode",1);
+            result.put("resultMsg",e.getMessage());
+            return result;
+        }
+    }
+
     @PostMapping("/manage/withdraws/approval")
     @Transactional
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public @ResponseBody
     Map<String,Object> approval(@AuthenticationPrincipal Manager manager, long id, String comment, String bankName) {
         final CashTransferSupplier supplier;
@@ -101,11 +128,13 @@ public class ManageWithdrawController {
             e.printStackTrace();
             log.error(e.getMessage());
             Map<String,Object> resultMsg = new HashMap<>();
+            request.setComment(e.getMessage());
             resultMsg.put("resultCode",1);
             resultMsg.put("resultMsg",e.getMessage());
             return resultMsg;
         }
     }
+
 
     @PreAuthorize("hasAnyRole('ROOT','" + Login.ROLE_FINANCE + "','" + Login.ROLE_LOOK + "')")
     @GetMapping("/manage/withdraws")

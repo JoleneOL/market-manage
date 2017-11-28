@@ -12,7 +12,6 @@ import me.jiangcai.lib.notice.Content;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public interface WithdrawService {
 
@@ -95,10 +94,9 @@ public interface WithdrawService {
 
     /**
      * 自动转账成功时,将这个提现请求的状态修改掉.
-     *
-     * @param withdrawRequestId 成功的提现上申请
-     * @param processingTime 供应商(银行)处理的时间.
+     *  @param withdrawRequestId 成功的提现上申请
+     * @param result 供应商(银行)处理的时间.
      */
     @Transactional
-    void automaticIsSuccessful(long withdrawRequestId, LocalDateTime processingTime);
+    void automaticIsSuccessful(long withdrawRequestId, CashTransferResult result);
 }

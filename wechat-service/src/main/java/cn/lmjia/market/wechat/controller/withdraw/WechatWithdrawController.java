@@ -197,27 +197,23 @@ public class WechatWithdrawController {
                 //没有发票自动提现,默认供应商
                 try {
                     CashTransferResult cashTransferResult = cashTransferService.cashTransfer(null, null, withdrawRequest);
-                    //向财务发送短信提醒,客户自动转账.
+                    //向财务发送消息提醒客户自动转账.
                     log.info(cashTransferResult.toString());
-                    withdrawService.automaticIsSuccessful(withdrawRequest.getId(),cashTransferResult.getProcessingTime());
+                    withdrawService.automaticIsSuccessful(withdrawRequest.getId(),cashTransferResult);
                     remindFinancial(login, withdraw,true);
                 } catch (SupplierApiUpgradeException e) {
-                    e.printStackTrace();
                     log.error(e.getMessage());
                     recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
                     return "wechat@withdrawSuccess.html";
                 } catch (BadAccessException e) {
-                    e.printStackTrace();
                     log.error(e.getMessage());
                     recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
                     return "wechat@withdrawSuccess.html";
                 } catch (TransferFailureException e) {
-                    e.printStackTrace();
                     log.error(e.getMessage());
                     recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
                     return withdrawFailure(e.getMessage(),model);
                 } catch (IOException e) {
-                    e.printStackTrace();
                     log.error(e.getMessage());
                     //记录到备注
                     recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
@@ -233,9 +229,9 @@ public class WechatWithdrawController {
 
     /**
      * 当客户自己因为自己的原因时,给他跳转失败页面
-     * @param message
+     * @param message 错误信息
      * @param model
-     * @return
+     * @return 错误展示页面
      */
     public String withdrawFailure(String message,Model model){
         model.addAttribute("msg",message);

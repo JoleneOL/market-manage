@@ -49,6 +49,7 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
         page.approval(readService.nameForPrincipal(target));
 
         WithdrawStatus withdrawStatus = withdrawService.get(request2.getId()).getWithdrawStatus();
+        page.search(readService.nameForPrincipal(target));
         assertThat(withdrawStatus)
                 .isEqualByComparingTo(WithdrawStatus.success);
 
@@ -58,6 +59,9 @@ public class ManageWithdrawControllerTest extends ManageServiceTest {
         page.refresh();
         page.assertInvoice(readService.nameForPrincipal(target))
                 .isTrue();
+
+    }
+    private void searchTransferStatus(){
 
     }
 

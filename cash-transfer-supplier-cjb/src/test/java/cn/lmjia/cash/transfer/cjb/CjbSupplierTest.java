@@ -5,7 +5,9 @@ import cn.lmjia.cash.transfer.cjb.service.CjbSupplierImpl;
 import cn.lmjia.cash.transfer.exception.BadAccessException;
 import cn.lmjia.cash.transfer.exception.SupplierApiUpgradeException;
 import cn.lmjia.cash.transfer.exception.TransferFailureException;
+import cn.lmjia.cash.transfer.model.CashTransferResult;
 import cn.lmjia.cash.transfer.service.CashTransferService;
+import cn.lmjia.cash.transfer.service.TransferStatusQueryService;
 import me.jiangcai.lib.test.SpringWebTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +15,22 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @WebAppConfiguration
 @ContextConfiguration(classes = CjbConfig.class)
 public class CjbSupplierTest extends SpringWebTest {
 
     @Autowired
-    CashTransferService cashTransferService;
+    private CashTransferService cashTransferService;
+    @Autowired
+    private TransferStatusQueryService transferStatusQueryService;
     @Autowired
     Environment environment;
 
@@ -36,6 +42,7 @@ public class CjbSupplierTest extends SpringWebTest {
         CashReceiver cashReceiver = getCashReceiver();
         //兴业银行
         CjbSupplier cjbSupplier = new CjbSupplierImpl(environment);
+        //发送转账指令
         cashTransferService.cashTransfer(cjbSupplier, entityOwner, cashReceiver);
 
     }
@@ -87,6 +94,7 @@ public class CjbSupplierTest extends SpringWebTest {
 
     public CashReceiver getCashReceiver() {
         return new CashReceiver() {
+            private String withdrawId = UUID.randomUUID().toString().replace("-", "").substring(0, 20);
             @Override
             public Long getId() {
                 return 3l;

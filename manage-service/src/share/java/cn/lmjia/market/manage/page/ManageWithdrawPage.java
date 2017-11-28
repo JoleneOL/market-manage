@@ -33,6 +33,18 @@ public class ManageWithdrawPage extends AbstractContentPage {
     }
 
     /**
+     * 查询这个合伙人的申请
+     *
+     * @param name
+     */
+    public void search(String name) throws InterruptedException {
+        webDriver.findElement(By.linkText("已成功")).click();
+        waitForTable();
+        WebElement targetRow = getTargetRow(name);
+        targetRow.findElement(By.className("js-makeSearch")).click();
+        Thread.sleep(500);
+    }
+    /**
      * 拒绝这个合伙人的申请
      *
      * @param name
