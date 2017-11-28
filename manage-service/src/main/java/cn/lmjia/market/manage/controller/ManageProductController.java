@@ -3,14 +3,14 @@ package cn.lmjia.market.manage.controller;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainProduct;
 import cn.lmjia.market.core.repository.MainProductRepository;
-import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.RowCustom;
-import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.field.FieldBuilder;
-import cn.lmjia.market.core.row.field.Fields;
-import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.service.MainOrderService;
 import cn.lmjia.market.core.service.MarketStockService;
+import me.jiangcai.crud.row.FieldDefinition;
+import me.jiangcai.crud.row.RowCustom;
+import me.jiangcai.crud.row.RowDefinition;
+import me.jiangcai.crud.row.field.FieldBuilder;
+import me.jiangcai.crud.row.field.Fields;
+import me.jiangcai.crud.row.supplier.JQueryDataTableDramatizer;
 import me.jiangcai.lib.resource.service.ResourceService;
 import me.jiangcai.lib.seext.FileUtils;
 import me.jiangcai.logistics.entity.Product_;
@@ -206,7 +206,7 @@ public class ManageProductController {
         if(isCleanProductStock){
             marketStockService.cleanProductStock(product);
         }
-        //转存资源
+        //主图转存资源
         if (!StringUtils.isEmpty(productImgPath) && productImgPath.length() > 1) {
             String productImgResource = "product/" + product.getCode() + "." + FileUtils.fileExtensionName(productImgPath);
             resourceService.moveResource(productImgResource, productImgPath);

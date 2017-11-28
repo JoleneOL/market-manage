@@ -11,19 +11,17 @@ import cn.lmjia.market.core.entity.deal.Commission_;
 import cn.lmjia.market.core.entity.deal.OrderCommission;
 import cn.lmjia.market.core.entity.deal.OrderCommission_;
 import cn.lmjia.market.core.jpa.JpaFunctionUtils;
-import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.RowCustom;
-import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.field.FieldBuilder;
 import cn.lmjia.market.core.util.ApiDramatizer;
-import org.springframework.beans.factory.annotation.Autowired;
+import me.jiangcai.crud.row.FieldDefinition;
+import me.jiangcai.crud.row.RowCustom;
+import me.jiangcai.crud.row.RowDefinition;
+import me.jiangcai.crud.row.field.FieldBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -216,6 +214,7 @@ public class CommissionController {
                             @Override
                             public Object export(Object origin, MediaType mediaType, Function<List, ?> exportMe) {
                                 NumberFormat format = NumberFormat.getPercentInstance(Locale.CHINA);
+                                format.setMaximumFractionDigits(2);
                                 return format.format(origin);
                             }
 

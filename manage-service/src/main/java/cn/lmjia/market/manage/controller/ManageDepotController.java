@@ -1,10 +1,10 @@
 package cn.lmjia.market.manage.controller;
 
 import cn.lmjia.market.core.entity.Login;
-import cn.lmjia.market.core.row.RowCustom;
-import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
 import cn.lmjia.market.core.rows.DepotRows;
+import me.jiangcai.crud.row.RowCustom;
+import me.jiangcai.crud.row.RowDefinition;
+import me.jiangcai.crud.row.supplier.JQueryDataTableDramatizer;
 import me.jiangcai.jpa.entity.support.Address;
 import me.jiangcai.logistics.entity.Depot;
 import me.jiangcai.logistics.haier.entity.HaierDepot;

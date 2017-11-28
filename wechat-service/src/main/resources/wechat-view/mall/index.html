@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:res="http://resource.jiangcai.me" xmlns:wx="http://wx.jiangcai.me" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -17,7 +17,7 @@
 </head>
 <body class="bg-gray">
 <div class="mall-toolbar clearfix">
-    <h3><a href="index.html" th:href="@{/wechatIndex}">利每家</a></h3>
+    <h3><a href="index.html" th:href="@{/wechatIndex}">商城</a></h3>
     <div class="mall-toolbar-items">
         <a href="orderList.html" th:href="@{/wechatMallOrderList}" class="toolbar-item">我的订单</a>
         <a href="search.html" th:href="@{/wechatSearch}" class="toolbar-item m-search"></a>
@@ -162,4 +162,7 @@
 <script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
 <script src="../../wechat-resource/assets/js/mall/storage.js"></script>
 <script src="../../wechat-resource/assets/js/mall/index.js"></script>
+<script th:if="${#authentication.principal != null}" wx:js=""></script>
+<script  th:if="${#authentication.principal != null}"
+         wx:share="利每家|${'您的好友'+@readService.wechatNickNameForPrincipal(#authentication.principal)+'向您推荐'}|${@systemService.toUrl('/wechatForward/')+'0_'+#authentication.principal.id}|https://cdn.lmjia.cn/lmjia_logo_1.png"></script>
 </html>

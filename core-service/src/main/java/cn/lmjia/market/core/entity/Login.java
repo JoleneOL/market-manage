@@ -204,6 +204,23 @@ public class Login implements UserDetails {
                 '}';
     }
 
+    /**
+     * 避免循环引导，即我不应该是目标用户引导链上的
+     *
+     * @param target 目标用户
+     * @return 目标用户是否可以成为当前用户的引导者
+     */
+    public boolean isGuideAble(Login target) {
+        if (this.equals(target)) {
+            return false;
+        }
+        if (target.getGuideUser() == null)
+            return true;
+        if (target.getGuideUser().equals(this))
+            return false;
+        return isGuideAble(target.getGuideUser());
+    }
+
     public boolean isRoot() {
         return getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ROOT"));
     }

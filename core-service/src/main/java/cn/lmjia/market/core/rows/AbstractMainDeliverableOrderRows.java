@@ -4,9 +4,9 @@ import cn.lmjia.market.core.entity.Customer;
 import cn.lmjia.market.core.entity.Customer_;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder;
 import cn.lmjia.market.core.entity.order.MainDeliverableOrder_;
-import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.field.FieldBuilder;
-import cn.lmjia.market.core.row.field.Fields;
+import me.jiangcai.crud.row.FieldDefinition;
+import me.jiangcai.crud.row.field.FieldBuilder;
+import me.jiangcai.crud.row.field.Fields;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;

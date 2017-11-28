@@ -102,6 +102,10 @@ public class ManageAgentDetailPage extends AbstractContentPage {
 
 
     public void changeGuide(Login login) {
+        changeGuide(login, "修改成功");
+    }
+
+    private void changeGuide(Login login, String expected) {
         // 开启修改
         webDriver.findElement(By.id("J_modifyGuide")).click();
         // 确认同意一次性修改
@@ -114,7 +118,8 @@ public class ManageAgentDetailPage extends AbstractContentPage {
 
         // 确认修改
         webDriver.findElement(By.id("J_confirmModifyGuide")).click();
-        assertLayerMessage().isEqualTo("修改成功");
+
+        assertLayerMessage().isEqualTo(expected);
     }
 
     public void changeSuperior(Login login) {
@@ -136,5 +141,9 @@ public class ManageAgentDetailPage extends AbstractContentPage {
         // 确认修改
         webDriver.findElement(By.id("J_confirmModify")).click();
         assertLayerMessage().isEqualTo("修改成功");
+    }
+
+    public void changeGuideAndFailed(Login login) {
+        changeGuide(login, "用户不能互为引导者");
     }
 }

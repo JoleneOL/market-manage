@@ -14,17 +14,17 @@ import cn.lmjia.market.core.entity.settlement.AgentGoodAdvancePaymentJournal_;
 import cn.lmjia.market.core.entity.settlement.LoginCommissionJournal;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.settlement.LoginCommissionJournalRepository;
-import cn.lmjia.market.core.row.FieldDefinition;
-import cn.lmjia.market.core.row.RowCustom;
-import cn.lmjia.market.core.row.RowDefinition;
-import cn.lmjia.market.core.row.RowService;
-import cn.lmjia.market.core.row.field.FieldBuilder;
-import cn.lmjia.market.core.row.field.Fields;
-import cn.lmjia.market.core.row.supplier.JQueryDataTableDramatizer;
-import cn.lmjia.market.core.row.supplier.Select2Dramatizer;
 import cn.lmjia.market.core.service.ContactWayService;
 import cn.lmjia.market.core.service.LoginService;
 import cn.lmjia.market.core.service.ReadService;
+import me.jiangcai.crud.row.FieldDefinition;
+import me.jiangcai.crud.row.RowCustom;
+import me.jiangcai.crud.row.RowDefinition;
+import me.jiangcai.crud.row.RowService;
+import me.jiangcai.crud.row.field.FieldBuilder;
+import me.jiangcai.crud.row.field.Fields;
+import me.jiangcai.crud.row.supplier.JQueryDataTableDramatizer;
+import me.jiangcai.crud.row.supplier.Select2Dramatizer;
 import me.jiangcai.lib.spring.data.AndSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -125,6 +125,10 @@ public class LoginDataController {
         if (!StringUtils.isEmpty(newGuide)) {
             long guideId = NumberUtils.parseNumber(newGuide, Long.class);
             Login guide = loginService.get(guideId);
+            //检查一下这个guide的引导者和target有没有关系
+            if (!target.isGuideAble(guide)) {
+                return ApiResult.withCodeAndMessage(400,"用户不能互为引导者",null);
+            }
             target.setGuideUser(guide);
             target.setGuideChanged(true);
             return ApiResult.withOk(Collections.singletonMap("name", readService.nameForPrincipal(guide)));

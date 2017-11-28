@@ -2,11 +2,11 @@ package cn.lmjia.market.wechat.controller;
 
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.deal.SalesAchievement;
-import cn.lmjia.market.core.row.RowCustom;
-import cn.lmjia.market.core.row.RowDefinition;
 import cn.lmjia.market.core.service.SalesmanService;
 import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.util.ApiDramatizer;
+import me.jiangcai.crud.row.RowCustom;
+import me.jiangcai.crud.row.RowDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
