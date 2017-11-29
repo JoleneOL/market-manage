@@ -42,6 +42,7 @@ public class WechatMainOrderControllerTest extends AbstractWechatMainOrderContro
     public void goWithSalesman() throws Exception {
         // 新增一个用户，然后下单，那么它的order必然与促销无关
         Login login = newRandomLogin();
+        bindDeveloperWechat(login);
         updateAllRunWith(login);
         doOrder();
         MainOrder lastOrder = getLastOrder(login);

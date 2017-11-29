@@ -28,7 +28,12 @@ public enum MarketNoticeType {
     /**
      * 通知财务客户佣金提现申请
      */
-    WithdrawSuccessRemindFinancial;
+    WithdrawSuccessRemindFinancial,
+    /**
+     * 获取到佣金后通知直接获取人.
+     */
+    CommissionForPeople;
+
 
 
     private final String targetId;
