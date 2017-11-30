@@ -8,6 +8,7 @@ import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.repository.deal.OrderCommissionRepository;
 import cn.lmjia.market.core.service.CommissionDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -42,5 +43,11 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
             }
         }
         return result;
+    }
+
+    @Override
+    @Scheduled(cron = "0 0 9 ? * 2")
+    public void sendComissionDetailWeekly() {
+
     }
 }
