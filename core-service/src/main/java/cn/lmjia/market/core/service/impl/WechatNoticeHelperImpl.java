@@ -71,9 +71,9 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
         if (environment.acceptsProfiles("staging")) {
             switch (type) {
                 case PaySuccessToOrder:
-                    return "X1gHrZDnxG6x4CHmqZSsEa1MYDfT9y1gSkYXTGy__nU";
+                    return "PAPtJrtvDZt61HhT02vPNke_74ScWsQLA8P69_TfDaA";
                 case PaySuccessToJustOrder:
-                    return "X1gHrZDnxG6x4CHmqZSsEa1MYDfT9y1gSkYXTGy__nU";
+                    return "PAPtJrtvDZt61HhT02vPNke_74ScWsQLA8P69_TfDaA";
                 case PaySuccessToCS:
                     return "ZKMii3civ10Ig4-MnUDcZNGjyvLqYokVN7LlalN2l_g";
                 case NewLoginToLogin:
@@ -90,7 +90,7 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
                 case WithdrawSuccessRemindFinancial:
                     return "k80HJQEcaDbcIGUcua26JLfeTD3_-0-xHF-L5zUGuAU";
                 case CommissionForPeople:
-                    return "Y9YODT3qZSrvK_E8NiCrtniXXXCQjh670WxFbQFZAF4";
+                    return "s7jqiVdRNKrib2PihadKp7aYbcsCFrgQZtAWMkHvzz4";
                 default:
                     throw new IllegalArgumentException("未知的staging消息类型:" + type);
             }
@@ -123,7 +123,7 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
             case WithdrawSuccessRemindFinancial:
                 return "8ZdNxW4PwuRAugwGfT80jlTJXKM6lhe52ISWqUUDR8c";
             case CommissionForPeople:
-                return "s7jqiVdRNKrib2PihadKp7aYbcsCFrgQZtAWMkHvzz4";
+                return "Y9YODT3qZSrvK_E8NiCrtniXXXCQjh670WxFbQFZAF4";
             default:
                 throw new IllegalArgumentException("未知的消息类型:" + type);
         }

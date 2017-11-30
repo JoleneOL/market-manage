@@ -2,12 +2,9 @@ package cn.lmjia.market.wechat.controller.order;
 
 import cn.lmjia.market.core.controller.main.order.AbstractMainOrderController;
 import cn.lmjia.market.core.converter.QRController;
-import cn.lmjia.market.core.define.MarketNoticeType;
-import cn.lmjia.market.core.define.MarketUserNoticeType;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.channel.Channel;
-import cn.lmjia.market.core.entity.deal.Commission;
 import cn.lmjia.market.core.entity.deal.SalesAchievement;
 import cn.lmjia.market.core.entity.trj.TRJPayOrder;
 import cn.lmjia.market.core.exception.MainGoodLowStockException;
@@ -26,30 +23,19 @@ import me.jiangcai.payment.exception.SystemMaintainException;
 import me.jiangcai.payment.hua.huabei.entity.HuaHuabeiPayOrder;
 import me.jiangcai.payment.paymax.entity.PaymaxPayOrder;
 import me.jiangcai.payment.service.PaymentService;
-import me.jiangcai.user.notice.User;
-import me.jiangcai.user.notice.UserNoticeService;
 import me.jiangcai.wx.OpenId;
 import me.jiangcai.wx.model.Gender;
-import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
-import me.jiangcai.wx.model.message.TemplateMessageParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.*;
 
 /**
  * @author CJ
@@ -73,14 +59,6 @@ public class WechatMainOrderController extends AbstractMainOrderController {
     private SystemStringService systemStringService;
     @Autowired
     private SystemService systemService;
-    @Autowired
-    private WechatNoticeHelper wechatNoticeHelper;
-    @Autowired
-    private UserNoticeService userNoticeService;
-    @Autowired
-    private CommissionDetailService commissionDetailService;
-    @Autowired
-    private LoginService loginService;
 
     //    @GetMapping("/_pay/{id}")
 //    public ModelAndView pay(@OpenId String openId, HttpServletRequest request, @PathVariable("id") long id)
@@ -324,42 +302,6 @@ public class WechatMainOrderController extends AbstractMainOrderController {
             MainOrder order = mainOrderService.getOrder(mainOrderId);
             yours = order.getOrderBy().equals(login);
         }
-        //支付成功,要将产生的佣金提醒直接推荐人或促销人员,判断是否曾经支付过订单.
-        CommissionForPeople commissionForPeople = new CommissionForPeople();
-        wechatNoticeHelper.registerTemplateMessage(commissionForPeople, null);
-        try {
-            if (((Login) login).isSuccessOrder()) {
-                //身份是会员,给他自己和直接推荐人或者促销人员发送模版消息.
-                List<Commission> CommissionList = commissionDetailService.findByOrderId(mainOrderId);
-                BigDecimal oneselfAmount = new BigDecimal(0);
-                BigDecimal guideUserAmount = new BigDecimal(0);
-                for (Commission commission : CommissionList) {
-                    if (commission.getWho().equals(login)) {
-                        //属于自己的所有佣金
-                        oneselfAmount = oneselfAmount.add(commission.getAmount());
-                    }
-                    //是否是他的推荐人
-                    if (commission.getWho().equals(((Login) login).getGuideUser())) {
-                        guideUserAmount = guideUserAmount.add(commission.getAmount());
-                    }
-                }
-                userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton((Login) login)), null, commissionForPeople, "获取的佣金金额:￥" + oneselfAmount.toString(), new Date());
-                userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(((Login) login).getGuideUser())), null, commissionForPeople, "获取的佣金金额:￥" + guideUserAmount.toString(), new Date());
-            } else {
-                //连爱心天使都不是,第一次下单,这时候仅仅向他的推荐人发送消息
-                List<Commission> CommissionList = commissionDetailService.findByOrderId(mainOrderId);
-                BigDecimal guideUserAmount = null;
-                for (Commission commission : CommissionList) {
-                    //是否是他的推荐人
-                    if (commission.getWho().equals(((Login) login).getGuideUser())) {
-                        guideUserAmount = guideUserAmount.add(commission.getAmount());
-                    }
-                }
-                userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(((Login) login).getGuideUser())), null, commissionForPeople, "获取的佣金金额:￥" + guideUserAmount.toString(), new Date());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         model.addAttribute("yours", yours);
         return successView(model);
     }
@@ -374,52 +316,4 @@ public class WechatMainOrderController extends AbstractMainOrderController {
         return "订单列表";
     }
 
-    /**
-     * 通知佣金直接获取人消息模版
-     */
-    private class CommissionForPeople implements MarketUserNoticeType {
-
-        @Override
-        public Collection<? extends TemplateMessageParameter> parameterStyles() {
-            return Arrays.asList(
-                    new SimpleTemplateMessageParameter("first", "恭喜您,获得了一笔新的佣金.。")
-                    , new SimpleTemplateMessageParameter("keyword1", "{0}")
-                    , new SimpleTemplateMessageParameter("keyword2", "{1}")
-                    , new SimpleTemplateMessageParameter("remark", "感谢您的使用。")
-            );
-        }
-
-        @Override
-        public MarketNoticeType type() {
-            return MarketNoticeType.CommissionForPeople;
-        }
-
-        @Override
-        public String title() {
-            return null;
-        }
-
-        @Override
-        public boolean allowDifferentiation() {
-            return true;
-        }
-
-        @Override
-        public String defaultToText(Locale locale, Object[] parameters) {
-            return "恭喜您,获得了一笔新的佣金.";
-        }
-
-        @Override
-        public String defaultToHTML(Locale locale, Object[] parameters) {
-            return "恭喜您,获得了一笔新的佣金.";
-        }
-
-        @Override
-        public Class<?>[] expectedParameterTypes() {
-            return new Class<?>[]{
-                    String.class,//佣金金额
-                    Date.class, //获得的时间
-            };
-        }
-    }
 }
