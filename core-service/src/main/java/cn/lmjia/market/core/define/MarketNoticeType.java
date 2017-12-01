@@ -32,7 +32,12 @@ public enum MarketNoticeType {
     /**
      * 获取到佣金后通知直接获取人.
      */
-    CommissionForPeople;
+    CommissionForPeople,
+    /**
+     * 佣金周报消息模版
+     */
+    CommissionWeekly;
+    ;
 
 
 

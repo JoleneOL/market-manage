@@ -252,6 +252,13 @@ public class CommissionController {
                                     return criteriaBuilder.greaterThanOrEqualTo(integerExpression,
                                             criteriaBuilder.sum(integerExpression2, -3));
                                 });
+                    if("week".equals(type)){
+                        return JpaFunctionUtils.ymd(cb,root.get("orderCommission").get("generateTime")
+                                ,LocalDate.now()
+                                ,((criteriaBuilder, integerExpression, integerExpression2) -> {
+                                    return criteriaBuilder.greaterThanOrEqualTo(integerExpression,criteriaBuilder.diff(integerExpression2,7));
+                        }));
+                    }
                     throw new IllegalArgumentException("未知的查询类型:" + type);
                 });
             }

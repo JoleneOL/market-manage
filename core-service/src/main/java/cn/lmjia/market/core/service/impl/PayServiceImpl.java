@@ -196,7 +196,7 @@ public class PayServiceImpl implements PayService {
         @Override
         public Collection<? extends TemplateMessageParameter> parameterStyles() {
             return Arrays.asList(
-                    new SimpleTemplateMessageParameter("first", "恭喜您,获得了一笔新的佣金.。")
+                    new SimpleTemplateMessageParameter("first", "恭喜您,获得了一笔新的佣金。")
                     , new SimpleTemplateMessageParameter("keyword1", "{0}")
                     , new SimpleTemplateMessageParameter("keyword2", "{1}")
                     , new SimpleTemplateMessageParameter("remark", "感谢您的使用。")
