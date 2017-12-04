@@ -12,6 +12,7 @@ import cn.lmjia.market.core.repository.deal.CommissionRepository;
 import cn.lmjia.market.core.repository.deal.OrderCommissionRepository;
 import cn.lmjia.market.core.service.CommissionDetailService;
 import cn.lmjia.market.core.service.LoginService;
+import cn.lmjia.market.core.service.SystemService;
 import cn.lmjia.market.core.service.WechatNoticeHelper;
 import me.jiangcai.user.notice.UserNoticeService;
 import me.jiangcai.wx.model.message.SimpleTemplateMessageParameter;
@@ -46,6 +47,8 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
     private UserNoticeService userNoticeService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private SystemService systemService;
 
     @Override
     public List<Commission> findByOrderId(long id) {
@@ -71,7 +74,7 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
     @Override
     @Scheduled(cron = "0 0 9 ? * 2")
     public void sendComissionDetailWeekly() {
-        String start = LocalDate.now()+" 24:00:00";//获取今天日期
+        String start = LocalDate.now()+" 00:00:00";//获取今天日期
         LocalDateTime endTime = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDateTime startTime = endTime.minusDays(7);//七天前的日期
         //所有的当周获取过佣金的人.
@@ -98,20 +101,22 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
             loginSet.add(commission.getWho());
         }
 
-        Map<Login,BigDecimal> loginAndAmount = new HashMap<>();
+        Map<Login,BigDecimal> loginAndAmountMap = new HashMap<>();
         for (Commission commission : commissionList) {
             for (Login login : loginSet) {
-                loginAndAmount.put(login,new BigDecimal(0));
+                if(!loginAndAmountMap.containsKey(login)){
+                    loginAndAmountMap.put(login,new BigDecimal(0));
+                }
                 if(commission.getWho() == login){
-                    loginAndAmount.put(login,loginAndAmount.get(login).add(commission.getAmount()));
+                    loginAndAmountMap.put(login,loginAndAmountMap.get(login).add(commission.getAmount()));
                 }
             }
         }
         CommissionWeekly commissionWeekly = new CommissionWeekly();
-        wechatNoticeHelper.registerTemplateMessage(commissionWeekly,"/wechatCommissionWeekly");
-        for (Login login : loginAndAmount.keySet()) {
+        wechatNoticeHelper.registerTemplateMessage(commissionWeekly,systemService.toUrl("/wechatCommissionWeekly"));
+        for (Login login : loginAndAmountMap.keySet()) {
             userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(login))
-                    ,null, commissionWeekly, "￥" + loginAndAmount.get(login).toString(),startTime.toLocalDate()+"-"+endTime.toLocalDate());
+                    ,null, commissionWeekly, startTime.toLocalDate()+"-"+endTime.toLocalDate(),"￥" + loginAndAmountMap.get(login).toString());
         }
 
 
@@ -125,7 +130,7 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
         @Override
         public Collection<? extends TemplateMessageParameter> parameterStyles() {
             return Arrays.asList(
-                    new SimpleTemplateMessageParameter("first", "上周佣金周报。")
+                    new SimpleTemplateMessageParameter("first", "佣金周报,点击查看详情。")
                     , new SimpleTemplateMessageParameter("keyword1", "{0}")
                     , new SimpleTemplateMessageParameter("keyword2", "{1}")
                     , new SimpleTemplateMessageParameter("remark", "感谢您的使用。")

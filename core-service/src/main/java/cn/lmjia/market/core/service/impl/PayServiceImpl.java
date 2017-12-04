@@ -199,7 +199,7 @@ public class PayServiceImpl implements PayService {
                     new SimpleTemplateMessageParameter("first", "恭喜您,获得了一笔新的佣金。")
                     , new SimpleTemplateMessageParameter("keyword1", "{0}")
                     , new SimpleTemplateMessageParameter("keyword2", "{1}")
-                    , new SimpleTemplateMessageParameter("remark", "感谢您的使用。")
+                    , new SimpleTemplateMessageParameter("remark", "详情在\"即将获佣\"中查看,感谢您的使用。")
             );
         }
 
