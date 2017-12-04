@@ -108,10 +108,9 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
             }
         }
         CommissionWeekly commissionWeekly = new CommissionWeekly();
-        //写一个网页
         wechatNoticeHelper.registerTemplateMessage(commissionWeekly,"/wechatCommissionWeekly");
         for (Login login : loginAndAmount.keySet()) {
-            userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(login.getGuideUser()))
+            userNoticeService.sendMessage(null, loginService.toWechatUser(Collections.singleton(login))
                     ,null, commissionWeekly, "￥" + loginAndAmount.get(login).toString(),startTime.toLocalDate()+"-"+endTime.toLocalDate());
         }
 

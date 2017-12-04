@@ -4,9 +4,12 @@ package cn.lmjia.market.manage.controller;
 import cn.lmjia.market.core.entity.Login;
 import cn.lmjia.market.core.entity.MainOrder;
 import cn.lmjia.market.core.entity.deal.Commission;
+import cn.lmjia.market.core.repository.LoginRepository;
 import cn.lmjia.market.core.service.CommissionDetailService;
 import cn.lmjia.market.core.service.ReadService;
 import cn.lmjia.market.manage.ManageServiceTest;
+import me.jiangcai.wx.standard.entity.StandardWeixinUser;
+import me.jiangcai.wx.standard.repository.StandardWeixinUserRepository;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,6 @@ import java.util.List;
  *
  * @author lxf
  */
-@Ignore
 public class CommissionDetailsControllerTest extends ManageServiceTest {
 
     @Autowired
@@ -37,10 +39,12 @@ public class CommissionDetailsControllerTest extends ManageServiceTest {
         makeOrderPay(mainOrder);
 
         //根据订单查询详情
+        System.out.println("登录用户"+login.getLoginName());
         List<Commission> result = commissionDetailService.findByOrderId(mainOrder.getId());
         for (Commission commission : result) {
             System.out.println("佣金获取人:" + readService.nameForPrincipal(commission.getWho()) + "分佣金额:" + commission.getAmount() + "分佣比例:" + commission.getRate()+"分佣类型:"+commission.getType());
         }
 
     }
+
 }

@@ -63,6 +63,8 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
                 case CommissionForPeople:
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
+                case CommissionWeekly:
+                    return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
                 default:
                     return "V7Tu9FsG9L-WFgdrMPtcnWl3kv15_iKfz_yIoCbjtxY";
             }
@@ -91,6 +93,8 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
                     return "k80HJQEcaDbcIGUcua26JLfeTD3_-0-xHF-L5zUGuAU";
                 case CommissionForPeople:
                     return "s7jqiVdRNKrib2PihadKp7aYbcsCFrgQZtAWMkHvzz4";
+                case CommissionWeekly:
+                    return "1Qq6FhoyiZtlLZROIoj2KNCza-qbR17zOWrcPwitaZk";
                 default:
                     throw new IllegalArgumentException("未知的staging消息类型:" + type);
             }
@@ -124,6 +128,8 @@ WechatNoticeHelperImpl implements WechatNoticeHelper {
                 return "8ZdNxW4PwuRAugwGfT80jlTJXKM6lhe52ISWqUUDR8c";
             case CommissionForPeople:
                 return "Y9YODT3qZSrvK_E8NiCrtniXXXCQjh670WxFbQFZAF4";
+            case CommissionWeekly:
+                return "RzYLWz7SO5Oz8JT8hhd7U18Isrglj92BGeVOml5S2-0";
             default:
                 throw new IllegalArgumentException("未知的消息类型:" + type);
         }
