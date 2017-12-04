@@ -72,7 +72,7 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
     }
 
     @Override
-    @Scheduled(cron = "0 0/3 * * * ?")
+    @Scheduled(cron = "0 0 9 ? * 2")
     public void sendComissionDetailWeekly() {
         //String start = LocalDate.now()+" 00:00:00";//获取今天日期
         String start = LocalDate.now()+" 24:00:00";
