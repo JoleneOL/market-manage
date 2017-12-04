@@ -23,13 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -231,7 +225,21 @@ public class CommissionController {
                 if ("pending".equals(type))
                     return Commission.listAllSpecification(login, (root, query, cb)
                             -> Commission.reality(root, cb).not());
-
+                if ("weekPending".equals(type)) {
+                    return Commission.listAllSpecification(login,new Specification<Commission>() {
+                        @Override
+                        public Predicate toPredicate(Root<Commission> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                            return cb.and(
+                                    cb.isTrue(root.get(Commission_.orderCommission).get(OrderCommission_.pending))
+                                    , cb.isFalse(root.get(Commission_.orderCommission).get(OrderCommission_.source).get(MainOrder_.disableSettlement))
+                                    , JpaFunctionUtils.ymd(cb, root.get("orderCommission").get("generateTime")
+                                            , LocalDate.now()
+                                            , ((criteriaBuilder, integerExpression, integerExpression2) -> {
+                                                return criteriaBuilder.greaterThanOrEqualTo(integerExpression, criteriaBuilder.diff(integerExpression2, 7));
+                                            })));
+                        }
+                    });
+                }
                 if ("all".equals(type))
                     return Commission.listRealitySpecification(login, null);
                 return Commission.listRealitySpecification(login, (root, query, cb) -> {
@@ -252,12 +260,12 @@ public class CommissionController {
                                     return criteriaBuilder.greaterThanOrEqualTo(integerExpression,
                                             criteriaBuilder.sum(integerExpression2, -3));
                                 });
-                    if("week".equals(type)){
-                        return JpaFunctionUtils.ymd(cb,root.get("orderCommission").get("generateTime")
-                                ,LocalDate.now()
-                                ,((criteriaBuilder, integerExpression, integerExpression2) -> {
-                                    return criteriaBuilder.greaterThanOrEqualTo(integerExpression,criteriaBuilder.diff(integerExpression2,7));
-                        }));
+                    if ("week".equals(type)) {
+                        return JpaFunctionUtils.ymd(cb, root.get("orderCommission").get("generateTime")
+                                , LocalDate.now()
+                                , ((criteriaBuilder, integerExpression, integerExpression2) -> {
+                                    return criteriaBuilder.greaterThanOrEqualTo(integerExpression, criteriaBuilder.diff(integerExpression2, 7));
+                                }));
                     }
                     throw new IllegalArgumentException("未知的查询类型:" + type);
                 });

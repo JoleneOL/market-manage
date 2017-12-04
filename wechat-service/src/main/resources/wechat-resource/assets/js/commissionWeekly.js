@@ -2,6 +2,25 @@
  * Created by Neo on 2017/7/14.
  */
 $(function () {
+    var tabsItem = $('.js-comm');
+    var tabsSwiper = $('#tabs-container').swiper({
+        observer: true,
+        observeParents: true,
+        speed: 500,
+        onSlideChangeStart: function () {
+            $(".js-comms .active").removeClass('active');
+            tabsItem.eq(tabsSwiper.activeIndex).addClass('active');
+        }
+    });
+    tabsItem.on('touchstart mousedown', function (e) {
+        e.preventDefault();
+        $(".js-comms .active").removeClass('active');
+        $(this).addClass('active');
+        tabsSwiper.slideTo($(this).index())
+    });
+    tabsItem.click(function (e) {
+        e.preventDefault();
+    });
 
     var extraHeight = 0;
     var commItems = $('.js-commItems');

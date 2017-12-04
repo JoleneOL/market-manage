@@ -30,6 +30,10 @@
 
         </div>
     </div>
+    <div class="view-tabs js-comms js-extra-h-c">
+        <a href="#" class="view-tabs_item js-comm active">上周已获</a>
+        <a href="#" class="view-tabs_item js-comm">上周即将</a>
+    </div>
     <div class="view_team-list view_team-list-left js-extra-h-c">
         <div class="weui-flex view_team-header">
             <div class="weui-flex__item">类型</div>
@@ -40,6 +44,14 @@
     <div id="tabs-container" class="swiper-container">
         <div class="swiper-wrapper">
             <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/week">
+                <div class="view-scroll-list">
+                    <div class="weui-loadmore">
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">数据加载中...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide view-scroll-wrap js-commItems" data-url="/api/commList/weekPending">
                 <div class="view-scroll-list">
                     <div class="weui-loadmore">
                         <i class="weui-loading"></i>
