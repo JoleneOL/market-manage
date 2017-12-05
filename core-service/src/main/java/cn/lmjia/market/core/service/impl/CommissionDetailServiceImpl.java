@@ -74,8 +74,7 @@ public class CommissionDetailServiceImpl implements CommissionDetailService {
     @Override
     @Scheduled(cron = "0 0 9 ? * 2")
     public void sendComissionDetailWeekly() {
-        //String start = LocalDate.now()+" 00:00:00";//获取今天日期
-        String start = LocalDate.now()+" 24:00:00";
+        String start = LocalDate.now()+" 00:00:00";//获取今天日期
         LocalDateTime endTime = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         LocalDateTime startTime = endTime.minusDays(7);//七天前的日期
         //所有的当周获取过佣金的人.
