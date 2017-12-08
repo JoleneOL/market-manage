@@ -7,18 +7,11 @@ import me.jiangcai.logistics.LogisticsService;
 import me.jiangcai.logistics.LogisticsSource;
 import me.jiangcai.logistics.LogisticsSupplier;
 import me.jiangcai.logistics.Thing;
-import me.jiangcai.logistics.entity.Depot;
-import me.jiangcai.logistics.entity.Product;
-import me.jiangcai.logistics.entity.StockShiftUnit;
-import me.jiangcai.logistics.entity.UsageStock;
-import me.jiangcai.logistics.entity.UsageStock_;
+import me.jiangcai.logistics.entity.*;
 import me.jiangcai.logistics.entity.support.ProductBatch;
 import me.jiangcai.logistics.entity.support.ShiftStatus;
 import me.jiangcai.logistics.entity.support.ShiftType;
-import me.jiangcai.logistics.event.InstallationEvent;
-import me.jiangcai.logistics.event.OrderDeliveredEvent;
-import me.jiangcai.logistics.event.OrderInstalledEvent;
-import me.jiangcai.logistics.event.ShiftEvent;
+import me.jiangcai.logistics.event.*;
 import me.jiangcai.logistics.exception.UnnecessaryShipException;
 import me.jiangcai.logistics.option.LogisticsOptions;
 import me.jiangcai.logistics.repository.StockShiftUnitRepository;
@@ -141,6 +134,11 @@ public class LogisticsServiceImpl implements LogisticsService {
         // 库存
         Map<Depot, Map<Product, Integer>> depotInfo = getDepotInfo(wantShipProduct);
         model.addAttribute("depotInfo", depotInfo);
+    }
+
+    @Override
+    public void deliveryGoodsSuccessEvent(String mobile,StockShiftUnit unit) {
+        applicationEventPublisher.publishEvent(new DeliveryGoodsSuccessEvent(unit,mobile));
     }
 
     @Override

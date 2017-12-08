@@ -181,4 +181,7 @@ public interface LogisticsService {
      */
     @Transactional(readOnly = true)
     void viewModelForDelivery(DeliverableOrder order, Model model);
+
+    @Transactional(readOnly = true)
+    void deliveryGoodsSuccessEvent(String mobile, StockShiftUnit unit);
 }

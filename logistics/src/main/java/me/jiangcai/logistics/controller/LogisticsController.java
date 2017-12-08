@@ -229,17 +229,20 @@ public class LogisticsController {
         };
 
         try {
-            StockShiftUnit unit = logisticsService.makeShift(supplier, order, collection, depotEntity
+            final StockShiftUnit unit = logisticsService.makeShift(supplier, order, collection, depotEntity
                     , destination, installation ? LogisticsOptions.Installation : 0);
             if (unit instanceof ManuallyOrder) {
                 ((ManuallyOrder) unit).setOrderNumber(orderNumber);
                 ((ManuallyOrder) unit).setSupplierCompany(company);
-            }
+                log.info("发送物流短信给用户");
+                logisticsService.deliveryGoodsSuccessEvent(consigneeMobile,unit);
+            }else
+                //日日顺,包括未来的其他对接物流
+                logisticsService.deliveryGoodsSuccessEvent(consigneeMobile,unit);
         } catch (UnnecessaryShipException e) {
             log.debug("", e);
             return with(400, e.getMessage());
         }
-
         // ok 了 计算新的库存表
 
         return withOk(toData(depotInfo));
