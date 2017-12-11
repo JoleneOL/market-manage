@@ -15,11 +15,7 @@ import cn.lmjia.market.core.entity.withdraw.WithdrawRequest;
 import cn.lmjia.market.core.entity.withdraw.WithdrawRequest_;
 import cn.lmjia.market.core.model.ApiResult;
 import cn.lmjia.market.core.repository.WithdrawRequestRepository;
-import cn.lmjia.market.core.service.LoginService;
-import cn.lmjia.market.core.service.ReadService;
-import cn.lmjia.market.core.service.SystemService;
-import cn.lmjia.market.core.service.WechatNoticeHelper;
-import cn.lmjia.market.core.service.WithdrawService;
+import cn.lmjia.market.core.service.*;
 import com.huotu.verification.IllegalVerificationCodeException;
 import com.huotu.verification.service.VerificationCodeService;
 import me.jiangcai.lib.sys.service.SystemStringService;
@@ -37,16 +33,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -245,7 +240,7 @@ public class WechatWithdrawController {
      */
     public void recordCommentAndRefuseRequest(WithdrawRequest withdrawRequest,String message){
         withdrawRequest.setComment(message);
-        withdrawRequest.setWithdrawStatus(WithdrawStatus.refuse);
+        withdrawRequest.setWithdrawStatus(WithdrawStatus.checkPending);
     }
 
     /**
