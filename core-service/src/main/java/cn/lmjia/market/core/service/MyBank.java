@@ -2,11 +2,13 @@ package cn.lmjia.market.core.service;
 
 import cn.lmjia.cash.transfer.EntityOwner;
 import cn.lmjia.cash.transfer.OwnerAccount;
+import com.sun.nio.sctp.IllegalUnbindException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.IllegalFormatConversionException;
 import java.util.Map;
 
 /**
@@ -22,6 +24,7 @@ public class MyBank implements EntityOwner{
 
     @Override
     public OwnerAccount getOwnerAccount(String supplierName) {
+        //兴业银行账户.
         if ("兴业银行".equalsIgnoreCase(supplierName) || supplierName==null){
             return new OwnerAccount() {
                 @Override
@@ -33,7 +36,7 @@ public class MyBank implements EntityOwner{
                 @Override
                 public String getName() {
                     //
-                    return environment.getProperty("market.owner.accountNum","中国民族证券有限责任公司12");
+                    return environment.getProperty("market.owner.companyName","中国民族证券有限责任公司12");
                 }
 
                 @Override
@@ -55,8 +58,8 @@ public class MyBank implements EntityOwner{
                     return message;
                 }
             };
-        }
-        return null;
+        }else
+        throw new IllegalArgumentException("该银行不被支持.");
     }
 
     @Override
