@@ -132,7 +132,7 @@ public class CjbSupplierImpl implements CjbSupplier {
             if (!"0".equals(transferStatus.getCode())) {
                 //失败的请求
                 throw new TransferFailureException("转账错误码:" + transferStatus.getCode() + ",转账错误信息:" +
-                        transferStatus.getMessage() + ",错误的提现申请单号:" + xferTrnRs.getTrnuId());
+                        transferStatus.getMessage());
             }
             //成功
             XferRs xferRs = xferTrnRs.getXferRs();

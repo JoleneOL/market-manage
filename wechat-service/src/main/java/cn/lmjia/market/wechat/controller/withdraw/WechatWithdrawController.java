@@ -36,6 +36,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -198,20 +199,20 @@ public class WechatWithdrawController {
                     remindFinancial(login, withdraw,true);
                 } catch (SupplierApiUpgradeException e) {
                     log.error(e.getMessage());
-                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage(), true);
                     return "wechat@withdrawSuccess.html";
                 } catch (BadAccessException e) {
                     log.error(e.getMessage());
-                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage(), true);
                     return "wechat@withdrawSuccess.html";
                 } catch (TransferFailureException e) {
                     log.error(e.getMessage());
-                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage(), false);
                     return withdrawFailure(e.getMessage(),model);
                 } catch (IOException e) {
                     log.error(e.getMessage());
                     //记录到备注
-                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage());
+                    recordCommentAndRefuseRequest(withdrawRequest,e.getMessage(), true);
                     return "wechat@withdrawSuccess.html";
                 }
             }
@@ -234,13 +235,26 @@ public class WechatWithdrawController {
     }
 
     /**
-     * 当申请因为我们的原因失败时,将原因写入申请的备注
+     * 当申请失败时,将原因写入申请的备注
      * @param withdrawRequest 该条错误的申请
      * @param message 错误信息.
+     * @param areWe 是否是我们的原因.
      */
-    public void recordCommentAndRefuseRequest(WithdrawRequest withdrawRequest,String message){
+    public void recordCommentAndRefuseRequest(WithdrawRequest withdrawRequest, String message, boolean areWe){
+        try {
+            String flag = new String(message.getBytes("gbk"),"iso-8859-1");
+            if(flag.length() > 100){
+                flag = new String(flag.substring(0, 100).getBytes("iso-8859-1"),"gbk");
+                withdrawRequest.setComment(flag);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         withdrawRequest.setComment(message);
-        withdrawRequest.setWithdrawStatus(WithdrawStatus.checkPending);
+        if(areWe)
+            withdrawRequest.setWithdrawStatus(WithdrawStatus.checkPending);
+        else
+            withdrawRequest.setWithdrawStatus(WithdrawStatus.refuse);
     }
 
     /**
