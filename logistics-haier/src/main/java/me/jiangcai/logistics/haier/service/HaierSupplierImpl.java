@@ -123,7 +123,8 @@ public class HaierSupplierImpl implements HaierSupplier {
             order.setInstallation(installation);
             parameters.put("ordertype", "2");
 //            parameters.put("bustype", installation ? "2" : "70");
-            parameters.put("bustype", "2");
+//            parameters.put("bustype", "2");
+            parameters.put("bustype", "1");
             if (!installation)
                 parameters.put("remark1", "XJ");
 
