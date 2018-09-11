@@ -3,6 +3,7 @@ package cn.lmjia.market.core.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.jiangcai.crud.row.AbstractMediaRowDramatizer;
 import me.jiangcai.crud.row.FieldDefinition;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -54,16 +55,30 @@ public class ApiDramatizer extends AbstractMediaRowDramatizer {
     }
 
     @Override
-    protected void writeResponse(long total, List<Object> rows, NativeWebRequest webRequest) throws IOException {
+    protected void writeData(Page<?> page, List<Object> list, NativeWebRequest nativeWebRequest) throws IOException {
         Map<String, Object> json = new HashMap<>();
         json.put("resultCode", 200);
         json.put("resultMsg", "ok");
-        json.put("total_count", total);
-        json.put("data", rows);
+        json.put("total_count", page.getTotalElements());
+        json.put("data", list);
         // 实际上……
 //  "incomplete_results": false,
 //        json.put("incomplete_results", total < queryOffset(webRequest) + querySize(webRequest));
 
-        objectMapper.writeValue(webRequest.getNativeResponse(HttpServletResponse.class).getOutputStream(), json);
+        objectMapper.writeValue(nativeWebRequest.getNativeResponse(HttpServletResponse.class).getOutputStream(), json);
     }
+
+//    @Override
+//    protected void writeResponse(long total, List<Object> rows, NativeWebRequest webRequest) throws IOException {
+//        Map<String, Object> json = new HashMap<>();
+//        json.put("resultCode", 200);
+//        json.put("resultMsg", "ok");
+//        json.put("total_count", total);
+//        json.put("data", rows);
+//        // 实际上……
+////  "incomplete_results": false,
+////        json.put("incomplete_results", total < queryOffset(webRequest) + querySize(webRequest));
+//
+//        objectMapper.writeValue(webRequest.getNativeResponse(HttpServletResponse.class).getOutputStream(), json);
+//    }
 }
