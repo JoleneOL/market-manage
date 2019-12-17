@@ -6,7 +6,7 @@ $(function () {
 
     var uploader = WebUploader.create({
         auto: true,
-        swf: '//cdn.lmjia.cn/webuploader/0.1.5/Uploader.swf',
+        swf: '//cdnjs.cloudflare.com/ajax/libs/webuploader/0.1.1/Uploader.swf',
         server: $('body').data('upload-url'),
         pick: {
             id: '#J_upload',

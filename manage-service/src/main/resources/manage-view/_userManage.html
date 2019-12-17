@@ -10,15 +10,15 @@
     <meta name="format-detection" content="telephone=no"/>
     <title>公司用户管理</title>
     <!--第三方库-->
-    <link rel="stylesheet" href="//cdn.lmjia.cn/bootstrap-3.3.7/css/bootstrap.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/dataTables/1.10.15/css/dataTables.bootstrap.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <!--重置库-->
     <link rel="stylesheet" href="./manage-resource/css/style.min.css">
     <link rel="stylesheet" href="./manage-resource/css/custom.css">
     <!--[if lt IE 9]>
-    <script src="//cdn.lmjia.cn/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="//cdn.lmjia.cn/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 <body data-edit-url="_userEdit.html" th:data-edit-url="@{/manageManagerEdit}"
@@ -82,20 +82,20 @@
 </template>
 
 </body>
-<script src="//cdn.lmjia.cn/jquery/1.12.4/jquery.js"></script>
-<script src="//cdn.lmjia.cn/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-<script src="//cdn.lmjia.cn/layer/3.0.3/layer.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/jquery.dataTables.min.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/js/dataTables.bootstrap.min.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/layer/2.3/layer.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.15/js/dataTables.bootstrap.min.js"></script>
+<!--<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/dataTables.zh-CN.js"></script>-->
 <!--额外工具-->
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/ColReorder/js/dataTables.colReorder.min.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/dataTables.buttons.min.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.bootstrap.min.js"></script>
-<script src="//cdn.lmjia.cn//jszip/3.1.3/jszip.min.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.html5.min.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.flash.min.js"></script>
-<script src="//cdn.lmjia.cn/dataTables/1.10.15/extend/Buttons/js/buttons.colVis.js"></script>
+<script src="//cdn.datatables.net/colreorder/1.5.2/js/dataTables.colReorder.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.1/js/buttons.bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
 <!--生产环境请移除 Begin-->
 <script src="mock/mock-min.js" th:remove="all"></script>
 <script src="mock/api.js" th:remove="all"></script>

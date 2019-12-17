@@ -12,8 +12,8 @@
     <meta name="format-detection" content="telephone=no">
     <title>分享二维码</title>
 
-    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/weui/1.0.1/style/weui.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.0.1/css/jquery-weui.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../wechat-resource/assets/css/custom.css"
           th:href="@{/wechat-resource/assets/css/custom.css}">
@@ -36,7 +36,7 @@
     <!--<a href="javascript:;" class="weui-btn weui-btn_plain-default">分享给朋友</a>-->
     <!--</p>-->
 </section>
-<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script wx:js=""></script>
 <script wx:share="利每家|${'您的好友'+@readService.wechatNickNameForPrincipal(#authentication.principal)+'邀请您加入利每家'}|${url}|https://cdn.lmjia.cn/lmjia_logo_1.png"></script>
 </body>

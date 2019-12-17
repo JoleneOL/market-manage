@@ -10,9 +10,9 @@
     <meta name="format-detection" content="telephone=no">
     <title>购物车</title>
 
-    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/weui/1.0.1/style/weui.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.0.1/css/jquery-weui.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 </head>
@@ -104,15 +104,18 @@
     </div>
 </div>
 <div class="cart-footer">
-    <div class="cart-total"><span class="cart-total_title">合计：</span><span class="cart-total_number">￥<i id="J_orderTotal">0</i></span></div>
-    <div class="settlement"><button type="button" id="J_settlementBtn">结算</button></div>
+    <div class="cart-total"><span class="cart-total_title">合计：</span><span class="cart-total_number">￥<i
+            id="J_orderTotal">0</i></span></div>
+    <div class="settlement">
+        <button type="button" id="J_settlementBtn">结算</button>
+    </div>
 </div>
 <form action="orderPlace.html" th:action="@{/mallOrder}" method="post" id="J_orderPlace">
     <input type="hidden" name="order">
 </form>
 </body>
-<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
-<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="../../wechat-resource/assets/js/mall/storage.js"></script>
 <script src="../../wechat-resource/assets/js/mall/cart.js?v=2"></script>
 </html>

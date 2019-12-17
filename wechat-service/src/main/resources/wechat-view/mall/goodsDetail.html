@@ -11,9 +11,9 @@
     <meta name="format-detection" content="telephone=no">
     <title>商品详情</title>
 
-    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/lib/weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/jquery-weui/1.0.1/css/jquery-weui.min.css">
-    <link rel="stylesheet" href="//cdn.lmjia.cn/swiper/3.4.2/css/swiper.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/weui/1.0.1/style/weui.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.0.1/css/jquery-weui.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/css/swiper.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../../wechat-resource/assets/css/mall.css">
 </head>
@@ -145,12 +145,14 @@
     <input type="hidden" name="order">
 </form>
 </body>
-<script src="//cdn.lmjia.cn/jquery/3.2.1/jquery.min.js"></script>
-<script src="//cdn.lmjia.cn/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
-<script src="//cdn.lmjia.cn/swiper/3.4.2/js/swiper.jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Swiper/3.4.2/js/swiper.jquery.min.js"></script>
 <script th:if="${#authentication.principal != null}" wx:js=""></script>
 <script th:if="${#authentication.principal != null}"
         wx:share="利每家|${'您的好友'+@readService.wechatNickNameForPrincipal(#authentication.principal)+'向您推荐'+currentData.product.name  + '。'+ currentData.product.description}|${shareUrl+'_'+ #authentication.principal.id} |${shareImg!=null?shareImg:'https://cdn.lmjia.cn/lmjia_logo_1.png'}"></script>
-<script src="../../wechat-resource/assets/js/mall/storage.js" th:src="@{/wechat-resource/assets/js/mall/storage.js}"></script>
-<script src="../../wechat-resource/assets/js/mall/detail.js" th:src="@{/wechat-resource/assets/js/mall/detail.js}"></script>
+<script src="../../wechat-resource/assets/js/mall/storage.js"
+        th:src="@{/wechat-resource/assets/js/mall/storage.js}"></script>
+<script src="../../wechat-resource/assets/js/mall/detail.js"
+        th:src="@{/wechat-resource/assets/js/mall/detail.js}"></script>
 </html>
